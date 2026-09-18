@@ -36,7 +36,7 @@
 // ============================================================
 
 import { chromium } from 'playwright';
-import { PDFDocument, PDFTextField, PDFCheckBox } from 'pdf-lib';
+import { PDFDocument, PDFTextField, PDFCheckBox, PDFRadioGroup, PDFDropdown } from 'pdf-lib';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -243,6 +243,12 @@ await test('Escape closes the modal, "Continue editing" reopens it with fields i
 
     await page.click('#ffReopenBtn');
     await page.waitForSelector('.ff-modal--open', { timeout: 5000 });
+    // .ff-modal--open is added on the rAF right after the modal mounts, but
+    // the field boxes only exist once _openModal's awaited _renderPage
+    // resolves (pdf.js getPage + render) — a few ms later. Counting boxes
+    // straight after the modal appears therefore raced and intermittently
+    // read 0. Wait for the overlay to actually repaint instead.
+    await page.waitForSelector('.ff-field-box', { timeout: 10000 });
     expect(await page.locator('.ff-field-box').count()).toBe(1);
     const val = await page.locator('.ff-name-input').inputValue();
     expect(val).toBe('Survives Close');
@@ -392,6 +398,262 @@ await test('checkbox field type: select chip, place, save, verify two independen
     await context2.close();
     fs.unlinkSync(tmpPath);
   }
+});
+
+await test('radio group: 3 options sharing one group name become ONE AcroForm field with 3 widgets', async () => {
+  // Radio is the first field type here that isn't 1 box = 1 field: in
+  // AcroForm terms a radio group is ONE field carrying one widget
+  // annotation per option, which is precisely what makes only one of them
+  // selectable at a time. A "works" that quietly produced three separate
+  // single-button fields would look identical in this tool's own UI and be
+  // wrong in every reader, so the shape (1 field / 3 widgets) — not just
+  // the presence of something radio-ish — is what's asserted below.
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  let rgBuffer;
+  const GROUP = 'Favourite Colour';
+  try {
+    await page.addInitScript(BLOB_HOOK);
+    const wrap = await openEditor(page);
+
+    await page.click('label[data-name="ffType"][data-value="radio"]');
+    // Selecting the Radio chip reveals the shared group-name input — the
+    // one new UI concept this field type needs (see formFieldsUI.js's
+    // header). It must be seeded with a real default, not blank.
+    const groupInput = page.locator('#ffGroupInput');
+    await groupInput.waitFor({ state: 'visible', timeout: 5000 });
+    const seeded = await groupInput.inputValue();
+    if (!seeded.trim()) throw new Error('group-name input opened blank — expected a seeded default');
+    await groupInput.fill(GROUP);
+
+    // Three options placed in a row, WITHOUT re-touching the group input
+    // between them: the whole point of the persistent row is that this
+    // common case costs zero extra actions.
+    for (const [yFrac, value] of [[0.12, 'Red'], [0.30, 'Green'], [0.48, 'Blue']]) {
+      await clickAtPageFraction(page, wrap, 0.25, yFrac);
+      await page.waitForTimeout(150);
+      await page.keyboard.type(value);
+    }
+    expect(await page.locator('.ff-field-box').count()).toBe(3);
+
+    const { buffer } = await saveAndCapture(page);
+    rgBuffer = buffer;
+  } finally {
+    await context.close();
+  }
+
+  // Independent check #1 — plain-Node pdf-lib.
+  const pdf    = await PDFDocument.load(rgBuffer);
+  const fields = pdf.getForm().getFields();
+  expect(fields.length).toBe(1);
+
+  const rg = fields[0];
+  if (!(rg instanceof PDFRadioGroup)) throw new Error(`Expected PDFRadioGroup, got ${rg.constructor.name}`);
+  expect(rg.getName()).toBe(GROUP);
+  expect(JSON.stringify(rg.getOptions().slice().sort())).toBe(JSON.stringify(['Blue', 'Green', 'Red']));
+  // One field, three widget annotations — the actual structural claim.
+  expect(rg.acroField.getWidgets().length).toBe(3);
+
+  // Each widget's "on" appearance state must be the option's own TEXT, not
+  // pdf-lib's positional "0"/"1"/"2". pdf-lib itself reads options out of
+  // /Opt and so never notices the difference — but pdf.js (which this site's
+  // Fill tool, and plenty of other software, reads forms through) takes a
+  // radio kid's export value from this state name and ignores /Opt entirely.
+  // Before formFieldsWorker.js's _relabelRadioStates existed, a group saved
+  // as Red/Green/Blue came back from the real Fill tool offering three
+  // choices literally labelled "0", "1" and "2".
+  const onStates = rg.acroField.getWidgets().map(w => String(w.getOnValue()));
+  expect(JSON.stringify(onStates)).toBe(JSON.stringify(['/Red', '/Green', '/Blue']));
+  // A freshly placed form starts with nothing selected, same reasoning as
+  // the unchecked-checkbox default.
+  if (rg.getSelected() !== undefined) throw new Error(`expected no option pre-selected, got ${rg.getSelected()}`);
+
+  // Independent check #2 — the site's own real Fill tool.
+  const tmpPath = path.join(__dirname, '..', 'fixtures', '_e2e_formfields_radio_output.pdf');
+  const fs = await import('fs');
+  fs.writeFileSync(tmpPath, rgBuffer);
+  const context2 = await browser.newContext({ serviceWorkers: 'block' });
+  const page2 = await context2.newPage();
+  try {
+    await page2.goto(`${BASE_URL}/fill/`, { waitUntil: 'load', timeout: 30000 });
+    await page2.setInputFiles('#fileInput', tmpPath);
+    await page2.waitForSelector('#fillOptions input[type="radio"]', { state: 'visible', timeout: 15000 });
+
+    const radios = await page2.$$eval('#fillOptions input[type="radio"]',
+      els => els.map(el => ({ name: el.name, value: el.value })));
+    expect(radios.length).toBe(3);
+    expect(JSON.stringify(radios.map(r => r.value).sort())).toBe(JSON.stringify(['Blue', 'Green', 'Red']));
+    // All three sharing one HTML `name` is how Fill — an entirely separate
+    // code path (js/fillUI.js) reading the PDF through pdf.js, not through
+    // anything this tool wrote — expresses "these are one mutually
+    // exclusive group". That it groups them at all is the cross-tool proof
+    // the saved AcroForm structure is genuinely a radio group.
+    if (new Set(radios.map(r => r.name)).size !== 1) {
+      throw new Error(`Fill rendered the options as separate groups: ${JSON.stringify(radios)}`);
+    }
+
+    // And they really are mutually exclusive when used.
+    await page2.check('#fillOptions input[type="radio"][value="Green"]');
+    await page2.check('#fillOptions input[type="radio"][value="Blue"]');
+    const checkedValues = await page2.$$eval('#fillOptions input[type="radio"]:checked', els => els.map(el => el.value));
+    expect(JSON.stringify(checkedValues)).toBe(JSON.stringify(['Blue']));
+  } finally {
+    await context2.close();
+    fs.unlinkSync(tmpPath);
+  }
+});
+
+await test('dropdown: comma-separated choices become a real /Opt list Fill renders as a <select>', async () => {
+  // The dropdown's one extra concept is its options list, entered as plain
+  // comma-separated text (a deliberate v1 — see formFieldsUI.js's header).
+  // What matters is that the parse produces a real AcroForm choice field,
+  // not that the input is fancy, so both checks below target the saved
+  // field's own /Opt contents rather than the editor's state.
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  let ddBuffer;
+  try {
+    await page.addInitScript(BLOB_HOOK);
+    const wrap = await openEditor(page);
+
+    await page.click('label[data-name="ffType"][data-value="dropdown"]');
+    const optsInput = page.locator('#ffOptsInput');
+    await optsInput.waitFor({ state: 'visible', timeout: 5000 });
+    if (!(await optsInput.inputValue()).trim()) {
+      throw new Error('options input opened blank — expected a seeded default');
+    }
+    // Ragged spacing on purpose: the parser must trim each choice, and drop
+    // the empty one the trailing comma produces.
+    await optsInput.fill('Small,  Medium ,Large,');
+
+    await clickAtPageFraction(page, wrap, 0.25, 0.15);
+    await page.waitForTimeout(150);
+    await page.keyboard.type('Shirt Size');
+
+    expect(await page.locator('.ff-field-box').count()).toBe(1);
+
+    const { buffer } = await saveAndCapture(page);
+    ddBuffer = buffer;
+  } finally {
+    await context.close();
+  }
+
+  // Independent check #1 — plain-Node pdf-lib.
+  const pdf    = await PDFDocument.load(ddBuffer);
+  const fields = pdf.getForm().getFields();
+  expect(fields.length).toBe(1);
+
+  const dd = fields[0];
+  if (!(dd instanceof PDFDropdown)) throw new Error(`Expected PDFDropdown, got ${dd.constructor.name}`);
+  expect(dd.getName()).toBe('Shirt Size');
+  // Order preserved, whitespace trimmed, the trailing empty entry dropped.
+  expect(JSON.stringify(dd.getOptions())).toBe(JSON.stringify(['Small', 'Medium', 'Large']));
+  expect(dd.getSelected().length).toBe(0);
+  if (dd.acroField.getWidgets().length < 1) throw new Error('dropdown field has no widget annotation');
+
+  // Independent check #2 — the site's own real Fill tool. A <select> (not a
+  // text input) is the thing worth asserting: it means pdf.js reported a
+  // /Ch field with a real option list, i.e. a standards-shaped choice field.
+  const tmpPath = path.join(__dirname, '..', 'fixtures', '_e2e_formfields_dropdown_output.pdf');
+  const fs = await import('fs');
+  fs.writeFileSync(tmpPath, ddBuffer);
+  const context2 = await browser.newContext({ serviceWorkers: 'block' });
+  const page2 = await context2.newPage();
+  try {
+    await page2.goto(`${BASE_URL}/fill/`, { waitUntil: 'load', timeout: 30000 });
+    await page2.setInputFiles('#fileInput', tmpPath);
+    const select = page2.locator('#fillOptions select[data-field-name="Shirt Size"]');
+    await select.waitFor({ state: 'visible', timeout: 15000 });
+
+    const optionValues = await page2.$$eval(
+      '#fillOptions select[data-field-name="Shirt Size"] option',
+      els => els.map(el => el.value).filter(Boolean)
+    );
+    expect(JSON.stringify(optionValues)).toBe(JSON.stringify(['Small', 'Medium', 'Large']));
+
+    await select.selectOption('Medium');
+    expect(await select.inputValue()).toBe('Medium');
+  } finally {
+    await context2.close();
+    fs.unlinkSync(tmpPath);
+  }
+});
+
+await test('two radio groups stay separate, and every type coexists in one document', async () => {
+  // The failure mode this guards: the persistent group-name row making
+  // everything silently land in ONE group (or, the other way, each option
+  // becoming its own group). Also the worker's name de-dup scoping — a
+  // group name is de-duped once per group against field names, while
+  // option values are de-duped only within their own group, so two groups
+  // are both allowed to offer "Yes"/"No".
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  let mixBuffer;
+  try {
+    await page.addInitScript(BLOB_HOOK);
+    const wrap = await openEditor(page);
+
+    await page.click('label[data-name="ffType"][data-value="radio"]');
+    await page.locator('#ffGroupInput').waitFor({ state: 'visible', timeout: 5000 });
+    await page.locator('#ffGroupInput').fill('Smoker');
+    await clickAtPageFraction(page, wrap, 0.20, 0.10);
+    await page.waitForTimeout(150);
+    await page.keyboard.type('Yes');
+    await clickAtPageFraction(page, wrap, 0.35, 0.10);
+    await page.waitForTimeout(150);
+    await page.keyboard.type('No');
+
+    // Starting a second group needs its own explicit action: with an option
+    // of the first group selected, editing the text input renames THAT group
+    // (see formFieldsUI.js's input handler), which is why "New group" exists
+    // at all — this test is exactly what surfaced that ambiguity, by
+    // producing one merged 4-option group instead of two.
+    await page.click('#ffNewGroupBtn');
+    await page.locator('#ffGroupInput').fill('Newsletter');
+    await clickAtPageFraction(page, wrap, 0.20, 0.30);
+    await page.waitForTimeout(150);
+    await page.keyboard.type('Yes');
+    await clickAtPageFraction(page, wrap, 0.35, 0.30);
+    await page.waitForTimeout(150);
+    await page.keyboard.type('No');
+
+    // A text field and a checkbox in the same run — four field types, one
+    // document, one save.
+    await page.click('label[data-name="ffType"][data-value="text"]');
+    await clickAtPageFraction(page, wrap, 0.25, 0.55);
+    await page.waitForTimeout(150);
+    await page.keyboard.type('Notes');
+
+    await page.click('label[data-name="ffType"][data-value="checkbox"]');
+    await clickAtPageFraction(page, wrap, 0.25, 0.70);
+    await page.waitForTimeout(150);
+    await page.keyboard.type('Confirmed');
+
+    expect(await page.locator('.ff-field-box').count()).toBe(6);
+
+    const { buffer } = await saveAndCapture(page);
+    mixBuffer = buffer;
+  } finally {
+    await context.close();
+  }
+
+  const pdf    = await PDFDocument.load(mixBuffer);
+  const form   = pdf.getForm();
+  // 6 placed boxes → 4 AcroForm fields: two radio GROUPS (2 widgets each),
+  // one text field, one checkbox.
+  expect(form.getFields().length).toBe(4);
+
+  const smoker     = form.getRadioGroup('Smoker');      // throws if absent/wrong type
+  const newsletter = form.getRadioGroup('Newsletter');
+  expect(smoker.acroField.getWidgets().length).toBe(2);
+  expect(newsletter.acroField.getWidgets().length).toBe(2);
+  // Both groups legitimately offer the same option values — the per-group
+  // de-dup scope must NOT have rewritten the second pair to "Yes (2)".
+  expect(JSON.stringify(smoker.getOptions().slice().sort())).toBe(JSON.stringify(['No', 'Yes']));
+  expect(JSON.stringify(newsletter.getOptions().slice().sort())).toBe(JSON.stringify(['No', 'Yes']));
+
+  if (!(form.getField('Notes') instanceof PDFTextField)) throw new Error('Notes is not a text field');
+  if (!(form.getField('Confirmed') instanceof PDFCheckBox)) throw new Error('Confirmed is not a checkbox');
 });
 
 await test('Cyrillic field name survives sanitization + a real Unicode font (not WinAnsi Helvetica) backs the field', async () => {

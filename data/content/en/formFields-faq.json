@@ -28,7 +28,7 @@
     "name": "What field types can I add?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "This first version supports text fields — the most common field type, covering names, dates, addresses, free-text answers, and most everyday paperwork. Checkboxes, radio buttons, and dropdown lists are on the roadmap as a follow-up."
+      "text": "Four types: text fields, checkboxes, radio button groups, and dropdown lists. Pick the type with the chips above the page, then click to place it. Text fields cover names, dates, addresses and free-text answers; checkboxes cover single yes/no ticks; a radio group is a set of buttons where only one can be chosen at a time; a dropdown offers a list of choices you type in yourself. Signature fields are not supported yet — use Draw on PDF to sign a document."
     }
   },
   {
@@ -36,7 +36,23 @@
     "name": "How do I place and adjust a field?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Click anywhere on the rendered page to drop a new text field at that spot. Drag the field to reposition it, drag its bottom-right corner to resize it, and type directly into the field's own label to name it (helpful if you or someone else will later see field names in a PDF reader's form-filling sidebar). Click the small × button to remove a field you don't want."
+      "text": "Choose a field type, then click anywhere on the rendered page to drop one at that spot. Drag the field by its round handle to reposition it, drag its bottom-right corner to resize it, and type directly into the field's own label to name it (helpful if you or someone else will later see field names in a PDF reader's form-filling sidebar). Click the small × button to remove a field you don't want."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "How do I create a group of radio buttons where only one can be selected?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pick the Radio field type and give the group a name in the Radio group name box, then click to place each option. Every button you place while that name is set joins the same group, so only one of them can ever be selected — which is what makes radio buttons different from a row of checkboxes. Type the option's own value into each button (for example Yes and No). To start a second, separate group, click New group and give it a different name. Editing the name while a placed button is selected renames that whole group instead."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "How do I set the choices in a dropdown?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pick the Dropdown field type and type the choices into the options box, separated by commas — for example Small, Medium, Large. Click on the page to place the dropdown, and those choices are written into the PDF as a real list a reader can open. Click an already-placed dropdown to load its choices back into the box and edit them."
     }
   },
   {

@@ -6,14 +6,36 @@
 //  into one with real, fillable AcroForm fields.
 //
 //  Scope (see js/formFieldsWorker.js's own header for the write side):
-//    - Text and checkbox fields (radio groups/dropdowns are a follow-up —
-//      those need real additional UI concepts this one doesn't: a shared
-//      group name spanning multiple boxes, an options-list editor)
+//    - Text, checkbox, radio-group and dropdown fields (signature fields
+//      are still a follow-up — those need an appearance/ink concept this
+//      tool doesn't have; the existing Draw on PDF tool covers signing
+//      today)
 //    - A field-type chip toggle selects what the NEXT click places; once
 //      placed a field's type is fixed (delete + re-place to change it)
 //    - Click-to-place, drag to move, corner-drag to resize, inline name
-//      input, delete button — all fully type-agnostic, shared by both
-//      field types unchanged
+//      input, delete button — all fully type-agnostic, shared by every
+//      field type unchanged
+//
+//  The two "compound" field types each need ONE extra piece of data that
+//  doesn't fit inside a placed box, so both are edited through a single
+//  shared panel row (#ffTypeExtra, see _typeExtraHTML) rather than two
+//  bespoke interaction models:
+//    - radio   → a GROUP NAME shared across several boxes. In AcroForm
+//      terms a radio group is ONE field with MANY widget annotations, so
+//      the box's own inline name input holds that option's VALUE ("Yes",
+//      "No") while the panel row holds the group name every option placed
+//      while it's set joins. The row persists between placements, so the
+//      overwhelmingly common case (place 2-3 options → they're one group)
+//      needs zero extra actions; "New group" starts a separate one.
+//    - dropdown → an OPTIONS LIST, entered comma-separated ("Small,
+//      Medium, Large"). Deliberately a plain text input, not a
+//      drag-and-drop list editor — an honest v1 that costs one input.
+//  Clicking an already-placed radio/dropdown box — or its entry in the
+//  field-list sidebar — loads ITS group/options back into that same row, so
+//  the row is also how you edit them after the fact (editing a group name
+//  there renames the whole group, not just the one option, which is what a
+//  user means by renaming a group; that's precisely why "New group" has to
+//  exist as its own separate action).
 //    - Multi-page supported (page nav, like drawUI.js/fillUI.js)
 //    - A PDF that already has AcroForm fields is redirected to the
 //      existing Fill tool instead of duplicating that tool's job — this
@@ -56,14 +78,22 @@ const DEFAULT_W_FRAC = 0.30;   // default placed-field width, as a fraction of p
 // mobile vs desktop, a tall vs short window, a differently-sized page all
 // used to silently change the actual PDF-point size of a "24px" default.
 const DEFAULT_H_PT   = 30;     // default placed text-field height, in PDF points
-// Checkboxes are inherently small and square, unlike a text field that
-// needs width for typed content — WCAG 2.5.8's 24px comfort-target size
-// (same language already used for this in fillUI.js's own checkbox
-// rendering) is a sensible fixed default, expressed here as PDF points (see
-// above) rather than CSS px.
-const DEFAULT_CHECKBOX_PT = 24;
+// Checkboxes and radio buttons are inherently small and square, unlike a
+// text field that needs width for typed content — WCAG 2.5.8's 24px
+// comfort-target size (same language already used for this in fillUI.js's
+// own checkbox rendering) is a sensible fixed default, expressed here as
+// PDF points (see above) rather than CSS px.
+const DEFAULT_SQUARE_PT = 24;
 const MIN_W_FRAC     = 0.04;
 const MIN_H_FRAC     = 0.015;
+
+// Field types whose widget is a glyph in a box (tick / dot) rather than a
+// text run: they get the small square default size above AND keep a 1:1
+// aspect ratio while being resized, because a real PDF viewer centres
+// their glyph in whatever rect the widget was given — letting the user
+// stretch one into a rectangle here would misleadingly not match how it
+// actually renders.
+const SQUARE_TYPES = new Set(['checkbox', 'radio']);
 
 // Manual zoom ladder (competitive gap vs iLovePDF's own PDF-Forms editor,
 // which ships %/+/−/fit-width controls — checked live 2026-09-17). Index 2
@@ -83,7 +113,10 @@ const FOCUSABLE_SEL = 'a[href], button:not([disabled]), input:not([disabled]), '
 let _pdfDoc      = null;
 let _currentPage = 1;
 let _pageCount   = 0;
-let _fields      = [];     // { id, page, name, type: 'text'|'checkbox', xFrac, yFrac, wFrac, hFrac }
+// { id, page, name, type: 'text'|'checkbox'|'radio'|'dropdown', xFrac, yFrac, wFrac, hFrac }
+// plus, per type: radio → group (shared group name; `name` is the option
+// VALUE), dropdown → options (array of choice strings).
+let _fields      = [];
 let _fieldSeq    = 0;
 let _fieldType   = 'text'; // type the NEXT click will place — mirrors watermarkUI.js's _kind
 let _hasExisting = false;
@@ -91,7 +124,20 @@ let _loading     = false;
 let _generation  = 0;      // staleness guard, same pattern as fillUI.js/drawUI.js
 let _pageWPt = 0, _pageHPt = 0; // current page's own PDF-point size — see DEFAULT_H_PT above
 let _zoomIdx = ZOOM_FIT_IDX;    // index into ZOOM_STEPS — user zoom on top of fit-to-width
-let _activeFieldId = null;      // field highlighted by the sidebar list, null when none
+// THE selected field — one variable, deliberately shared by the sidebar
+// highlight, the on-canvas box highlight and #ffTypeExtra's "edit this
+// field's group/options" behaviour. These arrived as two separate
+// concepts in two parallel branches; keeping both would have meant
+// clicking a sidebar entry highlighting one field while the type-extra row
+// still edited another.
+let _activeFieldId = null;
+
+// ── Compound-type state (see this file's header) ───────────────
+// The values the NEXT placed field of that type inherits — they persist
+// across placements so placing several radio options in a row just works.
+let _radioGroup   = '';
+let _dropdownOpts = '';
+let _extraKey     = null;  // what #ffTypeExtra currently shows — avoids re-rendering (and blurring) it needlessly
 
 // DOM refs — set inside _buildModalHTML/_bindEditorEvents each render
 let _container, _wrap, _canvas, _overlay, _countEl, _pageLabel, _btnPrev, _btnNext;
@@ -129,6 +175,7 @@ export function hideFormFieldsOptions() {
   _closeModal({ silent: true });
   _pdfDoc = null; _currentPage = 1; _pageCount = 0;
   _fields = []; _fieldSeq = 0; _fieldType = 'text'; _hasExisting = false; _loading = false;
+  _radioGroup = ''; _dropdownOpts = ''; _extraKey = null;
   _fileLabel = ''; _zoomIdx = ZOOM_FIT_IDX; _activeFieldId = null;
   _generation++;
   _container = null;
@@ -139,10 +186,18 @@ export function getFormFieldsParams() {
   return {
     loading:           _loading,
     hasExistingFields: _hasExisting,
-    fields: _fields.map(f => ({
-      page: f.page, name: f.name, type: f.type,
-      xFrac: f.xFrac, yFrac: f.yFrac, wFrac: f.wFrac, hFrac: f.hFrac,
-    })),
+    fields: _fields.map(f => {
+      const out = {
+        page: f.page, name: f.name, type: f.type,
+        xFrac: f.xFrac, yFrac: f.yFrac, wFrac: f.wFrac, hFrac: f.hFrac,
+      };
+      // Only the type that owns it carries the extra key — keeps the
+      // worker's per-field branch reading exactly what it expects, and
+      // keeps the postMessage payload free of dead fields.
+      if (f.type === 'radio')    out.group   = f.group || '';
+      if (f.type === 'dropdown') out.options = Array.isArray(f.options) ? f.options.slice() : [];
+      return out;
+    }),
   };
 }
 
@@ -189,6 +244,10 @@ async function _extractAndRender(file, container) {
     _currentPage = 1;
     _fields      = [];
     _fieldSeq    = 0;
+    _radioGroup  = '';
+    _dropdownOpts = '';
+    _activeFieldId = null;
+    _extraKey    = null;
     _fileLabel   = file.name;
     _container   = container;
     _zoomIdx     = ZOOM_FIT_IDX;
@@ -266,11 +325,14 @@ function _modalBodyHTML() {
       <p style="margin:0 0 12px;font-size:13px;color:var(--text3);line-height:1.5;">
         ${esc(t('formfields_click_hint'))}
       </p>
-      <div style="max-width:320px;margin:0 auto 14px;">
+      <div style="max-width:420px;margin:0 auto 14px;">
         ${group(t('formfields_type_label'), chipGroup('ffType', [
           { value: 'text',     label: t('formfields_type_text') },
           { value: 'checkbox', label: t('formfields_type_checkbox') },
+          { value: 'radio',    label: t('formfields_type_radio') },
+          { value: 'dropdown', label: t('formfields_type_dropdown') },
         ], _fieldType, t('formfields_type_label')))}
+        <div id="ffTypeExtra">${_typeExtraHTML()}</div>
       </div>
       <div class="ff-modal__toolbar">
         <div class="ff-modal__navgroup">
@@ -305,6 +367,109 @@ function _modalBodyHTML() {
       <p class="ff-modal__side-title">${esc(t('formfields_fieldlist_title'))}</p>
       <div id="ffFieldList" class="ff-fieldlist"></div>
     </aside>`;
+}
+
+// ── #ffTypeExtra — the one shared row both compound types edit ──
+// See this file's header for why radio and dropdown share a single row
+// instead of each getting a bespoke editor.
+
+function _activeField() {
+  if (_activeFieldId == null) return null;
+  return _fields.find(f => String(f.id) === String(_activeFieldId)) || null;
+}
+
+// What the extra row is currently ABOUT: the active (last placed/clicked)
+// field's type if there is one, otherwise the chip's type — i.e. "the
+// thing the next click will place". Selecting a chip clears _activeFieldId
+// precisely so the row follows the chip again (see _bindEditorEvents).
+function _effectiveType() {
+  const a = _activeField();
+  return a ? a.type : _fieldType;
+}
+
+function _parseOptions(str) {
+  return String(str ?? '').split(',').map(s => s.trim()).filter(Boolean);
+}
+
+function _typeExtraHTML() {
+  const type = _effectiveType();
+  let html = '', value = '';
+
+  if (type === 'radio') {
+    const a = _activeField();
+    value = (a && a.type === 'radio') ? (a.group || '') : _radioGroup;
+    // "New group" is not decoration — without it this one input carries two
+    // irreconcilable meanings once a placed option is selected: "rename the
+    // group I have selected" and "start a different group". Renaming is what
+    // editing the text must mean (see the input handler); starting a fresh
+    // group therefore needs its own affordance. align-items:stretch makes the
+    // button inherit the input's ~42px height rather than .split-action-btn's
+    // own 27px, keeping it a comfortable tap target (Fitts / WCAG 2.5.8).
+    html = group(t('formfields_group_label'), `
+      <div style="display:flex;gap:8px;align-items:stretch;">
+        <input type="text" id="ffGroupInput" class="wm-text-input" value="${esc(value)}"
+          placeholder="${esc(t('formfields_group_placeholder'))}"
+          aria-label="${esc(t('formfields_group_label'))}">
+        <button type="button" id="ffNewGroupBtn" class="split-action-btn"
+          style="flex-shrink:0;white-space:nowrap;">${esc(t('formfields_new_group'))}</button>
+      </div>
+      <p class="ff-extra-hint">${esc(t('formfields_group_hint'))}</p>`);
+  } else if (type === 'dropdown') {
+    const a = _activeField();
+    value = (a && a.type === 'dropdown') ? (a.options || []).join(', ') : _dropdownOpts;
+    html = group(t('formfields_options_label'), `
+      <input type="text" id="ffOptsInput" class="wm-text-input" value="${esc(value)}"
+        placeholder="${esc(t('formfields_options_placeholder'))}"
+        aria-label="${esc(t('formfields_options_label'))}">
+      <p class="ff-extra-hint">${esc(t('formfields_options_hint'))}</p>`);
+  }
+
+  _extraKey = `${type}|${value}`;
+  return html;
+}
+
+// Repaints the row ONLY when what it should show actually changed —
+// blindly re-rendering would blow away the caret of a user mid-type in it
+// (this runs from the same delegated listeners that field placement and
+// box clicks go through).
+function _renderTypeExtra() {
+  const host = id('ffTypeExtra');
+  if (!host) return;
+  const prev = _extraKey;
+  const html = _typeExtraHTML();   // also refreshes _extraKey
+  if (_extraKey !== prev) host.innerHTML = html;
+}
+
+// Marks a field as the one the extra row reflects. Passing null means
+// "nothing selected — follow the chip again".
+function _setActive(fieldId) {
+  const next = fieldId == null ? null : String(fieldId);
+  if (String(_activeFieldId ?? '') === String(next ?? '')) return;
+  _activeFieldId = next;
+  _renderTypeExtra();
+  // Selection is one shared concept (see _activeFieldId's own comment), so
+  // every change to it has to repaint the two other things that render it:
+  // the on-canvas box highlight and the sidebar list's current entry.
+  _applyActiveHighlight();
+  _renderFieldList();
+}
+
+// Default names. Radio is the odd one out: its inline input holds the
+// OPTION VALUE, and options are numbered within their own group (so a
+// second group starts at "Option 1" again), not off the global _fieldSeq.
+function _defaultNameFor(type, groupName) {
+  if (type === 'checkbox') return t('formfields_default_checkbox_name', { n: _fieldSeq });
+  if (type === 'dropdown') return t('formfields_default_dropdown_name', { n: _fieldSeq });
+  if (type === 'radio') {
+    const n = _fields.filter(f => f.type === 'radio' && f.group === groupName).length + 1;
+    return t('formfields_default_option_name', { n });
+  }
+  return t('formfields_default_field_name', { n: _fieldSeq });
+}
+
+function _nextGroupName() {
+  const seen = new Set(_fields.filter(f => f.type === 'radio').map(f => f.group));
+  return t('formfields_default_group_name', { n: seen.size + 1 });
 }
 
 // Full-viewport editor modal — see css/components.css's .ff-modal block
@@ -469,24 +634,39 @@ function _fieldBoxHTML(f) {
   // default size, and dragging the resize handle bigger (already-existing
   // functionality, zero special-casing needed) makes the same input
   // usable for renaming, same as it always has been for text fields.
-  const checkboxGlyph = f.type === 'checkbox'
-    ? `<span aria-hidden="true" style="flex-shrink:0;font-size:13px;line-height:1;padding-left:4px;color:#123;">☐</span>`
+  // Radio options reuse that same reasoning unchanged — they're the same
+  // small square box with a different glyph, and their inline input holds
+  // the option VALUE rather than a field name (the shared group name lives
+  // in #ffTypeExtra, see this file's header). The group is surfaced here as
+  // a title/tooltip so a box's membership is checkable without clicking it.
+  const leadGlyph = f.type === 'checkbox' ? '☐' : f.type === 'radio' ? '◯' : '';
+  const leadHTML  = leadGlyph
+    ? `<span aria-hidden="true" style="flex-shrink:0;font-size:13px;line-height:1;padding-left:4px;color:#123;">${leadGlyph}</span>`
+    : '';
+  // Dropdowns are text-field-shaped, so their affordance goes on the right
+  // where a real select's caret sits. pointer-events:none so it never eats
+  // a click meant for the box's own drag/select handling.
+  const trailHTML = f.type === 'dropdown'
+    ? `<span aria-hidden="true" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);
+        font-size:11px;line-height:1;color:#123;pointer-events:none;">▾</span>`
+    : '';
+  const titleAttr = f.type === 'radio'
+    ? ` title="${esc(t('formfields_radio_box_title', { group: f.group || '', value: f.name }))}"`
     : '';
   // Highlight state for the sidebar's "click an entry to find it on the
-  // page" action. Written into the inline style rather than a CSS class
-  // because the box's border/background are themselves inline here, and an
-  // inline declaration always beats a class — a .ff-field-box--active rule
-  // would silently lose. The colors are the same green already used by the
-  // box + the site's own --red for nothing else; no new color introduced.
+  // page" action — and, since selection is one shared concept here, also for
+  // a box selected by clicking it directly on the canvas. Written into the
+  // inline style rather than a CSS class because the box's border/background
+  // are themselves inline here, and an inline declaration always beats a
+  // class — a .ff-field-box--active rule would silently lose. The colors are
+  // the same green already used by the box; no new color introduced.
   const active = String(f.id) === String(_activeFieldId);
-  const boxBorder = active ? '2px solid #2D7A4F' : '1.5px dashed #2D7A4F';
-  const boxBg     = active ? 'rgba(45,122,79,0.22)' : 'rgba(45,122,79,0.10)';
-  const boxRing   = active ? 'box-shadow:0 0 0 3px rgba(45,122,79,0.45);' : '';
-  return `<div class="ff-field-box${active ? ' ff-field-box--active' : ''}" data-id="${f.id}" style="
+  const hl = _highlightStyle(active);
+  return `<div class="ff-field-box${active ? ' ff-field-box--active' : ''}" data-id="${f.id}"${titleAttr} style="
       position:absolute;box-sizing:border-box;
       left:${(f.xFrac * 100).toFixed(3)}%; top:${(f.yFrac * 100).toFixed(3)}%;
       width:${(f.wFrac * 100).toFixed(3)}%; height:${(f.hFrac * 100).toFixed(3)}%;
-      border:${boxBorder}; background:${boxBg}; ${boxRing}
+      border:${hl.border}; background:${hl.background}; box-shadow:${hl.boxShadow};
       display:flex; align-items:center; touch-action:none;">
     <div class="ff-drag-handle" data-id="${f.id}"
       aria-label="${esc(t('formfields_drag_aria'))}" title="${esc(t('formfields_drag_aria'))}"
@@ -494,7 +674,7 @@ function _fieldBoxHTML(f) {
         border-radius:50%;border:2px solid #fff;background:#2D7A4F;color:#fff;
         font-size:12px;line-height:1;cursor:move;display:flex;align-items:center;justify-content:center;
         touch-action:none;">⠿</div>
-    ${checkboxGlyph}
+    ${leadHTML}${trailHTML}
     <input class="ff-name-input" data-id="${f.id}" value="${esc(f.name)}"
       placeholder="${esc(t('formfields_name_placeholder'))}"
       style="flex:1;min-width:0;height:100%;box-sizing:border-box;padding:0 22px 0 6px;
@@ -511,6 +691,34 @@ function _fieldBoxHTML(f) {
       <div style="width:10px;height:10px;border-radius:3px;background:#2D7A4F;border:2px solid #fff;"></div>
     </div>
   </div>`;
+}
+
+// The ONE definition of what a selected field box looks like, used both by
+// _fieldBoxHTML's initial render and by _applyActiveHighlight's in-place
+// update — two copies of these values would drift the moment either changed.
+function _highlightStyle(active) {
+  return active
+    ? { border: '2px solid #2D7A4F',    background: 'rgba(45,122,79,0.22)', boxShadow: '0 0 0 3px rgba(45,122,79,0.45)' }
+    : { border: '1.5px dashed #2D7A4F', background: 'rgba(45,122,79,0.10)', boxShadow: 'none' };
+}
+
+// Repaints ONLY the selection highlight, by mutating the existing boxes'
+// styles rather than rebuilding the overlay's innerHTML. That distinction is
+// load-bearing, not an optimisation: selection now changes on pointerdown
+// anywhere on a box (including its own .ff-name-input), and a full
+// _renderOverlayFields() there would destroy the very input the user just
+// clicked into — blurring it mid-type — and swap out the element a drag
+// gesture had just captured the pointer on.
+function _applyActiveHighlight() {
+  if (!_overlay) return;
+  _overlay.querySelectorAll('.ff-field-box').forEach(el => {
+    const active = String(el.dataset.id) === String(_activeFieldId);
+    const hl = _highlightStyle(active);
+    el.style.border     = hl.border;
+    el.style.background = hl.background;
+    el.style.boxShadow  = hl.boxShadow;
+    el.classList.toggle('ff-field-box--active', active);
+  });
 }
 
 // ── Editor: refs, page render, overlay ──────────────────────────
@@ -638,7 +846,13 @@ function _renderFieldList() {
     return;
   }
   _listEl.innerHTML = _fields.map(f => {
-    const typeLabel = f.type === 'checkbox' ? t('formfields_type_checkbox') : t('formfields_type_text');
+    // A radio option's own `name` is its VALUE, so the list shows its group
+    // alongside the type — "Radio · Favourite Colour" is what actually tells
+    // two identically-valued options ("Yes" in two different groups) apart.
+    const typeLabel = f.type === 'checkbox' ? t('formfields_type_checkbox')
+      : f.type === 'dropdown' ? t('formfields_type_dropdown')
+      : f.type === 'radio'    ? `${t('formfields_type_radio')} · ${f.group || ''}`
+      : t('formfields_type_text');
     const isActive  = String(f.id) === String(_activeFieldId);
     return `<button type="button" class="ff-fieldlist__item${isActive ? ' ff-fieldlist__item--active' : ''}"
         data-id="${f.id}"${isActive ? ' aria-current="true"' : ''}>
@@ -655,8 +869,13 @@ async function _revealField(fieldId) {
   const f = _fields.find(x => String(x.id) === String(fieldId));
   if (!f) return;
   _activeFieldId = f.id;
+  // Selecting from the sidebar is the same selection as clicking the box, so
+  // it must also repoint #ffTypeExtra at this field — otherwise jumping to a
+  // radio option from the list would leave the group-name input still editing
+  // whatever was selected before.
+  _renderTypeExtra();
   if (f.page !== _currentPage) await _renderPage(f.page);
-  else { _renderOverlayFields(); _renderFieldList(); }
+  else { _applyActiveHighlight(); _renderFieldList(); }
 
   const el = _overlay?.querySelector(`.ff-field-box[data-id="${f.id}"]`);
   const scrollEl = id('ffCanvasScroll');
@@ -698,7 +917,63 @@ function _bindEditorEvents() {
       _fieldType = e.target.value;
       _modal.querySelectorAll('[data-name="ffType"]').forEach(el =>
         el.classList.toggle('j2p-chip--active', el.dataset.value === _fieldType));
+      // Picking a type is the user saying "I'm about to place a NEW field
+      // of this type", so the extra row must stop reflecting whatever box
+      // was last selected and follow the chip again.
+      _activeFieldId = null;
+      _applyActiveHighlight();
+      _renderFieldList();
+      // Seed a sensible default the first time each compound type is
+      // chosen, so the row is never an empty box the user has to guess at
+      // (CLAUDE.md UX rule 5 — sensible defaults, never a silent no-op).
+      if (_fieldType === 'radio'    && !_radioGroup)   _radioGroup   = _nextGroupName();
+      if (_fieldType === 'dropdown' && !_dropdownOpts) _dropdownOpts = t('formfields_default_options');
+      _renderTypeExtra();
     }
+  });
+
+  // The two compound-type editors. Both write through to the ACTIVE field
+  // when there is one (so the row doubles as "edit this box"), and always
+  // update the template the next placed field inherits.
+  _modal.addEventListener('input', e => {
+    if (e.target.id === 'ffGroupInput') {
+      const val = e.target.value;
+      const a   = _activeField();
+      if (a && a.type === 'radio') {
+        // Renaming the group from a selected option renames the WHOLE
+        // group — an AcroForm radio group IS its shared name, so moving
+        // just the one option out of it is never what "rename the group"
+        // means. Everything that shared the old name moves together.
+        const old = a.group;
+        _fields.forEach(f => { if (f.type === 'radio' && f.group === old) f.group = val; });
+        _renderOverlayFields();   // refresh the boxes' group tooltips
+      }
+      _radioGroup = val;
+      _extraKey   = `radio|${val}`;   // the row already shows this; don't repaint it under the caret
+    } else if (e.target.id === 'ffOptsInput') {
+      const val = e.target.value;
+      const a   = _activeField();
+      if (a && a.type === 'dropdown') a.options = _parseOptions(val);
+      _dropdownOpts = val;
+      _extraKey     = `dropdown|${val}`;
+    }
+  });
+
+  // Deselects whatever box is active and seeds a fresh, unused group name, so
+  // the very next radio option placed starts a NEW group instead of joining
+  // (or renaming) the selected one. Focus+select the input right after so the
+  // user can type the real group name immediately, same affordance as a
+  // freshly placed field's own name input.
+  _modal.addEventListener('click', e => {
+    if (e.target.id !== 'ffNewGroupBtn') return;
+    _activeFieldId = null;
+    _radioGroup    = _nextGroupName();
+    _extraKey      = null;
+    _renderTypeExtra();
+    _applyActiveHighlight();
+    _renderFieldList();
+    const input = id('ffGroupInput');
+    if (input) { input.focus(); input.select(); }
   });
 
   _overlay.addEventListener('pointerdown', _onOverlayPointerDown);
@@ -739,24 +1014,34 @@ function _placeFieldAtEvent(e) {
   // point size depending on what viewport happened to render the page.
   // Dividing by the page's own point dimensions keeps the saved field size
   // constant regardless of render viewport.
-  const isCheckbox = _fieldType === 'checkbox';
-  const wFrac = isCheckbox ? DEFAULT_CHECKBOX_PT / _pageWPt : DEFAULT_W_FRAC;
-  const hFrac = isCheckbox ? DEFAULT_CHECKBOX_PT / _pageHPt : DEFAULT_H_PT / _pageHPt;
+  const isSquare = SQUARE_TYPES.has(_fieldType);
+  const wFrac = isSquare ? DEFAULT_SQUARE_PT / _pageWPt : DEFAULT_W_FRAC;
+  const hFrac = isSquare ? DEFAULT_SQUARE_PT / _pageHPt : DEFAULT_H_PT / _pageHPt;
 
   const xFrac = Math.min(Math.max(0, clickXFrac - wFrac / 2), Math.max(0, 1 - wFrac));
   const yFrac = Math.min(Math.max(0, clickYFrac - hFrac / 2), Math.max(0, 1 - hFrac));
 
+  // Both compound types inherit the panel row's current value. A user who
+  // places a radio option without ever having touched the group input (the
+  // chip's own change handler seeds it, but a keyboard/programmatic path
+  // could skip that) still lands in a real, named group rather than a
+  // blank one the worker would have to invent a name for.
+  if (_fieldType === 'radio'    && !_radioGroup)   _radioGroup   = _nextGroupName();
+  if (_fieldType === 'dropdown' && !_dropdownOpts) _dropdownOpts = t('formfields_default_options');
+
   _fieldSeq++;
   const field = {
     id: _fieldSeq, page: _currentPage, type: _fieldType,
-    name: isCheckbox
-      ? t('formfields_default_checkbox_name', { n: _fieldSeq })
-      : t('formfields_default_field_name', { n: _fieldSeq }),
+    name: _defaultNameFor(_fieldType, _radioGroup),
     xFrac, yFrac, wFrac, hFrac,
   };
+  if (_fieldType === 'radio')    field.group   = _radioGroup;
+  if (_fieldType === 'dropdown') field.options = _parseOptions(_dropdownOpts);
   _fields.push(field);
+  _activeFieldId = field.id;
   _renderOverlayFields();
   _updateCount();
+  _renderTypeExtra();
 
   // Focus + select the new field's name input so the user can type a label
   // right away — this IS the "simple inline name/label" affordance.
@@ -767,6 +1052,12 @@ function _placeFieldAtEvent(e) {
 function _onOverlayPointerDown(e) {
   const handle = e.target.closest('.ff-resize-handle');
   const box    = e.target.closest('.ff-field-box');
+
+  // Touching a placed box — anywhere on it, including its name input or a
+  // handle — selects it, which is what makes #ffTypeExtra show (and edit)
+  // THAT field's group/options. Deliberately before the drag/resize
+  // branching so it happens for every interaction, not just a bare click.
+  if (box) _setActive(box.dataset.id);
 
   if (handle) { _startResize(e, handle.dataset.id); return; }
   if (box && !e.target.closest('.ff-name-input') && !e.target.closest('.ff-delete-btn')) {
@@ -821,7 +1112,7 @@ function _startResize(e, fieldId) {
   function onMove(ev) {
     const dwFrac = (ev.clientX - startX) / r.width;
     const dhFrac = (ev.clientY - startY) / r.height;
-    if (f.type === 'checkbox') {
+    if (SQUARE_TYPES.has(f.type)) {
       // Lock aspect ratio to 1:1 IN PDF POINTS (not in xFrac/yFrac space,
       // which is only square when the page itself is square) — a real PDF
       // viewer renders a checkbox's tick centered in whatever rect the
@@ -855,6 +1146,7 @@ function _deleteField(fieldId) {
   if (String(_activeFieldId) === String(fieldId)) _activeFieldId = null;
   _renderOverlayFields();
   _updateCount();
+  _renderTypeExtra();   // the deleted field may have been what the row was showing
 }
 
 function _syncNamesFromDOM() {

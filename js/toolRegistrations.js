@@ -583,6 +583,12 @@ registerTool('formFields', {
                 ? t('val_formfields_has_fields')
                 : (!p.fields || p.fields.length === 0)
                 ? t('val_formfields_empty')
+                // A dropdown with no choices is a real, silent no-op — it
+                // saves as a field a reader shows as an empty, unusable
+                // select. Block with a specific message rather than shipping
+                // a broken field (CLAUDE.md UX rule 5).
+                : p.fields.some(f => f.type === 'dropdown' && (!f.options || f.options.length === 0))
+                ? t('val_formfields_dropdown_empty')
                 : null,
 });
 

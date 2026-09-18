@@ -6175,6 +6175,19 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   border-top: 1px solid var(--border);
 }
 
+/* #ffTypeExtra — the one row the two "compound" field types share (radio
+   group name / dropdown options list, see js/formFieldsUI.js's header).
+   The input itself reuses .wm-text-input rather than inventing a second
+   theme-aware text-input style; only the hint line underneath is new.
+   --text3 (not --text2) is the established token for this kind of
+   secondary hint and is already dark-theme-corrected in variables.css. */
+.ff-extra-hint {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text3);
+}
+
 @media (max-width: 900px) {
   .ff-modal__side { display: none; }
   .ff-modal__body { gap: 0; }
@@ -6189,6 +6202,16 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   .ff-modal__toolbar { gap: 8px 12px; }
   .ff-modal__navgroup { gap: 6px; }
   .ff-modal__navlabel { min-width: 44px; font-size: 12px; }
+  /* Same reasoning as the toolbar rule above, applied to #ffTypeExtra: the
+     radio/dropdown row costs the stage 134px at 390x664 (measured — stage
+     301px → 167px), and the stage is the whole tool on a phone. Tightened
+     rather than hidden: this row is the ONLY way to name a radio group or
+     set a dropdown's choices, so removing it on mobile would remove the
+     feature. The input keeps its full 42px tap target untouched; only the
+     surrounding type scale and margins give ground. */
+  .ff-extra-hint { font-size: 11px; line-height: 1.35; margin-top: 4px; }
+  #ffTypeExtra .j2p-group { margin-bottom: 0; }
+  #ffTypeExtra .j2p-group__label { margin-bottom: 2px; }
 }
 
 /* ══════════════════════════════════════════════════════════════
