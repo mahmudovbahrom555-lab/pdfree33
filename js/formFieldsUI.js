@@ -79,6 +79,59 @@ let _pageWPt = 0, _pageHPt = 0; // current page's own PDF-point size — see DEF
 
 // DOM refs — set inside _buildEditorHTML/_bindEditorEvents each render
 let _container, _wrap, _canvas, _overlay, _countEl, _pageLabel, _btnPrev, _btnNext;
+let _scrollRaf = null; // rAF handle for the window-scroll listener below
+let _scrollHeightListenerBound = false;
+const FF_STICKY_RESERVE = 110; // #mergeBtn's real height + its sticky offset + a small margin
+
+// Recomputed on every scroll (see _onWindowScrollForCanvasHeight), not just
+// once at render time — see _renderPage's own comment for why a one-time
+// snapshot left the canvas permanently cramped on chrome-heavy pages.
+// Safe by construction: box bottom = currentTop + (innerHeight - currentTop
+// - reserve) = innerHeight - reserve, regardless of currentTop, as long as
+// currentTop isn't negative (clamped to 0 — a box already scrolled PAST
+// the viewport top can safely use the full innerHeight - reserve).
+function _applyCanvasScrollHeight() {
+  const el = id('ffCanvasScroll');
+  if (!el) return;
+  const top = Math.max(0, el.getBoundingClientRect().top);
+  // No generous floor here on purpose — a floor that exceeds the real
+  // (innerHeight - top - reserve) room is exactly what let the box
+  // overlap the sticky button at low scroll positions (confirmed via a
+  // real document.elementFromPoint() sweep across scroll offsets before
+  // this fix). 200 is just a degenerate-case fallback (a genuinely
+  // near-zero result), not a target size — _positionCanvasForRoom below
+  // is what actually gets the box to a comfortable size by default.
+  const maxCssHeight = Math.max(200, (window.innerHeight || 800) - top - FF_STICKY_RESERVE);
+  el.style.maxHeight = `${maxCssHeight}px`;
+  el.style.overflowY = 'auto';
+}
+
+function _onWindowScrollForCanvasHeight() {
+  if (_scrollRaf) return;
+  _scrollRaf = requestAnimationFrame(() => {
+    _scrollRaf = null;
+    _applyCanvasScrollHeight();
+  });
+}
+
+// Real, reported bug: this options panel routinely renders far down a page
+// that already has nav + hero + drop zone + file list above it, so at the
+// moment a PDF finishes loading, #ffCanvasScroll's render-time position
+// often leaves very little safe room before the sticky #mergeBtn — the box
+// then renders small BY DEFAULT (see _applyCanvasScrollHeight's own
+// safety-first comment), and a real portrait certificate looked like a
+// barely-usable sliver as a result, with nothing prompting the user to
+// scroll for more room. Proactively scroll the container to a fixed,
+// comfortable offset from the viewport top once the editor first opens —
+// same idea as a focused input scrolling itself into view — so the box is
+// already close to its maximum safe size by default, without the user
+// needing to discover they can scroll for more.
+function _positionCanvasForRoom() {
+  const el = id('ffCanvasScroll');
+  if (!el) return;
+  const top = el.getBoundingClientRect().top;
+  if (top > 80) window.scrollBy(0, top - 80);
+}
 
 // ── Public API ────────────────────────────────────────────────
 
@@ -97,6 +150,9 @@ export function hideFormFieldsOptions() {
   _fields = []; _fieldSeq = 0; _fieldType = 'text'; _hasExisting = false; _loading = false;
   _generation++;
   _container = _wrap = _canvas = _overlay = _countEl = _pageLabel = _btnPrev = _btnNext = null;
+  window.removeEventListener('scroll', _onWindowScrollForCanvasHeight);
+  _scrollHeightListenerBound = false;
+  if (_scrollRaf) { cancelAnimationFrame(_scrollRaf); _scrollRaf = null; }
 }
 
 export function getFormFieldsParams() {
@@ -159,6 +215,10 @@ async function _extractAndRender(file, container) {
     _bindEditorEvents();
     await _renderPage(1);
     _updateCount();
+    // Once, on initial open only — not on every prev/next page nav, which
+    // would be a jarring surprise scroll. See _positionCanvasForRoom's own
+    // comment for why.
+    _positionCanvasForRoom();
 
   } catch (err) {
     if (myGen !== _generation) return;
@@ -341,19 +401,24 @@ async function _renderPage(pageNum) {
     // page now scrolls WITHIN that fixed-size box instead of shrinking
     // sideways to avoid ever needing to scroll.
     //
-    // A flat "reserve N px" guess doesn't work here — this same options
-    // panel is embedded inside different page templates (the dedicated
-    // /add-form-fields/ page has real nav + hero copy + page-nav buttons
-    // above the canvas; a different host page could have more or less).
-    // Measure the ACTUAL space already consumed above the canvas via
-    // getBoundingClientRect() instead of guessing — real, dynamic per
-    // page, not a magic number that only happened to fit one template.
-    const scrollTop     = scrollEl?.getBoundingClientRect().top ?? 200;
-    const stickyReserve = 110; // #mergeBtn's real height + its sticky offset + a small margin
-    const maxCssHeight  = Math.max(220, (window.innerHeight || 800) - scrollTop - stickyReserve);
-    if (scrollEl) {
-      scrollEl.style.maxHeight = `${maxCssHeight}px`;
-      scrollEl.style.overflowY = 'auto';
+    // Real, reported follow-up bug: this used to compute max-height ONCE,
+    // at render time, from the space available at THAT scroll position —
+    // safe by construction (box bottom = renderTimeTop + (innerHeight -
+    // renderTimeTop - stickyReserve) = innerHeight - stickyReserve,
+    // regardless of renderTimeTop) but frozen there forever after. On this
+    // tool's own template (hint text + type toggle + page nav all sit
+    // above the canvas), the canvas can easily start most of the way down
+    // even a tall viewport, leaving very little room at render time — a
+    // real portrait certificate showed barely 1/4 of the page at once,
+    // permanently, even though scrolling down would have revealed plenty
+    // more room. Recomputing live on scroll (see _applyCanvasScrollHeight
+    // below) fixes this: the box grows as the user scrolls it up toward
+    // (or past) the viewport top, up to the full safe cap, instead of
+    // being stuck at whatever was available the instant the PDF rendered.
+    _applyCanvasScrollHeight();
+    if (!_scrollHeightListenerBound) {
+      window.addEventListener('scroll', _onWindowScrollForCanvasHeight, { passive: true });
+      _scrollHeightListenerBound = true;
     }
     let cssScale = Math.min(1, areaW / baseVp.width);
 
