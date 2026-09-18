@@ -356,6 +356,83 @@ await test('checkbox field type: select chip, place, save, verify two independen
   }
 });
 
+await test('Cyrillic field name survives sanitization + a real Unicode font (not WinAnsi Helvetica) backs the field', async () => {
+  // Project standing rule: any text-touching feature needs a Cyrillic/CJK
+  // test up front. This tool's _sanitizeFieldName (formFieldsWorker.js)
+  // strips control chars and replaces '.', so it's worth confirming
+  // directly that it doesn't also mangle non-ASCII text it has no reason to
+  // touch. Separately, confirm formFieldsWorker.js's own actual job — the
+  // font it embeds and hands to createTextField/addToPage — really is a
+  // Unicode-capable font (LiberationSans, per its own header comment), not
+  // one of pdf-lib's built-in WinAnsi-only StandardFonts.
+  //
+  // NOT tested here: whether a value LATER typed into this field (e.g. via
+  // this site's own Fill tool) renders correctly. That's a separate claim
+  // about a separate file — investigating it surfaced a real, unrelated bug
+  // in js/worker.js's Fill/Flatten field-appearance regeneration (uses
+  // StandardFonts.Helvetica unconditionally, which throws on Cyrillic/
+  // Greek/etc.), tracked and fixed separately, not part of this tool.
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  let cyrillicBuffer;
+  const CYRILLIC_NAME = 'Имя (Фамилия)';
+  try {
+    await page.addInitScript(BLOB_HOOK);
+    await page.goto(`${BASE_URL}/add-form-fields/`, { waitUntil: 'load', timeout: 30000 });
+    await page.setInputFiles('#fileInput', FLAT_PDF);
+    await page.waitForSelector('#ffCanvasWrap', { state: 'visible', timeout: 15000 });
+    const canvas = page.locator('#ffCanvas');
+    await canvas.waitFor({ state: 'visible' });
+    const box = await canvas.boundingBox();
+
+    await page.mouse.click(box.x + box.width * 0.25, box.y + box.height * 0.10);
+    await page.waitForTimeout(150);
+    // The name input is auto-focused+selected after placement — typing
+    // Cyrillic here exercises the same real keyboard-input path a real
+    // user would use, not a synthetic value assignment.
+    await page.keyboard.type(CYRILLIC_NAME);
+
+    await page.evaluate(() => { window.__blob = null; });
+    await page.click('#mergeBtn');
+    let result = null;
+    for (let i = 0; i < 60; i++) {
+      result = await page.evaluate(() => window.__blob ? { size: window.__blob.size } : null).catch(() => null);
+      if (result) break;
+      await page.waitForTimeout(500);
+    }
+    if (!result) throw new Error('processing did not complete in time');
+
+    const base64 = await page.evaluate(async () => {
+      const buf = await window.__blob.arrayBuffer();
+      let binary = '';
+      const bytes = new Uint8Array(buf);
+      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+      return btoa(binary);
+    });
+    cyrillicBuffer = Buffer.from(base64, 'base64');
+  } finally {
+    await context.close();
+  }
+
+  // Check #1 — the sanitizer didn't mangle a name it had no reason to touch
+  // (no control chars, no literal '.').
+  const pdf   = await PDFDocument.load(cyrillicBuffer);
+  const field = pdf.getForm().getTextField(CYRILLIC_NAME); // throws if the name doesn't match exactly
+  expect(field.getName()).toBe(CYRILLIC_NAME);
+  if (field.acroField.getWidgets().length < 1) throw new Error('Cyrillic-named field has no widget annotation');
+
+  // Check #2 — a real embedded Unicode font backs this field, not one of
+  // pdf-lib's 14 built-in StandardFonts. pdf-lib doesn't subset/rename an
+  // embedded font unless explicitly asked to (formFieldsWorker.js's
+  // `pdf.embedFont(fontBytes)` call passes no subset option), so the raw
+  // saved bytes should still carry the font's own name table entry.
+  const raw = cyrillicBuffer.toString('latin1');
+  if (!raw.includes('LiberationSans')) {
+    throw new Error('expected an embedded LiberationSans font in the saved PDF — found none. ' +
+      'A Cyrillic/Greek/Vietnamese value typed into this field later would have no working font to render with.');
+  }
+});
+
 await browser.close();
 
 console.log(`\n${'─'.repeat(40)}`);

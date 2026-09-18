@@ -47,13 +47,21 @@ import { t, tp }             from './i18n.js';
 
 const MAX_DIMENSION  = 4096;
 const DEFAULT_W_FRAC = 0.30;   // default placed-field width, as a fraction of page width
-const DEFAULT_H_PX   = 30;     // default placed-field height, in CSS px at render time
+// Both of these are in PDF POINTS (the page's own, fixed, render-independent
+// unit), not CSS px — deliberately. They're divided by _pageWPt/_pageHPt (the
+// current page's real point dimensions, captured in _renderPage) rather than
+// the canvas wrap's CSS pixel rect, so the same click-to-place action always
+// produces the same real-world field size in the saved PDF regardless of
+// what cssScale _renderPage happened to compute for the current viewport —
+// mobile vs desktop, a tall vs short window, a differently-sized page all
+// used to silently change the actual PDF-point size of a "24px" default.
+const DEFAULT_H_PT   = 30;     // default placed text-field height, in PDF points
 // Checkboxes are inherently small and square, unlike a text field that
 // needs width for typed content — WCAG 2.5.8's 24px comfort-target size
 // (same language already used for this in fillUI.js's own checkbox
-// rendering) is a sensible fixed default, converted to a page-width
-// fraction at placement time since the box itself is percentage-positioned.
-const DEFAULT_CHECKBOX_PX = 24;
+// rendering) is a sensible fixed default, expressed here as PDF points (see
+// above) rather than CSS px.
+const DEFAULT_CHECKBOX_PT = 24;
 const MIN_W_FRAC     = 0.04;
 const MIN_H_FRAC     = 0.015;
 
@@ -67,6 +75,7 @@ let _fieldType   = 'text'; // type the NEXT click will place — mirrors waterma
 let _hasExisting = false;
 let _loading     = false;
 let _generation  = 0;      // staleness guard, same pattern as fillUI.js/drawUI.js
+let _pageWPt = 0, _pageHPt = 0; // current page's own PDF-point size — see DEFAULT_H_PT above
 
 // DOM refs — set inside _buildEditorHTML/_bindEditorEvents each render
 let _container, _wrap, _canvas, _overlay, _countEl, _pageLabel, _btnPrev, _btnNext;
@@ -305,6 +314,8 @@ async function _renderPage(pageNum) {
     // (must match pdf-lib's unrotated page.getWidth()/getHeight() space,
     // which is what js/formFieldsWorker.js converts field fractions into).
     const baseVp       = page.getViewport({ scale: 1, rotation: 0 });
+    _pageWPt = baseVp.width;
+    _pageHPt = baseVp.height;
     const outputScale  = window.devicePixelRatio || 1;
     const scrollEl     = id('ffCanvasScroll');
     const areaW        = Math.max(280, (scrollEl?.clientWidth || 760) - 8);
@@ -417,15 +428,20 @@ function _placeFieldAtEvent(e) {
   const clickXFrac = (e.clientX - r.left) / r.width;
   const clickYFrac = (e.clientY - r.top)  / r.height;
 
-  // Checkboxes get a small square default (24px comfort-target, matching
+  // Checkboxes get a small square default (24pt comfort-target, matching
   // fillUI.js's own checkbox-sizing language) instead of the wide
   // text-field default — a 30%-page-width box would look absurd for a
-  // checkbox. wFrac/hFrac are computed from the SAME pixel size against
-  // the wrap's actual width/height so the box renders visually square in
-  // CSS px regardless of the page's own aspect ratio.
+  // checkbox. Divide by _pageWPt/_pageHPt (the page's own fixed PDF-point
+  // size, captured in _renderPage), NOT r.width/r.height (the CSS wrap
+  // rect) — the wrap rect scales with _renderPage's dynamic cssScale
+  // (viewport width, available scroll height, DPR all affect it), so
+  // dividing by it made the SAME click produce a different real-world PDF
+  // point size depending on what viewport happened to render the page.
+  // Dividing by the page's own point dimensions keeps the saved field size
+  // constant regardless of render viewport.
   const isCheckbox = _fieldType === 'checkbox';
-  const wFrac = isCheckbox ? DEFAULT_CHECKBOX_PX / r.width  : DEFAULT_W_FRAC;
-  const hFrac = isCheckbox ? DEFAULT_CHECKBOX_PX / r.height : DEFAULT_H_PX / r.height;
+  const wFrac = isCheckbox ? DEFAULT_CHECKBOX_PT / _pageWPt : DEFAULT_W_FRAC;
+  const hFrac = isCheckbox ? DEFAULT_CHECKBOX_PT / _pageHPt : DEFAULT_H_PT / _pageHPt;
 
   const xFrac = Math.min(Math.max(0, clickXFrac - wFrac / 2), Math.max(0, 1 - wFrac));
   const yFrac = Math.min(Math.max(0, clickYFrac - hFrac / 2), Math.max(0, 1 - hFrac));
@@ -466,6 +482,12 @@ function _startDrag(e, fieldId) {
   const startX = e.clientX, startY = e.clientY;
   const startXFrac = f.xFrac, startYFrac = f.yFrac;
   const el = _overlay.querySelector(`.ff-field-box[data-id="${fieldId}"]`);
+  // Pointer capture keeps move/up events targeted at this element even if a
+  // fast touch drag slips outside its bounds mid-gesture — window-level
+  // listeners still receive the events either way (capture affects the
+  // event's target, not whether it bubbles to window), so this is a pure
+  // reliability addition, not a change to the existing listener wiring.
+  if (el?.setPointerCapture && e.pointerId != null) el.setPointerCapture(e.pointerId);
 
   function onMove(ev) {
     const dxFrac = (ev.clientX - startX) / r.width;
@@ -474,7 +496,10 @@ function _startDrag(e, fieldId) {
     f.yFrac = Math.min(Math.max(0, startYFrac + dyFrac), Math.max(0, 1 - f.hFrac));
     if (el) { el.style.left = `${(f.xFrac * 100).toFixed(3)}%`; el.style.top = `${(f.yFrac * 100).toFixed(3)}%`; }
   }
-  function onUp() {
+  function onUp(ev) {
+    if (el?.releasePointerCapture && ev.pointerId != null) {
+      try { el.releasePointerCapture(ev.pointerId); } catch { /* already released */ }
+    }
     window.removeEventListener('pointermove', onMove);
     window.removeEventListener('pointerup',   onUp);
   }
@@ -491,15 +516,33 @@ function _startResize(e, fieldId) {
   const startX = e.clientX, startY = e.clientY;
   const startWFrac = f.wFrac, startHFrac = f.hFrac;
   const el = _overlay.querySelector(`.ff-field-box[data-id="${fieldId}"]`);
+  if (el?.setPointerCapture && e.pointerId != null) el.setPointerCapture(e.pointerId);
 
   function onMove(ev) {
     const dwFrac = (ev.clientX - startX) / r.width;
     const dhFrac = (ev.clientY - startY) / r.height;
-    f.wFrac = Math.min(Math.max(MIN_W_FRAC, startWFrac + dwFrac), Math.max(MIN_W_FRAC, 1 - f.xFrac));
-    f.hFrac = Math.min(Math.max(MIN_H_FRAC, startHFrac + dhFrac), Math.max(MIN_H_FRAC, 1 - f.yFrac));
+    if (f.type === 'checkbox') {
+      // Lock aspect ratio to 1:1 IN PDF POINTS (not in xFrac/yFrac space,
+      // which is only square when the page itself is square) — a real PDF
+      // viewer renders a checkbox's tick centered in whatever rect the
+      // widget was given, so a checkbox this tool lets the user stretch
+      // into a rectangle would misleadingly not match how it actually
+      // renders. Average the two drag deltas converted to points, then
+      // apply that single point delta to both dimensions so the box stays
+      // square in the units that actually matter (the saved PDF's points).
+      const dPt = (dwFrac * _pageWPt + dhFrac * _pageHPt) / 2;
+      f.wFrac = Math.min(Math.max(MIN_W_FRAC, (startWFrac * _pageWPt + dPt) / _pageWPt), Math.max(MIN_W_FRAC, 1 - f.xFrac));
+      f.hFrac = Math.min(Math.max(MIN_H_FRAC, (startHFrac * _pageHPt + dPt) / _pageHPt), Math.max(MIN_H_FRAC, 1 - f.yFrac));
+    } else {
+      f.wFrac = Math.min(Math.max(MIN_W_FRAC, startWFrac + dwFrac), Math.max(MIN_W_FRAC, 1 - f.xFrac));
+      f.hFrac = Math.min(Math.max(MIN_H_FRAC, startHFrac + dhFrac), Math.max(MIN_H_FRAC, 1 - f.yFrac));
+    }
     if (el) { el.style.width = `${(f.wFrac * 100).toFixed(3)}%`; el.style.height = `${(f.hFrac * 100).toFixed(3)}%`; }
   }
-  function onUp() {
+  function onUp(ev) {
+    if (el?.releasePointerCapture && ev.pointerId != null) {
+      try { el.releasePointerCapture(ev.pointerId); } catch { /* already released */ }
+    }
     window.removeEventListener('pointermove', onMove);
     window.removeEventListener('pointerup',   onUp);
   }
