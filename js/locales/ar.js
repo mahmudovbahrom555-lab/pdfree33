@@ -1198,7 +1198,10 @@ window.PDFREE_LOCALE = {
   formfields_has_fields_body:    'اكتشف PDFree حقول نموذج موجودة بالفعل في هذا الملف. ',
   formfields_has_fields_link:    'استخدام تعبئة PDF',
   formfields_has_fields_suffix:  ' لتعبئتها بدلاً من ذلك.',
-  formfields_click_hint:         'انقر في أي مكان على الصفحة لوضع حقل نصي. اسحب الحقل لتحريكه، أو زاويته لتغيير حجمه. اكتب اسمًا في الحقل لتسميته.',
+  formfields_click_hint:         'اختر نوع الحقل، ثم انقر في أي مكان على الصفحة لوضعه. اسحب الحقل لتحريكه، أو زاويته لتغيير حجمه. اكتب اسمًا في الحقل لوسمه.',
+  formfields_type_label:      'نوع الحقل',
+  formfields_type_text:       'نص',
+  formfields_type_checkbox:      'خانة اختيار',
   formfields_name_placeholder:   'اسم الحقل',
   formfields_delete_aria:        'حذف الحقل',
   formfields_drag_aria:          'سحب الحقل',
@@ -1207,6 +1210,7 @@ window.PDFREE_LOCALE = {
   formfields_error_prefix:       'تعذرت معالجة PDF: {msg}',
   formfields_default_field_name: 'حقل {n}',
 
+  formfields_default_checkbox_name: 'خانة اختيار {n}',
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'فشل تحميل عارض PDF. تحقق من اتصالك بالإنترنت.',
   draw_read_file_failed:       'تعذّرت قراءة الملف.',

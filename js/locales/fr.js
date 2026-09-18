@@ -1149,7 +1149,10 @@ window.PDFREE_LOCALE = {
   formfields_has_fields_body:    'PDFree a détecté des champs de formulaire existants dans ce PDF. ',
   formfields_has_fields_link:    'Utiliser Remplir PDF',
   formfields_has_fields_suffix:  ' pour les remplir à la place.',
-  formfields_click_hint:         "Cliquez n'importe où sur la page pour placer un champ de texte. Faites glisser un champ pour le déplacer, ou son coin pour le redimensionner. Tapez un nom dans le champ pour l'étiqueter.",
+  formfields_click_hint:         'Choisissez un type de champ, puis cliquez n\'importe où sur la page pour le placer. Faites glisser un champ pour le déplacer, ou son coin pour le redimensionner. Tapez un nom dans le champ pour l\'étiqueter.',
+  formfields_type_label:      'Type de champ',
+  formfields_type_text:       'Texte',
+  formfields_type_checkbox:      'Case à cocher',
   formfields_name_placeholder:   'Nom du champ',
   formfields_delete_aria:        'Supprimer le champ',
   formfields_drag_aria:          'Déplacer le champ',
@@ -1158,6 +1161,7 @@ window.PDFREE_LOCALE = {
   formfields_error_prefix:       'Impossible de traiter le PDF : {msg}',
   formfields_default_field_name: 'Champ {n}',
 
+  formfields_default_checkbox_name: 'Case {n}',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Échec du chargement du moteur de rendu PDF. Vérifiez votre connexion internet.',
   draw_read_file_failed:       'Impossible de lire le fichier.',

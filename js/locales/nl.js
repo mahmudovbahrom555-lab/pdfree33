@@ -1147,7 +1147,10 @@ window.PDFREE_LOCALE = {
   formfields_has_fields_body:    'PDFree heeft bestaande formuliervelden in deze PDF gedetecteerd. ',
   formfields_has_fields_link:    'PDF Invullen gebruiken',
   formfields_has_fields_suffix:  ' om ze in plaats daarvan in te vullen.',
-  formfields_click_hint:         'Klik ergens op de pagina om een tekstveld te plaatsen. Sleep een veld om het te verplaatsen, of de hoek ervan om het formaat te wijzigen. Typ een naam in het veld om het te labelen.',
+  formfields_click_hint:         'Kies een veldtype en klik dan ergens op de pagina om het te plaatsen. Sleep een veld om het te verplaatsen, of de hoek ervan om het formaat te wijzigen. Typ een naam in het veld om het te labelen.',
+  formfields_type_label:      'Veldtype',
+  formfields_type_text:       'Tekst',
+  formfields_type_checkbox:      'Selectievakje',
   formfields_name_placeholder:   'Veldnaam',
   formfields_delete_aria:        'Veld verwijderen',
   formfields_drag_aria:          'Veld verslepen',
@@ -1156,6 +1159,7 @@ window.PDFREE_LOCALE = {
   formfields_error_prefix:       'Kan PDF niet verwerken: {msg}',
   formfields_default_field_name: 'Veld {n}',
 
+  formfields_default_checkbox_name: 'Selectievakje {n}',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Laden van PDF-renderer mislukt. Controleer je internetverbinding.',
   draw_read_file_failed:       'Kan het bestand niet lezen.',

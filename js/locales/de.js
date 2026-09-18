@@ -1150,7 +1150,10 @@ window.PDFREE_LOCALE = {
   formfields_has_fields_body:    'PDFree hat in diesem PDF bereits vorhandene Formularfelder erkannt. ',
   formfields_has_fields_link:    'PDF Ausfüllen verwenden',
   formfields_has_fields_suffix:  ' um sie stattdessen auszufüllen.',
-  formfields_click_hint:         'Klicke auf die Seite, um ein Textfeld zu platzieren. Ziehe ein Feld, um es zu verschieben, oder seine Ecke, um es zu skalieren. Tippe einen Namen in das Feld, um es zu beschriften.',
+  formfields_click_hint:         'Wähle einen Feldtyp aus und klicke dann auf die Seite, um ihn zu platzieren. Ziehe ein Feld, um es zu verschieben, oder seine Ecke, um es zu skalieren. Tippe einen Namen in das Feld, um es zu beschriften.',
+  formfields_type_label:      'Feldtyp',
+  formfields_type_text:       'Text',
+  formfields_type_checkbox:      'Kontrollkästchen',
   formfields_name_placeholder:   'Feldname',
   formfields_delete_aria:        'Feld löschen',
   formfields_drag_aria:          'Feld verschieben',
@@ -1159,6 +1162,7 @@ window.PDFREE_LOCALE = {
   formfields_error_prefix:       'PDF konnte nicht verarbeitet werden: {msg}',
   formfields_default_field_name: 'Feld {n}',
 
+  formfields_default_checkbox_name: 'Kontrollkästchen {n}',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF-Renderer konnte nicht geladen werden. Überprüfe deine Internetverbindung.',
   draw_read_file_failed:       'Datei konnte nicht gelesen werden.',

@@ -1147,7 +1147,10 @@ window.PDFREE_LOCALE = {
   formfields_has_fields_body:    'PDFree wykrył istniejące pola formularza w tym PDF. ',
   formfields_has_fields_link:    'Użyj Wypełnij PDF',
   formfields_has_fields_suffix:  ', aby je zamiast tego wypełnić.',
-  formfields_click_hint:         'Kliknij w dowolnym miejscu strony, aby umieścić pole tekstowe. Przeciągnij pole, aby je przesunąć, lub jego róg, aby zmienić rozmiar. Wpisz nazwę w polu, aby je oznaczyć.',
+  formfields_click_hint:         'Wybierz typ pola, a następnie kliknij dowolne miejsce na stronie, aby je umieścić. Przeciągnij pole, aby je przenieść, lub jego róg, aby zmienić rozmiar. Wpisz nazwę w polu, aby je oznaczyć.',
+  formfields_type_label:      'Typ pola',
+  formfields_type_text:       'Tekst',
+  formfields_type_checkbox:      'Pole wyboru',
   formfields_name_placeholder:   'Nazwa pola',
   formfields_delete_aria:        'Usuń pole',
   formfields_drag_aria:          'Przeciągnij pole',
@@ -1156,6 +1159,7 @@ window.PDFREE_LOCALE = {
   formfields_error_prefix:       'Nie można przetworzyć PDF: {msg}',
   formfields_default_field_name: 'Pole {n}',
 
+  formfields_default_checkbox_name: 'Pole wyboru {n}',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Nie udało się załadować renderera PDF. Sprawdź połączenie internetowe.',
   draw_read_file_failed:       'Nie można odczytać pliku.',

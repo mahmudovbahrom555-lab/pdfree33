@@ -1196,7 +1196,10 @@ window.PDFREE_LOCALE = {
   formfields_has_fields_body:    'PDFree 检测到此 PDF 中已存在表单字段。',
   formfields_has_fields_link:    '使用填写 PDF 表单',
   formfields_has_fields_suffix:  '来填写它们。',
-  formfields_click_hint:         '点击页面任意位置以放置文本字段。拖动字段以移动，拖动其角部以调整大小。在字段中输入名称以标注。',
+  formfields_click_hint:         '选择字段类型，然后点击页面任意位置放置该字段。拖动字段可以移动它，拖动其边角可以调整大小。在字段中输入名称即可为其添加标签。',
+  formfields_type_label:      '字段类型',
+  formfields_type_text:       '文本',
+  formfields_type_checkbox:      '复选框',
   formfields_name_placeholder:   '字段名称',
   formfields_delete_aria:        '删除字段',
   formfields_drag_aria:          '拖动字段',
@@ -1205,6 +1208,7 @@ window.PDFREE_LOCALE = {
   formfields_error_prefix:       '无法处理 PDF：{msg}',
   formfields_default_field_name: '字段 {n}',
 
+  formfields_default_checkbox_name: '复选框 {n}',
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'PDF 渲染器加载失败。请检查您的网络连接。',
   draw_read_file_failed:       '无法读取此文件。',

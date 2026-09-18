@@ -1149,7 +1149,10 @@ window.PDFREE_LOCALE = {
   formfields_has_fields_body:    'O PDFree detectou campos de formulário existentes neste PDF. ',
   formfields_has_fields_link:    'Usar Preencher PDF',
   formfields_has_fields_suffix:  ' para preenchê-los em vez disso.',
-  formfields_click_hint:         'Clique em qualquer lugar da página para posicionar um campo de texto. Arraste um campo para movê-lo, ou seu canto para redimensioná-lo. Digite um nome no campo para rotulá-lo.',
+  formfields_click_hint:         'Escolha um tipo de campo e depois clique em qualquer lugar da página para posicioná-lo. Arraste um campo para movê-lo, ou seu canto para redimensioná-lo. Digite um nome no campo para rotulá-lo.',
+  formfields_type_label:      'Tipo de campo',
+  formfields_type_text:       'Texto',
+  formfields_type_checkbox:      'Caixa de seleção',
   formfields_name_placeholder:   'Nome do campo',
   formfields_delete_aria:        'Excluir campo',
   formfields_drag_aria:          'Arrastar campo',
@@ -1158,6 +1161,7 @@ window.PDFREE_LOCALE = {
   formfields_error_prefix:       'Não foi possível processar o PDF: {msg}',
   formfields_default_field_name: 'Campo {n}',
 
+  formfields_default_checkbox_name: 'Caixa {n}',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Falha ao carregar o renderizador de PDF. Verifique sua conexão com a internet.',
   draw_read_file_failed:       'Não foi possível ler o arquivo.',

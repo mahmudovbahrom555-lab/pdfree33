@@ -3,12 +3,17 @@
 
 // ============================================================
 //  formFieldsUI.js — "Add Form Fields" tool: turn a flat/scanned PDF
-//  into one with real, fillable AcroForm text fields.
+//  into one with real, fillable AcroForm fields.
 //
-//  MVP scope (see js/formFieldsWorker.js's own header for the write side):
-//    - Text fields only (checkbox/radio/dropdown are a follow-up)
-//    - Single field TYPE, click-to-place, drag to move, corner-drag to
-//      resize, inline name input, delete button
+//  Scope (see js/formFieldsWorker.js's own header for the write side):
+//    - Text and checkbox fields (radio groups/dropdowns are a follow-up —
+//      those need real additional UI concepts this one doesn't: a shared
+//      group name spanning multiple boxes, an options-list editor)
+//    - A field-type chip toggle selects what the NEXT click places; once
+//      placed a field's type is fixed (delete + re-place to change it)
+//    - Click-to-place, drag to move, corner-drag to resize, inline name
+//      input, delete button — all fully type-agnostic, shared by both
+//      field types unchanged
 //    - Multi-page supported (page nav, like drawUI.js/fillUI.js)
 //    - A PDF that already has AcroForm fields is redirected to the
 //      existing Fill tool instead of duplicating that tool's job — this
@@ -37,11 +42,18 @@
 import { id, esc }           from './utils.js';
 import { loadPdfJs }         from './pdf2jpgUI.js';
 import { showToast, setButtonDisabled } from './ui.js';
+import { chipGroup, group }  from './uiComponents.js';
 import { t, tp }             from './i18n.js';
 
 const MAX_DIMENSION  = 4096;
 const DEFAULT_W_FRAC = 0.30;   // default placed-field width, as a fraction of page width
 const DEFAULT_H_PX   = 30;     // default placed-field height, in CSS px at render time
+// Checkboxes are inherently small and square, unlike a text field that
+// needs width for typed content — WCAG 2.5.8's 24px comfort-target size
+// (same language already used for this in fillUI.js's own checkbox
+// rendering) is a sensible fixed default, converted to a page-width
+// fraction at placement time since the box itself is percentage-positioned.
+const DEFAULT_CHECKBOX_PX = 24;
 const MIN_W_FRAC     = 0.04;
 const MIN_H_FRAC     = 0.015;
 
@@ -49,8 +61,9 @@ const MIN_H_FRAC     = 0.015;
 let _pdfDoc      = null;
 let _currentPage = 1;
 let _pageCount   = 0;
-let _fields      = [];     // { id, page, name, xFrac, yFrac, wFrac, hFrac }
+let _fields      = [];     // { id, page, name, type: 'text'|'checkbox', xFrac, yFrac, wFrac, hFrac }
 let _fieldSeq    = 0;
+let _fieldType   = 'text'; // type the NEXT click will place — mirrors watermarkUI.js's _kind
 let _hasExisting = false;
 let _loading     = false;
 let _generation  = 0;      // staleness guard, same pattern as fillUI.js/drawUI.js
@@ -72,7 +85,7 @@ export function hideFormFieldsOptions() {
   const el = id('formFieldsOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
   _pdfDoc = null; _currentPage = 1; _pageCount = 0;
-  _fields = []; _fieldSeq = 0; _hasExisting = false; _loading = false;
+  _fields = []; _fieldSeq = 0; _fieldType = 'text'; _hasExisting = false; _loading = false;
   _generation++;
   _container = _wrap = _canvas = _overlay = _countEl = _pageLabel = _btnPrev = _btnNext = null;
 }
@@ -83,7 +96,7 @@ export function getFormFieldsParams() {
     loading:           _loading,
     hasExistingFields: _hasExisting,
     fields: _fields.map(f => ({
-      page: f.page, name: f.name,
+      page: f.page, name: f.name, type: f.type,
       xFrac: f.xFrac, yFrac: f.yFrac, wFrac: f.wFrac, hFrac: f.hFrac,
     })),
   };
@@ -188,6 +201,12 @@ function _buildEditorHTML() {
       <p style="margin:0 0 12px;font-size:13px;color:var(--text3);line-height:1.5;">
         ${esc(t('formfields_click_hint'))}
       </p>
+      <div style="max-width:320px;margin:0 auto 14px;">
+        ${group(t('formfields_type_label'), chipGroup('ffType', [
+          { value: 'text',     label: t('formfields_type_text') },
+          { value: 'checkbox', label: t('formfields_type_checkbox') },
+        ], _fieldType, t('formfields_type_label')))}
+      </div>
       <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:10px;">
         <button type="button" id="ffPrevBtn" aria-label="${esc(t('org_lightbox_prev'))}" style="
           width:36px;height:36px;border-radius:8px;border:1.5px solid var(--border);
@@ -218,6 +237,20 @@ function _fieldBoxHTML(f) {
   // same pattern already used here for delete (top-right) and resize
   // (bottom-right) — so it's always a real, reachable target regardless of
   // how small the field box itself gets resized to.
+  // Checkbox fields default to a small (24px) square box — real PDF
+  // checkbox widgets are just the tick square, the descriptive label is
+  // normally separate page text, not part of the widget itself — so
+  // there's rarely room for a usable inline name input at default size.
+  // Rather than invent a second box layout, this prepends a small glyph
+  // and reuses the exact same name-input/drag/resize/delete structure
+  // text fields already use: the auto-generated name ("Checkbox 1", …)
+  // works even if the input itself is too cramped to interact with at
+  // default size, and dragging the resize handle bigger (already-existing
+  // functionality, zero special-casing needed) makes the same input
+  // usable for renaming, same as it always has been for text fields.
+  const checkboxGlyph = f.type === 'checkbox'
+    ? `<span aria-hidden="true" style="flex-shrink:0;font-size:13px;line-height:1;padding-left:4px;color:#123;">☐</span>`
+    : '';
   return `<div class="ff-field-box" data-id="${f.id}" style="
       position:absolute;box-sizing:border-box;
       left:${(f.xFrac * 100).toFixed(3)}%; top:${(f.yFrac * 100).toFixed(3)}%;
@@ -230,6 +263,7 @@ function _fieldBoxHTML(f) {
         border-radius:50%;border:2px solid #fff;background:#2D7A4F;color:#fff;
         font-size:12px;line-height:1;cursor:move;display:flex;align-items:center;justify-content:center;
         touch-action:none;">⠿</div>
+    ${checkboxGlyph}
     <input class="ff-name-input" data-id="${f.id}" value="${esc(f.name)}"
       placeholder="${esc(t('formfields_name_placeholder'))}"
       style="flex:1;min-width:0;height:100%;box-sizing:border-box;padding:0 22px 0 6px;
@@ -351,6 +385,17 @@ function _bindEditorEvents() {
     if (_currentPage < _pageCount) _renderPage(_currentPage + 1);
   });
 
+  // Only affects the NEXT placed field — no re-render needed, same as
+  // watermarkUI.js's wmKind handler for a mode that doesn't change
+  // anything already on screen.
+  _container.addEventListener('change', e => {
+    if (e.target.name === 'ffType') {
+      _fieldType = e.target.value;
+      _container.querySelectorAll('[data-name="ffType"]').forEach(el =>
+        el.classList.toggle('j2p-chip--active', el.dataset.value === _fieldType));
+    }
+  });
+
   _overlay.addEventListener('pointerdown', _onOverlayPointerDown);
   _overlay.addEventListener('click', e => {
     const del = e.target.closest('.ff-delete-btn');
@@ -371,16 +416,27 @@ function _placeFieldAtEvent(e) {
   const r = _wrapRect();
   const clickXFrac = (e.clientX - r.left) / r.width;
   const clickYFrac = (e.clientY - r.top)  / r.height;
-  const hFrac = DEFAULT_H_PX / r.height;
 
-  const xFrac = Math.min(Math.max(0, clickXFrac - DEFAULT_W_FRAC / 2), Math.max(0, 1 - DEFAULT_W_FRAC));
+  // Checkboxes get a small square default (24px comfort-target, matching
+  // fillUI.js's own checkbox-sizing language) instead of the wide
+  // text-field default — a 30%-page-width box would look absurd for a
+  // checkbox. wFrac/hFrac are computed from the SAME pixel size against
+  // the wrap's actual width/height so the box renders visually square in
+  // CSS px regardless of the page's own aspect ratio.
+  const isCheckbox = _fieldType === 'checkbox';
+  const wFrac = isCheckbox ? DEFAULT_CHECKBOX_PX / r.width  : DEFAULT_W_FRAC;
+  const hFrac = isCheckbox ? DEFAULT_CHECKBOX_PX / r.height : DEFAULT_H_PX / r.height;
+
+  const xFrac = Math.min(Math.max(0, clickXFrac - wFrac / 2), Math.max(0, 1 - wFrac));
   const yFrac = Math.min(Math.max(0, clickYFrac - hFrac / 2), Math.max(0, 1 - hFrac));
 
   _fieldSeq++;
   const field = {
-    id: _fieldSeq, page: _currentPage,
-    name: t('formfields_default_field_name', { n: _fieldSeq }),
-    xFrac, yFrac, wFrac: DEFAULT_W_FRAC, hFrac,
+    id: _fieldSeq, page: _currentPage, type: _fieldType,
+    name: isCheckbox
+      ? t('formfields_default_checkbox_name', { n: _fieldSeq })
+      : t('formfields_default_field_name', { n: _fieldSeq }),
+    xFrac, yFrac, wFrac, hFrac,
   };
   _fields.push(field);
   _renderOverlayFields();

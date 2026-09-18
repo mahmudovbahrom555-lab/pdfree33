@@ -28,7 +28,7 @@
 // ============================================================
 
 import { chromium } from 'playwright';
-import { PDFDocument, PDFTextField } from 'pdf-lib';
+import { PDFDocument, PDFTextField, PDFCheckBox } from 'pdf-lib';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -86,20 +86,24 @@ await test('click-place-name-save produces a downloaded PDF', async () => {
 
     // Place two fields at two different spots on the page via REAL clicks
     // on the REAL rendered canvas overlay (not a synthetic event dispatch).
-    // Both points sit in the canvas's upper half — clear of the sticky
-    // #mergeBtn zone at the viewport bottom (see formFieldsUI.js's own
-    // _renderPage height-cap comment: the fix meaningfully shrinks that
-    // overlap but a tall page can still have its LOWEST portion pass
-    // behind the button during scroll, same as any sticky-CTA-over-tall-
-    // content layout — confirmed via document.elementFromPoint() sweep
-    // across canvas fractions 0.1..0.9; 0.1-0.5 were consistently clear).
-    await page.mouse.click(box.x + box.width * 0.25, box.y + box.height * 0.15);
+    // Safe-zone fractions re-swept after the field-type toolbar was added
+    // (that toolbar pushes the canvas further down the page, shrinking the
+    // room above the sticky #mergeBtn — see formFieldsUI.js's own
+    // _renderPage height-cap comment): a fresh document.elementFromPoint()
+    // sweep across 0.05..0.90 at default Playwright viewport (1280×720)
+    // found 0.20-0.40 now land on #mergeBtn, while 0.05-0.15 and 0.45-0.50
+    // stay clear — 0.10/0.50 used here, one from each confirmed-safe band.
+    await page.mouse.click(box.x + box.width * 0.25, box.y + box.height * 0.10);
     await page.waitForTimeout(150);
     // The first field's name input is auto-focused+selected after
     // placement (see formFieldsUI.js's _placeFieldAtEvent) — type over it.
+    // Focusing an input can trigger the browser to scroll it into view,
+    // shifting the canvas's on-screen position — re-query the bounding box
+    // fresh before the second click rather than reusing the pre-focus one.
     await page.keyboard.type('Full Name');
 
-    await page.mouse.click(box.x + box.width * 0.25, box.y + box.height * 0.35);
+    const box2 = await canvas.boundingBox();
+    await page.mouse.click(box2.x + box2.width * 0.25, box2.y + box2.height * 0.50);
     await page.waitForTimeout(150);
     await page.keyboard.type('Email Address');
 
@@ -240,6 +244,114 @@ await test('independent check #2 — this site\'s own real Fill tool detects the
     expect(typed).toBe('Ada Lovelace');
   } finally {
     await context.close();
+    fs.unlinkSync(tmpPath);
+  }
+});
+
+await test('checkbox field type: select chip, place, save, verify two independent ways', async () => {
+  // Follow-up to the tool's initial text-only MVP: a field-type chip
+  // toggle ('Text'/'Checkbox') now selects what the NEXT click places.
+  // Same two-independent-check verification standard as the text-field
+  // flow above — this isn't a lesser-verified follow-up.
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  let cbBuffer;
+  try {
+    await page.addInitScript(BLOB_HOOK);
+    await page.goto(`${BASE_URL}/add-form-fields/`, { waitUntil: 'load', timeout: 30000 });
+    await page.setInputFiles('#fileInput', FLAT_PDF);
+    await page.waitForSelector('#ffCanvasWrap', { state: 'visible', timeout: 15000 });
+    const canvas = page.locator('#ffCanvas');
+    await canvas.waitFor({ state: 'visible' });
+    const box = await canvas.boundingBox();
+
+    // Select the Checkbox chip before placing — same click-target pattern
+    // as chip groups elsewhere in this codebase (label[data-name][data-value]).
+    // Click fractions: see the text-only test above for the confirmed-safe-
+    // zone sweep this reuses (0.10/0.50 clear the sticky #mergeBtn zone).
+    await page.click('label[data-name="ffType"][data-value="checkbox"]');
+    await page.mouse.click(box.x + box.width * 0.25, box.y + box.height * 0.10);
+    await page.waitForTimeout(150);
+    await page.keyboard.type('Agree To Terms');
+
+    // Also place a text field in the same run, to confirm both types
+    // coexist correctly and the chip toggle doesn't leak state between
+    // placements. Re-query the bounding box fresh — same reasoning as the
+    // text-only test above (focusing the first field's input can scroll
+    // the canvas, invalidating a cached box).
+    await page.click('label[data-name="ffType"][data-value="text"]');
+    const box2 = await canvas.boundingBox();
+    await page.mouse.click(box2.x + box2.width * 0.25, box2.y + box2.height * 0.50);
+    await page.waitForTimeout(150);
+    await page.keyboard.type('Comments');
+
+    expect(await page.locator('.ff-field-box').count()).toBe(2);
+
+    await page.evaluate(() => { window.__blob = null; });
+    await page.click('#mergeBtn');
+    let result = null;
+    for (let i = 0; i < 60; i++) {
+      result = await page.evaluate(() => window.__blob ? { size: window.__blob.size } : null).catch(() => null);
+      if (result) break;
+      await page.waitForTimeout(500);
+    }
+    if (!result) throw new Error('processing did not complete in time');
+
+    const base64 = await page.evaluate(async () => {
+      const buf = await window.__blob.arrayBuffer();
+      let binary = '';
+      const bytes = new Uint8Array(buf);
+      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+      return btoa(binary);
+    });
+    cbBuffer = Buffer.from(base64, 'base64');
+  } finally {
+    await context.close();
+  }
+
+  // Independent check #1 — plain-Node pdf-lib.
+  const pdf    = await PDFDocument.load(cbBuffer);
+  const fields = pdf.getForm().getFields();
+  expect(fields.length).toBe(2);
+
+  const cbField = fields.find(f => f.getName() === 'Agree To Terms');
+  if (!cbField) throw new Error('checkbox field "Agree To Terms" not found in saved PDF');
+  if (!(cbField instanceof PDFCheckBox)) {
+    throw new Error(`Expected PDFCheckBox, got ${cbField.constructor.name}`);
+  }
+  if (cbField.isChecked()) throw new Error('expected a freshly-placed checkbox to default to unchecked');
+
+  const textField = fields.find(f => f.getName() === 'Comments');
+  if (!textField) throw new Error('text field "Comments" not found in saved PDF');
+  if (!(textField instanceof PDFTextField)) {
+    throw new Error(`Expected the other field to still be PDFTextField, got ${textField.constructor.name}`);
+  }
+
+  // Independent check #2 — the site's own real Fill tool.
+  const tmpPath = path.join(__dirname, '..', 'fixtures', '_e2e_formfields_checkbox_output.pdf');
+  const fs = await import('fs');
+  fs.writeFileSync(tmpPath, cbBuffer);
+  const context2 = await browser.newContext({ serviceWorkers: 'block' });
+  const page2 = await context2.newPage();
+  try {
+    await page2.goto(`${BASE_URL}/fill/`, { waitUntil: 'load', timeout: 30000 });
+    await page2.setInputFiles('#fileInput', tmpPath);
+    await page2.waitForSelector('#fillOptions input[data-field-name]', { state: 'visible', timeout: 15000 });
+
+    const checkboxInput = page2.locator('#fillOptions input[type="checkbox"][data-field-name="Agree To Terms"]');
+    await checkboxInput.waitFor({ state: 'visible', timeout: 10000 });
+    // Fill's own UI must render this as a REAL checkbox input, not a text
+    // box — proves the saved PDF is a standards-shaped AcroForm checkbox
+    // widget another independent tool correctly reads as one.
+    const inputType = await checkboxInput.evaluate(el => el.type);
+    expect(inputType).toBe('checkbox');
+
+    const textInput = page2.locator('#fillOptions input[data-field-name="Comments"]');
+    await textInput.waitFor({ state: 'visible' });
+    const textInputType = await textInput.evaluate(el => el.type);
+    if (textInputType === 'checkbox') throw new Error('the text field was mis-detected as a checkbox');
+  } finally {
+    await context2.close();
     fs.unlinkSync(tmpPath);
   }
 });

@@ -1148,7 +1148,10 @@ window.PDFREE_LOCALE = {
   formfields_has_fields_body:    'PDFree mendeteksi kolom formulir yang sudah ada di PDF ini. ',
   formfields_has_fields_link:    'Gunakan Isi Formulir PDF',
   formfields_has_fields_suffix:  ' untuk mengisinya.',
-  formfields_click_hint:         'Klik di mana saja pada halaman untuk menempatkan kolom teks. Seret kolom untuk memindahkannya, atau sudutnya untuk mengubah ukuran. Ketik nama pada kolom untuk memberi label.',
+  formfields_click_hint:         'Pilih jenis kolom, lalu klik di mana saja pada halaman untuk menempatkannya. Seret kolom untuk memindahkannya, atau sudutnya untuk mengubah ukurannya. Ketik nama di kolom untuk memberinya label.',
+  formfields_type_label:      'Jenis kolom',
+  formfields_type_text:       'Teks',
+  formfields_type_checkbox:      'Kotak centang',
   formfields_name_placeholder:   'Nama kolom',
   formfields_delete_aria:        'Hapus kolom',
   formfields_drag_aria:          'Geser kolom',
@@ -1157,6 +1160,7 @@ window.PDFREE_LOCALE = {
   formfields_error_prefix:       'Tidak dapat memproses PDF: {msg}',
   formfields_default_field_name: 'Kolom {n}',
 
+  formfields_default_checkbox_name: 'Kotak Centang {n}',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Gagal memuat perender PDF. Periksa koneksi internet Anda.',
   draw_read_file_failed:       'Tidak dapat membaca file.',

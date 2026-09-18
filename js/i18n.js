@@ -1176,7 +1176,10 @@ export const EN = {
   formfields_has_fields_body:    'PDFree detected existing form fields in this PDF. ',
   formfields_has_fields_link:    'Use Fill PDF',
   formfields_has_fields_suffix:  ' instead to fill them in.',
-  formfields_click_hint:         'Click anywhere on the page to place a text field. Drag a field to move it, or its corner to resize it. Type a name into the field to label it.',
+  formfields_click_hint:         'Choose a field type, then click anywhere on the page to place it. Drag a field to move it, or its corner to resize it. Type a name into the field to label it.',
+  formfields_type_label:         'Field type',
+  formfields_type_text:          'Text',
+  formfields_type_checkbox:      'Checkbox',
   formfields_name_placeholder:   'Field name',
   formfields_delete_aria:        'Delete field',
   formfields_drag_aria:          'Drag field',
@@ -1184,6 +1187,7 @@ export const EN = {
   formfields_count_many:         '{n} fields placed',
   formfields_error_prefix:       'Could not process PDF: {msg}',
   formfields_default_field_name: 'Field {n}',
+  formfields_default_checkbox_name: 'Checkbox {n}',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'Failed to load PDF renderer. Check your internet connection.',

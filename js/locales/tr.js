@@ -1147,7 +1147,10 @@ window.PDFREE_LOCALE = {
   formfields_has_fields_body:    "PDFree bu PDF'de mevcut form alanları algıladı. ",
   formfields_has_fields_link:    'PDF Doldur Kullan',
   formfields_has_fields_suffix:  ' ile bunun yerine doldurun.',
-  formfields_click_hint:         'Bir metin alanı yerleştirmek için sayfada herhangi bir yere tıklayın. Taşımak için bir alanı, yeniden boyutlandırmak için köşesini sürükleyin. Etiketlemek için alana bir ad yazın.',
+  formfields_click_hint:         'Bir alan türü seçin, ardından yerleştirmek için sayfada herhangi bir yere tıklayın. Taşımak için bir alanı, yeniden boyutlandırmak için köşesini sürükleyin. Etiketlemek için alana bir ad yazın.',
+  formfields_type_label:      'Alan türü',
+  formfields_type_text:       'Metin',
+  formfields_type_checkbox:      'Onay kutusu',
   formfields_name_placeholder:   'Alan adı',
   formfields_delete_aria:        'Alanı sil',
   formfields_drag_aria:          'Alanı sürükle',
@@ -1156,6 +1159,7 @@ window.PDFREE_LOCALE = {
   formfields_error_prefix:       'PDF işlenemedi: {msg}',
   formfields_default_field_name: 'Alan {n}',
 
+  formfields_default_checkbox_name: 'Onay Kutusu {n}',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF işleyicisi yüklenemedi. İnternet bağlantınızı kontrol edin.',
   draw_read_file_failed:       'Dosya okunamadı.',

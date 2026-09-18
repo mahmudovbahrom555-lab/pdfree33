@@ -1148,7 +1148,10 @@ window.PDFREE_LOCALE = {
   formfields_has_fields_body:    'PDFree đã phát hiện các trường biểu mẫu có sẵn trong PDF này. ',
   formfields_has_fields_link:    'Dùng Điền Form PDF',
   formfields_has_fields_suffix:  ' để điền chúng thay thế.',
-  formfields_click_hint:         'Nhấp vào bất kỳ đâu trên trang để đặt một trường văn bản. Kéo trường để di chuyển, hoặc góc của nó để đổi kích thước. Nhập tên vào trường để gắn nhãn.',
+  formfields_click_hint:         'Chọn loại trường, sau đó nhấp vào bất kỳ đâu trên trang để đặt trường đó. Kéo một trường để di chuyển, hoặc kéo góc của nó để đổi kích thước. Nhập tên vào trường để gắn nhãn cho nó.',
+  formfields_type_label:      'Loại trường',
+  formfields_type_text:       'Văn bản',
+  formfields_type_checkbox:      'Hộp kiểm',
   formfields_name_placeholder:   'Tên trường',
   formfields_delete_aria:        'Xóa trường',
   formfields_drag_aria:          'Kéo trường',
@@ -1157,6 +1160,7 @@ window.PDFREE_LOCALE = {
   formfields_error_prefix:       'Không thể xử lý PDF: {msg}',
   formfields_default_field_name: 'Trường {n}',
 
+  formfields_default_checkbox_name: 'Hộp kiểm {n}',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Không thể tải trình kết xuất PDF. Kiểm tra kết nối internet của bạn.',
   draw_read_file_failed:       'Không thể đọc tệp.',

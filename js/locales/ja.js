@@ -1150,7 +1150,10 @@ window.PDFREE_LOCALE = {
   formfields_has_fields_body:    'PDFreeはこのPDFに既存のフォームフィールドを検出しました。',
   formfields_has_fields_link:    'PDFに記入を使用',
   formfields_has_fields_suffix:  'して、代わりに入力してください。',
-  formfields_click_hint:         'ページ上の任意の場所をクリックしてテキストフィールドを配置します。フィールドをドラッグして移動するか、角をドラッグしてサイズを変更します。フィールドに名前を入力してラベルを付けます。',
+  formfields_click_hint:         'フィールドの種類を選んでから、ページ上の任意の場所をクリックして配置します。フィールドをドラッグして移動するか、角をドラッグしてサイズを変更します。フィールドに名前を入力してラベルを付けます。',
+  formfields_type_label:      'フィールドの種類',
+  formfields_type_text:       'テキスト',
+  formfields_type_checkbox:      'チェックボックス',
   formfields_name_placeholder:   'フィールド名',
   formfields_delete_aria:        'フィールドを削除',
   formfields_drag_aria:          'フィールドをドラッグ',
@@ -1159,6 +1162,7 @@ window.PDFREE_LOCALE = {
   formfields_error_prefix:       'PDFを処理できませんでした: {msg}',
   formfields_default_field_name: 'フィールド {n}',
 
+  formfields_default_checkbox_name: 'チェックボックス {n}',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDFレンダラーの読み込みに失敗しました。インターネット接続を確認してください。',
   draw_read_file_failed:       'ファイルを読み込めませんでした。',

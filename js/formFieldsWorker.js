@@ -38,7 +38,8 @@
 //  formFieldsUI.js's own header comment.
 //
 //  Message contract:
-//    in  → { fileBuffer: ArrayBuffer, fields: [{page,name,xFrac,yFrac,wFrac,hFrac}], fontBytes: ArrayBuffer }
+//    in  → { fileBuffer: ArrayBuffer, fields: [{page,name,type,xFrac,yFrac,wFrac,hFrac}], fontBytes: ArrayBuffer }
+//        — type is 'text' (default, createTextField) or 'checkbox' (createCheckBox, no font needed)
 //    out → { type: 'progress', value, label }
 //        | { type: 'done', result: ArrayBuffer, pageCount, fieldCount }
 //        | { type: 'error', message }
@@ -119,14 +120,31 @@ self.onmessage = async (e) => {
       const name = _sanitizeFieldName(f.name, i, used);
 
       try {
-        const tf = form.createTextField(name);
-        tf.addToPage(page, {
-          x: ptX, y: ptY, width: ptW, height: ptH,
-          font,
-          borderWidth:     1,
-          borderColor:     rgb(0.55, 0.55, 0.55),
-          backgroundColor: rgb(1, 1, 1),
-        });
+        if (f.type === 'checkbox') {
+          // No font option — PDFCheckBox renders its tick via a built-in
+          // appearance stream, not text, so there's nothing to embed for
+          // this branch (verified directly against pdf-lib's own source
+          // before relying on it: PDFCheckBox.addToPage doesn't accept a
+          // font option at all). addToPage always creates the widget
+          // unchecked — matches placing a blank, not-yet-ticked field on a
+          // form, which is the only behavior this tool needs.
+          const cb = form.createCheckBox(name);
+          cb.addToPage(page, {
+            x: ptX, y: ptY, width: ptW, height: ptH,
+            borderWidth:     1,
+            borderColor:     rgb(0.55, 0.55, 0.55),
+            backgroundColor: rgb(1, 1, 1),
+          });
+        } else {
+          const tf = form.createTextField(name);
+          tf.addToPage(page, {
+            x: ptX, y: ptY, width: ptW, height: ptH,
+            font,
+            borderWidth:     1,
+            borderColor:     rgb(0.55, 0.55, 0.55),
+            backgroundColor: rgb(1, 1, 1),
+          });
+        }
         added++;
       } catch {
         // A single unplaceable field (e.g. a pathological name pdf-lib still

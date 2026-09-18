@@ -1149,7 +1149,10 @@ window.PDFREE_LOCALE = {
   formfields_has_fields_body:    'PDFree가 이 PDF에서 기존 양식 필드를 감지했습니다. ',
   formfields_has_fields_link:    'PDF 양식 작성 사용',
   formfields_has_fields_suffix:  '하여 대신 작성하세요.',
-  formfields_click_hint:         '페이지 아무 곳이나 클릭하여 텍스트 필드를 배치하세요. 필드를 드래그하여 이동하거나 모서리를 드래그하여 크기를 조절하세요. 필드에 이름을 입력하여 라벨을 지정하세요.',
+  formfields_click_hint:         '필드 유형을 선택한 다음 페이지의 아무 곳이나 클릭해 배치하세요. 필드를 드래그하면 이동하고, 모서리를 드래그하면 크기가 조절됩니다. 필드에 이름을 입력해 레이블을 지정하세요.',
+  formfields_type_label:      '필드 유형',
+  formfields_type_text:       '텍스트',
+  formfields_type_checkbox:      '체크박스',
   formfields_name_placeholder:   '필드 이름',
   formfields_delete_aria:        '필드 삭제',
   formfields_drag_aria:          '필드 드래그',
@@ -1158,6 +1161,7 @@ window.PDFREE_LOCALE = {
   formfields_error_prefix:       'PDF를 처리할 수 없습니다: {msg}',
   formfields_default_field_name: '필드 {n}',
 
+  formfields_default_checkbox_name: '체크박스 {n}',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF 렌더러를 불러오지 못했습니다. 인터넷 연결을 확인하세요.',
   draw_read_file_failed:       '파일을 읽을 수 없습니다.',

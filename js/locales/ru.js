@@ -1148,7 +1148,10 @@ window.PDFREE_LOCALE = {
   formfields_has_fields_body:    'PDFree обнаружил в этом PDF уже существующие поля формы. ',
   formfields_has_fields_link:    'Использовать Заполнить PDF',
   formfields_has_fields_suffix:  ', чтобы заполнить их.',
-  formfields_click_hint:         'Нажмите в любом месте страницы, чтобы разместить текстовое поле. Перетащите поле, чтобы переместить его, или его угол, чтобы изменить размер. Введите имя в поле, чтобы подписать его.',
+  formfields_click_hint:         'Выберите тип поля, затем щёлкните в любом месте страницы, чтобы разместить его. Перетащите поле, чтобы переместить его, или его угол — чтобы изменить размер. Введите название в поле, чтобы подписать его.',
+  formfields_type_label:      'Тип поля',
+  formfields_type_text:       'Текст',
+  formfields_type_checkbox:      'Флажок',
   formfields_name_placeholder:   'Имя поля',
   formfields_delete_aria:        'Удалить поле',
   formfields_drag_aria:          'Перетащить поле',
@@ -1157,6 +1160,7 @@ window.PDFREE_LOCALE = {
   formfields_error_prefix:       'Не удалось обработать PDF: {msg}',
   formfields_default_field_name: 'Поле {n}',
 
+  formfields_default_checkbox_name: 'Флажок {n}',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Не удалось загрузить рендерер PDF. Проверьте подключение к интернету.',
   draw_read_file_failed:       'Не удалось прочитать файл.',

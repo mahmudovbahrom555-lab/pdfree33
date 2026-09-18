@@ -1147,7 +1147,10 @@ window.PDFREE_LOCALE = {
   formfields_has_fields_body:    'PDFree ha rilevato campi modulo esistenti in questo PDF. ',
   formfields_has_fields_link:    'Usa Compila PDF',
   formfields_has_fields_suffix:  ' per compilarli invece.',
-  formfields_click_hint:         'Clicca in un punto qualsiasi della pagina per posizionare un campo di testo. Trascina un campo per spostarlo, o il suo angolo per ridimensionarlo. Digita un nome nel campo per etichettarlo.',
+  formfields_click_hint:         'Scegli un tipo di campo, poi fai clic in un punto qualsiasi della pagina per posizionarlo. Trascina un campo per spostarlo, o il suo angolo per ridimensionarlo. Digita un nome nel campo per etichettarlo.',
+  formfields_type_label:      'Tipo di campo',
+  formfields_type_text:       'Testo',
+  formfields_type_checkbox:      'Casella di controllo',
   formfields_name_placeholder:   'Nome campo',
   formfields_delete_aria:        'Elimina campo',
   formfields_drag_aria:          'Trascina campo',
@@ -1156,6 +1159,7 @@ window.PDFREE_LOCALE = {
   formfields_error_prefix:       'Impossibile elaborare il PDF: {msg}',
   formfields_default_field_name: 'Campo {n}',
 
+  formfields_default_checkbox_name: 'Casella {n}',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Impossibile caricare il motore di rendering PDF. Controlla la tua connessione internet.',
   draw_read_file_failed:       'Impossibile leggere il file.',
