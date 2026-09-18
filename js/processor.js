@@ -1978,9 +1978,26 @@ async function _runWorkerTool(tool, filesSnapshot, params, bufferOverride) {
   };
   setProgress(5, labelMap[tool] || t('prog_processing'));
 
+  // fill/flatten/redact all write PDF-lib text using an embedded font —
+  // filled-in values, a redaction stamp label — and a WinAnsi-only
+  // StandardFont there throws the moment that text is non-Latin (Cyrillic,
+  // Greek, Vietnamese beyond WinAnsi, etc.), which previously aborted
+  // appearance regeneration for the WHOLE form, not just the offending
+  // field (see worker.js's own comment on _embedUnicodeFont for the full
+  // story). Reuse the same cached LiberationSans-Regular already fetched
+  // for formFieldsWorker.js — other tools don't need it, so leave
+  // fontBytes undefined for them rather than fetching unconditionally.
+  const fontBytes = (tool === 'fill' || tool === 'flatten' || tool === 'redact')
+    ? await _loadLiberationSansRegular()
+    : undefined;
+
   // ⚠️  TRANSFERABLE: buffer detached after this call — worker owns it until done.
+  // fontBytes is NOT in the transfer list (same reasoning as
+  // _watermarkTextRequest's own cached-buffer comment) — it's a shared
+  // cached buffer reused across calls; transferring it would detach and
+  // corrupt it for every call after the first.
   _worker.postMessage(
-    { tool, file: buffer, options: params },
+    { tool, file: buffer, options: params, fontBytes },
     [buffer]
   );
 

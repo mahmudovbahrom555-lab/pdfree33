@@ -195,6 +195,22 @@ jobs:
         # tests/e2e/formFields.e2e.mjs's own header comment.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:formfields
 
+      - name: E2E — Fill Cyrillic value doesn't abort appearance regeneration for the whole form
+        # Real-browser regression gate for a bug found while responding to a
+        # code review of an unrelated tool: js/worker.js's handleFill()
+        # embedded PDFLib.StandardFonts.Helvetica (WinAnsi-only) unconditionally
+        # for form.updateFieldAppearances() — confirmed by direct reproduction
+        # that this throws the instant ANY field holds non-WinAnsi text
+        # (Cyrillic, Greek, Vietnamese beyond WinAnsi, etc.), and since that one
+        # call regenerates every dirty field's appearance in a single pass, the
+        # throw — caught by a blanket try/catch — silently aborted appearance
+        # regeneration for the WHOLE form, not just the offending field. Same
+        # bug class Watermark hit earlier (see watermarkTextWorker.js) but was
+        # never ported to Fill/Flatten/Redact. Fixed by embedding LiberationSans
+        # (fontkit, same vendored file formFieldsWorker.js already uses) instead
+        # of Helvetica. See tests/e2e/fill.e2e.mjs's own header comment.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:fill
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do

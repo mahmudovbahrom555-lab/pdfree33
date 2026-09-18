@@ -14,6 +14,7 @@
     "test:e2e:embed-sdk": "node tests/e2e/embed-sdk.e2e.mjs",
     "test:e2e:mobile-merge-golden-path": "node tests/e2e/mobile-merge-golden-path.e2e.mjs",
     "test:e2e:formfields": "node tests/e2e/formFields.e2e.mjs",
+    "test:e2e:fill": "node tests/e2e/fill.e2e.mjs",
     "check:prod:embed-sdk": "PDFREE_BASE_URL=https://pdfree.io node tests/e2e/embed-sdk.e2e.mjs",
     "lint": "eslint js/*.js --ignore-pattern 'js/vendor/**'",
     "check:dom": "python3 scripts/check_dom.py",

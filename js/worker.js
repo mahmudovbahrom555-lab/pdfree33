@@ -8,12 +8,41 @@
 // ============================================================
 
 importScripts('./vendor/pdf-lib.min.js');
+importScripts('./vendor/fontkit.umd.js');
 importScripts('pdfEncrypt.js');
 importScripts('watermarkImage.js');
 
 // Note: pdf-lib-encrypt.min.js (broken fork) is no longer loaded here.
 // Encryption is now handled by our own pdfEncrypt.js which correctly
 // encrypts stream bytes, not just the /Encrypt dictionary header.
+
+// Real bug found while responding to a code review of a different tool
+// (Add Form Fields' checkbox increment): Fill/Flatten/Redact's text-stamp
+// mode all embedded PDFLib.StandardFonts.Helvetica — WinAnsi-only — for
+// text that's fully user-controlled (a filled field's typed value, a
+// redaction label). Confirmed by direct reproduction: form.
+// updateFieldAppearances(helveticaFont) throws "WinAnsi cannot encode ..."
+// the moment ANY field in the form holds a Cyrillic/Greek/Vietnamese-
+// beyond-WinAnsi/etc. value — and since that call updates every dirty
+// field's appearance in one pass, one non-Latin field's throw silently
+// aborts appearance regeneration for the WHOLE form (caught by a blanket
+// try/catch that assumed the only failure mode was "already has valid
+// font resources"). Text watermarks hit the identical class of bug
+// earlier and were fixed by routing to a dedicated worker with a
+// Unicode-capable font (see watermarkTextWorker.js's own header) — same
+// fix shape here, reusing the same vendored LiberationSans-Regular.ttf
+// (fetched+cached once in processor.js as _loadLiberationSansRegular(),
+// sent as fontBytes in the postMessage for these three tools only).
+async function _embedUnicodeFont(pdfDoc, fontBytes) {
+  if (fontBytes) {
+    pdfDoc.registerFontkit(self.fontkit);
+    return pdfDoc.embedFont(fontBytes);
+  }
+  // Defensive fallback only — processor.js always sends fontBytes for the
+  // tools that call this. A missing fontBytes would just mean any non-
+  // WinAnsi text still fails, same as before this fix, not a new crash.
+  return pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+}
 
 self.onmessage = async function (e) {
   const { tool, files, names } = e.data;
@@ -51,13 +80,13 @@ self.onmessage = async function (e) {
         await handleRotate(e.data.file, e.data.options);
         break;
       case 'redact':
-        await handleRedact(e.data.file, e.data.options);
+        await handleRedact(e.data.file, e.data.options, e.data.fontBytes);
         break;
       case 'fill':
-        await handleFill(e.data.file, e.data.options);
+        await handleFill(e.data.file, e.data.options, e.data.fontBytes);
         break;
       case 'flatten':
-        await handleFlatten(e.data.file);
+        await handleFlatten(e.data.file, e.data.fontBytes);
         break;
       case 'draw':
         await handleDraw(e.data.original, e.data.layers);
@@ -1992,7 +2021,7 @@ async function handleRotate(fileBuffer, options) {
 // fillColor:    [r,g,b] floats 0..1
 // opacity:      0..1
 
-async function handleRedact(fileBuffer, options) {
+async function handleRedact(fileBuffer, options, fontBytes) {
   const { rgb } = PDFLib;
   const {
     rects = [],
@@ -2052,7 +2081,7 @@ async function handleRedact(fileBuffer, options) {
               const textStr = r.text || '';
               if (textStr.trim()) {
                 if (!cachedFont) {
-                  cachedFont = await pdf.embedFont(PDFLib.StandardFonts.Helvetica);
+                  cachedFont = await _embedUnicodeFont(pdf, fontBytes);
                 }
                 const font = cachedFont;
                 page.drawText(textStr, {
@@ -2151,7 +2180,7 @@ function _cleanDanglingAnnots(pdfDoc) {
   }
 }
 
-async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {}, fieldMeta = {}, flatten = true } = {}) {
+async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {}, fieldMeta = {}, flatten = true } = {}, fontBytes) {
   const {
     PDFDocument, PDFTextField, PDFCheckBox, PDFRadioGroup, PDFDropdown, PDFOptionList,
   } = PDFLib;
@@ -2247,7 +2276,7 @@ async function handleFill(fileBuffer, { fieldValues = {}, sigImages = {}, fieldM
   // PDF looks blank even though values were set. Calling updateFieldAppearances()
   // with an embedded font first guarantees visible text for all filled fields.
   try {
-    const fillFont = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+    const fillFont = await _embedUnicodeFont(pdfDoc, fontBytes);
     form.updateFieldAppearances(fillFont);
   } catch { /* PDF may already have valid font resources — proceed to flatten */ }
 
@@ -2307,8 +2336,8 @@ async function _embedSigImage(pdfDoc, pages, dataUrl, rect, pageIndex) {
   });
 }
 
-async function handleFlatten(fileBuffer) {
-  const { PDFDocument, StandardFonts } = PDFLib;
+async function handleFlatten(fileBuffer, fontBytes) {
+  const { PDFDocument } = PDFLib;
 
   progress(10, 'Loading PDF…');
   const pdfDoc = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
@@ -2327,7 +2356,7 @@ async function handleFlatten(fileBuffer) {
 
   progress(40, 'Rendering field appearances…');
   try {
-    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const font = await _embedUnicodeFont(pdfDoc, fontBytes);
     form.updateFieldAppearances(font);
   } catch { /* form already has valid font resources */ }
 
