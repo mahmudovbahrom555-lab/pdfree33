@@ -192,21 +192,21 @@ function _blockedHTML() {
 }
 
 function _buildEditorHTML() {
-  // padding-bottom on the outer wrapper (not just ffCanvasScroll) is
-  // deliberate: #mergeBtn is `position: sticky; bottom: 16px` (see
-  // css/components.css), pinned to a fixed VIEWPORT position while any
-  // part of this panel is in view — same mechanism documented in
-  // CLAUDE.md's UX checklist item 8 (bit twice before: #fileList sitewide,
-  // #btnInstallOcr/#glsDictionary). This tool's canvas can easily be
-  // taller than the viewport (a full A4 page at 1:1 CSS px), so without
-  // this clearance, scrolling down to place a field near the BOTTOM of the
-  // page puts that exact click point under the sticky button instead of on
-  // the canvas — confirmed live via document.elementFromPoint() during
-  // Playwright verification (tests/e2e/formFields.e2e.mjs) before this fix
-  // was added: the click landed on #mergeBtn, not #ffOverlay. ~90px matches
-  // the button's own real height + its 16px sticky offset.
+  // This used to carry a 96px bottom padding to clear #mergeBtn's sticky
+  // position (CLAUDE.md UX checklist item 8) — needed back when the canvas
+  // rendered at full, un-clipped height directly in the page's normal
+  // scroll flow (a full A4 page at 1:1 CSS px could easily be taller than
+  // the viewport, so scrolling to the bottom of it put that click point
+  // under the sticky button). Now that #ffCanvasScroll itself is bounded
+  // (max-height + internal scroll, set in _renderPage — see that function's
+  // own comment) to the exact "space available before the sticky button"
+  // measurement, the canvas's visible footprint is already guaranteed safe
+  // — this extra padding became pure dead space below it (a real user-
+  // reported screenshot showed a large empty gap between the canvas and
+  // the process button). Removed; a small gap remains for basic breathing
+  // room around #ffCount, not sticky-button clearance.
   return `
-    <div class="ff-editor" style="padding:0 0 96px;">
+    <div class="ff-editor" style="padding:0 0 8px;">
       <p style="margin:0 0 12px;font-size:13px;color:var(--text3);line-height:1.5;">
         ${esc(t('formfields_click_hint'))}
       </p>
