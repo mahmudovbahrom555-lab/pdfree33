@@ -1151,6 +1151,7 @@ window.PDFREE_LOCALE = {
   formfields_click_hint:         'Klik di mana saja pada halaman untuk menempatkan kolom teks. Seret kolom untuk memindahkannya, atau sudutnya untuk mengubah ukuran. Ketik nama pada kolom untuk memberi label.',
   formfields_name_placeholder:   'Nama kolom',
   formfields_delete_aria:        'Hapus kolom',
+  formfields_drag_aria:          'Geser kolom',
   formfields_count_one:          '{n} kolom ditempatkan',
   formfields_count_many:         '{n} kolom ditempatkan',
   formfields_error_prefix:       'Tidak dapat memproses PDF: {msg}',

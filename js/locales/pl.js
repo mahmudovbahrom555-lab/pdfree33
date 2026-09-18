@@ -1150,6 +1150,7 @@ window.PDFREE_LOCALE = {
   formfields_click_hint:         'Kliknij w dowolnym miejscu strony, aby umieścić pole tekstowe. Przeciągnij pole, aby je przesunąć, lub jego róg, aby zmienić rozmiar. Wpisz nazwę w polu, aby je oznaczyć.',
   formfields_name_placeholder:   'Nazwa pola',
   formfields_delete_aria:        'Usuń pole',
+  formfields_drag_aria:          'Przeciągnij pole',
   formfields_count_one:          '{n} pole umieszczone',
   formfields_count_many:         '{n} pól umieszczonych',
   formfields_error_prefix:       'Nie można przetworzyć PDF: {msg}',

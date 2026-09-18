@@ -1201,6 +1201,7 @@ window.PDFREE_LOCALE = {
   formfields_click_hint:         'انقر في أي مكان على الصفحة لوضع حقل نصي. اسحب الحقل لتحريكه، أو زاويته لتغيير حجمه. اكتب اسمًا في الحقل لتسميته.',
   formfields_name_placeholder:   'اسم الحقل',
   formfields_delete_aria:        'حذف الحقل',
+  formfields_drag_aria:          'سحب الحقل',
   formfields_count_one:          'تم وضع {n} حقل',
   formfields_count_many:         'تم وضع {n} حقول',
   formfields_error_prefix:       'تعذرت معالجة PDF: {msg}',

@@ -131,6 +131,58 @@ await test('click-place-name-save produces a downloaded PDF', async () => {
   }
 });
 
+await test('dragging a placed field by its handle actually moves it', async () => {
+  // Real regression: a real user reported "impossible to move — inside the
+  // text there's a text cursor, outside there's no grab hand" right after
+  // this tool first shipped. Root cause: .ff-name-input used flex:1 and
+  // filled the ENTIRE field box, leaving zero pixels of the wrapper's own
+  // cursor:move area for _onOverlayPointerDown's drag-start check to ever
+  // fire on. Fixed with a dedicated .ff-drag-handle positioned outside the
+  // box (same pattern as the pre-existing delete/resize handles). This
+  // test drags via that handle and asserts the box's on-screen position
+  // actually changed — not just that no error was thrown, which the old,
+  // broken code also satisfied.
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    await page.goto(`${BASE_URL}/add-form-fields/`, { waitUntil: 'load', timeout: 30000 });
+    await page.setInputFiles('#fileInput', FLAT_PDF);
+    await page.waitForSelector('#ffCanvasWrap', { state: 'visible', timeout: 15000 });
+    const canvas = page.locator('#ffCanvas');
+    await canvas.waitFor({ state: 'visible' });
+    const box = await canvas.boundingBox();
+
+    await page.mouse.click(box.x + box.width * 0.25, box.y + box.height * 0.15);
+    await page.waitForTimeout(150);
+
+    const before = await page.locator('.ff-field-box').boundingBox();
+    const handle = page.locator('.ff-drag-handle');
+    await handle.waitFor({ state: 'visible' });
+    const hbox = await handle.boundingBox();
+
+    await page.mouse.move(hbox.x + hbox.width / 2, hbox.y + hbox.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(hbox.x + hbox.width / 2 + 60, hbox.y + hbox.height / 2 + 40, { steps: 10 });
+    await page.mouse.up();
+    await page.waitForTimeout(150);
+
+    const after = await page.locator('.ff-field-box').boundingBox();
+    const dx = Math.abs(after.x - before.x);
+    const dy = Math.abs(after.y - before.y);
+    if (dx < 30 || dy < 20) {
+      throw new Error(`field did not move as expected: dx=${dx} dy=${dy} (before=${JSON.stringify(before)}, after=${JSON.stringify(after)})`);
+    }
+
+    // Renaming must still work after this fix (the name input is no longer
+    // the box's only child) — same click target, still a real text field.
+    await page.fill('.ff-name-input', 'Renamed After Drag');
+    const val = await page.locator('.ff-name-input').inputValue();
+    expect(val).toBe('Renamed After Drag');
+  } finally {
+    await context.close();
+  }
+});
+
 let nodeVerifiedBuffer = null;
 
 await test('independent check #1 — pdf-lib in plain Node sees 2 real PDFTextField widgets', async () => {

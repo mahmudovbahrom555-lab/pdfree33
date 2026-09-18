@@ -1152,6 +1152,7 @@ window.PDFREE_LOCALE = {
   formfields_click_hint:         "Cliquez n'importe où sur la page pour placer un champ de texte. Faites glisser un champ pour le déplacer, ou son coin pour le redimensionner. Tapez un nom dans le champ pour l'étiqueter.",
   formfields_name_placeholder:   'Nom du champ',
   formfields_delete_aria:        'Supprimer le champ',
+  formfields_drag_aria:          'Déplacer le champ',
   formfields_count_one:          '{n} champ placé',
   formfields_count_many:         '{n} champs placés',
   formfields_error_prefix:       'Impossible de traiter le PDF : {msg}',

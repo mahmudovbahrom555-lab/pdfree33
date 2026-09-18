@@ -208,12 +208,28 @@ function _buildEditorHTML() {
 }
 
 function _fieldBoxHTML(f) {
+  // Real bug found by the user right after shipping: .ff-name-input used
+  // flex:1 to fill the whole box, so there was no pixel of the box NOT
+  // covered by the text input — the wrapper's own cursor:move / drag-start
+  // handling (_onOverlayPointerDown) never had anywhere to actually fire,
+  // since a pointerdown anywhere on a placed field always landed on the
+  // input and was explicitly excluded from starting a drag. Fixed with a
+  // dedicated drag handle, positioned outside the box via negative offset —
+  // same pattern already used here for delete (top-right) and resize
+  // (bottom-right) — so it's always a real, reachable target regardless of
+  // how small the field box itself gets resized to.
   return `<div class="ff-field-box" data-id="${f.id}" style="
       position:absolute;box-sizing:border-box;
       left:${(f.xFrac * 100).toFixed(3)}%; top:${(f.yFrac * 100).toFixed(3)}%;
       width:${(f.wFrac * 100).toFixed(3)}%; height:${(f.hFrac * 100).toFixed(3)}%;
       border:1.5px dashed #2D7A4F; background:rgba(45,122,79,0.10);
-      display:flex; align-items:center; cursor:move; touch-action:none;">
+      display:flex; align-items:center; touch-action:none;">
+    <div class="ff-drag-handle" data-id="${f.id}"
+      aria-label="${esc(t('formfields_drag_aria'))}" title="${esc(t('formfields_drag_aria'))}"
+      style="position:absolute;top:-11px;left:-11px;width:22px;height:22px;min-width:22px;
+        border-radius:50%;border:2px solid #fff;background:#2D7A4F;color:#fff;
+        font-size:12px;line-height:1;cursor:move;display:flex;align-items:center;justify-content:center;
+        touch-action:none;">⠿</div>
     <input class="ff-name-input" data-id="${f.id}" value="${esc(f.name)}"
       placeholder="${esc(t('formfields_name_placeholder'))}"
       style="flex:1;min-width:0;height:100%;box-sizing:border-box;padding:0 22px 0 6px;

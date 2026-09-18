@@ -1151,6 +1151,7 @@ window.PDFREE_LOCALE = {
   formfields_click_hint:         'Nhấp vào bất kỳ đâu trên trang để đặt một trường văn bản. Kéo trường để di chuyển, hoặc góc của nó để đổi kích thước. Nhập tên vào trường để gắn nhãn.',
   formfields_name_placeholder:   'Tên trường',
   formfields_delete_aria:        'Xóa trường',
+  formfields_drag_aria:          'Kéo trường',
   formfields_count_one:          'Đã đặt {n} trường',
   formfields_count_many:         'Đã đặt {n} trường',
   formfields_error_prefix:       'Không thể xử lý PDF: {msg}',

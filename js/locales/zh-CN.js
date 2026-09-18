@@ -1199,6 +1199,7 @@ window.PDFREE_LOCALE = {
   formfields_click_hint:         '点击页面任意位置以放置文本字段。拖动字段以移动，拖动其角部以调整大小。在字段中输入名称以标注。',
   formfields_name_placeholder:   '字段名称',
   formfields_delete_aria:        '删除字段',
+  formfields_drag_aria:          '拖动字段',
   formfields_count_one:          '已放置 {n} 个字段',
   formfields_count_many:         '已放置 {n} 个字段',
   formfields_error_prefix:       '无法处理 PDF：{msg}',

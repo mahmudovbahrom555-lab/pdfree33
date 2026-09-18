@@ -1153,6 +1153,7 @@ window.PDFREE_LOCALE = {
   formfields_click_hint:         'Klicke auf die Seite, um ein Textfeld zu platzieren. Ziehe ein Feld, um es zu verschieben, oder seine Ecke, um es zu skalieren. Tippe einen Namen in das Feld, um es zu beschriften.',
   formfields_name_placeholder:   'Feldname',
   formfields_delete_aria:        'Feld löschen',
+  formfields_drag_aria:          'Feld verschieben',
   formfields_count_one:          '{n} Feld platziert',
   formfields_count_many:         '{n} Felder platziert',
   formfields_error_prefix:       'PDF konnte nicht verarbeitet werden: {msg}',

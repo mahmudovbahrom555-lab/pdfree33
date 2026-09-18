@@ -1151,6 +1151,7 @@ window.PDFREE_LOCALE = {
   formfields_click_hint:         'Нажмите в любом месте страницы, чтобы разместить текстовое поле. Перетащите поле, чтобы переместить его, или его угол, чтобы изменить размер. Введите имя в поле, чтобы подписать его.',
   formfields_name_placeholder:   'Имя поля',
   formfields_delete_aria:        'Удалить поле',
+  formfields_drag_aria:          'Перетащить поле',
   formfields_count_one:          '{n} поле размещено',
   formfields_count_many:         '{n} полей размещено',
   formfields_error_prefix:       'Не удалось обработать PDF: {msg}',

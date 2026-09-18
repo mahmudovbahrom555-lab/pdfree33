@@ -1150,6 +1150,7 @@ window.PDFREE_LOCALE = {
   formfields_click_hint:         'Klik ergens op de pagina om een tekstveld te plaatsen. Sleep een veld om het te verplaatsen, of de hoek ervan om het formaat te wijzigen. Typ een naam in het veld om het te labelen.',
   formfields_name_placeholder:   'Veldnaam',
   formfields_delete_aria:        'Veld verwijderen',
+  formfields_drag_aria:          'Veld verslepen',
   formfields_count_one:          '{n} veld geplaatst',
   formfields_count_many:         '{n} velden geplaatst',
   formfields_error_prefix:       'Kan PDF niet verwerken: {msg}',

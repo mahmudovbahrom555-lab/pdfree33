@@ -1179,6 +1179,7 @@ export const EN = {
   formfields_click_hint:         'Click anywhere on the page to place a text field. Drag a field to move it, or its corner to resize it. Type a name into the field to label it.',
   formfields_name_placeholder:   'Field name',
   formfields_delete_aria:        'Delete field',
+  formfields_drag_aria:          'Drag field',
   formfields_count_one:          '{n} field placed',
   formfields_count_many:         '{n} fields placed',
   formfields_error_prefix:       'Could not process PDF: {msg}',

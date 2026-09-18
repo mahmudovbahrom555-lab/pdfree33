@@ -1153,6 +1153,7 @@ window.PDFREE_LOCALE = {
   formfields_click_hint:         'ページ上の任意の場所をクリックしてテキストフィールドを配置します。フィールドをドラッグして移動するか、角をドラッグしてサイズを変更します。フィールドに名前を入力してラベルを付けます。',
   formfields_name_placeholder:   'フィールド名',
   formfields_delete_aria:        'フィールドを削除',
+  formfields_drag_aria:          'フィールドをドラッグ',
   formfields_count_one:          '{n} 個のフィールドを配置しました',
   formfields_count_many:         '{n} 個のフィールドを配置しました',
   formfields_error_prefix:       'PDFを処理できませんでした: {msg}',

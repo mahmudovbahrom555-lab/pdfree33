@@ -1152,6 +1152,7 @@ window.PDFREE_LOCALE = {
   formfields_click_hint:         '페이지 아무 곳이나 클릭하여 텍스트 필드를 배치하세요. 필드를 드래그하여 이동하거나 모서리를 드래그하여 크기를 조절하세요. 필드에 이름을 입력하여 라벨을 지정하세요.',
   formfields_name_placeholder:   '필드 이름',
   formfields_delete_aria:        '필드 삭제',
+  formfields_drag_aria:          '필드 드래그',
   formfields_count_one:          '{n}개 필드 배치됨',
   formfields_count_many:         '{n}개 필드 배치됨',
   formfields_error_prefix:       'PDF를 처리할 수 없습니다: {msg}',

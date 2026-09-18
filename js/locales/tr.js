@@ -1150,6 +1150,7 @@ window.PDFREE_LOCALE = {
   formfields_click_hint:         'Bir metin alanı yerleştirmek için sayfada herhangi bir yere tıklayın. Taşımak için bir alanı, yeniden boyutlandırmak için köşesini sürükleyin. Etiketlemek için alana bir ad yazın.',
   formfields_name_placeholder:   'Alan adı',
   formfields_delete_aria:        'Alanı sil',
+  formfields_drag_aria:          'Alanı sürükle',
   formfields_count_one:          '{n} alan yerleştirildi',
   formfields_count_many:         '{n} alan yerleştirildi',
   formfields_error_prefix:       'PDF işlenemedi: {msg}',
