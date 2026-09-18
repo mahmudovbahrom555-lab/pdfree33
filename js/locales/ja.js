@@ -1164,6 +1164,13 @@ window.PDFREE_LOCALE = {
 
   formfields_default_checkbox_name: 'チェックボックス {n}',
   formfields_continue_editing:   '編集を続ける',
+  formfields_fieldlist_title:    '配置済みフィールド',
+  formfields_fieldlist_empty:    'まだフィールドがありません — ページをクリックして配置してください。',
+  formfields_fieldlist_page:     'ページ{n}',
+  formfields_zoom_out:           '縮小',
+  formfields_zoom_in:            '拡大',
+  formfields_zoom_reset:         'ズームをリセット',
+  formfields_zoom_level:         'ズーム倍率',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDFレンダラーの読み込みに失敗しました。インターネット接続を確認してください。',
   draw_read_file_failed:       'ファイルを読み込めませんでした。',

@@ -1212,6 +1212,13 @@ window.PDFREE_LOCALE = {
 
   formfields_default_checkbox_name: 'خانة اختيار {n}',
   formfields_continue_editing:   'متابعة التحرير',
+  formfields_fieldlist_title:    'الحقول الموضوعة',
+  formfields_fieldlist_empty:    'لا توجد حقول بعد — انقر على الصفحة لإضافة حقل.',
+  formfields_fieldlist_page:     'صفحة {n}',
+  formfields_zoom_out:           'تصغير',
+  formfields_zoom_in:            'تكبير',
+  formfields_zoom_reset:         'إعادة تعيين التكبير',
+  formfields_zoom_level:         'مستوى التكبير',
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'فشل تحميل عارض PDF. تحقق من اتصالك بالإنترنت.',
   draw_read_file_failed:       'تعذّرت قراءة الملف.',

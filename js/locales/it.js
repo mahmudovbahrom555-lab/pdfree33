@@ -1161,6 +1161,13 @@ window.PDFREE_LOCALE = {
 
   formfields_default_checkbox_name: 'Casella {n}',
   formfields_continue_editing:   'Continua a modificare',
+  formfields_fieldlist_title:    'Campi inseriti',
+  formfields_fieldlist_empty:    'Nessun campo ancora — fai clic sulla pagina per inserirne uno.',
+  formfields_fieldlist_page:     'Pagina {n}',
+  formfields_zoom_out:           'Riduci zoom',
+  formfields_zoom_in:            'Aumenta zoom',
+  formfields_zoom_reset:         'Reimposta zoom',
+  formfields_zoom_level:         'Livello di zoom',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Impossibile caricare il motore di rendering PDF. Controlla la tua connessione internet.',
   draw_read_file_failed:       'Impossibile leggere il file.',

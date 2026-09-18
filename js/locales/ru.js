@@ -1162,6 +1162,13 @@ window.PDFREE_LOCALE = {
 
   formfields_default_checkbox_name: 'Флажок {n}',
   formfields_continue_editing:   'Продолжить редактирование',
+  formfields_fieldlist_title:    'Размещённые поля',
+  formfields_fieldlist_empty:    'Полей пока нет — нажмите на страницу, чтобы разместить поле.',
+  formfields_fieldlist_page:     'Страница {n}',
+  formfields_zoom_out:           'Уменьшить',
+  formfields_zoom_in:            'Увеличить',
+  formfields_zoom_reset:         'Сбросить масштаб',
+  formfields_zoom_level:         'Уровень масштаба',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Не удалось загрузить рендерер PDF. Проверьте подключение к интернету.',
   draw_read_file_failed:       'Не удалось прочитать файл.',

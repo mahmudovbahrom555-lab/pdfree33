@@ -1210,6 +1210,13 @@ window.PDFREE_LOCALE = {
 
   formfields_default_checkbox_name: '复选框 {n}',
   formfields_continue_editing:   '继续编辑',
+  formfields_fieldlist_title:    '已放置的字段',
+  formfields_fieldlist_empty:    '还没有字段 — 点击页面即可放置一个。',
+  formfields_fieldlist_page:     '第 {n} 页',
+  formfields_zoom_out:           '缩小',
+  formfields_zoom_in:            '放大',
+  formfields_zoom_reset:         '重置缩放',
+  formfields_zoom_level:         '缩放比例',
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'PDF 渲染器加载失败。请检查您的网络连接。',
   draw_read_file_failed:       '无法读取此文件。',

@@ -1162,6 +1162,13 @@ window.PDFREE_LOCALE = {
 
   formfields_default_checkbox_name: 'Hộp kiểm {n}',
   formfields_continue_editing:   'Tiếp tục chỉnh sửa',
+  formfields_fieldlist_title:    'Trường đã đặt',
+  formfields_fieldlist_empty:    'Chưa có trường nào — nhấp vào trang để đặt một trường.',
+  formfields_fieldlist_page:     'Trang {n}',
+  formfields_zoom_out:           'Thu nhỏ',
+  formfields_zoom_in:            'Phóng to',
+  formfields_zoom_reset:         'Đặt lại thu phóng',
+  formfields_zoom_level:         'Mức thu phóng',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Không thể tải trình kết xuất PDF. Kiểm tra kết nối internet của bạn.',
   draw_read_file_failed:       'Không thể đọc tệp.',

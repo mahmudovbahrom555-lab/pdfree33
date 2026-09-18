@@ -1164,6 +1164,13 @@ window.PDFREE_LOCALE = {
 
   formfields_default_checkbox_name: 'Kontrollkästchen {n}',
   formfields_continue_editing:   'Bearbeitung fortsetzen',
+  formfields_fieldlist_title:    'Platzierte Felder',
+  formfields_fieldlist_empty:    'Noch keine Felder — klicken Sie auf die Seite, um eines zu platzieren.',
+  formfields_fieldlist_page:     'Seite {n}',
+  formfields_zoom_out:           'Verkleinern',
+  formfields_zoom_in:            'Vergrößern',
+  formfields_zoom_reset:         'Zoom zurücksetzen',
+  formfields_zoom_level:         'Zoomstufe',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF-Renderer konnte nicht geladen werden. Überprüfe deine Internetverbindung.',
   draw_read_file_failed:       'Datei konnte nicht gelesen werden.',

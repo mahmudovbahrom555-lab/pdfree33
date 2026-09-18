@@ -1161,6 +1161,13 @@ window.PDFREE_LOCALE = {
 
   formfields_default_checkbox_name: 'Onay Kutusu {n}',
   formfields_continue_editing:   'Düzenlemeye devam et',
+  formfields_fieldlist_title:    'Yerleştirilen alanlar',
+  formfields_fieldlist_empty:    'Henüz alan yok — yerleştirmek için sayfaya tıklayın.',
+  formfields_fieldlist_page:     'Sayfa {n}',
+  formfields_zoom_out:           'Uzaklaştır',
+  formfields_zoom_in:            'Yakınlaştır',
+  formfields_zoom_reset:         'Yakınlaştırmayı sıfırla',
+  formfields_zoom_level:         'Yakınlaştırma düzeyi',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF işleyicisi yüklenemedi. İnternet bağlantınızı kontrol edin.',
   draw_read_file_failed:       'Dosya okunamadı.',

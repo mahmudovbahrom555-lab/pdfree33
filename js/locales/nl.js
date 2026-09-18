@@ -1161,6 +1161,13 @@ window.PDFREE_LOCALE = {
 
   formfields_default_checkbox_name: 'Selectievakje {n}',
   formfields_continue_editing:   'Verder bewerken',
+  formfields_fieldlist_title:    'Geplaatste velden',
+  formfields_fieldlist_empty:    'Nog geen velden — klik op de pagina om er een te plaatsen.',
+  formfields_fieldlist_page:     'Pagina {n}',
+  formfields_zoom_out:           'Uitzoomen',
+  formfields_zoom_in:            'Inzoomen',
+  formfields_zoom_reset:         'Zoom herstellen',
+  formfields_zoom_level:         'Zoomniveau',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Laden van PDF-renderer mislukt. Controleer je internetverbinding.',
   draw_read_file_failed:       'Kan het bestand niet lezen.',

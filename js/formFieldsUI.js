@@ -65,6 +65,20 @@ const DEFAULT_CHECKBOX_PT = 24;
 const MIN_W_FRAC     = 0.04;
 const MIN_H_FRAC     = 0.015;
 
+// Manual zoom ladder (competitive gap vs iLovePDF's own PDF-Forms editor,
+// which ships %/+/−/fit-width controls — checked live 2026-09-17). Index 2
+// (1.0) means "exactly what _renderPage's own fit-to-width computed", so
+// "Fit to width" is simply a reset to this index, not separate math. Fixed
+// steps rather than a multiply-by-1.25 loop so the displayed % is always a
+// round, repeatable number and zooming out then in lands back where it was.
+const ZOOM_STEPS = [0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 4];
+const ZOOM_FIT_IDX = 2;
+
+// Focus-trap selector (standard modal a11y set). Applied against the modal
+// subtree only — see _focusables/_onModalKeydown.
+const FOCUSABLE_SEL = 'a[href], button:not([disabled]), input:not([disabled]), ' +
+  'select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 // ── State ──────────────────────────────────────────────────────
 let _pdfDoc      = null;
 let _currentPage = 1;
@@ -76,11 +90,16 @@ let _hasExisting = false;
 let _loading     = false;
 let _generation  = 0;      // staleness guard, same pattern as fillUI.js/drawUI.js
 let _pageWPt = 0, _pageHPt = 0; // current page's own PDF-point size — see DEFAULT_H_PT above
+let _zoomIdx = ZOOM_FIT_IDX;    // index into ZOOM_STEPS — user zoom on top of fit-to-width
+let _activeFieldId = null;      // field highlighted by the sidebar list, null when none
 
 // DOM refs — set inside _buildModalHTML/_bindEditorEvents each render
 let _container, _wrap, _canvas, _overlay, _countEl, _pageLabel, _btnPrev, _btnNext;
+let _listEl, _zoomLabel, _btnZoomIn, _btnZoomOut, _btnZoomFit;
 let _modal     = null; // the editor modal's own root element, null when closed
 let _fileLabel = '';   // file.name, shown in the modal header + reused by _triggerHTML
+let _prevFocus = null; // element focused before the modal opened — restored on close
+let _inerted   = [];   // body children this modal made inert; emptied on close
 
 // Real, reported bug history (see form_field_creation_tool_2026_09 memory
 // for the full trace): this options panel routinely renders far down a
@@ -110,7 +129,7 @@ export function hideFormFieldsOptions() {
   _closeModal({ silent: true });
   _pdfDoc = null; _currentPage = 1; _pageCount = 0;
   _fields = []; _fieldSeq = 0; _fieldType = 'text'; _hasExisting = false; _loading = false;
-  _fileLabel = '';
+  _fileLabel = ''; _zoomIdx = ZOOM_FIT_IDX; _activeFieldId = null;
   _generation++;
   _container = null;
 }
@@ -172,6 +191,8 @@ async function _extractAndRender(file, container) {
     _fieldSeq    = 0;
     _fileLabel   = file.name;
     _container   = container;
+    _zoomIdx     = ZOOM_FIT_IDX;
+    _activeFieldId = null;
 
     // The outer options panel just holds a compact placeholder — the real
     // editing surface is the modal (see _openModal). Painted first so
@@ -232,33 +253,58 @@ function _bindTriggerEvents(container) {
   container.querySelector('#ffReopenBtn')?.addEventListener('click', () => _openModal());
 }
 
+// Two-column body: the editing surface on the left, a live list of every
+// placed field on the right. The sidebar is the competitive gap iLovePDF's
+// own PDF-Forms editor covers with its "Form Field List" (checked live
+// 2026-09-17): on a document with many fields, finding a specific one by
+// hunting across pages on the canvas doesn't scale. It's collapsed away
+// entirely under 900px (see .ff-modal__side in css/components.css) rather
+// than squeezing the canvas — the canvas IS the tool on a phone.
 function _modalBodyHTML() {
   return `
-    <p style="margin:0 0 12px;font-size:13px;color:var(--text3);line-height:1.5;">
-      ${esc(t('formfields_click_hint'))}
-    </p>
-    <div style="max-width:320px;margin:0 auto 14px;">
-      ${group(t('formfields_type_label'), chipGroup('ffType', [
-        { value: 'text',     label: t('formfields_type_text') },
-        { value: 'checkbox', label: t('formfields_type_checkbox') },
-      ], _fieldType, t('formfields_type_label')))}
-    </div>
-    <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:10px;">
-      <button type="button" id="ffPrevBtn" aria-label="${esc(t('org_lightbox_prev'))}" style="
-        width:36px;height:36px;border-radius:8px;border:1.5px solid var(--border);
-        background:var(--surface);color:var(--text);font-size:16px;cursor:pointer;">‹</button>
-      <span id="ffPageLabel" style="font-size:13px;color:var(--text2);min-width:70px;text-align:center;">1 / 1</span>
-      <button type="button" id="ffNextBtn" aria-label="${esc(t('org_lightbox_next'))}" style="
-        width:36px;height:36px;border-radius:8px;border:1.5px solid var(--border);
-        background:var(--surface);color:var(--text);font-size:16px;cursor:pointer;">›</button>
-    </div>
-    <div id="ffCanvasScroll" class="ff-modal__stage">
-      <div id="ffCanvasWrap" style="position:relative;flex-shrink:0;">
-        <canvas id="ffCanvas" style="display:block;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.15);"></canvas>
-        <div id="ffOverlay" style="position:absolute;inset:0;cursor:crosshair;"></div>
+    <div class="ff-modal__main">
+      <p style="margin:0 0 12px;font-size:13px;color:var(--text3);line-height:1.5;">
+        ${esc(t('formfields_click_hint'))}
+      </p>
+      <div style="max-width:320px;margin:0 auto 14px;">
+        ${group(t('formfields_type_label'), chipGroup('ffType', [
+          { value: 'text',     label: t('formfields_type_text') },
+          { value: 'checkbox', label: t('formfields_type_checkbox') },
+        ], _fieldType, t('formfields_type_label')))}
       </div>
+      <div class="ff-modal__toolbar">
+        <div class="ff-modal__navgroup">
+          <button type="button" id="ffPrevBtn" class="ff-navbtn" aria-label="${esc(t('org_lightbox_prev'))}">‹</button>
+          <span id="ffPageLabel" class="ff-modal__navlabel">1 / 1</span>
+          <button type="button" id="ffNextBtn" class="ff-navbtn" aria-label="${esc(t('org_lightbox_next'))}">›</button>
+        </div>
+        <div class="ff-modal__navgroup">
+          <button type="button" id="ffZoomOutBtn" class="ff-navbtn" aria-label="${esc(t('formfields_zoom_out'))}">−</button>
+          <span id="ffZoomLabel" class="ff-modal__navlabel" role="status"
+            aria-label="${esc(t('formfields_zoom_level'))}">100%</span>
+          <button type="button" id="ffZoomInBtn" class="ff-navbtn" aria-label="${esc(t('formfields_zoom_in'))}">+</button>
+          <!-- "Reset zoom", not "Fit to width": the underlying fit scale is
+               Math.min(1, areaW / pageWidth) (see _renderPage), so on a wide
+               desktop 100% is the page's own size, NOT the stage's width —
+               labelling this button "fit to width" would be visibly untrue
+               there. Icon-only so the whole toolbar stays one row at 390px
+               instead of wrapping and eating ~44px of canvas height. -->
+          <button type="button" id="ffZoomFitBtn" class="ff-navbtn"
+            aria-label="${esc(t('formfields_zoom_reset'))}" title="${esc(t('formfields_zoom_reset'))}">⤢</button>
+        </div>
+      </div>
+      <div id="ffCanvasScroll" class="ff-modal__stage">
+        <div id="ffCanvasWrap" style="position:relative;flex-shrink:0;margin:auto;">
+          <canvas id="ffCanvas" style="display:block;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.15);"></canvas>
+          <div id="ffOverlay" style="position:absolute;inset:0;cursor:crosshair;"></div>
+        </div>
+      </div>
+      <p id="ffCount" style="text-align:center;margin:10px 0 0;font-size:12px;color:var(--text3);"></p>
     </div>
-    <p id="ffCount" style="text-align:center;margin:10px 0 0;font-size:12px;color:var(--text3);"></p>`;
+    <aside class="ff-modal__side" id="ffFieldPanel" aria-label="${esc(t('formfields_fieldlist_title'))}">
+      <p class="ff-modal__side-title">${esc(t('formfields_fieldlist_title'))}</p>
+      <div id="ffFieldList" class="ff-fieldlist"></div>
+    </aside>`;
 }
 
 // Full-viewport editor modal — see css/components.css's .ff-modal block
@@ -269,6 +315,8 @@ function _modalBodyHTML() {
 // "Continue editing" is a no-op if somehow still mounted) just returns.
 async function _openModal() {
   if (_modal) return;
+  const active = document.activeElement;
+  _prevFocus = active && typeof active.focus === 'function' ? active : null;
   _modal = document.createElement('div');
   _modal.className = 'ff-modal';
   // Reuses the REAL #mergeBtn's own current label (already set for this
@@ -288,6 +336,14 @@ async function _openModal() {
       </div>
     </div>`;
   document.body.appendChild(_modal);
+  // Everything else on the page is made inert (and aria-hidden) for as long
+  // as the modal is up. Without it a screen-reader / keyboard user can walk
+  // straight "behind" the backdrop into the still-focusable page underneath
+  // — the backdrop only hides it VISUALLY. Checked first: no other modal in
+  // this codebase (.scan-cam-modal, .org-lightbox) does this either, so it's
+  // a real pre-existing sitewide gap; fixed properly here, noted for the
+  // others rather than half-fixed everywhere.
+  _setBackgroundInert(true);
   requestAnimationFrame(() => _modal?.classList.add('ff-modal--open'));
 
   id('ffModalClose').addEventListener('click', () => _closeModal());
@@ -305,12 +361,54 @@ async function _openModal() {
 
   _bindEditorRefs();
   _bindEditorEvents();
+  // Focus lands inside the modal immediately, on the close button — the
+  // conventional "first focusable in the dialog" target, and the one that
+  // makes the trap below start from a known point instead of from <body>.
+  id('ffModalClose')?.focus();
   await _renderPage(_currentPage);
   _updateCount();
 }
 
+// Escape closes; Tab/Shift+Tab is trapped inside the modal. Bound on
+// document (not _modal) so it still fires if focus somehow lands outside —
+// in which case the first branch pulls it straight back in.
 function _onModalKeydown(e) {
-  if (e.key === 'Escape') _closeModal();
+  if (e.key === 'Escape') { _closeModal(); return; }
+  if (e.key !== 'Tab' || !_modal) return;
+  const els = _focusables();
+  if (!els.length) return;
+  const first  = els[0];
+  const last   = els[els.length - 1];
+  const active = document.activeElement;
+  if (!_modal.contains(active)) { e.preventDefault(); first.focus(); return; }
+  if (e.shiftKey && active === first)  { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && active === last) { e.preventDefault(); first.focus(); }
+}
+
+// offsetParent===null filters out display:none entries (the chip group's own
+// radios are opacity:0/width:0 but still laid out and still genuinely
+// focusable, so they're correctly kept).
+function _focusables() {
+  if (!_modal) return [];
+  return Array.from(_modal.querySelectorAll(FOCUSABLE_SEL))
+    .filter(el => el.offsetParent !== null || el === document.activeElement);
+}
+
+function _setBackgroundInert(on) {
+  if (on) {
+    for (const el of Array.from(document.body.children)) {
+      if (el === _modal) continue;
+      // Never touch (or later clear) something that was already hidden by
+      // someone else — only elements this modal itself marked get restored.
+      if (el.hasAttribute('inert') || el.getAttribute('aria-hidden') === 'true') continue;
+      el.setAttribute('inert', '');
+      el.setAttribute('aria-hidden', 'true');
+      _inerted.push(el);
+    }
+  } else {
+    for (const el of _inerted) { el.removeAttribute('inert'); el.removeAttribute('aria-hidden'); }
+    _inerted = [];
+  }
 }
 
 // Tears down the modal DOM only — _fields/_pdfDoc state is untouched, so
@@ -319,16 +417,34 @@ function _onModalKeydown(e) {
 // the caller is about to overwrite the outer container itself right after,
 // e.g. a new file replacing this one, or the whole tool closing).
 function _closeModal({ silent = false } = {}) {
+  const wasOpen = !!_modal;
   if (_modal) {
     document.removeEventListener('keydown', _onModalKeydown);
     _modal.remove();
     _modal = null;
   }
+  _setBackgroundInert(false);
   _wrap = _canvas = _overlay = _countEl = _pageLabel = _btnPrev = _btnNext = null;
+  _listEl = _zoomLabel = _btnZoomIn = _btnZoomOut = _btnZoomFit = null;
   if (!silent && _container) {
     _container.innerHTML = _triggerHTML();
     _bindTriggerEvents(_container);
   }
+  if (wasOpen) _restoreFocus(silent);
+}
+
+// Returning focus to <body> on close is the classic half-done modal — a
+// keyboard user is dumped back at the top of the document. Prefer the
+// "Continue editing" button that now represents this editor in the outer
+// panel (it's the natural place to carry on from, and it's freshly
+// re-created by _triggerHTML so a saved reference to the OLD one would be
+// stale); fall back to whatever actually had focus when the modal opened.
+function _restoreFocus(silent) {
+  let target = null;
+  if (!silent && _container) target = _container.querySelector('#ffReopenBtn');
+  if (!target && _prevFocus && _prevFocus.isConnected) target = _prevFocus;
+  _prevFocus = null;
+  try { target?.focus(); } catch { /* element became unfocusable — nothing to restore to */ }
 }
 
 function _fieldBoxHTML(f) {
@@ -356,11 +472,21 @@ function _fieldBoxHTML(f) {
   const checkboxGlyph = f.type === 'checkbox'
     ? `<span aria-hidden="true" style="flex-shrink:0;font-size:13px;line-height:1;padding-left:4px;color:#123;">☐</span>`
     : '';
-  return `<div class="ff-field-box" data-id="${f.id}" style="
+  // Highlight state for the sidebar's "click an entry to find it on the
+  // page" action. Written into the inline style rather than a CSS class
+  // because the box's border/background are themselves inline here, and an
+  // inline declaration always beats a class — a .ff-field-box--active rule
+  // would silently lose. The colors are the same green already used by the
+  // box + the site's own --red for nothing else; no new color introduced.
+  const active = String(f.id) === String(_activeFieldId);
+  const boxBorder = active ? '2px solid #2D7A4F' : '1.5px dashed #2D7A4F';
+  const boxBg     = active ? 'rgba(45,122,79,0.22)' : 'rgba(45,122,79,0.10)';
+  const boxRing   = active ? 'box-shadow:0 0 0 3px rgba(45,122,79,0.45);' : '';
+  return `<div class="ff-field-box${active ? ' ff-field-box--active' : ''}" data-id="${f.id}" style="
       position:absolute;box-sizing:border-box;
       left:${(f.xFrac * 100).toFixed(3)}%; top:${(f.yFrac * 100).toFixed(3)}%;
       width:${(f.wFrac * 100).toFixed(3)}%; height:${(f.hFrac * 100).toFixed(3)}%;
-      border:1.5px dashed #2D7A4F; background:rgba(45,122,79,0.10);
+      border:${boxBorder}; background:${boxBg}; ${boxRing}
       display:flex; align-items:center; touch-action:none;">
     <div class="ff-drag-handle" data-id="${f.id}"
       aria-label="${esc(t('formfields_drag_aria'))}" title="${esc(t('formfields_drag_aria'))}"
@@ -397,6 +523,11 @@ function _bindEditorRefs() {
   _pageLabel = id('ffPageLabel');
   _btnPrev   = id('ffPrevBtn');
   _btnNext   = id('ffNextBtn');
+  _listEl    = id('ffFieldList');
+  _zoomLabel = id('ffZoomLabel');
+  _btnZoomIn = id('ffZoomInBtn');
+  _btnZoomOut= id('ffZoomOutBtn');
+  _btnZoomFit= id('ffZoomFitBtn');
 }
 
 async function _renderPage(pageNum) {
@@ -424,7 +555,15 @@ async function _renderPage(pageNum) {
     // when the canvas rendered inline in the page's own scroll flow next
     // to a sticky process button — see form_field_creation_tool_2026_09
     // memory for that history — all now moot inside a dedicated modal.
-    let cssScale = Math.min(1, areaW / baseVp.width);
+    // The user's zoom multiplier layers straight on top of the fit-to-width
+    // scale and nothing else changes: fields are stored as xFrac/yFrac/
+    // wFrac/hFrac (page fractions, not pixels) and positioned in CSS
+    // percentages of the wrap, so they follow any render scale for free —
+    // there is deliberately no placement math to adjust here. The existing
+    // maxCss clamp below (a real canvas-pixel-limit guard, not a UX choice)
+    // still applies AFTER the multiplier, so zooming can never push the
+    // backing canvas past MAX_DIMENSION.
+    let cssScale = Math.min(1, areaW / baseVp.width) * ZOOM_STEPS[_zoomIdx];
 
     const maxCss = MAX_DIMENSION / (Math.max(baseVp.width, baseVp.height) * outputScale);
     if (cssScale > maxCss) cssScale = maxCss;
@@ -454,8 +593,10 @@ async function _renderPage(pageNum) {
     if (_pageLabel) _pageLabel.textContent = `${pageNum} / ${_pageCount}`;
     if (_btnPrev)   _btnPrev.disabled = pageNum <= 1;
     if (_btnNext)   _btnNext.disabled = pageNum >= _pageCount;
+    _updateZoomUI();
 
     _renderOverlayFields();
+    _renderFieldList();
   } catch (err) {
     if (myGen === _generation) showToast(t('formfields_error_prefix', { msg: err.message }));
   }
@@ -469,6 +610,66 @@ function _renderOverlayFields() {
     .join('');
 }
 
+// ── Zoom ───────────────────────────────────────────────────────
+
+function _updateZoomUI() {
+  if (_zoomLabel) _zoomLabel.textContent = `${Math.round(ZOOM_STEPS[_zoomIdx] * 100)}%`;
+  if (_btnZoomOut) _btnZoomOut.disabled = _zoomIdx <= 0;
+  if (_btnZoomIn)  _btnZoomIn.disabled  = _zoomIdx >= ZOOM_STEPS.length - 1;
+  if (_btnZoomFit) _btnZoomFit.disabled = _zoomIdx === ZOOM_FIT_IDX;
+}
+
+function _setZoom(nextIdx) {
+  const clamped = Math.min(Math.max(0, nextIdx), ZOOM_STEPS.length - 1);
+  if (clamped === _zoomIdx) return;
+  _zoomIdx = clamped;
+  _renderPage(_currentPage);
+}
+
+// ── Field list sidebar ─────────────────────────────────────────
+
+// Lists fields across ALL pages, not just the current one — the whole point
+// is navigating a many-field document without hunting, and a per-page list
+// would still leave the user paging around to find something.
+function _renderFieldList() {
+  if (!_listEl) return;
+  if (_fields.length === 0) {
+    _listEl.innerHTML = `<p class="ff-fieldlist__empty">${esc(t('formfields_fieldlist_empty'))}</p>`;
+    return;
+  }
+  _listEl.innerHTML = _fields.map(f => {
+    const typeLabel = f.type === 'checkbox' ? t('formfields_type_checkbox') : t('formfields_type_text');
+    const isActive  = String(f.id) === String(_activeFieldId);
+    return `<button type="button" class="ff-fieldlist__item${isActive ? ' ff-fieldlist__item--active' : ''}"
+        data-id="${f.id}"${isActive ? ' aria-current="true"' : ''}>
+      <span class="ff-fieldlist__name" data-id="${f.id}">${esc(f.name)}</span>
+      <span class="ff-fieldlist__meta">${esc(typeLabel)} · ${esc(t('formfields_fieldlist_page', { n: f.page }))}</span>
+    </button>`;
+  }).join('');
+}
+
+// Sidebar entry → find that field on the canvas. Switches page first if the
+// field lives on a different one (via the same _renderPage the page-nav
+// buttons use — no second code path).
+async function _revealField(fieldId) {
+  const f = _fields.find(x => String(x.id) === String(fieldId));
+  if (!f) return;
+  _activeFieldId = f.id;
+  if (f.page !== _currentPage) await _renderPage(f.page);
+  else { _renderOverlayFields(); _renderFieldList(); }
+
+  const el = _overlay?.querySelector(`.ff-field-box[data-id="${f.id}"]`);
+  const scrollEl = id('ffCanvasScroll');
+  if (!el || !scrollEl) return;
+  // Scroll the modal's OWN stage, not via el.scrollIntoView() — that walks
+  // every scrollable ancestor including the document behind the modal, which
+  // would move the page underneath the backdrop for no reason.
+  const sRect = scrollEl.getBoundingClientRect();
+  const eRect = el.getBoundingClientRect();
+  scrollEl.scrollTop  += (eRect.top  + eRect.height / 2) - (sRect.top  + sRect.height / 2);
+  scrollEl.scrollLeft += (eRect.left + eRect.width  / 2) - (sRect.left + sRect.width  / 2);
+}
+
 // ── Interaction: click-to-place, drag, resize, delete ──────────
 
 function _bindEditorEvents() {
@@ -477,6 +678,15 @@ function _bindEditorEvents() {
   });
   _btnNext.addEventListener('click', () => {
     if (_currentPage < _pageCount) _renderPage(_currentPage + 1);
+  });
+
+  _btnZoomOut.addEventListener('click', () => _setZoom(_zoomIdx - 1));
+  _btnZoomIn .addEventListener('click', () => _setZoom(_zoomIdx + 1));
+  _btnZoomFit.addEventListener('click', () => _setZoom(ZOOM_FIT_IDX));
+
+  _listEl.addEventListener('click', e => {
+    const item = e.target.closest('.ff-fieldlist__item');
+    if (item) _revealField(item.dataset.id);
   });
 
   // Only affects the NEXT placed field — no re-render needed, same as
@@ -501,7 +711,13 @@ function _bindEditorEvents() {
   _overlay.addEventListener('input', e => {
     if (!e.target.classList.contains('ff-name-input')) return;
     const f = _fields.find(x => String(x.id) === e.target.dataset.id);
-    if (f) f.name = e.target.value;
+    if (!f) return;
+    f.name = e.target.value;
+    // Update just this entry's label rather than re-rendering the whole
+    // list on every keystroke — a full _renderFieldList() here would also
+    // destroy and recreate the button the user may be about to click.
+    const label = _listEl?.querySelector(`.ff-fieldlist__name[data-id="${f.id}"]`);
+    if (label) label.textContent = f.name;
   });
 }
 
@@ -636,6 +852,7 @@ function _startResize(e, fieldId) {
 
 function _deleteField(fieldId) {
   _fields = _fields.filter(x => String(x.id) !== String(fieldId));
+  if (String(_activeFieldId) === String(fieldId)) _activeFieldId = null;
   _renderOverlayFields();
   _updateCount();
 }
@@ -648,7 +865,12 @@ function _syncNamesFromDOM() {
   });
 }
 
+// The single place "the set of fields changed" is announced — place,
+// delete and first render all route through here, so the sidebar list stays
+// in lockstep with the count without a second set of call sites to keep
+// in sync.
 function _updateCount() {
+  _renderFieldList();
   if (!_countEl) return;
   const n = _fields.length;
   _countEl.textContent = n === 0 ? '' : tp(n, 'formfields_count_one', 'formfields_count_many', { n });

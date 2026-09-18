@@ -44,7 +44,15 @@
     "name": "Does this work on multi-page PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. Use the page navigation above the preview to move between pages — fields can be placed on any page, and each page remembers its own set of fields."
+      "text": "Yes. Use the page navigation above the preview to move between pages — fields can be placed on any page, and each page remembers its own set of fields. The Placed fields list beside the page shows every field you've added across the whole document, with its page number; clicking an entry jumps to that page and highlights the field, so you don't have to page through the document hunting for one."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I zoom in to place a field precisely?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Zoom controls sit next to the page navigation: zoom in or out in steps up to 400%, with a reset button to return to the default view. Zooming only changes how large the page is drawn on screen — fields are stored as positions relative to the page itself, so anything you've already placed stays exactly where it is on the finished PDF no matter what zoom level you place or review it at."
     }
   },
   {

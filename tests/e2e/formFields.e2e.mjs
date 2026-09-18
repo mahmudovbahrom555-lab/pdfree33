@@ -43,6 +43,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE_URL  = process.env.PDFREE_BASE_URL || 'http://localhost:8934';
 const FLAT_PDF  = path.join(__dirname, '..', 'fixtures', 'normal-1page.pdf');
+const FLAT_3PG  = path.join(__dirname, '..', 'fixtures', 'normal-3page.pdf');
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -64,9 +65,9 @@ const BLOB_HOOK = () => {
 
 // Opens the tool, uploads FLAT_PDF, and waits for the editor modal to be
 // ready. Returns the #ffCanvasWrap locator, already confirmed visible.
-async function openEditor(page) {
+async function openEditor(page, pdfPath = FLAT_PDF) {
   await page.goto(`${BASE_URL}/add-form-fields/`, { waitUntil: 'load', timeout: 30000 });
-  await page.setInputFiles('#fileInput', FLAT_PDF);
+  await page.setInputFiles('#fileInput', pdfPath);
   await page.waitForSelector('.ff-modal--open', { timeout: 15000 });
   const wrap = page.locator('#ffCanvasWrap');
   await page.locator('#ffCanvas').waitFor({ state: 'visible' });
@@ -446,6 +447,239 @@ await test('Cyrillic field name survives sanitization + a real Unicode font (not
   if (!raw.includes('LiberationSans')) {
     throw new Error('expected an embedded LiberationSans font in the saved PDF — found none. ' +
       'A Cyrillic/Greek/Vietnamese value typed into this field later would have no working font to render with.');
+  }
+});
+
+await test('field-list sidebar lists every placed field and navigates to one on another page', async () => {
+  // Competitive-parity feature vs iLovePDF's own PDF-Forms "Form Field List"
+  // (checked live 2026-09-17). The sidebar's whole reason to exist is finding
+  // a field in a document with many of them WITHOUT hunting across pages, so
+  // the load-bearing assertion here is the cross-page jump — a same-page-only
+  // list would pass a weaker version of this test while being useless.
+  const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    const wrap = await openEditor(page, FLAT_3PG);
+
+    await clickAtPageFraction(page, wrap, 0.30, 0.15);
+    await page.waitForTimeout(150);
+    await page.keyboard.type('On Page One');
+
+    // Move to page 2 and place a second field there.
+    await page.click('#ffNextBtn');
+    await page.waitForTimeout(600);
+    expect((await page.locator('#ffPageLabel').innerText()).trim()).toBe('2 / 3');
+    await clickAtPageFraction(page, wrap, 0.30, 0.60);
+    await page.waitForTimeout(150);
+    await page.keyboard.type('On Page Two');
+
+    // The list spans ALL pages, not just the one on screen.
+    expect(await page.locator('.ff-fieldlist__item').count()).toBe(2);
+    const listText = await page.locator('#ffFieldList').innerText();
+    for (const needle of ['On Page One', 'Page 1', 'On Page Two', 'Page 2']) {
+      if (!listText.includes(needle)) throw new Error(`field list missing "${needle}" — got: ${JSON.stringify(listText)}`);
+    }
+
+    // Go back to page 1, then click the page-2 entry: it must switch pages
+    // AND highlight AND scroll the field into the stage's visible window.
+    await page.click('#ffPrevBtn');
+    await page.waitForTimeout(600);
+    expect((await page.locator('#ffPageLabel').innerText()).trim()).toBe('1 / 3');
+
+    await page.locator('.ff-fieldlist__item', { hasText: 'On Page Two' }).click();
+    await page.waitForTimeout(800);
+    expect((await page.locator('#ffPageLabel').innerText()).trim()).toBe('2 / 3');
+
+    // Exactly one box on the canvas, and it's the highlighted one.
+    expect(await page.locator('.ff-field-box').count()).toBe(1);
+    expect(await page.locator('.ff-field-box--active').count()).toBe(1);
+    expect(await page.locator('.ff-fieldlist__item--active').count()).toBe(1);
+    expect(await page.locator('.ff-name-input').inputValue()).toBe('On Page Two');
+
+    // Really scrolled into view: the box's centre must sit inside the
+    // stage's own visible rect, not merely exist somewhere in the DOM.
+    const visible = await page.evaluate(() => {
+      const s = document.getElementById('ffCanvasScroll').getBoundingClientRect();
+      const b = document.querySelector('.ff-field-box').getBoundingClientRect();
+      const cy = b.top + b.height / 2, cx = b.left + b.width / 2;
+      return { inside: cy >= s.top && cy <= s.bottom && cx >= s.left && cx <= s.right, s, b };
+    });
+    if (!visible.inside) throw new Error(`revealed field is outside the visible stage: ${JSON.stringify(visible)}`);
+
+    // Renaming updates the list entry live (no re-open, no extra click).
+    await page.fill('.ff-name-input', 'Renamed Live');
+    await page.waitForTimeout(100);
+    if (!(await page.locator('#ffFieldList').innerText()).includes('Renamed Live')) {
+      throw new Error('renaming a field did not update the sidebar list');
+    }
+
+    // Deleting removes it from the list too.
+    await page.click('.ff-delete-btn');
+    await page.waitForTimeout(200);
+    expect(await page.locator('.ff-fieldlist__item').count()).toBe(1);
+  } finally {
+    await context.close();
+  }
+});
+
+await test('zoom controls really rescale the canvas, and placed fields stay aligned', async () => {
+  // The claim this tool's own code comment makes — "fields are stored as
+  // page fractions, so zooming needs no placement math at all" — is exactly
+  // the kind of plausible-sounding claim CLAUDE.md says to verify against a
+  // real browser rather than accept. So: measure each field box's CENTRE as
+  // a fraction of the canvas wrap before and after zooming. If the fractions
+  // survive, the boxes are still over the same page content.
+  const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    const wrap = await openEditor(page);
+    await clickAtPageFraction(page, wrap, 0.30, 0.15);
+    await page.waitForTimeout(150);
+    await clickAtPageFraction(page, wrap, 0.30, 0.55);
+    await page.waitForTimeout(250);
+
+    const measure = () => page.evaluate(() => {
+      const w = document.getElementById('ffCanvasWrap').getBoundingClientRect();
+      return {
+        canvasCssW: document.getElementById('ffCanvas').style.width,
+        wrapW: w.width,
+        boxes: [...document.querySelectorAll('.ff-field-box')].map(el => {
+          const r = el.getBoundingClientRect();
+          return { cx: (r.left + r.width / 2 - w.left) / w.width, cy: (r.top + r.height / 2 - w.top) / w.height };
+        }),
+      };
+    });
+
+    const before = await measure();
+    expect(await page.locator('#ffZoomLabel').innerText()).toBe('100%');
+
+    await page.click('#ffZoomInBtn');
+    await page.waitForTimeout(700);
+    const after = await measure();
+
+    expect(await page.locator('#ffZoomLabel').innerText()).toBe('125%');
+    if (!(after.wrapW > before.wrapW * 1.2)) {
+      throw new Error(`canvas did not actually grow: ${before.wrapW} → ${after.wrapW} (css ${before.canvasCssW} → ${after.canvasCssW})`);
+    }
+    expect(after.boxes.length).toBe(before.boxes.length);
+    for (let i = 0; i < before.boxes.length; i++) {
+      const dx = Math.abs(after.boxes[i].cx - before.boxes[i].cx);
+      const dy = Math.abs(after.boxes[i].cy - before.boxes[i].cy);
+      if (dx > 0.005 || dy > 0.005) {
+        throw new Error(`field ${i} drifted relative to the page when zoomed: dx=${dx} dy=${dy} ` +
+          `(${JSON.stringify(before.boxes[i])} → ${JSON.stringify(after.boxes[i])})`);
+      }
+    }
+
+    // Zooming all the way in stops at the top of the ladder (the backing
+    // canvas is separately clamped to MAX_DIMENSION inside _renderPage).
+    for (let i = 0; i < 10; i++) {
+      if (await page.locator('#ffZoomInBtn').isDisabled()) break;
+      await page.click('#ffZoomInBtn');
+      await page.waitForTimeout(300);
+    }
+    expect(await page.locator('#ffZoomLabel').innerText()).toBe('400%');
+    expect(await page.locator('#ffZoomInBtn').isDisabled()).toBe(true);
+
+    // A canvas wider than the stage must be scrollable to BOTH edges —
+    // .ff-modal__stage deliberately avoids justify-content:center for this
+    // reason (a centered flex item's overflow is unreachable at the start
+    // edge). Assert the real numbers, don't assume overflow:auto is enough.
+    const overflow = await page.evaluate(() => {
+      const s = document.getElementById('ffCanvasScroll');
+      s.scrollLeft = 0;
+      const sr = s.getBoundingClientRect();
+      const wr = document.getElementById('ffCanvasWrap').getBoundingClientRect();
+      return { scrollW: s.scrollWidth, clientW: s.clientWidth, leftGap: Math.round(wr.left - sr.left) };
+    });
+    if (!(overflow.scrollW > overflow.clientW)) throw new Error(`expected horizontal overflow at 400%, got ${JSON.stringify(overflow)}`);
+    if (overflow.leftGap < 0) throw new Error(`canvas left edge is clipped out of reach at 400%: ${JSON.stringify(overflow)}`);
+
+    // Reset returns to the fit scale and disables itself there.
+    await page.click('#ffZoomFitBtn');
+    await page.waitForTimeout(700);
+    expect(await page.locator('#ffZoomLabel').innerText()).toBe('100%');
+    expect(await page.locator('#ffZoomFitBtn').isDisabled()).toBe(true);
+    const reset = await measure();
+    if (Math.abs(reset.wrapW - before.wrapW) > 1) {
+      throw new Error(`reset did not return to the original scale: ${before.wrapW} → ${reset.wrapW}`);
+    }
+  } finally {
+    await context.close();
+  }
+});
+
+await test('modal traps focus, starts focus inside, makes the page behind inert, and restores focus on close', async () => {
+  // A modal that looks right but lets Tab walk out behind the backdrop is
+  // the classic half-done dialog. Only a real browser can settle it — code
+  // review cannot tell you what document.activeElement actually becomes.
+  const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    const wrap = await openEditor(page);
+
+    // Focus must already be inside the modal the moment it opens.
+    const opened = await page.evaluate(() => {
+      const a = document.activeElement;
+      return { id: a?.id, inside: !!document.querySelector('.ff-modal')?.contains(a) };
+    });
+    if (!opened.inside) throw new Error(`focus was not inside the modal on open (activeElement id="${opened.id}")`);
+
+    // Everything else on the page must be inert + aria-hidden while it's up.
+    const bg = await page.evaluate(() => [...document.body.children]
+      .filter(el => !el.classList.contains('ff-modal'))
+      .map(el => ({ tag: el.tagName, inert: el.hasAttribute('inert'), hidden: el.getAttribute('aria-hidden') })));
+    const leaked = bg.filter(e => !e.inert || e.hidden !== 'true');
+    if (leaked.length) throw new Error(`page content behind the modal is still exposed: ${JSON.stringify(leaked)}`);
+
+    // Place two fields first so the trap has to cycle past real, dynamically
+    // created focusables (name inputs, delete buttons, list entries), not
+    // just the three static chrome buttons.
+    await clickAtPageFraction(page, wrap, 0.30, 0.15);
+    await page.waitForTimeout(150);
+    await clickAtPageFraction(page, wrap, 0.30, 0.55);
+    await page.waitForTimeout(250);
+
+    const walk = async (shift) => {
+      const seen = [];
+      for (let i = 0; i < 30; i++) {
+        await page.keyboard.press(shift ? 'Shift+Tab' : 'Tab');
+        const step = await page.evaluate(() => {
+          const a = document.activeElement;
+          const m = document.querySelector('.ff-modal');
+          return { inside: !!(m && a && m.contains(a)), id: a?.id || a?.className || a?.tagName };
+        });
+        seen.push(step);
+      }
+      return seen;
+    };
+
+    for (const shift of [false, true]) {
+      const seen = await walk(shift);
+      const escaped = seen.filter(s => !s.inside);
+      if (escaped.length) {
+        throw new Error(`${shift ? 'Shift+Tab' : 'Tab'} escaped the modal ${escaped.length}/30 times: ` +
+          JSON.stringify(seen.map(s => (s.inside ? '' : '!') + s.id)));
+      }
+      // A trap that pins focus on ONE element would also never "escape" —
+      // confirm it genuinely cycles through several distinct controls.
+      const distinct = new Set(seen.map(s => s.id));
+      if (distinct.size < 4) throw new Error(`focus barely moved (${distinct.size} distinct targets): ${JSON.stringify([...distinct])}`);
+    }
+
+    // Closing must hand focus to something meaningful — the "Continue
+    // editing" button that now represents this editor — not <body>.
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
+    expect(await page.locator('.ff-modal').count()).toBe(0);
+    expect(await page.evaluate(() => document.activeElement?.id)).toBe('ffReopenBtn');
+
+    // …and the page behind must be interactive again.
+    const stillInert = await page.evaluate(() => [...document.body.children]
+      .filter(el => el.hasAttribute('inert') || el.getAttribute('aria-hidden') === 'true').length);
+    expect(stillInert).toBe(0);
+  } finally {
+    await context.close();
   }
 });
 

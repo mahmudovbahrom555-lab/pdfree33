@@ -1189,6 +1189,13 @@ export const EN = {
   formfields_default_field_name: 'Field {n}',
   formfields_default_checkbox_name: 'Checkbox {n}',
   formfields_continue_editing:   'Continue editing',
+  formfields_fieldlist_title:    'Placed fields',
+  formfields_fieldlist_empty:    'No fields yet — click the page to place one.',
+  formfields_fieldlist_page:     'Page {n}',
+  formfields_zoom_out:           'Zoom out',
+  formfields_zoom_in:            'Zoom in',
+  formfields_zoom_reset:         'Reset zoom',
+  formfields_zoom_level:         'Zoom level',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'Failed to load PDF renderer. Check your internet connection.',

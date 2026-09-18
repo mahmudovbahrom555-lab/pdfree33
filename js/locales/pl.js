@@ -1161,6 +1161,13 @@ window.PDFREE_LOCALE = {
 
   formfields_default_checkbox_name: 'Pole wyboru {n}',
   formfields_continue_editing:   'Kontynuuj edycję',
+  formfields_fieldlist_title:    'Umieszczone pola',
+  formfields_fieldlist_empty:    'Nie ma jeszcze pól — kliknij stronę, aby umieścić pole.',
+  formfields_fieldlist_page:     'Strona {n}',
+  formfields_zoom_out:           'Pomniejsz',
+  formfields_zoom_in:            'Powiększ',
+  formfields_zoom_reset:         'Resetuj powiększenie',
+  formfields_zoom_level:         'Poziom powiększenia',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Nie udało się załadować renderera PDF. Sprawdź połączenie internetowe.',
   draw_read_file_failed:       'Nie można odczytać pliku.',

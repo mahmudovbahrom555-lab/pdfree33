@@ -1163,6 +1163,13 @@ window.PDFREE_LOCALE = {
 
   formfields_default_checkbox_name: 'Casilla {n}',
   formfields_continue_editing:   'Continuar editando',
+  formfields_fieldlist_title:    'Campos colocados',
+  formfields_fieldlist_empty:    'Aún no hay campos: haz clic en la página para colocar uno.',
+  formfields_fieldlist_page:     'Página {n}',
+  formfields_zoom_out:           'Alejar',
+  formfields_zoom_in:            'Acercar',
+  formfields_zoom_reset:         'Restablecer zoom',
+  formfields_zoom_level:         'Nivel de zoom',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'No se pudo cargar el renderizador de PDF. Comprueba tu conexión a internet.',
   draw_read_file_failed:       'No se pudo leer el archivo.',

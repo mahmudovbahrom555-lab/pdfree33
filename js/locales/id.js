@@ -1162,6 +1162,13 @@ window.PDFREE_LOCALE = {
 
   formfields_default_checkbox_name: 'Kotak Centang {n}',
   formfields_continue_editing:   'Lanjutkan mengedit',
+  formfields_fieldlist_title:    'Bidang yang ditempatkan',
+  formfields_fieldlist_empty:    'Belum ada bidang — klik halaman untuk menempatkan satu.',
+  formfields_fieldlist_page:     'Halaman {n}',
+  formfields_zoom_out:           'Perkecil',
+  formfields_zoom_in:            'Perbesar',
+  formfields_zoom_reset:         'Atur ulang zoom',
+  formfields_zoom_level:         'Tingkat zoom',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Gagal memuat perender PDF. Periksa koneksi internet Anda.',
   draw_read_file_failed:       'Tidak dapat membaca file.',

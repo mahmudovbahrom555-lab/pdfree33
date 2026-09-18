@@ -6031,21 +6031,142 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 }
 .ff-modal-close:hover { background: var(--surface2); }
 
+/* Two-column: editing surface + field-list sidebar (see
+   js/formFieldsUI.js's _modalBodyHTML). The body is the ROW; .ff-modal__main
+   is the old column. */
 .ff-modal__body {
   flex: 1;
   min-height: 0;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  gap: 14px;
   padding: 12px 16px;
   overflow: hidden;
 }
+.ff-modal__main {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
 
+/* justify-content:center is deliberately NOT used here: once the canvas is
+   zoomed wider than the stage, a centered flex item's overflow spills past
+   the scroll container's start edge and becomes unreachable (the classic
+   flexbox centered-overflow bug). `margin:auto` on #ffCanvasWrap centers it
+   identically while free space is positive and resolves to 0 once it isn't,
+   so a zoomed-in page scrolls to both edges correctly. */
 .ff-modal__stage {
   flex: 1;
   min-height: 0;
   display: flex;
-  justify-content: center;
   overflow: auto;
+}
+
+.ff-modal__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-bottom: 10px;
+}
+.ff-modal__navgroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ff-modal__navlabel {
+  font-size: 13px;
+  color: var(--text2);
+  min-width: 56px;
+  text-align: center;
+}
+.ff-navbtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.ff-navbtn:hover:not(:disabled) { background: var(--surface2); }
+.ff-navbtn:disabled { opacity: 0.45; cursor: default; }
+
+/* Field-list sidebar. Hidden entirely below 900px rather than squeezed —
+   on a phone the canvas IS the tool, and a 240px column would leave it
+   unusable. Every action it offers (place / rename / delete / page-nav)
+   remains reachable on the canvas itself, so nothing is lost. */
+.ff-modal__side {
+  width: 240px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-left: 1px solid var(--border);
+  padding-left: 14px;
+}
+.ff-modal__side-title {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text3);
+  flex-shrink: 0;
+}
+.ff-fieldlist {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ff-fieldlist__empty {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text3);
+}
+.ff-fieldlist__item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  text-align: left;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.ff-fieldlist__item:hover { background: var(--surface2); }
+.ff-fieldlist__item--active {
+  border-color: var(--green-text);
+  background: var(--surface2);
+}
+.ff-fieldlist__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ff-fieldlist__meta {
+  font-size: 11px;
+  color: var(--text3);
 }
 
 .ff-modal__footer {
@@ -6054,9 +6175,20 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   border-top: 1px solid var(--border);
 }
 
+@media (max-width: 900px) {
+  .ff-modal__side { display: none; }
+  .ff-modal__body { gap: 0; }
+}
+
 @media (max-width: 700px) {
   .ff-modal { padding: 0; }
   .ff-modal__card { max-width: none; border-radius: 0; }
+  /* Tight enough to keep page-nav + zoom on ONE row at 390px. A wrapped
+     two-row toolbar costs ~44px of a stage that's only ~240px tall there,
+     and the canvas is the whole tool on a phone. */
+  .ff-modal__toolbar { gap: 8px 12px; }
+  .ff-modal__navgroup { gap: 6px; }
+  .ff-modal__navlabel { min-width: 44px; font-size: 12px; }
 }
 
 /* ══════════════════════════════════════════════════════════════

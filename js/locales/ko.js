@@ -1163,6 +1163,13 @@ window.PDFREE_LOCALE = {
 
   formfields_default_checkbox_name: '체크박스 {n}',
   formfields_continue_editing:   '계속 편집',
+  formfields_fieldlist_title:    '배치된 필드',
+  formfields_fieldlist_empty:    '아직 필드가 없습니다 — 페이지를 클릭하여 배치하세요.',
+  formfields_fieldlist_page:     '페이지 {n}',
+  formfields_zoom_out:           '축소',
+  formfields_zoom_in:            '확대',
+  formfields_zoom_reset:         '확대/축소 초기화',
+  formfields_zoom_level:         '확대/축소 수준',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF 렌더러를 불러오지 못했습니다. 인터넷 연결을 확인하세요.',
   draw_read_file_failed:       '파일을 읽을 수 없습니다.',

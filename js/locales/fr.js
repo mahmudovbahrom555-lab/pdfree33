@@ -1163,6 +1163,13 @@ window.PDFREE_LOCALE = {
 
   formfields_default_checkbox_name: 'Case {n}',
   formfields_continue_editing:   "Continuer l'édition",
+  formfields_fieldlist_title:    'Champs placés',
+  formfields_fieldlist_empty:    "Aucun champ pour l'instant — cliquez sur la page pour en placer un.",
+  formfields_fieldlist_page:     'Page {n}',
+  formfields_zoom_out:           'Zoom arrière',
+  formfields_zoom_in:            'Zoom avant',
+  formfields_zoom_reset:         'Réinitialiser le zoom',
+  formfields_zoom_level:         'Niveau de zoom',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Échec du chargement du moteur de rendu PDF. Vérifiez votre connexion internet.',
   draw_read_file_failed:       'Impossible de lire le fichier.',
