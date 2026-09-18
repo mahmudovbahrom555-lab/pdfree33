@@ -1161,6 +1161,7 @@ window.PDFREE_LOCALE = {
   formfields_default_field_name: 'Trường {n}',
 
   formfields_default_checkbox_name: 'Hộp kiểm {n}',
+  formfields_continue_editing:   'Tiếp tục chỉnh sửa',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Không thể tải trình kết xuất PDF. Kiểm tra kết nối internet của bạn.',
   draw_read_file_failed:       'Không thể đọc tệp.',

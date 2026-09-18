@@ -1162,6 +1162,7 @@ window.PDFREE_LOCALE = {
   formfields_default_field_name: 'Campo {n}',
 
   formfields_default_checkbox_name: 'Caixa {n}',
+  formfields_continue_editing:   'Continuar a editar',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Falha ao carregar o renderizador de PDF. Verifique sua conexão com a internet.',
   draw_read_file_failed:       'Não foi possível ler o arquivo.',

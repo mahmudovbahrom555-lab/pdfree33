@@ -1160,6 +1160,7 @@ window.PDFREE_LOCALE = {
   formfields_default_field_name: 'Campo {n}',
 
   formfields_default_checkbox_name: 'Casella {n}',
+  formfields_continue_editing:   'Continua a modificare',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Impossibile caricare il motore di rendering PDF. Controlla la tua connessione internet.',
   draw_read_file_failed:       'Impossibile leggere il file.',

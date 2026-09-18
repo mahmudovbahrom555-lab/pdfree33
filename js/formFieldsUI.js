@@ -77,61 +77,22 @@ let _loading     = false;
 let _generation  = 0;      // staleness guard, same pattern as fillUI.js/drawUI.js
 let _pageWPt = 0, _pageHPt = 0; // current page's own PDF-point size — see DEFAULT_H_PT above
 
-// DOM refs — set inside _buildEditorHTML/_bindEditorEvents each render
+// DOM refs — set inside _buildModalHTML/_bindEditorEvents each render
 let _container, _wrap, _canvas, _overlay, _countEl, _pageLabel, _btnPrev, _btnNext;
-let _scrollRaf = null; // rAF handle for the window-scroll listener below
-let _scrollHeightListenerBound = false;
-const FF_STICKY_RESERVE = 110; // #mergeBtn's real height + its sticky offset + a small margin
+let _modal     = null; // the editor modal's own root element, null when closed
+let _fileLabel = '';   // file.name, shown in the modal header + reused by _triggerHTML
 
-// Recomputed on every scroll (see _onWindowScrollForCanvasHeight), not just
-// once at render time — see _renderPage's own comment for why a one-time
-// snapshot left the canvas permanently cramped on chrome-heavy pages.
-// Safe by construction: box bottom = currentTop + (innerHeight - currentTop
-// - reserve) = innerHeight - reserve, regardless of currentTop, as long as
-// currentTop isn't negative (clamped to 0 — a box already scrolled PAST
-// the viewport top can safely use the full innerHeight - reserve).
-function _applyCanvasScrollHeight() {
-  const el = id('ffCanvasScroll');
-  if (!el) return;
-  const top = Math.max(0, el.getBoundingClientRect().top);
-  // No generous floor here on purpose — a floor that exceeds the real
-  // (innerHeight - top - reserve) room is exactly what let the box
-  // overlap the sticky button at low scroll positions (confirmed via a
-  // real document.elementFromPoint() sweep across scroll offsets before
-  // this fix). 200 is just a degenerate-case fallback (a genuinely
-  // near-zero result), not a target size — _positionCanvasForRoom below
-  // is what actually gets the box to a comfortable size by default.
-  const maxCssHeight = Math.max(200, (window.innerHeight || 800) - top - FF_STICKY_RESERVE);
-  el.style.maxHeight = `${maxCssHeight}px`;
-  el.style.overflowY = 'auto';
-}
-
-function _onWindowScrollForCanvasHeight() {
-  if (_scrollRaf) return;
-  _scrollRaf = requestAnimationFrame(() => {
-    _scrollRaf = null;
-    _applyCanvasScrollHeight();
-  });
-}
-
-// Real, reported bug: this options panel routinely renders far down a page
-// that already has nav + hero + drop zone + file list above it, so at the
-// moment a PDF finishes loading, #ffCanvasScroll's render-time position
-// often leaves very little safe room before the sticky #mergeBtn — the box
-// then renders small BY DEFAULT (see _applyCanvasScrollHeight's own
-// safety-first comment), and a real portrait certificate looked like a
-// barely-usable sliver as a result, with nothing prompting the user to
-// scroll for more room. Proactively scroll the container to a fixed,
-// comfortable offset from the viewport top once the editor first opens —
-// same idea as a focused input scrolling itself into view — so the box is
-// already close to its maximum safe size by default, without the user
-// needing to discover they can scroll for more.
-function _positionCanvasForRoom() {
-  const el = id('ffCanvasScroll');
-  if (!el) return;
-  const top = el.getBoundingClientRect().top;
-  if (top > 80) window.scrollBy(0, top - 80);
-}
+// Real, reported bug history (see form_field_creation_tool_2026_09 memory
+// for the full trace): this options panel routinely renders far down a
+// page with nav+hero+dropzone+filelist above it, so an inline canvas
+// bounded to "whatever room is left above the sticky #mergeBtn" was
+// chronically cramped — several rounds of scroll-height-tracking fixes
+// here before this one, all now removed. A full-viewport modal (see
+// .ff-modal in css/components.css) sidesteps the entire problem class:
+// inside the modal there's no outer page scroll to fight — the canvas
+// stage just flex-fills whatever's left after the header/footer via CSS
+// (.ff-modal__stage's flex:1/min-height:0), same pattern already proven
+// by .scan-cam-stage in js/scanCameraUI.js.
 
 // ── Public API ────────────────────────────────────────────────
 
@@ -139,20 +100,19 @@ export function initFormFieldsOptions(file) {
   const el = id('formFieldsOptions');
   if (!el) return;
   el.style.display = '';
-  if (!file) { el.innerHTML = ''; return; }
+  if (!file) { el.innerHTML = ''; _closeModal({ silent: true }); return; }
   _extractAndRender(file, el);
 }
 
 export function hideFormFieldsOptions() {
   const el = id('formFieldsOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
+  _closeModal({ silent: true });
   _pdfDoc = null; _currentPage = 1; _pageCount = 0;
   _fields = []; _fieldSeq = 0; _fieldType = 'text'; _hasExisting = false; _loading = false;
+  _fileLabel = '';
   _generation++;
-  _container = _wrap = _canvas = _overlay = _countEl = _pageLabel = _btnPrev = _btnNext = null;
-  window.removeEventListener('scroll', _onWindowScrollForCanvasHeight);
-  _scrollHeightListenerBound = false;
-  if (_scrollRaf) { cancelAnimationFrame(_scrollRaf); _scrollRaf = null; }
+  _container = null;
 }
 
 export function getFormFieldsParams() {
@@ -172,6 +132,7 @@ export function getFormFieldsParams() {
 async function _extractAndRender(file, container) {
   _loading = true;
   const myGen = ++_generation;
+  _closeModal({ silent: true }); // a new file replaces any editor already open for a previous one
   container.innerHTML = _spinnerHTML(t('formfields_analysing'));
 
   try {
@@ -209,16 +170,16 @@ async function _extractAndRender(file, container) {
     _currentPage = 1;
     _fields      = [];
     _fieldSeq    = 0;
+    _fileLabel   = file.name;
+    _container   = container;
 
-    container.innerHTML = _buildEditorHTML();
-    _bindEditorRefs(container);
-    _bindEditorEvents();
-    await _renderPage(1);
-    _updateCount();
-    // Once, on initial open only — not on every prev/next page nav, which
-    // would be a jarring surprise scroll. See _positionCanvasForRoom's own
-    // comment for why.
-    _positionCanvasForRoom();
+    // The outer options panel just holds a compact placeholder — the real
+    // editing surface is the modal (see _openModal). Painted first so
+    // there's no flash of empty panel while the modal's own first render
+    // (pdf.js page render + field overlay) is still in flight.
+    container.innerHTML = _triggerHTML();
+    _bindTriggerEvents(container);
+    await _openModal();
 
   } catch (err) {
     if (myGen !== _generation) return;
@@ -251,48 +212,123 @@ function _blockedHTML() {
   </div>`;
 }
 
-function _buildEditorHTML() {
-  // This used to carry a 96px bottom padding to clear #mergeBtn's sticky
-  // position (CLAUDE.md UX checklist item 8) — needed back when the canvas
-  // rendered at full, un-clipped height directly in the page's normal
-  // scroll flow (a full A4 page at 1:1 CSS px could easily be taller than
-  // the viewport, so scrolling to the bottom of it put that click point
-  // under the sticky button). Now that #ffCanvasScroll itself is bounded
-  // (max-height + internal scroll, set in _renderPage — see that function's
-  // own comment) to the exact "space available before the sticky button"
-  // measurement, the canvas's visible footprint is already guaranteed safe
-  // — this extra padding became pure dead space below it (a real user-
-  // reported screenshot showed a large empty gap between the canvas and
-  // the process button). Removed; a small gap remains for basic breathing
-  // room around #ffCount, not sticky-button clearance.
+// Shown in the OUTER options panel — behind the modal while it's briefly
+// building, and again if the user closes the modal without processing.
+// Doesn't touch _fields/_pdfDoc state; this is a view, not a reset (see
+// hideFormFieldsOptions for the real teardown).
+function _triggerHTML() {
+  const n = _fields.length;
+  const countText = n > 0 ? tp(n, 'formfields_count_one', 'formfields_count_many', { n }) : '';
   return `
-    <div class="ff-editor" style="padding:0 0 8px;">
-      <p style="margin:0 0 12px;font-size:13px;color:var(--text3);line-height:1.5;">
-        ${esc(t('formfields_click_hint'))}
+    <div style="padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-align:center;">
+      <p style="margin:0 0 10px;font-size:13px;color:var(--text3);word-break:break-word;">
+        ${esc(_fileLabel)}${countText ? ` · ${esc(countText)}` : ''}
       </p>
-      <div style="max-width:320px;margin:0 auto 14px;">
-        ${group(t('formfields_type_label'), chipGroup('ffType', [
-          { value: 'text',     label: t('formfields_type_text') },
-          { value: 'checkbox', label: t('formfields_type_checkbox') },
-        ], _fieldType, t('formfields_type_label')))}
-      </div>
-      <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:10px;">
-        <button type="button" id="ffPrevBtn" aria-label="${esc(t('org_lightbox_prev'))}" style="
-          width:36px;height:36px;border-radius:8px;border:1.5px solid var(--border);
-          background:var(--surface);color:var(--text);font-size:16px;cursor:pointer;">‹</button>
-        <span id="ffPageLabel" style="font-size:13px;color:var(--text2);min-width:70px;text-align:center;">1 / 1</span>
-        <button type="button" id="ffNextBtn" aria-label="${esc(t('org_lightbox_next'))}" style="
-          width:36px;height:36px;border-radius:8px;border:1.5px solid var(--border);
-          background:var(--surface);color:var(--text);font-size:16px;cursor:pointer;">›</button>
-      </div>
-      <div id="ffCanvasScroll" style="display:flex;justify-content:center;overflow:auto;max-width:100%;">
-        <div id="ffCanvasWrap" style="position:relative;flex-shrink:0;">
-          <canvas id="ffCanvas" style="display:block;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.15);"></canvas>
-          <div id="ffOverlay" style="position:absolute;inset:0;cursor:crosshair;"></div>
-        </div>
-      </div>
-      <p id="ffCount" style="text-align:center;margin:10px 0 0;font-size:12px;color:var(--text3);"></p>
+      <button type="button" id="ffReopenBtn" class="split-action-btn">${esc(t('formfields_continue_editing'))}</button>
     </div>`;
+}
+
+function _bindTriggerEvents(container) {
+  container.querySelector('#ffReopenBtn')?.addEventListener('click', () => _openModal());
+}
+
+function _modalBodyHTML() {
+  return `
+    <p style="margin:0 0 12px;font-size:13px;color:var(--text3);line-height:1.5;">
+      ${esc(t('formfields_click_hint'))}
+    </p>
+    <div style="max-width:320px;margin:0 auto 14px;">
+      ${group(t('formfields_type_label'), chipGroup('ffType', [
+        { value: 'text',     label: t('formfields_type_text') },
+        { value: 'checkbox', label: t('formfields_type_checkbox') },
+      ], _fieldType, t('formfields_type_label')))}
+    </div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:10px;">
+      <button type="button" id="ffPrevBtn" aria-label="${esc(t('org_lightbox_prev'))}" style="
+        width:36px;height:36px;border-radius:8px;border:1.5px solid var(--border);
+        background:var(--surface);color:var(--text);font-size:16px;cursor:pointer;">‹</button>
+      <span id="ffPageLabel" style="font-size:13px;color:var(--text2);min-width:70px;text-align:center;">1 / 1</span>
+      <button type="button" id="ffNextBtn" aria-label="${esc(t('org_lightbox_next'))}" style="
+        width:36px;height:36px;border-radius:8px;border:1.5px solid var(--border);
+        background:var(--surface);color:var(--text);font-size:16px;cursor:pointer;">›</button>
+    </div>
+    <div id="ffCanvasScroll" class="ff-modal__stage">
+      <div id="ffCanvasWrap" style="position:relative;flex-shrink:0;">
+        <canvas id="ffCanvas" style="display:block;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.15);"></canvas>
+        <div id="ffOverlay" style="position:absolute;inset:0;cursor:crosshair;"></div>
+      </div>
+    </div>
+    <p id="ffCount" style="text-align:center;margin:10px 0 0;font-size:12px;color:var(--text3);"></p>`;
+}
+
+// Full-viewport editor modal — see css/components.css's .ff-modal block
+// for the full rationale (this tool's canvas was chronically cramped
+// rendering inline in the options panel; a dedicated modal sidesteps the
+// whole problem class instead of tracking scroll position to work around
+// it). Re-entrant: calling this while already open (e.g. clicking
+// "Continue editing" is a no-op if somehow still mounted) just returns.
+async function _openModal() {
+  if (_modal) return;
+  _modal = document.createElement('div');
+  _modal.className = 'ff-modal';
+  // Reuses the REAL #mergeBtn's own current label (already set for this
+  // tool by the time this runs, via config.js's TOOLS.formFields.btn/btns —
+  // see app.js's tool-switch flow) rather than a second hardcoded/
+  // translated copy that could drift out of sync with it across 15 locales.
+  const saveLabel = id('mergeBtn')?.textContent?.trim() || '📝 Add Fields & Download';
+  _modal.innerHTML = `
+    <div class="ff-modal__card" role="dialog" aria-modal="true" aria-label="${esc(_fileLabel)}">
+      <div class="ff-modal__header">
+        <p class="ff-modal__title">${esc(_fileLabel)}</p>
+        <button type="button" class="ff-modal-close" id="ffModalClose" aria-label="${esc(t('scan_cam_close'))}">✕</button>
+      </div>
+      <div class="ff-modal__body">${_modalBodyHTML()}</div>
+      <div class="ff-modal__footer">
+        <button type="button" class="merge-btn" id="ffModalSaveBtn" style="position:static;margin-top:0;">${esc(saveLabel)}</button>
+      </div>
+    </div>`;
+  document.body.appendChild(_modal);
+  requestAnimationFrame(() => _modal?.classList.add('ff-modal--open'));
+
+  id('ffModalClose').addEventListener('click', () => _closeModal());
+  document.addEventListener('keydown', _onModalKeydown);
+  _modal.addEventListener('click', e => { if (e.target === _modal) _closeModal(); });
+  // Forwards to the REAL #mergeBtn rather than duplicating its processing
+  // wiring — this button's only job is closing the modal out of the way
+  // first so the shared progress bar/success card (which live in the main
+  // page, not the modal) are visible right away, same as if the user had
+  // closed the modal and clicked #mergeBtn directly themselves.
+  id('ffModalSaveBtn').addEventListener('click', () => {
+    _closeModal({ silent: true });
+    id('mergeBtn')?.click();
+  });
+
+  _bindEditorRefs();
+  _bindEditorEvents();
+  await _renderPage(_currentPage);
+  _updateCount();
+}
+
+function _onModalKeydown(e) {
+  if (e.key === 'Escape') _closeModal();
+}
+
+// Tears down the modal DOM only — _fields/_pdfDoc state is untouched, so
+// reopening (via _triggerHTML's button) resumes exactly where the user
+// left off. silent:true skips re-rendering the outer trigger (used when
+// the caller is about to overwrite the outer container itself right after,
+// e.g. a new file replacing this one, or the whole tool closing).
+function _closeModal({ silent = false } = {}) {
+  if (_modal) {
+    document.removeEventListener('keydown', _onModalKeydown);
+    _modal.remove();
+    _modal = null;
+  }
+  _wrap = _canvas = _overlay = _countEl = _pageLabel = _btnPrev = _btnNext = null;
+  if (!silent && _container) {
+    _container.innerHTML = _triggerHTML();
+    _bindTriggerEvents(_container);
+  }
 }
 
 function _fieldBoxHTML(f) {
@@ -353,8 +389,7 @@ function _fieldBoxHTML(f) {
 
 // ── Editor: refs, page render, overlay ──────────────────────────
 
-function _bindEditorRefs(container) {
-  _container = container;
+function _bindEditorRefs() {
   _wrap      = id('ffCanvasWrap');
   _canvas    = id('ffCanvas');
   _overlay   = id('ffOverlay');
@@ -380,46 +415,15 @@ async function _renderPage(pageNum) {
     const scrollEl     = id('ffCanvasScroll');
     const areaW        = Math.max(280, (scrollEl?.clientWidth || 760) - 8);
 
-    // Previously this also capped cssScale by height (maxCssHeight /
-    // baseVp.height, folded into the same Math.min as the width term) to
-    // keep #mergeBtn's sticky-bottom overlap from covering the canvas's
-    // lower portion (CLAUDE.md UX checklist item 8). Real, reported bug in
-    // that approach: since ONE scale factor drives both width and height
-    // (a canvas render can't scale them independently without distorting
-    // the page), a tall page on a viewport with limited headroom above the
-    // sticky button shrank the WHOLE render — including width — down to a
-    // tiny thumbnail, even though plenty of horizontal space was still
-    // available. A real portrait certificate PDF made this obvious: the
-    // rendered page was a fraction of the panel's actual width.
-    //
-    // Fix: scale by WIDTH ONLY (maximize the render size that actually
-    // matters for precise click-to-place accuracy), and instead bound
-    // #ffCanvasScroll itself (max-height + its existing overflow:auto) to
-    // the same "space available above the sticky button" measurement.
-    // This gives the identical overlap guarantee as before — the visible
-    // box never extends into the sticky button's territory — but a tall
-    // page now scrolls WITHIN that fixed-size box instead of shrinking
-    // sideways to avoid ever needing to scroll.
-    //
-    // Real, reported follow-up bug: this used to compute max-height ONCE,
-    // at render time, from the space available at THAT scroll position —
-    // safe by construction (box bottom = renderTimeTop + (innerHeight -
-    // renderTimeTop - stickyReserve) = innerHeight - stickyReserve,
-    // regardless of renderTimeTop) but frozen there forever after. On this
-    // tool's own template (hint text + type toggle + page nav all sit
-    // above the canvas), the canvas can easily start most of the way down
-    // even a tall viewport, leaving very little room at render time — a
-    // real portrait certificate showed barely 1/4 of the page at once,
-    // permanently, even though scrolling down would have revealed plenty
-    // more room. Recomputing live on scroll (see _applyCanvasScrollHeight
-    // below) fixes this: the box grows as the user scrolls it up toward
-    // (or past) the viewport top, up to the full safe cap, instead of
-    // being stuck at whatever was available the instant the PDF rendered.
-    _applyCanvasScrollHeight();
-    if (!_scrollHeightListenerBound) {
-      window.addEventListener('scroll', _onWindowScrollForCanvasHeight, { passive: true });
-      _scrollHeightListenerBound = true;
-    }
+    // Scale by width only — the modal's own #ffCanvasScroll (class
+    // ff-modal__stage) flex-fills whatever vertical space the modal has
+    // left after its header/footer (see css/components.css) and handles
+    // overflow via plain CSS scroll, so there's no JS-computed height cap
+    // to fight here at all. This file used to carry several rounds of
+    // scroll-position-tracking height math for exactly this purpose, back
+    // when the canvas rendered inline in the page's own scroll flow next
+    // to a sticky process button — see form_field_creation_tool_2026_09
+    // memory for that history — all now moot inside a dedicated modal.
     let cssScale = Math.min(1, areaW / baseVp.width);
 
     const maxCss = MAX_DIMENSION / (Math.max(baseVp.width, baseVp.height) * outputScale);
@@ -477,11 +481,12 @@ function _bindEditorEvents() {
 
   // Only affects the NEXT placed field — no re-render needed, same as
   // watermarkUI.js's wmKind handler for a mode that doesn't change
-  // anything already on screen.
-  _container.addEventListener('change', e => {
+  // anything already on screen. Bound on _modal (not the outer _container,
+  // which no longer holds this markup — see _openModal).
+  _modal.addEventListener('change', e => {
     if (e.target.name === 'ffType') {
       _fieldType = e.target.value;
-      _container.querySelectorAll('[data-name="ffType"]').forEach(el =>
+      _modal.querySelectorAll('[data-name="ffType"]').forEach(el =>
         el.classList.toggle('j2p-chip--active', el.dataset.value === _fieldType));
     }
   });

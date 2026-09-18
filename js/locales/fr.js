@@ -1162,6 +1162,7 @@ window.PDFREE_LOCALE = {
   formfields_default_field_name: 'Champ {n}',
 
   formfields_default_checkbox_name: 'Case {n}',
+  formfields_continue_editing:   "Continuer l'édition",
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Échec du chargement du moteur de rendu PDF. Vérifiez votre connexion internet.',
   draw_read_file_failed:       'Impossible de lire le fichier.',

@@ -1209,6 +1209,7 @@ window.PDFREE_LOCALE = {
   formfields_default_field_name: '字段 {n}',
 
   formfields_default_checkbox_name: '复选框 {n}',
+  formfields_continue_editing:   '继续编辑',
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'PDF 渲染器加载失败。请检查您的网络连接。',
   draw_read_file_failed:       '无法读取此文件。',

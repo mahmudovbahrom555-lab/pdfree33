@@ -1160,6 +1160,7 @@ window.PDFREE_LOCALE = {
   formfields_default_field_name: 'Pole {n}',
 
   formfields_default_checkbox_name: 'Pole wyboru {n}',
+  formfields_continue_editing:   'Kontynuuj edycję',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Nie udało się załadować renderera PDF. Sprawdź połączenie internetowe.',
   draw_read_file_failed:       'Nie można odczytać pliku.',

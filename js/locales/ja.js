@@ -1163,6 +1163,7 @@ window.PDFREE_LOCALE = {
   formfields_default_field_name: 'フィールド {n}',
 
   formfields_default_checkbox_name: 'チェックボックス {n}',
+  formfields_continue_editing:   '編集を続ける',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDFレンダラーの読み込みに失敗しました。インターネット接続を確認してください。',
   draw_read_file_failed:       'ファイルを読み込めませんでした。',

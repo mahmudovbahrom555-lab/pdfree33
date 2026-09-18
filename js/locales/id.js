@@ -1161,6 +1161,7 @@ window.PDFREE_LOCALE = {
   formfields_default_field_name: 'Kolom {n}',
 
   formfields_default_checkbox_name: 'Kotak Centang {n}',
+  formfields_continue_editing:   'Lanjutkan mengedit',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Gagal memuat perender PDF. Periksa koneksi internet Anda.',
   draw_read_file_failed:       'Tidak dapat membaca file.',

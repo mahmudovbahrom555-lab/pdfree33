@@ -1162,6 +1162,7 @@ window.PDFREE_LOCALE = {
   formfields_default_field_name: '필드 {n}',
 
   formfields_default_checkbox_name: '체크박스 {n}',
+  formfields_continue_editing:   '계속 편집',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF 렌더러를 불러오지 못했습니다. 인터넷 연결을 확인하세요.',
   draw_read_file_failed:       '파일을 읽을 수 없습니다.',

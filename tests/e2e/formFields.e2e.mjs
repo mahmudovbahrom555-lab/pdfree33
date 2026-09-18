@@ -21,6 +21,14 @@
 //     PDF another tool can actually read, not just something that looks
 //     right in this tool's own code.
 //
+//  Editor UI lives in a full-viewport modal (js/formFieldsUI.js's
+//  _openModal), not inline in the options panel — earlier versions of
+//  this file had a lot of page-scroll-positioning logic here to reach a
+//  click target reliably; none of that is needed anymore since the modal
+//  is a fixed-position overlay with its own bounded, scrollable canvas
+//  stage. See form_field_creation_tool_2026_09 memory for the full history
+//  of why the modal replaced the inline canvas.
+//
 //  Requires: dist/ already built (`python3 scripts/build.py`) and served
 //  at PDFREE_BASE_URL (default http://localhost:8934).
 //
@@ -54,26 +62,31 @@ const BLOB_HOOK = () => {
   URL.createObjectURL = function (blob) { if (blob instanceof Blob) window.__blob = blob; return orig(blob); };
 };
 
-// #ffCanvasScroll now renders the page at full width-derived scale (see
-// formFieldsUI.js's own _renderPage comment — this used to also shrink by
-// height to avoid #mergeBtn's sticky overlap, which made tall/portrait
-// pages render as tiny unusable thumbnails; fixed by scaling on width only
-// and instead bounding #ffCanvasScroll itself with max-height+scroll). Two
-// things follow: (1) a click target below the fold needs scrolling WITHIN
-// the container into view first, same as a real user now does; (2) the
-// container's own on-PAGE position is unaffected by that internal scroll —
-// when the panel's chrome above the canvas leaves very little real
-// headroom before the sticky #mergeBtn, the height-cap's safety floor
-// (220px minimum, formFieldsUI.js's own Math.max) can still place the
-// container's bottom edge behind the button, confirmed via a real
-// document.elementFromPoint() probe. Scroll the OUTER page first so the
-// container sits near a fixed, comfortably-clear offset from the viewport
-// top, THEN scroll within it — matches how a real user would reposition a
-// tall canvas before clicking, not a test-only workaround.
+// Opens the tool, uploads FLAT_PDF, and waits for the editor modal to be
+// ready. Returns the #ffCanvasWrap locator, already confirmed visible.
+async function openEditor(page) {
+  await page.goto(`${BASE_URL}/add-form-fields/`, { waitUntil: 'load', timeout: 30000 });
+  await page.setInputFiles('#fileInput', FLAT_PDF);
+  await page.waitForSelector('.ff-modal--open', { timeout: 15000 });
+  const wrap = page.locator('#ffCanvasWrap');
+  await page.locator('#ffCanvas').waitFor({ state: 'visible' });
+  return wrap;
+}
+
+// Clicks at a fraction of the canvas wrap's own bounds. #ffCanvasScroll
+// (the modal's stage) can be shorter than the full-resolution rendered
+// page — its own bounding rect is fixed within the modal, but the WRAP
+// inside it (and the overlay covering it) can extend well past that
+// visible window on a page tall enough to need internal scrolling. A
+// click computed against the wrap's full (un-clipped) height can land on
+// whatever's laid out AFTER the scroll area in the modal — confirmed via
+// document.elementFromPoint(): a naive click at 50% of a page whose
+// visible stage covers only ~43% landed on the modal's OWN footer save
+// button instead of the canvas. Scroll #ffCanvasScroll (simple internal
+// scroll only — no outer page involved, unlike the old inline-canvas
+// version of this helper) to bring the target into its visible window
+// first, same as a real user would for a page taller than the modal.
 async function clickAtPageFraction(page, wrapLocator, xFrac, yFrac) {
-  await page.locator('#ffCanvasScroll').evaluate((el) => {
-    window.scrollBy(0, el.getBoundingClientRect().top - 80);
-  });
   const box = await wrapLocator.boundingBox();
   await page.evaluate(({ yFracArg, wrapHeight }) => {
     const scrollEl = document.getElementById('ffCanvasScroll');
@@ -82,6 +95,31 @@ async function clickAtPageFraction(page, wrapLocator, xFrac, yFrac) {
   }, { yFracArg: yFrac, wrapHeight: box.height });
   const box2 = await wrapLocator.boundingBox();
   await page.mouse.click(box2.x + box2.width * xFrac, box2.y + box2.height * yFrac);
+}
+
+// Waits for and captures the downloaded blob after clicking the in-modal
+// save button (#ffModalSaveBtn) — the natural user action now that the
+// editor lives in a modal, not the shared #mergeBtn directly (though that
+// still works too — clicking #ffModalSaveBtn just closes the modal and
+// forwards to it, see _openModal's own comment).
+async function saveAndCapture(page) {
+  await page.evaluate(() => { window.__blob = null; });
+  await page.click('#ffModalSaveBtn');
+  let result = null;
+  for (let i = 0; i < 60; i++) {
+    result = await page.evaluate(() => window.__blob ? { size: window.__blob.size, type: window.__blob.type } : null).catch(() => null);
+    if (result) break;
+    await page.waitForTimeout(500);
+  }
+  if (!result) throw new Error('processing did not complete in time');
+  const base64 = await page.evaluate(async () => {
+    const buf = await window.__blob.arrayBuffer();
+    let binary = '';
+    const bytes = new Uint8Array(buf);
+    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+    return btoa(binary);
+  });
+  return { result, buffer: Buffer.from(base64, 'base64') };
 }
 
 console.log(`\nformFields E2E — click-to-place produces a real AcroForm PDF (real browser, ${BASE_URL}):`);
@@ -102,19 +140,10 @@ await test('click-place-name-save produces a downloaded PDF', async () => {
   const page = await context.newPage();
   try {
     await page.addInitScript(BLOB_HOOK);
-    await page.goto(`${BASE_URL}/add-form-fields/`, { waitUntil: 'load', timeout: 30000 });
-    await page.setInputFiles('#fileInput', FLAT_PDF);
-
-    // Wait for the canvas-based editor to render (not the "already has
-    // fields" blocked message, not the loading spinner).
-    await page.waitForSelector('#ffCanvasWrap', { state: 'visible', timeout: 15000 });
-    const wrap = page.locator('#ffCanvasWrap');
-    await page.locator('#ffCanvas').waitFor({ state: 'visible' });
+    const wrap = await openEditor(page);
 
     // Place two fields at two different spots on the page via REAL clicks
     // on the REAL rendered canvas overlay (not a synthetic event dispatch).
-    // clickAtPageFraction scrolls #ffCanvasScroll so each target point is
-    // actually visible first — see its own comment for why that's needed.
     await clickAtPageFraction(page, wrap, 0.25, 0.10);
     await page.waitForTimeout(150);
     // The first field's name input is auto-focused+selected after
@@ -128,26 +157,15 @@ await test('click-place-name-save produces a downloaded PDF', async () => {
     const fieldBoxCount = await page.locator('.ff-field-box').count();
     expect(fieldBoxCount).toBe(2);
 
-    await page.evaluate(() => { window.__blob = null; });
-    await page.click('#mergeBtn');
-
-    let result = null;
-    for (let i = 0; i < 60; i++) {
-      result = await page.evaluate(() => window.__blob ? { size: window.__blob.size, type: window.__blob.type } : null).catch(() => null);
-      if (result) break;
-      await page.waitForTimeout(500);
-    }
-    if (!result) throw new Error('processing did not complete in time');
+    const { result, buffer } = await saveAndCapture(page);
     expect(result.type).toBe('application/pdf');
     if (!(result.size > 0)) throw new Error(`Expected a non-empty PDF, got size ${result.size}`);
+    downloadedB64 = buffer.toString('base64');
 
-    downloadedB64 = await page.evaluate(async () => {
-      const buf = await window.__blob.arrayBuffer();
-      let binary = '';
-      const bytes = new Uint8Array(buf);
-      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-      return btoa(binary);
-    });
+    // The modal should be gone once processing kicks off — see
+    // _openModal's own comment on why (so the shared progress bar/success
+    // card, which live in the main page, are visible right away).
+    expect(await page.locator('.ff-modal').count()).toBe(0);
   } finally {
     await context.close();
   }
@@ -167,11 +185,7 @@ await test('dragging a placed field by its handle actually moves it', async () =
   const context = await browser.newContext({ serviceWorkers: 'block' });
   const page = await context.newPage();
   try {
-    await page.goto(`${BASE_URL}/add-form-fields/`, { waitUntil: 'load', timeout: 30000 });
-    await page.setInputFiles('#fileInput', FLAT_PDF);
-    await page.waitForSelector('#ffCanvasWrap', { state: 'visible', timeout: 15000 });
-    const wrap = page.locator('#ffCanvasWrap');
-    await page.locator('#ffCanvas').waitFor({ state: 'visible' });
+    const wrap = await openEditor(page);
 
     await clickAtPageFraction(page, wrap, 0.25, 0.15);
     await page.waitForTimeout(150);
@@ -199,6 +213,38 @@ await test('dragging a placed field by its handle actually moves it', async () =
     await page.fill('.ff-name-input', 'Renamed After Drag');
     const val = await page.locator('.ff-name-input').inputValue();
     expect(val).toBe('Renamed After Drag');
+  } finally {
+    await context.close();
+  }
+});
+
+await test('Escape closes the modal, "Continue editing" reopens it with fields intact', async () => {
+  // Real feature added the same day as the modal itself: closing (X /
+  // Escape / backdrop click) must NOT discard placed fields — the outer
+  // options panel shows a compact "N fields placed" summary with a
+  // reopen button, and _fields/_pdfDoc state survives the round trip.
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    const wrap = await openEditor(page);
+    await clickAtPageFraction(page, wrap, 0.25, 0.15);
+    await page.waitForTimeout(150);
+    await page.keyboard.type('Survives Close');
+
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(200);
+    expect(await page.locator('.ff-modal').count()).toBe(0);
+
+    const triggerText = (await page.locator('#formFieldsOptions').textContent()).trim();
+    if (!triggerText.includes('1 field placed')) {
+      throw new Error(`Expected the trigger panel to report 1 field placed, got: "${triggerText}"`);
+    }
+
+    await page.click('#ffReopenBtn');
+    await page.waitForSelector('.ff-modal--open', { timeout: 5000 });
+    expect(await page.locator('.ff-field-box').count()).toBe(1);
+    const val = await page.locator('.ff-name-input').inputValue();
+    expect(val).toBe('Survives Close');
   } finally {
     await context.close();
   }
@@ -275,11 +321,7 @@ await test('checkbox field type: select chip, place, save, verify two independen
   let cbBuffer;
   try {
     await page.addInitScript(BLOB_HOOK);
-    await page.goto(`${BASE_URL}/add-form-fields/`, { waitUntil: 'load', timeout: 30000 });
-    await page.setInputFiles('#fileInput', FLAT_PDF);
-    await page.waitForSelector('#ffCanvasWrap', { state: 'visible', timeout: 15000 });
-    const wrap = page.locator('#ffCanvasWrap');
-    await page.locator('#ffCanvas').waitFor({ state: 'visible' });
+    const wrap = await openEditor(page);
 
     // Select the Checkbox chip before placing — same click-target pattern
     // as chip groups elsewhere in this codebase (label[data-name][data-value]).
@@ -298,24 +340,8 @@ await test('checkbox field type: select chip, place, save, verify two independen
 
     expect(await page.locator('.ff-field-box').count()).toBe(2);
 
-    await page.evaluate(() => { window.__blob = null; });
-    await page.click('#mergeBtn');
-    let result = null;
-    for (let i = 0; i < 60; i++) {
-      result = await page.evaluate(() => window.__blob ? { size: window.__blob.size } : null).catch(() => null);
-      if (result) break;
-      await page.waitForTimeout(500);
-    }
-    if (!result) throw new Error('processing did not complete in time');
-
-    const base64 = await page.evaluate(async () => {
-      const buf = await window.__blob.arrayBuffer();
-      let binary = '';
-      const bytes = new Uint8Array(buf);
-      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-      return btoa(binary);
-    });
-    cbBuffer = Buffer.from(base64, 'base64');
+    const { buffer } = await saveAndCapture(page);
+    cbBuffer = buffer;
   } finally {
     await context.close();
   }
@@ -389,11 +415,7 @@ await test('Cyrillic field name survives sanitization + a real Unicode font (not
   const CYRILLIC_NAME = 'Имя (Фамилия)';
   try {
     await page.addInitScript(BLOB_HOOK);
-    await page.goto(`${BASE_URL}/add-form-fields/`, { waitUntil: 'load', timeout: 30000 });
-    await page.setInputFiles('#fileInput', FLAT_PDF);
-    await page.waitForSelector('#ffCanvasWrap', { state: 'visible', timeout: 15000 });
-    const wrap = page.locator('#ffCanvasWrap');
-    await page.locator('#ffCanvas').waitFor({ state: 'visible' });
+    const wrap = await openEditor(page);
 
     await clickAtPageFraction(page, wrap, 0.25, 0.10);
     await page.waitForTimeout(150);
@@ -402,24 +424,8 @@ await test('Cyrillic field name survives sanitization + a real Unicode font (not
     // user would use, not a synthetic value assignment.
     await page.keyboard.type(CYRILLIC_NAME);
 
-    await page.evaluate(() => { window.__blob = null; });
-    await page.click('#mergeBtn');
-    let result = null;
-    for (let i = 0; i < 60; i++) {
-      result = await page.evaluate(() => window.__blob ? { size: window.__blob.size } : null).catch(() => null);
-      if (result) break;
-      await page.waitForTimeout(500);
-    }
-    if (!result) throw new Error('processing did not complete in time');
-
-    const base64 = await page.evaluate(async () => {
-      const buf = await window.__blob.arrayBuffer();
-      let binary = '';
-      const bytes = new Uint8Array(buf);
-      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-      return btoa(binary);
-    });
-    cyrillicBuffer = Buffer.from(base64, 'base64');
+    const { buffer } = await saveAndCapture(page);
+    cyrillicBuffer = buffer;
   } finally {
     await context.close();
   }

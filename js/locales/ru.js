@@ -1161,6 +1161,7 @@ window.PDFREE_LOCALE = {
   formfields_default_field_name: 'Поле {n}',
 
   formfields_default_checkbox_name: 'Флажок {n}',
+  formfields_continue_editing:   'Продолжить редактирование',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Не удалось загрузить рендерер PDF. Проверьте подключение к интернету.',
   draw_read_file_failed:       'Не удалось прочитать файл.',

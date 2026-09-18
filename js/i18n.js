@@ -1188,6 +1188,7 @@ export const EN = {
   formfields_error_prefix:       'Could not process PDF: {msg}',
   formfields_default_field_name: 'Field {n}',
   formfields_default_checkbox_name: 'Checkbox {n}',
+  formfields_continue_editing:   'Continue editing',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'Failed to load PDF renderer. Check your internet connection.',

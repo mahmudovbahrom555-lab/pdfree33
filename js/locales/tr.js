@@ -1160,6 +1160,7 @@ window.PDFREE_LOCALE = {
   formfields_default_field_name: 'Alan {n}',
 
   formfields_default_checkbox_name: 'Onay Kutusu {n}',
+  formfields_continue_editing:   'Düzenlemeye devam et',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF işleyicisi yüklenemedi. İnternet bağlantınızı kontrol edin.',
   draw_read_file_failed:       'Dosya okunamadı.',

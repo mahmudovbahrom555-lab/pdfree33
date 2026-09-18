@@ -1211,6 +1211,7 @@ window.PDFREE_LOCALE = {
   formfields_default_field_name: 'حقل {n}',
 
   formfields_default_checkbox_name: 'خانة اختيار {n}',
+  formfields_continue_editing:   'متابعة التحرير',
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'فشل تحميل عارض PDF. تحقق من اتصالك بالإنترنت.',
   draw_read_file_failed:       'تعذّرت قراءة الملف.',

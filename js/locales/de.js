@@ -1163,6 +1163,7 @@ window.PDFREE_LOCALE = {
   formfields_default_field_name: 'Feld {n}',
 
   formfields_default_checkbox_name: 'Kontrollkästchen {n}',
+  formfields_continue_editing:   'Bearbeitung fortsetzen',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF-Renderer konnte nicht geladen werden. Überprüfe deine Internetverbindung.',
   draw_read_file_failed:       'Datei konnte nicht gelesen werden.',

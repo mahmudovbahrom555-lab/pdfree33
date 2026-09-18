@@ -1160,6 +1160,7 @@ window.PDFREE_LOCALE = {
   formfields_default_field_name: 'Veld {n}',
 
   formfields_default_checkbox_name: 'Selectievakje {n}',
+  formfields_continue_editing:   'Verder bewerken',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Laden van PDF-renderer mislukt. Controleer je internetverbinding.',
   draw_read_file_failed:       'Kan het bestand niet lezen.',
