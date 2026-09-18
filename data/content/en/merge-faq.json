@@ -36,7 +36,7 @@
     "name": "Will the formatting and fonts be preserved after merging?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. PDFree uses pdf-lib, which copies pages at the PDF object level — fonts, images, vector graphics, and formatting are preserved exactly as in the originals."
+      "text": "Yes. PDFree uses pdf-lib, which copies pages at the PDF object level — fonts, images, vector graphics, and formatting are preserved exactly as in the originals. This includes each page's own size and orientation: if you merge a mix of portrait and landscape pages, or different paper sizes, each page keeps its original dimensions in the merged file instead of being stretched or shrunk to match the others."
     }
   },
   {
