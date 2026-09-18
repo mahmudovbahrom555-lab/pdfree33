@@ -320,16 +320,26 @@ async function _renderPage(pageNum) {
     const scrollEl     = id('ffCanvasScroll');
     const areaW        = Math.max(280, (scrollEl?.clientWidth || 760) - 8);
 
-    // Height cap, not just width — see this file's own header comment on
-    // #mergeBtn's sticky-bottom overlap (CLAUDE.md UX checklist item 8).
-    // Without this, a page rendered at 1:1 (a full A4/Letter page is
-    // visually taller than most viewports) leaves its lower portion
-    // sitting UNDER the sticky button at essentially every scroll
-    // position — confirmed live via document.elementFromPoint() during
-    // Playwright verification: a click at a point that looked like it was
-    // on the canvas landed on #mergeBtn instead. Capping height so the
-    // whole page fits above the reserved chrome sidesteps the overlap for
-    // the common case instead of relying on scroll position.
+    // Previously this also capped cssScale by height (maxCssHeight /
+    // baseVp.height, folded into the same Math.min as the width term) to
+    // keep #mergeBtn's sticky-bottom overlap from covering the canvas's
+    // lower portion (CLAUDE.md UX checklist item 8). Real, reported bug in
+    // that approach: since ONE scale factor drives both width and height
+    // (a canvas render can't scale them independently without distorting
+    // the page), a tall page on a viewport with limited headroom above the
+    // sticky button shrank the WHOLE render — including width — down to a
+    // tiny thumbnail, even though plenty of horizontal space was still
+    // available. A real portrait certificate PDF made this obvious: the
+    // rendered page was a fraction of the panel's actual width.
+    //
+    // Fix: scale by WIDTH ONLY (maximize the render size that actually
+    // matters for precise click-to-place accuracy), and instead bound
+    // #ffCanvasScroll itself (max-height + its existing overflow:auto) to
+    // the same "space available above the sticky button" measurement.
+    // This gives the identical overlap guarantee as before — the visible
+    // box never extends into the sticky button's territory — but a tall
+    // page now scrolls WITHIN that fixed-size box instead of shrinking
+    // sideways to avoid ever needing to scroll.
     //
     // A flat "reserve N px" guess doesn't work here — this same options
     // panel is embedded inside different page templates (the dedicated
@@ -341,7 +351,11 @@ async function _renderPage(pageNum) {
     const scrollTop     = scrollEl?.getBoundingClientRect().top ?? 200;
     const stickyReserve = 110; // #mergeBtn's real height + its sticky offset + a small margin
     const maxCssHeight  = Math.max(220, (window.innerHeight || 800) - scrollTop - stickyReserve);
-    let cssScale        = Math.min(1, areaW / baseVp.width, maxCssHeight / baseVp.height);
+    if (scrollEl) {
+      scrollEl.style.maxHeight = `${maxCssHeight}px`;
+      scrollEl.style.overflowY = 'auto';
+    }
+    let cssScale = Math.min(1, areaW / baseVp.width);
 
     const maxCss = MAX_DIMENSION / (Math.max(baseVp.width, baseVp.height) * outputScale);
     if (cssScale > maxCss) cssScale = maxCss;

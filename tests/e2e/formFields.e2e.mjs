@@ -54,6 +54,36 @@ const BLOB_HOOK = () => {
   URL.createObjectURL = function (blob) { if (blob instanceof Blob) window.__blob = blob; return orig(blob); };
 };
 
+// #ffCanvasScroll now renders the page at full width-derived scale (see
+// formFieldsUI.js's own _renderPage comment — this used to also shrink by
+// height to avoid #mergeBtn's sticky overlap, which made tall/portrait
+// pages render as tiny unusable thumbnails; fixed by scaling on width only
+// and instead bounding #ffCanvasScroll itself with max-height+scroll). Two
+// things follow: (1) a click target below the fold needs scrolling WITHIN
+// the container into view first, same as a real user now does; (2) the
+// container's own on-PAGE position is unaffected by that internal scroll —
+// when the panel's chrome above the canvas leaves very little real
+// headroom before the sticky #mergeBtn, the height-cap's safety floor
+// (220px minimum, formFieldsUI.js's own Math.max) can still place the
+// container's bottom edge behind the button, confirmed via a real
+// document.elementFromPoint() probe. Scroll the OUTER page first so the
+// container sits near a fixed, comfortably-clear offset from the viewport
+// top, THEN scroll within it — matches how a real user would reposition a
+// tall canvas before clicking, not a test-only workaround.
+async function clickAtPageFraction(page, wrapLocator, xFrac, yFrac) {
+  await page.locator('#ffCanvasScroll').evaluate((el) => {
+    window.scrollBy(0, el.getBoundingClientRect().top - 80);
+  });
+  const box = await wrapLocator.boundingBox();
+  await page.evaluate(({ yFracArg, wrapHeight }) => {
+    const scrollEl = document.getElementById('ffCanvasScroll');
+    if (!scrollEl) return;
+    scrollEl.scrollTop = Math.max(0, wrapHeight * yFracArg - scrollEl.clientHeight / 2);
+  }, { yFracArg: yFrac, wrapHeight: box.height });
+  const box2 = await wrapLocator.boundingBox();
+  await page.mouse.click(box2.x + box2.width * xFrac, box2.y + box2.height * yFrac);
+}
+
 console.log(`\nformFields E2E — click-to-place produces a real AcroForm PDF (real browser, ${BASE_URL}):`);
 
 let browser;
@@ -78,32 +108,20 @@ await test('click-place-name-save produces a downloaded PDF', async () => {
     // Wait for the canvas-based editor to render (not the "already has
     // fields" blocked message, not the loading spinner).
     await page.waitForSelector('#ffCanvasWrap', { state: 'visible', timeout: 15000 });
-    const canvas = page.locator('#ffCanvas');
-    await canvas.waitFor({ state: 'visible' });
-
-    const box = await canvas.boundingBox();
-    if (!box) throw new Error('canvas has no bounding box');
+    const wrap = page.locator('#ffCanvasWrap');
+    await page.locator('#ffCanvas').waitFor({ state: 'visible' });
 
     // Place two fields at two different spots on the page via REAL clicks
     // on the REAL rendered canvas overlay (not a synthetic event dispatch).
-    // Safe-zone fractions re-swept after the field-type toolbar was added
-    // (that toolbar pushes the canvas further down the page, shrinking the
-    // room above the sticky #mergeBtn — see formFieldsUI.js's own
-    // _renderPage height-cap comment): a fresh document.elementFromPoint()
-    // sweep across 0.05..0.90 at default Playwright viewport (1280×720)
-    // found 0.20-0.40 now land on #mergeBtn, while 0.05-0.15 and 0.45-0.50
-    // stay clear — 0.10/0.50 used here, one from each confirmed-safe band.
-    await page.mouse.click(box.x + box.width * 0.25, box.y + box.height * 0.10);
+    // clickAtPageFraction scrolls #ffCanvasScroll so each target point is
+    // actually visible first — see its own comment for why that's needed.
+    await clickAtPageFraction(page, wrap, 0.25, 0.10);
     await page.waitForTimeout(150);
     // The first field's name input is auto-focused+selected after
     // placement (see formFieldsUI.js's _placeFieldAtEvent) — type over it.
-    // Focusing an input can trigger the browser to scroll it into view,
-    // shifting the canvas's on-screen position — re-query the bounding box
-    // fresh before the second click rather than reusing the pre-focus one.
     await page.keyboard.type('Full Name');
 
-    const box2 = await canvas.boundingBox();
-    await page.mouse.click(box2.x + box2.width * 0.25, box2.y + box2.height * 0.50);
+    await clickAtPageFraction(page, wrap, 0.25, 0.50);
     await page.waitForTimeout(150);
     await page.keyboard.type('Email Address');
 
@@ -152,11 +170,10 @@ await test('dragging a placed field by its handle actually moves it', async () =
     await page.goto(`${BASE_URL}/add-form-fields/`, { waitUntil: 'load', timeout: 30000 });
     await page.setInputFiles('#fileInput', FLAT_PDF);
     await page.waitForSelector('#ffCanvasWrap', { state: 'visible', timeout: 15000 });
-    const canvas = page.locator('#ffCanvas');
-    await canvas.waitFor({ state: 'visible' });
-    const box = await canvas.boundingBox();
+    const wrap = page.locator('#ffCanvasWrap');
+    await page.locator('#ffCanvas').waitFor({ state: 'visible' });
 
-    await page.mouse.click(box.x + box.width * 0.25, box.y + box.height * 0.15);
+    await clickAtPageFraction(page, wrap, 0.25, 0.15);
     await page.waitForTimeout(150);
 
     const before = await page.locator('.ff-field-box').boundingBox();
@@ -261,27 +278,21 @@ await test('checkbox field type: select chip, place, save, verify two independen
     await page.goto(`${BASE_URL}/add-form-fields/`, { waitUntil: 'load', timeout: 30000 });
     await page.setInputFiles('#fileInput', FLAT_PDF);
     await page.waitForSelector('#ffCanvasWrap', { state: 'visible', timeout: 15000 });
-    const canvas = page.locator('#ffCanvas');
-    await canvas.waitFor({ state: 'visible' });
-    const box = await canvas.boundingBox();
+    const wrap = page.locator('#ffCanvasWrap');
+    await page.locator('#ffCanvas').waitFor({ state: 'visible' });
 
     // Select the Checkbox chip before placing — same click-target pattern
     // as chip groups elsewhere in this codebase (label[data-name][data-value]).
-    // Click fractions: see the text-only test above for the confirmed-safe-
-    // zone sweep this reuses (0.10/0.50 clear the sticky #mergeBtn zone).
     await page.click('label[data-name="ffType"][data-value="checkbox"]');
-    await page.mouse.click(box.x + box.width * 0.25, box.y + box.height * 0.10);
+    await clickAtPageFraction(page, wrap, 0.25, 0.10);
     await page.waitForTimeout(150);
     await page.keyboard.type('Agree To Terms');
 
     // Also place a text field in the same run, to confirm both types
     // coexist correctly and the chip toggle doesn't leak state between
-    // placements. Re-query the bounding box fresh — same reasoning as the
-    // text-only test above (focusing the first field's input can scroll
-    // the canvas, invalidating a cached box).
+    // placements.
     await page.click('label[data-name="ffType"][data-value="text"]');
-    const box2 = await canvas.boundingBox();
-    await page.mouse.click(box2.x + box2.width * 0.25, box2.y + box2.height * 0.50);
+    await clickAtPageFraction(page, wrap, 0.25, 0.50);
     await page.waitForTimeout(150);
     await page.keyboard.type('Comments');
 
@@ -381,11 +392,10 @@ await test('Cyrillic field name survives sanitization + a real Unicode font (not
     await page.goto(`${BASE_URL}/add-form-fields/`, { waitUntil: 'load', timeout: 30000 });
     await page.setInputFiles('#fileInput', FLAT_PDF);
     await page.waitForSelector('#ffCanvasWrap', { state: 'visible', timeout: 15000 });
-    const canvas = page.locator('#ffCanvas');
-    await canvas.waitFor({ state: 'visible' });
-    const box = await canvas.boundingBox();
+    const wrap = page.locator('#ffCanvasWrap');
+    await page.locator('#ffCanvas').waitFor({ state: 'visible' });
 
-    await page.mouse.click(box.x + box.width * 0.25, box.y + box.height * 0.10);
+    await clickAtPageFraction(page, wrap, 0.25, 0.10);
     await page.waitForTimeout(150);
     // The name input is auto-focused+selected after placement — typing
     // Cyrillic here exercises the same real keyboard-input path a real
