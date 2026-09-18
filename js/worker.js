@@ -8,7 +8,6 @@
 // ============================================================
 
 importScripts('./vendor/pdf-lib.min.js');
-importScripts('./vendor/fontkit.umd.js');
 importScripts('pdfEncrypt.js');
 importScripts('watermarkImage.js');
 
@@ -33,8 +32,20 @@ importScripts('watermarkImage.js');
 // fix shape here, reusing the same vendored LiberationSans-Regular.ttf
 // (fetched+cached once in processor.js as _loadLiberationSansRegular(),
 // sent as fontBytes in the postMessage for these three tools only).
+//
+// fontkit.umd.js (~1.5MB) is importScripts'd LAZILY here, not at the top
+// of this file alongside pdf-lib — this shared worker also handles a
+// dozen+ other tools (Merge, Compress, Rotate, image watermarks, …) that
+// never call this function, and unconditionally loading 1.5MB into every
+// one of those unrelated jobs is both wasteful and, worse, a needless
+// shared point of failure for tools with nothing to do with fonts.
+let _fontkitLoaded = false;
 async function _embedUnicodeFont(pdfDoc, fontBytes) {
   if (fontBytes) {
+    if (!_fontkitLoaded) {
+      importScripts('./vendor/fontkit.umd.js');
+      _fontkitLoaded = true;
+    }
     pdfDoc.registerFontkit(self.fontkit);
     return pdfDoc.embedFont(fontBytes);
   }
