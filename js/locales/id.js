@@ -222,6 +222,8 @@ window.PDFREE_LOCALE = {
   err_encrypted_pdf:   'PDF ini memiliki struktur yang tidak biasa atau rusak (ini juga bisa terjadi pada file yang dilindungi kata sandi). Coba simpan ulang dari aplikasi PDF lain, atau hapus kata sandinya, lalu coba lagi.',
   err_out_of_memory:   "Perangkat Anda kehabisan memori saat memproses file ini — ini batas perangkat keras yang nyata, bukan bug. Coba gunakan rentang halaman yang lebih kecil, tutup tab browser lain, atau (untuk hasil multi-file) beralih ke satu file gabungan alih-alih file terpisah. Terima kasih telah menggunakan PDFree — maaf kali ini tidak berjalan lancar.",
   err_unlock_wrong_password: 'Kata sandi salah. Silakan coba lagi.',
+  err_docx_legacy_or_encrypted: 'File ini tampaknya dilindungi kata sandi, atau menggunakan format lama .doc, bukan .docx. Word→PDF memerlukan file .docx modern yang tidak terenkripsi — di Word, hapus kata sandi (File → Info → Lindungi Dokumen) atau gunakan File → Simpan Sebagai → Dokumen Word (.docx), lalu coba lagi.',
+  err_docx_parse_failed: 'Dokumen Word ini tidak dapat dibaca — mungkin rusak, tidak lengkap, atau disimpan dengan cara yang tidak dikenali alat ini. Coba simpan ulang dari Word (atau pengolah kata Anda) sebagai file .docx baru, lalu coba lagi.',
   err_watermark_unsupported_chars: 'Teks watermark ini tidak dapat dirender — coba teks tanpa karakter Tionghoa, Jepang, atau Korea.',
   err_cdn_lib_unavailable: 'Pustaka {lib} tidak tersedia — periksa koneksi internet Anda',
   err_compress_timeout: '⏱ Kompresi dibatalkan — file mengandung terlalu banyak gambar untuk browser. Coba preset Ringan atau pisahkan PDF terlebih dahulu.',

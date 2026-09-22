@@ -228,6 +228,8 @@ window.PDFREE_LOCALE = {
   err_encrypted_pdf:    '此 PDF 结构异常或已损坏（受密码保护的文件也可能出现此情况）。请尝试用其他 PDF 应用重新保存，或移除密码后再试。',
   err_out_of_memory:    '处理此文件时设备内存不足 — 这是真实的硬件限制，并非程序错误。请尝试缩小页面范围、关闭其他浏览器标签页，或（多文件输出时）改用单一合并文件而非分开输出。感谢您使用 PDFree — 很抱歉这次没能顺利处理。',
   err_unlock_wrong_password: '密码不正确，请重试。',
+  err_docx_legacy_or_encrypted: '此文件似乎已设置密码保护，或者是旧版 .doc 格式而非 .docx。Word→PDF 需要未加密的现代 .docx 文件——请在 Word 中移除密码（文件 → 信息 → 保护文档），或使用“文件 → 另存为 → Word 文档 (.docx)”重新保存后再试。',
+  err_docx_parse_failed: '无法读取此 Word 文档——它可能已损坏、不完整，或以此工具无法识别的方式保存。请尝试在 Word（或您使用的文字处理软件）中另存为新的 .docx 文件后重试。',
   err_watermark_unsupported_chars: '此水印文字无法渲染 — 请尝试不含中文、日文或韩文字符的文字。',
   err_cdn_lib_unavailable: '{lib} 库不可用 — 请检查您的网络连接',
   err_compress_timeout: '⏱ 压缩超时 — 文件可能包含过多图片，超出浏览器处理能力。请尝试"轻度"预设，或先将 PDF 拆分为较小的部分。',

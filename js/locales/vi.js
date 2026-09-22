@@ -222,6 +222,8 @@ window.PDFREE_LOCALE = {
   err_encrypted_pdf:   'PDF này có cấu trúc bất thường hoặc bị hỏng (điều này cũng có thể xảy ra với các tệp được bảo vệ bằng mật khẩu). Hãy thử lưu lại tệp bằng một ứng dụng PDF khác, hoặc xóa mật khẩu, rồi thử lại.',
   err_out_of_memory:   "Thiết bị của bạn đã hết bộ nhớ khi xử lý tệp này — đây là giới hạn phần cứng thực sự, không phải lỗi. Hãy thử chọn phạm vi trang nhỏ hơn, đóng bớt các tab trình duyệt khác, hoặc (với đầu ra nhiều tệp) chuyển sang một tệp gộp duy nhất thay vì các tệp riêng lẻ. Cảm ơn bạn đã sử dụng PDFree — rất tiếc lần này mọi việc không suôn sẻ.",
   err_unlock_wrong_password: 'Mật khẩu không đúng. Vui lòng thử lại.',
+  err_docx_legacy_or_encrypted: 'Tệp này có vẻ được bảo vệ bằng mật khẩu, hoặc ở định dạng .doc cũ thay vì .docx. Word→PDF cần một tệp .docx hiện đại, không mã hóa — trong Word, hãy gỡ mật khẩu (File → Info → Protect Document) hoặc dùng File → Save As → Word Document (.docx), rồi thử lại.',
+  err_docx_parse_failed: 'Không thể đọc tài liệu Word này — có thể tệp bị hỏng, chưa đầy đủ hoặc được lưu theo cách công cụ này không nhận dạng được. Hãy thử lưu lại tệp từ Word (hoặc trình xử lý văn bản của bạn) dưới dạng tệp .docx mới rồi thử lại.',
   err_watermark_unsupported_chars: 'Không thể hiển thị văn bản hình mờ này — hãy thử văn bản không có ký tự Trung, Nhật hoặc Hàn.',
   err_cdn_lib_unavailable: 'Không thể tải thư viện {lib} — vui lòng kiểm tra kết nối internet',
   err_compress_timeout: '⏱ Nén bị hủy — file chứa quá nhiều ảnh cho trình duyệt. Thử preset Nhẹ hoặc tách PDF trước.',

@@ -221,6 +221,8 @@ window.PDFREE_LOCALE = {
   err_encrypted_pdf:    'Ten plik PDF ma nietypową lub uszkodzoną strukturę (może się tak zdarzyć również w przypadku plików chronionych hasłem). Spróbuj zapisać go ponownie w innej aplikacji PDF lub usuń hasło, a następnie spróbuj ponownie.',
   err_out_of_memory:   "Twojemu urządzeniu zabrakło pamięci podczas przetwarzania tego pliku — to realne ograniczenie sprzętowe, a nie błąd. Spróbuj mniejszego zakresu stron, zamknij inne karty przeglądarki albo (przy generowaniu wielu plików) wybierz jeden połączony plik zamiast osobnych. Dziękujemy za korzystanie z PDFree — przepraszamy, że tym razem nie poszło gładko.",
   err_unlock_wrong_password: 'Nieprawidłowe hasło. Spróbuj ponownie.',
+  err_docx_legacy_or_encrypted: 'Ten plik wygląda na zabezpieczony hasłem lub jest w starym formacie .doc zamiast .docx. Word→PDF wymaga nowoczesnego, niezaszyfrowanego pliku .docx — w Wordzie usuń hasło (Plik → Informacje → Chroń dokument) lub użyj Plik → Zapisz jako → Dokument programu Word (.docx), a następnie spróbuj ponownie.',
+  err_docx_parse_failed: 'Nie udało się odczytać tego dokumentu Word — może być uszkodzony, niekompletny lub zapisany w formacie, którego to narzędzie nie rozpoznaje. Spróbuj zapisać go ponownie w Wordzie (lub innym edytorze tekstu) jako nowy plik .docx, a następnie spróbuj jeszcze raz.',
   err_watermark_unsupported_chars: 'Tego tekstu znaku wodnego nie można wyświetlić — spróbuj tekstu bez chińskich, japońskich lub koreańskich znaków.',
   err_cdn_lib_unavailable: 'Biblioteka {lib} niedostępna — sprawdź połączenie z internetem',
   err_compress_timeout: '⏱ Kompresja anulowana — plik ma zbyt wiele obrazów dla przeglądarki. Wypróbuj ustawienie Lekkie lub najpierw podziel PDF.',

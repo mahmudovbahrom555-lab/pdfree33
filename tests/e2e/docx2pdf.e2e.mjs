@@ -38,8 +38,10 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE_URL  = process.env.PDFREE_BASE_URL || 'http://localhost:8934';
-const MERGED_CELLS_DOCX = path.join(__dirname, '..', 'fixtures', 'docx2pdf_merged_cells.docx');
-const IMAGE_DOCX        = path.join(__dirname, '..', 'fixtures', 'eri', '004_libreoffice.docx');
+const MERGED_CELLS_DOCX  = path.join(__dirname, '..', 'fixtures', 'docx2pdf_merged_cells.docx');
+const IMAGE_DOCX         = path.join(__dirname, '..', 'fixtures', 'eri', '004_libreoffice.docx');
+const ENCRYPTED_OR_LEGACY_DOCX = path.join(__dirname, '..', 'fixtures', 'docx2pdf_encrypted_or_legacy.docx');
+const MISSING_DOCXML_DOCX      = path.join(__dirname, '..', 'fixtures', 'docx2pdf_missing_document_xml.docx');
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -195,6 +197,66 @@ await test('a fetched "image" that is actually an HTML error page (e.g. a hijack
     }
     expect(result.type).toBe('application/pdf');
     if (!(result.size > 0)) throw new Error(`Expected a non-empty PDF, got size ${result.size}`);
+  } finally {
+    await context.close();
+  }
+});
+
+await test('a password-protected/legacy-.doc-shaped file (real OLE2/CFBF magic bytes, not a zip) gets a specific, correct toast instead of leaking a raw JSZip error', async () => {
+  // Found via a broader corpus-based fuzz sweep (not a specific user report):
+  // a genuinely password-protected .docx AND a legacy binary .doc simply
+  // renamed to .docx are BOTH, at the byte level, an OLE2/CFBF compound
+  // file (magic bytes D0 CF 11 E0 A1 B1 1A E1) — not a zip at all, since a
+  // real .docx IS a zip. Before the fix, this hit docx-preview's own
+  // JSZip.loadAsync() and surfaced RAW library internals to the user:
+  // "Can't find end of central directory : is this a zip file ? If it is,
+  // see https://stuk.github.io/jszip/..." — confusing (means nothing to a
+  // user with an ordinary old .doc file) and actively misleading (its
+  // "tap to report" implies a pdfree.io bug, not an unsupported format).
+  // _rejectIfOleCfbf() in docxToPdfCore.js now sniffs the magic bytes up
+  // front and throws a specific sentinel translated to a correct, friendly
+  // message in js/processor.js's catch block.
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    await page.addInitScript(BLOB_HOOK);
+    const { result, toastText } = await convertAndCapture(page, ENCRYPTED_OR_LEGACY_DOCX);
+
+    if (result) throw new Error(`Expected a rejection toast, but got a PDF blob (size ${result.size}) — this fixture is not a valid .docx.`);
+    if (!toastText) throw new Error('Expected a toast, got none.');
+    if (/central directory|jszip|stuk\.github\.io/i.test(toastText)) {
+      throw new Error(`Got the raw JSZip internals back instead of a friendly message: ${toastText}`);
+    }
+    if (!/password|\.doc\b/i.test(toastText)) {
+      throw new Error(`Toast doesn't mention password-protection or the legacy .doc format: ${toastText}`);
+    }
+  } finally {
+    await context.close();
+  }
+});
+
+await test('a structurally incomplete .docx (valid zip, but word/document.xml missing) gets a friendly toast instead of a raw "Cannot read properties of undefined" crash', async () => {
+  // Found via the same fuzz sweep: a truncated/failed save (or any
+  // producer that emits an incomplete OOXML zip) used to crash INSIDE
+  // docx-preview's own parsing with a bare property-access TypeError —
+  // "Cannot read properties of undefined (reading 'body')" — surfaced
+  // verbatim to the user with zero context. The renderAsync() call in
+  // docxToPdfCore.js's _docxToPdfmakeContent() is now wrapped so ANY
+  // parse failure normalizes to one honest, specific sentinel.
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    await page.addInitScript(BLOB_HOOK);
+    const { result, toastText } = await convertAndCapture(page, MISSING_DOCXML_DOCX);
+
+    if (result) throw new Error(`Expected a rejection toast, but got a PDF blob (size ${result.size}) — this fixture is missing word/document.xml.`);
+    if (!toastText) throw new Error('Expected a toast, got none.');
+    if (/reading 'body'|cannot read propert/i.test(toastText)) {
+      throw new Error(`Got the raw TypeError back instead of a friendly message: ${toastText}`);
+    }
+    if (!/couldn't be read|corrupted/i.test(toastText)) {
+      throw new Error(`Toast doesn't give a specific, friendly explanation: ${toastText}`);
+    }
   } finally {
     await context.close();
   }

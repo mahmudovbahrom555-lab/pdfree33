@@ -204,6 +204,8 @@ export const EN = {
   err_encrypted_pdf:    'This PDF has an unusual or corrupted structure (this can also happen with password-protected files). Try re-saving it from another PDF app, or removing any password, then try again.',
   err_out_of_memory:    "Your device ran out of memory processing this file — a real hardware limit, not a bug. Try a smaller page range, close other browser tabs, or (for multi-file output) switch to a single combined file instead of separate files. Thanks for using PDFree — sorry this one didn't go smoothly.",
   err_unlock_wrong_password: 'The password is incorrect. Please try again.',
+  err_docx_legacy_or_encrypted: "This file looks password-protected, or it's in the old .doc format rather than .docx. Word→PDF needs an unencrypted, modern .docx file — in Word, remove the password (File → Info → Protect Document) or use File → Save As → Word Document (.docx), then try again.",
+  err_docx_parse_failed: "This Word document couldn't be read — it may be corrupted, incomplete, or saved in a way this tool doesn't recognize. Try re-saving it from Word (or your word processor) as a fresh .docx file, then try again.",
   err_watermark_unsupported_chars: 'This watermark text can’t be rendered — try text without Chinese, Japanese, or Korean characters.',
   err_cdn_lib_unavailable: '{lib} library unavailable — check your internet connection',
   err_compress_timeout: '⏱ Compression timed out — the file may be too image-heavy for the browser. Try the Light preset or split the PDF into smaller parts first.',

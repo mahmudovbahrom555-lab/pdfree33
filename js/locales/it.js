@@ -221,6 +221,8 @@ window.PDFREE_LOCALE = {
   err_encrypted_pdf:   "Questo PDF ha una struttura insolita o danneggiata (può succedere anche con file protetti da password). Prova a salvarlo di nuovo da un'altra app PDF, oppure rimuovi la password, e riprova.",
   err_out_of_memory:   "Il tuo dispositivo ha esaurito la memoria durante l'elaborazione di questo file — è un vero limite hardware, non un bug. Prova con un intervallo di pagine più piccolo, chiudi altre schede del browser oppure (per output multi-file) passa a un unico file combinato invece di file separati. Grazie per aver usato PDFree — ci dispiace che questa volta non sia andata liscia.",
   err_unlock_wrong_password: 'La password non è corretta. Riprova.',
+  err_docx_legacy_or_encrypted: 'Questo file sembra protetto da password, oppure è nel vecchio formato .doc anziché .docx. Word→PDF richiede un file .docx moderno e non crittografato — in Word, rimuovi la password (File → Informazioni → Proteggi documento) oppure usa File → Salva con nome → Documento Word (.docx), quindi riprova.',
+  err_docx_parse_failed: 'Impossibile leggere questo documento Word — potrebbe essere danneggiato, incompleto o salvato in un formato non riconosciuto da questo strumento. Prova a salvarlo di nuovo da Word (o dal tuo programma di scrittura) come nuovo file .docx, quindi riprova.',
   err_watermark_unsupported_chars: 'Questo testo della filigrana non può essere visualizzato — prova un testo senza caratteri cinesi, giapponesi o coreani.',
   err_cdn_lib_unavailable: "Libreria {lib} non disponibile — controlla la tua connessione internet",
   err_compress_timeout: '⏱ Compressione annullata — il file ha troppe immagini per il browser. Prova il preset Leggero o dividi il PDF prima.',

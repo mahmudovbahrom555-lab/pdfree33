@@ -221,6 +221,8 @@ window.PDFREE_LOCALE = {
   err_encrypted_pdf:   'Este PDF tem uma estrutura incomum ou corrompida (isso também pode acontecer com arquivos protegidos por senha). Tente salvá-lo novamente em outro aplicativo de PDF, ou remova a senha, e tente novamente.',
   err_out_of_memory:   "Seu dispositivo ficou sem memória ao processar este arquivo — é um limite real de hardware, não um bug. Tente um intervalo de páginas menor, feche outras abas do navegador ou (para saída em vários arquivos) use um único arquivo combinado em vez de arquivos separados. Obrigado por usar o PDFree — desculpe por essa não ter saído redondinha.",
   err_unlock_wrong_password: 'A senha está incorreta. Tente novamente.',
+  err_docx_legacy_or_encrypted: 'Este arquivo parece estar protegido por senha, ou está no formato antigo .doc em vez de .docx. O Word→PDF precisa de um arquivo .docx moderno e sem criptografia — no Word, remova a senha (Arquivo → Informações → Proteger Documento) ou use Arquivo → Salvar Como → Documento do Word (.docx) e tente novamente.',
+  err_docx_parse_failed: 'Não foi possível ler este documento do Word — ele pode estar corrompido, incompleto ou salvo de uma forma que esta ferramenta não reconhece. Tente salvá-lo novamente a partir do Word (ou do seu processador de texto) como um novo arquivo .docx e tente de novo.',
   err_watermark_unsupported_chars: "Este texto de marca d'água não pode ser exibido — tente um texto sem caracteres chineses, japoneses ou coreanos.",
   err_cdn_lib_unavailable: 'Biblioteca do {lib} indisponível — verifique sua conexão com a internet',
   err_compress_timeout: '⏱ Compressão cancelada — o ficheiro tem demasiadas imagens para o navegador. Tente o preset Light ou divida o PDF primeiro.',

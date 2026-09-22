@@ -3850,6 +3850,15 @@ async function _runDocx2Pdf(filesSnapshot, _extraParams) {
   } catch (err) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
     if (err.message === 'cancelled') return; // isCancelled() bail — not a real error, no toast
+    // docxToPdfCore.js's own two sentinels (see _rejectIfOleCfbf /
+    // renderAsync's catch there) — already-classified, friendly-translated
+    // messages, same pattern as unlock's 'wrong_password' below.
+    if (err.message === 'DOCX_LEGACY_OR_ENCRYPTED') {
+      _handleError('docx2pdf', t('err_docx_legacy_or_encrypted'), 'docx_legacy_or_encrypted'); return;
+    }
+    if (err.message === 'DOCX_PARSE_FAILED') {
+      _handleError('docx2pdf', t('err_docx_parse_failed'), 'docx_parse_failed'); return;
+    }
     _handleError('docx2pdf', err.message); return;
   }
 

@@ -162,6 +162,30 @@ function _splitBalanced(heights, k) {
   return groups;
 }
 
+// A real password-protected .docx (Office's own "Encrypt with Password")
+// and a legacy binary .doc file simply renamed to .docx are BOTH, at the
+// byte level, an OLE2/CFBF compound file — not a zip at all (an ordinary
+// .docx IS a zip). Office wraps the ENTIRE zip container in CFBF to
+// encrypt it, and the old binary Office formats (.doc/.xls/.ppt) were
+// always CFBF to begin with. Without this check, docx-preview's own
+// JSZip.loadAsync() chokes on it with a raw, JSZip-internal error ("Can't
+// find end of central directory : is this a zip file? ...") that links out
+// to JSZip's own GitHub Pages docs — confusing for a user with a perfectly
+// ordinary old .doc file ("is this a zip file?" means nothing to them),
+// and actively misleading: the generic error toast's "tap to report"
+// affordance implies a pdfree.io bug, when the file is just an unsupported
+// format. Sniff the magic bytes up front (D0 CF 11 E0 A1 B1 1A E1, stable
+// across every real CFBF file) and give one specific, correct diagnosis
+// instead — found via a corpus-based fuzz sweep, not a specific user
+// report (see docx2pdf.e2e.mjs for the regression coverage).
+const OLE_CFBF_MAGIC = [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1];
+async function _rejectIfOleCfbf(file) {
+  const head = new Uint8Array(await file.slice(0, 8).arrayBuffer());
+  if (OLE_CFBF_MAGIC.every((b, i) => head[i] === b)) {
+    throw new Error('DOCX_LEGACY_OR_ENCRYPTED');
+  }
+}
+
 /**
  * Renders a .docx File into DOM (off-screen, in this page) and walks it
  * into a pdfmake document-definition `content` array + header/footer text.
@@ -169,6 +193,7 @@ function _splitBalanced(heights, k) {
  * @param {{ isCancelled?: () => boolean }} [opts]
  */
 async function _docxToPdfmakeContent(file, { isCancelled } = {}) {
+  await _rejectIfOleCfbf(file);
   await loadDocxPreview();
 
   // Off-screen, not display:none — display:none elements don't get real
@@ -179,7 +204,20 @@ async function _docxToPdfmakeContent(file, { isCancelled } = {}) {
   document.body.appendChild(container);
 
   try {
-    await window.docx.renderAsync(file, container, null, { inWrapper: true });
+    try {
+      await window.docx.renderAsync(file, container, null, { inWrapper: true });
+    } catch {
+      // Any renderAsync failure — corrupt/truncated zip, a missing
+      // required part (e.g. word/document.xml absent from an otherwise
+      // valid zip), or any other malformed-OOXML shape docx-preview's own
+      // zip/XML walk doesn't expect — surfaces here as whatever raw
+      // internal string that specific corruption happened to produce (a
+      // real one found via fuzzing: "Cannot read properties of undefined
+      // (reading 'body')", a bare property-access TypeError meaning
+      // nothing to an actual user). Normalize ALL of these to one honest,
+      // specific sentinel instead of leaking internals.
+      throw new Error('DOCX_PARSE_FAILED');
+    }
     if (isCancelled?.()) throw new Error('cancelled');
 
     const listCounters = {};
