@@ -2639,6 +2639,11 @@ function _p2eBuildWorkbook(tables, textRows) {
       parsed.forEach((p, ci) => {
         if (p.numFmt) excelRow.getCell(ci + 1).numFmt = p.numFmt;
       });
+      // A subtotal/total row that was bold in the source PDF (e.g. every
+      // item on that line resolved to a bold embedded font — see
+      // _p2eExtractTables' boldRows) stays bold in the spreadsheet, same as
+      // it visually reads in the original document.
+      if (tbl.boldRows?.has(ri)) excelRow.font = { bold: true };
     });
 
     // Only assert "this looks like a header" visually when the detector
@@ -2708,16 +2713,40 @@ async function _p2eExtractTables(pdfDoc) {
                 `Reading page ${p}/${pdfDoc.numPages}…`);
 
     const page    = await pdfDoc.getPage(p);
-    const content = await page.getTextContent({ normalizeWhitespace: false });
+    // getOperatorList() alongside getTextContent() forces pdf.js to resolve
+    // font objects into page.commonObjs — without it, _isFontBold below
+    // silently always returns false (same fix as pdf2readCore.js's own
+    // _p2wBuildPageData, see its comment for the real fixture this was
+    // found on: content.styles[...].fontFamily alone reports a generic
+    // "sans-serif" fallback for both a bold and a regular weight of the
+    // same embedded font, indistinguishable without the real PostScript name).
+    const [content] = await Promise.all([
+      page.getTextContent({ normalizeWhitespace: false }),
+      page.getOperatorList().catch(() => {}),
+    ]);
+    const _boldFontCache = new Map(); // fontName -> boolean, one commonObjs lookup per unique font per page
+    const _isFontBold = fontName => {
+      if (_boldFontCache.has(fontName)) return _boldFontCache.get(fontName);
+      let bold = false;
+      try {
+        bold = BOLD_FONT_NAME_RE.test(page.commonObjs.get(fontName)?.name || '');
+      } catch { /* font object failed to resolve — fall through to false */ }
+      _boldFontCache.set(fontName, bold);
+      return bold;
+    };
     const items = content.items
       .filter(item => 'str' in item && item.str.split(' ').join('').trim())
-      .map(item => ({
-        str: ((item.dir === 'rtl') ? _visualRTLToLogical(item.str) : item.str)
-          .split(' ').join(''),
-        x: item.transform[4],
-        y: item.transform[5],
-        fontSize: (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10,
-      }));
+      .map(item => {
+        const fam = (content.styles[item.fontName]?.fontFamily || '').toLowerCase();
+        return {
+          str: ((item.dir === 'rtl') ? _visualRTLToLogical(item.str) : item.str)
+            .split(' ').join(''),
+          x: item.transform[4],
+          y: item.transform[5],
+          fontSize: (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10,
+          bold: _isFontBold(item.fontName) || BOLD_FONT_NAME_RE.test(fam),
+        };
+      });
 
     const lines = groupItemsIntoLines(items);
 
@@ -2727,7 +2756,18 @@ async function _p2eExtractTables(pdfDoc) {
     const consumed    = new Set();
     for (const tbl of pageTables) {
       for (let li = tbl.startIdx; li <= tbl.endIdx; li++) consumed.add(li);
-      tables.push({ page: p, rows: tbl.rows, confidence: tbl.confidence });
+      // A whole row is treated as bold only when EVERY item on that source
+      // line is bold — matches how real documents actually author
+      // subtotal/total rows (the entire row gets the bold weight, e.g.
+      // ReportLab's FONTNAME applied across a full row), and avoids a
+      // false positive from a single stray bold glyph (e.g. a bolded
+      // currency symbol) inside an otherwise-plain row.
+      const boldRows = new Set();
+      for (let li = tbl.startIdx; li <= tbl.endIdx; li++) {
+        const ln = lines[li];
+        if (ln.items.length && ln.items.every(it => it.bold)) boldRows.add(li - tbl.startIdx);
+      }
+      tables.push({ page: p, rows: tbl.rows, confidence: tbl.confidence, boldRows });
     }
     lines.forEach((ln, li) => {
       if (consumed.has(li)) return;
