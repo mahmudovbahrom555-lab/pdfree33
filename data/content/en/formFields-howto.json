@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Add Fillable Form Fields to a PDF Free",
+  "description": "Click to place real text, checkbox, radio, and dropdown fields on a flat or scanned PDF — free, no upload, processed locally in your browser.",
+  "totalTime": "PT3M",
+  "tool": [{ "@type": "HowToTool", "name": "PDFree — free browser-based PDF form-field tool, no upload required" }],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your PDF",
+      "text": "Click 'Choose files' or drag your PDF into the drop zone. PDFree checks whether the document already has interactive fields — if it does, you're pointed to the Fill tool instead.",
+      "url": "https://pdfree.io/add-form-fields/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Click to place fields",
+      "text": "Pick a field type — text, checkbox, radio, or dropdown — then click anywhere on the page to drop one there. Drag to reposition, drag the corner to resize, and type a name directly into the field. Repeat for every blank, on every page.",
+      "url": "https://pdfree.io/add-form-fields/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download the fillable PDF",
+      "text": "Click 'Add Fields & Download'. PDFree writes real AcroForm fields into the document in your browser and downloads the result immediately — no waiting, no account.",
+      "url": "https://pdfree.io/add-form-fields/#step3"
+    }
+  ]
+}
