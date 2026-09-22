@@ -211,6 +211,21 @@ jobs:
         # of Helvetica. See tests/e2e/fill.e2e.mjs's own header comment.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:fill
 
+      - name: E2E — Word→PDF table with merged cells doesn't crash pdfmake
+        # Real-browser regression gate for a real end-user bug report
+        # (error ID DOCX2PDF-8490): a DOCX table with a merged cell (Word's
+        # gridSpan/vMerge, rendered by docx-preview as real HTML colspan/
+        # rowspan) crashed pdfmake with "Malformed table row, a cell is
+        # undefined" — js/docxToPdfCore.js's parseTable() assumed every row
+        # has the same <td> count as the first row, which breaks the
+        # instant any row has a merged cell. Fixed by walking the table as
+        # a real grid. Verified against the actual reporting user's own
+        # file (not committed — someone else's personal document) before
+        # this synthetic fixture was built to reproduce the same
+        # structural pattern permanently. See tests/e2e/docx2pdf.e2e.mjs's
+        # own header comment.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:docx2pdf
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do

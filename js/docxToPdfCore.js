@@ -247,12 +247,68 @@ async function _docxToPdfmakeContent(file, { isCancelled } = {}) {
       return { stack: stack.length ? stack : [{ text: ' ' }] };
     }
 
+    // Real bug found via a real user's file: a naive "one <td> per column,
+    // every row has the same count" walk (the previous version of this
+    // function) breaks the instant a table has a merged cell — docx-preview
+    // renders Word's gridSpan/vMerge as genuine HTML colspan/rowspan
+    // attributes (real DOM+CSS, not a flattened image), and a row covered
+    // by an earlier row's rowSpan, or a row containing a colSpan cell,
+    // simply has FEWER real <td> elements than the table's true column
+    // count — pdfmake then throws "Malformed table row, a cell is
+    // undefined" the moment it hits a row shorter than its own widths
+    // array. Walks the table as a real grid instead: a column already
+    // "occupied" by an active rowSpan from a previous row gets pdfmake's
+    // own documented placeholder ({} — see pdfmake's table docs, a colSpan/
+    // rowSpan continuation cell must still be present in the array, just
+    // empty) rather than being skipped, and a cell with colSpan>1 gets that
+    // many placeholder columns inserted after it in its OWN row too.
     async function parseTable(table) {
       const rows = Array.from(table.querySelectorAll(':scope > tr'));
-      const body = await Promise.all(
-        rows.map(tr => Promise.all(Array.from(tr.querySelectorAll(':scope > td')).map(parseCell)))
-      );
-      const colCount = body[0]?.length || 1;
+      const rowSpanCarry = []; // rowSpanCarry[col] = how many more rows a previous row's rowSpan still covers at this column
+      const body = [];
+      let colCount = 0;
+
+      for (const tr of rows) {
+        const tds = Array.from(tr.querySelectorAll(':scope > td'));
+        const rowArr = [];
+        let col = 0, tdIdx = 0;
+
+        while (tdIdx < tds.length || rowSpanCarry[col] > 0) {
+          if (rowSpanCarry[col] > 0) {
+            rowArr[col] = {};
+            rowSpanCarry[col]--;
+            col++;
+            continue;
+          }
+          const td = tds[tdIdx++];
+          const colSpan = Math.max(1, parseInt(td.getAttribute('colspan') || '1', 10) || 1);
+          const rowSpan = Math.max(1, parseInt(td.getAttribute('rowspan') || '1', 10) || 1);
+          const cell = await parseCell(td);
+          if (colSpan > 1) cell.colSpan = colSpan;
+          if (rowSpan > 1) cell.rowSpan = rowSpan;
+          rowArr[col] = cell;
+          for (let k = 1; k < colSpan; k++) rowArr[col + k] = {};
+          if (rowSpan > 1) rowSpanCarry[col] = (rowSpanCarry[col] || 0) + (rowSpan - 1);
+          col += colSpan;
+        }
+
+        colCount = Math.max(colCount, col);
+        body.push(rowArr);
+      }
+
+      // pdfmake requires every row to have EXACTLY colCount entries — pad
+      // any row a malformed/inconsistent source table left short (should
+      // be rare after the grid walk above, but a real-world .docx can still
+      // have a genuinely irregular table; this is the same "don't fail the
+      // whole document over one row" spirit as the sanitizers elsewhere in
+      // this codebase, not a silently-swallowed bug). colCount||1 matches
+      // this function's own pre-existing fallback for a degenerate
+      // (empty/rowless) table.
+      colCount = colCount || 1;
+      for (const rowArr of body) {
+        for (let c = 0; c < colCount; c++) if (!rowArr[c]) rowArr[c] = {};
+        rowArr.length = colCount;
+      }
 
       const firstTd = table.querySelector('td');
       const tdStyle = firstTd?.getAttribute('style') || '';
