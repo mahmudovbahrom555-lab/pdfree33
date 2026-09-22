@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Mon PDF est-il envoyé quelque part lorsque j'ajoute des champs de formulaire ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Tout s'exécute dans votre navigateur avec pdf.js (pour afficher la page sur laquelle vous cliquez) et pdf-lib (pour écrire les vrais champs AcroForm). Ni votre PDF d'origine ni la version avec les champs ajoutés n'est jamais envoyée à un serveur. PDFree n'a aucun accès à votre document."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quelle est la différence entre cet outil et Remplir PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Remplir PDF s'adresse aux documents qui possèdent déjà des champs de formulaire interactifs : il les détecte et vous laisse y saisir des valeurs. Ajouter des champs de formulaire traite le cas inverse : un PDF plat ou scanné qui n'a ENCORE aucun champ interactif. C'est vous qui placez les champs en cliquant sur la page, puis vous téléchargez un PDF doté, pour la première fois, de vrais champs remplissables. Si PDFree détecte que votre fichier a déjà des champs, il vous orientera vers Remplir PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Les champs créés par cet outil sont-ils de « vrais » champs de formulaire, ou juste des boîtes dessinées sur la page ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "De vrais champs. Chaque boîte placée devient un véritable champ de texte AcroForm écrit dans la structure du PDF avec pdf-lib — la même technologie que celle utilisée pour construire des formulaires interactifs dans Acrobat et les autres logiciels de création PDF. Ouvrez le résultat dans n'importe quel lecteur PDF conforme au standard : vous pouvez cliquer dans le champ et taper, passer d'un champ à l'autre avec la tabulation, et les valeurs sont enregistrées comme de vraies données de formulaire, pas comme une image."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quels types de champs puis-je ajouter ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Quatre types : champs de texte, cases à cocher, groupes de boutons radio et listes déroulantes. Choisissez le type avec les boutons situés au-dessus de la page, puis cliquez pour le placer. Les champs de texte conviennent aux noms, dates, adresses et réponses libres ; les cases à cocher aux simples oui/non ; un groupe radio est un ensemble de boutons dont un seul peut être choisi à la fois ; une liste déroulante propose les choix que vous saisissez vous-même. Les champs de signature ne sont pas encore pris en charge — utilisez Dessiner sur PDF pour signer un document."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Comment placer et ajuster un champ ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Choisissez un type de champ, puis cliquez n'importe où sur la page affichée pour en déposer un à cet endroit. Faites glisser le champ par sa poignée ronde pour le repositionner, tirez son coin inférieur droit pour le redimensionner, et tapez directement dans son étiquette pour le nommer (utile si vous ou quelqu'un d'autre verrez plus tard les noms des champs dans le panneau de formulaire d'un lecteur PDF). Cliquez sur le petit bouton × pour supprimer un champ dont vous ne voulez pas."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Comment créer un groupe de boutons radio dont un seul peut être sélectionné ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Choisissez le type de champ Bouton radio et donnez un nom au groupe dans la case prévue à cet effet, puis cliquez pour placer chaque option. Tous les boutons que vous placez pendant que ce nom est actif rejoignent le même groupe : un seul d'entre eux pourra donc être sélectionné — c'est précisément ce qui distingue les boutons radio d'une rangée de cases à cocher. Saisissez la valeur propre de chaque bouton (par exemple Oui et Non). Pour démarrer un second groupe indépendant, cliquez sur « Nouveau groupe » et donnez-lui un nom différent. Modifier le nom pendant qu'un bouton déjà placé est sélectionné renomme au contraire le groupe entier."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Comment définir les choix d'une liste déroulante ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Choisissez le type de champ Liste déroulante et saisissez les choix, séparés par des virgules, dans la case des options — par exemple Petit, Moyen, Grand. Cliquez sur la page pour placer la liste : ces choix sont écrits dans le PDF sous forme de véritable liste qu'un lecteur peut dérouler. Cliquez sur une liste déjà placée pour recharger ses choix dans la case et les modifier."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Cela fonctionne-t-il sur des PDF de plusieurs pages ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Utilisez la navigation au-dessus de l'aperçu pour changer de page — les champs peuvent être placés sur n'importe quelle page, et chaque page conserve son propre jeu de champs. La liste « Champs placés », à côté de la page, affiche tous les champs ajoutés dans l'ensemble du document, avec leur numéro de page ; cliquer sur une entrée saute à cette page et met le champ en évidence, ce qui vous évite de feuilleter tout le document pour le retrouver."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je zoomer pour placer un champ avec précision ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Les commandes de zoom se trouvent à côté de la navigation : zoom avant ou arrière par paliers jusqu'à 400 %, avec un bouton de réinitialisation pour revenir à la vue par défaut. Le zoom ne change que la taille d'affichage de la page à l'écran — les champs sont enregistrés comme des positions relatives à la page elle-même, donc tout ce que vous avez déjà placé reste exactement au même endroit dans le PDF final, quel que soit le niveau de zoom utilisé pour le placer ou le vérifier."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je ajouter des champs à un PDF scanné (une photo ou un scan d'un formulaire papier) ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui — c'est exactement le cas pour lequel cet outil a été conçu. Un PDF scanné n'est qu'une image, sans aucune couche interactive : le placement au clic vous permet donc de déposer de vrais champs de texte pile à l'endroit des espaces imprimés, transformant un scan en formulaire numérique remplissable."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Est-ce un créateur de formulaires PDF gratuit et sans inscription ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Ajouter des champs de formulaire est entièrement gratuit, sans compte, sans inscription et sans installation. Ouvrez l'outil, chargez votre PDF, cliquez pour placer les champs et téléchargez — aucune adresse e-mail n'est demandée."
+    }
+  }
+]

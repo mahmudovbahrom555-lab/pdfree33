@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come aggiungere campi modulo compilabili a un PDF gratis",
+  "description": "Inserisci con un clic veri campi di testo, caselle di controllo, pulsanti di opzione ed elenchi a discesa su un PDF piatto o scansionato — gratis, senza caricamenti, elaborato localmente nel tuo browser.",
+  "totalTime": "PT3M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — servizio gratuito per campi modulo PDF nel browser, senza caricamenti"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Apri il tuo PDF",
+      "text": "Fai clic su \"Scegli file\" oppure trascina il PDF nell'area di rilascio. PDFree verifica se il documento ha già campi interattivi — in caso affermativo vieni indirizzato allo strumento Compila.",
+      "url": "https://pdfree.io/it/aggiungi-campi-modulo-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Fai clic per posizionare i campi",
+      "text": "Scegli un tipo di campo — testo, casella di controllo, pulsante di opzione o elenco a discesa — poi fai clic in un punto qualsiasi della pagina per inserirlo lì. Trascina per spostarlo, trascina l'angolo per ridimensionarlo e digita il nome direttamente nel campo. Ripeti per ogni spazio, su ogni pagina.",
+      "url": "https://pdfree.io/it/aggiungi-campi-modulo-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Scarica il PDF compilabile",
+      "text": "Fai clic su \"Aggiungi campi e scarica\". PDFree scrive veri campi AcroForm dentro il documento nel tuo browser e scarica il risultato immediatamente — senza attese, senza account.",
+      "url": "https://pdfree.io/it/aggiungi-campi-modulo-pdf/#step3"
+    }
+  ]
+}

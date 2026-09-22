@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Invulbare formuliervelden gratis aan een PDF toevoegen",
+  "description": "Plaats met één klik echte tekstvelden, selectievakjes, keuzerondjes en keuzelijsten op een plat of gescand PDF — gratis, zonder upload, lokaal verwerkt in je browser.",
+  "totalTime": "PT3M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — gratis PDF-formulierveldendienst in de browser, zonder uploaden"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open je PDF",
+      "text": "Klik op \"Bestanden kiezen\" of sleep je PDF naar het neerzetgebied. PDFree controleert of het document al interactieve velden bevat — zo ja, dan word je doorverwezen naar de Invullen-tool.",
+      "url": "https://pdfree.io/nl/pdf-formuliervelden-toevoegen/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Klik om velden te plaatsen",
+      "text": "Kies een veldtype — tekst, selectievakje, keuzerondje of keuzelijst — en klik daarna ergens op de pagina om er een neer te zetten. Sleep om te verplaatsen, sleep de hoek om het formaat te wijzigen en typ de naam rechtstreeks in het veld. Herhaal dit voor elke invulruimte, op elke pagina.",
+      "url": "https://pdfree.io/nl/pdf-formuliervelden-toevoegen/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download het invulbare PDF",
+      "text": "Klik op \"Velden toevoegen & downloaden\". PDFree schrijft in je browser echte AcroForm-velden in het document en downloadt het resultaat meteen — geen wachttijd, geen account.",
+      "url": "https://pdfree.io/nl/pdf-formuliervelden-toevoegen/#step3"
+    }
+  ]
+}

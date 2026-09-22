@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Como adicionar campos de formulário preenchíveis a um PDF grátis",
+  "description": "Posicione com um clique campos de texto, caixas de seleção, botões de opção e listas suspensas reais num PDF simples ou digitalizado — grátis, sem upload, processado localmente no seu navegador.",
+  "totalTime": "PT3M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — serviço gratuito de campos de formulário PDF no navegador, sem necessidade de upload"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Abra o seu PDF",
+      "text": "Clique em \"Escolher ficheiros\" ou arraste o seu PDF para a zona de entrega. O PDFree verifica se o documento já tem campos interativos — se tiver, é encaminhado para a ferramenta Preencher.",
+      "url": "https://pdfree.io/pt/adicionar-campos-formulario-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Clique para posicionar os campos",
+      "text": "Escolha um tipo de campo — texto, caixa de seleção, botão de opção ou lista suspensa — e clique em qualquer ponto da página para o colocar ali. Arraste para reposicionar, arraste o canto para redimensionar e escreva o nome diretamente no campo. Repita para cada espaço, em cada página.",
+      "url": "https://pdfree.io/pt/adicionar-campos-formulario-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Baixe o PDF preenchível",
+      "text": "Clique em \"Adicionar campos e baixar\". O PDFree grava campos AcroForm reais dentro do documento no seu navegador e baixa o resultado de imediato — sem espera, sem conta.",
+      "url": "https://pdfree.io/pt/adicionar-campos-formulario-pdf/#step3"
+    }
+  ]
+}

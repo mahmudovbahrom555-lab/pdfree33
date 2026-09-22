@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wordt mijn PDF ergens geüpload als ik formuliervelden toevoeg?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Alles draait in je browser met pdf.js (om de pagina weer te geven waarop je klikt) en pdf-lib (om de echte AcroForm-velden weg te schrijven). Noch je oorspronkelijke PDF, noch de versie met de toegevoegde velden wordt ooit naar een server gestuurd. PDFree heeft geen toegang tot je document."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wat is het verschil tussen deze tool en PDF invullen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF invullen is bedoeld voor documenten die al interactieve formuliervelden hebben — het herkent ze en laat je er waarden in typen. Formuliervelden toevoegen is voor het omgekeerde geval: een plat of gescand PDF dat nog GEEN enkel interactief veld heeft. Je plaatst de velden zelf door op de pagina te klikken en downloadt daarna een PDF dat voor het eerst echte, invulbare velden bevat. Merkt PDFree dat je bestand al velden heeft, dan verwijst het je door naar PDF invullen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Zijn de velden die deze tool maakt 'echte' formuliervelden, of alleen vakjes die op de pagina getekend zijn?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Echte velden. Elk geplaatst vak wordt met pdf-lib een werkelijk AcroForm-tekstveld dat in de structuur van het PDF wordt geschreven — dezelfde techniek waarmee interactieve formulieren in Acrobat en andere PDF-authoringtools worden gebouwd. Open het resultaat in een willekeurige standaardconforme PDF-lezer: je kunt in het veld klikken en typen, met Tab tussen velden springen, en de waarden worden opgeslagen als echte formuliergegevens, niet als afbeelding."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welke veldtypen kan ik toevoegen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Vier typen: tekstvelden, selectievakjes, groepen keuzerondjes en keuzelijsten. Kies het type met de knoppen boven de pagina en klik om het te plaatsen. Tekstvelden zijn geschikt voor namen, datums, adressen en vrije antwoorden; selectievakjes voor losse ja/nee-vinkjes; een keuzerondjesgroep is een set knoppen waarvan er maar één tegelijk gekozen kan worden; een keuzelijst biedt de opties die je zelf intypt. Handtekeningvelden worden nog niet ondersteund — gebruik Tekenen op PDF om een document te ondertekenen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hoe plaats en verstel ik een veld?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Kies een veldtype en klik daarna ergens op de weergegeven pagina om er een neer te zetten. Sleep het veld aan de ronde greep om het te verplaatsen, sleep de rechteronderhoek om het formaat te wijzigen, en typ rechtstreeks in het label van het veld om het een naam te geven (handig als jij of iemand anders die veldnamen later ziet in het formulierpaneel van een PDF-lezer). Klik op de kleine ×-knop om een veld te verwijderen dat je niet wilt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hoe maak ik een groep keuzerondjes waarvan er maar één geselecteerd kan worden?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Kies het veldtype Keuzerondje en geef de groep een naam in het vak voor de groepsnaam; klik daarna om elke optie te plaatsen. Elk rondje dat je plaatst terwijl die naam is ingesteld, hoort bij dezelfde groep, dus er kan er altijd maar één geselecteerd zijn — en juist dat onderscheidt keuzerondjes van een rij selectievakjes. Typ in elk rondje zijn eigen waarde (bijvoorbeeld Ja en Nee). Wil je een tweede, losstaande groep beginnen, klik dan op 'Nieuwe groep' en geef die een andere naam. Pas je de naam aan terwijl een geplaatst rondje geselecteerd is, dan hernoem je juist die hele groep."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hoe stel ik de opties van een keuzelijst in?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Kies het veldtype Keuzelijst en typ de opties in het optievak, gescheiden door komma's — bijvoorbeeld Klein, Middel, Groot. Klik op de pagina om de keuzelijst te plaatsen; die opties worden als een echte, uitklapbare lijst in het PDF geschreven. Klik op een al geplaatste keuzelijst om de opties terug in het vak te laden en te bewerken."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Werkt dit bij PDF's met meerdere pagina's?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Gebruik de paginanavigatie boven het voorbeeld om tussen pagina's te wisselen — velden kunnen op elke pagina geplaatst worden en elke pagina onthoudt zijn eigen set. De lijst 'Geplaatste velden' naast de pagina toont elk veld dat je in het hele document hebt toegevoegd, met paginanummer; klik je op een regel, dan spring je naar die pagina en wordt het veld gemarkeerd, zodat je niet het hele document hoeft door te bladeren."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik inzoomen om een veld nauwkeurig te plaatsen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. De zoomknoppen staan naast de paginanavigatie: in stappen in- of uitzoomen tot 400 %, met een knop om terug te keren naar de standaardweergave. Zoomen verandert alleen hoe groot de pagina op het scherm wordt getekend — velden worden opgeslagen als posities ten opzichte van de pagina zelf, dus alles wat je al hebt geplaatst blijft in het uiteindelijke PDF precies staan waar het staat, ongeacht het zoomniveau waarop je het plaatst of nakijkt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik velden toevoegen aan een gescand PDF (een foto of scan van een papieren formulier)?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja — precies daarvoor is deze tool gebouwd. Een gescand PDF is niet meer dan een afbeelding zonder enige interactieve laag, dus met klikken-om-te-plaatsen zet je echte tekstvelden direct over de gedrukte invulruimtes en maak je van een scan een invulbaar digitaal formulier."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is dit een gratis PDF-formulierbouwer zonder registratie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Formuliervelden toevoegen is volledig gratis, zonder account, zonder registratie en zonder installatie. Open de tool, laad je PDF, klik om velden te plaatsen en download — een e-mailadres is niet nodig."
+    }
+  }
+]

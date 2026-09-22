@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Comment ajouter des champs de formulaire remplissables à un PDF gratuitement",
+  "description": "Placez en un clic de vrais champs de texte, cases à cocher, boutons radio et listes déroulantes sur un PDF plat ou scanné — gratuit, sans envoi, traité localement dans votre navigateur.",
+  "totalTime": "PT3M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — service gratuit de champs de formulaire PDF dans le navigateur, sans envoi de fichier"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Ouvrez votre PDF",
+      "text": "Cliquez sur \"Choisir des fichiers\" ou faites glisser votre PDF dans la zone de dépôt. PDFree vérifie si le document possède déjà des champs interactifs — si c'est le cas, vous êtes orienté vers l'outil Remplir.",
+      "url": "https://pdfree.io/fr/ajouter-champs-formulaire-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Cliquez pour placer les champs",
+      "text": "Choisissez un type de champ — texte, case à cocher, bouton radio ou liste déroulante — puis cliquez n'importe où sur la page pour en déposer un. Faites glisser pour repositionner, tirez le coin pour redimensionner, et tapez le nom directement dans le champ. Répétez pour chaque espace à remplir, sur chaque page.",
+      "url": "https://pdfree.io/fr/ajouter-champs-formulaire-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Téléchargez le PDF remplissable",
+      "text": "Cliquez sur \"Ajouter les champs et télécharger\". PDFree écrit de vrais champs AcroForm dans le document depuis votre navigateur et télécharge le résultat immédiatement — sans attente, sans compte.",
+      "url": "https://pdfree.io/fr/ajouter-champs-formulaire-pdf/#step3"
+    }
+  ]
+}

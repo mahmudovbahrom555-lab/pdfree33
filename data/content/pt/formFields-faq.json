@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "O meu PDF é enviado para algum lado quando adiciono campos de formulário?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Tudo corre no seu navegador usando o pdf.js (para mostrar a página em que clica) e o pdf-lib (para gravar os campos AcroForm reais). Nem o PDF original nem a versão com os campos adicionados são alguma vez enviados para um servidor. O PDFree não tem acesso ao seu documento."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual é a diferença entre esta ferramenta e Preencher PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Preencher PDF é para documentos que já têm campos de formulário interativos — deteta-os e permite escrever valores neles. Adicionar campos de formulário é para o caso contrário: um PDF simples ou digitalizado que AINDA não tem nenhum campo interativo. É você que posiciona os campos clicando na página e depois baixa um PDF que, pela primeira vez, tem campos reais e preenchíveis. Se o PDFree detetar que o seu ficheiro já tem campos, encaminha-o para Preencher PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Os campos criados por esta ferramenta são «reais» ou apenas caixas desenhadas na página?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "São campos reais. Cada caixa posicionada torna-se um verdadeiro campo de texto AcroForm gravado na estrutura do PDF com o pdf-lib — a mesma tecnologia usada para construir formulários interativos no Acrobat e noutras ferramentas de autoria de PDF. Abra o resultado em qualquer leitor de PDF que cumpra o padrão e poderá clicar dentro do campo e escrever, saltar entre campos com o tabulador, e os valores ficam guardados como dados de formulário reais, não como imagem."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Que tipos de campo posso adicionar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Quatro tipos: campos de texto, caixas de seleção, grupos de botões de opção e listas suspensas. Escolha o tipo nos botões acima da página e clique para o posicionar. Os campos de texto servem para nomes, datas, moradas e respostas livres; as caixas de seleção, para marcas de sim/não; um grupo de opção é um conjunto de botões em que só um pode ser escolhido de cada vez; uma lista suspensa oferece as opções que você próprio escrever. Campos de assinatura ainda não são suportados — use Desenhar no PDF para assinar um documento."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Como posiciono e ajusto um campo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Escolha um tipo de campo e clique em qualquer ponto da página apresentada para o colocar ali. Arraste o campo pela alça redonda para o reposicionar, arraste o canto inferior direito para o redimensionar e escreva diretamente na etiqueta do campo para lhe dar um nome (útil se você ou outra pessoa vir mais tarde os nomes dos campos no painel de formulários de um leitor de PDF). Clique no pequeno botão × para remover um campo que não queira."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Como crio um grupo de botões de opção em que só um pode ser selecionado?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Escolha o tipo de campo Botão de opção e dê um nome ao grupo na caixa do nome do grupo; depois clique para posicionar cada opção. Todos os botões que posicionar com esse nome ativo passam a pertencer ao mesmo grupo, pelo que só um deles poderá ficar selecionado — e é isso que distingue os botões de opção de uma fila de caixas de seleção. Escreva o valor próprio de cada botão (por exemplo Sim e Não). Para começar um segundo grupo, independente, clique em «Novo grupo» e dê-lhe um nome diferente. Editar o nome enquanto um botão já posicionado está selecionado renomeia todo esse grupo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Como defino as opções de uma lista suspensa?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Escolha o tipo de campo Lista suspensa e escreva as opções na caixa de opções, separadas por vírgulas — por exemplo Pequeno, Médio, Grande. Clique na página para posicionar a lista, e essas opções são gravadas no PDF como uma lista real que o leitor consegue abrir. Clique numa lista já posicionada para carregar as suas opções de volta na caixa e editá-las."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funciona em PDF com várias páginas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Use a navegação de páginas acima da pré-visualização para mudar de página — os campos podem ser posicionados em qualquer página e cada página guarda o seu próprio conjunto. A lista «Campos posicionados», ao lado da página, mostra todos os campos adicionados em todo o documento, com o respetivo número de página; clicar numa entrada salta para essa página e destaca o campo, para não ter de folhear o documento à procura dele."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso aproximar o zoom para posicionar um campo com precisão?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Os controlos de zoom ficam junto à navegação de páginas: aproxime ou afaste em passos até 400 %, com um botão para voltar à vista predefinida. O zoom só altera o tamanho com que a página é desenhada no ecrã — os campos são guardados como posições relativas à própria página, por isso tudo o que já posicionou fica exatamente onde está no PDF final, seja qual for o nível de zoom com que o posicionou ou reviu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso adicionar campos a um PDF digitalizado (uma foto ou digitalização de um formulário em papel)?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim — é exatamente o caso para o qual esta ferramenta foi construída. Um PDF digitalizado é apenas uma imagem, sem qualquer camada interativa, por isso posicionar com um clique permite colocar campos de texto reais mesmo por cima dos espaços impressos, transformando uma digitalização num formulário digital preenchível."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "É um criador de formulários PDF gratuito e sem registo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Adicionar campos de formulário é totalmente grátis, sem conta, sem registo e sem instalação. Abra a ferramenta, carregue o seu PDF, clique para posicionar os campos e baixe — não é pedido nenhum endereço de e-mail."
+    }
+  }
+]

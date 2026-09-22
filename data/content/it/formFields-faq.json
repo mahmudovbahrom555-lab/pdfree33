@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Il mio PDF viene caricato da qualche parte quando aggiungo campi modulo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Tutto viene eseguito nel tuo browser usando pdf.js (per il rendering della pagina su cui fai clic) e pdf-lib (per scrivere i veri campi AcroForm). Né il PDF originale né la versione con i campi aggiunti vengono mai inviati a un server. PDFree non ha accesso al tuo documento."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Qual è la differenza tra questo strumento e Compila PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Compila PDF è per documenti che hanno già campi modulo interattivi: li rileva e ti permette di digitarci dentro dei valori. Aggiungi campi modulo serve al caso opposto: un PDF piatto o scansionato che NON ha ancora alcun campo interattivo. Sei tu a posizionare i campi facendo clic sulla pagina, poi scarichi un PDF che per la prima volta ha veri campi compilabili. Se PDFree rileva che il tuo file ha già dei campi, ti indirizza a Compila PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "I campi creati da questo strumento sono «veri» campi modulo o solo riquadri disegnati sulla pagina?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sono campi veri. Ogni riquadro inserito diventa un autentico campo di testo AcroForm scritto nella struttura del PDF con pdf-lib — la stessa tecnologia usata per costruire moduli interattivi in Acrobat e negli altri strumenti di creazione PDF. Apri il risultato in un qualsiasi lettore PDF conforme allo standard: puoi fare clic nel campo e digitare, spostarti tra i campi con il tasto Tab, e i valori vengono salvati come veri dati di modulo, non come immagine."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quali tipi di campo posso aggiungere?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Quattro tipi: campi di testo, caselle di controllo, gruppi di pulsanti di opzione ed elenchi a discesa. Scegli il tipo con i pulsanti sopra la pagina, poi fai clic per inserirlo. I campi di testo servono per nomi, date, indirizzi e risposte libere; le caselle di controllo per singole spunte sì/no; un gruppo di opzione è un insieme di pulsanti di cui se ne può scegliere solo uno alla volta; un elenco a discesa propone le voci che digiti tu. I campi firma non sono ancora supportati — usa Disegna su PDF per firmare un documento."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Come inserisco e regolo un campo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Scegli un tipo di campo, poi fai clic in un punto qualsiasi della pagina visualizzata per inserirlo lì. Trascina il campo dalla maniglia rotonda per spostarlo, trascina l'angolo in basso a destra per ridimensionarlo e digita direttamente nella sua etichetta per dargli un nome (utile se tu o qualcun altro vedrete più avanti i nomi dei campi nel pannello moduli di un lettore PDF). Fai clic sul piccolo pulsante × per rimuovere un campo che non vuoi."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Come creo un gruppo di pulsanti di opzione in cui se ne può selezionare solo uno?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Scegli il tipo di campo Pulsante di opzione e assegna un nome al gruppo nella casella del nome gruppo, poi fai clic per inserire ogni opzione. Ogni pulsante che inserisci mentre quel nome è impostato entra nello stesso gruppo, quindi solo uno di essi potrà essere selezionato — ed è proprio questo a distinguere i pulsanti di opzione da una fila di caselle di controllo. Digita in ciascun pulsante il suo valore (per esempio Sì e No). Per iniziare un secondo gruppo separato, fai clic su «Nuovo gruppo» e assegnagli un nome diverso. Modificare il nome mentre è selezionato un pulsante già inserito rinomina invece l'intero gruppo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Come imposto le voci di un elenco a discesa?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Scegli il tipo di campo Elenco a discesa e digita le voci nella casella delle opzioni, separate da virgole — per esempio Piccolo, Medio, Grande. Fai clic sulla pagina per inserire l'elenco: quelle voci vengono scritte nel PDF come una vera lista che il lettore può aprire. Fai clic su un elenco già inserito per ricaricarne le voci nella casella e modificarle."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funziona con PDF di più pagine?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Usa la navigazione sopra l'anteprima per spostarti tra le pagine — i campi si possono inserire su qualsiasi pagina e ogni pagina ricorda il proprio insieme. L'elenco «Campi inseriti», accanto alla pagina, mostra ogni campo aggiunto nell'intero documento con il relativo numero di pagina; facendo clic su una voce salti a quella pagina e il campo viene evidenziato, così non devi sfogliare tutto il documento per ritrovarlo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso ingrandire lo zoom per inserire un campo con precisione?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. I comandi di zoom si trovano accanto alla navigazione delle pagine: puoi ingrandire o ridurre a passi fino al 400 %, con un pulsante per tornare alla vista predefinita. Lo zoom cambia solo la dimensione con cui la pagina viene disegnata a schermo — i campi sono salvati come posizioni relative alla pagina stessa, quindi tutto ciò che hai già inserito resta esattamente dov'è nel PDF finale, a qualunque livello di zoom tu lo inserisca o lo riveda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso aggiungere campi a un PDF scansionato (una foto o una scansione di un modulo cartaceo)?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì — è esattamente il caso per cui questo strumento è stato costruito. Un PDF scansionato è solo un'immagine senza alcun livello interattivo, quindi l'inserimento con un clic ti permette di mettere veri campi di testo proprio sopra gli spazi stampati, trasformando una scansione in un modulo digitale compilabile."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "È un creatore di moduli PDF gratuito e senza registrazione?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Aggiungi campi modulo è completamente gratuito, senza account, senza registrazione e senza installazione. Apri lo strumento, carica il tuo PDF, fai clic per inserire i campi e scarica — non è richiesto alcun indirizzo e-mail."
+    }
+  }
+]

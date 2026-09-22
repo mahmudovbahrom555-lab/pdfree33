@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "¿Se sube mi PDF a algún sitio cuando añado campos de formulario?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Todo se ejecuta en tu navegador usando pdf.js (para mostrar la página sobre la que haces clic) y pdf-lib (para escribir los campos AcroForm reales). Ni tu PDF original ni la versión con los campos añadidos se envían nunca a un servidor. PDFree no tiene acceso a tu documento."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Cuál es la diferencia entre esta herramienta y Rellenar PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Rellenar PDF es para documentos que ya tienen campos de formulario interactivos: los detecta y te permite escribir valores en ellos. Añadir campos de formulario es para el caso contrario: un PDF plano o escaneado que TODAVÍA no tiene ningún campo interactivo. Tú mismo colocas los campos haciendo clic en la página y luego descargas un PDF que, por primera vez, tiene campos reales y rellenables. Si PDFree detecta que tu archivo ya tiene campos, te dirigirá a Rellenar PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Los campos que crea esta herramienta son «reales» o solo cuadros dibujados sobre la página?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Son campos reales. Cada cuadro colocado se convierte en un auténtico campo de texto AcroForm escrito en la estructura del PDF con pdf-lib, la misma tecnología con la que se crean formularios interactivos en Acrobat y otras herramientas de autoría de PDF. Abre el resultado en cualquier lector de PDF que cumpla el estándar y podrás hacer clic dentro del campo y escribir, saltar entre campos con el tabulador, y los valores se guardarán como datos de formulario reales, no como una imagen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Qué tipos de campo puedo añadir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Cuatro tipos: campos de texto, casillas de verificación, grupos de botones de opción y listas desplegables. Elige el tipo con los botones situados encima de la página y haz clic para colocarlo. Los campos de texto sirven para nombres, fechas, direcciones y respuestas libres; las casillas, para marcas de sí/no; un grupo de opción es un conjunto de botones del que solo se puede elegir uno a la vez; una lista desplegable ofrece las opciones que tú mismo escribas. Los campos de firma todavía no están disponibles — usa Dibujar en PDF para firmar un documento."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Cómo coloco y ajusto un campo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Elige un tipo de campo y haz clic en cualquier punto de la página mostrada para colocarlo ahí. Arrastra el campo por su tirador redondo para moverlo, arrastra su esquina inferior derecha para redimensionarlo y escribe directamente en la etiqueta del propio campo para darle nombre (útil si tú u otra persona veréis después los nombres de los campos en el panel de formularios de un lector de PDF). Haz clic en el pequeño botón × para eliminar un campo que no quieras."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Cómo creo un grupo de botones de opción en el que solo se pueda elegir uno?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Elige el tipo de campo Botón de opción y dale un nombre al grupo en la casilla del nombre de grupo; después haz clic para colocar cada opción. Todos los botones que coloques con ese nombre activo pasan a formar parte del mismo grupo, así que solo podrá seleccionarse uno de ellos — y eso es justo lo que diferencia a los botones de opción de una fila de casillas. Escribe el valor propio de cada botón (por ejemplo Sí y No). Para empezar un segundo grupo independiente, haz clic en «Nuevo grupo» y ponle un nombre distinto. Si editas el nombre mientras hay un botón colocado seleccionado, lo que harás es renombrar todo ese grupo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Cómo defino las opciones de una lista desplegable?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Elige el tipo de campo Lista desplegable y escribe las opciones separadas por comas en la casilla de opciones — por ejemplo Pequeña, Mediana, Grande. Haz clic en la página para colocar la lista, y esas opciones se escriben en el PDF como una lista real que el lector puede desplegar. Haz clic en una lista ya colocada para volver a cargar sus opciones en la casilla y editarlas."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Funciona con PDF de varias páginas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Usa la navegación de páginas situada encima de la vista previa para moverte entre páginas — los campos se pueden colocar en cualquier página y cada página recuerda su propio conjunto. La lista «Campos colocados», junto a la página, muestra todos los campos que has añadido en todo el documento, con su número de página; al hacer clic en una entrada saltas a esa página y el campo se resalta, así no tienes que recorrer el documento buscándolo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo ampliar el zoom para colocar un campo con precisión?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Los controles de zoom están junto a la navegación de páginas: puedes acercar o alejar por pasos hasta el 400 %, con un botón para volver a la vista predeterminada. El zoom solo cambia el tamaño con el que se dibuja la página en pantalla — los campos se guardan como posiciones relativas a la propia página, así que todo lo que ya hayas colocado se queda exactamente donde está en el PDF final, sea cual sea el nivel de zoom con el que lo coloques o lo revises."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo añadir campos a un PDF escaneado (una foto o un escaneo de un formulario en papel)?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí — es precisamente el caso para el que se creó esta herramienta. Un PDF escaneado no es más que una imagen sin ninguna capa interactiva, así que colocar los campos con un clic te permite situar campos de texto reales justo encima de los huecos impresos, convirtiendo un escaneo en un formulario digital rellenable."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Es un creador de formularios PDF gratuito y sin registro?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Añadir campos de formulario es completamente gratis, sin cuenta, sin registro y sin instalación. Abre la herramienta, carga tu PDF, haz clic para colocar los campos y descarga — no hace falta ninguna dirección de correo."
+    }
+  }
+]
