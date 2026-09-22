@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách thêm trường biểu mẫu có thể điền vào PDF miễn phí",
+  "description": "Nhấp để đặt các trường văn bản, hộp kiểm, nút chọn và danh sách thả xuống thật sự lên tệp PDF phẳng hoặc bản quét — miễn phí, không tải lên, xử lý cục bộ trong trình duyệt của bạn.",
+  "totalTime": "PT3M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — dịch vụ tạo trường biểu mẫu PDF miễn phí chạy trong trình duyệt, không cần tải tệp lên"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Mở tệp PDF của bạn",
+      "text": "Nhấp \"Chọn tệp\" hoặc kéo tệp PDF vào vùng thả. PDFree sẽ kiểm tra xem tài liệu đã có trường tương tác hay chưa — nếu đã có, bạn sẽ được chuyển sang công cụ Điền Biểu Mẫu.",
+      "url": "https://pdfree.io/vi/them-truong-bieu-mau-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Nhấp để đặt các trường",
+      "text": "Chọn một loại trường — văn bản, hộp kiểm, nút chọn hoặc danh sách thả xuống — rồi nhấp vào bất kỳ vị trí nào trên trang để đặt trường tại đó. Kéo để di chuyển, kéo góc để đổi kích thước, và gõ tên trực tiếp vào trường. Lặp lại cho mọi chỗ trống, trên từng trang.",
+      "url": "https://pdfree.io/vi/them-truong-bieu-mau-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Tải về tệp PDF có thể điền",
+      "text": "Nhấp \"Thêm trường & tải xuống\". PDFree ghi các trường AcroForm thật vào tài liệu ngay trong trình duyệt và tải kết quả về ngay lập tức — không chờ đợi, không cần tài khoản.",
+      "url": "https://pdfree.io/vi/them-truong-bieu-mau-pdf/#step3"
+    }
+  ]
+}

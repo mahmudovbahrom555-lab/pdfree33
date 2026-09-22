@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah PDF saya diunggah ke suatu tempat saat menambahkan kolom formulir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Semuanya berjalan di browser Anda menggunakan pdf.js (untuk menampilkan halaman yang Anda klik) dan pdf-lib (untuk menulis kolom AcroForm yang asli). Baik PDF asli Anda maupun versi dengan kolom yang sudah ditambahkan tidak pernah dikirim ke server. PDFree tidak memiliki akses ke dokumen Anda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apa bedanya alat ini dengan Isi Formulir PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Isi Formulir PDF ditujukan untuk dokumen yang sudah memiliki kolom formulir interaktif — alat itu mendeteksinya dan membiarkan Anda mengetik nilai di dalamnya. Tambah Kolom Formulir untuk kebalikannya: PDF datar atau hasil pindai yang BELUM punya kolom interaktif sama sekali. Anda sendiri yang menempatkan kolomnya dengan mengeklik halaman, lalu mengunduh PDF yang untuk pertama kalinya punya kolom isian sungguhan. Jika PDFree mendeteksi berkas Anda sudah punya kolom, Anda akan diarahkan ke Isi Formulir PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah kolom yang dibuat alat ini kolom formulir 'asli', atau hanya kotak yang digambar di halaman?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Kolom asli. Setiap kotak yang ditempatkan menjadi kolom teks AcroForm sungguhan yang ditulis ke dalam struktur PDF dengan pdf-lib — teknologi yang sama yang dipakai untuk membangun formulir interaktif di Acrobat dan perangkat penyusun PDF lainnya. Buka hasilnya di pembaca PDF mana pun yang mengikuti standar: Anda bisa mengeklik kolomnya dan mengetik, berpindah antarkolom dengan Tab, dan nilainya tersimpan sebagai data formulir sungguhan, bukan sekadar gambar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jenis kolom apa saja yang bisa saya tambahkan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Empat jenis: kolom teks, kotak centang, grup tombol pilihan, dan daftar pilihan. Pilih jenisnya lewat tombol di atas halaman, lalu klik untuk menempatkannya. Kolom teks cocok untuk nama, tanggal, alamat, dan jawaban bebas; kotak centang untuk tanda ya/tidak tunggal; grup pilihan adalah sekumpulan tombol yang hanya satu bisa dipilih dalam satu waktu; daftar pilihan menyajikan opsi yang Anda ketik sendiri. Kolom tanda tangan belum didukung — gunakan Gambar di PDF untuk menandatangani dokumen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bagaimana cara menempatkan dan menyesuaikan kolom?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pilih jenis kolom, lalu klik di mana saja pada halaman yang ditampilkan untuk menempatkannya di sana. Seret kolom lewat pegangan bulatnya untuk memindahkan, tarik sudut kanan bawahnya untuk mengubah ukuran, dan ketik langsung pada label kolom untuk memberi nama (berguna jika Anda atau orang lain nanti melihat nama kolom di panel formulir pembaca PDF). Klik tombol × kecil untuk menghapus kolom yang tidak Anda inginkan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bagaimana cara membuat grup tombol pilihan yang hanya satu bisa dipilih?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pilih jenis kolom Tombol pilihan dan beri nama grup pada kotak nama grup, lalu klik untuk menempatkan setiap opsi. Setiap tombol yang Anda tempatkan selagi nama itu aktif akan bergabung ke grup yang sama, sehingga hanya satu di antaranya yang bisa terpilih — dan itulah yang membedakan tombol pilihan dari deretan kotak centang. Ketik nilai masing-masing tombol (misalnya Ya dan Tidak). Untuk memulai grup kedua yang terpisah, klik \"Grup baru\" dan beri nama berbeda. Mengubah nama saat sebuah tombol yang sudah ditempatkan sedang dipilih justru akan mengganti nama seluruh grup itu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bagaimana cara menentukan isi daftar pilihan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pilih jenis kolom Daftar pilihan dan ketik opsinya di kotak opsi, dipisahkan koma — misalnya Kecil, Sedang, Besar. Klik pada halaman untuk menempatkan daftarnya, dan opsi-opsi itu ditulis ke dalam PDF sebagai daftar sungguhan yang bisa dibuka pembaca. Klik daftar yang sudah ditempatkan untuk memuat kembali opsinya ke kotak dan menyuntingnya."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ini berfungsi pada PDF banyak halaman?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Gunakan navigasi halaman di atas pratinjau untuk berpindah halaman — kolom bisa ditempatkan di halaman mana pun, dan tiap halaman mengingat kumpulan kolomnya sendiri. Daftar \"Kolom yang ditempatkan\" di samping halaman menampilkan setiap kolom yang Anda tambahkan di seluruh dokumen beserta nomor halamannya; mengeklik salah satu entri akan melompat ke halaman itu dan menyorot kolomnya, jadi Anda tak perlu menelusuri dokumen untuk mencarinya."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya memperbesar tampilan untuk menempatkan kolom dengan presisi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa. Kontrol zoom ada di sebelah navigasi halaman: perbesar atau perkecil bertahap hingga 400 %, dengan tombol untuk kembali ke tampilan bawaan. Zoom hanya mengubah seberapa besar halaman digambar di layar — kolom disimpan sebagai posisi relatif terhadap halaman itu sendiri, jadi apa pun yang sudah Anda tempatkan akan tetap persis di tempatnya pada PDF jadi, pada tingkat zoom berapa pun Anda menempatkan atau memeriksanya."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya menambahkan kolom ke PDF hasil pindai (foto atau pindaian formulir kertas)?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa — justru inilah kasus yang jadi alasan alat ini dibuat. PDF hasil pindai hanyalah gambar tanpa lapisan interaktif sama sekali, sehingga penempatan dengan klik memungkinkan Anda menaruh kolom teks sungguhan tepat di atas isian yang tercetak, mengubah hasil pindai menjadi formulir digital yang bisa diisi."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ini pembuat formulir PDF gratis tanpa pendaftaran?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Tambah Kolom Formulir sepenuhnya gratis, tanpa akun, tanpa pendaftaran, dan tanpa pemasangan. Buka alatnya, muat PDF Anda, klik untuk menempatkan kolom, lalu unduh — tidak ada alamat email yang diminta."
+    }
+  }
+]

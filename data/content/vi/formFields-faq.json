@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Tệp PDF của tôi có bị tải lên đâu đó khi tôi thêm trường biểu mẫu không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Không. Mọi thứ đều chạy trong trình duyệt của bạn, dùng pdf.js (để dựng hình trang bạn nhấp vào) và pdf-lib (để ghi các trường AcroForm thật). Cả tệp PDF gốc lẫn bản đã thêm trường đều không bao giờ được gửi tới máy chủ. PDFree không có quyền truy cập vào tài liệu của bạn."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Công cụ này khác gì so với Điền Biểu Mẫu PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Điền Biểu Mẫu PDF dành cho tài liệu đã có sẵn trường biểu mẫu tương tác — nó phát hiện các trường đó và cho bạn nhập giá trị vào. Thêm Trường Biểu Mẫu dành cho trường hợp ngược lại: một tệp PDF phẳng hoặc bản quét CHƯA có trường tương tác nào. Bạn tự đặt các trường bằng cách nhấp lên trang, rồi tải về một tệp PDF lần đầu tiên có trường điền được thật sự. Nếu PDFree phát hiện tệp của bạn đã có trường, nó sẽ hướng bạn sang Điền Biểu Mẫu PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Các trường công cụ này tạo ra là trường biểu mẫu 'thật' hay chỉ là những ô vẽ lên trang?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Là trường thật. Mỗi ô bạn đặt sẽ trở thành một trường văn bản AcroForm thực sự, được ghi vào cấu trúc tệp PDF bằng pdf-lib — chính công nghệ dùng để dựng biểu mẫu tương tác trong Acrobat và các phần mềm soạn PDF khác. Mở kết quả bằng bất kỳ trình đọc PDF tuân thủ chuẩn nào: bạn có thể nhấp vào trường và gõ, dùng phím Tab chuyển giữa các trường, và giá trị được lưu như dữ liệu biểu mẫu thật chứ không phải hình ảnh."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể thêm những loại trường nào?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bốn loại: trường văn bản, hộp kiểm, nhóm nút chọn và danh sách thả xuống. Chọn loại bằng các nút phía trên trang rồi nhấp để đặt. Trường văn bản phù hợp cho tên, ngày tháng, địa chỉ và câu trả lời tự do; hộp kiểm dành cho dấu tích có/không đơn lẻ; nhóm nút chọn là tập hợp nút mà mỗi lần chỉ chọn được một; danh sách thả xuống đưa ra các lựa chọn do chính bạn nhập. Trường chữ ký hiện chưa được hỗ trợ — hãy dùng Vẽ trên PDF để ký tài liệu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Làm sao để đặt và tinh chỉnh một trường?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Chọn một loại trường, rồi nhấp vào bất kỳ vị trí nào trên trang đang hiển thị để đặt trường tại đó. Kéo trường bằng núm tròn để di chuyển, kéo góc dưới bên phải để đổi kích thước, và gõ trực tiếp vào nhãn của trường để đặt tên (rất tiện nếu sau này bạn hoặc người khác nhìn thấy tên trường trong khung biểu mẫu của trình đọc PDF). Nhấp nút × nhỏ để xóa trường bạn không muốn giữ."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Làm sao tạo một nhóm nút chọn mà chỉ chọn được một phương án?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Chọn loại trường Nút chọn và đặt tên cho nhóm trong ô tên nhóm, sau đó nhấp để đặt từng phương án. Mọi nút bạn đặt trong khi tên đó đang được thiết lập đều thuộc cùng một nhóm, nên chỉ một nút được chọn tại một thời điểm — đó chính là điểm khác biệt giữa nút chọn và một hàng hộp kiểm. Gõ giá trị riêng vào từng nút (ví dụ Có và Không). Để bắt đầu một nhóm thứ hai tách biệt, hãy nhấp \"Nhóm mới\" và đặt tên khác. Nếu sửa tên trong khi một nút đã đặt đang được chọn thì thao tác đó sẽ đổi tên toàn bộ nhóm."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Làm sao đặt các lựa chọn cho danh sách thả xuống?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Chọn loại trường Danh sách thả xuống và nhập các lựa chọn vào ô tùy chọn, phân tách bằng dấu phẩy — ví dụ Nhỏ, Vừa, Lớn. Nhấp lên trang để đặt danh sách; các lựa chọn đó được ghi vào tệp PDF thành một danh sách thật mà trình đọc có thể mở ra. Nhấp vào một danh sách đã đặt để nạp lại các lựa chọn của nó vào ô và chỉnh sửa."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Công cụ này có dùng được với PDF nhiều trang không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Dùng thanh điều hướng trang phía trên khung xem trước để chuyển trang — trường có thể đặt ở bất kỳ trang nào và mỗi trang ghi nhớ bộ trường riêng. Danh sách \"Trường đã đặt\" bên cạnh trang liệt kê mọi trường bạn đã thêm trong toàn bộ tài liệu kèm số trang; nhấp vào một mục sẽ nhảy tới trang đó và làm nổi bật trường, nên bạn không phải lật cả tài liệu để tìm."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể phóng to để đặt trường thật chính xác không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Các nút thu phóng nằm cạnh thanh điều hướng trang: phóng to hoặc thu nhỏ theo từng mức tới 400 %, kèm nút đặt lại để trở về khung nhìn mặc định. Thu phóng chỉ thay đổi kích thước trang hiển thị trên màn hình — các trường được lưu theo vị trí tương đối so với chính trang đó, nên mọi thứ bạn đã đặt vẫn nằm đúng chỗ trong tệp PDF hoàn chỉnh, bất kể bạn đặt hay rà soát ở mức thu phóng nào."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể thêm trường vào tệp PDF quét (ảnh chụp hoặc bản quét biểu mẫu giấy) không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có — đây đúng là trường hợp mà công cụ này được tạo ra để phục vụ. Tệp PDF quét chỉ là một hình ảnh, không hề có lớp tương tác, nên cách đặt bằng thao tác nhấp cho phép bạn thả các trường văn bản thật ngay lên vị trí những chỗ trống in sẵn, biến bản quét thành biểu mẫu số có thể điền."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Đây có phải công cụ tạo biểu mẫu PDF miễn phí, không cần đăng ký không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Đúng vậy. Thêm Trường Biểu Mẫu hoàn toàn miễn phí, không cần tài khoản, không cần đăng ký và không phải cài đặt. Mở công cụ, nạp tệp PDF, nhấp để đặt trường rồi tải về — không đòi hỏi địa chỉ email nào."
+    }
+  }
+]

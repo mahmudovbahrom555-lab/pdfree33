@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Form alanı eklerken PDF'im herhangi bir yere yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Her şey tarayıcınızda çalışır: tıkladığınız sayfayı çizmek için pdf.js, gerçek AcroForm alanlarını yazmak için pdf-lib kullanılır. Ne özgün PDF'niz ne de alanların eklendiği sürüm hiçbir zaman bir sunucuya gönderilir. PDFree'nin belgenize erişimi yoktur."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu araçla PDF Doldur arasındaki fark nedir?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF Doldur, zaten etkileşimli form alanları olan belgeler içindir — alanları algılar ve içlerine değer yazmanızı sağlar. Form Alanı Ekle ise tam tersi durum içindir: HENÜZ hiç etkileşimli alanı olmayan düz veya taranmış bir PDF. Alanları sayfaya tıklayarak siz yerleştirirsiniz ve ardından ilk kez gerçek, doldurulabilir alanlara sahip bir PDF indirirsiniz. PDFree dosyanızda zaten alan olduğunu algılarsa sizi PDF Doldur'a yönlendirir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu aracın oluşturduğu alanlar \"gerçek\" form alanları mı, yoksa sayfaya çizilmiş kutular mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Gerçek alanlar. Yerleştirdiğiniz her kutu, pdf-lib ile PDF'nin yapısına yazılan gerçek bir AcroForm metin alanına dönüşür — Acrobat ve diğer PDF hazırlama araçlarında etkileşimli formlar oluşturmak için kullanılan teknolojinin aynısı. Sonucu standartlara uyan herhangi bir PDF okuyucusunda açın: alana tıklayıp yazabilir, alanlar arasında sekme tuşuyla geçebilirsiniz ve değerler resim olarak değil, gerçek form verisi olarak kaydedilir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hangi alan türlerini ekleyebilirim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dört tür: metin alanları, onay kutuları, seçenek düğmesi grupları ve açılır listeler. Türü sayfanın üstündeki düğmelerle seçin ve yerleştirmek için tıklayın. Metin alanları ad, tarih, adres ve serbest yanıtlar için; onay kutuları tek tek evet/hayır işaretleri için; seçenek grubu, aynı anda yalnızca birinin seçilebildiği düğme kümesi için; açılır liste ise kendi yazdığınız seçenekleri sunmak içindir. İmza alanları henüz desteklenmiyor — bir belgeyi imzalamak için PDF'ye Çiz aracını kullanın."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bir alanı nasıl yerleştirir ve ayarlarım?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bir alan türü seçin, sonra görüntülenen sayfanın herhangi bir yerine tıklayarak oraya bir alan bırakın. Yerini değiştirmek için alanı yuvarlak tutamacından sürükleyin, boyutlandırmak için sağ alt köşesini çekin ve ad vermek için doğrudan alanın kendi etiketine yazın (siz ya da bir başkası daha sonra bir PDF okuyucusunun form panelinde bu adları göreceği için işinize yarar). İstemediğiniz bir alanı kaldırmak için küçük × düğmesine tıklayın."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Yalnızca birinin seçilebildiği bir seçenek düğmesi grubunu nasıl oluştururum?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Seçenek düğmesi alan türünü seçin, grup adı kutusuna gruba bir ad verin ve ardından her seçeneği tıklayarak yerleştirin. O ad ayarlıyken yerleştirdiğiniz her düğme aynı gruba katılır; böylece bunlardan yalnızca biri seçili olabilir — seçenek düğmelerini bir sıra onay kutusundan ayıran şey tam olarak budur. Her düğmenin içine kendi değerini yazın (örneğin Evet ve Hayır). İkinci, ayrı bir grup başlatmak için \"Yeni grup\" düğmesine tıklayın ve farklı bir ad verin. Yerleştirilmiş bir düğme seçiliyken adı düzenlerseniz, bunun yerine o grubun tamamı yeniden adlandırılır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Açılır listedeki seçenekleri nasıl belirlerim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Açılır liste alan türünü seçin ve seçenekleri, virgülle ayırarak seçenek kutusuna yazın — örneğin Küçük, Orta, Büyük. Listeyi yerleştirmek için sayfaya tıklayın; bu seçenekler PDF'ye, okuyucunun açabileceği gerçek bir liste olarak yazılır. Zaten yerleştirilmiş bir açılır listeye tıklayarak seçeneklerini kutuya geri yükleyebilir ve düzenleyebilirsiniz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Çok sayfalı PDF'lerde çalışır mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Sayfalar arasında geçiş için önizlemenin üstündeki sayfa gezinmesini kullanın — alanlar herhangi bir sayfaya yerleştirilebilir ve her sayfa kendi alan kümesini hatırlar. Sayfanın yanındaki \"Yerleştirilen alanlar\" listesi, belge genelinde eklediğiniz her alanı sayfa numarasıyla birlikte gösterir; bir satıra tıkladığınızda o sayfaya atlar ve alan vurgulanır, böylece aramak için belgeyi baştan sona gezmeniz gerekmez."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bir alanı tam isabetle yerleştirmek için yakınlaştırabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Yakınlaştırma denetimleri sayfa gezinmesinin yanındadır: kademeli olarak %400'e kadar yakınlaştırıp uzaklaştırabilir, bir düğmeyle varsayılan görünüme dönebilirsiniz. Yakınlaştırma yalnızca sayfanın ekranda ne kadar büyük çizildiğini değiştirir — alanlar sayfanın kendisine göre konum olarak saklandığından, hangi yakınlaştırma düzeyinde yerleştirirseniz veya gözden geçirirseniz geçirin, daha önce yerleştirdikleriniz bitmiş PDF'de tam olarak olduğu yerde kalır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Taranmış bir PDF'ye (kâğıt bir formun fotoğrafı veya taraması) alan ekleyebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet — bu araç tam olarak bu durum için yapıldı. Taranmış bir PDF, hiçbir etkileşimli katmanı olmayan bir resimden ibarettir; tıklayarak yerleştirme sayesinde gerçek metin alanlarını doğrudan basılı boşlukların üzerine koyabilir, bir taramayı doldurulabilir dijital bir forma dönüştürebilirsiniz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bu, kayıt gerektirmeyen ücretsiz bir PDF form oluşturucu mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Form Alanı Ekle tamamen ücretsizdir; hesap, kayıt ve kurulum gerekmez. Aracı açın, PDF'nizi yükleyin, alanları tıklayarak yerleştirin ve indirin — e-posta adresi istenmez."
+    }
+  }
+]

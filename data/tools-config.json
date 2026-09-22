@@ -3839,8 +3839,13 @@
         "pt": "adicionar-campos-formulario-pdf",
         "de": "pdf-formularfelder-hinzufuegen",
         "fr": "ajouter-champs-formulaire-pdf",
+        "id": "tambah-kolom-formulir-pdf",
+        "vi": "them-truong-bieu-mau-pdf",
+        "ru": "dobavit-polya-formy-pdf",
         "it": "aggiungi-campi-modulo-pdf",
-        "nl": "pdf-formuliervelden-toevoegen"
+        "nl": "pdf-formuliervelden-toevoegen",
+        "pl": "dodaj-pola-formularza-pdf",
+        "tr": "pdf-form-alani-ekle"
       },
       "titles": {
         "en": "Add Fillable Form Fields to a PDF Free — No Upload | PDFree",
@@ -3848,8 +3853,13 @@
         "pt": "Adicionar Campos de Formulário a PDF Grátis — Sem Upload | PDFree",
         "de": "PDF-Formularfelder hinzufügen — Kostenlos, kein Upload | PDFree",
         "fr": "Ajouter des Champs de Formulaire à un PDF — Gratuit | PDFree",
+        "id": "Tambah Kolom Formulir ke PDF Gratis — Tanpa Unggah | PDFree",
+        "vi": "Thêm Trường Biểu Mẫu vào PDF Miễn Phí — Không Tải Lên | PDFree",
+        "ru": "Добавить Поля Формы в PDF Бесплатно — Без Загрузки | PDFree",
         "it": "Aggiungere Campi Modulo a un PDF Gratis — Senza Upload | PDFree",
-        "nl": "Formuliervelden aan PDF Toevoegen — Gratis, Geen Upload | PDFree"
+        "nl": "Formuliervelden aan PDF Toevoegen — Gratis, Geen Upload | PDFree",
+        "pl": "Dodaj Pola Formularza do PDF Za Darmo — Bez Przesyłania | PDFree",
+        "tr": "PDF'ye Form Alanı Ekle — Ücretsiz, Yükleme Yapmadan | PDFree"
       },
       "descs": {
         "en": "Click to place real AcroForm text fields on a flat or scanned PDF. Processed 100% in your browser — files never leave your device.",
@@ -3857,8 +3867,13 @@
         "pt": "Posicione campos de texto AcroForm reais num PDF simples ou digitalizado com um clique. Tudo no navegador — os ficheiros nunca saem do seu dispositivo.",
         "de": "Setze per Klick echte AcroForm-Textfelder auf ein flaches oder gescanntes PDF. Komplett im Browser — deine Datei verlässt dein Gerät nie.",
         "fr": "Placez de vrais champs de texte AcroForm sur un PDF plat ou scanné en un clic. Tout se passe dans votre navigateur — vos fichiers ne sont jamais envoyés.",
+        "id": "Tempatkan kolom teks AcroForm asli pada PDF datar atau hasil pindai dengan sekali klik. Semua di browser — berkas tidak pernah meninggalkan perangkat Anda.",
+        "vi": "Đặt các trường văn bản AcroForm thật lên PDF phẳng hoặc bản quét chỉ bằng một cú nhấp. Tất cả trong trình duyệt — tệp không bao giờ rời khỏi thiết bị của bạn.",
+        "ru": "Размещайте настоящие текстовые поля AcroForm на плоском или сканированном PDF одним кликом. Всё в браузере — файлы не покидают ваше устройство.",
         "it": "Posiziona veri campi di testo AcroForm su un PDF piatto o scansionato con un clic. Tutto nel browser — i tuoi file non lasciano mai il dispositivo.",
-        "nl": "Plaats met één klik echte AcroForm-tekstvelden op een plat of gescand PDF. Volledig in je browser — je bestanden verlaten je apparaat nooit."
+        "nl": "Plaats met één klik echte AcroForm-tekstvelden op een plat of gescand PDF. Volledig in je browser — je bestanden verlaten je apparaat nooit.",
+        "pl": "Umieszczaj prawdziwe pola tekstowe AcroForm na płaskim lub zeskanowanym PDF jednym kliknięciem. Wszystko w przeglądarce — pliki nie opuszczają urządzenia.",
+        "tr": "Düz veya taranmış bir PDF'ye tek tıkla gerçek AcroForm metin alanları yerleştirin. Tamamı tarayıcınızda — dosyalarınız cihazınızdan hiç çıkmaz."
       },
       "navLabels": {
         "en": "Add Fields",
@@ -3866,8 +3881,13 @@
         "pt": "Adicionar campos",
         "de": "Felder hinzufügen",
         "fr": "Ajouter des champs",
+        "id": "Tambah kolom",
+        "vi": "Thêm trường",
+        "ru": "Добавить поля",
         "it": "Aggiungi campi",
-        "nl": "Velden toevoegen"
+        "nl": "Velden toevoegen",
+        "pl": "Dodaj pola",
+        "tr": "Alan ekle"
       },
       "cardNames": {
         "en": "Add Form Fields",
@@ -3875,8 +3895,13 @@
         "pt": "Adicionar campos de formulário",
         "de": "Formularfelder hinzufügen",
         "fr": "Ajouter des champs de formulaire",
+        "id": "Tambah kolom formulir",
+        "vi": "Thêm trường biểu mẫu",
+        "ru": "Добавить поля формы",
         "it": "Aggiungi campi modulo",
-        "nl": "Formuliervelden toevoegen"
+        "nl": "Formuliervelden toevoegen",
+        "pl": "Dodaj pola formularza",
+        "tr": "Form alanı ekle"
       },
       "cardDescs": {
         "en": "Turn a flat PDF into a fillable form — click to place fields",
@@ -3884,8 +3909,13 @@
         "pt": "Transforme um PDF simples num formulário preenchível — clique para posicionar campos",
         "de": "Flaches PDF zum ausfüllbaren Formular machen — Felder per Klick setzen",
         "fr": "Transformez un PDF plat en formulaire remplissable — placez les champs en un clic",
+        "id": "Ubah PDF datar menjadi formulir yang bisa diisi — klik untuk menempatkan kolom",
+        "vi": "Biến PDF phẳng thành biểu mẫu có thể điền — nhấp để đặt trường",
+        "ru": "Превратите плоский PDF в заполняемую форму — размещайте поля кликом",
         "it": "Trasforma un PDF piatto in un modulo compilabile — posiziona i campi con un clic",
-        "nl": "Maak van een plat PDF een invulbaar formulier — plaats velden met één klik"
+        "nl": "Maak van een plat PDF een invulbaar formulier — plaats velden met één klik",
+        "pl": "Zamień płaski PDF w formularz do wypełnienia — umieszczaj pola kliknięciem",
+        "tr": "Düz bir PDF'yi doldurulabilir forma dönüştürün — alanları tıklayarak yerleştirin"
       },
       "breadcrumb": {
         "en": "Add Form Fields",
@@ -3893,8 +3923,13 @@
         "pt": "Adicionar Campos de Formulário",
         "de": "Formularfelder hinzufügen",
         "fr": "Ajouter des Champs de Formulaire",
+        "id": "Tambah Kolom Formulir",
+        "vi": "Thêm Trường Biểu Mẫu",
+        "ru": "Добавить Поля Формы",
         "it": "Aggiungi Campi Modulo",
-        "nl": "Formuliervelden Toevoegen"
+        "nl": "Formuliervelden Toevoegen",
+        "pl": "Dodaj Pola Formularza",
+        "tr": "Form Alanı Ekle"
       },
       "metaDescs": {
         "en": "Turn a flat PDF into a fillable form free. Click to add text, checkbox, radio and dropdown fields. Runs in your browser — nothing uploaded, no signup.",
@@ -3902,8 +3937,13 @@
         "pt": "Transforme um PDF simples num formulário preenchível grátis. Adicione campos de texto, caixas, botões de opção e listas com um clique. Sem upload.",
         "de": "Flaches PDF kostenlos in ein ausfüllbares Formular verwandeln. Text-, Kontrollkästchen-, Options- und Auswahlfelder per Klick setzen. Ohne Upload.",
         "fr": "Transformez un PDF plat en formulaire remplissable gratuitement. Ajoutez champs texte, cases à cocher, boutons radio et listes en un clic. Sans envoi.",
+        "id": "Ubah PDF datar menjadi formulir yang bisa diisi, gratis. Tambahkan kolom teks, kotak centang, tombol pilihan, dan daftar dengan sekali klik. Tanpa unggah.",
+        "vi": "Biến PDF phẳng thành biểu mẫu có thể điền, miễn phí. Thêm trường văn bản, hộp kiểm, nút chọn và danh sách chỉ bằng một cú nhấp. Không cần tải lên.",
+        "ru": "Превратите плоский PDF в заполняемую форму бесплатно. Добавляйте текстовые поля, флажки, переключатели и списки одним кликом. Без загрузки на сервер.",
         "it": "Trasforma un PDF piatto in un modulo compilabile gratis. Aggiungi campi di testo, caselle, pulsanti di opzione ed elenchi con un clic. Senza caricamenti.",
-        "nl": "Maak van een plat PDF gratis een invulbaar formulier. Voeg tekstvelden, selectievakjes, keuzerondjes en keuzelijsten toe met één klik. Zonder uploaden."
+        "nl": "Maak van een plat PDF gratis een invulbaar formulier. Voeg tekstvelden, selectievakjes, keuzerondjes en keuzelijsten toe met één klik. Zonder uploaden.",
+        "pl": "Zamień płaski PDF w formularz do wypełnienia za darmo. Dodaj pola tekstowe, pola wyboru, przyciski opcji i listy jednym kliknięciem. Bez przesyłania.",
+        "tr": "Düz bir PDF'yi ücretsiz doldurulabilir forma dönüştürün. Metin alanı, onay kutusu, seçenek düğmesi ve açılır liste ekleyin. Tarayıcıda çalışır."
       },
       "ogTitles": {
         "en": "Add Fillable Form Fields to a PDF Free — Click to Place, No Upload",
@@ -3911,8 +3951,13 @@
         "pt": "Tornar um PDF Preenchível Grátis — Posicione Campos com um Clique, Sem Upload",
         "de": "PDF ausfüllbar machen — Formularfelder per Klick setzen, ohne Upload",
         "fr": "Rendre un PDF Remplissable Gratuitement — Champs en un Clic, Sans Envoi",
+        "id": "Buat PDF Bisa Diisi Gratis — Tempatkan Kolom dengan Sekali Klik, Tanpa Unggah",
+        "vi": "Làm PDF Có Thể Điền Miễn Phí — Đặt Trường Bằng Một Cú Nhấp, Không Tải Lên",
+        "ru": "Сделать PDF Заполняемым Бесплатно — Поля Одним Кликом, Без Загрузки",
         "it": "Rendere Compilabile un PDF Gratis — Campi con un Clic, Senza Upload",
-        "nl": "PDF Invulbaar Maken Gratis — Velden met Één Klik, Zonder Upload"
+        "nl": "PDF Invulbaar Maken Gratis — Velden met Één Klik, Zonder Upload",
+        "pl": "Zrób z PDF Formularz do Wypełnienia — Pola Jednym Kliknięciem, Bez Przesyłania",
+        "tr": "PDF'yi Ücretsiz Doldurulabilir Yapın — Tek Tıkla Alan, Yükleme Yok"
       },
       "ogDescs": {
         "en": "Turn a flat or scanned PDF into a real fillable form — click to place text fields, download a standard AcroForm PDF. Runs entirely in your browser.",
@@ -3920,8 +3965,13 @@
         "pt": "Transforme um PDF simples ou digitalizado num formulário realmente preenchível — posicione campos com um clique e baixe um PDF AcroForm padrão. Tudo no navegador.",
         "de": "Verwandle ein flaches oder gescanntes PDF in ein echtes ausfüllbares Formular — Felder per Klick platzieren und ein standardkonformes AcroForm-PDF herunterladen. Läuft vollständig im Browser.",
         "fr": "Transformez un PDF plat ou scanné en véritable formulaire remplissable — placez les champs en un clic et téléchargez un PDF AcroForm standard. Tout dans votre navigateur.",
+        "id": "Ubah PDF datar atau hasil pindai menjadi formulir yang benar-benar bisa diisi — klik untuk menempatkan kolom dan unduh PDF AcroForm standar. Berjalan sepenuhnya di browser.",
+        "vi": "Biến PDF phẳng hoặc bản quét thành biểu mẫu thực sự có thể điền — nhấp để đặt trường và tải về tệp AcroForm chuẩn. Chạy hoàn toàn trong trình duyệt của bạn.",
+        "ru": "Превратите плоский или сканированный PDF в настоящую заполняемую форму — размещайте поля кликом и скачивайте стандартный AcroForm-файл. Всё работает в браузере.",
         "it": "Trasforma un PDF piatto o scansionato in un modulo davvero compilabile — posiziona i campi con un clic e scarica un PDF AcroForm standard. Tutto nel browser.",
-        "nl": "Maak van een plat of gescand PDF een echt invulbaar formulier — plaats velden met één klik en download een standaard AcroForm-PDF. Draait volledig in je browser."
+        "nl": "Maak van een plat of gescand PDF een echt invulbaar formulier — plaats velden met één klik en download een standaard AcroForm-PDF. Draait volledig in je browser.",
+        "pl": "Zamień płaski lub zeskanowany PDF w prawdziwy formularz do wypełnienia — umieszczaj pola kliknięciem i pobierz standardowy plik AcroForm. Działa w całości w przeglądarce.",
+        "tr": "Düz veya taranmış bir PDF'yi gerçek bir doldurulabilir forma dönüştürün — alanları tıklayarak yerleştirin ve standart bir AcroForm PDF indirin. Tamamen tarayıcınızda çalışır."
       },
       "keywords": {
         "en": "add form fields to pdf, make pdf fillable, create fillable pdf form, add checkbox to pdf, add radio button to pdf, add dropdown to pdf, pdf form creator, turn scanned pdf into form",
@@ -3929,8 +3979,13 @@
         "pt": "adicionar campos de formulário ao pdf, tornar pdf preenchível, criar formulário pdf preenchível, adicionar caixa de seleção ao pdf, adicionar lista suspensa ao pdf, criador de formulários pdf",
         "de": "pdf formularfelder hinzufügen, pdf ausfüllbar machen, ausfüllbares pdf erstellen, pdf formular erstellen, kontrollkästchen in pdf einfügen, dropdown in pdf einfügen, pdf formular editor",
         "fr": "ajouter des champs de formulaire à un pdf, rendre un pdf remplissable, créer un formulaire pdf remplissable, ajouter une case à cocher à un pdf, ajouter une liste déroulante à un pdf, créateur de formulaire pdf",
+        "id": "tambah kolom formulir ke pdf, membuat pdf bisa diisi, buat formulir pdf isian, tambah kotak centang ke pdf, tambah daftar pilihan ke pdf, pembuat formulir pdf",
+        "vi": "thêm trường biểu mẫu vào pdf, làm pdf có thể điền, tạo biểu mẫu pdf điền được, thêm hộp kiểm vào pdf, thêm danh sách thả xuống vào pdf, trình tạo biểu mẫu pdf",
+        "ru": "добавить поля формы в pdf, сделать pdf заполняемым, создать заполняемую форму pdf, добавить флажок в pdf, добавить выпадающий список в pdf, конструктор форм pdf",
         "it": "aggiungere campi modulo al pdf, rendere compilabile un pdf, creare modulo pdf compilabile, aggiungere casella di controllo al pdf, aggiungere elenco a discesa al pdf, creatore di moduli pdf",
-        "nl": "formuliervelden toevoegen aan pdf, pdf invulbaar maken, invulbaar pdf-formulier maken, selectievakje toevoegen aan pdf, keuzelijst toevoegen aan pdf, pdf formulier maken"
+        "nl": "formuliervelden toevoegen aan pdf, pdf invulbaar maken, invulbaar pdf-formulier maken, selectievakje toevoegen aan pdf, keuzelijst toevoegen aan pdf, pdf formulier maken",
+        "pl": "dodaj pola formularza do pdf, formularz pdf do wypełnienia, utwórz formularz pdf, dodaj pole wyboru do pdf, dodaj listę rozwijaną do pdf, kreator formularzy pdf",
+        "tr": "pdf'ye form alanı ekleme, pdf doldurulabilir yapma, doldurulabilir pdf formu oluşturma, pdf'ye onay kutusu ekleme, pdf'ye açılır liste ekleme, pdf form oluşturucu"
       }
     },
     {

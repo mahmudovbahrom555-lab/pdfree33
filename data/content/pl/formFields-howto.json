@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Jak za darmo dodać pola formularza do PDF",
+  "description": "Umieszczaj kliknięciem prawdziwe pola tekstowe, pola wyboru, przyciski opcji i listy rozwijane na płaskim lub zeskanowanym PDF — za darmo, bez przesyłania, przetwarzane lokalnie w przeglądarce.",
+  "totalTime": "PT3M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — darmowe narzędzie do pól formularzy PDF w przeglądarce, bez przesyłania plików"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Otwórz swój PDF",
+      "text": "Kliknij \"Wybierz pliki\" albo przeciągnij PDF do pola upuszczania. PDFree sprawdza, czy dokument ma już pola interaktywne — jeśli ma, zostaniesz skierowany do narzędzia Wypełnij.",
+      "url": "https://pdfree.io/pl/dodaj-pola-formularza-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Umieszczaj pola kliknięciem",
+      "text": "Wybierz typ pola — tekstowe, pole wyboru, przycisk opcji lub listę rozwijaną — i kliknij w dowolnym miejscu strony, aby je tam umieścić. Przeciągnij, aby zmienić położenie, pociągnij róg, aby zmienić rozmiar, i wpisz nazwę bezpośrednio w polu. Powtórz dla każdego pustego miejsca, na każdej stronie.",
+      "url": "https://pdfree.io/pl/dodaj-pola-formularza-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Pobierz formularz PDF do wypełnienia",
+      "text": "Kliknij \"Dodaj pola i pobierz\". PDFree zapisuje prawdziwe pola AcroForm w dokumencie w Twojej przeglądarce i od razu pobiera wynik — bez czekania, bez konta.",
+      "url": "https://pdfree.io/pl/dodaj-pola-formularza-pdf/#step3"
+    }
+  ]
+}

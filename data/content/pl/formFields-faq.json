@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy mój PDF jest gdzieś przesyłany, gdy dodaję pola formularza?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Wszystko działa w Twojej przeglądarce przy użyciu pdf.js (do wyrenderowania strony, na którą klikasz) i pdf-lib (do zapisania prawdziwych pól AcroForm). Ani oryginalny PDF, ani wersja z dodanymi polami nigdy nie trafiają na serwer. PDFree nie ma dostępu do Twojego dokumentu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czym to narzędzie różni się od Wypełnij PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Wypełnij PDF jest przeznaczony dla dokumentów, które już mają interaktywne pola formularza — wykrywa je i pozwala wpisać wartości. Dodaj pola formularza rozwiązuje odwrotny problem: płaski lub zeskanowany PDF, który NIE ma jeszcze żadnych pól interaktywnych. Sam umieszczasz pola, klikając na stronie, a potem pobierasz PDF, który po raz pierwszy ma prawdziwe pola do wypełnienia. Jeśli PDFree wykryje, że Twój plik już ma pola, skieruje Cię do Wypełnij PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy pola tworzone przez to narzędzie są „prawdziwe”, czy to tylko ramki narysowane na stronie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Prawdziwe. Każda umieszczona ramka staje się rzeczywistym polem tekstowym AcroForm zapisanym w strukturze pliku PDF za pomocą pdf-lib — tej samej technologii, na której opierają się interaktywne formularze w Acrobacie i innych programach do tworzenia PDF. Otwórz wynik w dowolnym czytniku PDF zgodnym ze standardem: możesz kliknąć w pole i pisać, przechodzić między polami tabulatorem, a wartości zapisują się jako prawdziwe dane formularza, nie jako obrazek."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jakie typy pól mogę dodać?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Cztery typy: pola tekstowe, pola wyboru, grupy przycisków opcji i listy rozwijane. Wybierz typ przyciskami nad stroną, a potem kliknij, żeby umieścić pole. Pola tekstowe nadają się do imion, dat, adresów i odpowiedzi opisowych; pola wyboru do pojedynczych znaczników tak/nie; grupa opcji to zestaw przycisków, z których jednocześnie można wybrać tylko jeden; lista rozwijana oferuje pozycje, które sam wpiszesz. Pola podpisu nie są jeszcze obsługiwane — do podpisania dokumentu użyj narzędzia Rysuj na PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jak umieścić i dopasować pole?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Wybierz typ pola, a następnie kliknij w dowolnym miejscu wyświetlanej strony, aby je tam umieścić. Przeciągnij pole za okrągły uchwyt, aby zmienić jego położenie, pociągnij prawy dolny róg, aby zmienić rozmiar, i wpisz nazwę bezpośrednio w etykiecie pola (przyda się, jeśli Ty lub ktoś inny zobaczy później nazwy pól w panelu formularza czytnika PDF). Kliknij mały przycisk ×, aby usunąć niepotrzebne pole."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jak utworzyć grupę przycisków opcji, w której można wybrać tylko jeden?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Wybierz typ pola Przycisk opcji i nadaj grupie nazwę w polu nazwy grupy, a potem klikaj, umieszczając kolejne opcje. Każdy przycisk umieszczony przy ustawionej nazwie dołącza do tej samej grupy, więc zaznaczony może być tylko jeden z nich — i właśnie tym przyciski opcji różnią się od rzędu pól wyboru. W każdym przycisku wpisz jego własną wartość (na przykład Tak i Nie). Aby rozpocząć drugą, odrębną grupę, kliknij „Nowa grupa” i nadaj jej inną nazwę. Zmiana nazwy przy zaznaczonym już umieszczonym przycisku powoduje natomiast zmianę nazwy całej grupy."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Jak ustawić pozycje listy rozwijanej?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Wybierz typ pola Lista rozwijana i wpisz pozycje w polu opcji, oddzielając je przecinkami — na przykład Mały, Średni, Duży. Kliknij na stronie, aby umieścić listę, a te pozycje zostaną zapisane w pliku PDF jako prawdziwa lista, którą czytnik może rozwinąć. Kliknij już umieszczoną listę, aby wczytać jej pozycje z powrotem do pola i je edytować."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy to działa w wielostronicowych plikach PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Do przechodzenia między stronami służy nawigacja nad podglądem — pola można umieszczać na każdej stronie, a każda strona pamięta własny zestaw. Lista „Umieszczone pola” obok strony pokazuje każde pole dodane w całym dokumencie wraz z numerem strony; kliknięcie pozycji przenosi na tę stronę i podświetla pole, więc nie musisz przeglądać całego dokumentu w jego poszukiwaniu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę powiększyć widok, aby umieścić pole precyzyjnie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Przyciski powiększenia znajdują się obok nawigacji po stronach: powiększanie i pomniejszanie skokowo aż do 400 %, z przyciskiem powrotu do widoku domyślnego. Powiększenie zmienia tylko to, jak duża jest strona na ekranie — pola są zapisywane jako pozycje względem samej strony, więc wszystko, co już umieściłeś, zostaje w gotowym pliku PDF dokładnie tam, gdzie jest, niezależnie od poziomu powiększenia, przy którym je umieszczasz lub sprawdzasz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę dodać pola do zeskanowanego PDF (zdjęcia lub skanu papierowego formularza)?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak — dokładnie do tego przypadku to narzędzie zostało stworzone. Zeskanowany PDF to po prostu obrazek bez żadnej warstwy interaktywnej, więc umieszczanie kliknięciem pozwala postawić prawdziwe pola tekstowe wprost nad wydrukowanymi lukami i zamienić skan w cyfrowy formularz do wypełnienia."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy to darmowy kreator formularzy PDF bez rejestracji?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Dodaj pola formularza jest całkowicie darmowe, bez konta, bez rejestracji i bez instalacji. Otwórz narzędzie, wczytaj PDF, klikaj, aby umieścić pola, i pobierz — adres e-mail nie jest potrzebny."
+    }
+  }
+]

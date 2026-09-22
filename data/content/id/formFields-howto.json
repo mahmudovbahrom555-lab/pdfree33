@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara menambahkan kolom formulir yang bisa diisi ke PDF secara gratis",
+  "description": "Klik untuk menempatkan kolom teks, kotak centang, tombol pilihan, dan daftar pilihan yang asli pada PDF datar atau hasil pindai — gratis, tanpa unggah, diproses lokal di browser Anda.",
+  "totalTime": "PT3M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — layanan kolom formulir PDF gratis berbasis browser, tanpa perlu unggah"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Buka PDF Anda",
+      "text": "Klik \"Pilih berkas\" atau seret PDF Anda ke area unggah. PDFree memeriksa apakah dokumen sudah memiliki kolom interaktif — jika sudah, Anda akan diarahkan ke alat Isi Formulir.",
+      "url": "https://pdfree.io/id/tambah-kolom-formulir-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Klik untuk menempatkan kolom",
+      "text": "Pilih jenis kolom — teks, kotak centang, tombol pilihan, atau daftar pilihan — lalu klik di mana saja pada halaman untuk menempatkannya. Seret untuk memindahkan, tarik sudutnya untuk mengubah ukuran, dan ketik namanya langsung di dalam kolom. Ulangi untuk setiap isian, di setiap halaman.",
+      "url": "https://pdfree.io/id/tambah-kolom-formulir-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Unduh PDF yang bisa diisi",
+      "text": "Klik \"Tambah kolom & unduh\". PDFree menulis kolom AcroForm asli ke dalam dokumen di browser Anda dan langsung mengunduh hasilnya — tanpa menunggu, tanpa akun.",
+      "url": "https://pdfree.io/id/tambah-kolom-formulir-pdf/#step3"
+    }
+  ]
+}
