@@ -19,6 +19,15 @@
 # Common alternate spellings / search intent URLs
 /pdf-to-jpg/ /pdf2jpg/ 301
 /pdf-to-jpg /pdf2jpg/ 301
+
+# docx2pdf is the internal tool key, but the site's own dominant URL
+# convention is <name>-pdf (merge-pdf, split-pdf, watermark-pdf...) — a
+# real user reported guessing /docx2pdf-pdf/ from that pattern and hitting
+# a dead end. word-to-pdf/ is the actual page.
+/docx2pdf-pdf/ /word-to-pdf/ 301
+/docx2pdf/ /word-to-pdf/ 301
+/docx-to-pdf/ /word-to-pdf/ 301
+/doc-to-pdf/ /word-to-pdf/ 301
 /jpg-to-pdf/ /jpg2pdf/ 301
 /jpg-to-pdf /jpg2pdf/ 301
 /image-to-pdf/ /jpg2pdf/ 301

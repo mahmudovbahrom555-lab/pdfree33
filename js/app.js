@@ -75,6 +75,7 @@ const TOOL_SLUGS = {
   resize:           '/resize-pdf-for-printing/',
   mangaSplit:       '/split-manga-pages/',
   unlock:           '/unlock-pdf/',
+  docx2pdf:         '/word-to-pdf/',
   pdf2word:         '/pdf-to-word/',
   pdf2excel:        '/pdf-to-excel/',
   pdf2ppt:          '/pdf-to-powerpoint/',
