@@ -192,12 +192,28 @@ async function _docxToPdfmakeContent(file, { isCancelled } = {}) {
     async function parseParagraph(p) {
       const img = p.querySelector('img');
       if (img) {
-        const dataUrl = await _imgToDataUrl(img);
-        const wrapper = img.closest('div');
-        const wStyle = wrapper?.getAttribute('style') || '';
-        const wMatch = wStyle.match(/width:\s*([\d.]+)pt/);
-        const width = wMatch ? parseFloat(wMatch[1]) : 200;
-        return { image: dataUrl, width, margin: [0, 0, 0, 8] };
+        // _imgToDataUrl's fetch(img.src) can genuinely fail — a real user
+        // report showed a bare "Failed to fetch" aborting the WHOLE
+        // conversion (never root-caused to a specific reproducing file,
+        // but this is a real, verifiable gap regardless: docx-preview can
+        // in principle render an <img> pointing at a linked/external image
+        // reference rather than an embedded one, and any network hiccup —
+        // CORS, offline, a dead external host — would hit this exact path).
+        // One unreachable image shouldn't sink the entire document any
+        // more than one unplaceable form field does elsewhere in this
+        // codebase (formFieldsWorker.js's own per-field try/catch) —
+        // skip just this image, matching parseCell's own "nothing to show"
+        // fallback below.
+        try {
+          const dataUrl = await _imgToDataUrl(img);
+          const wrapper = img.closest('div');
+          const wStyle = wrapper?.getAttribute('style') || '';
+          const wMatch = wStyle.match(/width:\s*([\d.]+)pt/);
+          const width = wMatch ? parseFloat(wMatch[1]) : 200;
+          return { image: dataUrl, width, margin: [0, 0, 0, 8] };
+        } catch {
+          return { text: ' ' };
+        }
       }
 
       const spans = Array.from(p.children).filter(c => c.tagName === 'SPAN');
