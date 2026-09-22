@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "如何免费为 PDF 添加可填写的表单字段",
+  "description": "在扁平或扫描版 PDF 上点击放置真正的文本、复选框、单选按钮和下拉列表字段 —— 免费、无需上传，在浏览器本地处理。",
+  "totalTime": "PT3M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree —— 免费的浏览器内 PDF 表单字段服务，无需上传"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "打开你的 PDF",
+      "text": "点击「选择文件」，或把 PDF 拖入上传区域。PDFree 会检查文档中是否已有交互字段 —— 如果有，会引导你改用「填写 PDF 表单」工具。",
+      "url": "https://pdfree.io/zh/tianjia-biaodan-ziduan-pdf/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "点击放置字段",
+      "text": "先选择字段类型 —— 文本、复选框、单选按钮或下拉列表 —— 然后点击页面上的任意位置即可在该处放置。拖动可移动位置，拖动角上的手柄可调整大小，字段名称直接在字段里输入。每一页的每处空白都照此重复。",
+      "url": "https://pdfree.io/zh/tianjia-biaodan-ziduan-pdf/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "下载可填写的 PDF",
+      "text": "点击「添加字段并下载」。PDFree 会在你的浏览器里把真正的 AcroForm 字段写进文档，并立即下载结果 —— 无需等待，无需账号。",
+      "url": "https://pdfree.io/zh/tianjia-biaodan-ziduan-pdf/#step3"
+    }
+  ]
+}

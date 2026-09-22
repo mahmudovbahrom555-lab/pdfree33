@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF에 작성 가능한 양식 필드를 무료로 추가하는 방법",
+  "description": "평면 PDF나 스캔 PDF에 진짜 텍스트, 체크박스, 라디오, 드롭다운 필드를 클릭으로 배치하세요 — 무료, 업로드 없음, 브라우저에서 로컬로 처리됩니다.",
+  "totalTime": "PT3M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — 업로드가 필요 없는 무료 브라우저 기반 PDF 양식 필드 서비스"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF 열기",
+      "text": "\"파일 선택\"을 클릭하거나 PDF를 드롭 영역으로 끌어다 놓으세요. PDFree는 문서에 이미 대화형 필드가 있는지 확인하고, 있다면 'PDF 양식 작성' 도구로 안내합니다.",
+      "url": "https://pdfree.io/ko/pdf-yangsik-pildeu-chuga/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "클릭해서 필드 배치하기",
+      "text": "필드 유형(텍스트, 체크박스, 라디오 버튼, 드롭다운)을 고른 다음 페이지의 원하는 위치를 클릭해 배치하세요. 끌어서 위치를 옮기고, 모서리를 끌어 크기를 바꾸고, 이름은 필드에 바로 입력합니다. 모든 페이지의 빈칸마다 반복하세요.",
+      "url": "https://pdfree.io/ko/pdf-yangsik-pildeu-chuga/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "작성 가능한 PDF 내려받기",
+      "text": "\"필드 추가 후 다운로드\"를 클릭하세요. PDFree는 브라우저 안에서 실제 AcroForm 필드를 문서에 기록하고 결과를 곧바로 내려받습니다. 기다림도, 계정도 필요 없습니다.",
+      "url": "https://pdfree.io/ko/pdf-yangsik-pildeu-chuga/#step3"
+    }
+  ]
+}
