@@ -110,7 +110,11 @@ function _formatCounter(n, style) {
 
 async function _imgToDataUrl(img) {
   const resp = await fetch(img.src);
+  if (!resp.ok) throw new Error(`Image fetch returned ${resp.status}`);
   const blob = await resp.blob();
+  if (!blob.type || !blob.type.startsWith('image/')) {
+    throw new Error(`Fetched resource is not an image (${blob.type || 'unknown type'})`);
+  }
   return await new Promise((resolve) => {
     const reader = new FileReader();
     reader.onloadend = () => resolve(reader.result);

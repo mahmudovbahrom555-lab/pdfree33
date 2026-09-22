@@ -156,6 +156,50 @@ await test('a failed image fetch degrades gracefully (skips that image) instead 
   }
 });
 
+await test('a fetched "image" that is actually an HTML error page (e.g. a hijacked/NXDOMAIN-redirected external image link) degrades gracefully instead of crashing pdfmake', async () => {
+  // Real-world variant discovered while investigating the original "Failed to
+  // fetch" report: a broken external image reference doesn't always fail at
+  // the network level. Some networks (ISP/router NXDOMAIN hijacking, captive
+  // portals) resolve an unresolvable domain to a real server that answers
+  // with an HTML error page instead of DNS failure — fetch() then RESOLVES
+  // (not rejects) with a non-OK, non-image response. Without a status/type
+  // check, _imgToDataUrl happily turned that HTML into a "dataURL" and
+  // handed it to pdfmake, which crashed later with "Unknown image format" —
+  // outside the scope of the fetch-failure try/catch. Force that exact shape
+  // here (200 status, text/html body) and confirm it's now caught upstream.
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  const consoleErrors = [];
+  page.on('console', msg => { if (msg.type() === 'error') consoleErrors.push(msg.text()); });
+  try {
+    await page.addInitScript(BLOB_HOOK);
+    await page.addInitScript(() => {
+      const origFetch = window.fetch.bind(window);
+      window.fetch = function (url, ...rest) {
+        if (typeof url === 'string' && url.startsWith('blob:')) {
+          return Promise.resolve(new Response('<html><body>Not Found</body></html>', {
+            status: 200,
+            headers: { 'Content-Type': 'text/html' },
+          }));
+        }
+        return origFetch(url, ...rest);
+      };
+    });
+    const { result, toastText } = await convertAndCapture(page, IMAGE_DOCX);
+
+    if (!result) {
+      throw new Error(`Expected the conversion to still succeed despite the fake HTML "image" response. Toast: ${toastText || '(empty)'}. Console errors: ${consoleErrors.join(' | ')}`);
+    }
+    if (toastText && /Unknown image format|Invalid image/i.test(toastText)) {
+      throw new Error(`Got the pdfmake-level crash back: ${toastText}`);
+    }
+    expect(result.type).toBe('application/pdf');
+    if (!(result.size > 0)) throw new Error(`Expected a non-empty PDF, got size ${result.size}`);
+  } finally {
+    await context.close();
+  }
+});
+
 await browser.close();
 
 console.log(`\n${'─'.repeat(40)}`);
