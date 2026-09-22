@@ -171,6 +171,33 @@ await testAsync('numbers stored as text tank numericFidelity but nothing else', 
   }
 });
 
+await testAsync('a real financial table (multi-word labels, large amounts correctly typed as numbers) does NOT trip proseVsData', async () => {
+  // Real bug: pdf2excel's own _p2eCellValue correctly parses "1,204,500.00"
+  // into a real Excel number (processor.js) — but raw XLSX numeric storage
+  // never keeps the thousands separator, so the value comes back as plain
+  // "1204500", which NUMERIC_LOOKING's comma-grouped pattern doesn't match.
+  // Combined with genuinely multi-word labels ("Revenue — Product Sales"),
+  // this used to trip proseVsData's "two unrelated prose lists" heuristic
+  // on an entirely legitimate financial statement — the most common real
+  // pdf2excel use case — silently flattening it to plain text.
+  const buf = await buildXlsx([{
+    name: 'Table 1',
+    rows: [
+      [S('Line Item'), S('Amount (USD)')],
+      [S('Revenue — Product Sales'), '1204500'],
+      [S('Revenue — Service Contracts'), '398220'],
+      [S('Operating Expenses — Salaries'), '612400'],
+      [S('Other Expense — Tax Provision'), '188900'],
+    ],
+  }]);
+  const r = await evaluateXlsxStructural(buf);
+  const sheet = r.sheets[0];
+  if (sheet.components.proseVsData !== 1) {
+    throw new Error(`expected proseVsData === 1 (a real numeric column IS a numeric anchor), got ${sheet.components.proseVsData}, findings: ${JSON.stringify(sheet.findings.proseVsData)}`);
+  }
+  if (sheet.eri < 70) throw new Error(`expected eri >= 70 (must clear processor.js's demotion threshold), got ${sheet.eri}`);
+});
+
 await testAsync('ragged row lengths penalize columnConsistency', async () => {
   const buf = await buildXlsx([{
     name: 'Table 1',

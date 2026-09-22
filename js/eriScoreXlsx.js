@@ -211,7 +211,19 @@ function checkProseVsData(rows) {
       if (!text) continue;
       cellCount++;
       wordCount += text.split(/\s+/).length;
-      if (NUMERIC_LOOKING.test(text)) hasNumericAnchor = true;
+      // A genuinely numeric-typed cell (c.isTextType === false — e.g.
+      // pdf2excel's own _p2eCellValue correctly parsed "1,204,500.00" into
+      // a real Excel number) is authoritative proof of a numeric anchor on
+      // its own: raw XLSX numeric storage never carries thousands
+      // separators, so a real 4+-digit value like 1204500 no longer
+      // matches NUMERIC_LOOKING's comma-grouped pattern once it's been
+      // correctly typed — without this, a well-typed financial table
+      // (large amounts, multi-word labels) was scoring AS IF it had no
+      // numeric column at all, and got misclassified as two unrelated
+      // prose lists. Text cells still need the regex, since raw label/
+      // amount TEXT (not yet typed) is the one case this check exists to
+      // catch in the first place.
+      if (!c.isTextType || NUMERIC_LOOKING.test(text)) hasNumericAnchor = true;
     }
   }
   if (!cellCount) return { score: 1.0, findings: [] };
