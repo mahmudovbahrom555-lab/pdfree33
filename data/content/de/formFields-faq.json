@@ -1,0 +1,90 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wird mein PDF irgendwo hochgeladen, wenn ich Formularfelder hinzufüge?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Alles läuft in deinem Browser — pdf.js rendert die Seite, auf die du klickst, und pdf-lib schreibt die echten AcroForm-Felder. Weder dein ursprüngliches PDF noch die Fassung mit den hinzugefügten Feldern wird jemals an einen Server gesendet. PDFree hat keinen Zugriff auf dein Dokument."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Was ist der Unterschied zwischen diesem Werkzeug und PDF-Formular ausfüllen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "PDF-Formular ausfüllen ist für Dokumente gedacht, die bereits interaktive Formularfelder haben — es erkennt sie und lässt dich Werte eintragen. Formularfelder hinzufügen ist für den umgekehrten Fall: ein flaches oder gescanntes PDF ganz ohne interaktive Felder. Du setzt die Felder selbst per Klick auf die Seite und lädst danach ein PDF herunter, das zum ersten Mal echte, ausfüllbare Felder besitzt. Erkennt PDFree, dass deine Datei bereits Felder enthält, wirst du zum Ausfüllen-Werkzeug weitergeleitet."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Sind die erzeugten Felder „echte“ Formularfelder oder nur auf die Seite gezeichnete Kästchen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Echte Felder. Jedes gesetzte Kästchen wird mit pdf-lib als tatsächliches AcroForm-Textfeld in die Struktur des PDFs geschrieben — dieselbe Technik, mit der interaktive Formulare in Acrobat und anderen PDF-Autorenwerkzeugen entstehen. Öffne das Ergebnis in einem beliebigen standardkonformen PDF-Reader: Du kannst in das Feld klicken und tippen, mit der Tabulatortaste zwischen den Feldern wechseln, und die Werte werden als echte Formulardaten gespeichert, nicht als Bild."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Welche Feldtypen kann ich hinzufügen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Vier Typen: Textfelder, Kontrollkästchen, Optionsfeld-Gruppen und Auswahllisten. Wähle den Typ über die Schaltflächen oberhalb der Seite und klicke dann zum Platzieren. Textfelder eignen sich für Namen, Daten, Adressen und Freitext; Kontrollkästchen für einzelne Ja/Nein-Häkchen; eine Optionsgruppe ist ein Satz von Feldern, von denen immer nur eines gewählt werden kann; eine Auswahlliste bietet die Einträge an, die du selbst eintippst. Signaturfelder werden noch nicht unterstützt — nutze dafür „Auf PDF zeichnen“, um ein Dokument zu unterschreiben."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wie setze und justiere ich ein Feld?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Wähle einen Feldtyp und klicke dann an eine beliebige Stelle der gerenderten Seite, um dort ein Feld abzusetzen. Zieh das Feld am runden Griff, um es zu verschieben, zieh an der unteren rechten Ecke, um seine Größe zu ändern, und tippe direkt in die Beschriftung des Feldes, um ihm einen Namen zu geben (praktisch, wenn du oder jemand anderes die Feldnamen später in der Formular-Seitenleiste eines PDF-Readers sieht). Über die kleine Schaltfläche × entfernst du ein Feld wieder."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wie erstelle ich eine Gruppe von Optionsfeldern, bei der nur eines auswählbar ist?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Wähle den Feldtyp Optionsfeld, gib der Gruppe im Feld für den Gruppennamen einen Namen und klicke dann, um jede Option zu platzieren. Jedes Feld, das du bei gesetztem Namen platzierst, gehört zur selben Gruppe — es lässt sich also immer nur eines davon auswählen, und genau das unterscheidet Optionsfelder von einer Reihe Kontrollkästchen. Tippe in jedes Feld seinen eigenen Wert (zum Beispiel Ja und Nein). Für eine zweite, eigenständige Gruppe klickst du auf „Neue Gruppe“ und vergibst einen anderen Namen. Änderst du den Namen, während ein gesetztes Optionsfeld ausgewählt ist, wird stattdessen die ganze Gruppe umbenannt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wie lege ich die Einträge einer Auswahlliste fest?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Wähle den Feldtyp Auswahlliste und tippe die Einträge durch Kommas getrennt in das Optionsfeld — zum Beispiel Klein, Mittel, Groß. Klicke auf die Seite, um die Auswahlliste zu platzieren; die Einträge werden als echte, im Reader aufklappbare Liste in das PDF geschrieben. Klicke auf eine bereits gesetzte Auswahlliste, um ihre Einträge zurück in das Eingabefeld zu laden und zu bearbeiten."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funktioniert das auch bei mehrseitigen PDFs?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Mit der Seitennavigation oberhalb der Vorschau wechselst du zwischen den Seiten — Felder lassen sich auf jeder Seite platzieren, und jede Seite merkt sich ihre eigenen Felder. Die Liste „Gesetzte Felder“ neben der Seite zeigt jedes Feld im gesamten Dokument samt Seitenzahl; ein Klick auf einen Eintrag springt zu dieser Seite und hebt das Feld hervor, damit du nicht das ganze Dokument durchblättern musst."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich hineinzoomen, um ein Feld präzise zu platzieren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Die Zoom-Steuerung sitzt neben der Seitennavigation: in Stufen bis 400 % hinein- oder herauszoomen, mit einer Schaltfläche zurück zur Standardansicht. Der Zoom ändert nur, wie groß die Seite auf dem Bildschirm gezeichnet wird — Felder werden als Positionen relativ zur Seite selbst gespeichert. Alles, was du bereits platziert hast, bleibt im fertigen PDF also genau dort, unabhängig davon, bei welcher Zoomstufe du es gesetzt oder geprüft hast."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich Felder zu einem gescannten PDF hinzufügen (ein Foto oder Scan eines Papierformulars)?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja — genau dafür ist dieses Werkzeug gebaut. Ein gescanntes PDF ist nur ein Bild ganz ohne interaktive Ebene. Per Klick setzt du echte Textfelder direkt über die gedruckten Leerstellen und machst so aus einem Scan ein ausfüllbares digitales Formular."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ist das ein kostenloser PDF-Formularersteller ohne Registrierung?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Formularfelder hinzufügen ist völlig kostenlos — ohne Konto, ohne Registrierung und ohne Installation. Werkzeug öffnen, PDF laden, Felder per Klick setzen und herunterladen — eine E-Mail-Adresse wird nicht verlangt."
+    }
+  }
+]

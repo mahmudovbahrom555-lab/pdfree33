@@ -3834,37 +3834,48 @@
       "icon": "📝",
       "toolKey": "formFields",
       "slugs": {
-        "en": "add-form-fields"
+        "en": "add-form-fields",
+        "de": "pdf-formularfelder-hinzufuegen"
       },
       "titles": {
-        "en": "Add Fillable Form Fields to a PDF Free — No Upload | PDFree"
+        "en": "Add Fillable Form Fields to a PDF Free — No Upload | PDFree",
+        "de": "PDF-Formularfelder hinzufügen — Kostenlos, kein Upload | PDFree"
       },
       "descs": {
-        "en": "Click to place real AcroForm text fields on a flat or scanned PDF. Processed 100% in your browser — files never leave your device."
+        "en": "Click to place real AcroForm text fields on a flat or scanned PDF. Processed 100% in your browser — files never leave your device.",
+        "de": "Setze per Klick echte AcroForm-Textfelder auf ein flaches oder gescanntes PDF. Komplett im Browser — deine Datei verlässt dein Gerät nie."
       },
       "navLabels": {
-        "en": "Add Fields"
+        "en": "Add Fields",
+        "de": "Felder hinzufügen"
       },
       "cardNames": {
-        "en": "Add Form Fields"
+        "en": "Add Form Fields",
+        "de": "Formularfelder hinzufügen"
       },
       "cardDescs": {
-        "en": "Turn a flat PDF into a fillable form — click to place fields"
+        "en": "Turn a flat PDF into a fillable form — click to place fields",
+        "de": "Flaches PDF zum ausfüllbaren Formular machen — Felder per Klick setzen"
       },
       "breadcrumb": {
-        "en": "Add Form Fields"
+        "en": "Add Form Fields",
+        "de": "Formularfelder hinzufügen"
       },
       "metaDescs": {
-        "en": "Turn a flat PDF into a fillable form free. Click to add text, checkbox, radio and dropdown fields. Runs in your browser — nothing uploaded, no signup."
+        "en": "Turn a flat PDF into a fillable form free. Click to add text, checkbox, radio and dropdown fields. Runs in your browser — nothing uploaded, no signup.",
+        "de": "Flaches PDF kostenlos in ein ausfüllbares Formular verwandeln. Text-, Kontrollkästchen-, Options- und Auswahlfelder per Klick setzen. Ohne Upload."
       },
       "ogTitles": {
-        "en": "Add Fillable Form Fields to a PDF Free — Click to Place, No Upload"
+        "en": "Add Fillable Form Fields to a PDF Free — Click to Place, No Upload",
+        "de": "PDF ausfüllbar machen — Formularfelder per Klick setzen, ohne Upload"
       },
       "ogDescs": {
-        "en": "Turn a flat or scanned PDF into a real fillable form — click to place text fields, download a standard AcroForm PDF. Runs entirely in your browser."
+        "en": "Turn a flat or scanned PDF into a real fillable form — click to place text fields, download a standard AcroForm PDF. Runs entirely in your browser.",
+        "de": "Verwandle ein flaches oder gescanntes PDF in ein echtes ausfüllbares Formular — Felder per Klick platzieren und ein standardkonformes AcroForm-PDF herunterladen. Läuft vollständig im Browser."
       },
       "keywords": {
-        "en": "add form fields to pdf, make pdf fillable, create fillable pdf form, add checkbox to pdf, add radio button to pdf, add dropdown to pdf, pdf form creator, turn scanned pdf into form"
+        "en": "add form fields to pdf, make pdf fillable, create fillable pdf form, add checkbox to pdf, add radio button to pdf, add dropdown to pdf, pdf form creator, turn scanned pdf into form",
+        "de": "pdf formularfelder hinzufügen, pdf ausfüllbar machen, ausfüllbares pdf erstellen, pdf formular erstellen, kontrollkästchen in pdf einfügen, dropdown in pdf einfügen, pdf formular editor"
       }
     },
     {

@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Ausfüllbare Formularfelder kostenlos zu einem PDF hinzufügen",
+  "description": "Setze per Klick echte Text-, Kontrollkästchen-, Options- und Auswahlfelder auf ein flaches oder gescanntes PDF — kostenlos, kein Upload, lokal im Browser verarbeitet.",
+  "totalTime": "PT3M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "PDFree — kostenloser browserbasierter PDF-Formularfeld-Dienst, kein Upload erforderlich"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF öffnen",
+      "text": "Klicke auf \"Dateien auswählen\" oder ziehe dein PDF in den Ablagebereich. PDFree prüft, ob das Dokument bereits interaktive Felder enthält — wenn ja, wirst du stattdessen zum Ausfüllen-Werkzeug geleitet.",
+      "url": "https://pdfree.io/de/pdf-formularfelder-hinzufuegen/#step1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Felder per Klick setzen",
+      "text": "Wähle einen Feldtyp — Text, Kontrollkästchen, Optionsfeld oder Auswahlliste — und klicke dann an eine beliebige Stelle der Seite, um dort ein Feld abzusetzen. Zum Verschieben ziehen, zum Größenändern an der Ecke ziehen, und den Namen direkt in das Feld tippen. Für jede Leerstelle auf jeder Seite wiederholen.",
+      "url": "https://pdfree.io/de/pdf-formularfelder-hinzufuegen/#step2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Ausfüllbares PDF herunterladen",
+      "text": "Klicke auf \"Felder hinzufügen & herunterladen\". PDFree schreibt echte AcroForm-Felder in deinem Browser in das Dokument und lädt das Ergebnis sofort herunter — ohne Wartezeit, ohne Konto.",
+      "url": "https://pdfree.io/de/pdf-formularfelder-hinzufuegen/#step3"
+    }
+  ]
+}
