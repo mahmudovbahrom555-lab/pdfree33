@@ -5694,6 +5694,44 @@
       "keywords": {
         "en": "word to pdf, docx to pdf, convert word to pdf, doc to pdf, docx converter, word to pdf online, word to pdf no upload, convert docx to pdf free"
       }
+    },
+    {
+      "id": "quickEdit",
+      "icon": "🩹",
+      "toolKey": "quickEdit",
+      "slugs": {
+        "en": "quick-edit-pdf"
+      },
+      "titles": {
+        "en": "Quick Edit PDF — Fix a Typo, No Upload | PDFree"
+      },
+      "descs": {
+        "en": "Fix a typo or small text change inside a PDF — runs entirely in your browser, no upload."
+      },
+      "navLabels": {
+        "en": "Quick Edit"
+      },
+      "cardNames": {
+        "en": "Quick Edit PDF"
+      },
+      "cardDescs": {
+        "en": "Fix a typo or small text change locally"
+      },
+      "breadcrumb": {
+        "en": "Quick Edit"
+      },
+      "metaDescs": {
+        "en": "Edit text inside a PDF for free — fix a typo, a date, or a name without leaving your browser. 100% private, no upload, no account."
+      },
+      "ogTitles": {
+        "en": "Quick Edit PDF — Fix a Typo, No Upload"
+      },
+      "ogDescs": {
+        "en": "Quick Edit PDF runs entirely in your browser. No upload, no server, no account. 100% private."
+      },
+      "keywords": {
+        "en": "edit pdf text, fix typo in pdf, edit text in pdf, quick edit pdf, correct pdf online, change pdf text no upload"
+      }
     }
   ],
   "ui": {

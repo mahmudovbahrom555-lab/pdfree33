@@ -23,6 +23,7 @@ window.PDFREE_LOCALE = {
     meta:             ['metadati', 'titolo', 'autore', 'oggetto', 'proprietà', 'informazioni file'],
     protect:          ['proteggere', 'password', 'bloccare', 'crittografare', 'sicurezza', 'limitare'],
     fill:             ['compilare', 'modulo', 'casella di controllo', 'menu a tendina', 'campo di testo', 'compila modulo'],
+    quickEdit:        ['modifica testo pdf', 'correggi errore pdf', 'modifica rapida pdf', 'correggi refuso'],
     formFields:       ['aggiungi campi modulo', 'crea modulo pdf', 'pdf compilabile', 'aggiungi campo'],
     'compress-email':  ['email', 'gmail', 'outlook', 'invia pdf', 'allegato', 'file piccolo', 'troppo grande per email'],
     'draw-pdf':        ['disegnare', 'annotare', 'annotazione', 'evidenziare', 'freccia', 'forma', 'casella di testo', 'a mano libera', 'evidenzia'],

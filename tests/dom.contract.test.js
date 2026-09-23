@@ -151,15 +151,18 @@ test('draw-pdf has inline:false', () =>
 test('formFields has inline:false', () =>
   assert.equal(TOOLS['formFields']?.inline, false)
 );
+test('quickEdit has inline:false', () =>
+  assert.equal(TOOLS['quickEdit']?.inline, false)
+);
 test('all other implemented tools do NOT have inline:false', () => {
   const wrongly_blocked = Object.entries(TOOLS)
-    .filter(([k, t]) => t.implemented && t.inline === false && k !== 'fill' && k !== 'draw-pdf' && k !== 'formFields')
+    .filter(([k, t]) => t.implemented && t.inline === false && k !== 'fill' && k !== 'draw-pdf' && k !== 'formFields' && k !== 'quickEdit')
     .map(([k]) => k);
   assert.deepEqual(wrongly_blocked, [],
     `Unexpected inline:false on: ${wrongly_blocked.join(', ')}`);
 });
-test('navigate-only tools are fill, draw-pdf and formFields (update test if you add more)', () =>
-  assert.deepEqual(navigateOnly.sort(), ['draw-pdf', 'fill', 'formFields'])
+test('navigate-only tools are fill, draw-pdf, formFields and quickEdit (update test if you add more)', () =>
+  assert.deepEqual(navigateOnly.sort(), ['draw-pdf', 'fill', 'formFields', 'quickEdit'])
 );
 
 // ── Summary ───────────────────────────────────────────────────────

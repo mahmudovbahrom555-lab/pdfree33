@@ -304,6 +304,13 @@ export async function doProcess(currentTool, extraParams = {}) {
     ereader:      () => _runEreader(filesSnapshot, extraParams),
     glossary:     () => _runGlossary(filesSnapshot, extraParams),
     'redact-true': () => _runRedactTrue(filesSnapshot, extraParams),
+    // Explicit entry for a tool mid-registration (see js/quickEditUI.js's
+    // Stage 2/3 scaffolding) — this is exactly what the generic `??`
+    // fallback below already does for any unrecognized runner name; naming
+    // it here makes that intentional for a tool that's deliberately not
+    // wired to a real runner yet, instead of relying on the same behavior
+    // arriving via an unnamed catch-all.
+    stub: () => _runStub(currentTool),
   };
 
   try {
@@ -2403,7 +2410,7 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
  * @returns {Promise<{ blob: Blob, atlasEri: object|null, confidence: object|null,
  *   effectivePages: number, totalPages: number }>}
  */
-async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, stripMetadata = true, onProgress, isCancelled } = {}) {
+export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, stripMetadata = true, onProgress, isCancelled } = {}) {
   onProgress?.(5, 'Loading libraries…');
 
   try {
@@ -2464,7 +2471,7 @@ async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, stripMet
       onProgress:  (pct, label) => onProgress?.(pct, label),
       isCancelled,
     }));
-    ({ paragraphs, cs } = await _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { repeatPatternSet }));
+    ({ paragraphs, cs } = await _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { repeatPatternSet, isCancelled }));
     confidence = _p2wConfidence(cs, median);
   } else {
     onProgress?.(10, 'Rendering pages…');
@@ -2475,7 +2482,10 @@ async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, stripMet
 
   onProgress?.(92, 'Building Word document…');
 
-  const { Document, Packer, AlignmentType, LevelFormat } = window.docx;
+  // window.__pdfreeDocxBuilder, not window.docx — see lazyLibs.js's
+  // loadDocx() header comment for the namespace-collision this avoids
+  // (docx@8.5.0 and docx-preview@0.4.0 both export as window.docx).
+  const { Document, Packer, AlignmentType, LevelFormat } = window.__pdfreeDocxBuilder;
   // srcMeta is only ever set when the user unchecked "Delete original file
   // info" above — a source PDF field that's blank/absent still falls back
   // to the generic PDFree value below rather than producing an empty field.
@@ -2531,7 +2541,7 @@ async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, stripMet
       if (cs.totalTables > 0 && atlasEri.components.tables < _ERI_TABLE_RETRY_THRESHOLD) {
         onProgress?.(95, 'Verifying table structure…');
         const retry = await _p2wBuildParagraphs(
-          pdfDoc, pageData, median, repeatTextSet, cs, { useTables: false, repeatPatternSet }
+          pdfDoc, pageData, median, repeatTextSet, cs, { useTables: false, repeatPatternSet, isCancelled }
         );
         const retryBlob = await Packer.toBlob(_buildDoc(retry.paragraphs));
         const retryEri = await evaluateStructural(await retryBlob.arrayBuffer());
@@ -4108,12 +4118,25 @@ async function _runUnlock(filesSnapshot, { password } = {}) {
 // useTables:false skips text-detected AND border-grid tables entirely (all
 // their lines flow through the normal paragraph path instead) — used as the
 // conservative fallback when the first attempt's tables look mis-detected.
-export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { useTables = true, repeatPatternSet = new Set() } = {}) {
+export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { useTables = true, repeatPatternSet = new Set(), isCancelled = () => !isProcessing } = {}) {
+  // window.__pdfreeDocxBuilder — see the namespace-collision comment on
+  // _buildPdf2WordDocxBlob's own window.__pdfreeDocxBuilder read, above.
   const { Paragraph, TextRun, HeadingLevel,
-          Table, TableRow, TableCell, WidthType, ImageRun } = window.docx;
+          Table, TableRow, TableCell, WidthType, ImageRun } = window.__pdfreeDocxBuilder;
   const _repeatTextSet    = repeatTextSet;
   const _repeatPatternSet = repeatPatternSet;
   const _cs = { ...cs, totalTables: 0, totalGapVisuals: 0, totalInlineVisuals: 0 };
+  // isCancelled defaults to reading the module-level isProcessing flag —
+  // zero behavior change for every existing caller (_runPdf2Word's own
+  // table-retry call, tests/pdf2wordParagraphs.test.js). Made injectable
+  // specifically for _buildPdf2WordDocxBlob's callers that run OUTSIDE the
+  // normal doProcess()/isProcessing UI lifecycle (Quick Edit PDF builds its
+  // DOCX at file-select time, before #mergeBtn's click ever sets
+  // isProcessing=true) — without this, every one of this function's 5
+  // isProcessing checks below silently broke on the very first iteration,
+  // producing a real, hard-to-diagnose EMPTY document with zero paragraphs
+  // and no error at all (found via direct pageData/paragraph-count
+  // instrumentation while debugging Quick Edit's Stage 2 preview).
 
   // Adaptive gap factor: linearly interpolates from 1.6 (small fonts / dense technical
   // PDFs) to 2.5 (large fonts / presentations) over the 8–14pt range.
@@ -4364,7 +4387,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     // .catch() degrades gracefully — rest of the document is still produced.
     const gapRunsArr  = [];
     const inlineVisuals = [];
-    if (visualGaps.length > 0 && isProcessing) {
+    if (visualGaps.length > 0 && !isCancelled()) {
       setProgress(
         50 + Math.round((pi / pageData.length) * 40),
         `Capturing visuals on page ${pi + 1}/${pageData.length}…`,
@@ -4447,7 +4470,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     const consumedLines = new Set();
 
     for (const event of events) {
-      if (!isProcessing) break;
+      if (isCancelled()) break;
 
       if (event.type === 'line') {
         const { lineIdx } = event;
@@ -4668,7 +4691,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
   // ── Outer per-page loop: dispatches to _processLines once (no columns
   // detected — the common case) or once per detected column region ────────
   for (let pi = 0; pi < pageData.length; pi++) {
-    if (!isProcessing) break;
+    if (isCancelled()) break;
 
     if (pi > 0) {
       paragraphs.push(new Paragraph({ children: [], pageBreakBefore: true }));
@@ -4679,7 +4702,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     // Pages with no extractable text (diagram-only pages in scanned PDFs):
     // render the full page as a single ImageRun so content is not lost.
     if (!lines.length) {
-      if (isProcessing) {
+      if (!isCancelled()) {
         const imgRun = await _p2wRenderFullPage(pdfDoc, pi + 1, ImageRun).catch(() => null);
         if (imgRun) {
           paragraphs.push(new Paragraph({
@@ -4713,7 +4736,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
       // existing per-line BiDi text shaping, which is untouched.
       const ordered = pageIsRtl(lines) ? [...regions].reverse() : regions;
       for (const region of ordered) {
-        if (!isProcessing) break;
+        if (isCancelled()) break;
         const inRegion = (it) => !!it && it.x >= region.left && it.x < region.right;
         // Filter ITEMS WITHIN each line, not whole lines by their first item.
         // In the normal case _splitCrossColumnLines() (textLayoutUtils.js,
@@ -5256,7 +5279,9 @@ async function _p2wRenderFullPage(pdfDoc, pageNum, ImageRun) {
 // in _runPdf2Word prevents unbounded accumulation.
 // Quality is auto-reduced on large PDFs to minimise per-page buffer size.
 async function _p2wRenderImages(pdfDoc, dpi, pageLimit) {
-  const { Paragraph, ImageRun } = window.docx;
+  // window.__pdfreeDocxBuilder — see the namespace-collision comment on
+  // _buildPdf2WordDocxBlob's own window.__pdfreeDocxBuilder read, above.
+  const { Paragraph, ImageRun } = window.__pdfreeDocxBuilder;
   const scale = dpi / 72;
 
   // Automatically lower JPEG quality for large page counts to reduce peak RAM.

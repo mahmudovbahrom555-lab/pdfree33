@@ -23,6 +23,7 @@ window.PDFREE_LOCALE = {
     meta:             ['metadata', 'titel', 'auteur', 'onderwerp', 'eigenschappen', 'bestandsinfo'],
     protect:          ['beveiligen', 'wachtwoord', 'vergrendelen', 'versleutelen', 'beveiliging', 'beperken'],
     fill:             ['invullen', 'formulier', 'selectievakje', 'keuzelijst', 'tekstveld', 'formulier invullen'],
+    quickEdit:        ['pdf tekst bewerken', 'typefout corrigeren', 'snel bewerken', 'tekst aanpassen pdf'],
     formFields:       ['velden toevoegen', 'pdf formulier maken', 'invulbare pdf', 'veld toevoegen'],
     'compress-email':  ['email', 'gmail', 'outlook', 'pdf versturen', 'bijlage', 'klein bestand', 'te groot voor email'],
     'draw-pdf':        ['tekenen', 'annoteren', 'annotatie', 'markeren', 'pijl', 'vorm', 'tekstvak', 'vrije hand', 'markering'],

@@ -1171,9 +1171,9 @@ _OPTIONS_ID_DIV_RE = re.compile(r'id="([a-zA-Z0-9_-]*Options)"')
 
 # Kept in sync with scripts/check_dom.py's HOMEPAGE_OPTIONS_EXCLUDE — see
 # that file for the per-id rationale (fill is inline:false/real-navigation
-# only; pdf2pdfa creates its own container dynamically in JS; formFields is
-# inline:false/real-navigation, same as fill).
-_HOMEPAGE_OPTIONS_EXCLUDE = {'fillOptions', 'pdf2pdfaOptions', 'formFieldsOptions'}
+# only; pdf2pdfa creates its own container dynamically in JS; formFields and
+# quickEdit are inline:false/real-navigation, same as fill).
+_HOMEPAGE_OPTIONS_EXCLUDE = {'fillOptions', 'pdf2pdfaOptions', 'formFieldsOptions', 'quickEditOptions'}
 
 def _required_options_ids():
     ids = set()

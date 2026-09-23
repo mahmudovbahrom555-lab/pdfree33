@@ -24,6 +24,7 @@ window.PDFREE_LOCALE = {
     meta:             ['metadata', 'judul file', 'penulis', 'properti file', 'info file'],
     protect:          ['lindungi', 'kata sandi', 'kunci pdf', 'enkripsi', 'amankan', 'proteksi'],
     fill:             ['isi formulir', 'formulir', 'kotak centang', 'isi form', 'kolom teks'],
+    quickEdit:        ['edit teks pdf', 'perbaiki typo pdf', 'edit cepat pdf', 'ubah teks pdf'],
     formFields:       ['tambah kolom formulir', 'buat formulir pdf', 'pdf bisa diisi', 'tambah kolom'],
     'compress-email': ['email', 'gmail', 'kirim pdf', 'lampiran', 'file kecil', 'terlalu besar untuk email'],
     'draw-pdf':       ['gambar bebas', 'coret-coret', 'anotasi', 'tandai', 'panah', 'bentuk', 'kotak teks', 'sorot'],

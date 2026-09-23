@@ -194,7 +194,7 @@ HOMEPAGE_FILES = _discover_homepage_files()
 #                      based click-to-place editor, routed via the same
 #                      saveHandoff/restoreHandoff navigation mechanism
 #                      instead of rendering inline on the homepage.
-HOMEPAGE_OPTIONS_EXCLUDE = {'fillOptions', 'pdf2pdfaOptions', 'formFieldsOptions'}
+HOMEPAGE_OPTIONS_EXCLUDE = {'fillOptions', 'pdf2pdfaOptions', 'formFieldsOptions', 'quickEditOptions'}
 
 _OPTIONS_ID_REF_RE = re.compile(r"(?:id\(|getElementById\()['\"]([a-zA-Z0-9_-]*Options)['\"]\)")
 _OPTIONS_ID_DIV_RE = re.compile(r'id="([a-zA-Z0-9_-]*Options)"')

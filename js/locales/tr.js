@@ -23,6 +23,7 @@ window.PDFREE_LOCALE = {
     meta:             ['meta veri', 'başlık', 'yazar', 'özellikler', 'dosya bilgisi'],
     protect:          ['koru', 'şifrele', 'parola', 'kilitle', 'güvenlik', 'kısıtla'],
     fill:             ['form doldur', 'form', 'onay kutusu', 'açılır liste', 'metin alanı'],
+    quickEdit:        ['pdf metin düzenle', 'yazım hatası düzelt', 'hızlı düzenleme', 'pdf içeriğini değiştir'],
     formFields:       ['form alanı ekle', 'pdf form oluştur', 'doldurulabilir pdf', 'alan ekle'],
     'compress-email': ['e-posta', 'gmail', 'outlook', 'pdf gönder', 'ek dosya', 'küçük dosya', 'mail için çok büyük'],
     'draw-pdf':       ['çiz', 'not al', 'açıklama ekle', 'işaretle', 'ok işareti', 'şekil', 'metin kutusu', 'serbest çizim', 'vurgula'],

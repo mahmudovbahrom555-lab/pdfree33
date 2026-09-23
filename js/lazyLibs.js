@@ -65,8 +65,24 @@ export function loadJSZip() {
 // If the first CDN is down/slow, the second is tried automatically.
 // On total failure the cached promise is cleared so the NEXT user
 // action retries from scratch rather than hitting a dead cached promise.
+//
+// NAMESPACE COLLISION, found while building Quick Edit PDF (the first
+// feature to ever need BOTH this "docx" builder library AND docx-preview
+// in the same page session): both docx@8.5.0's UMD build and
+// docx-preview@0.4.0's UMD build export themselves under the exact same
+// `window.docx` global name — an unrelated coincidence between two
+// separate npm packages, invisible until something actually loads both.
+// Whichever loads SECOND overwrites `window.docx`, and the other
+// library's own `if (window.docx) return` guard then wrongly believes
+// ITSELF is already loaded (since the slot is truthy) and skips loading
+// its real script entirely. Fixed by capturing each library's own export
+// into a DEDICATED global the instant its own <script> finishes
+// executing (synchronous — nothing else can run in between one script's
+// completion and the next line), and gating/reading through that
+// dedicated global everywhere instead of the shared, ambiguous
+// `window.docx`. See window.__pdfreeDocxPreview below for the other half.
 export function loadDocx() {
-  if (window.docx) return Promise.resolve();
+  if (window.__pdfreeDocxBuilder) return Promise.resolve();
   if (_promises['docx']) return _promises['docx'];
 
   _promises['docx'] = _loadDocxWithFallback().catch(err => {
@@ -93,11 +109,13 @@ async function _loadDocxWithFallback() {
         s.src         = url;
         s.integrity   = DOCX_SRI;
         s.crossOrigin = 'anonymous';
-        s.onload  = resolve;
+        // Captured synchronously at THIS script's own load completion —
+        // see this function's header comment for why that timing matters.
+        s.onload  = () => { window.__pdfreeDocxBuilder = window.docx; resolve(); };
         s.onerror = () => reject(new Error(`CDN unavailable: ${url}`));
         document.head.appendChild(s);
       });
-      if (window.docx) return;
+      if (window.__pdfreeDocxBuilder) return;
     } catch (_) { /* try next */ }
   }
   throw new Error(t('err_cdn_lib_unavailable', { lib: 'Word' }));
@@ -237,8 +255,11 @@ export function loadOpenCv() {
 // reuses the SAME loadJSZip() already used elsewhere on this site rather
 // than adding a second jszip source. Same jsdelivr/unpkg byte-identical
 // verification as docx/exceljs/pptxgenjs above.
+// See loadDocx() above for the full window.docx namespace-collision
+// story — this is the other half of that same fix. window.__pdfreeDocxPreview
+// is docx-preview's own export, captured the instant ITS <script> finishes.
 export function loadDocxPreview() {
-  if (window.docx) return Promise.resolve();
+  if (window.__pdfreeDocxPreview) return Promise.resolve();
   if (_promises['docxPreview']) return _promises['docxPreview'];
 
   _promises['docxPreview'] = _loadDocxPreviewWithFallback().catch(err => {
@@ -263,11 +284,11 @@ async function _loadDocxPreviewWithFallback() {
         s.src         = url;
         s.integrity   = DOCX_PREVIEW_SRI;
         s.crossOrigin = 'anonymous';
-        s.onload  = resolve;
+        s.onload  = () => { window.__pdfreeDocxPreview = window.docx; resolve(); };
         s.onerror = () => reject(new Error(`CDN unavailable: ${url}`));
         document.head.appendChild(s);
       });
-      if (window.docx) return;
+      if (window.__pdfreeDocxPreview) return;
     } catch (_) { /* try next */ }
   }
   throw new Error(t('err_cdn_lib_unavailable', { lib: 'Word' }));

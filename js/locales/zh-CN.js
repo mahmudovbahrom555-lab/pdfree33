@@ -28,6 +28,7 @@ window.PDFREE_LOCALE = {
     ereader:      ['电子书阅读器优化', 'kindle优化'],
     protect:      ['pdf加密', '设置密码'],
     fill:         ['填写pdf表单', 'pdf签名'],
+    quickEdit:        ['编辑pdf文本', '修正拼写错误', '快速编辑pdf', '修改pdf内容'],
     formFields:       ['添加表单字段', '创建可填写pdf', '添加字段'],
     flatten:      ['展平pdf表单'],
     'draw-pdf':   ['pdf标注', 'pdf画图'],

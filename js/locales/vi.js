@@ -24,6 +24,7 @@ window.PDFREE_LOCALE = {
     meta:             ['siêu dữ liệu', 'tiêu đề', 'tác giả', 'thuộc tính file', 'thông tin file'],
     protect:          ['bảo vệ', 'mật khẩu', 'khóa file', 'mã hóa', 'đặt mật khẩu', 'bảo mật'],
     fill:             ['điền form', 'biểu mẫu', 'hộp kiểm', 'điền biểu mẫu', 'ô văn bản'],
+    quickEdit:        ['sửa văn bản pdf', 'sửa lỗi chính tả', 'chỉnh sửa nhanh', 'thay đổi văn bản pdf'],
     formFields:       ['thêm trường biểu mẫu', 'tạo biểu mẫu pdf', 'pdf có thể điền', 'thêm trường'],
     'compress-email': ['email', 'gmail', 'gửi pdf', 'tệp đính kèm', 'file nhỏ', 'quá to để gửi mail'],
     'draw-pdf':       ['vẽ pdf', 'chú thích', 'đánh dấu', 'mũi tên', 'hình dạng', 'hộp văn bản', 'vẽ tay', 'tô sáng', 'ghi chú'],

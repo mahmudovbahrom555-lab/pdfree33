@@ -42,6 +42,8 @@ import { initFillOptions, hideFillOptions,
          getFillParams, clearFillDraft } from './fillUI.js';
 import { initFormFieldsOptions, hideFormFieldsOptions,
          getFormFieldsParams }          from './formFieldsUI.js';
+import { initQuickEditOptions, hideQuickEditOptions,
+         getQuickEditParams }           from './quickEditUI.js';
 import { initRotateOptions, hideRotateOptions,
          getRotateParams }              from './rotateUI.js';
 import { initOrganizeOptions, hideOrganizeOptions,
@@ -698,6 +700,19 @@ registerTool('docx2pdf', {
   init:      initDocx2PdfOptions,
   hide:      hideDocx2PdfOptions,
   getParams: getDocx2PdfParams,
+});
+
+// Stage 2/3 scaffolding (see /Users/murodjon/.claude/plans/
+// typed-plotting-wave.md) — runner:'stub' (this project's own established
+// not-yet-wired placeholder, see tests/integration.test.js's KNOWN_RUNNERS)
+// until Stage 4 adds the real 'quickEdit' processor.js runnerMap entry. No
+// validate/Atlas-gate copy yet either (Stage 5). Registered now purely so
+// the read-only preview modal can be tested against a real page.
+registerTool('quickEdit', {
+  runner:    'stub',
+  init:      initQuickEditOptions,
+  hide:      hideQuickEditOptions,
+  getParams: getQuickEditParams,
 });
 
 registerTool('unlock', {

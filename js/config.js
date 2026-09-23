@@ -356,6 +356,18 @@ export const TOOLS = {
     implemented: true,
     inline:      false, // requires dedicated page HTML (fillOptions div)
   },
+  quickEdit: {
+    icon:        '🩹',
+    title:       'Quick Edit PDF',
+    desc:        'Fix a typo or small text change inside a PDF — runs in your browser, no upload',
+    tags:        ['quick edit', 'edit pdf text', 'fix typo in pdf', 'edit text in pdf',
+                  'correct pdf', 'change pdf text'],
+    btn:         '🩹 Save Edited PDF',
+    multi:       false,
+    accept:      '.pdf,application/pdf',
+    implemented: true,
+    inline:      false, // complex modal-based tool, same pattern as fill/formFields — dedicated page only
+  },
   formFields: {
     icon:        '📝',
     title:       'Add Form Fields',

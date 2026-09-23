@@ -24,6 +24,7 @@ window.PDFREE_LOCALE = {
     meta:             ['metadaten', 'titel', 'autor', 'eigenschaften', 'informationen zur datei'],
     protect:          ['schützen', 'passwort', 'sperren', 'verschlüsseln', 'sichern', 'einschränken'],
     fill:             ['ausfüllen', 'formular', 'kontrollkästchen', 'dropdown', 'textfeld', 'formular ausfüllen'],
+    quickEdit:        ['text im pdf ändern', 'tippfehler korrigieren', 'pdf text bearbeiten', 'schnelle bearbeitung'],
     formFields:       ['formularfelder hinzufügen', 'pdf ausfüllbar machen', 'feld hinzufügen', 'formularfeld erstellen'],
     'compress-email':  ['für email', 'gmail', 'outlook', 'pdf senden', 'anhang', 'kleine datei', 'zu groß für email'],
     'draw-pdf':        ['zeichnen', 'markieren', 'anmerkung', 'markup', 'pfeil', 'freihand', 'hervorheben'],

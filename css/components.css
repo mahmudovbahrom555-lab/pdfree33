@@ -6214,6 +6214,106 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   #ffTypeExtra .j2p-group__label { margin-bottom: 2px; }
 }
 
+/* ── Quick Edit PDF — read-only-then-editable DOCX preview modal ─
+   Same structural pattern as .ff-modal (fixed inset:0, z-index:600, dark
+   backdrop, create-on-open/remove-on-close) — see .ff-modal's own comment
+   for the full rationale. Single-column (no field-list sidebar; there's
+   nothing to list here) — the body directly holds docx-preview's own
+   rendered .docx-wrapper output, which renders at ITS OWN natural width
+   (not a fixed viewport-relative one), so the stage scrolls both axes
+   when the rendered page is wider/taller than the modal — same tradeoff
+   any real document viewer makes rather than distorting the actual page
+   proportions via a forced re-scale. */
+.qe-modal {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  background: rgba(0, 0, 0, 0.6);
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.qe-modal--open { opacity: 1; }
+.qe-modal[hidden] { display: none; }
+
+.qe-modal__card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  width: 100%;
+  height: 100%;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 48px rgba(0,0,0,.25);
+  animation: fadeUp 0.22s cubic-bezier(0.34, 1.1, 0.64, 1);
+  overflow: hidden;
+}
+
+.qe-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 8px 12px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.qe-modal__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.qe-modal-close {
+  background: transparent;
+  color: var(--text2);
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 8px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.qe-modal-close:hover { background: var(--surface2); }
+
+.qe-modal__hint {
+  margin: 10px 16px 0;
+  font-size: 13px;
+  color: var(--text3);
+  line-height: 1.5;
+  flex-shrink: 0;
+}
+
+/* The docx-preview render target lives directly inside this scroll
+   container — flex:1/min-height:0 is what makes it fill whatever room
+   the header/hint/footer leave, same idiom as .ff-modal__stage. */
+.qe-modal__stage {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 16px;
+  background: var(--surface2);
+}
+
+.qe-modal__footer {
+  flex-shrink: 0;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 700px) {
+  .qe-modal { padding: 0; }
+  .qe-modal__card { max-width: none; border-radius: 0; }
+}
+
 /* ══════════════════════════════════════════════════════════════
    RTL (ar, fa) — [dir="rtl"] set on <html> by scripts/templates/
    tool-page.html (merge tool only, for now). Everything laid out

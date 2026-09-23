@@ -204,7 +204,12 @@ export async function renderDocxToDom(file, container, { isCancelled } = {}) {
   await loadDocxPreview();
 
   try {
-    await window.docx.renderAsync(file, container, null, { inWrapper: true });
+    // window.__pdfreeDocxPreview, not window.docx — see lazyLibs.js's
+    // loadDocxPreview() header comment: docx@8.5.0 (the OTHER "docx"
+    // library, used by pdf2word) and docx-preview@0.4.0 both export
+    // themselves under the exact same window.docx name, and Quick Edit
+    // PDF is the first caller to ever need both loaded in one session.
+    await window.__pdfreeDocxPreview.renderAsync(file, container, null, { inWrapper: true });
   } catch {
     // Any renderAsync failure — corrupt/truncated zip, a missing
     // required part (e.g. word/document.xml absent from an otherwise
