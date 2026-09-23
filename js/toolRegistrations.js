@@ -14,7 +14,7 @@ import { id, esc }      from './utils.js';
 import { t }             from './i18n.js';
 import { getWmRemove, wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
 import { checkbox, chipGroup } from './uiComponents.js';
-import { cancelEreader } from './processor.js';
+import { cancelEreader, cancelSplit } from './processor.js';
 
 // ── UI modules ─────────────────────────────────────────────────
 import { initCompressOptions, hideCompressOptions,
@@ -280,11 +280,15 @@ registerTool('merge', {
 });
 
 registerTool('split', {
-  runner:    'split',
+  runner:    'split', // dedicated js/splitWorker.js, not the shared js/worker.js — see processor.js's _runSplit (streaming fix for separate-files mode's O(N)->O(1-2 page) memory bug, SPLIT-7058)
   init:      file => initExtractOptions(file, 'separate'),
   hide:      hideExtractOptions,
   getParams: getExtractParams,
   validate:  p => p.pages.length === 0 ? t('val_select_page') : null,
+  // Own cancel hook: split moved off the shared js/worker.js instance the
+  // default cancelProcess() terminates — see processor.js's cancelSplit()
+  // for the full story (same class of gap ereader's own hook fixed).
+  cancel:    cancelSplit,
 });
 
 registerTool('extract', {
@@ -293,6 +297,7 @@ registerTool('extract', {
   hide:      hideExtractOptions,
   getParams: getExtractParams,
   validate:  p => p.pages.length === 0 ? t('val_select_page') : null,
+  cancel:    cancelSplit, // same dedicated worker as 'split' above
 });
 
 registerTool('compress', {

@@ -475,24 +475,82 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilena
 // 'Tool Success' count at exactly zero despite real File Added/Retry
 // Conversion activity — the completions were happening, just counted as
 // 'split' the entire time.
+// Own dedicated Worker instance, NOT the shared `_worker` — js/worker.js is
+// off-limits per CLAUDE.md, and 'separate' mode needed a streaming message
+// protocol the shared handleSplit()'s one-final-batched-postMessage shape
+// can't provide without editing that file. See js/splitWorker.js's own
+// header for the full memory-fix rationale: a real user hit an out-of-
+// memory crash (SPLIT-7058) because the old shared-worker path built every
+// per-page PDF into one array — holding N pages in RAM at once — before
+// sending them all back in a single message. This worker instead streams
+// each page back the instant it's ready.
+let _splitWorker = null;
+function _ensureSplitWorker() {
+  if (!_splitWorker) {
+    _splitWorker = new Worker(new URL('./splitWorker.js', import.meta.url));
+  }
+  return _splitWorker;
+}
+
 async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false } = {}, toolKey = 'split') {
   if (!_checkSize(filesSnapshot[0], 200)) { _abortUI(); return; }
   const _sf = filesSnapshot[0];
   const buffer = _sf._decryptedBuffer ? _sf._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _sf.arrayBuffer());
   setProgress(5, t('prog_loading_pdf'));
 
+  const worker = _ensureSplitWorker();
+
+  // 'separate' mode's incoming 'page' messages are fed into this incrementally
+  // as each page arrives, and discarded — same "don't accumulate, stream+
+  // discard" idiom as _runPdf2Jpg's own "Memory-efficient streaming pipeline"
+  // (see that function's comment for the original, measured version of this
+  // fix). Deliberately scoped LOCAL to this call, not module-level: _splitWorker
+  // is a persistent singleton reused across runs, so module-level state here
+  // could leak between a cancelled run and a retry.
+  //
+  // Loaded and created EAGERLY, before postMessage, not lazily on the first
+  // 'page' message — a real bug found in manual testing: worker.onmessage is
+  // async, and the worker can post 'page' messages back-to-back fast enough
+  // that a lazy `await loadJSZip()` inside the 'page' handler hadn't resolved
+  // yet by the time 'done' arrived and ran its synchronous `if (!streamZip)`
+  // check, so the run failed with "Unexpected result type from worker" every
+  // time despite every page having actually streamed correctly. Loading here
+  // removes the async gap entirely — streamZip is guaranteed ready before the
+  // worker even starts producing pages.
+  let streamZip = null;
+  if (mode === 'separate') {
+    await loadJSZip();
+    streamZip = new window.JSZip();
+  }
+
   // ⚠️  TRANSFERABLE CONTRACT: `buffer` was passed to worker as a Transferable.
   //     It is now DETACHED here in the main thread — do not read it after this line.
-  //     The worker owns it until it sends `done`, at which point data.result
-  //     (single mode) or data.result[*].buffer (separate mode) are transferred
-  //     back and become the new owners. Each buffer must be consumed exactly once
-  //     (Blob constructor, JSZip.file()) and never stored for later reuse.
-  _worker.postMessage({ tool: 'split', file: buffer, options: { pages, mode, removeWatermarks } }, [buffer]);
+  //     The worker owns it until it sends `done` (single mode, data.result) or
+  //     each 'page' message (separate mode, data.buffer) — each transferred
+  //     buffer must be consumed exactly once (Blob constructor, JSZip.file())
+  //     and never stored for later reuse.
+  worker.postMessage({ file: buffer, options: { pages, mode, removeWatermarks } }, [buffer]);
 
-  _worker.onmessage = async (e) => {
+  worker.onmessage = async (e) => {
     const data = e.data;
     if (data.type === 'progress') {
       setProgress(data.value, data.label);
+
+    } else if (data.type === 'page') {
+      // Streaming path (separate mode only) — feed this one page into JSZip
+      // immediately and drop the reference, instead of waiting for every
+      // page to arrive first. This is the actual memory fix: peak RAM here
+      // stays at ~1 page + JSZip's own growing (compressed) structure,
+      // never N raw page buffers at once.
+      try {
+        streamZip.file(data.name, data.buffer);
+      } catch (err) {
+        isProcessing = false;
+        setFilesLocked(false);
+        hideCancelBtn();
+        _handleError(toolKey, err.message);
+      }
+
     } else if (data.type === 'done') {
       setProgress(95, t('prog_packaging'));
       try {
@@ -507,28 +565,19 @@ async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false 
           desc     = tp(data.totalPages, 'desc_split_single', 'desc_split_single_many', { n: data.totalPages, size: fmtSize(blob.size) });
           filename = 'extracted.pdf';
         } else {
-          if (!Array.isArray(data.result)) {
+          // Несколько PDF → ZIP через JSZip — already built incrementally by
+          // the 'page' handler above as each page arrived; just finalize it.
+          if (!streamZip) {
             _handleError(toolKey, 'Unexpected result type from worker'); return;
           }
-          // Несколько PDF → ZIP через JSZip
-          await loadJSZip();
-          const JSZip = window.JSZip;
-          const zip = new JSZip();
-          setProgress(96, t('prog_zip'));
-          // ⚠️  item.buffer is a transferred (detached) ArrayBuffer received from
-          //     the worker. JSZip.file() consumes it here — do not use item.buffer
-          //     again after this loop. Accessing a detached ArrayBuffer returns
-          //     byteLength=0 and reads return 0s, silently corrupting output.
-          for (const item of data.result) {
-            zip.file(item.name, item.buffer);
-          }
           setProgress(97, t('prog_compressing'));
-          blob     = await zip.generateAsync(
+          blob     = await streamZip.generateAsync(
             { type: 'blob', compression: 'DEFLATE' },
             meta  => setProgress(97 + Math.round(meta.percent / 100 * 2), t('prog_compressing'))
           );
           desc     = tp(data.totalPages, 'desc_split_separate', 'desc_split_separate_many', { n: data.totalPages, size: fmtSize(blob.size) });
           filename = 'split_pages.zip';
+          streamZip = null;
         }
 
         isProcessing = false;
@@ -545,18 +594,43 @@ async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false 
         _handleError(toolKey, err.message);
       }
     } else if (data.type === 'error') {
+      streamZip = null;
       isProcessing = false;
       setFilesLocked(false);
       hideCancelBtn();
       _handleError(toolKey, data.message);
     }
   };
-  _worker.onerror = (e) => {
+  worker.onerror = (e) => {
+    streamZip = null;
     isProcessing = false;
     setFilesLocked(false);
     hideCancelBtn();
     _handleError(toolKey, e.message || 'Worker error');
   };
+}
+
+// Wired as split/extract's `cancel` registry hook (js/toolRegistrations.js) —
+// Split moved to its own dedicated splitWorker.js (see that file's header for
+// why), which is never the shared js/worker.js instance the default
+// cancelProcess() terminates. Without this hook, clicking Cancel mid-run
+// would reset the UI but leave splitWorker.js running unterminated in the
+// background — same class of gap cancelEreader()'s own comment documents was
+// fixed for ereader. toolRegistry.js's `cancel` contract is `() => void` (no
+// args — called directly on #cancelBtn click), so this reads the module-level
+// _currentTool (set by doProcess(), already used the same way just above in
+// this file) rather than receiving it as a parameter — split and extract are
+// two different tool keys sharing this one hook, with genuinely different
+// button labels, so a hardcoded key would show the wrong one after cancelling
+// whichever tool wasn't hardcoded.
+export function cancelSplit() {
+  if (_splitWorker) { _splitWorker.terminate(); _splitWorker = null; }
+  isProcessing = false;
+  setFilesLocked(false);
+  hideProgress();
+  hideCancelBtn();
+  setButtonReady(TOOLS[_currentTool]?.btn || 'Try again');
+  showToast(t('cancelled'));
 }
 
 // ── Organize (reorder / delete / rotate pages) ──────────────────
