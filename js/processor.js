@@ -2472,7 +2472,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
       onProgress:  (pct, label) => onProgress?.(pct, label),
       isCancelled,
     }));
-    ({ paragraphs, cs } = await _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { repeatPatternSet, isCancelled }));
+    ({ paragraphs, cs } = await _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { repeatPatternSet, isCancelled, onProgress }));
     confidence = _p2wConfidence(cs, median);
   } else {
     onProgress?.(10, 'Rendering pages…');
@@ -2542,7 +2542,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
       if (cs.totalTables > 0 && atlasEri.components.tables < _ERI_TABLE_RETRY_THRESHOLD) {
         onProgress?.(95, 'Verifying table structure…');
         const retry = await _p2wBuildParagraphs(
-          pdfDoc, pageData, median, repeatTextSet, cs, { useTables: false, repeatPatternSet, isCancelled }
+          pdfDoc, pageData, median, repeatTextSet, cs, { useTables: false, repeatPatternSet, isCancelled, onProgress }
         );
         const retryBlob = await Packer.toBlob(_buildDoc(retry.paragraphs));
         const retryEri = await evaluateStructural(await retryBlob.arrayBuffer());
@@ -4170,7 +4170,7 @@ async function _runUnlock(filesSnapshot, { password } = {}) {
 // useTables:false skips text-detected AND border-grid tables entirely (all
 // their lines flow through the normal paragraph path instead) — used as the
 // conservative fallback when the first attempt's tables look mis-detected.
-export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { useTables = true, repeatPatternSet = new Set(), isCancelled = () => !isProcessing } = {}) {
+export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { useTables = true, repeatPatternSet = new Set(), isCancelled = () => !isProcessing, onProgress = setProgress } = {}) {
   // window.__pdfreeDocxBuilder — see the namespace-collision comment on
   // _buildPdf2WordDocxBlob's own window.__pdfreeDocxBuilder read, above.
   const { Paragraph, TextRun, HeadingLevel,
@@ -4189,6 +4189,19 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
   // producing a real, hard-to-diagnose EMPTY document with zero paragraphs
   // and no error at all (found via direct pageData/paragraph-count
   // instrumentation while debugging Quick Edit's Stage 2 preview).
+  //
+  // onProgress: same story, found one stage later (Stage 5). Defaults to
+  // the shared, sitewide setProgress() — zero behavior change for
+  // _runPdf2Word. Made injectable because the two setProgress() calls
+  // below (page-building, and visual-gap capturing on documents with
+  // embedded diagrams) were writing DIRECTLY to the shared #progressBar/
+  // #progressLabel DOM elements regardless of caller — Quick Edit's own
+  // file-select-time build (which never touches that shared UI, and
+  // deliberately shows progress inside its OWN options panel instead) got
+  // a stray, unexplained progress bar/label flashing on-screen on any
+  // document with visual gaps, confirmed via a real screenshot showing
+  // "Capturing visuals on page 1/1…" stuck at the bottom of Quick Edit's
+  // page with no processing actually running from the user's perspective.
 
   // Adaptive gap factor: linearly interpolates from 1.6 (small fonts / dense technical
   // PDFs) to 2.5 (large fonts / presentations) over the 8–14pt range.
@@ -4339,8 +4352,8 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
   // text, or it would misread the OTHER (not-yet-processed-in-this-call)
   // column's text as an inline visual while processing this one.
   async function _processLines(pi, lines, rotatedItems, borderGrids, textItems, pageH) {
-    setProgress(50 + Math.round((pi / pageData.length) * 40),
-                `Building page ${pi + 1}/${pageData.length}…`);
+    onProgress(50 + Math.round((pi / pageData.length) * 40),
+               `Building page ${pi + 1}/${pageData.length}…`);
 
     // Baseline left margin for THIS lines set (whole page, or one column
     // region after a column split) — the most common first-item X. Used
@@ -4440,7 +4453,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     const gapRunsArr  = [];
     const inlineVisuals = [];
     if (visualGaps.length > 0 && !isCancelled()) {
-      setProgress(
+      onProgress(
         50 + Math.round((pi / pageData.length) * 40),
         `Capturing visuals on page ${pi + 1}/${pageData.length}…`,
       );

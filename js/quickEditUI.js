@@ -44,6 +44,7 @@ let _generation = 0;    // staleness guard, same pattern as formFieldsUI.js
 let _container  = null; // the outer #quickEditOptions panel
 let _fileLabel  = '';
 let _docContainer = null; // the live docx-preview render target — lives INSIDE the modal while open
+let _atlasEri   = null; // {eri, components, findings} from _buildPdf2WordDocxBlob — pre-edit gate
 let _modal      = null;
 let _prevFocus  = null;
 let _inerted    = [];
@@ -73,8 +74,48 @@ export function hideQuickEditOptions() {
   _loading = false;
   _fileLabel = '';
   _docContainer = null;
+  _atlasEri = null;
   _generation++;
   _container = null;
+}
+
+// ── Atlas ERI pre-edit gate ──────────────────────────────────────
+// Reuses the SAME verdict thresholds pdf2wordUI.js's own (unexported)
+// _atlasVerdict uses (READY>=95/MINOR>=80/NOTABLE>=60/HEAVY<60) — same
+// bar, not invented separately. Can't reuse that function directly (not
+// exported) or the shared #atlasCheck div (it lives INSIDE #successCard,
+// display:none until a real success fires — semantically scoped to
+// POST-conversion results, not a pre-edit gate a user needs to see before
+// ever clicking anything). Renders the same .atlas-check__* classes
+// (css/components.css, already theme-aware) inline in this tool's own
+// options panel instead.
+function _atlasVerdict(eri) {
+  if (eri >= 95) return { key: 'ready',   label: 'Ready' };
+  if (eri >= 80) return { key: 'minor',   label: 'Minor issues' };
+  if (eri >= 60) return { key: 'notable', label: 'Notable issues' };
+  return { key: 'heavy', label: 'Heavy issues' };
+}
+
+// Below HEAVY, block entirely rather than let the user into an editor with
+// no power to fix what's already wrong. Deliberately DIFFERENT from
+// pdf2word's own leniency (pdf2word ships a full .docx the user can fix by
+// hand in Word; Quick Edit's only recovery power is "retype text inside a
+// run" — it can't repair a mis-split paragraph or a lost table row, so
+// shipping a PDF built from an already-HEAVY conversion would silently
+// bake in corruption the constrained editor can't fix and the user never
+// even sees).
+const _ATLAS_BLOCK_THRESHOLD = 60;
+
+function _atlasSummaryHTML(atlasEri) {
+  if (!atlasEri || atlasEri.error) return '';
+  const v = _atlasVerdict(atlasEri.eri);
+  return `
+    <div class="atlas-check" style="border-top:none;padding:0 0 12px;text-align:left;">
+      <div class="atlas-check__header">
+        <span class="atlas-check__title">Structural check</span>
+        <span class="atlas-check__badge atlas-check__badge--${v.key}">${Math.round(atlasEri.eri)}% ${esc(v.label)}</span>
+      </div>
+    </div>`;
 }
 
 // ── Trigger / spinner / error views (outer panel, behind the modal) ──
@@ -90,11 +131,35 @@ function _errorHTML(msg) {
   </div>`;
 }
 
+// Shown when the source PDF's structure survived the PDF->DOCX step too
+// poorly to safely enter the constrained editor at all — see
+// _ATLAS_BLOCK_THRESHOLD's own comment for why this is stricter than
+// pdf2word's own no-blocking policy.
+function _blockedHTML(atlasEri) {
+  const v = _atlasVerdict(atlasEri.eri);
+  return `
+    <div style="padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
+      <div class="atlas-check" style="border-top:none;padding:0 0 10px;">
+        <div class="atlas-check__header">
+          <span class="atlas-check__title">Structural check</span>
+          <span class="atlas-check__badge atlas-check__badge--${v.key}">${Math.round(atlasEri.eri)}% ${esc(v.label)}</span>
+        </div>
+      </div>
+      <p style="margin:0;font-size:13px;color:var(--text3);line-height:1.5;">
+        This PDF's structure didn't convert cleanly enough for Quick Edit's
+        constrained editor to safely fix. Try
+        <a href="/pdf-to-word/" style="color:var(--green-text);">PDF to Word</a>
+        instead — it gives you a full, freely-editable document.
+      </p>
+    </div>`;
+}
+
 // Shown in the outer options panel — behind the modal while it's briefly
 // building, and again if the user closes the modal without processing.
 function _triggerHTML() {
   return `
     <div style="padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);text-align:center;">
+      ${_atlasSummaryHTML(_atlasEri)}
       <p style="margin:0 0 10px;font-size:13px;color:var(--text3);word-break:break-word;">
         ${esc(_fileLabel)}
       </p>
@@ -111,6 +176,7 @@ function _bindTriggerEvents(container) {
 
 async function _prepareAndRender(file, container) {
   _loading = true;
+  _atlasEri = null;
   const myGen = ++_generation;
   _closeModal({ silent: true }); // a new file replaces any editor already open for a previous one
   container.innerHTML = _spinnerHTML('Converting to an editable form…');
@@ -125,14 +191,32 @@ async function _prepareAndRender(file, container) {
     // Reuses pdf2word's own conversion engine — text mode only, since
     // image mode produces no text runs to click-edit at all (Atlas ERI
     // scoring is also mode==='text'-only, matching processor.js's own
-    // gate). Stage 2 scope: build the DOCX blob, render it for preview —
-    // no Atlas gate UI yet (Stage 5), no click-to-edit yet (Stage 3).
-    const { blob } = await _buildPdf2WordDocxBlob(file, {
+    // gate). This whole build+render step can genuinely exceed 1-2s on a
+    // real document (Doherty Threshold, CLAUDE.md's UX checklist item 6)
+    // — real progress text, not a static spinner message.
+    const { blob, atlasEri } = await _buildPdf2WordDocxBlob(file, {
       mode: 'text',
-      onProgress:  () => {},
+      onProgress:  (pct, label) => {
+        if (myGen === _generation) container.innerHTML = _spinnerHTML(label || 'Converting to an editable form…');
+      },
       isCancelled: () => myGen !== _generation,
     });
     if (myGen !== _generation) return;
+    _atlasEri = atlasEri;
+
+    // Atlas gate: block entirely below the HEAVY threshold — see
+    // _ATLAS_BLOCK_THRESHOLD's own comment for why this is stricter than
+    // pdf2word's own leniency. Never blocks on a scoring FAILURE (atlasEri
+    // null/errored) — best-effort scoring, same posture processor.js's own
+    // Atlas call already takes; only an ACTUAL low score blocks.
+    if (atlasEri && !atlasEri.error && atlasEri.eri < _ATLAS_BLOCK_THRESHOLD) {
+      _loading = false;
+      container.innerHTML = _blockedHTML(atlasEri);
+      setButtonDisabled();
+      return;
+    }
+
+    container.innerHTML = _spinnerHTML('Rendering preview…');
 
     // Off-screen render target, moved into the modal's stage once built —
     // same "caller owns the container" contract renderDocxToDom documents.
