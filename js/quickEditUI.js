@@ -196,9 +196,17 @@ async function _openModal(docContainer) {
   id('qeModalClose').addEventListener('click', () => _closeModal());
   document.addEventListener('keydown', _onModalKeydown);
   _modal.addEventListener('click', e => { if (e.target === _modal) _closeModal(); });
-  // Stage 2: no real Save wiring yet (that's Stage 4) — placeholder only.
+  // Forwards to the REAL #mergeBtn rather than duplicating its processing
+  // wiring — closes the modal first so the shared progress bar/success
+  // card (which live in the main page, invisible while the modal covers
+  // it) are visible the instant processing starts. Exact same pattern
+  // formFieldsUI.js's own #ffModalSaveBtn uses. If an edit is still
+  // in-progress (span focused, not yet blurred), commit it first — the
+  // walk needs the FINAL text, not whatever was mid-edit.
   id('qeModalSaveBtn').addEventListener('click', () => {
+    if (_activeEditSpan) _commitEdit(_activeEditSpan);
     _closeModal({ silent: true });
+    id('mergeBtn')?.click();
   });
 
   // On first open (called from _prepareAndRender), docContainer is the

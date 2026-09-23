@@ -30,7 +30,7 @@ import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { _p2wBuildPageData } from './pdf2readCore.js';
 import { recognizeFormula } from './formulaOcr.js';
-import { docxToPdf } from './docxToPdfCore.js';
+import { docxToPdf, walkDomToPdfContent, pdfContentToBlob } from './docxToPdfCore.js';
 export { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE, _splitCrossColumnLines };
 
 // Below this ERI "tables" score, the text-detected/border-grid tables in the
@@ -311,6 +311,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     // wired to a real runner yet, instead of relying on the same behavior
     // arriving via an unnamed catch-all.
     stub: () => _runStub(currentTool),
+    quickEdit: () => _runQuickEdit(filesSnapshot, extraParams),
   };
 
   try {
@@ -4033,6 +4034,57 @@ async function _runDocx2Pdf(filesSnapshot, _extraParams) {
 
   document.dispatchEvent(new CustomEvent('pdfree:success', {
     detail: { tool: 'docx2pdf', blob, desc, filename }
+  }));
+}
+
+// ── Quick Edit PDF ────────────────────────────────────────────────
+// Unlike every other tool, the HEAVY work (pdf2word extraction + render)
+// already ran at file-select/Open-Editor time, inside js/quickEditUI.js's
+// own modal flow — entirely outside doProcess()'s isProcessing state
+// machine (same shape formFields/fill already use: interactive setup
+// before #mergeBtn, not triggered by it). #mergeBtn's click only runs this
+// cheap tail: walk the (possibly user-edited) DOM into pdfmake content,
+// then build the final PDF blob. getQuickEditParams() passes the live
+// container element straight through extraParams — safe specifically
+// because this tool runs entirely main-thread, no postMessage/structured-
+// clone boundary to survive.
+async function _runQuickEdit(filesSnapshot, { editedContainer } = {}) {
+  const file = filesSnapshot[0];
+  if (!editedContainer) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('quickEdit', 'Open the editor first.');
+    return;
+  }
+
+  setProgress(70, 'Building PDF…');
+
+  let blob;
+  try {
+    const parsed = await walkDomToPdfContent(editedContainer, { isCancelled: () => !isProcessing });
+    if (!isProcessing) return;
+    blob = await pdfContentToBlob(parsed, {
+      isCancelled: () => !isProcessing,
+      onProgress:  pct => setProgress(70 + Math.round(pct * 0.3), 'Building PDF…'),
+    });
+  } catch (err) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    if (err.message === 'cancelled') return;
+    _handleError('quickEdit', err.message);
+    return;
+  }
+
+  if (!isProcessing) return;
+
+  const filename = file.name.replace(/\.pdf$/i, '-edited.pdf');
+  const desc = fmtSize(blob.size);
+
+  isProcessing = false;
+  setFilesLocked(false);
+  hideCancelBtn();
+  setProgress(100, t('prog_done'));
+
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: { tool: 'quickEdit', blob, desc, filename }
   }));
 }
 

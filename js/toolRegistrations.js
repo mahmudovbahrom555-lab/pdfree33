@@ -702,17 +702,17 @@ registerTool('docx2pdf', {
   getParams: getDocx2PdfParams,
 });
 
-// Stage 2/3 scaffolding (see /Users/murodjon/.claude/plans/
-// typed-plotting-wave.md) — runner:'stub' (this project's own established
-// not-yet-wired placeholder, see tests/integration.test.js's KNOWN_RUNNERS)
-// until Stage 4 adds the real 'quickEdit' processor.js runnerMap entry. No
-// validate/Atlas-gate copy yet either (Stage 5). Registered now purely so
-// the read-only preview modal can be tested against a real page.
+// Stage 4 of /Users/murodjon/.claude/plans/typed-plotting-wave.md — real
+// runner wired. No Atlas-gate copy/validate message yet (Stage 5 — that's
+// a pre-edit quality GATE, separate from this basic "did you open the
+// editor" check, which already has real teeth: _runQuickEdit itself
+// refuses to run without editedContainer).
 registerTool('quickEdit', {
-  runner:    'stub',
+  runner:    'quickEdit',
   init:      initQuickEditOptions,
   hide:      hideQuickEditOptions,
   getParams: getQuickEditParams,
+  validate:  p => p.loading ? 'Analysing PDF…' : !p.hasOpened ? 'Open the editor first.' : null,
 });
 
 registerTool('unlock', {
