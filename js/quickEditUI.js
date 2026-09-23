@@ -14,10 +14,8 @@
 //  before the walk is sufficient to edit the final PDF. Full contenteditable
 //  is unsafe (the walk parser depends on exact DOM shapes — direct-child
 //  <span> runs, specific heading/list classes, :scope > td/p table
-//  structure) — editing is constrained to per-run TEXT-ONLY edits, added in
-//  a later stage (_bindEditableSpans). This file, as it stands, is Stage 2
-//  of that plan: a READ-ONLY preview modal only — renders the DOCX and
-//  shows it, no editing wired up yet.
+//  structure) — editing is constrained to per-run TEXT-ONLY edits via
+//  _bindEditableSpans (Stage 3, below). Save/walk-to-PDF wiring is Stage 4.
 //
 //  Modal pattern mirrors js/formFieldsUI.js's proven .ff-modal subsystem
 //  (full-viewport, inert/aria-hidden background while open, Escape/
@@ -185,7 +183,7 @@ async function _openModal(docContainer) {
         <p class="qe-modal__title">${esc(_fileLabel)}</p>
         <button type="button" class="qe-modal-close" id="qeModalClose" aria-label="Close">✕</button>
       </div>
-      <p class="qe-modal__hint">Preview — click-to-edit lands in a follow-up stage.</p>
+      <p class="qe-modal__hint">Click any line of text to edit it.</p>
       <div class="qe-modal__stage" id="qeModalStage"></div>
       <div class="qe-modal__footer">
         <button type="button" class="merge-btn" id="qeModalSaveBtn" style="position:static;margin-top:0;">Save Edited PDF</button>
@@ -212,11 +210,188 @@ async function _openModal(docContainer) {
   const target = docContainer || _docContainer;
   if (target) {
     id('qeModalStage').appendChild(target);
+    // Real bug, found via empirical click-testing (Stage 3): while
+    // renderDocxToDom() built `target` off-screen, it was a direct child
+    // of document.body (see _prepareAndRender's own comment on why —
+    // docx-preview needs real layout). _setBackgroundInert(true) below
+    // walks document.body.children and marks everything except the modal
+    // itself inert, for the WHOLE background-dimming duration this modal
+    // is open — including `target`, since at that exact moment it still
+    // looked like ordinary background content, not modal content.
+    // Reparenting into qeModalStage (the line above) does NOT clear an
+    // already-set `inert` attribute — it just carries the tainted node
+    // into a live, interactive subtree, where every descendant span
+    // silently stops receiving click/focus events at all (confirmed via
+    // document.elementsFromPoint: hit-testing skipped straight past the
+    // whole rendered document to the stage div itself). Clear it here,
+    // now that `target` genuinely IS inside the modal.
+    target.removeAttribute('inert');
+    target.removeAttribute('aria-hidden');
     _docContainer = target;
     _fitDocContainerToStage(target);
+    // Only bind once per container — reopening (docContainer===undefined,
+    // falls back to _docContainer) must NOT re-run this, since the
+    // delegated listener + editable-run classes already applied the first
+    // time are still intact on the same, never-torn-down DOM node.
+    if (docContainer) _bindEditableSpans(target);
   }
 
   id('qeModalClose')?.focus();
+}
+
+// ── Stage 3: constrained per-run click-to-edit ──────────────────
+//
+// THE core design constraint (see this file's header + the plan doc): only
+// a run's TEXT may change, never its class/style/element identity — every
+// selector docxToPdfCore.js's walk depends on (direct-child <span> of <p>,
+// bold/italic style regex, heading/list classes) must survive untouched.
+// contenteditable="plaintext-only" is the browser's own native guarantee
+// of exactly that (Chrome/Edge): the node can be typed into, but can never
+// gain a child ELEMENT. Firefox/Safari don't support it yet, so those get
+// a manual fallback that enforces the same invariant by hand.
+const _PLAINTEXT_ONLY_SUPPORTED = (() => {
+  try {
+    const probe = document.createElement('span');
+    probe.contentEditable = 'plaintext-only';
+    return probe.contentEditable === 'plaintext-only';
+  } catch { return false; }
+})();
+
+function _isEditableSpan(span) {
+  return span?.tagName === 'SPAN'
+    && span.parentElement?.tagName === 'P'
+    // Footnote MARKER text (the small superscript reference number) — see
+    // docxToPdfCore.js's `docx_footnotereference` class, `_parseRun`'s own
+    // `sup` flag. Editing a marker's own text has no sensible meaning
+    // (it's not the footnote's content, just its in-line number).
+    && !span.classList.contains('docx_footnotereference');
+}
+
+// Adds the discoverable-affordance class to every currently-eligible span.
+// Called once per fresh render (not on every click) — matches _isEditableSpan
+// exactly, so "looks clickable" and "is clickable" never drift apart.
+function _markEditableSpans(container) {
+  for (const span of container.querySelectorAll('p > span')) {
+    if (_isEditableSpan(span)) span.classList.add('qe-editable-run');
+  }
+}
+
+let _activeEditSpan = null; // the one span currently in edit mode, or null
+
+function _bindEditableSpans(container) {
+  _markEditableSpans(container);
+  container.addEventListener('click', e => {
+    const span = e.target.closest('span');
+    if (!_isEditableSpan(span)) return;
+    if (span === _activeEditSpan) return; // already editing this one
+    _enterEditMode(span);
+  });
+}
+
+function _enterEditMode(span) {
+  if (_activeEditSpan && _activeEditSpan !== span) _commitEdit(_activeEditSpan);
+
+  _activeEditSpan = span;
+  span.dataset.qeOriginalText = span.textContent;
+  span.classList.add('qe-editable-run--active');
+
+  if (_PLAINTEXT_ONLY_SUPPORTED) {
+    span.contentEditable = 'plaintext-only';
+  } else {
+    // Fallback: plain contenteditable="true" plus explicit enforcement —
+    // see this section's header comment for why each layer exists.
+    span.contentEditable = 'true';
+    span.addEventListener('beforeinput', _onFallbackBeforeInput);
+    span.addEventListener('paste', _onFallbackPaste);
+    // Last-resort safety net: if any non-text-node child ever appears
+    // despite the above (an edge case the explicit handlers didn't
+    // anticipate — unusual IME composition, a stray drag-drop), collapse
+    // back to plain text immediately rather than let it reach the walk.
+    span._qeObserver = new MutationObserver(() => {
+      // nodeType 3 === TEXT_NODE (raw literal matches this codebase's own
+      // existing convention, see js/eriAnatomy.js's nodeType===1 check).
+      if (Array.from(span.childNodes).some(n => n.nodeType !== 3)) {
+        // Re-flattening via textContent collapses all child nodes into one
+        // plain text node, discarding whatever stray element the mutation
+        // observer just caught.
+        const flat = span.textContent;
+        span.textContent = flat;
+      }
+    });
+    span._qeObserver.observe(span, { childList: true });
+  }
+
+  span.addEventListener('keydown', _onEditKeydown);
+  span.addEventListener('blur', _onEditBlur);
+
+  span.focus();
+  // Place the caret at the click point rather than selecting/resetting to
+  // start — matches native text-field click behavior a user expects.
+  const sel = window.getSelection();
+  if (sel && !sel.isCollapsed) { /* leave an active click-drag selection alone */ }
+}
+
+function _onEditKeydown(e) {
+  if (e.key === 'Enter') {
+    // Under plaintext-only, Enter is a no-op by the browser's own contract
+    // (can't insert a paragraph break) — still explicitly blur to commit,
+    // for a consistent "Enter commits" UX under BOTH code paths.
+    e.preventDefault();
+    e.stopPropagation(); // see the Escape branch's comment below — same bug class
+    e.target.blur();
+  } else if (e.key === 'Escape') {
+    // Real bug, found via empirical testing: Escape here is meant to
+    // cancel just THIS edit — but this listener is bound on the span
+    // itself, and keydown BUBBLES. _onModalKeydown (bound on `document`,
+    // for the modal's own Escape-to-close shortcut) was ALSO firing for
+    // the exact same keypress, closing the entire modal out from under an
+    // in-progress edit (confirmed: the whole #qeModalStage vanished
+    // immediately after pressing Escape while editing). preventDefault()
+    // alone only blocks the browser's own default action, not propagation
+    // to other listeners — stopPropagation() is the piece that was missing.
+    e.preventDefault();
+    e.stopPropagation();
+    const span = e.target;
+    span.textContent = span.dataset.qeOriginalText ?? span.textContent;
+    span.blur();
+  }
+}
+
+function _onFallbackBeforeInput(e) {
+  if (e.inputType === 'insertParagraph' || e.inputType === 'insertLineBreak') {
+    e.preventDefault();
+  }
+}
+
+function _onFallbackPaste(e) {
+  e.preventDefault();
+  const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+  document.execCommand('insertText', false, text);
+}
+
+function _onEditBlur(e) {
+  _commitEdit(e.target);
+}
+
+// Empty guard: _parseRun (docxToPdfCore.js) returns null for an empty span
+// and parseParagraph silently filters nulls — an emptied run wouldn't
+// crash anything, it would just silently VANISH from the output PDF. That
+// is exactly the "silent no-op" CLAUDE.md's UX rule warns against — block
+// it here (revert to the original text) rather than let it through quietly.
+function _commitEdit(span) {
+  if (!span) return;
+  if (span.textContent.trim() === '') {
+    span.textContent = span.dataset.qeOriginalText || '';
+  }
+  span.removeAttribute('contenteditable');
+  span.classList.remove('qe-editable-run--active');
+  span.removeEventListener('keydown', _onEditKeydown);
+  span.removeEventListener('blur', _onEditBlur);
+  span.removeEventListener('beforeinput', _onFallbackBeforeInput);
+  span.removeEventListener('paste', _onFallbackPaste);
+  if (span._qeObserver) { span._qeObserver.disconnect(); span._qeObserver = null; }
+  delete span.dataset.qeOriginalText;
+  if (_activeEditSpan === span) _activeEditSpan = null;
 }
 
 // docx-preview renders `.docx-wrapper > section.docx` at the page's own

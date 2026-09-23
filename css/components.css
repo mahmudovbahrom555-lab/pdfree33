@@ -6309,6 +6309,29 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   border-top: 1px solid var(--border);
 }
 
+/* Stage 3 — per-run click-to-edit affordance (js/quickEditUI.js's
+   _bindEditableSpans). Dashed underline signals "clickable text", not a
+   full box/highlight — the goal is discoverable without looking like a
+   form field (this is a constrained single-run edit, not a real text
+   input). --green-text is this project's own dark-mode-vetted token for
+   this exact purpose (see CLAUDE.md's own rule: raw --green measures
+   under WCAG AA in dark mode for TEXT/border use, -text variants don't). */
+.qe-editable-run {
+  cursor: text;
+  border-radius: 2px;
+  outline: none;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.qe-editable-run:hover {
+  background: var(--surface2);
+  box-shadow: 0 1px 0 0 var(--green-text);
+}
+.qe-editable-run--active {
+  background: var(--surface2);
+  box-shadow: 0 0 0 2px var(--green-text);
+}
+
 @media (max-width: 700px) {
   .qe-modal { padding: 0; }
   .qe-modal__card { max-width: none; border-radius: 0; }
