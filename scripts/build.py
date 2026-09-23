@@ -525,6 +525,7 @@ SPECIALTY_PAGES = [
     'terms',
     # Blog index + Blog posts
     'blog',
+    'blog/how-to-convert-word-to-pdf',
     'blog/how-to-annotate-pdf-on-mobile',
     'blog/how-to-fill-pdf-form',
     'blog/how-to-sign-pdf-free',
