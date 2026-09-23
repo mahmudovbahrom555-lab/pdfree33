@@ -2053,15 +2053,19 @@ async function _runWorkerTool(tool, filesSnapshot, params, bufferOverride) {
   setProgress(5, labelMap[tool] || t('prog_processing'));
 
   // fill/flatten/redact all write PDF-lib text using an embedded font —
-  // filled-in values, a redaction stamp label — and a WinAnsi-only
-  // StandardFont there throws the moment that text is non-Latin (Cyrillic,
-  // Greek, Vietnamese beyond WinAnsi, etc.), which previously aborted
-  // appearance regeneration for the WHOLE form, not just the offending
-  // field (see worker.js's own comment on _embedUnicodeFont for the full
-  // story). Reuse the same cached LiberationSans-Regular already fetched
-  // for formFieldsWorker.js — other tools don't need it, so leave
-  // fontBytes undefined for them rather than fetching unconditionally.
-  const fontBytes = (tool === 'fill' || tool === 'flatten' || tool === 'redact')
+  // filled-in values — and a WinAnsi-only StandardFont there throws the
+  // moment that text is non-Latin (Cyrillic, Greek, Vietnamese beyond
+  // WinAnsi, etc.), which previously aborted appearance regeneration for
+  // the WHOLE form, not just the offending field (see worker.js's own
+  // comment on _embedUnicodeFont for the full story). Reuse the same
+  // cached LiberationSans-Regular already fetched for formFieldsWorker.js
+  // — other tools don't need it, so leave fontBytes undefined for them
+  // rather than fetching unconditionally. ('redact' dropped from this
+  // condition 2026-09-23 dead-code audit: redact always routes through
+  // the dedicated redact-worker.js via the 'redact-true' runner now, so
+  // _runWorkerTool('redact', ...) is never actually called — see
+  // toolRegistrations.js's own comment on that transition.)
+  const fontBytes = (tool === 'fill' || tool === 'flatten')
     ? await _loadLiberationSansRegular()
     : undefined;
 

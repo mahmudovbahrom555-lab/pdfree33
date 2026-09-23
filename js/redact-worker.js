@@ -16,6 +16,16 @@
 //
 //  Canvas flatten guarantees that underlying content is physically
 //  gone from the PDF — not merely obscured by a paint layer.
+//
+//  THIS FILE IS THE ONLY LIVE REDACT IMPLEMENTATION. js/worker.js's own
+//  handleRedact()/case 'redact' (the older page.drawRectangle() overlay
+//  approach — real text stayed intact and extractable underneath the
+//  drawn box) is dead code: toolRegistrations.js's 'redact' entry always
+//  routes here via the 'redact-true' runner, never to the shared worker
+//  — see that file's own comment for the real bug this transition fixed
+//  (2026-09-07). worker.js is off-limits so that dead copy can't be
+//  removed; don't mistake it for a second implementation or "fix" a bug
+//  there — it will never run. (dead-code audit, 2026-09-23)
 // ============================================================
 
 importScripts('./vendor/pdf-lib.min.js');

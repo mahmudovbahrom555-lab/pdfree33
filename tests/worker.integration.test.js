@@ -52,8 +52,8 @@ function toArrayBuffer(buf) {
 }
 const fix = (name) => toArrayBuffer(readFileSync(join(FIXTURES, name)));
 
-// Fixtures are re-read per test via clone() because handleMerge
-// transfers (detaches) ArrayBuffers — using them again throws.
+// Fixtures are re-read per test via clone() because worker handlers
+// transfer (detach) ArrayBuffers — using them again throws.
 // clone() creates a fresh copy each time without re-reading disk.
 const _normal1 = fix('normal-1page.pdf');
 const _normal3 = fix('normal-3page.pdf');
@@ -82,8 +82,8 @@ const workerSrc = readFileSync(join(__dir, '../js/worker.js'), 'utf8')
 
 // eval into module scope — gives us access to all private functions
 const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-const workerModule = new AsyncFunction(workerSrc + '\nreturn { handleMerge, handleCompress };');
-const { handleMerge, handleCompress } = await workerModule();
+const workerModule = new AsyncFunction(workerSrc + '\nreturn { handleCompress };');
+const { handleCompress } = await workerModule();
 
 // ── Test runner ───────────────────────────────────────────────
 
@@ -117,99 +117,13 @@ function expect(actual) {
 function lastDone()  { return messages.findLast(m => m.type === 'done'); }
 function lastError() { return messages.findLast(m => m.type === 'error'); }
 
-// ══════════════════════════════════════════════════════════════
-// handleMerge — Happy path
-// ══════════════════════════════════════════════════════════════
-
-console.log('\n📎 handleMerge — happy path:');
-
-await test('merges two valid PDFs', async () => {
-  await handleMerge([normal1(), normal3()]);
-  const done = lastDone();
-  expect(done).toBeTruthy();
-  expect(done.totalPages).toBe(4);          // 1 + 3 pages
-  expect(done.result).toBeInstanceOf(ArrayBuffer);
-  expect(done.result.byteLength).toBeGreaterThan(100);
-});
-
-await test('single file merge returns correct page count', async () => {
-  await handleMerge([normal3()]);
-  const done = lastDone();
-  expect(done.totalPages).toBe(3);
-  expect(done.fileErrors).toBeNull();       // no errors → null, not []
-  expect(done.mergedCount).toBe(1);
-});
-
-await test('result is a valid PDF (starts with %PDF header)', async () => {
-  await handleMerge([normal1()]);
-  const bytes = new Uint8Array(lastDone().result);
-  const header = String.fromCharCode(...bytes.slice(0, 4));
-  expect(header).toBe('%PDF');
-});
-
-await test('emits progress messages during merge', async () => {
-  await handleMerge([normal1(), minimal()]);
-  const progressMsgs = messages.filter(m => m.type === 'progress');
-  expect(progressMsgs.length).toBeGreaterThan(0);
-  // Progress should go up, never exceed 100
-  const values = progressMsgs.map(m => m.value);
-  expect(values.every(v => v >= 0 && v <= 100)).toBeTruthy();
-});
-
-// ══════════════════════════════════════════════════════════════
-// handleMerge — Best Effort (corrupt / mixed files)
-// This is the most valuable test: catches regressions in our
-// Best Effort strategy added after code review.
-// ══════════════════════════════════════════════════════════════
-
-console.log('\n📎 handleMerge — Best Effort (corrupt files):');
-
-await test('skips corrupt file, merges the good one', async () => {
-  await handleMerge([normal1(), corrupt()]);
-  const done = lastDone();
-  expect(done).toBeTruthy();
-  expect(done.totalPages).toBe(1);          // only normal1's page
-  expect(done.mergedCount).toBe(1);
-  expect(done.fileErrors.length).toBe(1);
-  expect(done.fileErrors[0].code).toBe('CORRUPT');
-});
-
-await test('skips corrupt, keeps ordering of good files', async () => {
-  await handleMerge([corrupt(), normal3(), corrupt()]);
-  const done = lastDone();
-  expect(done.totalPages).toBe(3);          // only normal3's 3 pages
-  expect(done.mergedCount).toBe(1);
-  expect(done.fileErrors.length).toBe(2);
-});
-
-await test('fileErrors contain index and name fields', async () => {
-  const namedCorrupt = Object.assign(corrupt(), { name: 'broken.pdf' });
-  await handleMerge([normal1(), namedCorrupt]);
-  const err = lastDone().fileErrors[0];
-  expect(err.index).toBe(2);                // 1-based position
-  expect(err.code).toBe('CORRUPT');
-  expect(typeof err.message).toBe('string');
-});
-
-await test('all files corrupt → throws (no done message)', async () => {
-  let threw = false;
-  try {
-    await handleMerge([corrupt(), corrupt()]);
-  } catch {
-    threw = true;
-  }
-  expect(threw).toBeTruthy();
-  expect(lastDone()).toBeFalsy();           // no done if all failed
-});
-
-await test('two valid files produce larger output than one', async () => {
-  await handleMerge([normal1()]);
-  const size1 = lastDone().result.byteLength;
-  messages.length = 0;
-  await handleMerge([normal1(), normal1()]);
-  const size2 = lastDone().result.byteLength;
-  expect(size2).toBeGreaterThan(size1);
-});
+// handleMerge's own integration coverage lives in
+// tests/mergeWorker.integration.test.js now — js/worker.js's copy of
+// handleMerge is dead code (processor.js's _runMerge always routes to the
+// dedicated js/mergeWorker.js), so testing it here would just be exercising
+// unreachable code and creating a false sense of "merge is covered" for an
+// implementation nothing actually runs. See mergeWorker.js's own header
+// comment for the fork rationale.
 
 // ══════════════════════════════════════════════════════════════
 // handleCompress — Happy path
@@ -271,238 +185,20 @@ console.log(`\n${'─'.repeat(50)}`);
 console.log(`Integration tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);
 if (failed > 0) process.exit(1);
 
-// ══════════════════════════════════════════════════════════════
-// handleSplit
-// ══════════════════════════════════════════════════════════════
+// handleSplit's own integration coverage (both modes, plus the bookmark/
+// dangling-/Outlines edge cases and the non-ascending pages-order reorder
+// fix) lives in tests/splitWorker.integration.test.js now — js/worker.js's
+// copy of handleSplit is dead code (processor.js's _runSplit always routes
+// to the dedicated js/splitWorker.js, built specifically to fix an O(N
+// pages) memory bug — see that file's header). Testing it here would just
+// exercise unreachable code.
 
-// Re-extract handleSplit from worker module
+// Re-extract the remaining still-live handlers from worker module
 const workerSrc2 = readFileSync(join(__dir, '../js/worker.js'), 'utf8')
   .replace(/importScripts\([^)]+\);?/g, '')
   .replace(/self\.onmessage\s*=[\s\S]*?^};/m, '');
-const workerModule2 = new AsyncFunction(workerSrc2 + '\nreturn { handleSplit, handleWatermark, handlePageNum, handleMeta, handleProtect, handleFill, handleFlatten };');
-const { handleSplit, handleWatermark, handlePageNum, handleMeta, handleProtect, handleFill, handleFlatten } = await workerModule2();
-
-// A real /Outlines (bookmarks) tree, one item per page — pdf-lib has no
-// high-level bookmark API, so this is built the same way worker.js itself
-// manipulates the catalog: low-level PDFDict/PDFArray objects registered
-// directly on the document's context.
-async function _buildBookmarked3Page() {
-  const { PDFDocument, PDFName, PDFString } = PDFLib;
-  const doc = await PDFDocument.load(_normal3.slice(0));
-  const pages = doc.getPages();
-  const itemRefs = pages.map(() => doc.context.nextRef());
-  pages.forEach((page, i) => {
-    const item = doc.context.obj({
-      Title: PDFString.of(`Bookmark ${i + 1}`),
-      Dest:  [page.ref, PDFName.of('Fit')],
-    });
-    if (i < pages.length - 1) item.set(PDFName.of('Next'), itemRefs[i + 1]);
-    if (i > 0) item.set(PDFName.of('Prev'), itemRefs[i - 1]);
-    doc.context.assign(itemRefs[i], item);
-  });
-  const outlineRef = doc.context.register(doc.context.obj({
-    Type:  PDFName.of('Outlines'),
-    First: itemRefs[0],
-    Last:  itemRefs[itemRefs.length - 1],
-    Count: pages.length,
-  }));
-  itemRefs.forEach(ref => {
-    doc.context.lookup(ref).set(PDFName.of('Parent'), outlineRef);
-  });
-  doc.catalog.set(PDFName.of('Outlines'), outlineRef);
-  const bytes = await doc.save();
-  return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
-}
-const _bookmarked3 = await _buildBookmarked3Page();
-const bookmarked3 = () => clone(_bookmarked3);
-
-// Walks a loaded document's /Outlines chain (top-level + nested), returning
-// [{ title, pageRef }] — used to verify _filterOutlinesForSurvivors kept
-// exactly the right bookmarks and that each one's /Dest still resolves to a
-// real page inside THIS document (not a dangling ref to something excluded).
-function _collectOutlineEntries(doc) {
-  const { PDFName, PDFDict, PDFArray, PDFRef, PDFString } = PDFLib;
-  const entries = [];
-  const outlinesObj = doc.catalog.get(PDFName.of('Outlines'));
-  if (!outlinesObj) return entries;
-  const outlinesDict = doc.context.lookup(outlinesObj, PDFDict);
-
-  function walk(ref) {
-    let cur = ref;
-    while (cur) {
-      const item  = doc.context.lookup(cur, PDFDict);
-      const titleObj = item.lookup(PDFName.of('Title'));
-      const title = titleObj instanceof PDFString ? titleObj.decodeText() : titleObj.toString();
-      const destArr = item.lookupMaybe(PDFName.of('Dest'), PDFArray);
-      const first = destArr && destArr.size() > 0 ? destArr.get(0) : null;
-      entries.push({ title, pageRef: first instanceof PDFRef ? first : null });
-      const childFirst = item.get(PDFName.of('First'));
-      if (childFirst) walk(childFirst);
-      cur = item.get(PDFName.of('Next'));
-    }
-  }
-  const first = outlinesDict.get(PDFName.of('First'));
-  if (first) walk(first);
-  return entries;
-}
-
-console.log('\n✂️  handleSplit:');
-
-await test('split single mode: extracts subset of pages', async () => {
-  await handleSplit(normal3(), { pages: [1, 3], mode: 'single' });
-  const done = lastDone();
-  expect(done.mode).toBe('single');
-  expect(done.totalPages).toBe(2);
-  expect(done.result).toBeInstanceOf(ArrayBuffer);
-  expect(String.fromCharCode(...new Uint8Array(done.result).slice(0, 4))).toBe('%PDF');
-});
-
-await test('split separate mode: returns array of buffers', async () => {
-  await handleSplit(normal3(), { pages: [1, 2], mode: 'separate' });
-  const done = lastDone();
-  expect(done.mode).toBe('separate');
-  expect(done.totalPages).toBe(2);
-  expect(Array.isArray(done.result)).toBeTruthy();
-  expect(done.result[0].name).toBe('page_1.pdf');
-  expect(done.result[1].name).toBe('page_2.pdf');
-});
-
-await test('split throws on no valid pages', async () => {
-  let threw = false;
-  try { await handleSplit(normal1(), { pages: [99], mode: 'single' }); }
-  catch { threw = true; }
-  expect(threw).toBeTruthy();
-});
-
-// Real bug found via a competitor-comparison pass on the Split tool: source
-// PDFs with real bookmarks (/Outlines) kept ALL of them after a split/extract
-// removed some pages — several pointing at pages no longer in the visible
-// document, and those bookmark targets still resolved to the REMOVED pages'
-// full original content (removePage() only unlinks from /Pages; pdf-lib's
-// save() doesn't garbage-collect anything still reachable from elsewhere in
-// the catalog, like /Outlines). Confirmed live on pdfree.io with a real
-// 6-page/6-bookmark PDF before fixing (first shipped as "drop all bookmarks
-// whenever any page was removed" — since upgraded, see below, to keep the
-// bookmarks that still point at a surviving page, matching Smallpdf's
-// observed behavior from a later competitor-comparison pass).
-console.log('\n🔖 handleSplit — dangling /Outlines after page removal:');
-
-await test('single mode: extracting a SUBSET of a bookmarked PDF keeps ONLY the surviving pages\' bookmarks', async () => {
-  const { PDFDocument } = PDFLib;
-  await handleSplit(bookmarked3(), { pages: [1, 2], mode: 'single' }); // page 3 removed
-  const done = lastDone();
-  const out  = await PDFDocument.load(done.result);
-  expect(out.getPageCount()).toBe(2);
-
-  const entries = _collectOutlineEntries(out);
-  expect(entries.length).toBe(2);
-  expect(entries.map(e => e.title).sort().join(',')).toBe('Bookmark 1,Bookmark 2');
-  expect(entries.some(e => e.title === 'Bookmark 3')).toBeFalsy();
-
-  // Every surviving bookmark must resolve to one of THIS document's own
-  // pages — not a dangling ref to the excluded page's content (the original
-  // leak this whole fix closes).
-  const pageRefTags = new Set(out.getPages().map(p => p.ref.tag));
-  for (const e of entries) {
-    expect(e.pageRef !== null).toBeTruthy();
-    expect(pageRefTags.has(e.pageRef.tag)).toBeTruthy();
-  }
-});
-
-await test('single mode: non-contiguous keep (drop the MIDDLE page) still resolves the surviving bookmarks correctly', async () => {
-  const { PDFDocument } = PDFLib;
-  await handleSplit(bookmarked3(), { pages: [1, 3], mode: 'single' }); // page 2 removed
-  const done = lastDone();
-  const out  = await PDFDocument.load(done.result);
-  expect(out.getPageCount()).toBe(2);
-
-  const entries = _collectOutlineEntries(out);
-  expect(entries.map(e => e.title).sort().join(',')).toBe('Bookmark 1,Bookmark 3');
-  // "Bookmark 3" now targets the SECOND page of the output (original page 3
-  // shifted down), not the FIRST — proves no renumbering was needed: the
-  // /Dest ref still points at the same page object, which pdf-lib simply
-  // relinked to a new /Pages tree position.
-  const b3 = entries.find(e => e.title === 'Bookmark 3');
-  expect(b3.pageRef.tag).toBe(out.getPages()[1].ref.tag);
-});
-
-await test('separate mode: each per-page split of a bookmarked PDF keeps ONLY that page\'s own bookmark', async () => {
-  const { PDFDocument } = PDFLib;
-  await handleSplit(bookmarked3(), { pages: [1, 2, 3], mode: 'separate' });
-  const done = lastDone();
-  for (let i = 0; i < done.result.length; i++) {
-    const out = await PDFDocument.load(done.result[i].buffer);
-    expect(out.getPageCount()).toBe(1);
-    const entries = _collectOutlineEntries(out);
-    expect(entries.length).toBe(1);
-    expect(entries[0].title).toBe(`Bookmark ${i + 1}`);
-    expect(entries[0].pageRef.tag).toBe(out.getPages()[0].ref.tag);
-  }
-});
-
-await test('single mode: keeping ALL pages of a bookmarked PDF leaves /Outlines untouched (nothing was actually removed)', async () => {
-  const { PDFDocument, PDFName } = PDFLib;
-  await handleSplit(bookmarked3(), { pages: [1, 2, 3], mode: 'single' });
-  const done = lastDone();
-  const out  = await PDFDocument.load(done.result);
-  expect(out.catalog.get(PDFName.of('Outlines')) !== undefined).toBeTruthy();
-});
-
-await test('split page 1 only: single-page PDF is valid', async () => {
-  await handleSplit(normal3(), { pages: [1], mode: 'single' });
-  const done = lastDone();
-  expect(done.totalPages).toBe(1);
-  expect(done.result.byteLength).toBeGreaterThan(100);
-});
-
-// Real bug found while auditing Extract Pages (which reuses this same
-// handleSplit 'single' branch): the "reverse page order" option sends its
-// already-reversed `pages` array straight through, but the extraction logic
-// only ever used that array as an unordered Set to decide what to KEEP —
-// removePage() leaves survivors in their original relative order no matter
-// what sequence they were requested in, so reverse silently did nothing to
-// the actual output. Confirmed with a standalone pdf-lib reproduction before
-// touching worker.js: identical output for `pages:[1,2,3,4,5]` and
-// `pages:[5,4,3,2,1]`. Fixed by reordering the survivors to match the
-// requested sequence whenever it isn't already ascending.
-console.log('\n🔀 handleSplit — single mode respects a non-ascending `pages` order:');
-
-await test('single mode: pages=[3,1,2] (full reorder, nothing removed) outputs in that exact order', async () => {
-  const { PDFDocument } = PDFLib;
-  await handleSplit(bookmarked3(), { pages: [3, 1, 2], mode: 'single' });
-  const done = lastDone();
-  const out  = await PDFDocument.load(done.result);
-  expect(out.getPageCount()).toBe(3);
-
-  const entries = _collectOutlineEntries(out);
-  const titleForRef = tag => entries.find(e => e.pageRef.tag === tag)?.title;
-  const outputOrder = out.getPages().map(p => titleForRef(p.ref.tag));
-  expect(outputOrder.join(',')).toBe('Bookmark 3,Bookmark 1,Bookmark 2');
-});
-
-await test('single mode: pages=[3,1] (partial selection + reverse) outputs page 3 then page 1', async () => {
-  const { PDFDocument } = PDFLib;
-  await handleSplit(bookmarked3(), { pages: [3, 1], mode: 'single' }); // page 2 dropped, 1&3 reversed
-  const done = lastDone();
-  const out  = await PDFDocument.load(done.result);
-  expect(out.getPageCount()).toBe(2);
-
-  const entries = _collectOutlineEntries(out);
-  const titleForRef = tag => entries.find(e => e.pageRef.tag === tag)?.title;
-  const outputOrder = out.getPages().map(p => titleForRef(p.ref.tag));
-  expect(outputOrder.join(',')).toBe('Bookmark 3,Bookmark 1');
-});
-
-await test('single mode: ascending pages=[1,3] (no reverse) is unaffected by the reorder fix', async () => {
-  const { PDFDocument } = PDFLib;
-  await handleSplit(bookmarked3(), { pages: [1, 3], mode: 'single' });
-  const done = lastDone();
-  const out  = await PDFDocument.load(done.result);
-  const entries = _collectOutlineEntries(out);
-  const titleForRef = tag => entries.find(e => e.pageRef.tag === tag)?.title;
-  const outputOrder = out.getPages().map(p => titleForRef(p.ref.tag));
-  expect(outputOrder.join(',')).toBe('Bookmark 1,Bookmark 3');
-});
+const workerModule2 = new AsyncFunction(workerSrc2 + '\nreturn { handleWatermark, handlePageNum, handleMeta, handleProtect, handleFill, handleFlatten };');
+const { handleWatermark, handlePageNum, handleMeta, handleProtect, handleFill, handleFlatten } = await workerModule2();
 
 // ══════════════════════════════════════════════════════════════
 // handleWatermark

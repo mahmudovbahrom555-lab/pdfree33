@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+# ──────────────────────────────────────────────────────────────────
+# ONE-TIME MIGRATION SCRIPT — historical, not part of the production
+# build (python3 scripts/build.py). Not called by package.json, CI
+# (.github/workflows/deploy.yml), or .husky/pre-commit. Already run;
+# kept for historical reference (what/how existing pages were
+# migrated), not meant to be re-run against the current codebase.
+# Flagged by a dead-code audit, 2026-09-23 — see project memory
+# dead_code_audit_2026_09 for the full analysis.
+# ──────────────────────────────────────────────────────────────────
 """
 fix_tool_pages.py — Fix all 60 tool pages (EN + DE/ES/FR/PT):
   1. Remove display:none from toolArea  → tool visible before JS loads

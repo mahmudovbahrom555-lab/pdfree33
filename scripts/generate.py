@@ -1,4 +1,16 @@
 #!/usr/bin/env python3
+# ──────────────────────────────────────────────────────────────────
+# SUPERSEDED — from an earlier, JSON-config-driven page-generation
+# architecture (reads scripts/site-data.json, last modified June —
+# long before this file's current header was written). The current
+# production build is scripts/build.py: Jinja templates + data/content/
+# per language/tool, a completely different system. Not called by
+# package.json, CI, or .husky/pre-commit, and build.py never
+# references this file or site-data.json. Almost certainly safe to
+# remove once confirmed unneeded — kept for now per audit instructions
+# not to delete without confirmation. Flagged by a dead-code audit,
+# 2026-09-23.
+# ──────────────────────────────────────────────────────────────────
 """
 PDFree page generator
 

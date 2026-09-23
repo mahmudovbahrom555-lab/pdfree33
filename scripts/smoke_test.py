@@ -1,4 +1,18 @@
 #!/usr/bin/env python3
+# ──────────────────────────────────────────────────────────────────
+# ORPHANED, BUT STILL WORKING — ran clean, 12/12 checks passed, when
+# verified during the 2026-09-23 dead-code audit (unlike deploy.py in
+# this same directory, which is actually broken). Not called by
+# package.json, CI (.github/workflows/deploy.yml), or .husky/pre-commit
+# today, despite checking real, specific regressions (WebP handling,
+# OCR counter-rotation, SELF_MANAGED_TOOLS guard, unpushed commits).
+# Unclear whether this was ever wired into an automated gate and later
+# dropped, or always run manually — worth a deliberate decision (wire
+# into npm run validate / CI, or consciously leave manual-only) rather
+# than further silent drift. Not the same tool as scripts/smoke_prod.sh
+# (npm run check:prod) — that one verifies production matches the local
+# build post-deploy; this one sanity-checks the local dist/ pre-deploy.
+# ──────────────────────────────────────────────────────────────────
 """
 Быстрый smoke-тест перед деплоем (без браузера, ~1 сек).
 Проверяет: dist/ собран корректно, конфиги не сломаны, форматы присутствуют.

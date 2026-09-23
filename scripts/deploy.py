@@ -1,4 +1,19 @@
 #!/usr/bin/env python3
+# ──────────────────────────────────────────────────────────────────
+# BROKEN, SUPERSEDED — would error out if run today. sw.js's
+# CACHE_VERSION is now the literal placeholder '__CACHE_VERSION__'
+# (substituted by build.py with a content hash at build time, see
+# sw.js's own comment: "auto-set by build.py; never edit manually"),
+# not the 'vNN' string this script's regex expects — bump_cache_version()
+# would exit(1) with "CACHE_VERSION not found". Same problem in
+# bump_worker_version(): processor.js's worker.js reference is now
+# worker.js?v=__WORKER_HASH__, not a plain integer. Confirmed by
+# actually reading both target files, not guessed. build.py's own
+# hash-based versioning has fully replaced what this script did. Not
+# called by package.json, CI, or .husky/pre-commit. Kept for now per
+# audit instructions not to delete without confirmation — this is the
+# strongest deletion candidate found in the 2026-09-23 dead-code audit.
+# ──────────────────────────────────────────────────────────────────
 # SPDX-License-Identifier: AGPL-3.0-only
 # Single command before every deploy — bumps all version numbers atomically.
 #

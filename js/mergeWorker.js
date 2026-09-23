@@ -13,6 +13,14 @@
 //  classic-worker context, same rationale organizeWorker.js's own
 //  copy of _flattenPageTreeResources already documents.
 //
+//  THIS FILE IS THE ONLY LIVE MERGE IMPLEMENTATION. worker.js's own
+//  handleMerge()/case 'merge' (and its private _flattenPageTreeResources)
+//  are dead code — processor.js's _runMerge always routes here via
+//  _ensureMergeWorker(), never to the shared worker. worker.js is
+//  off-limits so that dead copy can't be removed; don't mistake it for a
+//  second implementation or "fix" a bug there — it will never run.
+//  (dead-code audit, 2026-09-23)
+//
 //  Message contract (mirrors js/worker.js's merge handler, so
 //  processor.js's onmessage plumbing needs no shape changes):
 //    in  → { files: ArrayBuffer[], names: string[], removeWatermarks,

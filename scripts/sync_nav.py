@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+# ──────────────────────────────────────────────────────────────────
+# LIKELY SUPERSEDED — build.py now generates nav dynamically per page
+# via _build_nav_items() (scripts/build.py, called from the main
+# render loop), not by regex-editing static HTML. This script's
+# NAV_LINKS-based approach predates that. Not called by package.json,
+# CI, or .husky/pre-commit. Verify against current _build_nav_items()
+# before trusting/running this — it may no longer match how nav
+# actually gets built. Flagged by a dead-code audit, 2026-09-23.
+# ──────────────────────────────────────────────────────────────────
 """
 sync_nav.py — Single source of truth for navigation links.
 

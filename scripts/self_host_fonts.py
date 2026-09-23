@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+# ──────────────────────────────────────────────────────────────────
+# ONE-TIME MIGRATION SCRIPT — historical, not part of the production
+# build (python3 scripts/build.py). Not called by package.json, CI
+# (.github/workflows/deploy.yml), or .husky/pre-commit. Already run;
+# kept for historical reference (what/how existing pages were
+# migrated), not meant to be re-run against the current codebase.
+# Flagged by a dead-code audit, 2026-09-23 — see project memory
+# dead_code_audit_2026_09 for the full analysis.
+# ──────────────────────────────────────────────────────────────────
 # SPDX-License-Identifier: AGPL-3.0-only
 # Self-hosts DM Sans + DM Mono fonts — removes Google Fonts CDN from all HTML pages.
 # Run once from project root: python3 scripts/self_host_fonts.py

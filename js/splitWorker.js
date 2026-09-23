@@ -48,6 +48,14 @@
 //  versions ever change. _flattenPageTreeResources itself is NOT
 //  needed here — confirmed it's only used by handleMerge, never by
 //  handleSplit.
+//
+//  THIS FILE IS THE ONLY LIVE SPLIT/EXTRACT IMPLEMENTATION. worker.js's
+//  own handleSplit()/case 'split' (and its private
+//  _filterOutlinesForSurvivors) are dead code — processor.js's _runSplit
+//  always routes here via _ensureSplitWorker(), never to the shared
+//  worker. worker.js is off-limits so that dead copy can't be removed;
+//  don't mistake it for a second implementation or "fix" a bug there —
+//  it will never run. (dead-code audit, 2026-09-23)
 // ============================================================
 
 importScripts('./vendor/pdf-lib.min.js');
