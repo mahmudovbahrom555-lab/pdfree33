@@ -5390,7 +5390,16 @@ function _handleError(tool, message, errorType = null) {
 
   const resolvedType = errorType ?? 'unknown';
   const errorId = _errorId(tool, resolvedType);
-  trackToolError(tool, resolvedType);
+  // When nothing above could classify the error, the raw engine/library
+  // message is still real signal — send a truncated slice of it instead of
+  // a flat 'unknown' so Analytics Engine can reveal what's actually failing
+  // (found via docx2pdf: 115/116 Tool Errors were 'unknown', hiding the
+  // real failure distribution entirely). Kept OUT of resolvedType itself —
+  // _errorId()/the user-facing toast stay on the stable 'unknown' bucket,
+  // so this doesn't fragment the Telegram-report correlation ID.
+  trackToolError(tool, resolvedType === 'unknown' && message
+    ? `unknown: ${message.slice(0, 60)}`
+    : resolvedType);
   // Mirrors the 'pdfree:success' dispatch below — found missing while
   // adding embed-SDK contract tests: embed/sdk.js's public onError callback
   // and js/embedBridge.js's listener both already existed and expected this
