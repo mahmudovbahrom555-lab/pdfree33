@@ -24,8 +24,8 @@ window.PDFREE_LOCALE = {
   drop_mobile_hint:    'برنامه فایل‌ها را باز کنید و یک PDF انتخاب کنید — نه عکس‌ها یا دوربین',
   not_valid_pdf:       '⚠️ «{name}» یک فایل PDF معتبر نیست',
 
-  merge_bookmarks_title:    'ایجاد نشانک‌ها',
-  merge_bookmarks_subtitle: 'برای هر فایل یک نشانک اضافه کنید تا بتوانید به‌سرعت در PDF ادغام‌شده جابه‌جا شوید.',
+  merge_bookmarks_title:    'ایجاد بوکمارک',
+  merge_bookmarks_subtitle: 'برای هر فایل یک بوکمارک (نشانک) اضافه کنید تا بتوانید به‌سرعت در PDF ادغام‌شده جابه‌جا شوید.',
   merge_blank_pages_title:  'درج صفحات خالی',
   merge_blank_pages_none:   'هیچ‌کدام',
   merge_blank_pages_always: 'همیشه',
