@@ -2385,43 +2385,50 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
 // Runs entirely in main thread (like pdf2jpg): docx lib needs DOM
 // for Blob creation, and pdf.js rendering needs canvas.
 
-async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150, stripMetadata = true } = {}) {
-  const file = filesSnapshot[0];
-  if (!_checkSize(file, 150)) { _abortUI(); return; }
-
-  setProgress(5, 'Loading libraries…');
+/**
+ * Pure PDF -> DOCX-blob builder: pdf.js extraction, docx.js Document/
+ * Packer build, Atlas ERI structural scoring + table-retry — everything
+ * `_runPdf2Word` needs EXCEPT the isProcessing/setFilesLocked/hideCancelBtn/
+ * pdfree:success UI lifecycle. Split out so Quick Edit PDF (js/quickEditUI.js)
+ * can build the same DOCX blob + Atlas score at file-select time, before its
+ * own edit modal ever opens — zero duplicated conversion logic between the
+ * two tools. On any failure, throws (message matches exactly what the
+ * original inline code passed to `_handleError`, including the bare
+ * 'cancelled' sentinel already used sitewide) — `_runPdf2Word` below is the
+ * thin wrapper translating that into the existing UI error handling with
+ * ZERO behavior change from before this split.
+ * @param {File} file
+ * @param {{ mode?: 'text'|'image', dpi?: number, stripMetadata?: boolean,
+ *   onProgress?: (pct:number, label:string) => void, isCancelled?: () => boolean }} [opts]
+ * @returns {Promise<{ blob: Blob, atlasEri: object|null, confidence: object|null,
+ *   effectivePages: number, totalPages: number }>}
+ */
+async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, stripMetadata = true, onProgress, isCancelled } = {}) {
+  onProgress?.(5, 'Loading libraries…');
 
   try {
     await loadDocx();
   } catch {
-    isProcessing = false; setFilesLocked(false); hideCancelBtn();
-    _handleError('pdf2word', 'Word library unavailable — check your internet connection.');
-    return;
+    throw new Error('Word library unavailable — check your internet connection.');
   }
 
   if (!window.pdfjsLib) {
-    isProcessing = false; setFilesLocked(false); hideCancelBtn();
-    _handleError('pdf2word', 'PDF engine not ready — reopen the tool.', 'renderer_not_loaded');
-    return;
+    const err = new Error('PDF engine not ready — reopen the tool.');
+    err.errorType = 'renderer_not_loaded';
+    throw err;
   }
 
-  setProgress(8, 'Loading PDF…');
+  onProgress?.(8, 'Loading PDF…');
 
-  let pdfDoc;
-  try {
-    const rawBuf = file._decryptedBuffer
-      ? file._decryptedBuffer.slice(0)
-      : await preprocessPdfBuffer(await file.arrayBuffer());
-    pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
-      data:              new Uint8Array(rawBuf),
-      useSystemFonts:    false,
-      verbosity:         0,
-      disableJavaScript: true,
-    }).promise;
-  } catch (err) {
-    isProcessing = false; setFilesLocked(false); hideCancelBtn();
-    _handleError('pdf2word', err.message); return;
-  }
+  const rawBuf = file._decryptedBuffer
+    ? file._decryptedBuffer.slice(0)
+    : await preprocessPdfBuffer(await file.arrayBuffer());
+  const pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
+    data:              new Uint8Array(rawBuf),
+    useSystemFonts:    false,
+    verbosity:         0,
+    disableJavaScript: true,
+  }).promise;
 
   // Only read the source PDF's own metadata when the user opted OUT of the
   // default strip behavior (js/pdf2wordUI.js's "Delete original file info"
@@ -2451,27 +2458,22 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150, stripMeta
   let paragraphs;
   let confidence = null;
   let pageData, median, repeatTextSet, repeatPatternSet, cs;   // text mode only — kept for the ERI retry below
-  try {
-    if (mode === 'text') {
-      setProgress(10, 'Extracting text…');
-      ({ pageData, median, repeatTextSet, repeatPatternSet, cs } = await _p2wBuildPageData(pdfDoc, {
-        onProgress:  (pct, label) => setProgress(pct, label),
-        isCancelled: () => !isProcessing,
-      }));
-      ({ paragraphs, cs } = await _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { repeatPatternSet }));
-      confidence = _p2wConfidence(cs, median);
-    } else {
-      setProgress(10, 'Rendering pages…');
-      paragraphs = await _p2wRenderImages(pdfDoc, dpi, effectivePages);
-    }
-  } catch (err) {
-    isProcessing = false; setFilesLocked(false); hideCancelBtn();
-    _handleError('pdf2word', err.message); return;
+  if (mode === 'text') {
+    onProgress?.(10, 'Extracting text…');
+    ({ pageData, median, repeatTextSet, repeatPatternSet, cs } = await _p2wBuildPageData(pdfDoc, {
+      onProgress:  (pct, label) => onProgress?.(pct, label),
+      isCancelled,
+    }));
+    ({ paragraphs, cs } = await _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { repeatPatternSet }));
+    confidence = _p2wConfidence(cs, median);
+  } else {
+    onProgress?.(10, 'Rendering pages…');
+    paragraphs = await _p2wRenderImages(pdfDoc, dpi, effectivePages);
   }
 
-  if (!isProcessing) return;
+  if (isCancelled?.()) throw new Error('cancelled');
 
-  setProgress(92, 'Building Word document…');
+  onProgress?.(92, 'Building Word document…');
 
   const { Document, Packer, AlignmentType, LevelFormat } = window.docx;
   // srcMeta is only ever set when the user unchecked "Delete original file
@@ -2516,7 +2518,7 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150, stripMeta
   // here never blocks a conversion that already succeeded — `atlasEri`
   // simply stays null and the UI shows nothing for it.
   let atlasEri = null;
-  if (mode === 'text' && isProcessing) {
+  if (mode === 'text' && !isCancelled?.()) {
     try {
       atlasEri = await evaluateStructural(await blob.arrayBuffer());
 
@@ -2527,7 +2529,7 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150, stripMeta
       // also keeping the winning variant's OWN atlasEri for display instead
       // of silently keeping the pre-retry score.
       if (cs.totalTables > 0 && atlasEri.components.tables < _ERI_TABLE_RETRY_THRESHOLD) {
-        setProgress(95, 'Verifying table structure…');
+        onProgress?.(95, 'Verifying table structure…');
         const retry = await _p2wBuildParagraphs(
           pdfDoc, pageData, median, repeatTextSet, cs, { useTables: false, repeatPatternSet }
         );
@@ -2545,11 +2547,40 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150, stripMeta
     }
   }
 
+  return { blob, atlasEri, confidence, effectivePages, totalPages: pdfDoc.numPages };
+}
+
+async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150, stripMetadata = true } = {}) {
+  const file = filesSnapshot[0];
+  if (!_checkSize(file, 150)) { _abortUI(); return; }
+
+  let result;
+  try {
+    result = await _buildPdf2WordDocxBlob(file, {
+      mode, dpi, stripMetadata,
+      onProgress:  (pct, label) => setProgress(pct, label),
+      isCancelled: () => !isProcessing,
+    });
+  } catch (err) {
+    // 'cancelled' matches the original code's silent `if (!isProcessing) return;`
+    // bail — isProcessing is already false by the time this throws (that's the
+    // isCancelled() contract above), and the cancel-button handler already did
+    // its own setFilesLocked/hideCancelBtn cleanup, so this path deliberately
+    // does NOT repeat those calls — same zero-extra-side-effect shape as before.
+    if (err.message === 'cancelled') return;
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('pdf2word', err.message, err.errorType); return;
+  }
+
+  if (!isProcessing) return;
+
+  const { blob, atlasEri, confidence, effectivePages, totalPages } = result;
+
   const baseName = file.name.replace(/\.pdf$/i, '');
   const filename = `${baseName}.docx`;
   const modeTag  = mode === 'text' ? 'editable text' : 'page images';
-  const pageNote = effectivePages < pdfDoc.numPages
-    ? `${effectivePages} of ${pdfDoc.numPages} pages`
+  const pageNote = effectivePages < totalPages
+    ? `${effectivePages} of ${totalPages} pages`
     : `${effectivePages} page${effectivePages !== 1 ? 's' : ''}`;
   const desc = `${pageNote} · ${modeTag} · ${fmtSize(blob.size)}`;
 

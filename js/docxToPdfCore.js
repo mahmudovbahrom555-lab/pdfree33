@@ -187,39 +187,52 @@ async function _rejectIfOleCfbf(file) {
 }
 
 /**
- * Renders a .docx File into DOM (off-screen, in this page) and walks it
- * into a pdfmake document-definition `content` array + header/footer text.
+ * Renders a .docx File into a live DOM inside `container` (docx-preview).
+ * Caller owns `container`'s creation/position/visibility/removal — this
+ * function only populates it. Split out of what used to be one monolithic
+ * "render+walk" function (see git history) specifically so an interactive
+ * caller (Quick Edit PDF) can render into an ON-SCREEN container, let the
+ * user edit the live DOM, and only THEN call walkDomToPdfContent() below —
+ * docxToPdf()'s own off-screen container is just the non-interactive case
+ * of the same contract.
  * @param {File|Blob} file
+ * @param {HTMLElement} container
  * @param {{ isCancelled?: () => boolean }} [opts]
  */
-async function _docxToPdfmakeContent(file, { isCancelled } = {}) {
+export async function renderDocxToDom(file, container, { isCancelled } = {}) {
   await _rejectIfOleCfbf(file);
   await loadDocxPreview();
 
-  // Off-screen, not display:none — display:none elements don't get real
-  // layout at all, which would make every getBoundingClientRect() used
-  // for column-balancing below return zero height.
-  const container = document.createElement('div');
-  container.style.cssText = 'position:absolute; top:-99999px; left:-99999px; width:800px;';
-  document.body.appendChild(container);
-
   try {
-    try {
-      await window.docx.renderAsync(file, container, null, { inWrapper: true });
-    } catch {
-      // Any renderAsync failure — corrupt/truncated zip, a missing
-      // required part (e.g. word/document.xml absent from an otherwise
-      // valid zip), or any other malformed-OOXML shape docx-preview's own
-      // zip/XML walk doesn't expect — surfaces here as whatever raw
-      // internal string that specific corruption happened to produce (a
-      // real one found via fuzzing: "Cannot read properties of undefined
-      // (reading 'body')", a bare property-access TypeError meaning
-      // nothing to an actual user). Normalize ALL of these to one honest,
-      // specific sentinel instead of leaking internals.
-      throw new Error('DOCX_PARSE_FAILED');
-    }
-    if (isCancelled?.()) throw new Error('cancelled');
+    await window.docx.renderAsync(file, container, null, { inWrapper: true });
+  } catch {
+    // Any renderAsync failure — corrupt/truncated zip, a missing
+    // required part (e.g. word/document.xml absent from an otherwise
+    // valid zip), or any other malformed-OOXML shape docx-preview's own
+    // zip/XML walk doesn't expect — surfaces here as whatever raw
+    // internal string that specific corruption happened to produce (a
+    // real one found via fuzzing: "Cannot read properties of undefined
+    // (reading 'body')", a bare property-access TypeError meaning
+    // nothing to an actual user). Normalize ALL of these to one honest,
+    // specific sentinel instead of leaking internals.
+    throw new Error('DOCX_PARSE_FAILED');
+  }
+  if (isCancelled?.()) throw new Error('cancelled');
+}
 
+/**
+ * Walks an already-rendered docx-preview DOM (see renderDocxToDom above)
+ * into a pdfmake document-definition `content` array + header/footer text.
+ * Does NOT touch `container`'s lifecycle (create/remove) — same
+ * caller-owns-the-container contract as renderDocxToDom. Split out
+ * specifically so Quick Edit PDF can run this against a user-EDITED DOM,
+ * not just a pristine renderAsync() output — every selector below is
+ * exactly what an editing UI must not disturb (see js/quickEditUI.js).
+ * @param {HTMLElement} container
+ * @param {{ isCancelled?: () => boolean }} [opts]
+ */
+export async function walkDomToPdfContent(container, { isCancelled } = {}) {
+  {
     const listCounters = {};
     const wrapperEl = container.querySelector('.docx-wrapper');
     const counterResetStr = wrapperEl ? getComputedStyle(wrapperEl).counterReset : '';
@@ -445,23 +458,18 @@ async function _docxToPdfmakeContent(file, { isCancelled } = {}) {
     }
 
     return { content: out, headerText, footerText };
-  } finally {
-    container.remove();
   }
 }
 
 /**
- * Converts a .docx File into a PDF Blob, entirely client-side.
- * @param {File} file
+ * Converts pdfmake `content` (see walkDomToPdfContent above) into a final
+ * PDF Blob. Split out so Quick Edit PDF can call this same tail-end step
+ * after its own edited-DOM walk, without duplicating the pdfmake wiring.
+ * @param {{ content: object[], headerText: string|null, footerText: string|null }} parsed
  * @param {{ isCancelled?: () => boolean, onProgress?: (pct:number) => void }} [opts]
  * @returns {Promise<Blob>}
  */
-export async function docxToPdf(file, { isCancelled, onProgress } = {}) {
-  onProgress?.(10);
-  const { content, headerText, footerText } = await _docxToPdfmakeContent(file, { isCancelled });
-  if (isCancelled?.()) throw new Error('cancelled');
-  onProgress?.(60);
-
+export async function pdfContentToBlob({ content, headerText, footerText }, { isCancelled, onProgress } = {}) {
   await loadPdfMake();
   if (isCancelled?.()) throw new Error('cancelled');
   onProgress?.(70);
@@ -485,4 +493,37 @@ export async function docxToPdf(file, { isCancelled, onProgress } = {}) {
   const blob = await window.pdfMake.createPdf(docDefinition).getBlob();
   onProgress?.(95);
   return blob;
+}
+
+/**
+ * Converts a .docx File into a PDF Blob, entirely client-side. Thin
+ * composition of renderDocxToDom + walkDomToPdfContent + pdfContentToBlob
+ * (all above) using an off-screen, non-interactive container — the
+ * non-interactive special case of the same pipeline Quick Edit PDF drives
+ * interactively. Owns the container's full lifecycle (create + remove),
+ * unlike the three functions above which only operate on a container the
+ * caller supplies.
+ * @param {File} file
+ * @param {{ isCancelled?: () => boolean, onProgress?: (pct:number) => void }} [opts]
+ * @returns {Promise<Blob>}
+ */
+export async function docxToPdf(file, { isCancelled, onProgress } = {}) {
+  onProgress?.(10);
+
+  // Off-screen, not display:none — display:none elements don't get real
+  // layout at all, which would make every getBoundingClientRect() used
+  // for column-balancing in walkDomToPdfContent() return zero height.
+  const container = document.createElement('div');
+  container.style.cssText = 'position:absolute; top:-99999px; left:-99999px; width:800px;';
+  document.body.appendChild(container);
+
+  try {
+    await renderDocxToDom(file, container, { isCancelled });
+    const parsed = await walkDomToPdfContent(container, { isCancelled });
+    if (isCancelled?.()) throw new Error('cancelled');
+    onProgress?.(60);
+    return await pdfContentToBlob(parsed, { isCancelled, onProgress });
+  } finally {
+    container.remove();
+  }
 }
