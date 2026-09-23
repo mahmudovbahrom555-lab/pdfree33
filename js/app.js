@@ -41,7 +41,7 @@ import { trackToolStart, trackToolSuccess,
          trackSearchQuery, trackSearchMiss,
          trackSearchSelect,
          trackHeroFileSelect, trackChipClick,
-         trackShareTool }                           from './analytics.js';
+         trackShareTool, trackBehaviorCrossSell }    from './analytics.js';
 import { buildIndex, search, trackMiss }           from './search.js';
 import { loadPdfLib }                              from './lazyLibs.js';
 import { checkReturnVisit, recordDownload,
@@ -433,15 +433,15 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
   // thumbnail render / OCR's own analysis) picks it up with zero extra
   // clicks — no new plumbing needed here beyond the markup + i18n text.
   const NEXT_STEP = {
-    merge:     { href: '/extract-pdf/', icon: '📑', titleKey: 'merge_next_extract_title',     subKey: 'merge_next_extract_sub' },
-    cleanScan: { href: '/ocr-pdf/',     icon: '🔍', titleKey: 'cleanscan_next_ocr_title',      subKey: 'cleanscan_next_ocr_sub' },
+    merge:     { href: '/extract-pdf/', icon: '📑', titleKey: 'merge_next_extract_title',     subKey: 'merge_next_extract_sub',   toTool: 'extract' },
+    cleanScan: { href: '/ocr-pdf/',     icon: '🔍', titleKey: 'cleanscan_next_ocr_title',      subKey: 'cleanscan_next_ocr_sub',   toTool: 'ocr' },
   };
   const nextStepEl = id('nextStepRow');
   if (nextStepEl) {
     const step = NEXT_STEP[tool];
     if (step) {
       nextStepEl.innerHTML = `
-        <a href="${step.href}" class="next-step-row" data-handoff>
+        <a href="${step.href}" class="next-step-row" data-handoff data-cross-sell-to="${step.toTool}">
           <div class="next-step-row__icon" aria-hidden="true">${step.icon}</div>
           <div class="next-step-row__body">
             <p class="next-step-row__title">${t(step.titleKey)}</p>
@@ -762,6 +762,7 @@ function initEvents() {
     // Always torn down by the navigation below, success or failure alike.
     link.classList.add('handoff-link--busy');
     link.setAttribute('aria-busy', 'true');
+    if (link.dataset.crossSellTo) trackBehaviorCrossSell(currentTool, link.dataset.crossSellTo);
     saveHandoff(result.blob, result.filename, currentTool, link.href)
       .catch(() => {})               // IDB failure → still navigate
       .then(() => { location.href = link.href; });

@@ -205,6 +205,16 @@ export function trackBehaviorReturnVisit(gapMin, tool) {
 }
 
 /**
+ * User clicked a "Continue in X" cross-sell link (Merge → Extract,
+ * Clean Scan → OCR) — the sole signal for whether this feature (js/app.js's
+ * NEXT_STEP handoff) is actually used, since the underlying data-handoff
+ * mechanism itself fires no event of its own.
+ */
+export function trackBehaviorCrossSell(fromTool, toTool) {
+  _track('Cross Sell Click', { from: fromTool, to: toTool });
+}
+
+/**
  * User clicked "Download again" within seconds of the automatic download
  * firing → the automatic one very likely failed silently (blocked by the
  * browser, a save dialog was dismissed, iOS Safari opened the PDF instead
