@@ -1187,6 +1187,22 @@ window.PDFREE_LOCALE = {
   formfields_zoom_in:            'Увеличить',
   formfields_zoom_reset:         'Сбросить масштаб',
   formfields_zoom_level:         'Уровень масштаба',
+
+  // ── quickEditUI.js ───────────────────────────────────────────────
+  quickedit_modal_hint:     'Нажмите на любую строку текста, чтобы отредактировать её.',
+  quickedit_save_btn:       'Сохранить изменённый PDF',
+  quickedit_continue_editing: 'Продолжить редактирование',
+  quickedit_close_aria:     'Закрыть',
+  quickedit_structural_check: 'Структурная проверка',
+  quickedit_verdict_ready:  'Готово',
+  quickedit_verdict_minor:  'Незначительные проблемы',
+  quickedit_verdict_notable: 'Заметные проблемы',
+  quickedit_verdict_heavy:  'Серьёзные проблемы',
+  quickedit_blocked_body:   'Структура этого PDF конвертировалась недостаточно чисто, чтобы ограниченный редактор Quick Edit мог безопасно её исправить. Попробуйте ',
+  quickedit_blocked_link:   'PDF в Word',
+  quickedit_blocked_suffix: ' вместо этого — вы получите полностью свободно редактируемый документ.',
+  quickedit_open_editor_first: 'Сначала откройте редактор.',
+  quickedit_analysing:      'Анализ PDF…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Не удалось загрузить рендерер PDF. Проверьте подключение к интернету.',
   draw_read_file_failed:       'Не удалось прочитать файл.',

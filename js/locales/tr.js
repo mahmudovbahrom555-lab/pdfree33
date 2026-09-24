@@ -1186,6 +1186,22 @@ window.PDFREE_LOCALE = {
   formfields_zoom_in:            'Yakınlaştır',
   formfields_zoom_reset:         'Yakınlaştırmayı sıfırla',
   formfields_zoom_level:         'Yakınlaştırma düzeyi',
+
+  // ── quickEditUI.js ───────────────────────────────────────────────
+  quickedit_modal_hint:     'Düzenlemek için herhangi bir metin satırına tıklayın.',
+  quickedit_save_btn:       'Düzenlenmiş PDF\'yi Kaydet',
+  quickedit_continue_editing: 'Düzenlemeye devam et',
+  quickedit_close_aria:     'Kapat',
+  quickedit_structural_check: 'Yapısal kontrol',
+  quickedit_verdict_ready:  'Hazır',
+  quickedit_verdict_minor:  'Küçük sorunlar',
+  quickedit_verdict_notable: 'Belirgin sorunlar',
+  quickedit_verdict_heavy:  'Ciddi sorunlar',
+  quickedit_blocked_body:   'Bu PDF\'nin yapısı, Quick Edit\'in sınırlı düzenleyicisinin güvenle düzeltebileceği kadar temiz dönüştürülemedi. Bunun yerine ',
+  quickedit_blocked_link:   'PDF\'den Word\'e',
+  quickedit_blocked_suffix: ' deneyin — tamamen serbestçe düzenlenebilir bir belge elde edersiniz.',
+  quickedit_open_editor_first: 'Önce düzenleyiciyi açın.',
+  quickedit_analysing:      'PDF analiz ediliyor…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF işleyicisi yüklenemedi. İnternet bağlantınızı kontrol edin.',
   draw_read_file_failed:       'Dosya okunamadı.',

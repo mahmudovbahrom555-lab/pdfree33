@@ -1189,6 +1189,22 @@ window.PDFREE_LOCALE = {
   formfields_zoom_in:            'Vergrößern',
   formfields_zoom_reset:         'Zoom zurücksetzen',
   formfields_zoom_level:         'Zoomstufe',
+
+  // ── quickEditUI.js ───────────────────────────────────────────────
+  quickedit_modal_hint:     'Klicke auf eine beliebige Textzeile, um sie zu bearbeiten.',
+  quickedit_save_btn:       'Bearbeitetes PDF speichern',
+  quickedit_continue_editing: 'Weiter bearbeiten',
+  quickedit_close_aria:     'Schließen',
+  quickedit_structural_check: 'Strukturprüfung',
+  quickedit_verdict_ready:  'Bereit',
+  quickedit_verdict_minor:  'Kleinere Probleme',
+  quickedit_verdict_notable: 'Deutliche Probleme',
+  quickedit_verdict_heavy:  'Schwerwiegende Probleme',
+  quickedit_blocked_body:   'Die Struktur dieser PDF-Datei konnte nicht sauber genug konvertiert werden, damit der eingeschränkte Editor von Quick Edit sie sicher reparieren kann. Nutze stattdessen ',
+  quickedit_blocked_link:   'PDF zu Word',
+  quickedit_blocked_suffix: ' — das ergibt ein vollständig frei bearbeitbares Dokument.',
+  quickedit_open_editor_first: 'Öffne zuerst den Editor.',
+  quickedit_analysing:      'PDF wird analysiert…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF-Renderer konnte nicht geladen werden. Überprüfe deine Internetverbindung.',
   draw_read_file_failed:       'Datei konnte nicht gelesen werden.',

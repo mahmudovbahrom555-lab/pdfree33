@@ -1187,6 +1187,22 @@ window.PDFREE_LOCALE = {
   formfields_zoom_in:            'Phóng to',
   formfields_zoom_reset:         'Đặt lại thu phóng',
   formfields_zoom_level:         'Mức thu phóng',
+
+  // ── quickEditUI.js ───────────────────────────────────────────────
+  quickedit_modal_hint:     'Nhấp vào bất kỳ dòng văn bản nào để chỉnh sửa.',
+  quickedit_save_btn:       'Lưu PDF đã chỉnh sửa',
+  quickedit_continue_editing: 'Tiếp tục chỉnh sửa',
+  quickedit_close_aria:     'Đóng',
+  quickedit_structural_check: 'Kiểm tra cấu trúc',
+  quickedit_verdict_ready:  'Sẵn sàng',
+  quickedit_verdict_minor:  'Vấn đề nhỏ',
+  quickedit_verdict_notable: 'Vấn đề đáng chú ý',
+  quickedit_verdict_heavy:  'Vấn đề nghiêm trọng',
+  quickedit_blocked_body:   'Cấu trúc của PDF này không được chuyển đổi đủ sạch để trình chỉnh sửa giới hạn của Quick Edit có thể khắc phục an toàn. Hãy thử ',
+  quickedit_blocked_link:   'PDF sang Word',
+  quickedit_blocked_suffix: ' thay thế — bạn sẽ nhận được một tài liệu đầy đủ, chỉnh sửa tự do.',
+  quickedit_open_editor_first: 'Hãy mở trình chỉnh sửa trước.',
+  quickedit_analysing:      'Đang phân tích PDF…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Không thể tải trình kết xuất PDF. Kiểm tra kết nối internet của bạn.',
   draw_read_file_failed:       'Không thể đọc tệp.',

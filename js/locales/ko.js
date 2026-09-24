@@ -1188,6 +1188,22 @@ window.PDFREE_LOCALE = {
   formfields_zoom_in:            '확대',
   formfields_zoom_reset:         '확대/축소 초기화',
   formfields_zoom_level:         '확대/축소 수준',
+
+  // ── quickEditUI.js ───────────────────────────────────────────────
+  quickedit_modal_hint:     '텍스트 줄을 클릭하면 편집할 수 있습니다.',
+  quickedit_save_btn:       '편집한 PDF 저장',
+  quickedit_continue_editing: '계속 편집',
+  quickedit_close_aria:     '닫기',
+  quickedit_structural_check: '구조 검사',
+  quickedit_verdict_ready:  '준비 완료',
+  quickedit_verdict_minor:  '경미한 문제',
+  quickedit_verdict_notable: '눈에 띄는 문제',
+  quickedit_verdict_heavy:  '심각한 문제',
+  quickedit_blocked_body:   '이 PDF의 구조가 Quick Edit의 제한된 편집기로 안전하게 수정할 만큼 깔끔하게 변환되지 않았습니다. 대신 ',
+  quickedit_blocked_link:   'PDF를 Word로',
+  quickedit_blocked_suffix: '을(를) 사용해 보세요 — 완전히 자유롭게 편집 가능한 문서를 얻을 수 있습니다.',
+  quickedit_open_editor_first: '먼저 편집기를 여세요.',
+  quickedit_analysing:      'PDF 분석 중…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF 렌더러를 불러오지 못했습니다. 인터넷 연결을 확인하세요.',
   draw_read_file_failed:       '파일을 읽을 수 없습니다.',

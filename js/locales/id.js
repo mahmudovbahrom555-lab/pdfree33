@@ -1187,6 +1187,22 @@ window.PDFREE_LOCALE = {
   formfields_zoom_in:            'Perbesar',
   formfields_zoom_reset:         'Atur ulang zoom',
   formfields_zoom_level:         'Tingkat zoom',
+
+  // ── quickEditUI.js ───────────────────────────────────────────────
+  quickedit_modal_hint:     'Klik baris teks mana pun untuk mengeditnya.',
+  quickedit_save_btn:       'Simpan PDF yang Diedit',
+  quickedit_continue_editing: 'Lanjutkan mengedit',
+  quickedit_close_aria:     'Tutup',
+  quickedit_structural_check: 'Pemeriksaan struktural',
+  quickedit_verdict_ready:  'Siap',
+  quickedit_verdict_minor:  'Masalah kecil',
+  quickedit_verdict_notable: 'Masalah signifikan',
+  quickedit_verdict_heavy:  'Masalah berat',
+  quickedit_blocked_body:   'Struktur PDF ini tidak dikonversi dengan cukup bersih agar editor terbatas Quick Edit dapat memperbaikinya dengan aman. Coba ',
+  quickedit_blocked_link:   'PDF ke Word',
+  quickedit_blocked_suffix: ' sebagai gantinya — Anda akan mendapatkan dokumen lengkap yang dapat diedit bebas.',
+  quickedit_open_editor_first: 'Buka editor terlebih dahulu.',
+  quickedit_analysing:      'Menganalisis PDF…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Gagal memuat perender PDF. Periksa koneksi internet Anda.',
   draw_read_file_failed:       'Tidak dapat membaca file.',

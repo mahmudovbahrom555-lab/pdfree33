@@ -1186,6 +1186,22 @@ window.PDFREE_LOCALE = {
   formfields_zoom_in:            'Inzoomen',
   formfields_zoom_reset:         'Zoom herstellen',
   formfields_zoom_level:         'Zoomniveau',
+
+  // ── quickEditUI.js ───────────────────────────────────────────────
+  quickedit_modal_hint:     'Klik op een willekeurige tekstregel om deze te bewerken.',
+  quickedit_save_btn:       'Bewerkte PDF opslaan',
+  quickedit_continue_editing: 'Verder bewerken',
+  quickedit_close_aria:     'Sluiten',
+  quickedit_structural_check: 'Structuurcontrole',
+  quickedit_verdict_ready:  'Klaar',
+  quickedit_verdict_minor:  'Kleine problemen',
+  quickedit_verdict_notable: 'Merkbare problemen',
+  quickedit_verdict_heavy:  'Ernstige problemen',
+  quickedit_blocked_body:   'De structuur van deze PDF is niet schoon genoeg geconverteerd om veilig te kunnen worden hersteld door de beperkte editor van Quick Edit. Probeer in plaats daarvan ',
+  quickedit_blocked_link:   'PDF naar Word',
+  quickedit_blocked_suffix: ' — dat levert een volledig vrij bewerkbaar document op.',
+  quickedit_open_editor_first: 'Open eerst de editor.',
+  quickedit_analysing:      'PDF wordt geanalyseerd…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Laden van PDF-renderer mislukt. Controleer je internetverbinding.',
   draw_read_file_failed:       'Kan het bestand niet lezen.',

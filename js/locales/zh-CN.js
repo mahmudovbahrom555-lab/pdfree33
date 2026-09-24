@@ -1235,6 +1235,22 @@ window.PDFREE_LOCALE = {
   formfields_zoom_in:            '放大',
   formfields_zoom_reset:         '重置缩放',
   formfields_zoom_level:         '缩放比例',
+
+  // ── quickEditUI.js ───────────────────────────────────────────────
+  quickedit_modal_hint:     '点击任意一行文字即可编辑。',
+  quickedit_save_btn:       '保存编辑后的PDF',
+  quickedit_continue_editing: '继续编辑',
+  quickedit_close_aria:     '关闭',
+  quickedit_structural_check: '结构检查',
+  quickedit_verdict_ready:  '可以编辑',
+  quickedit_verdict_minor:  '轻微问题',
+  quickedit_verdict_notable: '明显问题',
+  quickedit_verdict_heavy:  '严重问题',
+  quickedit_blocked_body:   '此PDF的结构转换得不够干净，Quick Edit的受限编辑器无法安全修复。请改用',
+  quickedit_blocked_link:   'PDF转Word',
+  quickedit_blocked_suffix: '——可获得完整、可自由编辑的文档。',
+  quickedit_open_editor_first: '请先打开编辑器。',
+  quickedit_analysing:      '正在分析PDF…',
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'PDF 渲染器加载失败。请检查您的网络连接。',
   draw_read_file_failed:       '无法读取此文件。',

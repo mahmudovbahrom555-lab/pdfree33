@@ -1188,6 +1188,22 @@ window.PDFREE_LOCALE = {
   formfields_zoom_in:            'Zoom avant',
   formfields_zoom_reset:         'Réinitialiser le zoom',
   formfields_zoom_level:         'Niveau de zoom',
+
+  // ── quickEditUI.js ───────────────────────────────────────────────
+  quickedit_modal_hint:     'Cliquez sur n\'importe quelle ligne de texte pour la modifier.',
+  quickedit_save_btn:       'Enregistrer le PDF modifié',
+  quickedit_continue_editing: 'Continuer la modification',
+  quickedit_close_aria:     'Fermer',
+  quickedit_structural_check: 'Vérification structurelle',
+  quickedit_verdict_ready:  'Prêt',
+  quickedit_verdict_minor:  'Problèmes mineurs',
+  quickedit_verdict_notable: 'Problèmes notables',
+  quickedit_verdict_heavy:  'Problèmes importants',
+  quickedit_blocked_body:   'La structure de ce PDF n\'a pas été convertie assez proprement pour que l\'éditeur limité de Quick Edit puisse la corriger en toute sécurité. Essayez ',
+  quickedit_blocked_link:   'PDF vers Word',
+  quickedit_blocked_suffix: ' à la place — vous obtiendrez un document complet et librement modifiable.',
+  quickedit_open_editor_first: 'Ouvrez d\'abord l\'éditeur.',
+  quickedit_analysing:      'Analyse du PDF…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Échec du chargement du moteur de rendu PDF. Vérifiez votre connexion internet.',
   draw_read_file_failed:       'Impossible de lire le fichier.',

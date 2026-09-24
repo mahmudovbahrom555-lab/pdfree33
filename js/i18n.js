@@ -1214,6 +1214,22 @@ export const EN = {
   formfields_zoom_reset:         'Reset zoom',
   formfields_zoom_level:         'Zoom level',
 
+  // ── quickEditUI.js ───────────────────────────────────────────────
+  quickedit_modal_hint:          'Click any line of text to edit it.',
+  quickedit_save_btn:            'Save Edited PDF',
+  quickedit_continue_editing:    'Continue editing',
+  quickedit_close_aria:          'Close',
+  quickedit_structural_check:    'Structural check',
+  quickedit_verdict_ready:       'Ready',
+  quickedit_verdict_minor:       'Minor issues',
+  quickedit_verdict_notable:     'Notable issues',
+  quickedit_verdict_heavy:       'Heavy issues',
+  quickedit_blocked_body:        "This PDF's structure didn't convert cleanly enough for Quick Edit's constrained editor to safely fix. Try ",
+  quickedit_blocked_link:        'PDF to Word',
+  quickedit_blocked_suffix:      ' instead — it gives you a full, freely-editable document.',
+  quickedit_open_editor_first:   'Open the editor first.',
+  quickedit_analysing:           'Analysing PDF…',
+
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'Failed to load PDF renderer. Check your internet connection.',
   draw_read_file_failed:       'Could not read the file.',

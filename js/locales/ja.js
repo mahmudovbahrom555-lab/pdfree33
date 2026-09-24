@@ -1189,6 +1189,22 @@ window.PDFREE_LOCALE = {
   formfields_zoom_in:            '拡大',
   formfields_zoom_reset:         'ズームをリセット',
   formfields_zoom_level:         'ズーム倍率',
+
+  // ── quickEditUI.js ───────────────────────────────────────────────
+  quickedit_modal_hint:     'テキストの行をクリックすると編集できます。',
+  quickedit_save_btn:       '編集したPDFを保存',
+  quickedit_continue_editing: '編集を続ける',
+  quickedit_close_aria:     '閉じる',
+  quickedit_structural_check: '構造チェック',
+  quickedit_verdict_ready:  '準備完了',
+  quickedit_verdict_minor:  '軽微な問題',
+  quickedit_verdict_notable: '顕著な問題',
+  quickedit_verdict_heavy:  '重大な問題',
+  quickedit_blocked_body:   'このPDFの構造はQuick Editの限定エディタで安全に修正できるほどきれいに変換されませんでした。代わりに',
+  quickedit_blocked_link:   'PDFからWordへ',
+  quickedit_blocked_suffix: 'をお試しください — 完全に自由編集できるドキュメントが得られます。',
+  quickedit_open_editor_first: '先にエディタを開いてください。',
+  quickedit_analysing:      'PDFを解析中…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDFレンダラーの読み込みに失敗しました。インターネット接続を確認してください。',
   draw_read_file_failed:       'ファイルを読み込めませんでした。',

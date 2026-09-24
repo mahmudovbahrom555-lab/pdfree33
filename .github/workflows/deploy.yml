@@ -226,6 +226,16 @@ jobs:
         # own header comment.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:docx2pdf
 
+      - name: E2E — Quick Edit PDF round trip (PDF -> DOCX -> edit -> PDF)
+        # Real-browser regression gate for the whole Quick Edit PDF feature:
+        # the Atlas ERI gate correctly blocks a text-extraction-failure
+        # document, and — the tool's core promise — an edit made to a real
+        # rendered docx-preview span survives the full round trip, verified
+        # two independent ways (raw pdf.js re-extraction, and this site's
+        # own real pdf2word tool as a second oracle). See
+        # tests/e2e/quickEdit.e2e.mjs's own header comment.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:quickedit
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do

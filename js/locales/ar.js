@@ -1237,6 +1237,22 @@ window.PDFREE_LOCALE = {
   formfields_zoom_in:            'تكبير',
   formfields_zoom_reset:         'إعادة تعيين التكبير',
   formfields_zoom_level:         'مستوى التكبير',
+
+  // ── quickEditUI.js ───────────────────────────────────────────────
+  quickedit_modal_hint:     'انقر على أي سطر نصي لتحريره.',
+  quickedit_save_btn:       'حفظ PDF المعدّل',
+  quickedit_continue_editing: 'متابعة التحرير',
+  quickedit_close_aria:     'إغلاق',
+  quickedit_structural_check: 'فحص البنية',
+  quickedit_verdict_ready:  'جاهز',
+  quickedit_verdict_minor:  'مشكلات طفيفة',
+  quickedit_verdict_notable: 'مشكلات ملحوظة',
+  quickedit_verdict_heavy:  'مشكلات كبيرة',
+  quickedit_blocked_body:   'لم يتم تحويل بنية ملف PDF هذا بدقة كافية ليتمكن محرر Quick Edit المحدود من إصلاحها بأمان. جرّب ',
+  quickedit_blocked_link:   'PDF إلى Word',
+  quickedit_blocked_suffix: ' بدلاً من ذلك — للحصول على مستند كامل قابل للتحرير بحرية.',
+  quickedit_open_editor_first: 'افتح المحرر أولاً.',
+  quickedit_analysing:      'جارٍ تحليل PDF…',
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'فشل تحميل عارض PDF. تحقق من اتصالك بالإنترنت.',
   draw_read_file_failed:       'تعذّرت قراءة الملف.',

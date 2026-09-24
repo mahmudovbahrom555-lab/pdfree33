@@ -30,9 +30,7 @@ import { setButtonDisabled }            from './ui.js';
 import { loadPdfJs }                    from './pdf2jpgUI.js';
 import { renderDocxToDom }              from './docxToPdfCore.js';
 import { _buildPdf2WordDocxBlob }       from './processor.js';
-// t()/showToast() land in Stage 5 (i18n + Atlas-gate copy) — no in-modal
-// user-facing strings are localized yet, this stage is functional
-// scaffolding only.
+import { t }                            from './i18n.js';
 
 // Focus-trap selector — same standard set formFieldsUI.js uses.
 const FOCUSABLE_SEL = 'a[href], button:not([disabled]), input:not([disabled]), ' +
@@ -90,10 +88,10 @@ export function hideQuickEditOptions() {
 // (css/components.css, already theme-aware) inline in this tool's own
 // options panel instead.
 function _atlasVerdict(eri) {
-  if (eri >= 95) return { key: 'ready',   label: 'Ready' };
-  if (eri >= 80) return { key: 'minor',   label: 'Minor issues' };
-  if (eri >= 60) return { key: 'notable', label: 'Notable issues' };
-  return { key: 'heavy', label: 'Heavy issues' };
+  if (eri >= 95) return { key: 'ready',   label: t('quickedit_verdict_ready') };
+  if (eri >= 80) return { key: 'minor',   label: t('quickedit_verdict_minor') };
+  if (eri >= 60) return { key: 'notable', label: t('quickedit_verdict_notable') };
+  return { key: 'heavy', label: t('quickedit_verdict_heavy') };
 }
 
 // Below HEAVY, block entirely rather than let the user into an editor with
@@ -112,7 +110,7 @@ function _atlasSummaryHTML(atlasEri) {
   return `
     <div class="atlas-check" style="border-top:none;padding:0 0 12px;text-align:left;">
       <div class="atlas-check__header">
-        <span class="atlas-check__title">Structural check</span>
+        <span class="atlas-check__title">${esc(t('quickedit_structural_check'))}</span>
         <span class="atlas-check__badge atlas-check__badge--${v.key}">${Math.round(atlasEri.eri)}% ${esc(v.label)}</span>
       </div>
     </div>`;
@@ -141,15 +139,12 @@ function _blockedHTML(atlasEri) {
     <div style="padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
       <div class="atlas-check" style="border-top:none;padding:0 0 10px;">
         <div class="atlas-check__header">
-          <span class="atlas-check__title">Structural check</span>
+          <span class="atlas-check__title">${esc(t('quickedit_structural_check'))}</span>
           <span class="atlas-check__badge atlas-check__badge--${v.key}">${Math.round(atlasEri.eri)}% ${esc(v.label)}</span>
         </div>
       </div>
       <p style="margin:0;font-size:13px;color:var(--text3);line-height:1.5;">
-        This PDF's structure didn't convert cleanly enough for Quick Edit's
-        constrained editor to safely fix. Try
-        <a href="/pdf-to-word/" style="color:var(--green-text);">PDF to Word</a>
-        instead — it gives you a full, freely-editable document.
+        ${esc(t('quickedit_blocked_body'))}<a href="/pdf-to-word/" style="color:var(--green-text);">${esc(t('quickedit_blocked_link'))}</a>${esc(t('quickedit_blocked_suffix'))}
       </p>
     </div>`;
 }
@@ -163,7 +158,7 @@ function _triggerHTML() {
       <p style="margin:0 0 10px;font-size:13px;color:var(--text3);word-break:break-word;">
         ${esc(_fileLabel)}
       </p>
-      <button type="button" id="qeReopenBtn" class="split-action-btn">Continue editing</button>
+      <button type="button" id="qeReopenBtn" class="split-action-btn">${esc(t('quickedit_continue_editing'))}</button>
     </div>`;
 }
 
@@ -265,12 +260,12 @@ async function _openModal(docContainer) {
     <div class="qe-modal__card" role="dialog" aria-modal="true" aria-label="${esc(_fileLabel)}">
       <div class="qe-modal__header">
         <p class="qe-modal__title">${esc(_fileLabel)}</p>
-        <button type="button" class="qe-modal-close" id="qeModalClose" aria-label="Close">✕</button>
+        <button type="button" class="qe-modal-close" id="qeModalClose" aria-label="${esc(t('quickedit_close_aria'))}">✕</button>
       </div>
-      <p class="qe-modal__hint">Click any line of text to edit it.</p>
+      <p class="qe-modal__hint">${esc(t('quickedit_modal_hint'))}</p>
       <div class="qe-modal__stage" id="qeModalStage"></div>
       <div class="qe-modal__footer">
-        <button type="button" class="merge-btn" id="qeModalSaveBtn" style="position:static;margin-top:0;">Save Edited PDF</button>
+        <button type="button" class="merge-btn" id="qeModalSaveBtn" style="position:static;margin-top:0;">${esc(t('quickedit_save_btn'))}</button>
       </div>
     </div>`;
   document.body.appendChild(_modal);

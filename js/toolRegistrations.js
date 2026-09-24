@@ -702,17 +702,12 @@ registerTool('docx2pdf', {
   getParams: getDocx2PdfParams,
 });
 
-// Stage 4 of /Users/murodjon/.claude/plans/typed-plotting-wave.md — real
-// runner wired. No Atlas-gate copy/validate message yet (Stage 5 — that's
-// a pre-edit quality GATE, separate from this basic "did you open the
-// editor" check, which already has real teeth: _runQuickEdit itself
-// refuses to run without editedContainer).
 registerTool('quickEdit', {
   runner:    'quickEdit',
   init:      initQuickEditOptions,
   hide:      hideQuickEditOptions,
   getParams: getQuickEditParams,
-  validate:  p => p.loading ? 'Analysing PDF…' : !p.hasOpened ? 'Open the editor first.' : null,
+  validate:  p => p.loading ? t('quickedit_analysing') : !p.hasOpened ? t('quickedit_open_editor_first') : null,
 });
 
 registerTool('unlock', {
