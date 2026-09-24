@@ -193,6 +193,7 @@ function buildPage(tool, lang, existingArticle) {
     font-src    https://fonts.gstatic.com;
     img-src     'self' data: blob: https:;
     connect-src 'self'
+                blob:
                 https://cdnjs.cloudflare.com
                 https://*.workers.dev
                 https://plausible.io

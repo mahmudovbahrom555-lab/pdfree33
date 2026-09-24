@@ -225,6 +225,7 @@ def build_page(tool, lang, existing_article):
     font-src    https://fonts.gstatic.com;
     img-src     'self' data: blob: https:;
     connect-src 'self'
+                blob:
                 data:
                 https://cdnjs.cloudflare.com
                 https://*.workers.dev

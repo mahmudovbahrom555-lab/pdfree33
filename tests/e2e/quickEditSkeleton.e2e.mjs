@@ -127,9 +127,19 @@ const EDITS = [
 
 let quickEditPage = null;
 let editedPdfBuf = null;
+const cspErrors = [];
 
 await test('Quick Edit PDF opens the editor on the skeleton PDF (Atlas gate not triggered)', async () => {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  // Regression gate for a real bug found via document-skeleton stress
+  // testing (2026-09-24): _imgToDataUrl() fetch()es a blob: URL for a
+  // docx-preview-rendered image (e.g. a pdf2word-reconstructed table-border
+  // graphic), but the site's own CSP connect-src used to omit blob: (only
+  // img-src had it) — a deterministic CSP violation on every Quick Edit
+  // save that hit this path, silently dropping that image content. Fixed
+  // by adding blob: to connect-src; this listener would have caught the
+  // regression the whole time this test file existed, had it been here.
+  page.on('console', m => { if (m.type() === 'error' && /Content Security Policy/i.test(m.text())) cspErrors.push(m.text()); });
   await page.goto(`${BASE_URL}/quick-edit-pdf/`, { waitUntil: 'load' });
   await page.waitForSelector('#fileInput', { state: 'attached' });
   await page.setInputFiles('#fileInput', { name: 'skeleton.pdf', mimeType: 'application/pdf', buffer: skeletonPdfBuf });
@@ -202,6 +212,14 @@ await test('independent check: edits landed, originals gone, and untouched struc
     'list level0 second item', 'COLUMN_B_TARGET',
   ]) {
     if (!text.includes(untouched)) throw new Error(`untouched marker "${untouched}" missing/corrupted in output PDF`);
+  }
+  // General CSP-hygiene guard (this fixture's plain <table> doesn't itself
+  // trigger the blob:-image path the connect-src fix targets — that needs
+  // a border-grid-as-image reconstruction, see js/pdf2readCore.js's own
+  // grid/table image handling — but any OTHER CSP violation during a real
+  // Quick Edit session should still fail loud here, not silently).
+  if (cspErrors.length > 0) {
+    throw new Error(`${cspErrors.length} CSP violation(s) during the Quick Edit session:\n${cspErrors.join('\n')}`);
   }
   await page.close();
 });

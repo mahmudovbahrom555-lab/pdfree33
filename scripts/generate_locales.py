@@ -572,6 +572,7 @@ def generate_index(locale_code):
     font-src    https://fonts.gstatic.com;
     img-src     'self' data: blob: https:;
     connect-src 'self'
+                blob:
                 data:
                 https://cdnjs.cloudflare.com
                 https://*.workers.dev

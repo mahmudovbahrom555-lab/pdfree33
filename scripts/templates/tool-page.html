@@ -22,6 +22,12 @@
       are needed or the download is silently blocked with no fallback UI
       (found for real during this feature's own browser testing).
     img-src: data: blob: REQUIRED — pdf.js thumbnails + JPG→PDF previews.
+    connect-src: blob: REQUIRED — docxToPdfCore.js's _imgToDataUrl()
+      fetch()es a blob: URL for embedded DOCX images (img-src alone only
+      covers rendering an <img src="blob:...">, not fetch()ing it; found via
+      overnight stress testing — Quick Edit PDF's Save step deterministically
+      hit this on every document containing a docx-preview-rendered table
+      border image, not a rare failure).
     ════════════════════════════════════════════════════════════════
   -->
   <meta http-equiv="Content-Security-Policy" content="
@@ -39,6 +45,7 @@
     font-src    'self';
     img-src     'self' data: blob: https:;
     connect-src 'self'
+                blob:
                 https://cdnjs.cloudflare.com
                 https://cdn.jsdelivr.net
                 https://fonts.gstatic.com
