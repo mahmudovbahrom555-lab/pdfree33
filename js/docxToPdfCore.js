@@ -357,6 +357,24 @@ export async function walkDomToPdfContent(container, { isCancelled } = {}) {
             continue;
           }
           const td = tds[tdIdx++];
+          // Real bug found via overnight stress testing: for a row COVERED
+          // by an earlier row's rowSpan (a vMerge continuation), docx-preview
+          // does NOT omit that grid position from the row's own <td> list —
+          // it renders a real, empty `<td style="...;display:none">` there
+          // (confirmed via direct DOM inspection, both for a combined
+          // colSpan+rowSpan merge and a rowSpan-only one). Skip it outright:
+          // the rowSpanCarry placeholder(s) set below already account for
+          // every column this phantom cell would otherwise re-claim: without
+          // this skip, tdIdx would still consume it as if it were the NEXT
+          // real cell, double-counting that grid space and shifting every
+          // real cell after it one position to the right for the rest of the
+          // row — which desyncs colSpan boundaries across rows (this row's
+          // real content no longer lines up with the header row's), and
+          // inflates colCount table-wide, causing pdfmake's own table layout
+          // to silently drop columns from the point of misalignment onward
+          // for the WHOLE table, not just the affected rows.
+          const tdStyle = td.getAttribute('style') || '';
+          if (/display:\s*none/.test(tdStyle)) continue;
           const colSpan = Math.max(1, parseInt(td.getAttribute('colspan') || '1', 10) || 1);
           const rowSpan = Math.max(1, parseInt(td.getAttribute('rowspan') || '1', 10) || 1);
           const cell = await parseCell(td);
@@ -364,7 +382,17 @@ export async function walkDomToPdfContent(container, { isCancelled } = {}) {
           if (rowSpan > 1) cell.rowSpan = rowSpan;
           rowArr[col] = cell;
           for (let k = 1; k < colSpan; k++) rowArr[col + k] = {};
-          if (rowSpan > 1) rowSpanCarry[col] = (rowSpanCarry[col] || 0) + (rowSpan - 1);
+          // Carry must cover EVERY column this cell's colSpan occupies, not
+          // just its starting column — a rowSpan>1 cell with colSpan>1 also
+          // needs continuation rows to treat ALL of its columns as carried
+          // (paired with the display:none skip above), or the fall-through
+          // path re-consumes the phantom cell as new content one column
+          // short of where it should.
+          if (rowSpan > 1) {
+            for (let k = 0; k < colSpan; k++) {
+              rowSpanCarry[col + k] = (rowSpanCarry[col + k] || 0) + (rowSpan - 1);
+            }
+          }
           col += colSpan;
         }
 

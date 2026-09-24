@@ -33,6 +33,7 @@
 // ============================================================
 
 import { chromium } from 'playwright';
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -86,6 +87,7 @@ async function convertAndCapture(page, filePath) {
   return { result, toastText };
 }
 
+
 console.log(`\ndocx2pdf E2E — real end-user regressions stay fixed (real browser, ${BASE_URL}):`);
 
 let browser;
@@ -114,6 +116,61 @@ await test('a DOCX table with a colSpan cell and a colSpan+rowSpan cell converts
     }
     expect(result.type).toBe('application/pdf');
     if (!(result.size > 0)) throw new Error(`Expected a non-empty PDF, got size ${result.size}`);
+
+    // Real regression, found via document-skeleton stress testing (2026-09-
+    // 24, commit right after this test's original version): the crash was
+    // fixed, but parseTable()'s rowSpanCarry only marked a spanning cell's
+    // STARTING column as "carried" for continuation rows, not every column
+    // a combined colSpan+rowSpan covers — docx-preview renders a real
+    // (empty, display:none) phantom <td> at a vMerge-continuation's grid
+    // position, which then got double-counted as new content instead of
+    // skipped, inflating colCount by one extra phantom column and desyncing
+    // column alignment for the rest of the table. With THIS fixture's short
+    // cell text (single letters/numbers) the phantom column stayed
+    // invisible to a plain "is the text still there" check — the actual
+    // wrong shape only shows up by inspecting walkDomToPdfContent()'s own
+    // pdfmake content structure directly (a wide real-world table with
+    // longer cell content can additionally lose real columns outright — see
+    // tests/e2e/quickEditSkeleton.e2e.mjs's own sibling coverage for that
+    // shape of damage on a different fixture).
+    const fixtureBytes = fs.readFileSync(MERGED_CELLS_DOCX);
+    const shape = await page.evaluate(async (bytesArr) => {
+      const { renderDocxToDom, walkDomToPdfContent } = await import('/js/docxToPdfCore.js');
+      const file = new File([new Uint8Array(bytesArr)], 'f.docx', {
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      });
+      const container = document.createElement('div');
+      container.style.cssText = 'position:absolute; top:-99999px; left:-99999px; width:800px;';
+      document.body.appendChild(container);
+      await renderDocxToDom(file, container, {});
+      const { content } = await walkDomToPdfContent(container, {});
+      const findTable = (nodes) => {
+        for (const n of nodes || []) {
+          if (n?.table) return n.table;
+          if (n?.stack) { const t = findTable(n.stack); if (t) return t; }
+        }
+        return null;
+      };
+      const table = findTable(content);
+      container.remove();
+      if (!table) return null;
+      const cellText = c => (c.stack || []).map(p => {
+        if (typeof p.text === 'string') return p.text;
+        return (p.text || []).map(t => t.text || '').join('');
+      }).join('');
+      return {
+        colCount: table.widths.length,
+        rowLengths: table.body.map(r => r.length),
+        row2Texts: table.body[2].map(cellText),
+      };
+    }, Array.from(fixtureBytes));
+
+    if (!shape) throw new Error('walkDomToPdfContent found no table in the merged-cells fixture');
+    if (shape.colCount !== 3) throw new Error(`expected colCount 3, got ${shape.colCount} — a phantom vMerge-continuation <td> is being double-counted as a real column`);
+    if (shape.rowLengths.some(n => n !== 3)) throw new Error(`expected every row to have exactly 3 entries, got ${JSON.stringify(shape.rowLengths)}`);
+    if (!(shape.row2Texts[0].includes('A2') && shape.row2Texts[1].includes('B2'))) {
+      throw new Error(`row 2's real content landed in the wrong columns: ${JSON.stringify(shape.row2Texts)}`);
+    }
   } finally {
     await context.close();
   }
