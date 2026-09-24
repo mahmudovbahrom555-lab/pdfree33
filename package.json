@@ -17,6 +17,7 @@
     "test:e2e:fill": "node tests/e2e/fill.e2e.mjs",
     "test:e2e:docx2pdf": "node tests/e2e/docx2pdf.e2e.mjs",
     "test:e2e:quickedit": "node tests/e2e/quickEdit.e2e.mjs",
+    "test:e2e:quickedit-skeleton": "node tests/e2e/quickEditSkeleton.e2e.mjs",
     "check:prod:embed-sdk": "PDFREE_BASE_URL=https://pdfree.io node tests/e2e/embed-sdk.e2e.mjs",
     "lint": "eslint js/*.js --ignore-pattern 'js/vendor/**'",
     "check:dom": "python3 scripts/check_dom.py",

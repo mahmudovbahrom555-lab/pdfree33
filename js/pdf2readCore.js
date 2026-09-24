@@ -556,8 +556,22 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
       _rawNameCache.set(fontName, name);
       return name;
     };
+    // Real bug found via document-skeleton stress testing (list items in a
+    // pdfmake-generated PDF, e.g. Quick Edit PDF's own round-trip output):
+    // this used to require item.str.trim() to be truthy, dropping any
+    // standalone whitespace-only text item outright. Most real-world PDF
+    // generators embed inter-word spacing WITHIN a word/line's own text
+    // item, so this rarely mattered — but pdfmake's renderer can emit each
+    // word as its own positioned text-show op with a literal lone " " item
+    // between them. Every text-reconstruction join site downstream
+    // (`.join('')`, not `.join(' ')`) relies on items already carrying
+    // their own necessary spacing — dropping the space items here silently
+    // glues adjacent words together with zero space in the final output
+    // (confirmed: "list level0 second item" -> "listlevel0seconditem").
+    // Only drop items that are genuinely EMPTY after NUL-stripping; a
+    // non-empty whitespace-only item is real inter-word spacing, not noise.
     const allMapped = content.items
-      .filter(item => 'str' in item && item.str.split('\0').join('').trim())
+      .filter(item => 'str' in item && item.str.split('\0').join('') !== '')
       .map(item => {
         const fontSize  = (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10;
         const style     = content.styles[item.fontName] || {};

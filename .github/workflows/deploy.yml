@@ -236,6 +236,16 @@ jobs:
         # tests/e2e/quickEdit.e2e.mjs's own header comment.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:quickedit
 
+      - name: E2E — Quick Edit PDF document-skeleton regression (nested lists, tables, header/footer, 2-col)
+        # Regression gate for a real bug found via document-skeleton stress
+        # testing (2026-09-24): a multi-word line inside a numbered/indented
+        # list item lost all its inter-word spaces on a PDF -> pdf2word ->
+        # PDF round trip. Root cause was in the shared _p2wBuildPageData()
+        # (js/pdf2readCore.js), so this also guards pdf2word/pdf2excel/
+        # pdf2ppt/pdf2md, not just Quick Edit. See
+        # tests/e2e/quickEditSkeleton.e2e.mjs's own header comment.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:quickedit-skeleton
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do
