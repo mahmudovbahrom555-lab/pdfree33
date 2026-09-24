@@ -62,7 +62,12 @@ global.document = {
 global.Worker = class { postMessage(){} terminate(){} addEventListener(){} };
 
 const docx = await import('docx');
-global.window.docx = docx;
+// js/lazyLibs.js's loadDocx() sets window.__pdfreeDocxBuilder (not plain
+// window.docx) the instant its own <script> loads — see its own header
+// comment for the window.docx namespace collision this avoids (docx@8.5.0
+// and docx-preview@0.4.0 both export as window.docx). _p2wBuildParagraphs
+// reads from the dedicated global now, so the mock must match.
+global.window.__pdfreeDocxBuilder = docx;
 
 const { _p2wBuildParagraphs, _setProcessingFlag } = await import('../js/processor.js');
 _setProcessingFlag(true);
