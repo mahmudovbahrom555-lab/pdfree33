@@ -173,6 +173,40 @@ test('fewer than 2 rows never qualifies', () => {
   expect(looksLikeProseNotData([['A', 'B']])).toBe(false);
 });
 
+// ── Wide implausible tables from over-fragmented prose (2026-09) ───────────
+// Real bug found via overnight document-skeleton/stress testing: pdfmake's
+// rendering of a paragraph built from multiple styled TextRuns (e.g. a bold
+// marker prefix + regular sentence text — extremely common in real
+// documents) can emit many small separate text items per line. When several
+// such paragraphs word-wrap similarly, detectTables()'s column-clustering
+// mistook their word-boundary positions for real table columns, producing
+// an implausibly wide (8-10+ column) "table" out of ordinary prose that the
+// general wordCount/cellCount>=2.0 check missed (individual fragment cells
+// averaged under 2 words each). Reproduced on a real 342-marker synthetic
+// business-report fixture: 44 fake tables / 2969 cells before this fix, 0
+// after.
+console.log('\nWide implausible tables from over-fragmented prose:');
+
+test('a 9-column "table" of word-wrapped prose fragments (no numeric anchor) is flagged as prose', () => {
+  const rows = [
+    ['[P-EXEC-0001]', 'The', 'committee', 'reviewed', 'quarterly', 'throughput', 'against', 'the baseline', ''],
+    ['established', 'in the prior', 'fiscal', 'cycle. Follow-', 'up items', 'are', 'tracked separately', 'in', 'the appendix.'],
+    ['[P-EXEC-0002]', 'Regional', 'variance', 'remained', 'within', 'tolerance', 'except', 'for the northeastern', ''],
+    ['distribution', 'corridor.', 'Follow-', 'up items', 'are tracked', 'separately', 'in the', 'appendix.', ''],
+  ];
+  expect(looksLikeProseNotData(rows)).toBe(true);
+});
+
+test('a narrow (< 8 col) table with the same low words-per-cell ratio is NOT caught by the wide-table guard '
+   + '(the general 2.0 threshold still governs narrower tables, unchanged)', () => {
+  const rows = [
+    ['Item', 'Qty', 'Note'],
+    ['Widgets', '4', 'ok'],
+    ['Gadgets', '2', 'ok'],
+  ];
+  expect(looksLikeProseNotData(rows)).toBe(false);
+});
+
 // ── CJK word density: real bug found via a synthetic Japanese contract ─────
 // "Word count via whitespace split" returns 1 for an entire CJK sentence,
 // since Chinese/Japanese prose has no spaces between words at all. A

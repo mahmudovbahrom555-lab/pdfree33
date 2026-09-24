@@ -494,7 +494,37 @@ export function looksLikeProseNotData(rows) {
     }
   }
   if (!cellCount) return false;
-  return !hasNumericAnchor && (wordCount / cellCount) >= 2.0;
+  if (!hasNumericAnchor && (wordCount / cellCount) >= 2.0) return true;
+
+  // Real bug found via overnight document-skeleton/stress testing: pdfmake's
+  // own rendering of a paragraph built from multiple styled TextRuns (e.g.
+  // a bold marker prefix followed by regular sentence text — an extremely
+  // common real-document pattern) can emit many separate small positioned
+  // text items per line instead of one combined run. When several such
+  // paragraphs happen to word-wrap similarly, detectTables()'s
+  // column-clustering mistakes their word-boundary X-positions for real
+  // table columns, producing an implausibly WIDE "table" (8-10+ columns)
+  // out of ordinary prose. The general wordCount/cellCount>=2.0 check above
+  // can miss this specific shape — individual fragment cells average under
+  // 2 words each even though each ROW, read left to right, is obviously a
+  // wrapped sentence, not tabular data (confirmed on a real 342-marker
+  // business-report fixture: 44 fake tables, 2969 cells, ratio ~1.5). A
+  // genuinely wide, all-text table with zero numeric/code-looking cells
+  // ANYWHERE is implausible in real documents — a real table that wide
+  // almost always carries some numeric/date/ID column — so require only a
+  // lower, still-meaningful word-density bar specifically for that shape,
+  // rather than accepting it outright. Deliberately narrow: only engages
+  // at a column count well above this codebase's own widest known
+  // legitimate table (6, tests/fixtures — see docx2pdf_merged_cells.docx-
+  // style fixtures), so ordinary tables are untouched.
+  const colCount = rows[0]?.length || 0;
+  const WIDE_TABLE_MIN_COLS = 8;
+  const WIDE_TABLE_MIN_WPC  = 1.15;
+  if (colCount >= WIDE_TABLE_MIN_COLS && !hasNumericAnchor && (wordCount / cellCount) >= WIDE_TABLE_MIN_WPC) {
+    return true;
+  }
+
+  return false;
 }
 
 // Found on the same real 19-page contract as looksLikeProseNotData above: a
