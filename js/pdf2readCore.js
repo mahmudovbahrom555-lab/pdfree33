@@ -36,6 +36,15 @@ import { detectTableGrids } from './pdf2wordBorders.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, _splitCrossColumnLines } from './textLayoutUtils.js';
 
+// XML 1.0's Char production disallows most C0 control characters (only
+// tab/LF/CR are valid: #x9 | #xA | #xD | [#x20-...]) — pdf.js text
+// extraction can return these from a PDF whose embedded font has a
+// ToUnicode CMap gap (found via a real macOS Arabic system font, not
+// purely synthetic). Passing one straight through into docx.js's TextRun
+// produces a literally invalid Office file.
+// eslint-disable-next-line no-control-regex -- intentional: stripping control chars
+const _XML_ILLEGAL_CONTROL_RE = /[\x00-\x08\x0B\x0C\x0E-\x1F]/g;
+
 // ── Small private helpers ────────────────────────────────────────────────
 // Local copies, not imports — the originals in js/processor.js are still
 // used by other, unrelated call sites there (pdf2word's own paragraph
@@ -568,10 +577,10 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
     // their own necessary spacing — dropping the space items here silently
     // glues adjacent words together with zero space in the final output
     // (confirmed: "list level0 second item" -> "listlevel0seconditem").
-    // Only drop items that are genuinely EMPTY after NUL-stripping; a
-    // non-empty whitespace-only item is real inter-word spacing, not noise.
+    // Only drop items that are genuinely EMPTY after control-char-stripping;
+    // a non-empty whitespace-only item is real inter-word spacing, not noise.
     const allMapped = content.items
-      .filter(item => 'str' in item && item.str.split('\0').join('') !== '')
+      .filter(item => 'str' in item && item.str.replace(_XML_ILLEGAL_CONTROL_RE, '') !== '')
       .map(item => {
         const fontSize  = (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10;
         const style     = content.styles[item.fontName] || {};
@@ -582,9 +591,18 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
         // pdf.js returns dir:'rtl' items in visual (left-to-right screen) order.
         // _visualRTLToLogical restores Unicode logical order while preserving embedded
         // LTR words (plain reverse() would corrupt e.g. "(Arabic)" → "(cibarA)").
-        // Strip NUL bytes produced by fonts without ToUnicode CMap — they corrupt DOCX XML.
+        // Strip XML-illegal control characters (NUL and the rest of the C0
+        // range except tab/LF/CR) produced by fonts with ToUnicode CMap
+        // gaps — a real, non-synthetic case found on some Arabic/ligature-
+        // heavy fonts, not just a hypothetical. Passing these straight
+        // through into docx.js's TextRun produces a literally invalid
+        // Office file (confirmed: a fresh DOMParser re-parse of the
+        // produced document.xml throws "PCDATA invalid Char value N" at
+        // the exact byte) — in Quick Edit specifically, docx-preview's own
+        // re-parse of that invalid XML throws, surfacing as a raw,
+        // untranslated 'DOCX_PARSE_FAILED' with the editor never opening.
         const str = ((item.dir === 'rtl') ? _visualRTLToLogical(item.str) : item.str)
-          .split('\0').join('');
+          .replace(_XML_ILLEGAL_CONTROL_RE, '');
         return {
           str,
           x:        item.transform[4],
