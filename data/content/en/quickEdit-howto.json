@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Edit Text in a PDF",
+  "description": "Fix a typo or small text change inside a PDF — 100% in your browser.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Open your PDF",
+      "text": "Click 'Choose file' or drag your PDF into the drop zone. PDFree checks how cleanly the document can be turned into an editable version."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Click the text you want to fix",
+      "text": "A real editable preview of your document opens. Click any line, paragraph, heading, or table cell, retype it, and press Enter."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Save and download",
+      "text": "Click 'Save'. Your edits are rebuilt into a real PDF and download immediately."
+    }
+  ]
+}

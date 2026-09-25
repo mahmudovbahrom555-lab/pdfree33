@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Is my PDF uploaded anywhere to edit it?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. The whole process — reading the PDF, rendering it as editable text, and rebuilding the edited PDF — runs entirely in your browser. Your document never leaves your device."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I add new paragraphs or delete a table row?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Not with this tool — Quick Edit PDF is built for retyping existing text in place, not restructuring a document. If you need to add or remove content, convert to Word with PDF to Word, make the full edit there, then convert back to PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Why did it say my PDF can't be edited here?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Before opening the editor, PDFree checks how cleanly your PDF's structure converts to an editable form. Scanned documents, unusual layouts, or heavily damaged text extraction can score too low to safely edit — rather than let you edit on top of broken structure and risk a worse result, the tool blocks the editor and suggests the full PDF to Word converter instead."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does editing change the formatting of the rest of the document?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No — only the exact text you click and retype changes. Bold, italic, headings, list numbering, and table structure elsewhere in the document are untouched."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does PDFree store or log my files after processing?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree runs entirely in your browser — there is no backend server that receives your files. Because nothing is uploaded, nothing can be stored, logged, or retained. Your document exists only in your browser's memory for the duration of the session and is cleared when you close the tab."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is this a free PDF editor with no sign up?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. PDFree is completely free — no sign up, no account, no installation. Open the tool, load your PDF, click the text you want to fix, and download the result."
+    }
+  }
+]
