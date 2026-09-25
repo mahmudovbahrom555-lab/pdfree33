@@ -44,6 +44,22 @@ const HEADING_STYLE = {
   docx_heading6: { fontSize: 11, bold: true, color: '#1F4D78' },
 };
 
+// Roboto (pdfmake's default and only bundled font) covers Latin, Latin
+// Extended, Cyrillic, and Greek — NOT CJK, Arabic, Hebrew, Thai, or most
+// emoji. Rendering any of those with no fallback font registered maps them
+// to .notdef glyphs: visible tofu boxes in the PDF, and literal NUL bytes
+// on any later text-extraction of the output (confirmed via document-
+// skeleton/stress testing, 2026-09-24) — the tool still reports success
+// regardless, a silent, total loss of that content CLAUDE.md's own UX
+// rules explicitly warn against ("never fail silently"). A real fix needs
+// a bundled Unicode-coverage fallback font — a genuine bundle-size/
+// engineering tradeoff deliberately left for deliberate daylight review,
+// not decided unattended overnight. In the meantime, detect and warn
+// instead of silently corrupting the output — see hasUnsupportedScript on
+// walkDomToPdfContent()'s return value and _runDocx2Pdf's toast.
+const _UNSUPPORTED_SCRIPT_RE =
+  /[぀-ヿ㐀-䶿一-鿿豈-﫿가-힯؀-ۿݐ-ݿﭐ-﷿ﹰ-\uFEFF֐-׿฀-๿\u{1F000}-\u{1FAFF}☀-➿]/u;
+
 function _parseRun(span) {
   const style = span.getAttribute('style') || '';
   const text = span.textContent;
@@ -490,7 +506,12 @@ export async function walkDomToPdfContent(container, { isCancelled } = {}) {
       });
     }
 
-    return { content: out, headerText, footerText };
+    // Scanned once over the whole rendered document rather than per-run —
+    // simpler, and independent of exactly how parseParagraph/parseCell
+    // happen to slice text into runs.
+    const hasUnsupportedScript = _UNSUPPORTED_SCRIPT_RE.test(container.textContent);
+
+    return { content: out, headerText, footerText, hasUnsupportedScript };
   }
 }
 
@@ -538,7 +559,7 @@ export async function pdfContentToBlob({ content, headerText, footerText }, { is
  * caller supplies.
  * @param {File} file
  * @param {{ isCancelled?: () => boolean, onProgress?: (pct:number) => void }} [opts]
- * @returns {Promise<Blob>}
+ * @returns {Promise<{ blob: Blob, hasUnsupportedScript: boolean }>}
  */
 export async function docxToPdf(file, { isCancelled, onProgress } = {}) {
   onProgress?.(10);
@@ -555,7 +576,8 @@ export async function docxToPdf(file, { isCancelled, onProgress } = {}) {
     const parsed = await walkDomToPdfContent(container, { isCancelled });
     if (isCancelled?.()) throw new Error('cancelled');
     onProgress?.(60);
-    return await pdfContentToBlob(parsed, { isCancelled, onProgress });
+    const blob = await pdfContentToBlob(parsed, { isCancelled, onProgress });
+    return { blob, hasUnsupportedScript: parsed.hasUnsupportedScript };
   } finally {
     container.remove();
   }

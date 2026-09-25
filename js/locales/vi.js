@@ -226,6 +226,7 @@ window.PDFREE_LOCALE = {
   err_docx_legacy_or_encrypted: 'Tệp này có vẻ được bảo vệ bằng mật khẩu, hoặc ở định dạng .doc cũ thay vì .docx. Word→PDF cần một tệp .docx hiện đại, không mã hóa — trong Word, hãy gỡ mật khẩu (File → Info → Protect Document) hoặc dùng File → Save As → Word Document (.docx), rồi thử lại.',
   err_docx_parse_failed: 'Không thể đọc tài liệu Word này — có thể tệp bị hỏng, chưa đầy đủ hoặc được lưu theo cách công cụ này không nhận dạng được. Hãy thử lưu lại tệp từ Word (hoặc trình xử lý văn bản của bạn) dưới dạng tệp .docx mới rồi thử lại.',
   err_watermark_unsupported_chars: 'Không thể hiển thị văn bản hình mờ này — hãy thử văn bản không có ký tự Trung, Nhật hoặc Hàn.',
+  warn_docx2pdf_unsupported_script: 'Một số ký tự trong tài liệu này (tiếng Trung, Nhật, Hàn, Ả Rập, Do Thái, Thái hoặc emoji) không thể hiển thị bằng phông chữ hiện tại của Word→PDF và có thể xuất hiện dưới dạng ô trống — phần còn lại đã được chuyển đổi bình thường.',
   err_cdn_lib_unavailable: 'Không thể tải thư viện {lib} — vui lòng kiểm tra kết nối internet',
   err_compress_timeout: '⏱ Nén bị hủy — file chứa quá nhiều ảnh cho trình duyệt. Thử preset Nhẹ hoặc tách PDF trước.',
   err_batch_timeout:    '⏱ File này đã hết thời gian xử lý — có thể quá lớn hoặc quá phức tạp cho trình duyệt. File sẽ được đánh dấu là lỗi và lô xử lý sẽ tiếp tục với các file còn lại.',

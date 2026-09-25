@@ -225,6 +225,7 @@ window.PDFREE_LOCALE = {
   err_docx_legacy_or_encrypted: 'Questo file sembra protetto da password, oppure è nel vecchio formato .doc anziché .docx. Word→PDF richiede un file .docx moderno e non crittografato — in Word, rimuovi la password (File → Informazioni → Proteggi documento) oppure usa File → Salva con nome → Documento Word (.docx), quindi riprova.',
   err_docx_parse_failed: 'Impossibile leggere questo documento Word — potrebbe essere danneggiato, incompleto o salvato in un formato non riconosciuto da questo strumento. Prova a salvarlo di nuovo da Word (o dal tuo programma di scrittura) come nuovo file .docx, quindi riprova.',
   err_watermark_unsupported_chars: 'Questo testo della filigrana non può essere visualizzato — prova un testo senza caratteri cinesi, giapponesi o coreani.',
+  warn_docx2pdf_unsupported_script: 'Alcuni caratteri in questo documento (cinese, giapponese, coreano, arabo, ebraico, thailandese o emoji) non possono essere visualizzati con il font attuale di Word→PDF e potrebbero apparire come caselle vuote — il resto è stato convertito normalmente.',
   err_cdn_lib_unavailable: "Libreria {lib} non disponibile — controlla la tua connessione internet",
   err_compress_timeout: '⏱ Compressione annullata — il file ha troppe immagini per il browser. Prova il preset Leggero o dividi il PDF prima.',
   err_batch_timeout:    '⏱ Questo file ha superato il tempo limite — potrebbe essere troppo grande o complesso per il browser. Verrà contrassegnato come non riuscito e il batch continuerà con gli altri file.',

@@ -225,6 +225,7 @@ window.PDFREE_LOCALE = {
   err_docx_legacy_or_encrypted: 'Este arquivo parece estar protegido por senha, ou está no formato antigo .doc em vez de .docx. O Word→PDF precisa de um arquivo .docx moderno e sem criptografia — no Word, remova a senha (Arquivo → Informações → Proteger Documento) ou use Arquivo → Salvar Como → Documento do Word (.docx) e tente novamente.',
   err_docx_parse_failed: 'Não foi possível ler este documento do Word — ele pode estar corrompido, incompleto ou salvo de uma forma que esta ferramenta não reconhece. Tente salvá-lo novamente a partir do Word (ou do seu processador de texto) como um novo arquivo .docx e tente de novo.',
   err_watermark_unsupported_chars: "Este texto de marca d'água não pode ser exibido — tente um texto sem caracteres chineses, japoneses ou coreanos.",
+  warn_docx2pdf_unsupported_script: 'Alguns caracteres deste documento (chinês, japonês, coreano, árabe, hebraico, tailandês ou emojis) não podem ser exibidos com a fonte atual do Word→PDF e podem aparecer como caixas vazias — o restante foi convertido normalmente.',
   err_cdn_lib_unavailable: 'Biblioteca do {lib} indisponível — verifique sua conexão com a internet',
   err_compress_timeout: '⏱ Compressão cancelada — o ficheiro tem demasiadas imagens para o navegador. Tente o preset Light ou divida o PDF primeiro.',
   err_batch_timeout:    '⏱ Este arquivo excedeu o tempo limite — pode ser grande ou complexo demais para o navegador. Será marcado como falho e o lote continuará com o restante.',

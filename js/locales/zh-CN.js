@@ -232,6 +232,7 @@ window.PDFREE_LOCALE = {
   err_docx_legacy_or_encrypted: '此文件似乎已设置密码保护，或者是旧版 .doc 格式而非 .docx。Word→PDF 需要未加密的现代 .docx 文件——请在 Word 中移除密码（文件 → 信息 → 保护文档），或使用“文件 → 另存为 → Word 文档 (.docx)”重新保存后再试。',
   err_docx_parse_failed: '无法读取此 Word 文档——它可能已损坏、不完整，或以此工具无法识别的方式保存。请尝试在 Word（或您使用的文字处理软件）中另存为新的 .docx 文件后重试。',
   err_watermark_unsupported_chars: '此水印文字无法渲染 — 请尝试不含中文、日文或韩文字符的文字。',
+  warn_docx2pdf_unsupported_script: '此文档中的部分字符(中文、日文、韩文、阿拉伯文、希伯来文、泰文或表情符号)无法用 Word→PDF 当前的字体渲染,可能显示为空白方框 — 其余内容已正常转换。',
   err_cdn_lib_unavailable: '{lib} 库不可用 — 请检查您的网络连接',
   err_compress_timeout: '⏱ 压缩超时 — 文件可能包含过多图片，超出浏览器处理能力。请尝试"轻度"预设，或先将 PDF 拆分为较小的部分。',
   err_batch_timeout:    '⏱ 此文件处理超时 — 文件可能过大或过于复杂。已标记为失败，批处理将继续处理其余文件。',

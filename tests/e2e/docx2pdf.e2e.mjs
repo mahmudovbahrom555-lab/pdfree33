@@ -43,6 +43,7 @@ const MERGED_CELLS_DOCX  = path.join(__dirname, '..', 'fixtures', 'docx2pdf_merg
 const IMAGE_DOCX         = path.join(__dirname, '..', 'fixtures', 'eri', '004_libreoffice.docx');
 const ENCRYPTED_OR_LEGACY_DOCX = path.join(__dirname, '..', 'fixtures', 'docx2pdf_encrypted_or_legacy.docx');
 const MISSING_DOCXML_DOCX      = path.join(__dirname, '..', 'fixtures', 'docx2pdf_missing_document_xml.docx');
+const UNSUPPORTED_SCRIPT_DOCX  = path.join(__dirname, '..', 'fixtures', 'docx2pdf_unsupported_script.docx');
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -314,6 +315,47 @@ await test('a structurally incomplete .docx (valid zip, but word/document.xml mi
     if (!/couldn't be read|corrupted/i.test(toastText)) {
       throw new Error(`Toast doesn't give a specific, friendly explanation: ${toastText}`);
     }
+  } finally {
+    await context.close();
+  }
+});
+
+await test('a DOCX with CJK/Arabic/emoji text shows a warning toast instead of silently producing a corrupted PDF', async () => {
+  // Real bug found via document-skeleton/stress testing (2026-09-24):
+  // pdfmake's bundled Roboto font has no CJK/Arabic/Hebrew/Thai/emoji
+  // glyph coverage — that content used to silently render as .notdef
+  // (tofu boxes, NUL bytes on any later extraction) while the tool
+  // reported plain success, a silent failure CLAUDE.md's own UX rules
+  // explicitly warn against. A real font-coverage fix is a deliberate,
+  // larger bundle-size decision left for daylight review — this test
+  // guards the interim mitigation: detect and warn, still produce the
+  // PDF (non-blocking — content in supported scripts still converts).
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    const toasts = [];
+    await page.exposeFunction('__recordToast', (txt) => toasts.push(txt));
+    await page.addInitScript(BLOB_HOOK);
+    await page.goto(`${BASE_URL}/word-to-pdf/`, { waitUntil: 'load', timeout: 30000 });
+    await page.evaluate(() => {
+      const el = document.getElementById('toast');
+      if (!el) return;
+      new MutationObserver(() => {
+        if (el.textContent.trim()) window.__recordToast(el.textContent.trim());
+      }).observe(el, { childList: true, characterData: true, subtree: true });
+    });
+    await page.setInputFiles('#fileInput', UNSUPPORTED_SCRIPT_DOCX);
+    await page.waitForTimeout(500);
+    await page.evaluate(() => { window.__blob = null; });
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__blob != null, { timeout: 20000 });
+    await page.waitForTimeout(300);
+
+    const sawWarning = toasts.some(t => /Chinese|Japanese|Korean|Arabic|Hebrew|Thai|emoji/i.test(t));
+    if (!sawWarning) throw new Error(`Expected an unsupported-script warning toast, saw: ${JSON.stringify(toasts)}`);
+    const blob = await page.evaluate(() => window.__blob ? { size: window.__blob.size, type: window.__blob.type } : null);
+    if (!blob) throw new Error('Expected a downloaded PDF blob, got none');
+    expect(blob.type).toBe('application/pdf');
   } finally {
     await context.close();
   }

@@ -4001,12 +4001,12 @@ async function _runDocx2Pdf(filesSnapshot, _extraParams) {
 
   setProgress(5, 'Reading document…');
 
-  let blob;
+  let blob, hasUnsupportedScript;
   try {
-    blob = await docxToPdf(file, {
+    ({ blob, hasUnsupportedScript } = await docxToPdf(file, {
       isCancelled: () => !isProcessing,
       onProgress:  (pct) => setProgress(pct, pct < 60 ? 'Reading document…' : 'Building PDF…'),
-    });
+    }));
   } catch (err) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
     if (err.message === 'cancelled') return; // isCancelled() bail — not a real error, no toast
@@ -4031,6 +4031,19 @@ async function _runDocx2Pdf(filesSnapshot, _extraParams) {
   setFilesLocked(false);
   hideCancelBtn();
   setProgress(100, t('prog_done'));
+
+  // Real bug found via document-skeleton/stress testing (2026-09-24):
+  // pdfmake's bundled Roboto font has no CJK/Arabic/Hebrew/Thai/emoji
+  // glyph coverage — that content silently renders as .notdef (tofu boxes,
+  // and NUL bytes on any later text-extraction) while this tool reports
+  // success regardless. A real fix needs a bundled fallback font (a
+  // deliberate bundle-size decision for daylight review, not this fix) —
+  // in the meantime, warn rather than let the user discover a silently
+  // corrupted PDF later. Non-blocking: the PDF still downloads (partial
+  // content is still better than none for any OTHER script it contains).
+  if (hasUnsupportedScript) {
+    showToast(t('warn_docx2pdf_unsupported_script'), 8000);
+  }
 
   document.dispatchEvent(new CustomEvent('pdfree:success', {
     detail: { tool: 'docx2pdf', blob, desc, filename }

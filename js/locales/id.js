@@ -226,6 +226,7 @@ window.PDFREE_LOCALE = {
   err_docx_legacy_or_encrypted: 'File ini tampaknya dilindungi kata sandi, atau menggunakan format lama .doc, bukan .docx. Word→PDF memerlukan file .docx modern yang tidak terenkripsi — di Word, hapus kata sandi (File → Info → Lindungi Dokumen) atau gunakan File → Simpan Sebagai → Dokumen Word (.docx), lalu coba lagi.',
   err_docx_parse_failed: 'Dokumen Word ini tidak dapat dibaca — mungkin rusak, tidak lengkap, atau disimpan dengan cara yang tidak dikenali alat ini. Coba simpan ulang dari Word (atau pengolah kata Anda) sebagai file .docx baru, lalu coba lagi.',
   err_watermark_unsupported_chars: 'Teks watermark ini tidak dapat dirender — coba teks tanpa karakter Tionghoa, Jepang, atau Korea.',
+  warn_docx2pdf_unsupported_script: 'Beberapa karakter dalam dokumen ini (Tionghoa, Jepang, Korea, Arab, Ibrani, Thai, atau emoji) tidak dapat ditampilkan dengan font Word→PDF saat ini dan mungkin muncul sebagai kotak kosong — bagian lainnya dikonversi dengan normal.',
   err_cdn_lib_unavailable: 'Pustaka {lib} tidak tersedia — periksa koneksi internet Anda',
   err_compress_timeout: '⏱ Kompresi dibatalkan — file mengandung terlalu banyak gambar untuk browser. Coba preset Ringan atau pisahkan PDF terlebih dahulu.',
   err_batch_timeout:    '⏱ File ini melebihi batas waktu — mungkin terlalu besar atau kompleks untuk browser. File akan ditandai gagal dan batch akan lanjut memproses sisanya.',

@@ -225,6 +225,7 @@ window.PDFREE_LOCALE = {
   err_docx_legacy_or_encrypted: 'Ten plik wygląda na zabezpieczony hasłem lub jest w starym formacie .doc zamiast .docx. Word→PDF wymaga nowoczesnego, niezaszyfrowanego pliku .docx — w Wordzie usuń hasło (Plik → Informacje → Chroń dokument) lub użyj Plik → Zapisz jako → Dokument programu Word (.docx), a następnie spróbuj ponownie.',
   err_docx_parse_failed: 'Nie udało się odczytać tego dokumentu Word — może być uszkodzony, niekompletny lub zapisany w formacie, którego to narzędzie nie rozpoznaje. Spróbuj zapisać go ponownie w Wordzie (lub innym edytorze tekstu) jako nowy plik .docx, a następnie spróbuj jeszcze raz.',
   err_watermark_unsupported_chars: 'Tego tekstu znaku wodnego nie można wyświetlić — spróbuj tekstu bez chińskich, japońskich lub koreańskich znaków.',
+  warn_docx2pdf_unsupported_script: 'Niektórych znaków w tym dokumencie (chińskich, japońskich, koreańskich, arabskich, hebrajskich, tajskich lub emoji) nie można wyświetlić przy użyciu obecnej czcionki Word→PDF i mogą pojawić się jako puste prostokąty — reszta została przekonwertowana normalnie.',
   err_cdn_lib_unavailable: 'Biblioteka {lib} niedostępna — sprawdź połączenie z internetem',
   err_compress_timeout: '⏱ Kompresja anulowana — plik ma zbyt wiele obrazów dla przeglądarki. Wypróbuj ustawienie Lekkie lub najpierw podziel PDF.',
   err_batch_timeout:    '⏱ Przetwarzanie tego pliku przekroczyło limit czasu — plik może być zbyt duży lub zbyt złożony dla przeglądarki. Zostanie oznaczony jako nieudany, a partia będzie kontynuowana z pozostałymi plikami.',
