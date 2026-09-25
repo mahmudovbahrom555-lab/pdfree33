@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wird mein PDF irgendwohin hochgeladen, um es zu bearbeiten?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Der gesamte Vorgang — das Lesen des PDFs, das Rendern als editierbarer Text und das Zusammenbauen des bearbeiteten PDFs — läuft vollständig in deinem Browser. Dein Dokument verlässt niemals dein Gerät."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich neue Absätze hinzufügen oder eine Tabellenzeile löschen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Mit diesem Tool nicht — PDF Text Bearbeiten ist dafür gedacht, vorhandenen Text an Ort und Stelle neu einzutippen, nicht ein Dokument umzustrukturieren. Wenn du Inhalte hinzufügen oder entfernen musst, konvertiere mit PDF zu Word, nimm die vollständige Änderung dort vor und konvertiere anschließend zurück in PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Warum hieß es, mein PDF könne hier nicht bearbeitet werden?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bevor sich der Editor öffnet, prüft PDFree, wie sauber sich die Struktur deines PDFs in eine editierbare Form umwandeln lässt. Gescannte Dokumente, ungewöhnliche Layouts oder stark beschädigte Textextraktion können zu niedrig bewertet werden, um sicher bearbeitet zu werden — statt dich auf einer defekten Struktur bearbeiten zu lassen und ein schlechteres Ergebnis zu riskieren, blockiert das Tool den Editor und schlägt stattdessen den vollständigen PDF-zu-Word-Konverter vor."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Verändert die Bearbeitung die Formatierung des restlichen Dokuments?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein — es ändert sich nur genau der Text, den du anklickst und neu eintippst. Fett, kursiv, Überschriften, Listennummerierung und Tabellenstruktur an anderen Stellen im Dokument bleiben unangetastet."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Speichert oder protokolliert PDFree meine Dateien nach der Verarbeitung?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. PDFree läuft vollständig in deinem Browser — es gibt keinen Backend-Server, der deine Dateien empfängt. Da nichts hochgeladen wird, kann auch nichts gespeichert, protokolliert oder aufbewahrt werden. Dein Dokument existiert nur für die Dauer der Sitzung im Arbeitsspeicher deines Browsers und wird gelöscht, wenn du den Tab schließt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ist das ein kostenloser PDF-Editor ohne Registrierung?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree ist vollkommen kostenlos — keine Registrierung, kein Konto, keine Installation. Tool öffnen, PDF laden, auf den zu korrigierenden Text klicken und das Ergebnis herunterladen."
+    }
+  }
+]

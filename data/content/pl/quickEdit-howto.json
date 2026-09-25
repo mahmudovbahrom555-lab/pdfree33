@@ -1,0 +1,11 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Jak edytować tekst w PDF",
+  "description": "Popraw literówkę lub drobną zmianę tekstu w pliku PDF — 100% w przeglądarce.",
+  "step": [
+    {"@type":"HowToStep","position":1,"name":"Otwórz swój PDF","text":"Kliknij 'Wybierz plik' lub przeciągnij PDF do obszaru wgrywania. PDFree sprawdza, jak dokładnie dokument można zamienić na wersję edytowalną."},
+    {"@type":"HowToStep","position":2,"name":"Kliknij tekst, który chcesz poprawić","text":"Otwiera się prawdziwy, edytowalny podgląd Twojego dokumentu. Kliknij dowolną linię, akapit, nagłówek lub komórkę tabeli, wpisz nową treść i naciśnij Enter."},
+    {"@type":"HowToStep","position":3,"name":"Zapisz i pobierz","text":"Kliknij 'Zapisz'. Twoje zmiany są odbudowywane w prawdziwy plik PDF i od razu pobierane."}
+  ]
+}

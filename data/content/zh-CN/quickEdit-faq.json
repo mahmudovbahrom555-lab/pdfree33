@@ -1,0 +1,8 @@
+[
+  {"@type":"Question","name":"编辑时我的 PDF 会被上传到任何地方吗？","acceptedAnswer":{"@type":"Answer","text":"不会。整个过程 —— 读取 PDF、渲染为可编辑文字、重新生成编辑后的 PDF —— 都完全在您的浏览器中运行。您的文档不会离开您的设备。"}},
+  {"@type":"Question","name":"可以新增段落或删除表格中的一行吗？","acceptedAnswer":{"@type":"Answer","text":"这个工具不支持 —— 快速编辑 PDF 是用来在原位置重新输入已有文字，而不是重新构建文档结构。如果需要新增或删除内容，请用 PDF 转 Word 转换为 Word 文档，在那里完成完整编辑，再转换回 PDF。"}},
+  {"@type":"Question","name":"为什么提示我的 PDF 无法在这里编辑？","acceptedAnswer":{"@type":"Answer","text":"在打开编辑器之前，PDFree 会检查您的 PDF 结构能否干净利落地转换为可编辑形式。扫描文档、版式异常，或文字提取严重受损，都可能导致评分过低而无法安全编辑 —— 与其让您在已损坏的结构上编辑、冒着结果更糟的风险，工具会直接拦截编辑器，转而建议使用完整版 PDF 转 Word 转换器。"}},
+  {"@type":"Question","name":"编辑会改变文档其余部分的格式吗？","acceptedAnswer":{"@type":"Answer","text":"不会 —— 只有您点击并重新输入的那部分文字会改变。文档其余部分的加粗、斜体、标题样式、列表编号和表格结构都不受影响。"}},
+  {"@type":"Question","name":"PDFree 会在处理后存储或记录我的文件吗？","acceptedAnswer":{"@type":"Answer","text":"不会。PDFree 完全在您的浏览器中运行 —— 没有接收文件的后端服务器。既然没有任何内容被上传，自然也就无法被存储、记录或保留。您的文档只存在于浏览器内存中，会话期间有效，关闭标签页后即被清除。"}},
+  {"@type":"Question","name":"这是一款无需注册的免费 PDF 编辑工具吗？","acceptedAnswer":{"@type":"Answer","text":"是的。PDFree 完全免费 —— 无需注册，无需账号，无需安装。打开工具，加载您的 PDF，点击要修改的文字，下载结果即可。"}}
+]

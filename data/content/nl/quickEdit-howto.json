@@ -1,0 +1,11 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Tekst in een PDF bewerken",
+  "description": "Herstel een typefout of kleine tekstwijziging in een PDF — 100% in je browser.",
+  "step": [
+    {"@type":"HowToStep","position":1,"name":"Open je PDF","text":"Klik op 'Bestand kiezen' of sleep je PDF naar het uploadvak. PDFree controleert hoe goed het document kan worden omgezet in een bewerkbare versie."},
+    {"@type":"HowToStep","position":2,"name":"Klik op de tekst die je wilt aanpassen","text":"Een echte, bewerkbare preview van je document opent. Klik op een regel, alinea, kop of tabelcel, typ deze opnieuw en druk op Enter."},
+    {"@type":"HowToStep","position":3,"name":"Opslaan en downloaden","text":"Klik op 'Opslaan'. Je wijzigingen worden verwerkt tot een echte PDF en meteen gedownload."}
+  ]
+}

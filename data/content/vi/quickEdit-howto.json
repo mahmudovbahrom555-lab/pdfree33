@@ -1,0 +1,11 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách Sửa Văn Bản Trong PDF",
+  "description": "Sửa lỗi gõ hoặc thay đổi văn bản nhỏ trong file PDF — 100% ngay trong trình duyệt.",
+  "step": [
+    {"@type":"HowToStep","position":1,"name":"Mở file PDF của bạn","text":"Nhấp 'Chọn file' hoặc kéo file PDF vào vùng thả. PDFree kiểm tra mức độ chuyển đổi sạch sẽ thành bản có thể chỉnh sửa."},
+    {"@type":"HowToStep","position":2,"name":"Nhấp vào đoạn văn bản cần sửa","text":"Một bản xem trước có thể chỉnh sửa thật sự của tài liệu sẽ mở ra. Nhấp vào bất kỳ dòng, đoạn văn, tiêu đề hay ô bảng nào, gõ lại nội dung, rồi nhấn Enter."},
+    {"@type":"HowToStep","position":3,"name":"Lưu và tải về","text":"Nhấp 'Lưu'. Các chỉnh sửa của bạn được dựng lại thành một file PDF thật và tải về ngay lập tức."}
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF-Text bearbeiten",
+  "description": "Einen Tippfehler oder eine kleine Textänderung in einem PDF korrigieren — 100 % im Browser.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF öffnen",
+      "text": "Klicke auf „Datei auswählen\" oder ziehe dein PDF in den Dropbereich. PDFree prüft, wie sauber sich das Dokument in eine editierbare Version umwandeln lässt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Klicke auf den Text, den du korrigieren möchtest",
+      "text": "Eine echte, editierbare Vorschau deines Dokuments öffnet sich. Klicke auf eine beliebige Zeile, einen Absatz, eine Überschrift oder eine Tabellenzelle, tippe sie neu ein und drücke Enter."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Speichern und herunterladen",
+      "text": "Klicke auf „Speichern\". Deine Änderungen werden zu einem echten PDF zusammengebaut und sofort heruntergeladen."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Comment modifier le texte d'un PDF",
+  "description": "Corrigez une faute de frappe ou un petit changement de texte dans un PDF — 100 % dans votre navigateur.",
+  "step": [
+    {"@type":"HowToStep","position":1,"name":"Ouvrez votre PDF","text":"Cliquez sur « Choisir un fichier » ou faites glisser votre PDF dans la zone de dépôt. PDFree évalue la qualité de conversion du document vers une version modifiable."},
+    {"@type":"HowToStep","position":2,"name":"Cliquez sur le texte à corriger","text":"Un véritable aperçu modifiable de votre document s'ouvre. Cliquez sur n'importe quelle ligne, paragraphe, titre ou cellule de tableau, retapez-le, puis appuyez sur Entrée."},
+    {"@type":"HowToStep","position":3,"name":"Enregistrez et téléchargez","text":"Cliquez sur « Enregistrer ». Vos modifications sont intégrées dans un vrai PDF, téléchargé immédiatement."}
+  ]
+}

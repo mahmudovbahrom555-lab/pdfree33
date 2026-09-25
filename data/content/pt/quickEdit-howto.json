@@ -1,0 +1,11 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Como editar texto em um PDF",
+  "description": "Corrija um erro de digitação ou uma pequena alteração de texto dentro de um PDF — 100% no seu navegador.",
+  "step": [
+    {"@type":"HowToStep","position":1,"name":"Abra seu PDF","text":"Clique em 'Escolher arquivo' ou arraste seu PDF para a área de upload. O PDFree verifica o quão bem o documento pode ser transformado em uma versão editável."},
+    {"@type":"HowToStep","position":2,"name":"Clique no texto que deseja corrigir","text":"Uma pré-visualização realmente editável do seu documento é aberta. Clique em qualquer linha, parágrafo, título ou célula de tabela, reescreva o conteúdo e pressione Enter."},
+    {"@type":"HowToStep","position":3,"name":"Salve e baixe","text":"Clique em 'Salvar'. Suas alterações são reconstruídas em um PDF de verdade e o download começa imediatamente."}
+  ]
+}

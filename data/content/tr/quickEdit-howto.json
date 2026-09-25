@@ -1,0 +1,11 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF'de Metin Nasıl Düzenlenir",
+  "description": "Bir PDF içindeki yazım hatasını veya küçük bir metin değişikliğini düzeltin — %100 tarayıcınızda.",
+  "step": [
+    {"@type":"HowToStep","position":1,"name":"PDF'nizi açın","text":"'Dosya Seç'e tıklayın veya PDF'nizi yükleme alanına sürükleyin. PDFree, belgenin düzenlenebilir bir sürüme ne kadar temiz şekilde dönüştürülebileceğini kontrol eder."},
+    {"@type":"HowToStep","position":2,"name":"Düzeltmek istediğiniz metne tıklayın","text":"Belgenizin gerçek, düzenlenebilir bir önizlemesi açılır. Herhangi bir satıra, paragrafa, başlığa veya tablo hücresine tıklayın, yeniden yazın ve Enter'a basın."},
+    {"@type":"HowToStep","position":3,"name":"Kaydedin ve indirin","text":"'Kaydet'e tıklayın. Değişiklikleriniz gerçek bir PDF olarak yeniden oluşturulur ve hemen indirilir."}
+  ]
+}
