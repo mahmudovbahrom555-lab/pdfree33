@@ -40,6 +40,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE_URL  = process.env.PDFREE_BASE_URL || 'http://localhost:8934';
 const EXTRACTABLE_PDF = path.join(__dirname, '..', 'fixtures', 'quickedit_extractable_text.pdf');
 const HEAVY_PDF        = path.join(__dirname, '..', 'fixtures', 'normal-3page.pdf');
+const UNSUPPORTED_SCRIPT_PDF = path.join(__dirname, '..', 'fixtures', 'quickedit_unsupported_script.pdf');
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -196,6 +197,38 @@ await test('independent check #2 — this site\'s own real pdf2word tool re-extr
   const flat = norm(xml.replace(/<[^>]+>/g, ' '));
   expect(flat.includes(norm('CORRECTED via Quick Edit'))).toBeTruthy();
   expect(flat.includes(norm('typo that needs fixing'))).toBeFalsy();
+  await page.close();
+});
+
+await test('Save on a document with intact RTL text shows the same unsupported-script warning word-to-pdf shows, instead of silently wiping it to NUL bytes', async () => {
+  // Real bug found via overnight round-2 stress testing: word-to-pdf's own
+  // docxToPdf() wrapper threads walkDomToPdfContent()'s hasUnsupportedScript
+  // flag through to a warning toast (see docx2pdf.e2e.mjs's own sibling
+  // test) — but Quick Edit's _runQuickEdit() calls
+  // walkDomToPdfContent()/pdfContentToBlob() directly and used to drop the
+  // flag on the floor. Confirmed empirically before the fix: a PDF with
+  // genuinely intact Hebrew text got ALL of that text silently wiped to NUL
+  // bytes on Save — even with zero edits made — while #successCard reported
+  // plain success and #toast stayed completely silent.
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  const toasts = [];
+  await page.exposeFunction('__recordToast', (txt) => toasts.push(txt));
+  await page.goto(`${BASE_URL}/quick-edit-pdf/`, { waitUntil: 'load' });
+  await page.evaluate(() => {
+    const el = document.getElementById('toast');
+    if (!el) return;
+    new MutationObserver(() => { if (el.textContent.trim()) window.__recordToast(el.textContent.trim()); })
+      .observe(el, { childList: true, characterData: true, subtree: true });
+  });
+  await page.waitForSelector('#fileInput', { state: 'attached' });
+  await page.setInputFiles('#fileInput', UNSUPPORTED_SCRIPT_PDF);
+  await page.waitForSelector('.qe-modal--open', { timeout: 20000 });
+  await page.click('#qeModalSaveBtn');
+  await page.waitForSelector('#successCard', { timeout: 20000 });
+  await page.waitForTimeout(300);
+
+  const sawWarning = toasts.some(t => /Chinese|Japanese|Korean|Arabic|Hebrew|Thai|emoji/i.test(t));
+  if (!sawWarning) throw new Error(`Expected an unsupported-script warning toast, saw: ${JSON.stringify(toasts)}`);
   await page.close();
 });
 

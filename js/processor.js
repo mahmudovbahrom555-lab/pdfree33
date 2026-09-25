@@ -4071,10 +4071,11 @@ async function _runQuickEdit(filesSnapshot, { editedContainer } = {}) {
 
   setProgress(70, 'Building PDF…');
 
-  let blob;
+  let blob, hasUnsupportedScript;
   try {
     const parsed = await walkDomToPdfContent(editedContainer, { isCancelled: () => !isProcessing });
     if (!isProcessing) return;
+    hasUnsupportedScript = parsed.hasUnsupportedScript;
     blob = await pdfContentToBlob(parsed, {
       isCancelled: () => !isProcessing,
       onProgress:  pct => setProgress(70 + Math.round(pct * 0.3), 'Building PDF…'),
@@ -4095,6 +4096,21 @@ async function _runQuickEdit(filesSnapshot, { editedContainer } = {}) {
   setFilesLocked(false);
   hideCancelBtn();
   setProgress(100, t('prog_done'));
+
+  // Real bug found via overnight round-2 stress testing: this call site
+  // re-walks the SAME edited DOM word-to-pdf's own docxToPdf() wrapper
+  // walks, and hits the exact same pdfmake font-coverage gap (bug #4,
+  // fixed earlier tonight) -- but this call site builds the PDF directly
+  // via walkDomToPdfContent()/pdfContentToBlob() rather than through
+  // docxToPdf(), so the hasUnsupportedScript flag never reached a toast
+  // here. Confirmed empirically: a document with intact RTL/CJK text gets
+  // ALL of that text silently wiped to NUL bytes on Save -- even
+  // paragraphs the user never clicked -- with zero warning. Same
+  // mitigation as word-to-pdf: warn, still ship the PDF (edits + every
+  // other run still round-trip correctly).
+  if (hasUnsupportedScript) {
+    showToast(t('warn_docx2pdf_unsupported_script'), 8000);
+  }
 
   document.dispatchEvent(new CustomEvent('pdfree:success', {
     detail: { tool: 'quickEdit', blob, desc, filename }
