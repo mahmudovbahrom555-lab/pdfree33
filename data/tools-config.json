@@ -407,7 +407,7 @@
         "ru": "Разделить PDF бесплатно — извлечение страниц | PDFree",
         "ja": "PDFを無料で分割 — ページを個別ファイルに、アップロード不要 | PDFree",
         "it": "Dividi PDF Gratis Online — Senza Caricare File | PDFree",
-        "ko": "PDF 분할 — 무료, 업로드 없이 | PDFree",
+        "ko": "PDF 분할 무료 — 페이지 추출, 업로드 없이 | PDFree",
         "nl": "PDF splitsen — Gratis, Zonder Uploaden | PDFree",
         "pl": "Podziel PDF — Darmowy, Bez Przesyłania | PDFree",
         "tr": "PDF Böl — Ücretsiz, Yükleme Yapmadan | PDFree",
@@ -1210,7 +1210,7 @@
         "ar": "taghyir-hajm-pdf"
       },
       "titles": {
-        "en": "Resize PDF for Printing | PDFree",
+        "en": "Resize PDF for Printing — Fit to A4, Letter, Legal | PDFree",
         "es": "Redimensionar PDF para Imprimir | PDFree",
         "pt": "Redimensionar PDF para Impressão | PDFree",
         "de": "PDF-Größe für den Druck ändern | PDFree",
