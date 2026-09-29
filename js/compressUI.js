@@ -43,7 +43,8 @@ let _targetDpi    = 150;       // null = no downsampling | 96 | 150
 let _quality      = 82;        // JPEG quality %, 60–95 (sent as 0–1 to worker)
 let _targetSizeMb = null;      // Target Size Mode: null | 25 | 10 | 5
 let _lastScan     = null;      // scan report (background or worker), null until scan arrives
-let _presetAutoSelected = false; // true when we auto-selected a preset from scan data
+let _presetAutoSelected = false; // true once the preset is settled (scan pick, saved or user choice) — scan won't override
+let _presetFromScan = false;     // true only while the CURRENT preset came from the scan's recommendation
 let _eventsBound  = false;     // listeners live on the persistent #compressOptions div — bind once
 let _rememberLoaded = false;   // "Remember my settings" applied once per tool session — see initCompressOptions
 
@@ -134,6 +135,18 @@ function _updateTimeEstimate() {
   if (!el) return;
   const est = _timeEstimate(_lastScan, _preset);
   el.textContent = est ? ` · ${t('compress_time_est', { t: est })}` : '';
+}
+
+// Sets the preset and reflects it in the preset cards (scan-driven changes;
+// a user's own click already updates the radio natively).
+function _selectPreset(preset) {
+  _preset = preset;
+  document.querySelectorAll('.compress-preset').forEach(el => {
+    el.classList.toggle('j2p-chip--active', el.dataset.preset === preset);
+    const input = el.querySelector('input[type="radio"]');
+    if (input) input.checked = input.value === preset;
+  });
+  _syncPresetDefaults(preset);
 }
 
 // Apply preset defaults to quality/DPI sliders without re-rendering the whole panel.
@@ -228,6 +241,7 @@ export function initCompressOptions(file) {
       _quality      = saved.quality != null ? Math.round(saved.quality * 100) : _quality;
       _targetSizeMb = saved.targetSizeMb ?? _targetSizeMb;
       _presetAutoSelected = true; // saved choice counts as explicit — don't let scan auto-override it
+      _presetFromScan     = false;
     }
   }
 
@@ -240,7 +254,7 @@ export function initCompressOptions(file) {
  * Заменяет placeholder "Analysis runs automatically…" реальными находками.
  * @param {{ pageCount, hasXMP, hasPieceInfo, thumbnails, isEncrypted, imageCount, imageDominant, opportunities }} report
  */
-export function renderWorkerScanReport(report) {
+export function renderWorkerScanReport(report, fileCount = 1) {
   _lastScan = report;
   const container = id('compressOptions');
   if (!container || container.style.display === 'none') return;
@@ -256,17 +270,27 @@ export function renderWorkerScanReport(report) {
     else container.insertAdjacentHTML('afterbegin', bannerHtml);
   }
 
-  // Auto-select recommended preset if user hasn't manually changed it
-  const rec = _recommendedPreset(report);
-  if (!_presetAutoSelected && _preset === 'medium' && rec !== 'medium') {
-    _preset             = rec;
-    _presetAutoSelected = true;
-    document.querySelectorAll('.compress-preset').forEach(el => {
-      el.classList.toggle('j2p-chip--active', el.dataset.preset === _preset);
-      const input = el.querySelector('input[type="radio"]');
-      if (input) input.checked = input.value === _preset;
-    });
-    _syncPresetDefaults(_preset);
+  // Auto-select recommended preset if user hasn't manually changed it.
+  // The scan only ever covers selectedFiles[0] (see app.js), so in a batch
+  // its pick would silently apply to every other file — real report: a
+  // 21-file batch saved 1% (1376.8 → 1366.9 MB) because a plain-text first
+  // file flipped the whole batch to Light, which never touches images. A
+  // batch stays on Standard unless the user picks otherwise; a scan pick
+  // made while only one file was selected is reverted once more are added.
+  // Same reason the ⭐ Recommended badge below is hidden for a batch.
+  const rec = fileCount > 1 ? null : _recommendedPreset(report);
+  if (fileCount > 1) {
+    if (_presetFromScan) {
+      _selectPreset('medium');
+      _presetFromScan     = false;
+      _presetAutoSelected = false;
+    }
+  } else {
+    if (!_presetAutoSelected && _preset === 'medium' && rec !== 'medium') {
+      _selectPreset(rec);
+      _presetAutoSelected = true;
+      _presetFromScan     = true;
+    }
   }
 
   // Show time estimate in the tier span
@@ -318,6 +342,7 @@ export function hideCompressOptions() {
   _targetSizeMb       = null;
   _lastScan           = null;
   _presetAutoSelected = false;
+  _presetFromScan     = false;
   _rememberLoaded     = false;
   resetWmRemove();
 }
@@ -640,6 +665,7 @@ function _bindEvents() {
     if (e.target.name === 'compressPreset') {
       _preset             = e.target.value;
       _presetAutoSelected = true; // user explicitly chose — don't override on next scan
+      _presetFromScan     = false;
       _targetSizeMb       = null; // reset target size when preset changes manually
       document.querySelectorAll('.compress-preset').forEach(el => {
         el.classList.toggle('j2p-chip--active', el.dataset.preset === _preset);
@@ -700,6 +726,7 @@ function _bindEvents() {
         _preset             = 'high';
         _targetDpi          = 96;
         _presetAutoSelected = true;
+        _presetFromScan     = false;
         // Sync preset cards visual
         document.querySelectorAll('.compress-preset').forEach(el => {
           el.classList.toggle('j2p-chip--active', el.dataset.preset === 'high');
@@ -813,6 +840,7 @@ export function hideCompressEmailOptions() {
   _targetSizeMb       = null;
   _lastScan           = null;
   _presetAutoSelected = false;
+  _presetFromScan     = false;
 }
 
 /**

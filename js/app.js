@@ -714,7 +714,7 @@ function initEvents() {
     const file = selectedFiles[0];
     if (!file) return;
     const report = await startCompressScan(file);
-    if (report && selectedFiles[0] === file) renderWorkerScanReport(report);
+    if (report && selectedFiles[0] === file) renderWorkerScanReport(report, selectedFiles.length);
   });
 
   // Background merge page-count scan: runs as soon as files are added to the merge list,
@@ -771,7 +771,7 @@ function initEvents() {
   // Compress scan findings arrive from worker mid-compression — update the
   // scan banner in #compressOptions with real data instead of the placeholder.
   document.addEventListener('pdfree:scan-report', e => {
-    renderWorkerScanReport(e.detail.report);
+    renderWorkerScanReport(e.detail.report, selectedFiles.length);
   });
 
   window.addEventListener('popstate', e => {

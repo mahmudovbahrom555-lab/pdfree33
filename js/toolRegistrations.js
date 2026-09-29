@@ -15,6 +15,7 @@ import { t }             from './i18n.js';
 import { getWmRemove, wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
 import { checkbox, chipGroup } from './uiComponents.js';
 import { cancelEreader, cancelSplit } from './processor.js';
+import { selectedFiles } from './files.js';
 
 // ── UI modules ─────────────────────────────────────────────────
 import { initCompressOptions, hideCompressOptions,
@@ -312,7 +313,9 @@ registerTool('compress', {
     // Hard block only when scan ran AND confirms Light preset is a near-no-op:
     // Light does not recompress images or use object streams, so if pre-scan
     // found zero removable items the operation will produce negligible results.
-    if (scan && p.preset === 'low' && scan.opportunities === 0) {
+    // Single file only: the scan covers selectedFiles[0] alone, so for a batch
+    // it can't vouch for the other files (see compressUI.js's auto-select).
+    if (scan && p.preset === 'low' && scan.opportunities === 0 && selectedFiles.length === 1) {
       return t('val_light_no_savings');
     }
     return null;

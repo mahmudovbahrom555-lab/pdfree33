@@ -210,6 +210,11 @@ export function cancelProcess(currentTool) {
     _batchCancelReject = null;
     reject(new _BatchCancelled());
   }
+  if (_compressPrepSettle) {
+    _compressPrepWorker?.terminate();
+    _compressPrepWorker = null;
+    _compressPrepSettle(null);
+  }
   _worker.terminate();
   _worker      = _createWorker();
   isProcessing = false;
@@ -1514,12 +1519,55 @@ async function _runEreader(filesSnapshot, { device = 'kindle', grayscale = true,
 
 // ── Compress ───────────────────────────────────────────────────
 
+// The file's bytes as compress sees them (decrypted when an owner password
+// was removed on add) — shared by the single-file and batch paths.
+async function _readCompressBuffer(file) {
+  return file._decryptedBuffer ? file._decryptedBuffer.slice(0) : preprocessPdfBuffer(await file.arrayBuffer());
+}
+
+// Lossless pre-pass (js/compressPrepWorker.js — see its header): images
+// stored with no /Filter are Flate-encoded before handleCompress, which
+// otherwise skips them entirely. Own dedicated worker, NOT the shared
+// `_worker` — js/worker.js is off-limits. Resolves with the buffer to
+// compress, or null if the user cancelled. Never rejects: a crash or hang
+// falls back to re-reading the original file, so this pass can only ever
+// add savings, never cost a compression.
+let _compressPrepWorker = null;
+let _compressPrepSettle = null;
+const _COMPRESS_PREP_TIMEOUT_MS = 60_000;
+
+function _compressPrep(buffer, file) {
+  return new Promise(resolve => {
+    let timer;
+    const settle = (val) => { clearTimeout(timer); _compressPrepSettle = null; resolve(val); };
+    const fallback = async () => {
+      _compressPrepWorker?.terminate();
+      _compressPrepWorker = null;
+      settle(await _readCompressBuffer(file));
+    };
+    if (!_compressPrepWorker) {
+      _compressPrepWorker = new Worker(new URL('./compressPrepWorker.js', import.meta.url));
+    }
+    _compressPrepWorker.onmessage = (e) => settle(e.data.result);
+    _compressPrepWorker.onerror   = fallback;
+    timer = setTimeout(fallback, _COMPRESS_PREP_TIMEOUT_MS);
+    _compressPrepSettle = settle;
+    _compressPrepWorker.postMessage({ file: buffer }, [buffer]);
+  });
+}
+
 async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = true, removeWatermarks = false, targetDpi = null, quality = null, targetSizeMb = null } = {}, toolKey = 'compress') {
   if (!_checkSize(filesSnapshot[0], MAX_COMPRESS_MB)) { _abortUI(); return; }
 
-  const file   = filesSnapshot[0];
-  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+  const file     = filesSnapshot[0];
+  const original = await _readCompressBuffer(file);
+  // Captured BEFORE the pre-pass: the buffer is transferred (detached) and
+  // the worker then only sees the pre-passed bytes — savings must be
+  // reported against what the user actually uploaded.
+  const originalSize = original.byteLength;
   setProgress(5, t('prog_loading_pdf'));
+  const buffer = await _compressPrep(original, file);
+  if (!buffer || !isProcessing) return;
 
   // Watchdog: if the worker goes silent for 45s (OOM crash or freeze),
   // browsers don't reliably fire onerror — detect it ourselves.
@@ -1578,8 +1626,9 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
       const baseName = file.name.replace(/\.pdf$/i, '');
       const filename  = `${baseName}-compressed.pdf`;
 
-      const savedPct  = data.originalSize > 0
-        ? Math.round((data.savedBytes / data.originalSize) * 100)
+      const savedBytes = originalSize - data.compressedSize;
+      const savedPct  = originalSize > 0
+        ? Math.round((savedBytes / originalSize) * 100)
         : 0;
       const desc = savedPct > 0
         ? t('desc_compress_saved', { pct: savedPct })
@@ -1593,9 +1642,9 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
           filename,
           // Extra data for compression report UI (beyond standard ТЗ)
           compressionReport: {
-            originalSize:   data.originalSize,
+            originalSize,
             compressedSize: data.compressedSize,
-            savedBytes:     data.savedBytes,
+            savedBytes,
             report:         data.report,
             targetSizeMb,
           },
@@ -2226,7 +2275,10 @@ function _postToWorkerForBatch(msg, transfer, onProgress) {
 
 /** One file through the compress runner — returns { name, buffer } for the zip. */
 async function _batchCompressOne(file, params, onProgress) {
-  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+  const original     = await _readCompressBuffer(file);
+  const originalSize = original.byteLength; // before the pre-pass detaches it — see _runCompress
+  const buffer       = await _compressPrep(original, file);
+  if (!buffer) throw new _BatchCancelled();
   const { preset = 'medium', preserveText = true, removeWatermarks = false, targetDpi = null, quality = null, targetSizeMb = null } = params;
   const data = await _postToWorkerForBatch(
     { tool: 'compress', file: buffer, options: { preset, preserveText, removeWatermarks, targetDpi, quality, targetSizeMb } },
@@ -2235,10 +2287,10 @@ async function _batchCompressOne(file, params, onProgress) {
   );
   if (!(data.result instanceof ArrayBuffer)) throw new Error('Unexpected result type from worker');
   const baseName = file.name.replace(/\.pdf$/i, '');
-  // originalSize/compressedSize come straight from worker.js's compress handler
-  // (same 'done' message shape as the single-file path) — _runBatch sums these
-  // across the whole batch for the aggregate "before → after" summary.
-  return { name: `${baseName}-compressed.pdf`, buffer: data.result, originalSize: data.originalSize, compressedSize: data.compressedSize };
+  // compressedSize comes straight from worker.js's compress handler; originalSize
+  // is the real uploaded size (not the pre-passed one worker.js saw) — _runBatch
+  // sums both across the whole batch for the aggregate "before → after" summary.
+  return { name: `${baseName}-compressed.pdf`, buffer: data.result, originalSize, compressedSize: data.compressedSize };
 }
 
 /** One file through a generic worker tool (watermark/protect/pagenum/flatten) — returns { name, buffer }. */
