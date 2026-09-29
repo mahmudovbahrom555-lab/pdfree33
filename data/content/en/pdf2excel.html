@@ -144,7 +144,7 @@
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">How does PDFree know what's a table and what isn't?</h3>
-          <p style="margin:0;font-size:14px;">It checks whether text lines line up into consistent columns across at least 3 rows — the same signal a human eye uses to spot a table. Each candidate gets a confidence score; low-confidence guesses are rejected rather than shown as a broken table, so you don't have to clean up false positives.</p>
+          <p style="margin:0;font-size:14px;">If the table has drawn borders, PDFree uses those lines as the exact cell boundaries — wrapped text stays in its own cell, and a table that continues across pages becomes one sheet. For tables without borders, it checks whether text lines line up into consistent columns across at least 3 rows — the same signal a human eye uses to spot a table. Each candidate gets a confidence score; low-confidence guesses are rejected rather than shown as a broken table, so you don't have to clean up false positives.</p>
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Is this a free PDF to Excel converter with no sign up?</h3>

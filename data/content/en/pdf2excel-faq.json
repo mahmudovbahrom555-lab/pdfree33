@@ -36,7 +36,7 @@
     "name": "How does PDFree know what's a table and what isn't?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "It checks whether text lines line up into consistent columns across at least 3 rows. Each candidate gets a confidence score; low-confidence guesses are rejected rather than shown as a broken table."
+      "text": "If the table has drawn borders, PDFree uses those lines as the exact cell boundaries — wrapped text stays in its own cell, and a table that continues across pages becomes one sheet. For tables without borders, it checks whether text lines line up into consistent columns across at least 3 rows. Each candidate gets a confidence score; low-confidence guesses are rejected rather than shown as a broken table."
     }
   },
   {

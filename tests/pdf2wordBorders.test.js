@@ -303,6 +303,55 @@ await test('an item exactly on a boundary still resolves to a single column (no 
   expect(cells[0] + cells[1]).toBe('X'); // appears in exactly one cell
 });
 
+// ── Real 41-page ruled attestation list (pdf2excel, 2026-09) ────────────
+// Rules there are thin filled rects (~0.7pt), and every row rule is drawn
+// as 3 collinear pieces. Shapes below reproduce each property on its own.
+console.log('\ndetectTableGrids — rules drawn as thin rects / split pieces:');
+
+await test('a thin rule-rect straddling a snap boundary yields ONE row rule, not a phantom pair', async () => {
+  // Edges at .7/.4 snap to different 4px buckets (e.g. 97.7→96, 98.4→100)
+  const ys = [97.7, 123.7, 149.7, 175.7];
+  const ops = [
+    ...ys.map(y => rectOp(40, y, 200, 0.7)),
+    ...[39.7, 139.7, 239.7].map(x => rectOp(x, 97.7, 0.7, 78.7)),
+  ];
+  const grids = await detectTableGrids(fakePage(ops));
+  expect(grids.length).toBe(1);
+  expect(grids[0].rowCount).toBe(3);
+  expect(grids[0].colCount).toBe(2);
+});
+
+await test('a rule drawn as collinear pieces with sub-point gaps forms ONE full-width table', async () => {
+  const pieces = y => [lineOp(40, y, 99.6, y), lineOp(100.4, y, 179.6, y), lineOp(180.4, y, 240, y)];
+  const ops = [
+    ...[100, 140, 180, 220].flatMap(pieces),
+    ...[40, 100, 180, 240].map(x => lineOp(x, 100, x, 220)),
+  ];
+  const grids = await detectTableGrids(fakePage(ops));
+  expect(grids.length).toBe(1);
+  expect(grids[0].x).toBe(40);
+  expect(grids[0].colCount).toBe(3);
+  expect(grids[0].rowCount).toBe(3);
+});
+
+await test('stacked filled boxes (text-line backgrounds, not rules) are NOT merged into a table', async () => {
+  // Real olympiad question sheet: invisible white boxes behind consecutive
+  // lines. Their side edges touch end-to-end; merging them would satisfy
+  // the frame check and invent a 1-column table.
+  const ops = [rectOp(36, 676, 281, 13.8), rectOp(36, 689.8, 281, 13.8), rectOp(36, 703.6, 281, 13.8)];
+  const grids = await detectTableGrids(fakePage(ops));
+  expect(grids.length).toBe(0);
+});
+
+await test('text starting just past a divider snapped RIGHT of its true position stays in its own column', () => {
+  // True divider 151.x snapped to 152; cell text at 153.84 (real case: a
+  // wrapped school name that used to land in the district column).
+  const cells = _assignLineToGridCols([{ x: 63.84, str: 'Parkent tumani' }, { x: 153.84, str: 'Parkent tuman ixtisoslashtirilgan' }],
+    [40, 152, 292]);
+  expect(cells[0]).toBe('Parkent tumani');
+  expect(cells[1]).toBe('Parkent tuman ixtisoslashtirilgan');
+});
+
 // ── Summary ──────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);

@@ -87,9 +87,9 @@ function _extractSegments(opList) {
     const dy = Math.abs(y2 - y1);
     const dx = Math.abs(x2 - x1);
     if (dy <= SNAP && dx > SNAP) {
-      hLines.push({ x1: Math.min(x1, x2), x2: Math.max(x1, x2), y: (y1 + y2) / 2 });
+      hLines.push({ x1: Math.min(x1, x2), x2: Math.max(x1, x2), y: (y1 + y2) / 2, rule: true });
     } else if (dx <= SNAP && dy > SNAP) {
-      vLines.push({ y1: Math.min(y1, y2), y2: Math.max(y1, y2), x: (x1 + x2) / 2 });
+      vLines.push({ y1: Math.min(y1, y2), y2: Math.max(y1, y2), x: (x1 + x2) / 2, rule: true });
     }
   };
 
@@ -189,6 +189,18 @@ function _extractSegments(opList) {
               const ex = tx(rx + rw, ry + rh), ey = ty(rx + rw, ry + rh);
               const left = Math.min(bx, ex), right = Math.max(bx, ex);
               const bot  = Math.min(by, ey), top   = Math.max(by, ey);
+              // A rect no thicker than SNAP is a rule drawn as a filled
+              // rect, not a box — treat it as ONE line at its centre (same
+              // threshold addSeg uses for stroked lines). Emitting both of
+              // its edges instead puts two lines ~0.7pt apart that can snap
+              // to DIFFERENT grid buckets, producing a phantom extra row or
+              // column 4px from every real one (seen on a real attestation
+              // list: row rules at 512/508, column rules at 292/296).
+              if (top - bot <= SNAP || right - left <= SNAP) {
+                addSeg(left, (bot + top) / 2, right, (bot + top) / 2);
+                addSeg((left + right) / 2, bot, (left + right) / 2, top);
+                break;
+              }
               hLines.push({ x1: left, x2: right, y: bot  });
               hLines.push({ x1: left, x2: right, y: top  });
               vLines.push({ y1: bot,  y2: top,   x: left });
@@ -209,25 +221,53 @@ function _extractSegments(opList) {
 
 function _snap(v) { return Math.round(v / SNAP) * SNAP; }
 
+// Merges [start, end, isRule] spans on the same line that overlap or are
+// separated by at most SNAP — see the call site in _buildGrids for why.
+// Only RULE spans (stroked lines, thin rule-rects — see addSeg) are merged:
+// the edges of ordinary filled boxes stay separate, exactly as before. A
+// real document stacks invisible white-filled boxes behind consecutive text
+// lines (an olympiad question sheet); merging their touching side edges
+// assembled a false 1-column "table" out of them.
+export function _mergeSpans(spans) {
+  const merged = [];
+  for (const [a, b] of spans.filter(s => s[2]).sort((x, y) => x[0] - y[0])) {
+    const last = merged[merged.length - 1];
+    if (last && a <= last[1] + SNAP) last[1] = Math.max(last[1], b);
+    else merged.push([a, b, true]);
+  }
+  return [...merged, ...spans.filter(s => !s[2])];
+}
+
 function _buildGrids(hLines, vLines, pageW = Infinity, pageH = Infinity) {
   if (!hLines.length || !vLines.length) return [];
 
   // Snap all coordinates
-  const sH = hLines.map(l => ({ x1: _snap(l.x1), x2: _snap(l.x2), y: _snap(l.y) }));
-  const sV = vLines.map(l => ({ y1: _snap(l.y1), y2: _snap(l.y2), x: _snap(l.x) }));
+  const sH = hLines.map(l => ({ x1: _snap(l.x1), x2: _snap(l.x2), y: _snap(l.y), rule: l.rule }));
+  const sV = vLines.map(l => ({ y1: _snap(l.y1), y2: _snap(l.y2), x: _snap(l.x), rule: l.rule }));
 
   // Group H-lines by Y → { y → [x1, x2] spans }
   const hByY = new Map();
   for (const l of sH) {
     if (!hByY.has(l.y)) hByY.set(l.y, []);
-    hByY.get(l.y).push([l.x1, l.x2]);
+    hByY.get(l.y).push([l.x1, l.x2, !!l.rule]);
   }
 
   // Group V-lines by X → { x → [y1, y2] spans }
   const vByX = new Map();
   for (const l of sV) {
     if (!vByX.has(l.x)) vByX.set(l.x, []);
-    vByX.get(l.x).push([l.y1, l.y2]);
+    vByX.get(l.x).push([l.y1, l.y2, !!l.rule]);
+  }
+
+  // A single visual rule is often drawn as several collinear segments
+  // (e.g. one per column group, with sub-point gaps between them). Left
+  // unmerged, the frame search below only ever sees each piece on its own
+  // and assembles one "table" per column group instead of one table across
+  // the full width — found on a real 41-page attestation list whose every
+  // row rule was 3 segments ([13,40] [41,578] [579,737]): the № column was
+  // lost entirely and guruhi/sanasi/vaqti were split into a separate grid.
+  for (const m of [hByY, vByX]) {
+    for (const [k, spans] of m) m.set(k, _mergeSpans(spans));
   }
 
   const hYs = [...hByY.keys()].sort((a, b) => a - b);

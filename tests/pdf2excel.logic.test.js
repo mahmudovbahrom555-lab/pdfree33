@@ -19,7 +19,7 @@ global.document = {
 global.window    = globalThis;
 global.Worker    = class { postMessage() {} terminate() {} addEventListener() {} };
 
-const { _p2eCellValue, _p2eConfidence } = await import('../js/processor.js');
+const { _p2eCellValue, _p2eConfidence, _p2eExtractPage, _p2eStitchTables } = await import('../js/processor.js');
 const { detectTables, groupItemsIntoLines } = await import('../js/pdf2wordTables.js');
 
 let passed = 0, failed = 0;
@@ -290,6 +290,73 @@ test('a genuinely unrelated line (matching only 1 of 4 base columns) is excluded
   const tables = detectTables(lines);
   expect(tables.length).toBe(1);
   expect(tables[0].rows.length).toBe(4); // header + 3 real data rows only
+});
+
+// ── _p2eExtractPage: ruled grids first ────────────────────
+// Real case: a 41-page ruled attestation list where text-alignment column
+// guessing got 574/842 records exact (spurious 9th column, wrapped names
+// glued onto the previous record). With the drawn rules as cell
+// boundaries: 842/842.
+console.log('\n_p2eExtractPage — ruled grid:');
+
+const GRID = { x: 0, y: 0, w: 300, h: 90, colXs: [0, 100, 200, 300], rowYs: [90, 60, 30, 0] };
+
+test('a cell wrapped over two lines stays ONE cell in its own row, and an empty cell stays empty', () => {
+  const lines = [
+    makeLineAt(120, [['Report title', 0]]),                                // above the grid
+    makeLineAt(75, [['No', 5], ['Name', 105], ['Group', 205]]),
+    makeLineAt(50, [['1', 5], ['Long name', 105], ['89', 205]]),
+    makeLineAt(40, [['continued', 105]]),                                  // wrap of row 1's Name
+    makeLineAt(15, [['2', 5], ['90', 205]]),                               // Name cell empty
+  ];
+  const { tables, textRows } = _p2eExtractPage(lines, [GRID], 1);
+  expect(tables.length).toBe(1);
+  expect(tables[0].rows).toEqual([['No', 'Name', 'Group'], ['1', 'Long name continued', '89'], ['2', '', '90']]);
+  expect(textRows.map(r => r.text)).toEqual(['Report title']);
+});
+
+test('a lone ruled box with one line of text is not a table — its text goes to the Text sheet', () => {
+  const box = { x: 0, y: 0, w: 300, h: 30, colXs: [0, 300], rowYs: [30, 0] };
+  const { tables, textRows } = _p2eExtractPage([makeLineAt(15, [['Signature:', 5]])], [box], 1);
+  expect(tables.length).toBe(0);
+  expect(textRows.map(r => r.text)).toEqual(['Signature:']);
+});
+
+test('lines outside every grid still go through the text-alignment detector', () => {
+  const lines = [
+    makeLineAt(700, [['Name', 0], ['Role', 44], ['Score', 88]]),
+    makeLineAt(680, [['Alice', 0], ['Eng', 44], ['92', 88]]),
+    makeLineAt(660, [['Bob', 0], ['PM', 44], ['87', 88]]),
+  ];
+  const { tables } = _p2eExtractPage(lines, [GRID], 1);
+  expect(tables.length).toBe(1);
+  expect(tables[0].rows.length).toBe(3);
+  expect(tables[0].colXs).toBe(undefined);
+});
+
+// ── _p2eStitchTables: one table across pages → one worksheet ──
+console.log('\n_p2eStitchTables:');
+
+const T = (page, rows, colXs) => ({ page, rows, confidence: 1, boldRows: new Set(), colXs });
+
+test('a ruled table continuing on the next page becomes one table; a reprinted header is dropped', () => {
+  const out = _p2eStitchTables([
+    T(1, [['No', 'Name'], ['1', 'A']], [0, 100, 200]),
+    T(2, [['No', 'Name'], ['2', 'B']], [1, 101, 199]),   // same columns within snap tolerance
+    T(3, [['3', 'C']], [0, 100, 200]),
+  ]);
+  expect(out.length).toBe(1);
+  expect(out[0].rows).toEqual([['No', 'Name'], ['1', 'A'], ['2', 'B'], ['3', 'C']]);
+});
+
+test('different columns, a skipped page, or a text-detected table are NOT stitched', () => {
+  const out = _p2eStitchTables([
+    T(1, [['a', 'b']], [0, 100, 200]),
+    T(2, [['c', 'd', 'e']], [0, 60, 130, 200]),           // different column layout
+    T(4, [['f', 'g', 'h']], [0, 60, 130, 200]),           // page 3 in between
+    T(5, [['i', 'j', 'k']], undefined),                   // text-detected, no rules
+  ]);
+  expect(out.length).toBe(4);
 });
 
 // ── Summary ────────────────────────────────────────────────

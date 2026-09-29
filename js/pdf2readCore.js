@@ -170,8 +170,8 @@ export function _assignLineToGridCols(items, colXs) {
   const cells = Array.from({ length: colCount }, () => []);
   for (const item of items) {
     let col = colCount - 1;
-    for (let c = 0; c < colCount; c++) {
-      if (item.x >= colXs[c] - GRID_SLACK && item.x < colXs[c + 1] + GRID_SLACK) { col = c; break; }
+    for (let c = colCount - 1; c >= 0; c--) {
+      if (item.x >= colXs[c] - GRID_SLACK) { col = c; break; }
     }
     cells[col].push(item.str);
   }
@@ -183,8 +183,8 @@ export function _assignLineToGridColsFonts(items, colXs) {
   const fonts = Array.from({ length: colCount }, () => undefined);
   for (const item of items) {
     let col = colCount - 1;
-    for (let c = 0; c < colCount; c++) {
-      if (item.x >= colXs[c] - GRID_SLACK && item.x < colXs[c + 1] + GRID_SLACK) { col = c; break; }
+    for (let c = colCount - 1; c >= 0; c--) {
+      if (item.x >= colXs[c] - GRID_SLACK) { col = c; break; }
     }
     if (fonts[col] === undefined && item.fontFamily) fonts[col] = item.fontFamily;
   }

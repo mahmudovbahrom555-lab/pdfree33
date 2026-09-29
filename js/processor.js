@@ -29,6 +29,7 @@ import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, _splitCrossColumnLines, _isCjk } from './textLayoutUtils.js';
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { _p2wBuildPageData } from './pdf2readCore.js';
+import { detectTableGrids } from './pdf2wordBorders.js';
 import { recognizeFormula } from './formulaOcr.js';
 import { docxToPdf, walkDomToPdfContent, pdfContentToBlob } from './docxToPdfCore.js';
 export { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE, _splitCrossColumnLines };
@@ -2606,16 +2607,15 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150, stripMeta
 }
 
 // ── PDF → Excel ──────────────────────────────────────────────────
-// Reuses detectTables() (js/pdf2wordTables.js) — the same X-coordinate
-// column-clustering engine pdf2word uses — since its rows: string[][]
-// output is already Excel's native cell model. Deliberately does NOT
-// reuse detectTableGrids() (border-only grids with no text): those are
-// visually meaningful in a Word document but carry zero cell data, so
-// they'd only produce empty worksheets — not useful in a spreadsheet.
-// Each detected table becomes its own worksheet; any line not captured
-// by a table is appended to a catch-all "Text" sheet so nothing is
-// silently dropped, even on documents that turn out not to be
-// spreadsheet-like.
+// Ruled tables use their drawn grid (detectTableGrids, js/pdf2wordBorders.js)
+// as the cell boundaries; everything else falls back to detectTables()
+// (js/pdf2wordTables.js), the X-coordinate column-clustering engine pdf2word
+// uses — see _p2eExtractPage. A grid with fewer than 2 text rows (an empty
+// template, a lone boxed note) produces no worksheet. A ruled table that
+// continues across pages is stitched back into one (_p2eStitchTables);
+// every other table becomes its own worksheet. Any line not captured by a
+// table is appended to a catch-all "Text" sheet so nothing is silently
+// dropped, even on documents that turn out not to be spreadsheet-like.
 
 async function _runPdf2Excel(filesSnapshot) {
   const file = filesSnapshot[0];
@@ -2872,33 +2872,118 @@ async function _p2eExtractTables(pdfDoc) {
 
     if (!lines.length) { pagesWithNoText++; page.cleanup?.(); continue; }
 
-    const pageTables = detectTables(lines);
-    const consumed    = new Set();
-    for (const tbl of pageTables) {
-      for (let li = tbl.startIdx; li <= tbl.endIdx; li++) consumed.add(li);
-      // A whole row is treated as bold only when EVERY item on that source
-      // line is bold — matches how real documents actually author
-      // subtotal/total rows (the entire row gets the bold weight, e.g.
-      // ReportLab's FONTNAME applied across a full row), and avoids a
-      // false positive from a single stray bold glyph (e.g. a bolded
-      // currency symbol) inside an otherwise-plain row.
-      const boldRows = new Set();
-      for (let li = tbl.startIdx; li <= tbl.endIdx; li++) {
-        const ln = lines[li];
-        if (ln.items.length && ln.items.every(it => it.bold)) boldRows.add(li - tbl.startIdx);
-      }
-      tables.push({ page: p, rows: tbl.rows, confidence: tbl.confidence, boldRows });
-    }
-    lines.forEach((ln, li) => {
-      if (consumed.has(li)) return;
-      const text = ln.items.map(i => i.str).join(' ').trim();
-      if (text) textRows.push({ page: p, text });
-    });
+    const grids = await detectTableGrids(page).catch(() => []);
+    const pageResult = _p2eExtractPage(lines, grids, p);
+    tables.push(...pageResult.tables);
+    textRows.push(...pageResult.textRows);
 
     page.cleanup?.();
   }
 
-  return { tables, textRows, totalPages: pdfDoc.numPages, pagesWithNoText };
+  return { tables: _p2eStitchTables(tables), textRows, totalPages: pdfDoc.numPages, pagesWithNoText };
+}
+
+// A whole row is treated as bold only when EVERY item on it is bold —
+// matches how real documents author subtotal/total rows (the entire row
+// gets the bold weight, e.g. ReportLab's FONTNAME applied across a full
+// row), and avoids a false positive from a single stray bold glyph (e.g. a
+// bolded currency symbol) inside an otherwise-plain row.
+const _p2eAllBold = lns => lns.some(ln => ln.items.length) &&
+  lns.every(ln => ln.items.every(it => it.bold));
+
+// One page → { tables, textRows }. Ruled grids (detectTableGrids) come
+// first: their drawn rules ARE the cell boundaries, so every text line is
+// placed by its position against them — a cell's wrapped second line lands
+// in the same row as its first, and an empty cell stays empty instead of
+// shifting its neighbours over. Guessing columns from text alignment alone
+// (detectTables) got both wrong on a real 41-page ruled attestation list
+// (only 574/842 records exact: a spurious 9th column on ~170 rows, wrapped
+// names glued onto the previous record). Lines outside every grid still go
+// through detectTables, unchanged — it remains the only option for
+// borderless tables. Anything neither claims becomes a Text-sheet row.
+export function _p2eExtractPage(lines, grids, page) {
+  const tables   = [];
+  const consumed = new Set();
+
+  for (const grid of grids) {
+    const { rowYs, colXs } = grid;
+    const bands = Array.from({ length: rowYs.length - 1 }, () => []);
+    const claimed = [];
+    lines.forEach((ln, li) => {
+      if (consumed.has(li)) return;
+      const r = rowYs.findIndex((top, i) => i < bands.length && ln.y < top && ln.y >= rowYs[i + 1]);
+      if (r < 0) return;
+      bands[r].push(ln);
+      claimed.push(li);
+    });
+
+    const rows = [];
+    const boldRows = new Set();
+    for (const bandLines of bands) {
+      const cols = Array.from({ length: colXs.length - 1 }, () => []);
+      for (const ln of bandLines) {
+        _assignLineToGridCols(ln.items, colXs).forEach((text, c) => { if (text) cols[c].push(text); });
+      }
+      const row = cols.map(parts => parts.join(' '));
+      if (!row.some(Boolean)) continue;
+      if (_p2eAllBold(bandLines)) boldRows.add(rows.length);
+      rows.push(row);
+    }
+    // Same 2-row floor detectTables applies — a lone ruled box (a signature
+    // field, a boxed note) isn't a table; its text falls through below.
+    if (rows.length < 2) continue;
+    claimed.forEach(li => consumed.add(li));
+    tables.push({ page, rows, confidence: 1, boldRows, colXs });
+  }
+
+  const restIdx = lines.map((_, li) => li).filter(li => !consumed.has(li));
+  const rest    = restIdx.map(li => lines[li]);
+  for (const tbl of detectTables(rest)) {
+    const tblLines = rest.slice(tbl.startIdx, tbl.endIdx + 1);
+    const boldRows = new Set();
+    tblLines.forEach((ln, i) => { if (_p2eAllBold([ln])) boldRows.add(i); });
+    for (let i = tbl.startIdx; i <= tbl.endIdx; i++) consumed.add(restIdx[i]);
+    tables.push({ page, rows: tbl.rows, confidence: tbl.confidence, boldRows });
+  }
+
+  const textRows = [];
+  lines.forEach((ln, li) => {
+    if (consumed.has(li)) return;
+    const text = ln.items.map(i => i.str).join(' ').trim();
+    if (text) textRows.push({ page, text });
+  });
+  return { tables, textRows };
+}
+
+// Joins a ruled table that continues onto the next page back into ONE
+// table (→ one worksheet), instead of one worksheet per page. Only grid
+// tables carry colXs, so only those are stitched — a text-detected table's
+// columns are inferred per page and can't be matched this reliably. Rows
+// repeating the first table's leading rows (a header reprinted on every
+// page) are dropped from the continuation.
+export function _p2eStitchTables(tables) {
+  const out = [];
+  let last = null, lastPage = 0;
+  for (const tbl of tables) {
+    const continues = last && tbl.colXs && last.colXs && tbl.page === lastPage + 1 &&
+      tbl.colXs.length === last.colXs.length &&
+      tbl.colXs.every((x, i) => Math.abs(x - last.colXs[i]) <= 4);
+    if (!continues) {
+      last = { ...tbl, rows: [...tbl.rows], boldRows: new Set(tbl.boldRows) };
+      lastPage = tbl.page;
+      out.push(last);
+      continue;
+    }
+    const header = last.rows.slice(0, 3).map(r => r.join('\u0001'));
+    let skip = 0;
+    while (skip < tbl.rows.length && header.includes(tbl.rows[skip].join('\u0001'))) skip++;
+    tbl.rows.slice(skip).forEach((row, i) => {
+      if (tbl.boldRows.has(i + skip)) last.boldRows.add(last.rows.length);
+      last.rows.push(row);
+    });
+    lastPage = tbl.page;
+  }
+  return out;
 }
 
 export function _p2eConfidence({ tables, totalPages, pagesWithNoText }) {
@@ -4954,6 +5039,16 @@ function _p2wGroupRotated(items, xTol = 20) {
 // pdf2wordBorders.js can also detect real, densely-populated merged-cell
 // tables, a misassigned column silently corrupts real data instead of
 // just a decorative header cell.
+//
+// Shrinking the slack alone didn't close this: each column's range was
+// [colXs[c] - SLACK, colXs[c+1] + SLACK), so neighbouring ranges still
+// overlapped and the first (LEFT) match won. A divider snapped right of its
+// true position (151.x → 152) put text starting 2.7px past it (x=153.84)
+// back into the previous column — real case, a wrapped school name on a
+// ruled attestation list landing in the district column. Assignment now
+// takes the RIGHTMOST column whose left edge (minus SLACK) the item has
+// reached: ranges no longer overlap, and cell text — which always starts
+// at or after its own left divider — can't fall back into its neighbour.
 const GRID_SLACK = 2;
 
 export function _assignLineToGridCols(items, colXs) {
@@ -4961,8 +5056,8 @@ export function _assignLineToGridCols(items, colXs) {
   const cells = Array.from({ length: colCount }, () => []);
   for (const item of items) {
     let col = colCount - 1;
-    for (let c = 0; c < colCount; c++) {
-      if (item.x >= colXs[c] - GRID_SLACK && item.x < colXs[c + 1] + GRID_SLACK) { col = c; break; }
+    for (let c = colCount - 1; c >= 0; c--) {
+      if (item.x >= colXs[c] - GRID_SLACK) { col = c; break; }
     }
     cells[col].push(item.str);
   }
@@ -4981,8 +5076,8 @@ export function _assignLineToGridColsFonts(items, colXs) {
   const fonts = Array.from({ length: colCount }, () => undefined);
   for (const item of items) {
     let col = colCount - 1;
-    for (let c = 0; c < colCount; c++) {
-      if (item.x >= colXs[c] - GRID_SLACK && item.x < colXs[c + 1] + GRID_SLACK) { col = c; break; }
+    for (let c = colCount - 1; c >= 0; c--) {
+      if (item.x >= colXs[c] - GRID_SLACK) { col = c; break; }
     }
     if (fonts[col] === undefined && item.fontFamily) fonts[col] = item.fontFamily;
   }
