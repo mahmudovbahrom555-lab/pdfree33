@@ -3,12 +3,14 @@
 #
 # Regenerates the few synthetic corpus PDFs that can't be built at test time
 # with pdf-lib (tests/corpus/README.md): encryption and a CCITT G4 scan.
-# Deterministic content, no real documents. Requires: pymupdf, pillow.
+# Deterministic content, no real documents. Requires: pymupdf, pillow, and
+# the qpdf CLI (for the Acrobat-style, by-reference /Encrypt variant).
 # Usage: python3 tests/corpus/synthetic/make_synthetic.py
 
 import io
 import os
-import struct
+import subprocess
+import tempfile
 
 import fitz
 from PIL import Image, ImageDraw
@@ -34,6 +36,20 @@ def encrypted():
         doc = fitz.open()
         _text_page(doc, f'Synthetic test page — {name}')
         doc.save(os.path.join(OUT, name), **kw)
+
+
+def encrypted_by_reference():
+    # MuPDF (above) writes /Encrypt as a DIRECT dictionary in the trailer;
+    # Acrobat and qpdf write it as a reference (/Encrypt N 0 R). Both are
+    # valid, and the site's encryption preflight once recognised only the
+    # reference form — so the corpus keeps one of each.
+    doc = fitz.open()
+    _text_page(doc, 'Synthetic test page — encrypted-user-password-qpdf.pdf')
+    with tempfile.TemporaryDirectory() as tmp:
+        plain = os.path.join(tmp, 'plain.pdf')
+        doc.save(plain)
+        subprocess.run(['qpdf', '--encrypt', 'user', 'owner', '256', '--', plain,
+                        os.path.join(OUT, 'encrypted-user-password-qpdf.pdf')], check=True)
 
 
 def ccitt_scan():
@@ -79,6 +95,7 @@ def ccitt_scan():
 
 if __name__ == '__main__':
     encrypted()
+    encrypted_by_reference()
     ccitt_scan()
     for f in sorted(os.listdir(OUT)):
         if f.endswith('.pdf'):

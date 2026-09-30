@@ -134,7 +134,12 @@ def judge(entry):
     fails, notes = [], []
 
     if old and not new:
-        fails.append(f"no output from NEW ({entry['new'].get('reason')}) where OLD produced one")
+        if sound(old):
+            fails.append(f"no output from NEW ({entry['new'].get('reason')}) where OLD produced a sound one")
+        else:
+            # Refusing (e.g. "password protected — unlock it first") beats handing
+            # back the corrupt file OLD produced.
+            notes.append(f"NEW refuses ({entry['new'].get('reason', '')[:60]}) where OLD returned a corrupt file (fixed)")
     if new and 'error' in new:
         fails.append(new['error'])
     if new and 'error' not in new:

@@ -574,7 +574,21 @@ function _onMergeBtnClick() {
   // found in a throttled-CPU Playwright pass (88ms vs 0-16ms for every
   // other tested interaction), the only one in the app not already using
   // this pattern.
-  requestAnimationFrame(() => {
+  requestAnimationFrame(async () => {
+    // A PDF that still needs its user password can't be processed: every
+    // pdf-lib tool loads with ignoreEncryption, so compress/watermark/page
+    // numbers/metadata silently returned a corrupt file (0 pages even with
+    // the password) and rotate/split/pdf2jpg said "select at least one page"
+    // (found by the corpus gate, 2026-09-30). Checked BEFORE the tool's own
+    // validation so that misleading message never shows. Unlock is the one
+    // tool meant to receive it; it caches _decryptedBuffer, which clears this.
+    if (currentTool !== 'unlock') {
+      await Promise.all(selectedFiles.map(f => f._encryptionCheck));
+      if (selectedFiles.some(f => f._needsPassword && !f._decryptedBuffer)) {
+        showToast(t('ocr_password_protected_inline'), 8000);
+        return;
+      }
+    }
     // Registry dispatch — no more if-else per tool
     const { params, error } = collectToolParams(currentTool);
     if (error) { showToast(error); return; }

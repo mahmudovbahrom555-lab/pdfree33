@@ -175,7 +175,9 @@ export async function decryptWithPassword(bytes, password) {
  *   1. Fast /Encrypt heuristic — skip non-encrypted files immediately.
  *   2. QPDF decrypt with empty password → owner-only PDFs open transparently.
  *   3. If QPDF fails (real user password) → return original buffer unchanged.
- *      worker.js will then throw ENCRYPTED and the UI will show the error.
+ *      Nothing downstream throws for it (pdf-lib loads use ignoreEncryption)
+ *      — such files are stopped before processing by app.js's password
+ *      guard (files.js sets file._needsPassword).
  *
  * @param {ArrayBuffer} buffer
  * @returns {Promise<ArrayBuffer>} Clean (decrypted or original) ArrayBuffer

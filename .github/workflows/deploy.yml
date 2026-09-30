@@ -165,6 +165,16 @@ jobs:
         # tests/e2e/compress.e2e.mjs's header comment.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:compress
 
+      - name: E2E — password-protected PDFs are stopped, not corrupted
+        # A PDF still needing its user password was processed anyway (every
+        # pdf-lib tool loads with ignoreEncryption): corrupt output from
+        # compress/watermark/page numbers/metadata, "select a page" from
+        # rotate/split/pdf2jpg, and — for MuPDF-written files whose /Encrypt is
+        # a direct trailer dict the preflight didn't recognise — Unlock saying
+        # no password was needed. Found by the corpus gate. Covers both
+        # /Encrypt forms; see tests/e2e/password-guard.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:password-guard
+
       - name: Corpus diff — compress, production vs this build (real documents)
         # Every PDF in tests/corpus (open-licence real documents + synthetic
         # traps) goes through /compress-pdf/ on PRODUCTION and on this build;

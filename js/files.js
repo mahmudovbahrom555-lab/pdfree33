@@ -73,7 +73,12 @@ async function _preflightPDF(file) {
     //     as plaintext in the tail, so it can't match by accident
     //   - only RC4 PDFs missing AESV2/V3 are correctly NOT flagged
     //     (tested: pdf-lib handles RC4 fine with ignoreEncryption:true)
-    const hasEncryptRef = /\/Encrypt\s+\d+\s+\d+\s+R/.test(tail);
+    // Either a reference (Acrobat, qpdf) or a DIRECT dictionary in the trailer
+    // (MuPDF / PyMuPDF / mutool write `/Encrypt<</Filter/Standard …>>`) — both
+    // valid. Matching only the reference form missed the latter entirely: such
+    // files were treated as unencrypted, tools processed the ciphertext into a
+    // corrupt output, and Unlock claimed no password was needed (2026-09-30).
+    const hasEncryptRef = /\/Encrypt\s*(?:\d+\s+\d+\s+R|<<)/.test(tail);
     const hasStandard   = /\/Filter\s*\/Standard/.test(tail);
     const hasAES        = /\/AESV[23]/.test(tail);
 
@@ -227,7 +232,9 @@ export function addFiles(files) {
   // Annotates file._pdfMeta. For AES- or RC4-encrypted files, tries QPDF
   // silent decryption (owner-only / empty user password) before showing badge.
   for (const f of added) {
-    _preflightPDF(f).then(async meta => {
+    // Kept on the file so the process button can wait for it (see
+    // app.js's password guard) — a click right after adding must not race it.
+    f._encryptionCheck = _preflightPDF(f).then(async meta => {
       if (!meta) return;
       if (meta.notPDF) {
         // File has .pdf extension but missing %PDF- magic bytes — reject it.
@@ -253,6 +260,10 @@ export function addFiles(files) {
             f._decryptedBuffer = decrypted.buffer;  // cache for processor.js
             f._pdfMeta.isEncrypted    = false;       // suppress lock badge
             f._pdfMeta.mayBeEncrypted = false;       // suppress Unlock's password field
+          } else {
+            // qpdf ran and couldn't open it without a real user password (a
+            // WASM init failure throws instead, below — never flagged here).
+            f._needsPassword = true;
           }
         } catch { /* WASM init failure — keep flags as detected */ }
         // Re-init tool options either way — the first init ran before this
