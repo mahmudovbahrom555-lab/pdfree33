@@ -972,8 +972,11 @@ function _estimateDpi(imgW, imgH, pageWPt, pageHPt, rotDeg) {
 //
 // Returns { recompressed, skipped, savedBytes }
 async function _recompressImages(pdf, jpegQuality, targetDpi, medianPageSize) {
-  const { PDFName, PDFNumber, PDFArray, PDFRawStream, decodePDFRawStream } = PDFLib;
+  const { PDFName, PDFNumber, PDFArray, PDFDict, PDFRawStream, decodePDFRawStream } = PDFLib;
   const ctx = pdf.context;
+  // Every dict entry this function may change — snapshotted per image and
+  // restored EXACTLY whenever the replacement is abandoned (see REVERT below).
+  const TOUCHED_KEYS = ['Filter', 'ColorSpace', 'DecodeParms', 'Width', 'Height'].map(k => PDFName.of(k));
 
   let recompressed = 0, skipped = 0, savedBytes = 0;
 
@@ -1004,7 +1007,13 @@ async function _recompressImages(pdf, jpegQuality, targetDpi, medianPageSize) {
     }
 
     const filter     = dict.get(PDFName.of('Filter'))?.toString() ?? '';
-    const colorSpace = dict.get(PDFName.of('ColorSpace'));
+    const rawColorSpace = dict.get(PDFName.of('ColorSpace'));
+    // Resolved, because a colour space given by reference ("5 0 R") slipped
+    // past the guards below: a Flate image was then decoded as RGB whatever it
+    // was (Indexed → solid black, gray → stripes), and a CMYK JPEG was
+    // re-encoded as RGB but kept its CMYK label (verified in production,
+    // 2026-09-29).
+    const colorSpace = ctx.lookup(rawColorSpace);
     const bpcObj     = dict.get(PDFName.of('BitsPerComponent'));
     const bpc        = bpcObj instanceof PDFNumber ? bpcObj.asNumber() : 8;
     const w          = dict.get(PDFName.of('Width'))?.asNumber()  ?? 0;
@@ -1016,16 +1025,36 @@ async function _recompressImages(pdf, jpegQuality, targetDpi, medianPageSize) {
     // ── Safety checks ─────────────────────────────────────────
     // CRITICAL: use instanceof PDFArray, NOT Array.isArray()
     // Array.isArray always returns false for pdf-lib PDFArray objects
-    if (colorSpace instanceof PDFArray)               { skipped++; continue; }  // ICC
-    if (colorSpace?.toString().includes('CMYK'))      { skipped++; continue; }  // CMYK
+    if (rawColorSpace instanceof PDFArray)            { skipped++; continue; }  // ICC (given directly)
+    // Given by reference: skip only what is actually mis-decoded. ICC N=3/N=1
+    // by reference keep being recompressed as RGB/gray (a real 41-page PDF,
+    // 29 such images: 2.15 → 0.47 MB — skipping them would lose that).
+    const iccComponents = colorSpace instanceof PDFArray && colorSpace.get(0)?.toString() === '/ICCBased'
+      ? ctx.lookup(colorSpace.get(1))?.dict?.get(PDFName.of('N'))?.asNumber?.()
+      : undefined;
+    if (colorSpace?.toString().includes('CMYK') || iccComponents === 4) { skipped++; continue; }  // CMYK
+    if (isFlate && colorSpace instanceof PDFArray && iccComponents !== 1 && iccComponents !== 3) {
+      skipped++; continue;                                                            // Indexed, Separation…
+    }
     if (colorSpace?.toString().includes('DeviceGray') && bpc === 1) { skipped++; continue; }  // 1-bit
     if (bpc === 1)                                    { skipped++; continue; }
     if (dict.get(PDFName.of('SMask')))                { skipped++; continue; }  // alpha
     if (dict.get(PDFName.of('Mask')))                 { skipped++; continue; }  // alpha
     if (w * h < 400)                                  { skipped++; continue; }  // too tiny
     if (!isJPEG && !isFlate)                          { skipped++; continue; }  // unsupported filter
+    // pdf-lib's Flate decoder reads 8-bit samples and ignores DecodeParms, so
+    // a /Predictor row-filter byte or a 2/4/16-bit sample was read as pixels
+    // (sheared / garbage output, verified in production 2026-09-29).
+    const parms = ctx.lookup(dict.get(PDFName.of('DecodeParms')));
+    const predicted = parms instanceof PDFDict
+      ? (parms.lookup(PDFName.of('Predictor'))?.asNumber?.() ?? 1) > 1
+      : parms !== undefined;                          // array (filter chain) — can't tell, skip
+    if (isFlate && (bpc !== 8 || predicted))          { skipped++; continue; }  // undecodable
 
     const origSize = obj.contents.length;
+    const origEntries = TOUCHED_KEYS.map(k => dict.get(k));
+    const revert = () => TOUCHED_KEYS.forEach((k, i) =>
+      origEntries[i] === undefined ? dict.delete(k) : dict.set(k, origEntries[i]));
 
     try {
       let newBytes;
@@ -1068,8 +1097,7 @@ async function _recompressImages(pdf, jpegQuality, targetDpi, medianPageSize) {
         // PDF stores rows of RGB (or Gray) pixels without row-filter bytes (unlike PNG)
         // OffscreenCanvas putImageData needs RGBA — we expand RGB → RGBA manually
         const rawPixels = decodePDFRawStream(obj).decode();
-        const cs        = colorSpace?.toString() ?? '';
-        const isGray    = cs.includes('DeviceGray');
+        const isGray    = colorSpace?.toString() === '/DeviceGray' || iccComponents === 1;
 
         // Build RGBA Uint8ClampedArray for ImageData
         const rgba = new Uint8ClampedArray(w * h * 4);
@@ -1113,14 +1141,13 @@ async function _recompressImages(pdf, jpegQuality, targetDpi, medianPageSize) {
 
       // 10% savings rule — only replace if meaningfully smaller
       if (newBytes.length >= origSize * 0.9) {
-        // Revert filter changes made during FlateDecode→JPEG attempt.
-        // Only restore ColorSpace if it existed originally — setting it to
-        // undefined would write an invalid entry into the PDF dict.
-        if (isFlate) {
-          dict.set(PDFName.of('Filter'), PDFName.of('FlateDecode'));
-          if (colorSpace) dict.set(PDFName.of('ColorSpace'), colorSpace);
-          else            dict.delete(PDFName.of('ColorSpace'));
-        }
+        // REVERT: both branches write the downsampled Width/Height (and the
+        // Flate branch Filter/ColorSpace/DecodeParms) BEFORE this check. The
+        // old revert only restored Filter/ColorSpace, so a kept original image
+        // was labelled with the new, smaller size — garbage output for gray
+        // Flate and JPEG scans since 5b76e99a (2026-05-24, verified in
+        // production 2026-09-29). Restore every touched entry as it was.
+        revert();
         skipped++;
         continue;
       }
@@ -1132,6 +1159,7 @@ async function _recompressImages(pdf, jpegQuality, targetDpi, medianPageSize) {
 
     } catch {
       // Any error (createImageBitmap fails on corrupt data, etc.) — skip silently
+      revert();
       skipped++;
     }
   }

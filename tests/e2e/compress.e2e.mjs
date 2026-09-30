@@ -15,6 +15,15 @@
 //     revert, and reads a by-reference colour space as RGB) — a gray image
 //     came out as striped garbage in production. Such images must pass
 //     through byte-identical.
+//  4. handleCompress itself (js/worker.js _recompressImages, fixed 2026-09-29
+//     as an owner-approved exception to its off-limits rule) corrupted six
+//     image shapes in production, independent of the pre-pass: it kept the
+//     original image but labelled it with the downsampled size (gray Flate,
+//     gray JPEG — since 2026-05-24), decoded by-reference colour spaces as
+//     RGB (Indexed → black, CMYK JPEG relabelled wrongly), and read PNG-
+//     predictor / 16-bit Flate samples as 8-bit pixels. Each must now come
+//     out untouched. The CMYK JPEG is a synthetic fixture
+//     (tests/fixtures/cmyk-gradient.jpg) — browsers can't encode CMYK.
 //  2. js/compressUI.js — the background pre-scan only covers
 //     selectedFiles[0], yet its recommended preset was applied to the whole
 //     batch: a plain-text first file flipped every file to Light, which
@@ -76,6 +85,33 @@ const iccRef = pdf => pdf.context.register(pdf.context.obj([PDFName.of('ICCBased
   pdf.context.register(pdf.context.stream(ICC, { N: 3 }))]));
 // DeviceGray by reference — the shape that came out as garbage
 const grayRef = pdf => pdf.context.register(PDFName.of('DeviceGray'));
+
+// Builds a one-image page from an already-encoded stream + dict entries.
+async function imagePdf(bytes, entries) {
+  const pdf  = await PDFDocument.create();
+  const page = pdf.addPage([595, 842]);
+  const img  = pdf.context.register(pdf.context.stream(bytes, {
+    Type: 'XObject', Subtype: 'Image', BitsPerComponent: 8, ...(typeof entries === 'function' ? entries(pdf) : entries),
+  }));
+  page.node.setXObject(PDFName.of('Im0'), img);
+  page.pushOperators(pushGraphicsState(), concatTransformationMatrix(595, 0, 0, 842, 0, 0), drawObject('Im0'), popGraphicsState());
+  return pdf.save({ useObjectStreams: false });
+}
+
+// ASCII85 (PDF /ASCII85Decode) encoder, "~>" terminated.
+function ascii85(bytes) {
+  let out = '';
+  for (let i = 0; i < bytes.length; i += 4) {
+    const n = Math.min(4, bytes.length - i);
+    let v = 0;
+    for (let k = 0; k < 4; k++) v = v * 256 + (k < n ? bytes[i + k] : 0);
+    if (n === 4 && v === 0) { out += 'z'; continue; }
+    const c = [];
+    for (let k = 0; k < 5; k++) { c.unshift(String.fromCharCode(33 + (v % 85))); v = Math.floor(v / 85); }
+    out += c.slice(0, n + 1).join('');
+  }
+  return out + '~>';
+}
 
 function firstImage(doc) {
   return [...doc.context.enumerateIndirectObjects()].map(([, o]) => o)
@@ -166,6 +202,98 @@ await test('a raw DeviceGray-by-reference image passes through byte-identical (w
   expect(out.dict.get(PDFName.of('Height'))?.toString()).toBe(String(H));
   expect(Buffer.compare(Buffer.from(out.contents), RAW_GRAY)).toBe(0);
 });
+
+// ── 4. handleCompress corruption shapes — each must come out untouched ──
+{
+  const deflate = b => zlib.deflateSync(b);
+  const grayGradient = Buffer.alloc(W * H);
+  for (let i = 0; i < grayGradient.length; i++) grayGradient[i] = ((i % W) * 255 / W) | 0;
+  // PNG "None" row filter byte before every row — what /Predictor 15 means
+  const rgbRows = [];
+  for (let y = 0; y < 1000; y++) {
+    const r = Buffer.alloc(1 + 800 * 3);
+    for (let x = 0; x < 800; x++) { r[1 + x * 3] = (x * 7 + y * 3) & 255; r[2 + x * 3] = y & 255; r[3 + x * 3] = x & 255; }
+    rgbRows.push(r);
+  }
+  // Seeded noise: Flate can't shrink it, so the old code's JPEG replacement
+  // path actually ran (a regular pattern compresses too well and never
+  // reached the corruption — the test then passed against the buggy build).
+  let seed = 12345;
+  const rnd = () => (seed = (seed * 1103515245 + 12345) >>> 0) / 2 ** 32;
+  const indices = Buffer.alloc(800 * 1000);
+  for (let i = 0; i < indices.length; i++) indices[i] = (rnd() * 4) | 0;
+  const gray16 = Buffer.alloc(800 * 1000 * 2);
+  for (let i = 0; i < 800 * 1000; i++) gray16.writeUInt16BE(Math.min(65535, (((i % 800) / 800) * 60000 + rnd() * 5000) | 0), i * 2);
+
+  // Low-quality gray JPEG from the real browser encoder — a q=0.72 re-encode
+  // can't beat it by 10%, so handleCompress takes its revert path.
+  const page = await browser.newPage();
+  const lowJpeg = Buffer.from(await page.evaluate(async ({ w, h }) => {
+    const c = new OffscreenCanvas(w, h); const g = c.getContext('2d');
+    const grad = g.createLinearGradient(0, 0, w, 0); grad.addColorStop(0, '#000'); grad.addColorStop(1, '#fff');
+    g.fillStyle = grad; g.fillRect(0, 0, w, h);
+    const b = await c.convertToBlob({ type: 'image/jpeg', quality: 0.15 });
+    return [...new Uint8Array(await b.arrayBuffer())];
+  }, { w: W, h: H }));
+  await page.close();
+
+  const cases = [
+    ['gray Flate (revert path)',  deflate(grayGradient), { Width: W, Height: H, ColorSpace: 'DeviceGray', Filter: 'FlateDecode' }],
+    ['low-quality JPEG (revert path)',   lowJpeg,               { Width: W, Height: H, ColorSpace: 'DeviceRGB', Filter: 'DCTDecode' }],
+    ['Indexed by reference',      deflate(indices),      pdf => ({ Width: 800, Height: 1000, Filter: 'FlateDecode',
+      ColorSpace: pdf.context.register(pdf.context.obj([PDFName.of('Indexed'), PDFName.of('DeviceRGB'), 3,
+        pdf.context.register(pdf.context.stream(Buffer.from([255, 0, 0, 0, 255, 0, 0, 0, 255, 255, 255, 0]), {}))])) })],
+    ['PNG predictor Flate',       deflate(Buffer.concat(rgbRows)), { Width: 800, Height: 1000, ColorSpace: 'DeviceRGB', Filter: 'FlateDecode',
+      DecodeParms: { Predictor: 15, Colors: 3, BitsPerComponent: 8, Columns: 800 } }],
+    ['16-bit gray Flate',         deflate(gray16),       { Width: 800, Height: 1000, ColorSpace: 'DeviceGray', Filter: 'FlateDecode', BitsPerComponent: 16 }],
+    ['CMYK JPEG by reference',    fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'fixtures', 'cmyk-gradient.jpg')),
+      pdf => ({ Width: 800, Height: 1000, Filter: 'DCTDecode', Decode: [1, 0, 1, 0, 1, 0, 1, 0],
+        ColorSpace: pdf.context.register(PDFName.of('DeviceCMYK')) })],
+  ];
+  for (const [label, bytes, entries] of cases) {
+    await test(`handleCompress leaves a ${label} image untouched (was corrupted)`, async () => {
+      const file = path.join(tmp, `${label.replace(/\W+/g, '-')}.pdf`);
+      fs.writeFileSync(file, await imagePdf(bytes, entries));
+      const before = firstImage(await PDFDocument.load(fs.readFileSync(file)));
+      const after  = firstImage(await PDFDocument.load(await compressViaUi(browser, file)));
+      for (const key of ['Filter', 'Width', 'Height', 'BitsPerComponent', 'DecodeParms']) {
+        expect(String(after.dict.get(PDFName.of(key)))).toBe(String(before.dict.get(PDFName.of(key))));
+      }
+      expect(Buffer.compare(Buffer.from(after.contents), Buffer.from(before.contents))).toBe(0);
+    });
+  }
+
+  // A filter CHAIN on the revert path: the old revert rewrote any Flate
+  // image's /Filter to a bare /FlateDecode, dropping /ASCII85Decode — the
+  // shape ReportLab/matplotlib write for soft masks. The mask then failed to
+  // decode and the WHOLE chart vanished from the page (found on the
+  // benchmark corpus's image-heavy.pdf by an old-vs-new run, 2026-09-30).
+  await test('handleCompress keeps an [/ASCII85Decode /FlateDecode] image untouched (charts vanished)', async () => {
+    const file = path.join(tmp, 'ascii85-chain.pdf');
+    fs.writeFileSync(file, await imagePdf(Buffer.from(ascii85(deflate(grayGradient))),
+      { Width: W, Height: H, ColorSpace: 'DeviceGray', Filter: [PDFName.of('ASCII85Decode'), PDFName.of('FlateDecode')] }));
+    const before = firstImage(await PDFDocument.load(fs.readFileSync(file)));
+    const after  = firstImage(await PDFDocument.load(await compressViaUi(browser, file)));
+    expect(String(after.dict.get(PDFName.of('Filter')))).toBe(String(before.dict.get(PDFName.of('Filter'))));
+    expect(String(after.dict.get(PDFName.of('Width')))).toBe(String(W));
+    expect(Buffer.compare(Buffer.from(after.contents), Buffer.from(before.contents))).toBe(0);
+  });
+
+  // The other side of that fix: an ICC N=3 colour space given BY REFERENCE
+  // was never mis-decoded (it is plain RGB) and must keep being recompressed.
+  // The first cut of the fix skipped it — a real 41-page PDF with 29 such
+  // images lost 2.15 → 0.47 MB savings (caught by an old-vs-new corpus run).
+  await test('a Flate RGB image with an ICC N=3 colour space by reference is still recompressed', async () => {
+    // Photo-like (gradient + mild noise): Flate can't shrink it much, a JPEG can
+    // — pure noise would be rejected by the 10% rule and prove nothing.
+    const noise = Buffer.alloc(800 * 1000 * 3);
+    for (let i = 0; i < noise.length; i++) noise[i] = Math.min(255, ((i % 2400) / 2400 * 200 + rnd() * 40) | 0);
+    const file = path.join(tmp, 'icc-ref-rgb.pdf');
+    fs.writeFileSync(file, await imagePdf(deflate(noise), pdf => ({ Width: 800, Height: 1000, Filter: 'FlateDecode', ColorSpace: iccRef(pdf) })));
+    const after = firstImage(await PDFDocument.load(await compressViaUi(browser, file)));
+    expect(after.dict.get(PDFName.of('Filter'))?.toString()).toBe('/DCTDecode');
+  });
+}
 
 await browser.close();
 fs.rmSync(tmp, { recursive: true, force: true });

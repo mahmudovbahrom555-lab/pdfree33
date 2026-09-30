@@ -88,15 +88,13 @@ async function _encodeRawImages(buffer) {
     if (dict.has(PDFName.of('Filter'))) continue;
 
     // Only images handleCompress will then LEAVE ALONE: its first guard skips
-    // any image whose /ColorSpace is a PDFArray (ICC, Indexed, Separation…),
-    // so a resolved array keeps exactly this lossless encoding. Anything it
-    // would process — plain DeviceRGB/DeviceGray, or a colour space it can
-    // only see as a reference — stays raw, as before this pass existed:
-    // handleCompress's Flate path writes the downsampled Width/Height before
-    // its 10%-savings check and doesn't restore them on revert, and it reads
-    // any non-"DeviceGray" string (e.g. "5 0 R") as 3-channel RGB. A raw
-    // DeviceGray-by-reference image fed through it came out as striped
-    // garbage (verified in production, 2026-09-29).
+    // any Flate image whose resolved /ColorSpace is a PDFArray (ICC, Indexed,
+    // Separation…), so this lossless encoding is exactly what ships. Plain
+    // DeviceRGB/DeviceGray raw images stay raw, as before this pass existed.
+    // History: the first version also encoded those, and handleCompress
+    // (before its own 2026-09-29 revert/colour-space fix) turned them into
+    // striped garbage in production. That fix makes them safe to hand over
+    // now, but widening this pass is a separate, deliberately untaken step.
     let cs = dict.get(PDFName.of('ColorSpace'));
     if (cs instanceof PDFRef) cs = pdf.context.lookup(cs);
     if (!(cs instanceof PDFArray)) continue;
