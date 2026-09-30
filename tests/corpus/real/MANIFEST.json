@@ -1,0 +1,355 @@
+{
+ "description": "Real, openly licensed PDFs for old-vs-new regression runs (scripts/corpus-diff). Every licence verified at source on the retrieved date. Never add user-supplied or personal documents here.",
+ "files": [
+  {
+   "file": "irs-fw9-form.pdf",
+   "source": "https://www.irs.gov/pub/irs-pdf/fw9.pdf",
+   "license": "Public domain (US federal government work, 17 U.S.C. §105)",
+   "retrieved": "2026-09-30",
+   "kind": "form",
+   "pages": 6,
+   "bytes": 140815,
+   "sha256": "2d420cbb4123dcf1fb82595b2359cfbb5d81f00b9df9d359fcc7af361d093f53",
+   "images": {},
+   "notes": "AcroForm fields"
+  },
+  {
+   "file": "irs-f1040-form.pdf",
+   "source": "https://www.irs.gov/pub/irs-pdf/f1040.pdf",
+   "license": "Public domain (US federal government work, 17 U.S.C. §105)",
+   "retrieved": "2026-09-30",
+   "kind": "form",
+   "pages": 2,
+   "bytes": 220237,
+   "sha256": "3d31c226df0d189ced80e039d01cf0f8820c1019681a0f0ca6264de277b7e982",
+   "images": {},
+   "notes": "AcroForm, 128 widgets"
+  },
+  {
+   "file": "arxiv-2609.36833.pdf",
+   "source": "https://arxiv.org/abs/2609.36833",
+   "license": "CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — verified via arXiv OAI <license>",
+   "retrieved": "2026-09-30",
+   "kind": "paper",
+   "pages": 11,
+   "bytes": 1162389,
+   "sha256": "1a4337833970e3653051b520f8959bd7527bd8e7794b2f5150582dfc9390e20f",
+   "images": {
+    "/DCTDecode": 4,
+    "/FlateDecode": 15
+   },
+   "notes": ""
+  },
+  {
+   "file": "arxiv-2609.36796.pdf",
+   "source": "https://arxiv.org/abs/2609.36796",
+   "license": "CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — verified via arXiv OAI <license>",
+   "retrieved": "2026-09-30",
+   "kind": "paper",
+   "pages": 7,
+   "bytes": 1971962,
+   "sha256": "5dc6f96e142c0c60ed3a69e2709a8ba14b6273e8efadaf84e9fcde9cea304a92",
+   "images": {
+    "/FlateDecode": 3
+   },
+   "notes": ""
+  },
+  {
+   "file": "arxiv-2609.36673.pdf",
+   "source": "https://arxiv.org/abs/2609.36673",
+   "license": "CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — verified via arXiv OAI <license>",
+   "retrieved": "2026-09-30",
+   "kind": "paper",
+   "pages": 24,
+   "bytes": 906571,
+   "sha256": "ee8390b2db3f1bbe4d4a473ff9556a5cb9b4214e790e7f53ae4b2b1eb7f7fa31",
+   "images": {
+    "/FlateDecode": 1
+   },
+   "notes": ""
+  },
+  {
+   "file": "arxiv-2609.36658.pdf",
+   "source": "https://arxiv.org/abs/2609.36658",
+   "license": "CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — verified via arXiv OAI <license>",
+   "retrieved": "2026-09-30",
+   "kind": "paper",
+   "pages": 13,
+   "bytes": 1840070,
+   "sha256": "cc25d574ed6d12e56fd825d51379982fda02a619d50ae30c7e0047925d6ec04b",
+   "images": {
+    "/DCTDecode": 10,
+    "/FlateDecode": 10
+   },
+   "notes": ""
+  },
+  {
+   "file": "arxiv-2609.36549.pdf",
+   "source": "https://arxiv.org/abs/2609.36549",
+   "license": "CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — verified via arXiv OAI <license>",
+   "retrieved": "2026-09-30",
+   "kind": "paper",
+   "pages": 24,
+   "bytes": 654322,
+   "sha256": "61c5517b6666e12971727712b48e536ba54db3874d0ec932e71e8af2a38b0ab9",
+   "images": {
+    "/FlateDecode": 7
+   },
+   "notes": ""
+  },
+  {
+   "file": "arxiv-2609.36525.pdf",
+   "source": "https://arxiv.org/abs/2609.36525",
+   "license": "CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — verified via arXiv OAI <license>",
+   "retrieved": "2026-09-30",
+   "kind": "paper",
+   "pages": 10,
+   "bytes": 883192,
+   "sha256": "0827c981e03e0ec7ff813ea312f4513cb161c16c3c5b4093a5de6edd5ccb1336",
+   "images": {
+    "/DCTDecode": 2,
+    "/FlateDecode": 3
+   },
+   "notes": ""
+  },
+  {
+   "file": "arxiv-2609.36935.pdf",
+   "source": "https://arxiv.org/abs/2609.36935",
+   "license": "CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — verified via arXiv OAI <license>",
+   "retrieved": "2026-09-30",
+   "kind": "paper",
+   "pages": 38,
+   "bytes": 1780755,
+   "sha256": "49ac26be619b8e4ca7a957ccf909c97123e74aaa663bfa29c0e66d3ba61ce933",
+   "images": {
+    "/FlateDecode": 14
+   },
+   "notes": ""
+  },
+  {
+   "file": "arxiv-2609.36931.pdf",
+   "source": "https://arxiv.org/abs/2609.36931",
+   "license": "CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — verified via arXiv OAI <license>",
+   "retrieved": "2026-09-30",
+   "kind": "paper",
+   "pages": 15,
+   "bytes": 1030448,
+   "sha256": "674f9eee44a3a22b994b3877c8a6f58f33acdc76f3480afb16b2954f98e240d2",
+   "images": {
+    "/FlateDecode": 9
+   },
+   "notes": ""
+  },
+  {
+   "file": "arxiv-2609.36920.pdf",
+   "source": "https://arxiv.org/abs/2609.36920",
+   "license": "CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — verified via arXiv OAI <license>",
+   "retrieved": "2026-09-30",
+   "kind": "paper",
+   "pages": 5,
+   "bytes": 315651,
+   "sha256": "c23b25c268b9dc1ae4243c7b872458f21f9dd508fa4d2474879075898a00ca29",
+   "images": {
+    "/FlateDecode": 3
+   },
+   "notes": ""
+  },
+  {
+   "file": "wikipedia-en-pdf.pdf",
+   "source": "https://en.wikipedia.org/wiki/Portable_Document_Format",
+   "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/) — Wikipedia contributors; PDF via Wikimedia REST page/pdf",
+   "retrieved": "2026-09-30",
+   "kind": "article",
+   "pages": 25,
+   "bytes": 1098734,
+   "sha256": "07efb96d229a346b7d6739d75fb2dbee92947b79f2dda33314ab3cd585bbeb60",
+   "images": {
+    "/FlateDecode": 2
+   },
+   "notes": "script coverage: en"
+  },
+  {
+   "file": "wikipedia-ja-pdf.pdf",
+   "source": "https://ja.wikipedia.org/wiki/Portable_Document_Format",
+   "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/) — Wikipedia contributors; PDF via Wikimedia REST page/pdf",
+   "retrieved": "2026-09-30",
+   "kind": "article",
+   "pages": 33,
+   "bytes": 2467089,
+   "sha256": "0b2951e8c643e17395d6444c2c5c42fcf558ba6ece3122cbf122f85f1f6e81f6",
+   "images": {
+    "/FlateDecode": 4
+   },
+   "notes": "script coverage: ja"
+  },
+  {
+   "file": "wikipedia-ar-pdf.pdf",
+   "source": "https://ar.wikipedia.org/wiki/%D8%A8%D9%8A_%D8%AF%D9%8A_%D8%A5%D9%81",
+   "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/) — Wikipedia contributors; PDF via Wikimedia REST page/pdf",
+   "retrieved": "2026-09-30",
+   "kind": "article",
+   "pages": 3,
+   "bytes": 239492,
+   "sha256": "60444ab4115d09137518337bc8cfafe9b536de33f496b9f23d3a60748149a35d",
+   "images": {
+    "/FlateDecode": 6
+   },
+   "notes": "script coverage: ar"
+  },
+  {
+   "file": "wikipedia-ru-pdf.pdf",
+   "source": "https://ru.wikipedia.org/wiki/Portable_Document_Format",
+   "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/) — Wikipedia contributors; PDF via Wikimedia REST page/pdf",
+   "retrieved": "2026-09-30",
+   "kind": "article",
+   "pages": 7,
+   "bytes": 394502,
+   "sha256": "1fe88a3063c33e783ceb23665cd856451e1413ec9e2cf10a76a9065f05c2595a",
+   "images": {
+    "/FlateDecode": 8
+   },
+   "notes": "script coverage: ru"
+  },
+  {
+   "file": "wikipedia-zh-pdf.pdf",
+   "source": "https://zh.wikipedia.org/wiki/PDF",
+   "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/) — Wikipedia contributors; PDF via Wikimedia REST page/pdf",
+   "retrieved": "2026-09-30",
+   "kind": "article",
+   "pages": 20,
+   "bytes": 2267334,
+   "sha256": "ce2c0290507442f3201822e0869f2de998933865ac39a31ce95b2b02911dd45b",
+   "images": {
+    "/FlateDecode": 4
+   },
+   "notes": "script coverage: zh"
+  },
+  {
+   "file": "wikipedia-ko-pdf.pdf",
+   "source": "https://ko.wikipedia.org/wiki/PDF",
+   "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/) — Wikipedia contributors; PDF via Wikimedia REST page/pdf",
+   "retrieved": "2026-09-30",
+   "kind": "article",
+   "pages": 25,
+   "bytes": 1900394,
+   "sha256": "8bd8072b0dda62fbf55d0fd345ab9f25261de370a5ac83cf22649c04109e49c0",
+   "images": {
+    "/FlateDecode": 5
+   },
+   "notes": "script coverage: ko"
+  },
+  {
+   "file": "wikipedia-he-pdf.pdf",
+   "source": "https://he.wikipedia.org/wiki/PDF",
+   "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/) — Wikipedia contributors; PDF via Wikimedia REST page/pdf",
+   "retrieved": "2026-09-30",
+   "kind": "article",
+   "pages": 2,
+   "bytes": 160630,
+   "sha256": "fa9a5490b89ae36c99effa2703c9c4a7935aeb42c68fe52a24a30856b13b5c3b",
+   "images": {
+    "/FlateDecode": 7
+   },
+   "notes": "script coverage: he"
+  },
+  {
+   "file": "wikipedia-fa-pdf.pdf",
+   "source": "https://fa.wikipedia.org/wiki/%D9%BE%DB%8C%E2%80%8C%D8%AF%DB%8C%E2%80%8C%D8%A7%D9%81",
+   "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/) — Wikipedia contributors; PDF via Wikimedia REST page/pdf",
+   "retrieved": "2026-09-30",
+   "kind": "article",
+   "pages": 2,
+   "bytes": 174077,
+   "sha256": "b84ac3b2545c3c23d7b516fc00bcb52117212e0013eb9157a66ecd745e59ef4a",
+   "images": {
+    "/FlateDecode": 3
+   },
+   "notes": "script coverage: fa"
+  },
+  {
+   "file": "wikipedia-tr-pdf.pdf",
+   "source": "https://tr.wikipedia.org/wiki/PDF",
+   "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/) — Wikipedia contributors; PDF via Wikimedia REST page/pdf",
+   "retrieved": "2026-09-30",
+   "kind": "article",
+   "pages": 4,
+   "bytes": 754281,
+   "sha256": "58a89679b67b958de7cbc8461a26589b38bff3392625fb16bbf97200359cd7ff",
+   "images": {
+    "/FlateDecode": 7,
+    "/DCTDecode": 1
+   },
+   "notes": "script coverage: tr"
+  },
+  {
+   "file": "wikipedia-vi-pdf.pdf",
+   "source": "https://vi.wikipedia.org/wiki/PDF",
+   "license": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/) — Wikipedia contributors; PDF via Wikimedia REST page/pdf",
+   "retrieved": "2026-09-30",
+   "kind": "article",
+   "pages": 9,
+   "bytes": 583090,
+   "sha256": "8971aee5f3b2d50bd818135fec4b3472120f22222eaf20ca744a86fe99db8d40",
+   "images": {
+    "/FlateDecode": 5
+   },
+   "notes": "script coverage: vi"
+  },
+  {
+   "file": "ia-goodytwoshoes00newyiala.pdf",
+   "source": "https://archive.org/details/goodytwoshoes00newyiala",
+   "license": "Public domain (Internet Archive possible-copyright-status: NOT_IN_COPYRIGHT / pre-1929 US publication)",
+   "retrieved": "2026-09-30",
+   "kind": "scan",
+   "pages": 16,
+   "bytes": 1508606,
+   "sha256": "aa3a0abbd02866d60c8b791f9a81940671163f705f9026c07af083f2d142c82c",
+   "images": {
+    "/JPXDecode": 32
+   },
+   "notes": "JPEG2000 page scans + OCR text layer"
+  },
+  {
+   "file": "ia-goodytwoshoes00newyiala_bw.pdf",
+   "source": "https://archive.org/details/goodytwoshoes00newyiala",
+   "license": "Public domain (Internet Archive possible-copyright-status: NOT_IN_COPYRIGHT / pre-1929 US publication)",
+   "retrieved": "2026-09-30",
+   "kind": "scan",
+   "pages": 16,
+   "bytes": 1730066,
+   "sha256": "6d6d091376fe68a19e3ec7a6bf655ea114320f4740f2a636eab86ba5a89304ee",
+   "images": {
+    "/JPXDecode": 32
+   },
+   "notes": "JPEG2000 page scans + OCR text layer"
+  },
+  {
+   "file": "ia-lifeofjacksprath00yorkiala.pdf",
+   "source": "https://archive.org/details/lifeofjacksprath00yorkiala",
+   "license": "Public domain (Internet Archive possible-copyright-status: NOT_IN_COPYRIGHT / pre-1929 US publication)",
+   "retrieved": "2026-09-30",
+   "kind": "scan",
+   "pages": 16,
+   "bytes": 357609,
+   "sha256": "d4b31e55a1822512ad8670bf384b5ce0fe1e17733f05cf532a6c33975b10e82e",
+   "images": {
+    "/JPXDecode": 32
+   },
+   "notes": "JPEG2000 page scans + OCR text layer"
+  },
+  {
+   "file": "ia-gettysburgaddres00linc.pdf",
+   "source": "https://archive.org/details/gettysburgaddres00linc",
+   "license": "Public domain (1900 US publication; Library of Congress: no known restrictions)",
+   "retrieved": "2026-09-30",
+   "kind": "scan",
+   "pages": 8,
+   "bytes": 219281,
+   "sha256": "868ab78cad4df7d84f4b46744e4c0fd86542953107a90074854ce052957677c7",
+   "images": {
+    "/JPXDecode": 16
+   },
+   "notes": "JPEG2000 page scans + OCR text layer"
+  }
+ ]
+}

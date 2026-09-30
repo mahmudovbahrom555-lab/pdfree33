@@ -136,6 +136,13 @@ building an analogous check for a different feature, prefer reusing the exact sa
 against a `PROD_BASE_URL`-style env var over writing a second, separate "production version" —
 duplicated test logic is itself a place for the two copies to quietly drift apart.
 
+**Real-document corpus gate (`tests/corpus/`, `scripts/corpus-diff/`).** Before shipping any change
+that can alter a tool's output, run the old-vs-new corpus diff (`npm run corpus:diff:compress` with
+`dist/` served on :8934) — CI runs it too and blocks the deploy. It compares production and the new
+build against the ORIGINAL with MuPDF, per image, not just per page render: low-DPI page renders hid a
+fully garbled chart (0.44 diff) on 2026-09-30. Compress only so far; extend `TOOLS` in `run.mjs` for
+merge/split/converters. Never add user documents to the corpus — see `tests/corpus/README.md`.
+
 **When adding N similar things (tools, locales, pages) via a proven template, verify one fully
 first, then batch-replicate — don't parallelize the first real usage.** Not because of demand
 uncertainty (see the pause-expansion strategy elsewhere in project memory for that separate

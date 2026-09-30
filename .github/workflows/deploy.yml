@@ -165,6 +165,21 @@ jobs:
         # tests/e2e/compress.e2e.mjs's header comment.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:compress
 
+      - name: Corpus diff — compress, production vs this build (real documents)
+        # Every PDF in tests/corpus (open-licence real documents + synthetic
+        # traps) goes through /compress-pdf/ on PRODUCTION and on this build;
+        # scripts/corpus-diff/check.py (MuPDF, independent of the site's own
+        # pdf.js/pdf-lib) fails the deploy if this build's output is further
+        # from the original than production's anywhere, loses an output, or
+        # loses savings. Validated 2026-09-30: against the pre-fix build it
+        # failed on all 7 known corruption shapes AND 2 real arXiv papers;
+        # prod vs an identical build gave 0 false alarms. Shared breakage in
+        # both builds is printed as "broken in both", not a failure.
+        run: |
+          pip install pymupdf==1.26.5
+          node scripts/corpus-diff/run.mjs --tool compress --old https://pdfree.io --new http://localhost:8934 --out corpus-diff-out
+          python3 scripts/corpus-diff/check.py corpus-diff-out
+
       - name: E2E — embed/SDK contract (CSP, sandbox, ready/result/error)
         # Real-browser regression gate for the embed/SDK feature
         # (embed/sdk.js, embed/compress/index.html, js/embedBridge.js). A
