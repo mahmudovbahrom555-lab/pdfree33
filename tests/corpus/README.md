@@ -17,7 +17,7 @@ false alarms.
 | Path | What |
 |---|---|
 | `real/` | Openly licensed real documents. `real/MANIFEST.json` records source URL, licence (verified at the source on the retrieved date), SHA-256 and image encodings for each. |
-| `synthetic/` | Files pdf-lib can't build at run time (encryption, CCITT G4). Regenerate with `python3 tests/corpus/synthetic/make_synthetic.py`. The user-password file's password is `user`. |
+| `synthetic/` | Files pdf-lib can't build at run time (encryption, CCITT G4). Regenerate with `python3 tests/corpus/synthetic/make_synthetic.py` (needs pymupdf, pillow, qpdf CLI). User-password files — one per `/Encrypt` form (direct dict / reference) — use password `user`. |
 | `traps.mjs` | Run-time traps (built with pdf-lib, nothing committed): the image shapes that broke Compress, each with `why` and `expect`. Also used by `tests/e2e/compress.e2e.mjs`. |
 
 ## Running
@@ -25,6 +25,8 @@ false alarms.
 ```
 python3 scripts/build.py && python3 -m http.server 8934 --directory dist &
 npm run corpus:diff:compress        # needs: pip install pymupdf==1.26.5
+npm run corpus:diff:merge           # input + tests/fixtures/normal-1page.pdf
+npm run corpus:diff:split           # per-page ZIP re-joined by page number
 ```
 
 ## Adding a file

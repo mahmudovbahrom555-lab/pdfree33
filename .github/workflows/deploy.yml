@@ -190,6 +190,20 @@ jobs:
           node scripts/corpus-diff/run.mjs --tool compress --old https://pdfree.io --new http://localhost:8934 --out corpus-diff-out
           python3 scripts/corpus-diff/check.py corpus-diff-out
 
+      - name: Corpus diff — merge + split, production vs this build (real documents)
+        # Same gate, next tools by traffic. Merge: each corpus file + a fixed
+        # reference must equal their MuPDF concatenation; split: the per-page
+        # ZIP is re-joined (by page NUMBER) and compared to the original.
+        # Validated 2026-09-30 with deliberately broken builds (merge dropping
+        # a page → 37 FAIL; split rotating pages → 29 FAIL) and prod vs an
+        # identical build (0 FAIL). Its first run surfaced split erroring on
+        # 8/9 real arXiv papers (named-destination bookmarks) — fixed.
+        run: |
+          for tool in merge split; do
+            node scripts/corpus-diff/run.mjs --tool $tool --old https://pdfree.io --new http://localhost:8934 --out corpus-diff-$tool
+            python3 scripts/corpus-diff/check.py corpus-diff-$tool
+          done
+
       - name: E2E — embed/SDK contract (CSP, sandbox, ready/result/error)
         # Real-browser regression gate for the embed/SDK feature
         # (embed/sdk.js, embed/compress/index.html, js/embedBridge.js). A

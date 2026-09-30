@@ -243,11 +243,18 @@ function _filterOutlinesForSurvivors(doc, survivingRefTags) {
   const outlinesDict = doc.context.lookup(outlinesObj, PDFDict);
   if (!outlinesDict) return;
 
+  // Types checked by hand, NOT via lookupMaybe(key, PDFArray): that THROWS on
+  // any other type instead of returning undefined, so a named destination (a
+  // string/name — what LaTeX/hyperref writes, i.e. essentially every arXiv
+  // paper) crashed the whole split/extract ("Expected instance of PDFArray,
+  // but got instance of PDFString" — 8 of 9 real arXiv papers in the
+  // regression corpus) instead of being dropped as documented above.
+  const asArray = v => { const o = doc.context.lookup(v); return o instanceof PDFArray ? o : null; };
   function destPageRef(itemDict) {
-    let destArr = itemDict.lookupMaybe(PDFName.of('Dest'), PDFArray);
+    let destArr = asArray(itemDict.get(PDFName.of('Dest')));
     if (!destArr) {
-      const action = itemDict.lookupMaybe(PDFName.of('A'), PDFDict);
-      destArr = action?.lookupMaybe(PDFName.of('D'), PDFArray);
+      const action = doc.context.lookup(itemDict.get(PDFName.of('A')));
+      if (action instanceof PDFDict) destArr = asArray(action.get(PDFName.of('D')));
     }
     if (!destArr || destArr.size() === 0) return null;
     const first = destArr.get(0);

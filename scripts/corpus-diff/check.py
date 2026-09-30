@@ -19,11 +19,22 @@ NEW fails when it: loses an output OLD had; changes the page count; has an
 image or page clearly further from the original than OLD's; or is bigger than
 an OLD that was itself sound (savings regression).
 
+Tool-specific inputs/outputs are normalised first, so the same checks apply:
+  • merge — the expected original is the input + the fixed reference file,
+            concatenated here with MuPDF (what a correct merge must equal)
+  • split — a ZIP of per-page PDFs is concatenated back into one document,
+            entries ordered by page NUMBER (a plain sort puts page_13 before
+            page_4)
+  • size is only judged for compress (split output legitimately repeats
+            shared resources in every page file)
+
 Usage: python3 scripts/corpus-diff/check.py [out-dir]   (default corpus-diff-out)
 """
 import json
 import os
+import re
 import sys
+import zipfile
 
 import fitz
 
@@ -125,12 +136,43 @@ def sound(s):
             and all(v < PAGE_BAD for _, v in s['page']))
 
 
-def judge(entry):
-    orig = entry['file']
-    old_p = os.path.join(OUT, 'old', entry['name'] + '.pdf')
-    new_p = os.path.join(OUT, 'new', entry['name'] + '.pdf')
-    old = score(orig, old_p) if entry['old']['status'] == 'ok' else None
-    new = score(orig, new_p) if entry['new']['status'] == 'ok' else None
+def _concat(parts, dest):
+    out = fitz.open()
+    for part in parts:
+        src = _open(part) if isinstance(part, str) else fitz.open(stream=part, filetype='pdf')
+        out.insert_pdf(src)
+    out.save(dest)
+    return dest
+
+
+def expected_original(entry, runs):
+    if runs['tool'] != 'merge':
+        return entry['file']
+    os.makedirs(os.path.join(OUT, 'expected'), exist_ok=True)
+    return _concat([entry['file'], runs['ref']], os.path.join(OUT, 'expected', entry['name'] + '.pdf'))
+
+
+def output_pdf(entry, side):
+    """The side's output as ONE pdf path (a split ZIP is re-joined by page number)."""
+    name = entry[side].get('file')
+    if entry[side]['status'] != 'ok' or not name:
+        return None
+    path = os.path.join(OUT, side, name)
+    if not name.endswith('.zip'):
+        return path
+    with zipfile.ZipFile(path) as z:
+        members = [m for m in z.namelist() if m.lower().endswith('.pdf')]
+        members.sort(key=lambda m: [int(n) for n in re.findall(r'\d+', m)] or [0])
+        parts = [z.read(m) for m in members]
+    os.makedirs(os.path.join(OUT, side + '-joined'), exist_ok=True)
+    return _concat(parts, os.path.join(OUT, side + '-joined', entry['name'] + '.pdf'))
+
+
+def judge(entry, runs):
+    orig = expected_original(entry, runs)
+    old_p, new_p = output_pdf(entry, 'old'), output_pdf(entry, 'new')
+    old = score(orig, old_p) if old_p else None
+    new = score(orig, new_p) if new_p else None
     fails, notes = [], []
 
     if old and not new:
@@ -157,16 +199,26 @@ def judge(entry):
             limit = max(PAGE_BAD, (ref if ref is not None else 0) + PAGE_SLACK)
             if v >= limit:
                 fails.append(f'p{p} render: {v:.1f} from original (old {ref if ref is None else round(ref, 1)})')
-        if old and sound(old) and new['bytes'] > old['bytes'] * SIZE_SLACK + 2048:
+        if runs['tool'] == 'compress' and old and sound(old) and new['bytes'] > old['bytes'] * SIZE_SLACK + 2048:
             fails.append(f"bigger than a sound OLD: {old['bytes']} → {new['bytes']} bytes (savings lost)")
+    # Neither build produced anything and the tool reported an ERROR (not a
+    # deliberate refusal like "password protected" or "Try Standard") on a PDF
+    # MuPDF opens fine: a pre-existing failure — e.g. split erroring on 8 of 9
+    # real arXiv papers — that must show up, not pass silently as "no output".
+    both_errored = (not old and not new
+                    and all('error' in (entry[side].get('reason') or '').lower() for side in ('old', 'new')))
+    if both_errored:
+        fails_known_error = f"tool error in both builds: {(entry['new'].get('reason') or '')[:70]}"
     if old and not sound(old) and new and sound(new):
         notes.append('OLD output was corrupted, NEW is sound (fixed)')
+    if not old and new and sound(new) and 'error' in (entry['old'].get('reason') or '').lower():
+        notes.append('OLD errored, NEW produces a sound output (fixed)')
     # Broken the SAME way in both builds = a pre-existing bug, not a regression
     # from this change: report it loudly, don't block the deploy on it.
-    known = []
+    known = [fails_known_error] if both_errored else []
     if fails and old and new and not sound(old) and not sound(new):
         old_fails = set(f.split(':')[0] for f in judge_fails_of(old))
-        known = [f for f in fails if f.split(':')[0] in old_fails or f == 'page count changed' and not old.get('pages_ok', True)]
+        known += [f for f in fails if f.split(':')[0] in old_fails or f == 'page count changed' and not old.get('pages_ok', True)]
         fails = [f for f in fails if f not in known]
     return {
         'name': entry['name'], 'kind': entry['kind'],
@@ -193,7 +245,7 @@ def judge_fails_of(s):
 
 def main():
     runs = json.load(open(os.path.join(OUT, 'runs.json')))
-    results = [judge(e) for e in runs['runs']]
+    results = [judge(e, runs) for e in runs['runs']]
     json.dump(results, open(os.path.join(OUT, 'report.json'), 'w'), indent=1, default=str)
 
     mb = lambda b: '—' if b is None else f'{b / 1e6:.2f}'
@@ -201,7 +253,7 @@ def main():
     print(f"{'input':44} {'orig':>7} {'old':>7} {'new':>7}  old/new sound  result")
     for r in results:
         verdict = 'FAIL' if r['fails'] else ('fixed' if r['notes'] else ('⚠ BROKEN IN BOTH (pre-existing)' if r['known'] else 'ok'))
-        if not r['fails'] and r['old'] is None and r['new'] is None:
+        if not r['fails'] and not r['known'] and r['old'] is None and r['new'] is None:
             verdict = f"ok (no output: {r['new_status'].get('reason', '')[:40]})"
         print(f"{r['name'][:44]:44} {mb(r['orig_bytes']):>7} {mb(r['old']):>7} {mb(r['new']):>7}  "
               f"{'y' if r['old_sound'] else 'n'}/{'y' if r['new_sound'] else 'n'}            {verdict}")

@@ -11,9 +11,10 @@
 //  MANIFEST.json), tests/corpus/synthetic/*.pdf, and the run-time traps
 //  from tests/corpus/traps.mjs.
 //
-//  Usage: node scripts/corpus-diff/run.mjs [--tool compress]
+//  Usage: node scripts/corpus-diff/run.mjs [--tool compress|merge|split]
 //           [--old https://pdfree.io] [--new http://localhost:8934] [--out dir]
-//  Writes <out>/{inputs,old,new}/<name>.pdf and <out>/runs.json.
+//           [--jobs 2]
+//  Writes <out>/{inputs,old,new}/<name>.{pdf,zip} and <out>/runs.json.
 // ============================================================
 
 import { chromium } from 'playwright';
@@ -29,27 +30,41 @@ const OLD  = arg('old', 'https://pdfree.io');
 const NEW  = arg('new', 'http://localhost:8934');
 const OUT  = path.resolve(arg('out', path.join(ROOT, 'corpus-diff-out')));
 
-// Per-tool page + how a run is driven. Only compress so far; merge/split/
-// converters get their own entry (see the plan in project memory).
+const REF_PDF = path.join(ROOT, 'tests', 'fixtures', 'normal-1page.pdf');
+
+// Per tool: its page, which files one run adds (merge appends a fixed
+// 1-page reference — check.py rebuilds the same concatenation as the
+// expected original), and when the page is ready for the click (split
+// pre-selects every page only once its page list has loaded).
 const TOOLS = {
-  compress: { path: '/compress-pdf/', mime: 'application/pdf' },
+  compress: { path: '/compress-pdf/', files: f => [f] },
+  merge:    { path: '/merge-pdf/',    files: f => [f, REF_PDF] },
+  split:    { path: '/split-pdf/',    files: f => [f],
+              ready: () => { const c = document.querySelector('#splitOptions');
+                             return !!c && c.children.length > 0 &&
+                               !(c.children.length === 1 && c.firstElementChild.classList.contains('split-loading')); } },
 };
 if (!TOOLS[TOOL]) { console.error(`unknown tool: ${TOOL}`); process.exit(2); }
 
 const RUN_TIMEOUT_MS = 90_000;
+const JOBS = Math.max(1, Number(arg('jobs', 2)));
 
 async function runOnce(browser, base, file) {
   const context = await browser.newContext({ serviceWorkers: 'block' });
   const page = await context.newPage();
   try {
-    await page.addInitScript((mime) => {
+    await page.addInitScript(() => {
       window.__blob = null;
       const orig = URL.createObjectURL.bind(URL);
-      URL.createObjectURL = b => { if (b instanceof Blob && b.type === mime) window.__blob = b; return orig(b); };
-    }, TOOLS[TOOL].mime);
+      URL.createObjectURL = b => {
+        if (b instanceof Blob && b.size > 0 && /^application\/(pdf|zip)$/.test(b.type)) window.__blob = b;
+        return orig(b);
+      };
+    });
     await page.goto(`${base}${TOOLS[TOOL].path}`, { waitUntil: 'load', timeout: 45_000 });
-    await page.setInputFiles('#fileInput', file);
-    await page.waitForTimeout(2500); // background pre-scan + preset auto-pick, as a user would get
+    await page.setInputFiles('#fileInput', TOOLS[TOOL].files(file));
+    await page.waitForTimeout(2500); // background pre-scan / preset pick, as a user would get
+    if (TOOLS[TOOL].ready) await page.waitForFunction(TOOLS[TOOL].ready, null, { timeout: 30_000 }).catch(() => {});
     await page.click('#mergeBtn');
     let started = Date.now();
     let retriedStandard = false;
@@ -77,12 +92,12 @@ async function runOnce(browser, base, file) {
       if (Date.now() - started > RUN_TIMEOUT_MS) return { status: 'no-output', reason: 'timeout' };
       await page.waitForTimeout(250);
     }
-    const b64 = await page.evaluate(async () => {
+    const { b64, zip } = await page.evaluate(async () => {
       const u = new Uint8Array(await window.__blob.arrayBuffer()); let s = '';
       for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode(...u.subarray(i, i + 0x8000));
-      return btoa(s);
+      return { b64: btoa(s), zip: window.__blob.type === 'application/zip' };
     });
-    return { status: 'ok', bytes: Buffer.from(b64, 'base64') };
+    return { status: 'ok', bytes: Buffer.from(b64, 'base64'), ext: zip ? 'zip' : 'pdf' };
   } finally {
     await context.close();
   }
@@ -110,15 +125,26 @@ for (const trap of await trapCases(browser)) {
   inputs.push({ name: `trap-${trap.name}`, file, kind: 'trap', expect: trap.expect, why: trap.why });
 }
 
-const runs = [];
-for (const [i, input] of inputs.entries()) {
-  const [oldRes, newRes] = await Promise.all([run(browser, OLD, input.file), run(browser, NEW, input.file)]);
-  const entry = { ...input, old: { status: oldRes.status, reason: oldRes.reason }, new: { status: newRes.status, reason: newRes.reason } };
-  if (oldRes.bytes) fs.writeFileSync(path.join(OUT, 'old', `${input.name}.pdf`), oldRes.bytes);
-  if (newRes.bytes) fs.writeFileSync(path.join(OUT, 'new', `${input.name}.pdf`), newRes.bytes);
-  runs.push(entry);
-  console.log(`[${i + 1}/${inputs.length}] ${input.name}: old=${oldRes.status} new=${newRes.status}`);
+const save = (dir, name, res) => {
+  if (!res.bytes) return undefined;
+  const file = `${name}.${res.ext}`;
+  fs.writeFileSync(path.join(OUT, dir, file), res.bytes);
+  return file;
+};
+const runs = new Array(inputs.length);
+let next = 0, done = 0;
+async function worker() {
+  while (next < inputs.length) {
+    const i = next++;
+    const input = inputs[i];
+    const [oldRes, newRes] = await Promise.all([run(browser, OLD, input.file), run(browser, NEW, input.file)]);
+    runs[i] = { ...input,
+      old: { status: oldRes.status, reason: oldRes.reason, file: save('old', input.name, oldRes) },
+      new: { status: newRes.status, reason: newRes.reason, file: save('new', input.name, newRes) } };
+    console.log(`[${++done}/${inputs.length}] ${input.name}: old=${oldRes.status} new=${newRes.status}`);
+  }
 }
+await Promise.all(Array.from({ length: JOBS }, worker));
 await browser.close();
-fs.writeFileSync(path.join(OUT, 'runs.json'), JSON.stringify({ tool: TOOL, old: OLD, new: NEW, runs }, null, 1));
+fs.writeFileSync(path.join(OUT, 'runs.json'), JSON.stringify({ tool: TOOL, old: OLD, new: NEW, ref: REF_PDF, runs }, null, 1));
 console.log(`\n${runs.length} inputs → ${OUT}`);

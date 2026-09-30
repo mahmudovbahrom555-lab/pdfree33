@@ -268,6 +268,55 @@ await test('AES-encrypted PDF still throws pdf-aes-encrypted in separate mode (s
   expect(threw.message).toBe('pdf-aes-encrypted');
 });
 
+// ── Named destinations (LaTeX/hyperref, i.e. every arXiv paper) ──────
+// A bookmark whose /Dest is a NAME resolved via /Names → /Dests, not an
+// explicit [page …] array. _filterOutlinesForSurvivors is documented to DROP
+// such bookmarks (it can't prove their page survives) — but it looked the
+// /Dest up with lookupMaybe(…, PDFArray), which throws on a string, so the
+// whole split crashed: "Expected instance of PDFArray, but got instance of
+// PDFString" — 8 of 9 real arXiv papers in tests/corpus (2026-09-30).
+async function _buildNamedDest3Page() {
+  const { PDFDocument, PDFName, PDFString } = PDFLib;
+  const doc = await PDFDocument.load(_normal3.slice(0));
+  const pages = doc.getPages();
+  const itemRefs = pages.map(() => doc.context.nextRef());
+  pages.forEach((page, i) => {
+    const item = doc.context.obj({
+      Title: PDFString.of(`Section ${i + 1}`),
+      // page 2's bookmark is an explicit array; the others are named, hyperref-style
+      Dest:  i === 1 ? [page.ref, PDFName.of('Fit')] : PDFString.of(`sec${i + 1}`),
+    });
+    if (i < pages.length - 1) item.set(PDFName.of('Next'), itemRefs[i + 1]);
+    if (i > 0) item.set(PDFName.of('Prev'), itemRefs[i - 1]);
+    doc.context.assign(itemRefs[i], item);
+  });
+  const outlineRef = doc.context.register(doc.context.obj({
+    Type: PDFName.of('Outlines'), First: itemRefs[0], Last: itemRefs[itemRefs.length - 1], Count: pages.length,
+  }));
+  itemRefs.forEach(ref => doc.context.lookup(ref).set(PDFName.of('Parent'), outlineRef));
+  doc.catalog.set(PDFName.of('Outlines'), outlineRef);
+  const names = [];
+  pages.forEach((page, i) => { if (i !== 1) names.push(PDFString.of(`sec${i + 1}`), doc.context.obj([page.ref, PDFName.of('Fit')])); });
+  doc.catalog.set(PDFName.of('Names'), doc.context.obj({ Dests: doc.context.obj({ Names: names }) }));
+  const bytes = await doc.save();
+  return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
+}
+const _namedDest3 = await _buildNamedDest3Page();
+
+await test('separate mode: named-destination bookmarks (hyperref) no longer crash the split', async () => {
+  await handleSplit(clone(_namedDest3), { pages: [1, 2, 3], mode: 'separate' });
+  expect(pageMsgs().length).toBe(3);
+});
+
+await test('single mode (extract): named-destination bookmarks are dropped, the explicit one kept', async () => {
+  const { PDFDocument } = PDFLib;
+  await handleSplit(clone(_namedDest3), { pages: [2], mode: 'single' });
+  const out = await PDFDocument.load(lastDone().result);
+  expect(out.getPageCount()).toBe(1);
+  const entries = _collectOutlineEntries(out);
+  expect(entries.map(e => e.title).join(',')).toBe('Section 2');
+});
+
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);
 if (failed > 0) process.exit(1);

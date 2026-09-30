@@ -16,3 +16,5 @@ benchmark_corpus/
 
 # scripts/corpus-diff output (old/new runs + report) — regenerated each run
 corpus-diff-out/
+corpus-diff-merge/
+corpus-diff-split/
