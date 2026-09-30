@@ -28,19 +28,30 @@ Tool-specific inputs/outputs are normalised first, so the same checks apply:
   • size is only judged for compress (split output legitimately repeats
             shared resources in every page file)
 
+Text tools (pdf2md) are judged against the original's TEXT (MuPDF), per
+build, relative to OLD — see judge_text():
+  • recall     — share of the original's words present in the output
+                 (markup stripped; CJK counted per character, no spaces there)
+  • garbage    — U+FFFD / private-use characters per output character
+  • inflation  — output words / original words (duplication)
+  • ERI        — the page's own structure score (js/eriScoreMd.js)
+
 Usage: python3 scripts/corpus-diff/check.py [out-dir]   (default corpus-diff-out)
 """
 import json
 import os
 import re
 import sys
+import unicodedata
 import zipfile
+from collections import Counter
 
 import fitz
 
 fitz.TOOLS.mupdf_display_errors(False)
 
-OUT = sys.argv[1] if len(sys.argv) > 1 else 'corpus-diff-out'
+OUT = next((a for a in sys.argv[1:] if not a.startswith('-')), 'corpus-diff-out')
+VERBOSE = '-v' in sys.argv[1:]
 MAX_PAGES = 40
 THUMB = 64
 IMG_BAD, IMG_SLACK = 25.0, 3.0      # thumbnail mean-abs-diff (0–255)
@@ -168,7 +179,112 @@ def output_pdf(entry, side):
     return _concat(parts, os.path.join(OUT, side + '-joined', entry['name'] + '.pdf'))
 
 
+TEXT_TOOLS = {'pdf2md'}
+MIN_WORDS = 50                                  # below this the original has no real text layer to hold output to
+RECALL_BAD, RECALL_SLACK = 0.85, 0.02
+GARBAGE_BAD, GARBAGE_SLACK = 0.005, 0.002
+INFLATE_BAD, INFLATE_SLACK = 1.5, 0.1
+ERI_SLACK = 5.0
+_CJK = r'\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uac00-\ud7af\uf900-\ufaff'
+_TOKEN = re.compile(rf'[{_CJK}]|[^\W\d_{_CJK}]{{2,}}|\d+', re.UNICODE)
+_GARBAGE = re.compile(r'[\ufffd\ue000-\uf8ff]')
+
+
+def _words(text):
+    return Counter(_TOKEN.findall(unicodedata.normalize('NFKC', text).lower()))
+
+
+def _markdown_text(path):
+    if path.endswith('.zip'):
+        with zipfile.ZipFile(path) as z:
+            md = z.read('document.md').decode('utf-8', 'replace')
+    else:
+        md = open(path, encoding='utf-8', errors='replace').read()
+    md = re.sub(r'!\[[^\]]*\]\([^)]*\)', ' ', md)          # images: alt text isn't in the original
+    md = re.sub(r'\[([^\]]*)\]\([^)]*\)', r'\1', md)       # links: keep the label
+    return md
+
+
+def text_score(orig_words, out_path, eri):
+    try:
+        md = _markdown_text(out_path)
+    except Exception as e:
+        return {'error': f'unreadable: {e}'}
+    got = _words(md)
+    total = sum(orig_words.values())
+    return {
+        'recall': sum(min(n, got[w]) for w, n in orig_words.items()) / total,
+        'garbage': len(_GARBAGE.findall(md)) / max(1, len(md)),
+        'inflation': sum(got.values()) / total,
+        'eri': (eri or {}).get('eri'),
+        'bytes': os.path.getsize(out_path),
+    }
+
+
+def text_sound(s):
+    return (s and 'error' not in s and s['recall'] >= RECALL_BAD
+            and s['garbage'] <= GARBAGE_BAD and s['inflation'] <= INFLATE_BAD)
+
+
+def judge_text(entry, runs):
+    orig_doc = _open(entry['file'])
+    orig_words = _words(''.join(p.get_text() for p in orig_doc))
+    paths = {side: (os.path.join(OUT, side, entry[side]['file'])
+                    if entry[side]['status'] == 'ok' and entry[side].get('file') else None)
+             for side in ('old', 'new')}
+    result = {'name': entry['name'], 'kind': entry['kind'], 'orig_bytes': os.path.getsize(entry['file']),
+              'fails': [], 'notes': [], 'known': []}
+    if sum(orig_words.values()) < MIN_WORDS:
+        # No text layer to measure against — only require that NEW still answers where OLD did
+        result.update(old=paths['old'] and os.path.getsize(paths['old']), new=paths['new'] and os.path.getsize(paths['new']),
+                      old_sound=bool(paths['old']), new_sound=bool(paths['new']), old_status=entry['old'], new_status=entry['new'])
+        if paths['old'] and not paths['new']:
+            result['fails'].append(f"no output from NEW ({entry['new'].get('reason')}) where OLD produced one")
+        return result
+    old = text_score(orig_words, paths['old'], entry['old'].get('eri')) if paths['old'] else None
+    new = text_score(orig_words, paths['new'], entry['new'].get('eri')) if paths['new'] else None
+    fails, notes, known = result['fails'], result['notes'], result['known']
+
+    if old and not new:
+        (fails if text_sound(old) else notes).append(
+            f"no output from NEW ({entry['new'].get('reason')})" + ('' if text_sound(old) else ' where OLD was unsound'))
+    if new and 'error' in new:
+        fails.append(new['error'])
+    if new and 'error' not in new:
+        ref = old if old and 'error' not in old else None
+        if new['recall'] < min(RECALL_BAD, (ref['recall'] if ref else 1) - RECALL_SLACK):
+            fails.append(f"recall {new['recall']:.3f} (old {ref['recall']:.3f})" if ref else f"recall {new['recall']:.3f}")
+        if new['garbage'] > max(GARBAGE_BAD, (ref['garbage'] if ref else 0) + GARBAGE_SLACK):
+            fails.append(f"garbage chars {new['garbage']:.4f} (old {ref['garbage']:.4f})" if ref else f"garbage chars {new['garbage']:.4f}")
+        if new['inflation'] > max(INFLATE_BAD, (ref['inflation'] if ref else 0) + INFLATE_SLACK):
+            fails.append(f"inflation {new['inflation']:.2f} (old {ref['inflation']:.2f})" if ref else f"inflation {new['inflation']:.2f}")
+        if ref and ref.get('eri') is not None and new.get('eri') is not None and new['eri'] < ref['eri'] - ERI_SLACK:
+            fails.append(f"ERI {new['eri']} (old {ref['eri']})")
+    both_errored = (not old and not new
+                    and all('error' in (entry[side].get('reason') or '').lower() for side in ('old', 'new')))
+    if both_errored:
+        known.append(f"tool error in both builds: {(entry['new'].get('reason') or '')[:70]}")
+    if fails and old and new and not text_sound(old) and not text_sound(new):
+        # same weakness in both builds = pre-existing, not a regression from this change
+        known.extend(fails); fails.clear()
+    if not known and old and new and 'error' not in old and 'error' not in new \
+            and not text_sound(old) and not text_sound(new):
+        # Equally bad in both builds is not "ok": it's a pre-existing defect the
+        # report must show (e.g. RTL text reversed / glued by pdf2md).
+        known.append('below the soundness bar in both builds')
+    if old and not text_sound(old) and new and text_sound(new):
+        notes.append('OLD output was unsound, NEW is sound (fixed)')
+    fmt = lambda s: None if not s or 'error' in s else f"recall {s['recall']:.3f} · garbage {s['garbage']:.4f} · infl {s['inflation']:.2f} · ERI {s['eri']}"
+    result.update(old=old and old.get('bytes'), new=new and new.get('bytes'),
+                  old_sound=text_sound(old), new_sound=text_sound(new),
+                  old_status=entry['old'], new_status=entry['new'],
+                  detail={'old': fmt(old), 'new': fmt(new)})
+    return result
+
+
 def judge(entry, runs):
+    if runs['tool'] in TEXT_TOOLS:
+        return judge_text(entry, runs)
     orig = expected_original(entry, runs)
     old_p, new_p = output_pdf(entry, 'old'), output_pdf(entry, 'new')
     old = score(orig, old_p) if old_p else None
@@ -216,6 +332,8 @@ def judge(entry, runs):
     # Broken the SAME way in both builds = a pre-existing bug, not a regression
     # from this change: report it loudly, don't block the deploy on it.
     known = [fails_known_error] if both_errored else []
+    if not fails and old and new and 'error' not in old and 'error' not in new and not sound(old) and not sound(new):
+        known.append('unsound in both builds')
     if fails and old and new and not sound(old) and not sound(new):
         old_fails = set(f.split(':')[0] for f in judge_fails_of(old))
         known += [f for f in fails if f.split(':')[0] in old_fails or f == 'page count changed' and not old.get('pages_ok', True)]
@@ -257,6 +375,8 @@ def main():
             verdict = f"ok (no output: {r['new_status'].get('reason', '')[:40]})"
         print(f"{r['name'][:44]:44} {mb(r['orig_bytes']):>7} {mb(r['old']):>7} {mb(r['new']):>7}  "
               f"{'y' if r['old_sound'] else 'n'}/{'y' if r['new_sound'] else 'n'}            {verdict}")
+        if r.get('detail') and (r['fails'] or r['known'] or VERBOSE):
+            print(f"      old: {r['detail']['old']}\n      new: {r['detail']['new']}")
         for f in r['fails']:
             print(f'      ✗ {f}')
         for f in r['known']:

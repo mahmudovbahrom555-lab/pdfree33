@@ -27,6 +27,8 @@ python3 scripts/build.py && python3 -m http.server 8934 --directory dist &
 npm run corpus:diff:compress        # needs: pip install pymupdf==1.26.5
 npm run corpus:diff:merge           # input + tests/fixtures/normal-1page.pdf
 npm run corpus:diff:split           # per-page ZIP re-joined by page number
+npm run corpus:diff:pdf2md          # text oracle: recall / garbage / inflation / ERI vs the original's text
+python3 scripts/corpus-diff/check.py <out-dir> -v   # per-file metrics (text tools)
 ```
 
 ## Adding a file

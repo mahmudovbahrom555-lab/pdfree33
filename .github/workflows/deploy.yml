@@ -204,6 +204,18 @@ jobs:
             python3 scripts/corpus-diff/check.py corpus-diff-$tool
           done
 
+      - name: Corpus diff — PDF→Markdown, production vs this build (text oracle)
+        # First converter on the gate: judged against the original's TEXT
+        # (MuPDF) — recall of its words, U+FFFD/private-use garbage,
+        # inflation (duplication) and the page's own ERI structure score —
+        # each relative to production. Validated 2026-09-30: identical
+        # builds 0 FAIL; a build dropping every 5th line + injecting U+FFFD
+        # → 22 FAIL. Pre-existing: Arabic/Farsi/Hebrew output reversed /
+        # glued (reported as "broken in both", not blocking).
+        run: |
+          node scripts/corpus-diff/run.mjs --tool pdf2md --old https://pdfree.io --new http://localhost:8934 --out corpus-diff-pdf2md
+          python3 scripts/corpus-diff/check.py corpus-diff-pdf2md
+
       - name: E2E — embed/SDK contract (CSP, sandbox, ready/result/error)
         # Real-browser regression gate for the embed/SDK feature
         # (embed/sdk.js, embed/compress/index.html, js/embedBridge.js). A

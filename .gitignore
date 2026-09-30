@@ -18,3 +18,4 @@ benchmark_corpus/
 corpus-diff-out/
 corpus-diff-merge/
 corpus-diff-split/
+corpus-diff-pdf2md/

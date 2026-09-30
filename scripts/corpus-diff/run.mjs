@@ -11,10 +11,11 @@
 //  MANIFEST.json), tests/corpus/synthetic/*.pdf, and the run-time traps
 //  from tests/corpus/traps.mjs.
 //
-//  Usage: node scripts/corpus-diff/run.mjs [--tool compress|merge|split]
+//  Usage: node scripts/corpus-diff/run.mjs [--tool compress|merge|split|pdf2md]
 //           [--old https://pdfree.io] [--new http://localhost:8934] [--out dir]
 //           [--jobs 2]
-//  Writes <out>/{inputs,old,new}/<name>.{pdf,zip} and <out>/runs.json.
+//  Writes <out>/{inputs,old,new}/<name>.{pdf,zip,md} and <out>/runs.json
+//  (pdf2md runs also record the page's own Atlas ERI structure score).
 // ============================================================
 
 import { chromium } from 'playwright';
@@ -43,7 +44,13 @@ const TOOLS = {
               ready: () => { const c = document.querySelector('#splitOptions');
                              return !!c && c.children.length > 0 &&
                                !(c.children.length === 1 && c.firstElementChild.classList.contains('split-loading')); } },
+  // Same readiness signal scripts/pdf2md_benchmark.mjs uses (the pre-scan
+  // must finish or validation refuses with "analysing")
+  pdf2md:   { path: '/pdf-to-markdown/', files: f => [f],
+              ready: () => { const el = document.getElementById('pdf2mdOptions');
+                             return !!el && el.style.display !== 'none' && !el.textContent.toLowerCase().includes('analysing'); } },
 };
+const EXT = { 'application/pdf': 'pdf', 'application/zip': 'zip', 'text/markdown': 'md' };
 if (!TOOLS[TOOL]) { console.error(`unknown tool: ${TOOL}`); process.exit(2); }
 
 const RUN_TIMEOUT_MS = 90_000;
@@ -55,11 +62,14 @@ async function runOnce(browser, base, file) {
   try {
     await page.addInitScript(() => {
       window.__blob = null;
+      window.__eri = null;
       const orig = URL.createObjectURL.bind(URL);
       URL.createObjectURL = b => {
-        if (b instanceof Blob && b.size > 0 && /^application\/(pdf|zip)$/.test(b.type)) window.__blob = b;
+        if (b instanceof Blob && b.size > 0 && /^(application\/(pdf|zip)|text\/markdown)$/.test(b.type)) window.__blob = b;
         return orig(b);
       };
+      // the page's own structure score for Markdown output (js/eriScoreMd.js)
+      document.addEventListener('pdfree:success', e => { window.__eri = e.detail?.atlasEri ?? null; });
     });
     await page.goto(`${base}${TOOLS[TOOL].path}`, { waitUntil: 'load', timeout: 45_000 });
     await page.setInputFiles('#fileInput', TOOLS[TOOL].files(file));
@@ -92,12 +102,13 @@ async function runOnce(browser, base, file) {
       if (Date.now() - started > RUN_TIMEOUT_MS) return { status: 'no-output', reason: 'timeout' };
       await page.waitForTimeout(250);
     }
-    const { b64, zip } = await page.evaluate(async () => {
+    await page.waitForTimeout(300); // pdfree:success fires right after the download
+    const { b64, type, eri } = await page.evaluate(async () => {
       const u = new Uint8Array(await window.__blob.arrayBuffer()); let s = '';
       for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode(...u.subarray(i, i + 0x8000));
-      return { b64: btoa(s), zip: window.__blob.type === 'application/zip' };
+      return { b64: btoa(s), type: window.__blob.type, eri: window.__eri };
     });
-    return { status: 'ok', bytes: Buffer.from(b64, 'base64'), ext: zip ? 'zip' : 'pdf' };
+    return { status: 'ok', bytes: Buffer.from(b64, 'base64'), ext: EXT[type], eri };
   } finally {
     await context.close();
   }
@@ -139,8 +150,8 @@ async function worker() {
     const input = inputs[i];
     const [oldRes, newRes] = await Promise.all([run(browser, OLD, input.file), run(browser, NEW, input.file)]);
     runs[i] = { ...input,
-      old: { status: oldRes.status, reason: oldRes.reason, file: save('old', input.name, oldRes) },
-      new: { status: newRes.status, reason: newRes.reason, file: save('new', input.name, newRes) } };
+      old: { status: oldRes.status, reason: oldRes.reason, file: save('old', input.name, oldRes), eri: oldRes.eri },
+      new: { status: newRes.status, reason: newRes.reason, file: save('new', input.name, newRes), eri: newRes.eri } };
     console.log(`[${++done}/${inputs.length}] ${input.name}: old=${oldRes.status} new=${newRes.status}`);
   }
 }

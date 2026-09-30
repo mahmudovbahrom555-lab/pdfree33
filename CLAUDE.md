@@ -140,9 +140,9 @@ duplicated test logic is itself a place for the two copies to quietly drift apar
 that can alter a tool's output, run the old-vs-new corpus diff (`npm run corpus:diff:compress` with
 `dist/` served on :8934) — CI runs it too and blocks the deploy. It compares production and the new
 build against the ORIGINAL with MuPDF, per image, not just per page render: low-DPI page renders hid a
-fully garbled chart (0.44 diff) on 2026-09-30. Covers compress, merge and split (`npm run
-corpus:diff:<tool>`); converters (Word/Excel) still need a text-based oracle — extend `TOOLS` in
-`run.mjs` + the normalisation in `check.py`. Validate a new tool's gate BOTH ways before trusting it:
+fully garbled chart (0.44 diff) on 2026-09-30. Covers compress, merge, split and pdf2md (`npm run
+corpus:diff:<tool>`); pdf2md uses a text oracle (`judge_text` in `check.py`) that Word/Excel can
+reuse once their output's text is extracted — extend `TOOLS` in `run.mjs` + `check.py`. Validate a new tool's gate BOTH ways before trusting it:
 prod vs an identical build (0 FAIL) and prod vs a deliberately broken build (must FAIL). Never add user documents to the corpus — see `tests/corpus/README.md`.
 
 **When adding N similar things (tools, locales, pages) via a proven template, verify one fully
