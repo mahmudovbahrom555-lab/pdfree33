@@ -31,7 +31,7 @@
 // ============================================================
 
 import { detectTables, looksLikeProseNotData, looksLikeEnumeratedList } from './pdf2wordTables.js';
-import { detectColumnRegions, pageIsRtl } from './pdf2wordColumns.js';
+import { detectColumnRegions, pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, _splitCrossColumnLines } from './textLayoutUtils.js';
@@ -485,10 +485,7 @@ export function _rpBuildPageBlocks(page, median, repeatTextSet, repeatPatternSet
   const ordered = pageIsRtl(lines) ? [...regions].reverse() : regions;
   const blocks = [];
   for (const region of ordered) {
-    const inRegion = (it) => !!it && it.x >= region.left && it.x < region.right;
-    const regionLines = lines
-      .map(ln => ({ y: ln.y, rtl: ln.rtl, items: ln.items.filter(inRegion) }))
-      .filter(ln => ln.items.length);
+    const regionLines = linesInRegion(lines, regions, regions.indexOf(region)); // full-width lines whole
     const regionGrids = borderGrids.filter(g => g.x >= region.left && (g.x + g.w) <= region.right);
     blocks.push(..._rpBuildRegionBlocks(regionLines, regionGrids, { x0: region.left, x1: region.right }, median, repeatTextSet, repeatPatternSet));
   }

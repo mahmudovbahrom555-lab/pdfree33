@@ -47,7 +47,7 @@ import { detectTables, looksLikeProseNotData } from './pdf2wordTables.js';
 import { detectColumnRegions, pageIsRtl } from './pdf2wordColumns.js';
 import { BULLET_RE, NUMBERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, _splitCrossColumnLines, _isCjk,
-         lineStartMargins, startsIndentedParagraph,
+         lineStartMargins, startsIndentedParagraph, linePitch, startsSpacedParagraph,
          joinHyphenatedLineEnd } from './textLayoutUtils.js';
 
 // Latin typographic ligatures (Unicode "Alphabetic Presentation Forms" block,
@@ -784,6 +784,7 @@ export async function _p2mdExtractText(pdfDoc, {
   // function walked `lines` as one flat array again.
   const _emitLines = (lines) => {
     const margins = lineStartMargins(lines); // first-line-indent paragraph breaks
+    const pitch = linePitch(lines);          // gap vs this column's own line spacing
     // Same text-based detector pdf2excel uses (no border-grid pass — that's
     // only worth the extra render cost in pdf2word's richer visual pipeline).
     // Filtered through looksLikeProseNotData(): two unrelated prose lists
@@ -941,7 +942,8 @@ export async function _p2mdExtractText(pdfDoc, {
         const mergeThreshold = (lastIsCjk && !lastEndsSent)
           ? lastMaxFont * 3.5
           : lastMaxFont * 2.0;
-        if (gap > mergeThreshold || startsIndentedParagraph(lastLn, ln, margins)) _flushPara();
+        if (gap > mergeThreshold || startsIndentedParagraph(lastLn, ln, margins)
+            || startsSpacedParagraph(lastLn, ln, pitch, margins)) _flushPara();
       }
       _paraBuffer.push(ln);
     }

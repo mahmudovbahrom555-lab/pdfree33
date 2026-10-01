@@ -9,7 +9,7 @@
 
 import { strict as assert } from 'assert';
 import { joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
-  lineStartMargins, startsIndentedParagraph } from '../js/textLayoutUtils.js';
+  lineStartMargins, startsIndentedParagraph, linePitch, startsSpacedParagraph } from '../js/textLayoutUtils.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -236,6 +236,27 @@ test('centred lines have no dominant margin, so nothing counts as indented', () 
 test('a shift wider than 4 em (block quote, centring) is not a first-line indent', () => {
   const lines = [ln(72, 416), ln(72, 416), ln(72, 416), ln(140, 300), ln(72, 416)];
   assert.deepEqual(breaks(lines), [false, false, false, false]);
+});
+
+// ── Paragraph gap measured against the text's own line pitch.
+const row = (y, str = 'text', width = 416, x = 72) => ({ y, rtl: false, items: [{ str, x, width, fontSize: 11 }] });
+// line pitch 15.4 (1.4 em), paragraph gap 21.45 (1.95 em — under the fixed 2.0 em rule)
+const spaced = [row(700), row(684.6), row(669.2, 'end of the paragraph.', 200), row(647.75), row(632.35), row(616.95)];
+
+test('a 1.95 em gap on a 1.4 em pitch starts a paragraph the fixed 2 em rule missed', () => {
+  const pitch = linePitch(spaced), m = lineStartMargins(spaced);
+  assert.ok(Math.abs(pitch - 15.4) < 0.01, `pitch ${pitch}`);
+  assert.deepEqual(spaced.slice(1).map((l, i) => startsSpacedParagraph(spaced[i], l, pitch, m)), [false, false, true, false, false]);
+});
+
+test('a taller gap before a display formula does not split the sentence', () => {
+  const lines = [row(700), row(684.6), row(669.2, 'can be written as'), row(645, 'x = y + z', 120, 220), row(621, 'where x is'), row(605.6)];
+  const pitch = linePitch(lines), m = lineStartMargins(lines);
+  assert.deepEqual(lines.slice(1).map((l, i) => startsSpacedParagraph(lines[i], l, pitch, m)), [false, false, false, false, false]);
+});
+
+test('too few lines to know the pitch: the rule stays out', () => {
+  assert.equal(linePitch([row(700), row(684.6), row(660)]), undefined);
 });
 
 const total = passed + failed;

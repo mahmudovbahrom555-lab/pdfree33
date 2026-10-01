@@ -55,6 +55,8 @@ const GAP_THRESHOLD = 12;
  * @typedef {Object} ColumnRegion
  * @property {number} left  — left X boundary (page-edge extended for the first region)
  * @property {number} right — right X boundary (page-edge extended for the last region)
+ * @property {boolean} gutter — boundaries run through a real empty gutter (projection
+ *   profile), not the midpoint fallback
  */
 
 // Every X position within `line` where a new "column run" starts: the
@@ -67,15 +69,71 @@ const GAP_THRESHOLD = 12;
 // column 2 invisible on every one of THOSE merged lines, since its items
 // are never first. Looking for gaps instead recovers both columns' real
 // start positions regardless of merging.
-function lineRunStarts(line) {
+// Where each run of a line BEGINS in reading order: its left edge, or its right
+// edge on an RTL line. Arabic/Hebrew/Persian columns are right-aligned with a
+// ragged left edge, so clustering left edges split one column into several
+// (ground truth 2026-10-01: three "columns" on every RTL two-column page).
+function lineRunStarts(line, rtlAware) {
   if (!line.items || !line.items.length) return [];
   const sorted = [...line.items].sort((a, b) => a.x - b.x);
-  const starts = [sorted[0].x];
+  const end = it => it.x + (it.width > 0 ? it.width : 0);
+  const runs = [[sorted[0]]];
   for (let i = 1; i < sorted.length; i++) {
-    const prevEnd = sorted[i - 1].x + (sorted[i - 1].width > 0 ? sorted[i - 1].width : 0);
-    if (sorted[i].x - prevEnd > GAP_THRESHOLD) starts.push(sorted[i].x);
+    if (sorted[i].x - end(sorted[i - 1]) > GAP_THRESHOLD) runs.push([]);
+    runs[runs.length - 1].push(sorted[i]);
   }
-  return starts;
+  return runs.map(run => (rtlAware && line.rtl ? Math.max(...run.map(end)) : run[0].x));
+}
+
+// Column boundaries through the empty gutters, not halfway between two
+// clusters' starts: a vertical projection profile of the page's text runs and
+// its widest empty valleys — the X-cut step of recursive XY-cut layout analysis
+// (Nagy & Seth 1984) and the whitespace analysis Breuel's work, and
+// Bukhari/Shafait/Breuel's for Arabic script, builds column detection on; it
+// doesn't care which way the text runs. The old midpoint put an English page's
+// boundary at x≈183 inside a left column spanning 72–285 (gutter 285–310).
+// Runs (a line split at gaps > GAP_THRESHOLD) rather than lines, so two
+// columns' lines merged on one baseline still leave the gutter empty; runs wider
+// than FULL_WIDTH_FRACTION of the text are full-width lines (title, abstract) and
+// stay out of the profile — they cross every gutter, and on arXiv page 1 they
+// outnumber the column lines. The clusters still decide whether there are
+// columns and how many; their centres only rank the valleys (a cluster mixing
+// abstract and column starts drifted to x≈252, short of the 300–315 gutter).
+// Returns null when fewer valleys than needed exist — the caller then keeps the
+// midpoint boundaries it always used.
+const GUTTER_MIN = 4;              // pt
+const FULL_WIDTH_FRACTION = 0.6;
+const VALLEY_FRACTION = 0.03;      // runs that may still cross a gutter (a rule, a stray glyph)
+function gutterCuts(lines, count) {
+  const end = it => it.x + (it.width > 0 ? it.width : 0);
+  const runs = [];
+  for (const ln of lines) {
+    const items = (ln.items || []).filter(Boolean).sort((a, b) => a.x - b.x);
+    let run = null;
+    for (const it of items) {
+      if (run && it.x - run[1] <= GAP_THRESHOLD) run[1] = Math.max(run[1], end(it));
+      else { if (run) runs.push(run); run = [it.x, end(it)]; }
+    }
+    if (run) runs.push(run);
+  }
+  if (!runs.length) return null;
+  const lo = Math.floor(Math.min(...runs.map(r => r[0]))), hi = Math.ceil(Math.max(...runs.map(r => r[1])));
+  const narrow = runs.filter(r => r[1] - r[0] <= FULL_WIDTH_FRACTION * (hi - lo));
+  const cover = new Uint16Array(hi - lo + 1);
+  for (const [x0, x1] of narrow) for (let x = Math.floor(x0); x <= Math.ceil(x1); x++) cover[x - lo]++;
+  const allowed = Math.floor(narrow.length * VALLEY_FRACTION);
+  const valleys = [];
+  for (let i = 0, start = -1; i <= cover.length; i++) {
+    const empty = i < cover.length && cover[i] <= allowed;
+    if (empty && start < 0) start = i;
+    if (!empty && start >= 0) {
+      // interior valleys only: text on both sides, not the page margins
+      if (start > 0 && i < cover.length && i - start >= GUTTER_MIN) valleys.push({ x: lo + start + (i - start) / 2, w: i - start });
+      start = -1;
+    }
+  }
+  if (valleys.length < count) return null;
+  return valleys.sort((a, b) => b.w - a.w).slice(0, count).map(v => v.x).sort((a, b) => a - b);
 }
 
 /**
@@ -89,9 +147,19 @@ function lineRunStarts(line) {
  *   confident multi-column layout was found (single-column — the common case)
  */
 export function detectColumnRegions(lines, pageWidth) {
+  // Direction-aware detection is trusted only when it finds real gutters; any
+  // other page gets exactly the detection it always had (left-edge starts,
+  // midpoint boundaries). Mixed RTL pages (an infobox beside full-width text)
+  // were never split before, and a midpoint cut there tore letter-by-letter
+  // Arabic words apart (holdout corpus 2026-10-01: Wikipedia ar/fa recall −3%).
+  const aware = _detectColumnRegions(lines, pageWidth, true);
+  return aware?.[0].gutter ? aware : _detectColumnRegions(lines, pageWidth, false);
+}
+
+function _detectColumnRegions(lines, pageWidth, rtlAware) {
   if (lines.length < MIN_LINES_ABS * 2) return null; // too little content to judge at all
 
-  const candidates = lines.flatMap(ln => lineRunStarts(ln).map(x => ({ x, y: ln.y })));
+  const candidates = lines.flatMap(ln => lineRunStarts(ln, rtlAware).map(x => ({ x, y: ln.y })));
   if (candidates.length < MIN_LINES_ABS * 2) return null;
 
   // Mean-based clustering, same algorithm _clusterColumns (pdf2wordTables.js)
@@ -196,9 +264,15 @@ export function detectColumnRegions(lines, pageWidth) {
     .reduce((n, t) => n + (t.endIdx - t.startIdx + 1), 0);
   if (tableLineCount >= lines.length * TABLE_GUARD_FRACTION) return null;
 
+  // `gutter` marks a boundary that runs through real empty space — only those
+  // may keep full-width lines whole (lineSpansRegions); midpoint boundaries keep
+  // the per-item split they always had.
+  const gutters = rtlAware ? gutterCuts(lines, real.length - 1) : null;
+  const cuts = gutters ?? real.slice(1).map((c, idx) => (real[idx].center + c.center) / 2);
   return real.map((c, idx) => ({
-    left:  idx === 0                ? 0          : (c.center + real[idx - 1].center) / 2,
-    right: idx === real.length - 1  ? pageWidth  : (c.center + real[idx + 1].center) / 2,
+    left:   idx === 0                ? 0          : cuts[idx - 1],
+    right:  idx === real.length - 1  ? pageWidth  : cuts[idx],
+    gutter: !!gutters,
   }));
 }
 
@@ -210,10 +284,46 @@ export function regionIndexForX(x, regions) {
   return regions.length - 1;
 }
 
-/** Which region a line falls into, by its first item's X. */
+/** Which region a line falls into, by its first item's X (its start in reading order). */
 export function lineRegionIndex(line, regions) {
   if (!line.items || !line.items.length) return 0;
   return regionIndexForX(line.items[0].x, regions);
+}
+
+// A line whose text runs across a region boundary — text on both sides with no
+// gutter-wide gap at it — is a full-width line (a title, an abstract, body text
+// under an infobox), not two columns' lines that landed on one baseline. On a
+// mixed page such lines were cut at the boundary mid-word (Wikipedia he/ar/fa,
+// arXiv page 1 with a full-width title and abstract: 22–54% of the lines cross
+// the cut vs 0–4% on real two-column pages). Recursive XY-cut never cuts through
+// text either: a vertical cut runs only along empty space.
+export function lineSpansRegions(line, regions) {
+  const items = (line.items || []).filter(Boolean);
+  for (const r of regions.slice(0, -1)) {
+    if (!r.gutter) continue; // a midpoint boundary says nothing about empty space
+    const b = r.right;
+    const leftEnd = Math.max(-Infinity, ...items.filter(it => it.x < b).map(it => it.x + (it.width > 0 ? it.width : 0)));
+    const rightStart = Math.min(Infinity, ...items.filter(it => it.x >= b).map(it => it.x));
+    if (leftEnd > b || (Number.isFinite(leftEnd) && Number.isFinite(rightStart) && rightStart - leftEnd < GUTTER_MIN)) return true;
+  }
+  return false;
+}
+
+// The lines of region `idx`: a full-width line whole, in the region where it
+// starts (left edge, or right edge for RTL — lineRegionIndex reads items[0], the
+// line's first item in reading order); any other line cut to its items inside.
+export function linesInRegion(lines, regions, idx) {
+  const r = regions[idx];
+  const out = [];
+  for (const ln of lines) {
+    if (lineSpansRegions(ln, regions)) {
+      if (lineRegionIndex(ln, regions) === idx) out.push({ y: ln.y, rtl: ln.rtl, items: ln.items });
+      continue;
+    }
+    const items = ln.items.filter(it => !!it && it.x >= r.left && it.x < r.right);
+    if (items.length) out.push({ y: ln.y, rtl: ln.rtl, items });
+  }
+  return out;
 }
 
 /**

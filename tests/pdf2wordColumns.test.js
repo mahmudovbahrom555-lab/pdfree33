@@ -31,7 +31,7 @@
 //
 // Run: node tests/pdf2wordColumns.test.js
 
-const { detectColumnRegions, lineRegionIndex, pageIsRtl } = await import('../js/pdf2wordColumns.js');
+const { detectColumnRegions, lineRegionIndex, pageIsRtl, lineSpansRegions, linesInRegion } = await import('../js/pdf2wordColumns.js');
 
 // processor.js touches Worker/document at module load time (it's built for
 // the browser) — same minimal stub pdf2wordBorders.test.js/
@@ -318,6 +318,43 @@ test('a single-column page (no confident columns detected) is left completely un
   const beforeJson = JSON.stringify(lines);
   _splitCrossColumnLines(lines, 612);
   expect(JSON.stringify(lines)).toBe(beforeJson);
+});
+
+// ── Gutter-based boundaries (projection profile), 2026-10-01 ───────────────
+// Two 213pt columns, left 72–285, right 310–523 (gutter 285–310), A4 width.
+const run = (x, width, str = 'text') => ({ str, x, width, fontSize: 11 });
+const twoCol = (rtl = false) => Array.from({ length: 24 }, (_, i) => {
+  const y = 700 - i * 15;
+  // RTL: right-aligned, ragged left edge; LTR: left-aligned, ragged right edge
+  const w = 213 - (i % 5) * 18;
+  const left = rtl ? run(285 - w, w) : run(72, w);
+  const right = rtl ? run(523 - w, w) : run(310, w);
+  return { y, rtl, items: [left, right] };
+});
+
+test('the boundary goes through the empty gutter (285–310), not halfway between the column starts', () => {
+  const regions = detectColumnRegions(twoCol(), 595);
+  expect(regions?.length).toBe(2);
+  expect(regions[0].right > 285 && regions[0].right < 310).toBe(true);
+  expect(regions[0].gutter).toBe(true);
+});
+
+test('a right-aligned RTL two-column page is 2 columns, not 3 (ragged left edges)', () => {
+  const regions = detectColumnRegions(twoCol(true), 595);
+  expect(regions?.length).toBe(2);
+  expect(regions[0].right > 285 && regions[0].right < 310).toBe(true);
+});
+
+test('full-width lines (a title, an abstract) do not hide the gutter or get cut', () => {
+  const lines = [...Array.from({ length: 30 }, (_, i) => ({ y: 790 - i * 3, items: [run(72, 451, 'full width abstract')] })), ...twoCol()];
+  const regions = detectColumnRegions(lines, 595);
+  expect(regions?.length).toBe(2);
+  expect(regions[0].right > 285 && regions[0].right < 310).toBe(true);
+  expect(lineSpansRegions(lines[0], regions)).toBe(true);
+  expect(lineSpansRegions(lines[40], regions)).toBe(false); // two columns' lines on one baseline
+  const left = linesInRegion(lines, regions, 0);
+  expect(left.filter(l => l.items[0].str === 'full width abstract').length).toBe(30); // whole, in the column it starts in
+  expect(linesInRegion(lines, regions, 1).every(l => l.items.every(it => it.x >= 300))).toBe(true);
 });
 
 // ── Summary ──────────────────────────────────────────────────

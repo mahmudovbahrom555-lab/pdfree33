@@ -11,7 +11,7 @@
 //  for backward-compat with existing test imports.
 // ============================================================
 
-import { detectColumnRegions, regionIndexForX } from './pdf2wordColumns.js';
+import { detectColumnRegions, regionIndexForX, lineSpansRegions } from './pdf2wordColumns.js';
 
 // Shared list-line detector — pdf2md and pdf2word (_p2wBuildParagraphs) both
 // use this exact pattern to keep list items from being swallowed into the
@@ -288,6 +288,7 @@ export function _splitCrossColumnLines(lines, pageW) {
   if (!columnRegions) return;
   for (let li = lines.length - 1; li >= 0; li--) {
     const ln = lines[li];
+    if (lineSpansRegions(ln, columnRegions)) continue; // a full-width line, not two columns' lines
     const byRegion = new Map();
     for (const item of ln.items) {
       const idx = regionIndexForX(item.x, columnRegions);
@@ -349,12 +350,16 @@ export function lineIsIndented(ln, margins) {
 // running into a display formula ("…can be written as" | centred equation) does
 // neither — without this the formula split its sentence (arXiv corpus 2026-10-01).
 const _SENTENCE_END_RE = /[.!?。！？؟…]["'”’»)\]]*$/;
+// "Short" counts only for a line that starts like body text — at the start margin
+// or at a paragraph indent: a centred display formula is short too, and the
+// sentence goes on after it ("where …").
 function _endsLikeParagraph(ln, margins) {
   if (_SENTENCE_END_RE.test(ln.items.map(i => i.str).join('').trimEnd())) return true;
   const m = margins[ln.rtl ? 'rtl' : 'ltr'];
-  if (m?.end === undefined) return false;
+  if (m?.end === undefined || m.start === undefined) return false;
+  const atStart = Math.abs(_lineStart(ln) - m.start) <= _EDGE_TOLERANCE || lineIsIndented(ln, margins);
   const short = ln.rtl ? _lineEnd(ln) - m.end : m.end - _lineEnd(ln);
-  return short > _lineEm(ln);
+  return atStart && short > _lineEm(ln);
 }
 // A paragraph starts at an indented line that follows a line at the margin which
 // ends like a paragraph. The previous line must not be indented itself: under a
@@ -362,6 +367,31 @@ function _endsLikeParagraph(ln, margins) {
 // shifted, and none of them start a paragraph.
 export function startsIndentedParagraph(prevLn, ln, margins) {
   return lineIsIndented(ln, margins) && !lineIsIndented(prevLn, margins) && _endsLikeParagraph(prevLn, margins);
+}
+
+// Paragraph gap relative to the text's own line pitch. The fixed "gap > 2.0×
+// font size" rule misses paragraphs whose spacing sits near 2 em: a two-column
+// page at line-height 1.4 with 0.6 em between paragraphs has gaps of 1.95–2.05 em
+// against a 1.4 em pitch (ground truth 2026-10-01). Layout analysis measures gaps
+// against the page's own median line spacing (Docstrum, O'Gorman 1993; pdfminer's
+// relative line margin; the median-baseline-distance rule used for Arabic
+// paragraph units) — here a gap over 1.25× the median pitch of a line set (page
+// or column) starts a paragraph when the previous line ends like one (same guard
+// as the indent rule: a display formula's taller gap must not split its sentence).
+export function linePitch(lines) {
+  const gaps = [];
+  for (let i = 1; i < lines.length; i++) {
+    const gap = lines[i - 1].y - lines[i].y;
+    const em = _lineEm(lines[i - 1]);
+    if (gap >= 0.8 * em && gap <= 3 * em) gaps.push(gap);
+  }
+  if (gaps.length < 3) return undefined;
+  gaps.sort((a, b) => a - b);
+  return gaps[Math.floor(gaps.length / 2)];
+}
+export function startsSpacedParagraph(prevLn, ln, pitch, margins) {
+  if (pitch === undefined) return false;
+  return prevLn.y - ln.y > pitch * 1.25 && _endsLikeParagraph(prevLn, margins);
 }
 
 // CJK: Hiragana/Katakana, CJK Unified Ideographs, Hangul syllables, CJK Extension A/B.

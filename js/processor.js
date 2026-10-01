@@ -17,7 +17,7 @@ import { loadJSZip, loadDocx, loadExcelJs, loadPptxGenJs } from './lazyLibs.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer, decryptWithPassword } from './decryptPdf.js';
 import { detectTables, groupItemsIntoLines, looksLikeProseNotData, looksLikeEnumeratedList } from './pdf2wordTables.js';
-import { detectColumnRegions, pageIsRtl } from './pdf2wordColumns.js';
+import { detectColumnRegions, pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
 import { openFeedback } from './feedback.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
 import { evaluateStructural } from './eriScore.js';
@@ -27,7 +27,7 @@ import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PR
          detectColumnGutter, reconcileColumnSplit, ereaderSampleIndices } from './ereaderCrop.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, toArabicBaseLetters, _splitCrossColumnLines, _isCjk,
-         lineStartMargins, startsIndentedParagraph } from './textLayoutUtils.js';
+         lineStartMargins, startsIndentedParagraph, linePitch, startsSpacedParagraph } from './textLayoutUtils.js';
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { _p2wBuildPageData } from './pdf2readCore.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
@@ -3591,15 +3591,10 @@ export function _p2pBuildSlideShapes(page, median, repeatTextSet, repeatPatternS
   const ordered = pageIsRtl(lines) ? [...regions].reverse() : regions;
   const textShapes = [], tableShapes = [], imageRegions = [];
   for (const region of ordered) {
-    const inRegion = (it) => !!it && it.x >= region.left && it.x < region.right;
-    // Filter ITEMS WITHIN each line, not whole lines by their first item —
-    // the exact bug shipped fixed for pdf2word's own column handling
-    // (commit 0cac6bda): a merged line's leftmost item is always the left
-    // column's, so gating on it alone would route a still-merged line's
-    // FULL content into whichever region contains its first item.
-    const regionLines = lines
-      .map(ln => ({ y: ln.y, rtl: ln.rtl, items: ln.items.filter(inRegion) }))
-      .filter(ln => ln.items.length);
+    // Items within each line, not whole lines by their first item (a merged
+    // line's leftmost item is always the left column's — commit 0cac6bda);
+    // full-width lines stay whole (linesInRegion, pdf2wordColumns.js).
+    const regionLines = linesInRegion(lines, regions, regions.indexOf(region));
     const regionGrids = borderGrids.filter(g => g.x >= region.left && (g.x + g.w) <= region.right);
     const result = _p2pBuildRegionShapes(
       regionLines, regionGrids, { x0: region.left, x1: region.right }, median, repeatTextSet, repeatPatternSet
@@ -4540,6 +4535,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     // positive like "A. Smith wrote the report." sitting flush with
     // ordinary body text.
     const margins = lineStartMargins(lines); // first-line-indent paragraph breaks
+    const pitch = linePitch(lines);          // gap vs this page's/column's own line spacing
     let pageBaselineX = 0;
     {
       const xFreq = new Map();
@@ -4851,7 +4847,8 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
               ? lastMaxFont * 3.5   // CJK continuation line — absorb generous leading
               : lastMaxFont * 2.0;  // conservative merge
 
-            if (isHead || lastIsHead || gap > mergeThreshold || startsIndentedParagraph(lastLn, ln, margins)) _flushPara();
+            if (isHead || lastIsHead || gap > mergeThreshold || startsIndentedParagraph(lastLn, ln, margins)
+                || startsSpacedParagraph(lastLn, ln, pitch, margins)) _flushPara();
           }
           _paraBuffer.push(ln);
         }
@@ -4998,9 +4995,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
         // region contains its leftmost item, and leaving the other region's
         // pass empty for that row. Filtering items directly costs nothing
         // and stays correct even if that invariant ever breaks.
-        const colLines = lines
-          .map(ln => ({ y: ln.y, rtl: ln.rtl, items: ln.items.filter(inRegion) }))
-          .filter(ln => ln.items.length);
+        const colLines = linesInRegion(lines, regions, regions.indexOf(region)); // full-width lines whole
         const colRotatedItems = rotatedItems.filter(inRegion);
         const colBorderGrids  = borderGrids.filter(g => g.x >= region.left && (g.x + g.w) <= region.right);
         await _processLines(pi, colLines, colRotatedItems, colBorderGrids, textItems, pageH);
