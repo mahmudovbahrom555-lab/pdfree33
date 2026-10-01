@@ -4274,7 +4274,7 @@
         "nl": "PDF naar Word Converteren — Gratis, Zonder Upload | PDFree",
         "pl": "PDF do Word — Za Darmo, Bez Przesyłania | PDFree",
         "zh-CN": "无需上传即可将 PDF 转换为 Word —— 免费且私密 | PDFree",
-        "ar": "تحويل PDF إلى Word دون رفع الملف — مجانًا وخاص | PDFree"
+        "ar": "تحويل ملف PDF إلى Word مجانًا — بدون تسجيل أو رفع | PDFree"
       },
       "descs": {
         "en": "Convert PDF to editable .docx — runs in your browser, no upload.",
@@ -4382,7 +4382,7 @@
         "nl": "Converteer PDF naar Word (.docx) in je browser — geen upload, niets opgeslagen. Ondersteuning voor tabellen, RTL-tekst en meer dan 15 talen.",
         "pl": "Konwertuj PDF do Word (.docx) w przeglądarce — bez przesyłania, bez przechowywania. Obsługa tabel, tekstu RTL i ponad 15 języków.",
         "zh-CN": "在浏览器中将 PDF 转换为 Word（.docx）—— 不上传、不存储任何内容。支持表格、从右到左文字以及 15 种以上语言。",
-        "ar": "حوّل PDF إلى Word (‎.docx‏) في متصفحك — لا شيء يُرفع، لا شيء يُخزَّن. دعم الجداول والنص من اليمين إلى اليسار وأكثر من 15 لغة."
+        "ar": "حوّل ملف PDF إلى Word (‎.docx‏) قابل للتحرير مجانًا وبدون تسجيل — يعمل داخل متصفحك دون رفع الملف. يحافظ على النص العربي والفقرات والجداول."
       },
       "ogTitles": {
         "en": "Convert PDF to Word Without Uploading — Free & Private | PDFree",
@@ -4400,7 +4400,7 @@
         "nl": "PDF naar Word Gratis — Zonder Upload | PDFree",
         "pl": "PDF do Word Za Darmo — Bez Przesyłania | PDFree",
         "zh-CN": "无需上传即可将 PDF 转换为 Word —— 免费且私密 | PDFree",
-        "ar": "تحويل PDF إلى Word دون رفع الملف — مجانًا وخاص | PDFree"
+        "ar": "تحويل ملف PDF إلى Word مجانًا — بدون تسجيل أو رفع | PDFree"
       },
       "ogDescs": {
         "en": "PDF to Word conversion that runs entirely in your browser. No upload, no server, no account. Tables, Arabic, Chinese, and more. 100% private.",
