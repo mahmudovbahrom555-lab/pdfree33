@@ -26,18 +26,23 @@
 //            their runs marked w:rtl and sized for complex script (w:szCs)
 //
 // Usage: node scripts/corpus-diff/groundtruth.mjs [base-url] [--tool pdf2md|pdf2word] [--json out.json]
+//        node scripts/corpus-diff/groundtruth.mjs --from-dir <dir> [--json out.json]
+//   --from-dir scores ready-made <document>.docx files (another converter's
+//   output for the same ground-truth PDFs) with exactly the same metrics;
+//   documents without a .docx there are skipped and counted.
 //   base-url defaults to http://localhost:8934 (python3 -m http.server 8934 --directory dist)
 
 import { chromium } from 'playwright';
 import JSZip from 'jszip';
-import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const args = process.argv.slice(2);
 const base = (args.find(a => /^https?:/.test(a)) || 'http://localhost:8934').replace(/\/$/, '');
 const jsonOut = args.includes('--json') ? args[args.indexOf('--json') + 1] : null;
-const tool = args.includes('--tool') ? args[args.indexOf('--tool') + 1] : 'pdf2md';
-if (!['pdf2md', 'pdf2word'].includes(tool)) throw new Error(`unknown --tool ${tool}`);
+const fromDir = args.includes('--from-dir') ? args[args.indexOf('--from-dir') + 1] : null;
+const tool = fromDir ? `docx files in ${fromDir}` : args.includes('--tool') ? args[args.indexOf('--tool') + 1] : 'pdf2md';
+if (!fromDir && !['pdf2md', 'pdf2word'].includes(tool)) throw new Error(`unknown --tool ${tool}`);
 const DIR = new URL('../../tests/corpus/groundtruth/', import.meta.url);
 const PDFJS = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
 
@@ -189,10 +194,15 @@ async function pdf2wordDocx(pdfPath) {
 }
 
 const rows = [];
+let skipped = 0;
 for (const { name, truth } of docs) {
   const pdfPath = new URL(`${name}.pdf`, DIR);
   let out, rtl = null;
-  if (tool === 'pdf2word') {
+  if (fromDir) {
+    const file = `${fromDir.replace(/\/$/, '')}/${name}.docx`;
+    if (!existsSync(file)) { skipped++; continue; }
+    ({ blocks: out, rtl } = await docxBlocks(readFileSync(file).toString('base64')));
+  } else if (tool === 'pdf2word') {
     ({ blocks: out, rtl } = await docxBlocks(await pdf2wordDocx(fileURLToPath(pdfPath))));
   } else {
     out = await page.evaluate(async (b64) => {
@@ -226,4 +236,5 @@ for (const key of ['lang', 'layout']) {
     console.log(`  ${g.padEnd(8)} recall ${pct(mean(rs, 'recall'))}%  order ${pct(mean(rs, 'order'))}%  paraP ${pct(mean(rs, 'paraP'))}%  paraR ${pct(mean(rs, 'paraR'))}%`);
   }
 }
+if (skipped) console.log(`\n${skipped} document(s) skipped — no .docx in ${fromDir}`);
 if (jsonOut) writeFileSync(jsonOut, JSON.stringify(rows, null, 1));
