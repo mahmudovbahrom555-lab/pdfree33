@@ -81,14 +81,16 @@ const appJs = versioned(/src="\/?(js\/app\.js\?v=[\w]+)"/, 'versioned js/app.js'
 const css = versioned(/href="\/?(css\/[\w.-]+\.css\?v=[\w]+)"/, 'versioned stylesheet');
 const font = versioned(/href="\/?(fonts\/[^"?]+)"/, 'font preload');
 
-const HTML = 'no-cache', HOUR = 'public, max-age=3600';
+// Directly-served HTML (and sw.js) carry Cloudflare's default; the Worker's own
+// HTML responses (404, embed) set no-cache — both mean "revalidate every time".
+const STATIC_HTML = 'public, max-age=0, must-revalidate', WORKER_HTML = 'no-cache', HOUR = 'public, max-age=3600';
 // worker: whether the response must come from the Worker (X-Pdfree-Worker)
 const CASES = [
-  { path: '/', status: 200, cc: HTML, worker: false, xfo: true, type: 'text/html' },
-  { path: '/merge-pdf/', status: 200, cc: HTML, worker: false, xfo: true, type: 'text/html' },
-  { path: '/merge-pdf/?utm_source=edge-check', status: 200, cc: HTML, worker: false, xfo: true },
-  { path: '/ru/', status: 200, cc: HTML, worker: false, xfo: true, type: 'text/html' },
-  { path: '/de/jpg-zu-pdf/', status: 200, cc: HTML, worker: false, xfo: true, type: 'text/html' },
+  { path: '/', status: 200, cc: STATIC_HTML, worker: false, xfo: true, type: 'text/html' },
+  { path: '/merge-pdf/', status: 200, cc: STATIC_HTML, worker: false, xfo: true, type: 'text/html' },
+  { path: '/merge-pdf/?utm_source=edge-check', status: 200, cc: STATIC_HTML, worker: false, xfo: true },
+  { path: '/ru/', status: 200, cc: STATIC_HTML, worker: false, xfo: true, type: 'text/html' },
+  { path: '/de/jpg-zu-pdf/', status: 200, cc: STATIC_HTML, worker: false, xfo: true, type: 'text/html' },
   { path: appJs, status: 200, cc: HOUR, worker: false, xfo: true, type: 'javascript' },
   { path: '/js/mergeWorker.js', status: 200, cc: HOUR, worker: false, xfo: true, type: 'javascript' },
   { path: css, status: 200, cc: HOUR, worker: false, xfo: true, type: 'text/css' },
@@ -99,10 +101,10 @@ const CASES = [
   { path: '/sitemap.xml', status: 200, cc: HOUR, worker: false, xfo: true, type: 'application/xml' },
   { path: '/version.json', status: 200, cc: HOUR, worker: false, xfo: true },
   { path: '/favicon.ico', status: 200, cc: HOUR, worker: false, xfo: true },
-  { path: '/sw.js', status: 200, cc: HTML, worker: false, xfo: true, type: 'javascript' },
-  { path: '/embed/compress/', status: 200, cc: HTML, worker: true, xfo: false, type: 'text/html' },
-  { path: '/no-such-page-edge-check/', status: 404, cc: HTML, worker: true, xfo: true, type: 'text/html', body: 'Page Not Found' },
-  { path: '/no-such-file-edge-check.js', status: 404, cc: HTML, worker: true, xfo: true, type: 'text/html' },
+  { path: '/sw.js', status: 200, cc: STATIC_HTML, worker: false, xfo: true, type: 'javascript' },
+  { path: '/embed/compress/', status: 200, cc: WORKER_HTML, worker: true, xfo: false, type: 'text/html' },
+  { path: '/no-such-page-edge-check/', status: 404, cc: WORKER_HTML, worker: true, xfo: true, type: 'text/html', body: 'Page Not Found' },
+  { path: '/no-such-file-edge-check.js', status: 404, cc: WORKER_HTML, worker: true, xfo: true, type: 'text/html' },
   { path: '/api/analytics', status: 405, worker: true },
 ];
 

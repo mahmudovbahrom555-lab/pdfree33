@@ -2,16 +2,19 @@
 # see wrangler.toml run_worker_first). Responses the Worker builds itself —
 # redirects, 404, /api/*, /embed/* — set their own Cache-Control in src/index.js.
 #
-# Cache-Control — the same buckets the Worker applied to every file until
+# Cache-Control — the buckets the Worker applied to every file until
 # 2026-10-01, except that `?v=<hash>` files drop from 1 year to 1 hour:
 # _headers matches paths, never query strings, so it can't tell them apart
 # from the ~15 Worker scripts (mergeWorker.js, pdfEncrypt.js, …) that are
 # loaded without `?v=` and must not be cached for a year (stale code after a
 # deploy). Revalidation after the hour is a cheap 304, and free.
-#   HTML pages (/, /<page>/, *.html), sw.js: no-cache
-#   everything else: 1 hour
-# Two matching rules would JOIN their Cache-Control values with a comma, so the
-# no-cache rules first detach the global one with `! Cache-Control`.
+#   /js /css /fonts /icons + five root files: 1 hour
+#   everything else — every HTML page, sw.js: no rule, so Cloudflare's own
+#   default "public, max-age=0, must-revalidate" (revalidate each time, same
+#   effect as no-cache)
+# The 1-hour rules deliberately never overlap a path that can be HTML: two
+# matching rules JOIN their values ("no-cache, public, max-age=3600" — seen on
+# the real preview for "/"), and `! Cache-Control` detaching didn't prevent it.
 
 # Global security headers applied to every response
 # Permissions-Policy: camera=(self) — the Document Scanner tool's
@@ -45,26 +48,34 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(self), microphone=(), geolocation=()
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
+/js/*
   Cache-Control: public, max-age=3600
 
-/
-  ! Cache-Control
-  Cache-Control: no-cache
+/css/*
+  Cache-Control: public, max-age=3600
 
-/*/
-  ! Cache-Control
-  Cache-Control: no-cache
+/fonts/*
+  Cache-Control: public, max-age=3600
 
-/*.html
-  ! Cache-Control
-  Cache-Control: no-cache
+/icons/*
+  Cache-Control: public, max-age=3600
 
-/sw.js
-  ! Cache-Control
-  Cache-Control: no-cache
+/favicon.ico
+  Cache-Control: public, max-age=3600
+
+/manifest.json
+  Cache-Control: public, max-age=3600
+
+/robots.txt
+  Cache-Control: public, max-age=3600
 
 /sitemap.xml
+  Cache-Control: public, max-age=3600
   Content-Type: application/xml; charset=utf-8
+
+/version.json
+  Cache-Control: public, max-age=3600
 
 /js/vendor/qpdf/lib/qpdf.wasm
   Content-Type: application/wasm

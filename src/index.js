@@ -711,7 +711,8 @@ function withEmbedFrameHeaders(response) {
 
 // Cache-Control for the responses this Worker still serves (the 404 page,
 // /embed/*). Static assets no longer pass through here — dist/_headers gives
-// them the same buckets (HTML no-cache, everything else 1 hour). The 1-hour
+// them equivalent buckets (HTML revalidated every time, /js /css /fonts /icons
+// 1 hour). The 1-hour
 // cap matters: ~15 first-party Worker files (worker.js, mergeWorker.js,
 // pdfEncrypt.js, …) are loaded via `new Worker(new URL(...))`/importScripts
 // and never get build.py's `?v=<hash>` param, so a 1-year cache would pin an
