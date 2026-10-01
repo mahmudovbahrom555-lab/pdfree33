@@ -25,6 +25,7 @@
     "test:e2e:quickedit": "node tests/e2e/quickEdit.e2e.mjs",
     "test:e2e:quickedit-skeleton": "node tests/e2e/quickEditSkeleton.e2e.mjs",
     "check:prod:embed-sdk": "PDFREE_BASE_URL=https://pdfree.io node tests/e2e/embed-sdk.e2e.mjs",
+    "check:prod:edge": "node scripts/check_edge_routing.mjs https://pdfree.io --browser --redirect-sample 20",
     "lint": "eslint js/*.js --ignore-pattern 'js/vendor/**'",
     "check:dom": "python3 scripts/check_dom.py",
     "check:i18n": "python3 scripts/check_i18n.py",

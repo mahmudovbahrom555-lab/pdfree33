@@ -43,13 +43,18 @@
 //      since the priority list covers all 13 locales — kept as a guard in
 //      case a 14th locale is ever added to tools-config.json without a
 //      matching priority-list update).
+//   8. FAILING — no path in _redirects maps somewhere different from the
+//      Worker's REDIRECTS. Cloudflare applies _redirects BEFORE the Worker
+//      (static files no longer go through it — wrangler.toml), so a stale
+//      _redirects line silently overrides the Worker. Real case 2026-10-01:
+//      /remove-password-from-pdf/ → /protect-pdf/ there vs /unlock-pdf/ here.
 // ============================================================
 
-import { existsSync, appendFileSync } from 'fs';
+import { existsSync, appendFileSync, readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import {
-  MANUAL_REDIRECTS, GUESS_REDIRECTS, toolsConfig,
+  MANUAL_REDIRECTS, GUESS_REDIRECTS, REDIRECTS, toolsConfig,
   LOCALE_TIE_BREAK_PRIORITY, AMBIGUOUS_BARE_SLUGS, TIE_BREAK_RESOLVED, INTERNAL_COLLISIONS,
 } from '../src/index.js';
 
@@ -181,6 +186,16 @@ test('no bare-slug ties are left genuinely unresolved', () => {
     const detail = AMBIGUOUS_BARE_SLUGS.map(a => `/${a.slug}/ (${a.targets.join(' OR ')})`).join(', ');
     throw new Error(`${AMBIGUOUS_BARE_SLUGS.length} unresolved (no candidate locale in LOCALE_TIE_BREAK_PRIORITY): ${detail}`);
   }
+});
+
+// ── 8. _redirects never contradicts the Worker's table ──────────────────────
+test('no _redirects rule sends a REDIRECTS path somewhere else', () => {
+  const conflicts = readFileSync(path.join(ROOT, '_redirects'), 'utf8')
+    .split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'))
+    .map(l => l.split(/\s+/))
+    .filter(([from, to]) => from in REDIRECTS && REDIRECTS[from] !== to)
+    .map(([from, to]) => `${from}: _redirects → ${to}, Worker → ${REDIRECTS[from]}`);
+  if (conflicts.length) throw new Error(`_redirects overrides the Worker (it runs first):\n    ${conflicts.join('\n    ')}`);
 });
 
 // ── CI job summary ─────────────────────────────────────────────────────────

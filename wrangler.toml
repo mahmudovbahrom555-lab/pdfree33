@@ -20,11 +20,21 @@ main = "src/index.js"
 # placement optimization to begin with. Default placement is standard
 # edge-nearest-request execution.
 
+# Static files are served by Cloudflare directly — free and not counted against
+# Workers Free's 100,000 requests/day. With run_worker_first = true every file
+# of every page view invoked the Worker (~100 per load, ~175 on a first visit
+# with the Service Worker precache) and the account hit 88% of the daily limit
+# on 2026-09-30 — past it, the whole site errors until 00:00 UTC. Now the
+# Worker runs only for /api/* and /embed/* (frame headers) plus any path that
+# matches no file (redirects, 404 page — see src/index.js's header comment).
+# No not_found_handling on purpose: "404-page" answers misses itself, so the
+# Worker's ~1,900 redirects would never run. Cache/security headers for
+# directly-served files live in _headers. Checked by
+# scripts/check_edge_routing.mjs (CI preview gate + npm run check:prod:edge).
 [assets]
 directory = "./dist"
 binding = "ASSETS"
-not_found_handling = "404-page"
-run_worker_first = true
+run_worker_first = ["/api/*", "/embed/*"]
 
 [[analytics_engine_datasets]]
 binding = "ANALYTICS"

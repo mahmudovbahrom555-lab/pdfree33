@@ -7,10 +7,9 @@
 //  "ASSETS"`), so the real src/index.js fetch handler's
 //  `env.ASSETS.fetch(request)` calls work unmodified outside Cloudflare.
 //
-//  Approximates `not_found_handling = "404-page"`: an unresolved path gets
-//  a real dist/404.html body with a genuine 404 status, matching
-//  src/index.js's own header comment about why that setting matters
-//  (avoids a soft-404 that 200s any path with the homepage).
+//  An unresolved path gets a bare 404, like the real binding without
+//  not_found_handling — src/index.js itself renders dist/404.html for it,
+//  the same code path as on Cloudflare.
 //
 //  Known, disclosed fidelity gaps vs. the real Workers Assets binding (see
 //  SELF_HOSTING.md): no ETag/If-None-Match, no Range support, no automatic
@@ -111,11 +110,7 @@ export function createAssetsBinding(distDir) {
         }
       }
 
-      const notFound = await readIfExists(join(distDir, '404.html'));
-      return new Response(notFound || 'Not Found', {
-        status: 404,
-        headers: { 'Content-Type': notFound ? 'text/html; charset=utf-8' : 'text/plain' },
-      });
+      return new Response('Not Found', { status: 404, headers: { 'Content-Type': 'text/plain' } });
     },
   };
 }

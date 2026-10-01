@@ -1,11 +1,14 @@
 // Cloudflare Worker entry point.
-// Handles 301 redirects before passing to static assets.
-// not_found_handling = "404-page" means any unmatched path — including
-// stray locale roots (/ru/, /ja/, etc. with no dedicated homepage) and
-// garbage URLs — now gets a real dist/404.html with a genuine 404 status,
-// instead of the old "single-page-application" fallback that silently
-// 200'd literally any path with the English homepage (a soft-404 that
-// was polluting Search Console with duplicate-content noise).
+// Runs only for /api/*, /embed/* (wrangler.toml run_worker_first) and for paths
+// that match no static file — every existing asset is served by Cloudflare
+// directly, without invoking this Worker (Workers Free counts every invocation
+// against a 100,000/day limit, and with run_worker_first = true each page view
+// cost ~100–175 of them; 2026-10-01). So: 301 redirects, the API, embed frame
+// headers, and the 404 page — any unmatched path, including stray locale roots
+// and garbage URLs, gets dist/404.html with a genuine 404 status (never a
+// soft-404 200 with the homepage, which polluted Search Console). The 404 is
+// rendered here rather than by not_found_handling = "404-page", because that
+// setting answers misses itself and the redirects below would never run.
 
 import toolsConfig from '../data/tools-config.json' with { type: 'json' };
 
@@ -706,28 +709,18 @@ function withEmbedFrameHeaders(response) {
   return new Response(response.body, { status: response.status, headers });
 }
 
-// env.ASSETS.fetch() (the Workers Assets binding) serves EVERY static file
-// with `Cache-Control: public, max-age=31536000, immutable` by default —
-// confirmed directly against production — regardless of whether the URL
-// carries this project's own `?v=<hash>` cache-busting query param
-// (scripts/build.py's _inject_hashes() only rewrites <script src>/<link
-// href> attributes inside generated HTML; it structurally cannot reach
-// `new Worker(new URL('./xWorker.js', import.meta.url))` or
-// `importScripts('./vendor/y.js')` calls living inside .js source files, so
-// ~15 first-party Worker files — worker.js, mergeWorker.js, pdfEncrypt.js,
-// organizeWorker.js, etc. — never get a cache-busting param at all). Left
-// unfixed, an already-visited browser would cache one of these files'
-// stale bytes for a full year past any future deploy that changes its
-// content — the exact same "silently stuck on old code" incident class as
-// pwa_direct_version_check_2026_09's Service-Worker case, just via plain
-// HTTP caching instead. Mirrors selfhost/assets.js's already-tested
-// cacheControlFor(pathname, hasVersionQuery) exactly (same 3 buckets), just
-// keyed off the response's own content-type instead of a resolved file
-// path (which this Worker doesn't have access to) — a text/html response
-// (including directory-style routes like /merge-pdf/ and the 404 page)
-// always gets a short no-cache; anything else gets the long immutable
-// cache ONLY if the request actually carries a `?v=`/`?t=` query param,
-// otherwise a short 1-hour cache instead of Cloudflare's 1-year default.
+// Cache-Control for the responses this Worker still serves (the 404 page,
+// /embed/*). Static assets no longer pass through here — dist/_headers gives
+// them the same buckets (HTML no-cache, everything else 1 hour). The 1-hour
+// cap matters: ~15 first-party Worker files (worker.js, mergeWorker.js,
+// pdfEncrypt.js, …) are loaded via `new Worker(new URL(...))`/importScripts
+// and never get build.py's `?v=<hash>` param, so a 1-year cache would pin an
+// already-visited browser to stale code long past a deploy — the same
+// "stuck on old code" class as pwa_direct_version_check_2026_09. Mirrors
+// selfhost/assets.js's cacheControlFor(pathname, hasVersionQuery) (same 3
+// buckets), keyed off the response's content-type: text/html always gets
+// no-cache; anything else the long immutable cache ONLY with a `?v=`/`?t=`
+// query param, otherwise 1 hour.
 export function _cacheControlFor(contentType, hasVersionQuery) {
   if ((contentType || '').includes('text/html')) return 'no-cache';
   return hasVersionQuery ? 'public, max-age=31536000, immutable' : 'public, max-age=3600';
@@ -740,33 +733,46 @@ function withAssetCacheControl(response, url) {
   return new Response(response.body, { status: response.status, headers });
 }
 
+// X-Pdfree-Worker marks every response this Worker produced, so a page load
+// can be checked for how many of its requests still reach it
+// (scripts/check_edge_routing.mjs — the Workers Free daily-limit metric).
 export default {
   async fetch(request, env) {
-    const url = new URL(request.url);
-
-    if (url.pathname === '/api/feedback') {
-      return handleFeedback(request, env);
-    }
-
-    if (url.pathname === '/api/analytics') {
-      return handleAnalytics(request, env);
-    }
-
-    const target = REDIRECTS[url.pathname];
-    if (target) {
-      return new Response(null, {
-        status: 301,
-        headers: {
-          Location: new URL(target, url.origin).href,
-          'Cache-Control': 'no-store',
-        },
-      });
-    }
-
-    if (url.pathname.startsWith('/embed/')) {
-      return withAssetCacheControl(withEmbedFrameHeaders(await env.ASSETS.fetch(request)), url);
-    }
-
-    return withAssetCacheControl(await env.ASSETS.fetch(request), url);
+    const res = await _route(request, env);
+    const out = new Response(res.body, res);
+    out.headers.set('X-Pdfree-Worker', '1');
+    return out;
   },
 };
+
+async function _route(request, env) {
+  const url = new URL(request.url);
+
+  if (url.pathname === '/api/feedback') {
+    return handleFeedback(request, env);
+  }
+
+  if (url.pathname === '/api/analytics') {
+    return handleAnalytics(request, env);
+  }
+
+  const target = REDIRECTS[url.pathname];
+  if (target) {
+    return new Response(null, {
+      status: 301,
+      headers: {
+        Location: new URL(target, url.origin).href,
+        'Cache-Control': 'no-store',
+      },
+    });
+  }
+
+  if (url.pathname.startsWith('/embed/')) {
+    return withAssetCacheControl(withEmbedFrameHeaders(await env.ASSETS.fetch(request)), url);
+  }
+
+  const asset = await env.ASSETS.fetch(request);
+  if (asset.status !== 404) return withAssetCacheControl(asset, url);
+  const page = await env.ASSETS.fetch(new Request(new URL('/404.html', url.origin)));
+  return withAssetCacheControl(new Response(page.body, { status: 404, headers: page.headers }), url);
+}

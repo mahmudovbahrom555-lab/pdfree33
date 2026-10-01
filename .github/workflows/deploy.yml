@@ -509,6 +509,14 @@ jobs:
             || { echo "ERROR: pdf-lib.min.js missing expected content-type"; exit 1; }
           echo "OK — vendor asset serves with the right content-type"
 
+          # Edge routing on the real preview: redirects (every 10th Worker one +
+          # all _redirects — each Worker redirect is a counted invocation),
+          # cache/security headers per URL class, and real page loads where
+          # only /api/* may reach the Worker. Static files bypass the Worker
+          # since 2026-10-01 (wrangler.toml), which is also what made a real
+          # browser load of the preview viable again (see the comment above).
+          node scripts/check_edge_routing.mjs "$PREVIEW" --browser --redirect-sample 10
+
       - name: Cut traffic to the new version (100%)
         # Only reached if every gate above passed. Production has served the
         # LAST-GOOD version this entire time — this is the single moment
@@ -549,6 +557,11 @@ jobs:
             fi
           done
           exit $FAIL
+
+      - name: Edge routing on production (static files must not reach the Worker)
+        # Same script as the preview gate above, now against pdfree.io: catches
+        # anything that differs between the preview hostname and the zone.
+        run: npm run check:prod:edge
 
       - name: Submit URLs to IndexNow (Bing, Yandex, Seznam, Naver)
         run: |

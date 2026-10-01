@@ -409,8 +409,8 @@ def _git_lastmod(rel_path):
 # Locales that have a real homepage file (index.html at their dir root).
 # Locales in config['languages'] but NOT in this set only have individual
 # tool pages — no {dir}/index.html exists for them. Cloudflare Workers
-# Assets 404s a request to e.g. /ko/ when no matching asset exists (see
-# wrangler.toml's not_found_handling), so those locales must stay out of
+# Assets 404s a request to e.g. /ko/ when no matching asset exists (the
+# Worker's 404 fallback, src/index.js), so those locales must stay out of
 # the sitemap/hreflang set — submitting /ko/ with hreflang="ko" would tell
 # Google "here is Korean content" for a URL that 404s. Their tool sub-pages
 # (e.g. /ko/pdf-word-byeonhwan/) are real files and unaffected — only the

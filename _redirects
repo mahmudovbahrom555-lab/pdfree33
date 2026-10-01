@@ -41,7 +41,6 @@
 /protect/ /protect-pdf/ 301
 /pdf-password/ /protect-pdf/ 301
 /add-password-to-pdf/ /protect-pdf/ 301
-/remove-password-from-pdf/ /protect-pdf/ 301
 /page-numbers/ /pagenum-pdf/ 301
 /add-page-numbers/ /pagenum-pdf/ 301
 /extract/ /extract-pdf/ 301
