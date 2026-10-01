@@ -393,7 +393,7 @@ export async function _p2mdExtractText(pdfDoc, {
     const rtlVisual = rtlItemsAreVisual(content.items);
     const items = content.items
       .filter(item => 'str' in item && item.str.split(' ').join('').trim())
-      .map(item => {
+      .map((item, seq) => {
         const fontSize = (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10;
         const style    = content.styles[item.fontName] || {};
         const fam      = (style.fontFamily || '').toLowerCase();
@@ -426,6 +426,7 @@ export async function _p2mdExtractText(pdfDoc, {
         const isFormula = _isFontMath(item.fontName, fam) || MATH_GLYPH_RE.test(str) ||
           (!pageIsGreekProse && str.length > 0 && (greekInItem / str.length) >= GREEK_ITEM_RATIO);
         return {
+          seq,      // content-stream order — see reorderVisualRtlLine
           str, x: item.transform[4], y: item.transform[5], width: item.width || 0,
           fontSize,
           bold:    !isFormula && (_isFontBold(item.fontName) || BOLD_FONT_NAME_RE.test(fam)),
@@ -927,12 +928,13 @@ export async function _p2mdExtractText(pdfDoc, {
         const gap         = lastLn.y - ln.y;
         const lastText    = _lineText(lastLn);
         const lastIsCjk    = _isCjk(lastText);
-        const lastIsRtl    = lastLn.rtl;
         const lastEndsSent = /[。！？…]$/.test(lastText.trimEnd());
+        // RTL lines used a tighter 1.3× (assumed line spacing 1.0–1.2×): real
+        // Arabic/Hebrew/Persian text sits at ~1.3–1.8× and every wrapped line
+        // became its own paragraph — ground truth 2026-10-01: paragraph-break
+        // precision 44–47% at 1.3×, 100% at the LTR 2.0× in web/loose layouts.
         const mergeThreshold = (lastIsCjk && !lastEndsSent)
           ? lastMaxFont * 3.5
-          : lastIsRtl
-          ? lastMaxFont * 1.3
           : lastMaxFont * 2.0;
         if (gap > mergeThreshold) _flushPara();
       }

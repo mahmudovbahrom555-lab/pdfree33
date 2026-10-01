@@ -582,7 +582,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
     const rtlVisual = rtlItemsAreVisual(content.items);
     const allMapped = content.items
       .filter(item => 'str' in item && item.str.replace(_XML_ILLEGAL_CONTROL_RE, '') !== '')
-      .map(item => {
+      .map((item, seq) => {
         const fontSize  = (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10;
         const style     = content.styles[item.fontName] || {};
         const fam       = (style.fontFamily || '').toLowerCase();
@@ -605,6 +605,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
         const str = ((item.dir === 'rtl' && rtlVisual) ? _visualRTLToLogical(item.str) : item.str)
           .replace(_XML_ILLEGAL_CONTROL_RE, '');
         return {
+          seq,      // content-stream order — see reorderVisualRtlLine
           str,
           x:        item.transform[4],
           y:        item.transform[5],

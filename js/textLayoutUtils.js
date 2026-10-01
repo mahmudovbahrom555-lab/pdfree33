@@ -114,14 +114,18 @@ export function rtlItemsAreVisual(items) {
 }
 
 // Puts one RTL line's items (in pdf.js content-stream order) into logical order, IN
-// PLACE — only when the stream itself runs left-to-right across the RTL items.
+// PLACE — only when the stream itself runs left-to-right across the line's text.
 // Chromium-printed Arabic/Farsi arrives one presentation-form glyph per item, drawn
 // left to right (visual); keeping that order spelled every word backwards and, with
 // no space items in the stream, glued the words together (corpus gate 2026-09-30).
-// Such a line is re-sorted right-to-left, embedded LTR runs ("PDF", "1993") are
-// flipped back to left-to-right, and an X-gap wider than 20% of the font size
-// becomes a space — the same threshold the LTR line-join paths use. A stream that
-// already runs right-to-left (logical, e.g. Hebrew multi-word items) is left alone.
+// Chromium also writes a mixed line as runs in visual order — "?", "PDF", then one
+// Hebrew run for "...האם יש הגבלה ... קבצי PDF?" — so the direction is judged across
+// every item with letters or digits, not the RTL ones only (with a single RTL run
+// there is nothing to compare; ground-truth set 2026-10-01). Such a line is
+// re-sorted right-to-left, embedded LTR runs ("PDF", "1993") are flipped back to
+// left-to-right, and an X-gap wider than 20% of the font size becomes a space —
+// the same threshold the LTR line-join paths use. A stream that already runs
+// right-to-left (logical: Word/LibreOffice output) is left alone.
 const _BIDI_MIRROR = {'(':')',')':'(','[':']',']':'[','{':'}','}':'{','<':'>','>':'<'};
 // Arabic-Indic / Persian digits (U+0660-0669, U+06F0-06F9) are left out: they run
 // left-to-right inside RTL text, so "۱۳۹۹" drawn digit by digit must stay in order.
@@ -148,16 +152,21 @@ const _JOIN_BROKEN_FORMS = (() => {
   return set;
 })();
 export function reorderVisualRtlLine(items) {
+  // Lines are grouped after a sort by y, so a raised footnote mark ("[1]") or a
+  // run on a slightly different baseline arrives out of stream order — restore it
+  // from `seq` (the item's pdf.js index) before judging direction. A logical line
+  // left as is then also keeps its true stream order.
+  items.sort((a, b) => (a.seq ?? 0) - (b.seq ?? 0));
   let ltrSteps = 0, rtlSteps = 0, prev = null;
   for (const item of items) {
-    if (!_RTL_CHAR_RE.test(item.str)) continue;
+    if (!_STRONG_CHAR_RE.test(item.str)) continue;
     if (prev) {
       if (item.x > prev.x) ltrSteps++;
       else if (item.x < prev.x) rtlSteps++;
     }
     prev = item;
   }
-  if (ltrSteps < 2 || ltrSteps <= rtlSteps) return;
+  if (ltrSteps <= rtlSteps) return;
 
   // Right edge first: pdf.js splits a lam-alef ligature glyph into items that share
   // one left x (e.g. "ال" width 9 and "إ" width 0), and only the right edge puts

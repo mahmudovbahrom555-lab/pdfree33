@@ -7,9 +7,11 @@
 // the same pdf.js the site loads (cdnjs 3.11.174), then compares blocks:
 //   recall   share of true tokens present (multiset)
 //   order    LCS of output vs true token sequence ÷ true length
-//   para P/R paragraph-boundary precision/recall (output breaks mapped onto the
-//            true text through the LCS alignment; a break the truth lacks = a
-//            paragraph wrongly split, a missing one = two paragraphs merged)
+//   para P   share of consecutive output blocks that really belong to different
+//            true blocks (each output block placed by where its words align) —
+//            low = paragraphs wrongly split
+//   para R   share of true boundaries kept — a boundary is lost when one output
+//            block holds a real share of both neighbours — low = paragraphs merged
 //   head     true headings found as heading blocks / output headings that aren't true
 // Tokens: words (letters/digits runs, NFKC, lower-case); CJK per character.
 // `mupdf` column: the share of words MuPDF itself recovers from that PDF (the
@@ -48,17 +50,16 @@ function align(a, b) {
   return { map, lcs: dp[0][0] };
 }
 
-// Flatten blocks into one token stream + the token index ending each block.
+// Flatten blocks into one token stream; blockOf[i] = which block token i came from.
 function stream(blocks) {
-  const toks = [], ends = [], heads = [];
-  for (const b of blocks) {
+  const toks = [], blockOf = [], heads = [];
+  blocks.forEach((b, k) => {
     const t = tokens(b.text);
-    if (!t.length) continue;
     toks.push(...t);
-    ends.push(toks.length - 1);
-    if (b.type === 'heading') heads.push(t);
-  }
-  return { toks, ends, heads };
+    blockOf.push(...t.map(() => k));
+    if (b.type === 'heading' && t.length) heads.push(t);
+  });
+  return { toks, blockOf, heads };
 }
 
 function score(truth, out) {
@@ -68,23 +69,32 @@ function score(truth, out) {
   let hit = 0;
   for (const t of T.toks) if (bag.get(t) > 0) { hit++; bag.set(t, bag.get(t) - 1); }
   const { map, lcs } = align(O.toks, T.toks);
-  // Boundaries in truth coordinates, the document's own end excluded.
-  const trueB = new Set(T.ends.slice(0, -1));
-  const predB = new Set();
-  for (const e of O.ends.slice(0, -1)) {
-    let i = e;
-    while (i >= 0 && map[i] < 0) i--; // last aligned token of that output block
-    if (i >= 0) predB.add(map[i]);
-  }
-  const both = [...predB].filter(b => trueB.has(b)).length;
-  const overlap = (a, b) => { const s = new Set(b); return a.filter(x => s.has(x)).length / Math.max(a.length, 1); };
+
+  // Paragraph boundaries by block membership, so one mis-tokenized word (a lost
+  // ZWNJ, a split ligature) can't move a boundary: count[k][j] = tokens of output
+  // block k aligned into true block j.
+  const count = out.map(() => new Map());
+  map.forEach((j, i) => { if (j >= 0) { const m = count[O.blockOf[i]], tb = T.blockOf[j]; m.set(tb, (m.get(tb) || 0) + 1); } });
+  const majority = m => [...m.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
+  const placed = count.map(majority).filter(j => j !== undefined);
+  // precision: consecutive output blocks belonging to different true blocks
+  let pairs = 0, splitOk = 0;
+  for (let k = 1; k < placed.length; k++) { pairs++; if (placed[k] !== placed[k - 1]) splitOk++; }
+  // recall: a true boundary j|j+1 is lost when one output block holds a real share
+  // (≥2 tokens and ≥10%) of both true blocks
+  const size = truth.map((_, j) => T.blockOf.filter(b => b === j).length);
+  const holds = (m, j) => (m.get(j) || 0) >= Math.max(2, 0.1 * size[j]);
+  let merged = 0;
+  for (let j = 0; j + 1 < truth.length; j++) if (count.some(m => holds(m, j) && holds(m, j + 1))) merged++;
+
+  const overlap = (a, b) => { const st = new Set(b); return a.filter(x => st.has(x)).length / Math.max(a.length, 1); };
   const found = T.heads.filter(h => O.heads.some(o => overlap(h, o) >= 0.8 && overlap(o, h) >= 0.8)).length;
   const falseHeads = O.heads.filter(o => !T.heads.some(h => overlap(o, h) >= 0.8)).length;
   return {
     recall: hit / T.toks.length,
     order: lcs / T.toks.length,
-    paraP: predB.size ? both / predB.size : 1,
-    paraR: trueB.size ? both / trueB.size : 1,
+    paraP: pairs ? splitOk / pairs : 1,
+    paraR: 1 - merged / Math.max(truth.length - 1, 1),
     headFound: `${found}/${T.heads.length}`,
     falseHeads,
   };

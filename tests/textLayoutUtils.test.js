@@ -163,6 +163,25 @@ test('a lam-alef ligature split into same-x items is ordered by right edge', () 
   assert.ok(lineText(items).startsWith('الإ'), lineText(items));
 });
 
+test('a mixed line written as visual runs ("?", "PDF", one Hebrew run) is put in reading order', () => {
+  // Chromium's output for "האם יש הגבלה על גודל קבצי PDF?" (ground-truth set): the
+  // runs left to right, the Hebrew run itself already logical inside its item
+  const items = [glyph('?', 0, 4), glyph('PDF', 4, 20), glyph('האם יש קבצי', 27, 60)];
+  reorderVisualRtlLine(items);
+  assert.equal(items.map(i => i.str).join(''), 'האם יש קבצי PDF?');
+});
+
+test('direction is judged in content-stream order (seq), not the y-sorted order lines arrive in', () => {
+  // Wikipedia (he): runs drawn left to right on baselines 651.2/650.7 plus a raised
+  // "[1]" — y-sorting put "[1]" first and hid the visual order (pdf2word regression)
+  const run = (str, x, width, seq) => ({ str, x, width, seq, fontSize: 10 });
+  const items = [run('1', 425, 5, 2), run('אשר', 294, 126, 0), run('הוא', 535, 17, 5),
+    run('חופשי', 438, 28, 3), run('פורמט', 472, 57, 4)];
+  reorderVisualRtlLine(items);
+  // logical: "הוא פורמט חופשי 1 אשר" — the runs right to left, gaps become spaces
+  assert.equal(items.map(i => i.str).join(''), 'הוא פורמט חופשי 1 אשר');
+});
+
 test('a stream already running right-to-left (logical) is left untouched', () => {
   const items = [glyph('שלום', 100, 30), glyph('עולם', 60, 30), glyph('זה', 20, 20)];
   const before = items.map(i => i.str);
