@@ -26,7 +26,7 @@ import { evaluateMarkdownStructural } from './eriScoreMd.js';
 import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PRESETS,
          detectColumnGutter, reconcileColumnSplit, ereaderSampleIndices } from './ereaderCrop.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, _splitCrossColumnLines, _isCjk } from './textLayoutUtils.js';
+         _visualRTLToLogical, rtlItemsAreVisual, _splitCrossColumnLines, _isCjk } from './textLayoutUtils.js';
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { _p2wBuildPageData } from './pdf2readCore.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
@@ -2906,12 +2906,13 @@ async function _p2eExtractTables(pdfDoc) {
       _boldFontCache.set(fontName, bold);
       return bold;
     };
+    const rtlVisual = rtlItemsAreVisual(content.items);
     const items = content.items
       .filter(item => 'str' in item && item.str.split(' ').join('').trim())
       .map(item => {
         const fam = (content.styles[item.fontName]?.fontFamily || '').toLowerCase();
         return {
-          str: ((item.dir === 'rtl') ? _visualRTLToLogical(item.str) : item.str)
+          str: ((item.dir === 'rtl' && rtlVisual) ? _visualRTLToLogical(item.str) : item.str)
             .split(' ').join(''),
           x: item.transform[4],
           y: item.transform[5],

@@ -46,7 +46,7 @@
 import { detectTables, looksLikeProseNotData } from './pdf2wordTables.js';
 import { detectColumnRegions, pageIsRtl } from './pdf2wordColumns.js';
 import { BULLET_RE, NUMBERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, _splitCrossColumnLines, _isCjk,
+         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, _splitCrossColumnLines, _isCjk,
          joinHyphenatedLineEnd } from './textLayoutUtils.js';
 
 // Latin typographic ligatures (Unicode "Alphabetic Presentation Forms" block,
@@ -390,6 +390,7 @@ export async function _p2mdExtractText(pdfDoc, {
       _mathFontCache.set(fontName, math);
       return math;
     };
+    const rtlVisual = rtlItemsAreVisual(content.items);
     const items = content.items
       .filter(item => 'str' in item && item.str.split(' ').join('').trim())
       .map(item => {
@@ -405,7 +406,7 @@ export async function _p2mdExtractText(pdfDoc, {
         // independently-documented failure mode for this exact
         // dependency (pdf.js): mozilla/pdf.js#11016, #11779, #18201.
         const nfcStr = _foldLigatures(item.str.normalize('NFC'));
-        const str = ((item.dir === 'rtl') ? _visualRTLToLogical(nfcStr) : nfcStr)
+        const str = ((item.dir === 'rtl' && rtlVisual) ? _visualRTLToLogical(nfcStr) : nfcStr)
           .split(' ').join('');
         // Formula wins over bold/italic when both would otherwise apply —
         // math-italic glyphs (variables) are a font-design artifact, not a
@@ -466,6 +467,7 @@ export async function _p2mdExtractText(pdfDoc, {
       const rtlCnt = (txt.match(/[\u0590-\u05FF\u0600-\u06FF\u0750-\u077F\uFB1D-\uFB4F\uFB50-\uFDFF\uFE70-\uFEFF]/g) || []).length;
       ln.rtl = rtlCnt > 0;
       if (rtlCnt === 0) ln.items.sort((a, b) => a.x - b.x);
+      else reorderVisualRtlLine(ln.items);
     });
 
     // Column-aware re-splitting — same fix pdf2word's _p2wBuildPageData

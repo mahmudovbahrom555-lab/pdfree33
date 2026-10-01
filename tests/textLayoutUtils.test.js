@@ -8,7 +8,7 @@
 // Run: node tests/textLayoutUtils.test.js
 
 import { strict as assert } from 'assert';
-import { joinHyphenatedLineEnd } from '../js/textLayoutUtils.js';
+import { joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical } from '../js/textLayoutUtils.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -83,6 +83,91 @@ test('a Cyrillic soft break is joined the same way as Latin', () => {
   assert.ok(r);
   assert.equal(r.hyphenKept, false);
   assert.equal(r.text, 'Это была настоящая проблема.');
+});
+
+// ── rtlItemsAreVisual: pdf.js 3.11 already returns LOGICAL order for RTL text
+// (corpus gate 2026-09-30: unconditional reversal left pdf2md recall at ~0.25
+// on the Wikipedia ar/he articles). Reversal must only happen on clear evidence.
+const rtl = strs => strs.map(str => ({ str, dir: 'rtl' }));
+const reversed = strs => strs.map(s => [...s].reverse().join(''));
+const HE = ['שלום עולם, זהו מסמך בעברית', 'הספרים נמצאים בחדר הגדול', 'אנחנו לומדים בבית הספר כל יום'];
+const AR = ['اللغة العربية هي لغة رسمية', 'في المدرسة الكبيرة مكتبة جميلة', 'الطالب يقرأ الكتاب في الحديقة'];
+
+test('logical-order Hebrew (what pdf.js returns) is not reversed', () => {
+  assert.equal(rtlItemsAreVisual(rtl(HE)), false);
+});
+
+test('logical-order Arabic (what pdf.js returns) is not reversed', () => {
+  assert.equal(rtlItemsAreVisual(rtl(AR)), false);
+});
+
+test('visual-order Hebrew and Arabic are detected and restored by _visualRTLToLogical', () => {
+  assert.equal(rtlItemsAreVisual(rtl(reversed(HE))), true);
+  assert.equal(rtlItemsAreVisual(rtl(reversed(AR))), true);
+  assert.equal(_visualRTLToLogical(reversed(HE)[1]), HE[1]);
+});
+
+test('standalone لا does not count as visual evidence (it is ال reversed after NFKC)', () => {
+  assert.equal(rtlItemsAreVisual(rtl(['لا', 'بالا', 'لا لا لا'])), false);
+});
+
+test('undecided pages (one glyph per item, no RTL, LTR items) keep pdf.js order', () => {
+  assert.equal(rtlItemsAreVisual(rtl([...'ﻞﻤﺣ'])), false);
+  assert.equal(rtlItemsAreVisual([{ str: 'שלום', dir: 'ltr' }, { str: 'Hello', dir: 'ltr' }]), false);
+  assert.equal(rtlItemsAreVisual([]), false);
+});
+
+// ── reorderVisualRtlLine: Chromium-printed Arabic/Farsi arrives one presentation-
+// form glyph per item, drawn left to right. Shapes below mirror the real items
+// pdf.js 3.11 returns for tests/corpus/real/wikipedia-{ar,fa}-pdf.pdf.
+const glyph = (str, x, width = 5) => ({ str, x, width, fontSize: 10 });
+const lineText = items => items.map(i => i.str).join('').normalize('NFKC');
+
+test('a visual glyph stream is reordered right-to-left, with spaces from X-gaps', () => {
+  // "صيغة PDF" drawn left to right: P D F, gap, then ﺔ ﻐ ﻴ ﺻ
+  const items = [glyph('PDF', 0, 15), glyph('ﺔ', 25), glyph('ﻐ', 30), glyph('ﻴ', 35), glyph('ﺻ', 40)];
+  reorderVisualRtlLine(items);
+  assert.equal(lineText(items), 'صيغة PDF');
+});
+
+test('numbers keep left-to-right digit order; brackets in RTL flow are mirrored back', () => {
+  // logical "سال ۱۳۹۹ (pdf)" — both brackets resolve RTL and are drawn mirrored
+  const items = [glyph('(', 0), glyph('pdf', 5, 15), glyph(')', 20), glyph('۱', 30), glyph('۳', 35),
+    glyph('۹', 40), glyph('۹', 45), glyph('ل', 55), glyph('ا', 60), glyph('س', 65)];
+  reorderVisualRtlLine(items);
+  assert.equal(lineText(items), 'سال ۱۳۹۹ (pdf)');
+});
+
+test('citation brackets between numbers do not join the numbers into one run', () => {
+  // logical "متن [6][7]": every bracket resolves RTL and is drawn mirrored, so the
+  // glyphs left to right read [ 7 ] [ 6 ] and then the word
+  const items = [glyph('[', 0, 3), glyph('7', 3, 5), glyph(']', 8, 3), glyph('[', 11, 3), glyph('6', 14, 5), glyph(']', 19, 3),
+    glyph('ﻦ', 30), glyph('ﺘ', 35), glyph('ﻣ', 40)];
+  reorderVisualRtlLine(items);
+  assert.equal(lineText(items), 'متن [6][7]');
+});
+
+test('a broken join with no gap restores the Persian half-space (ZWNJ) pdf.js drops', () => {
+  // "نرم‌افزار": isolated ﻡ followed directly by ﺍ — only a ZWNJ breaks that join.
+  // Glyphs left to right: ﺭ ﺍ ﺰ ﻓ ﺍ ﻡ ﺮ ﻧ
+  const items = [glyph('ﺭ', 0), glyph('ﺍ', 5), glyph('ﺰ', 10), glyph('ﻓ', 15),
+    glyph('ﺍ', 20), glyph('ﻡ', 25), glyph('ﺮ', 30), glyph('ﻧ', 35)];
+  reorderVisualRtlLine(items);
+  assert.equal(lineText(items), 'نرم‌افزار');
+});
+
+test('a lam-alef ligature split into same-x items is ordered by right edge', () => {
+  // pdf.js: "ال" (alef + lam, width 9) and zero-width "إ" share x — reads "الإ…"
+  const items = [glyph('ﺎ', 0), glyph('ﻨ', 10), glyph('ﻧ', 20), glyph('إ', 29, 0), glyph('ال', 29, 9)];
+  reorderVisualRtlLine(items);
+  assert.ok(lineText(items).startsWith('الإ'), lineText(items));
+});
+
+test('a stream already running right-to-left (logical) is left untouched', () => {
+  const items = [glyph('שלום', 100, 30), glyph('עולם', 60, 30), glyph('זה', 20, 20)];
+  const before = items.map(i => i.str);
+  reorderVisualRtlLine(items);
+  assert.deepEqual(items.map(i => i.str), before);
 });
 
 const total = passed + failed;

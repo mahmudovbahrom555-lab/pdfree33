@@ -34,7 +34,7 @@ import { detectTables, looksLikeProseNotData, looksLikeEnumeratedList } from './
 import { detectColumnRegions, pageIsRtl } from './pdf2wordColumns.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, _splitCrossColumnLines } from './textLayoutUtils.js';
+         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, _splitCrossColumnLines } from './textLayoutUtils.js';
 
 // XML 1.0's Char production disallows most C0 control characters (only
 // tab/LF/CR are valid: #x9 | #xA | #xD | [#x20-...]) — pdf.js text
@@ -579,6 +579,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
     // (confirmed: "list level0 second item" -> "listlevel0seconditem").
     // Only drop items that are genuinely EMPTY after control-char-stripping;
     // a non-empty whitespace-only item is real inter-word spacing, not noise.
+    const rtlVisual = rtlItemsAreVisual(content.items);
     const allMapped = content.items
       .filter(item => 'str' in item && item.str.replace(_XML_ILLEGAL_CONTROL_RE, '') !== '')
       .map(item => {
@@ -588,9 +589,9 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
         // Rotation detected when b-component dominates a-component in the transform matrix.
         // Normal text: [a≈size, b≈0, …]. Rotated 90°: [a≈0, b≈size, …].
         const isRotated = Math.abs(item.transform[1]) > Math.abs(item.transform[0]) * 0.5;
-        // pdf.js returns dir:'rtl' items in visual (left-to-right screen) order.
-        // _visualRTLToLogical restores Unicode logical order while preserving embedded
-        // LTR words (plain reverse() would corrupt e.g. "(Arabic)" → "(cibarA)").
+        // pdf.js normally returns dir:'rtl' items already in logical order; only when
+        // rtlItemsAreVisual() finds the page in visual order does _visualRTLToLogical
+        // restore it (keeping embedded LTR words intact).
         // Strip XML-illegal control characters (NUL and the rest of the C0
         // range except tab/LF/CR) produced by fonts with ToUnicode CMap
         // gaps — a real, non-synthetic case found on some Arabic/ligature-
@@ -601,7 +602,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
         // the exact byte) — in Quick Edit specifically, docx-preview's own
         // re-parse of that invalid XML throws, surfacing as a raw,
         // untranslated 'DOCX_PARSE_FAILED' with the editor never opening.
-        const str = ((item.dir === 'rtl') ? _visualRTLToLogical(item.str) : item.str)
+        const str = ((item.dir === 'rtl' && rtlVisual) ? _visualRTLToLogical(item.str) : item.str)
           .replace(_XML_ILLEGAL_CONTROL_RE, '');
         return {
           str,
@@ -638,7 +639,9 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
       // Sorting by X would reverse word order on pure-Arabic lines and break mixed
       // lines like "Arabic (العربية)" where LTR words have lower X than RTL words.
       // Word's built-in BiDi algorithm handles display when bidirectional:true is set.
+      // Exception: a stream drawn left-to-right (visual) — see reorderVisualRtlLine.
       if (rtlCnt === 0) ln.items.sort((a, b) => a.x - b.x);
+      else reorderVisualRtlLine(ln.items);
     });
 
     // Column-aware line re-splitting — see _splitCrossColumnLines() below

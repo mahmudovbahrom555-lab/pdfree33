@@ -258,7 +258,11 @@ def judge_text(entry, runs):
             fails.append(f"garbage chars {new['garbage']:.4f} (old {ref['garbage']:.4f})" if ref else f"garbage chars {new['garbage']:.4f}")
         if new['inflation'] > max(INFLATE_BAD, (ref['inflation'] if ref else 0) + INFLATE_SLACK):
             fails.append(f"inflation {new['inflation']:.2f} (old {ref['inflation']:.2f})" if ref else f"inflation {new['inflation']:.2f}")
-        if ref and ref.get('eri') is not None and new.get('eri') is not None and new['eri'] < ref['eri'] - ERI_SLACK:
+        # ERI only against a sound OLD: an unreadable OLD's ERI scores garbage — the
+        # 2026-09-30 RTL fix dropped ERI 84->71 on the Arabic article only because
+        # readable lines grew past the flow check's 50-char floor.
+        if (text_sound(ref) and ref.get('eri') is not None and new.get('eri') is not None
+                and new['eri'] < ref['eri'] - ERI_SLACK):
             fails.append(f"ERI {new['eri']} (old {ref['eri']})")
     both_errored = (not old and not new
                     and all('error' in (entry[side].get('reason') or '').lower() for side in ('old', 'new')))

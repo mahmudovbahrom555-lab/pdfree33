@@ -88,13 +88,132 @@ export const BOLD_FONT_NAME_RE = /bold|heavy|black|\b(?:cm|lm)(?:ss)?bx/i;
 // heading/clause reference) so ordinary numbered headings stay unaffected.
 export const MONEY_TOKEN_RE = /\d{1,3}(?:,\d{3})+\.\d{2}\b/;
 
+// Decides, per page, whether pdf.js's dir:'rtl' item strings are in visual order and
+// need _visualRTLToLogical. pdf.js 3.11 already runs its own bidi pass and returns
+// LOGICAL order for real Hebrew/Arabic PDFs (Chromium, LibreOffice and pdf-lib
+// output alike) — unconditionally reversing them turned every RTL word in
+// pdf2md/pdf2word/pdf2excel output backwards (corpus gate, 2026-09-30: recall
+// ~0.25 on the Wikipedia ar/he articles). Votes on letters that can only sit at
+// one end of a word: Hebrew final forms (ך ם ן ף ץ) and Arabic ة/ى end a word,
+// the article ال begins one. Seeing them at the opposite end means visual order.
+// Standalone لا is excluded — after NFKC it is the reverse of ال and so votes both
+// ways. Reverses only on clear evidence; undecided (e.g. pdf.js giving one glyph
+// per item) keeps pdf.js's order, since a wrong reversal garbles every word.
+const _HE_AR_WORD_FINAL_RE = /[\u05DA\u05DD\u05DF\u05E3\u05E5\u0629\u0649]/;
+export function rtlItemsAreVisual(items) {
+  let logical = 0, visual = 0;
+  for (const item of items) {
+    if (item.dir !== 'rtl' || !item.str) continue;
+    for (const w of item.str.normalize('NFKC').split(/[^\u0590-\u05FF\u0600-\u06FF]+/)) {
+      if (w.length < 3) continue;
+      if (_HE_AR_WORD_FINAL_RE.test(w[w.length - 1]) || w.startsWith('\u0627\u0644')) logical++;
+      if (_HE_AR_WORD_FINAL_RE.test(w[0]) || w.endsWith('\u0644\u0627')) visual++;
+    }
+  }
+  return visual >= 3 && visual > 2 * logical;
+}
+
+// Puts one RTL line's items (in pdf.js content-stream order) into logical order, IN
+// PLACE — only when the stream itself runs left-to-right across the RTL items.
+// Chromium-printed Arabic/Farsi arrives one presentation-form glyph per item, drawn
+// left to right (visual); keeping that order spelled every word backwards and, with
+// no space items in the stream, glued the words together (corpus gate 2026-09-30).
+// Such a line is re-sorted right-to-left, embedded LTR runs ("PDF", "1993") are
+// flipped back to left-to-right, and an X-gap wider than 20% of the font size
+// becomes a space — the same threshold the LTR line-join paths use. A stream that
+// already runs right-to-left (logical, e.g. Hebrew multi-word items) is left alone.
+const _BIDI_MIRROR = {'(':')',')':'(','[':']',']':'[','{':'}','}':'{','<':'>','>':'<'};
+// Arabic-Indic / Persian digits (U+0660-0669, U+06F0-06F9) are left out: they run
+// left-to-right inside RTL text, so "۱۳۹۹" drawn digit by digit must stay in order.
+const _RTL_CHAR_RE = /[\u0590-\u05FF\u0600-\u065F\u066A-\u06EF\u06FA-\u06FF\u0750-\u077F\uFB1D-\uFB4F\uFB50-\uFDFF\uFE70-\uFEFF]/;
+const _STRONG_CHAR_RE = /[\p{L}\p{N}]/u;
+// Isolated/final presentation forms of the dual-joining Arabic-script letters (the
+// 4-form groups; offsets 0 and 1), derived from Unicode's own NFKC mapping. Such a
+// glyph followed, with no gap, by another letter means the join was broken on
+// purpose — a Persian half-space (ZWNJ: "نرم‌افزار", "می‌توان"). pdf.js drops the
+// U+200C itself, so it is restored from the glyph forms.
+const _JOIN_BROKEN_FORMS = (() => {
+  const set = new Set();
+  for (const [lo, hi] of [[0xFB50, 0xFBFF], [0xFE80, 0xFEFC]]) {
+    for (let cp = lo; cp <= hi - 3; cp++) {
+      const base = String.fromCodePoint(cp).normalize('NFKC');
+      if (base.length !== 1 || base.codePointAt(0) === cp) continue;
+      const prevBase = String.fromCodePoint(cp - 1).normalize('NFKC');
+      if (prevBase === base) continue; // not the first form of its group
+      let n = 1;
+      while (n < 4 && String.fromCodePoint(cp + n).normalize('NFKC') === base) n++;
+      if (n === 4 && String.fromCodePoint(cp + 4).normalize('NFKC') !== base) { set.add(cp); set.add(cp + 1); }
+    }
+  }
+  return set;
+})();
+export function reorderVisualRtlLine(items) {
+  let ltrSteps = 0, rtlSteps = 0, prev = null;
+  for (const item of items) {
+    if (!_RTL_CHAR_RE.test(item.str)) continue;
+    if (prev) {
+      if (item.x > prev.x) ltrSteps++;
+      else if (item.x < prev.x) rtlSteps++;
+    }
+    prev = item;
+  }
+  if (ltrSteps < 2 || ltrSteps <= rtlSteps) return;
+
+  // Right edge first: pdf.js splits a lam-alef ligature glyph into items that share
+  // one left x (e.g. "ال" width 9 and "إ" width 0), and only the right edge puts
+  // them in reading order. Whitespace items narrower than a word gap (that split
+  // leaves near-zero-width ones) are dropped — real gaps are recovered below.
+  const right = item => item.x + (item.width || 0);
+  const ordered = items
+    .filter(item => item.str.trim() || item.width > item.fontSize * 0.2)
+    .sort((a, b) => (right(b) - right(a)) || (b.x - a.x));
+  // Left-to-right runs, as in the Unicode bidi algorithm: Latin words ('L') absorb
+  // neutrals between them; numbers ('N') only a lone separator ("1,234", "۱۳۹۹/۱")
+  // — numbers act as RTL toward neutrals, so "[6][7]" and "۱۳۹۹ (pdf" break apart.
+  const ltrKind = item => (_RTL_CHAR_RE.test(item.str) ? null
+    : /\p{L}/u.test(item.str) ? 'L' : /\p{N}/u.test(item.str) ? 'N' : null);
+  const joinsRun = (item, kind) => (kind === 'L'
+    ? !_STRONG_CHAR_RE.test(item.str)
+    : /^[.,:/\u066B\u066C]$/.test(item.str));
+  const inLtrRun = new Set();
+  for (let i = 0; i < ordered.length; i++) {
+    const kind = ltrKind(ordered[i]);
+    if (!kind) continue;
+    let end = i;
+    for (let j = i + 1; j < ordered.length; j++) {
+      if (ltrKind(ordered[j]) === kind) end = j;
+      else if (!joinsRun(ordered[j], kind)) break;
+    }
+    const run = ordered.slice(i, end + 1);
+    run.forEach(item => inLtrRun.add(item));
+    ordered.splice(i, run.length, ...run.reverse());
+    i = end;
+  }
+  // A bracket in right-to-left flow is drawn as its mirror glyph and extracted as
+  // that glyph's character; once the line reads right-to-left, mirror it back.
+  for (const item of ordered) {
+    if (!inLtrRun.has(item) && !_STRONG_CHAR_RE.test(item.str)) {
+      item.str = item.str.replace(/[()[\]{}<>]/g, c => _BIDI_MIRROR[c]);
+    }
+  }
+  for (let i = 1; i < ordered.length; i++) {
+    const a = ordered[i - 1], b = ordered[i];
+    if (a.str.endsWith(' ') || b.str.startsWith(' ')) continue;
+    const gap = Math.max(b.x - (a.x + (a.width || 0)), a.x - (b.x + (b.width || 0)));
+    if (gap > b.fontSize * 0.2) b.str = ' ' + b.str;
+    else if (_JOIN_BROKEN_FORMS.has(a.str.codePointAt(a.str.length - 1)) && _RTL_CHAR_RE.test(b.str[0])) {
+      b.str = '\u200C' + b.str;
+    }
+  }
+  items.splice(0, items.length, ...ordered);
+}
+
 // Converts a pdf.js RTL item string from visual (left-to-right screen) order to Unicode
 // logical order that Word's BiDi engine expects.  Character-level reverse() corrupts
 // embedded LTR words (e.g. "(Arabic)" → "(cibarA)"); this splits by run direction,
 // reverses only RTL runs, applies bidi mirroring to brackets in LTR runs, then reverses
 // the run order so the overall reading order is restored.
 export function _visualRTLToLogical(s) {
-  const BIDI_MIRROR = {'(':')',')':'(','[':']',']':'[','{':'}','}':'{','<':'>','>':'<'};
   // Arabic-Indic digits (U+0660–0669) and Extended Arabic-Indic (U+06F0–06F9) have
   // BiDi class AN — they run left-to-right even within RTL text, so exclude them
   // from the RTL set to prevent reversal (e.g. "١٢٣" must not become "٣٢١").
@@ -120,7 +239,7 @@ export function _visualRTLToLogical(s) {
   return segs.reverse()
     .map(seg => seg.rtl
       ? seg.chars.reverse().join('')
-      : seg.chars.map(c => BIDI_MIRROR[c] ?? c).join(''))
+      : seg.chars.map(c => _BIDI_MIRROR[c] ?? c).join(''))
     .join('');
 }
 
