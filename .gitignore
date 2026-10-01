@@ -19,3 +19,6 @@ corpus-diff-out/
 corpus-diff-merge/
 corpus-diff-split/
 corpus-diff-pdf2md/
+
+# ground-truth generator font cache (downloaded + instanced, not committed)
+tests/corpus/groundtruth/.fonts/

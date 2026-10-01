@@ -16,6 +16,7 @@
     "corpus:diff:merge": "node scripts/corpus-diff/run.mjs --tool merge --out corpus-diff-merge && python3 scripts/corpus-diff/check.py corpus-diff-merge",
     "corpus:diff:split": "node scripts/corpus-diff/run.mjs --tool split --out corpus-diff-split && python3 scripts/corpus-diff/check.py corpus-diff-split",
     "corpus:diff:pdf2md": "node scripts/corpus-diff/run.mjs --tool pdf2md --out corpus-diff-pdf2md && python3 scripts/corpus-diff/check.py corpus-diff-pdf2md",
+    "corpus:groundtruth": "node scripts/corpus-diff/groundtruth.mjs",
     "test:e2e:mobile-sticky-overlap": "node tests/e2e/mobile-sticky-overlap.e2e.mjs",
     "test:e2e:embed-sdk": "node tests/e2e/embed-sdk.e2e.mjs",
     "test:e2e:mobile-merge-golden-path": "node tests/e2e/mobile-merge-golden-path.e2e.mjs",

@@ -1,0 +1,40 @@
+{
+ "lang": "en",
+ "dir": "ltr",
+ "layout": "web",
+ "oracleRecall": 1,
+ "blocks": [
+  {
+   "type": "heading",
+   "text": "What's the difference between Clean and Enhance mode?"
+  },
+  {
+   "type": "para",
+   "text": "Clean flattens the background to pure white and darkens text for maximum contrast — best for plain text pages. Enhance brightens the page and boosts contrast without fully whitening the background, which keeps stamps, signatures, and photos on the page recognizable."
+  },
+  {
+   "type": "para",
+   "text": "Clean mode can fade or remove color content, since it's designed to push everything toward black text on a white background. If a page contains color you want to keep, use Enhance mode instead — the tool warns you automatically when it detects color on the page you're previewing."
+  },
+  {
+   "type": "para",
+   "text": "Flatbed scanners and phone cameras rarely light a page perfectly evenly — a book's spine casts a shadow near the gutter, ambient light falls off toward the edges, and aged paper reflects light unevenly. That unevenness gets captured as part of the image itself, which is exactly what Clean Scan's background analysis is built to correct."
+  },
+  {
+   "type": "heading",
+   "text": "Is there a limit on how many pages I can clean?"
+  },
+  {
+   "type": "para",
+   "text": "No. There's no page-count or file-size limit, and no per-hour task limit. Clean a single-page scan or a hundred-page document as often as you need."
+  },
+  {
+   "type": "para",
+   "text": "Clean mode saves pages as PNG, which avoids the compression artifacts that would blur sharp black-and-white text. Enhance mode saves as high-quality JPEG, appropriate for pages that still contain photos or continuous-tone content."
+  },
+  {
+   "type": "para",
+   "text": "You can, but it isn't the intended use — cleaning converts each page into an image, so real selectable text in a normal digital PDF would become a picture of text. The tool detects when a PDF looks like it has real text content and shows a warning before you process it."
+  }
+ ]
+}

@@ -18,6 +18,7 @@ false alarms.
 |---|---|
 | `real/` | Openly licensed real documents. `real/MANIFEST.json` records source URL, licence (verified at the source on the retrieved date), SHA-256 and image encodings for each. |
 | `synthetic/` | Files pdf-lib can't build at run time (encryption, CCITT G4). Regenerate with `python3 tests/corpus/synthetic/make_synthetic.py` (needs pymupdf, pillow, qpdf CLI). User-password files — one per `/Encrypt` form (direct dict / reference) — use password `user`. |
+| `groundtruth/` | PDFs rendered FROM a known source (the project's own FAQ copy in 8 languages × 4 layouts: web, book-style indent, loose, two columns), so the true headings, paragraphs and reading order are exact. `make_groundtruth.mjs` regenerates them (needs network + `pip install fonttools`) and rejects any PDF whose own text layer MuPDF can't read (<0.85 of the words) — font choice decides that, see its header. |
 | `traps.mjs` | Run-time traps (built with pdf-lib, nothing committed): the image shapes that broke Compress, each with `why` and `expect`. Also used by `tests/e2e/compress.e2e.mjs`. |
 
 ## Running
@@ -29,6 +30,8 @@ npm run corpus:diff:merge           # input + tests/fixtures/normal-1page.pdf
 npm run corpus:diff:split           # per-page ZIP re-joined by page number
 npm run corpus:diff:pdf2md          # text oracle: recall / garbage / inflation / ERI vs the original's text
 python3 scripts/corpus-diff/check.py <out-dir> -v   # per-file metrics (text tools)
+npm run corpus:groundtruth          # pdf2md structure vs ground truth: recall, reading order,
+                                    # paragraph-boundary precision/recall, headings
 ```
 
 ## Adding a file
