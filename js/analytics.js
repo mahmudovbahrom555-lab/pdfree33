@@ -56,6 +56,13 @@ function _roundDuration(ms) {
 function _track(eventName, props = {}) {
   try {
     if (typeof window === 'undefined') return;
+    // Automated browsers (Playwright/Puppeteer/Selenium set navigator.webdriver)
+    // are not users: the corpus gate and e2e runs against production added
+    // ~300 fake Merge "Tool Success" events in one week (2026-10-01 cross-sell
+    // re-check), and automated bots would skew the numbers the same way. A test
+    // that must see a real event can override the flag in an init script:
+    // Object.defineProperty(navigator, 'webdriver', { get: () => false }).
+    if (navigator.webdriver) return;
     // locale/session first — no caller ever passes these explicitly, but
     // this keeps the merge order intentional rather than accidental.
     const fullProps = { locale: getLang(), session: _sessionId, ...props };

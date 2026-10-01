@@ -133,6 +133,9 @@ if (args.includes('--browser')) {
   for (const serviceWorkers of ['block', 'allow']) {
     for (const path of ['/', '/merge-pdf/', '/ru/', '/pdf-to-word/']) {
       const ctx = await browser.newContext({ serviceWorkers });
+      // Measure what a real visitor costs: js/analytics.js skips automated
+      // browsers, so present as a normal one (a few page-level events per run).
+      await ctx.addInitScript(() => Object.defineProperty(navigator, 'webdriver', { get: () => false }));
       let total = 0;
       const reached = [];
       ctx.on('response', r => {
