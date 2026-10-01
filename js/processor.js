@@ -26,7 +26,7 @@ import { evaluateMarkdownStructural } from './eriScoreMd.js';
 import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PRESETS,
          detectColumnGutter, reconcileColumnSplit, ereaderSampleIndices } from './ereaderCrop.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, rtlItemsAreVisual, _splitCrossColumnLines, _isCjk } from './textLayoutUtils.js';
+         _visualRTLToLogical, rtlItemsAreVisual, toArabicBaseLetters, _splitCrossColumnLines, _isCjk } from './textLayoutUtils.js';
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { _p2wBuildPageData } from './pdf2readCore.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
@@ -2912,7 +2912,7 @@ async function _p2eExtractTables(pdfDoc) {
       .map(item => {
         const fam = (content.styles[item.fontName]?.fontFamily || '').toLowerCase();
         return {
-          str: ((item.dir === 'rtl' && rtlVisual) ? _visualRTLToLogical(item.str) : item.str)
+          str: toArabicBaseLetters((item.dir === 'rtl' && rtlVisual) ? _visualRTLToLogical(item.str) : item.str)
             .split(' ').join(''),
           x: item.transform[4],
           y: item.transform[5],
@@ -3597,7 +3597,7 @@ export function _p2pBuildSlideShapes(page, median, repeatTextSet, repeatPatternS
     // column's, so gating on it alone would route a still-merged line's
     // FULL content into whichever region contains its first item.
     const regionLines = lines
-      .map(ln => ({ y: ln.y, items: ln.items.filter(inRegion) }))
+      .map(ln => ({ y: ln.y, rtl: ln.rtl, items: ln.items.filter(inRegion) }))
       .filter(ln => ln.items.length);
     const regionGrids = borderGrids.filter(g => g.x >= region.left && (g.x + g.w) <= region.right);
     const result = _p2pBuildRegionShapes(
@@ -4405,7 +4405,8 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     const size   = Math.max(16, Math.round(Math.max(...ln.items.map(i => i.fontSize)) * 2));
     return new Paragraph({
       ...listProps,
-      children: [new TextRun({ text, bold, italics: italic, size })],
+      ..._rtlPara(text),
+      children: [new TextRun({ text, bold, italics: italic, size, ..._rtlRun(text) })],
       spacing: { after: 80 },
     });
   };
@@ -4498,6 +4499,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
           bold:    item.bold,
           italics: item.italic,
           size:    Math.max(16, Math.round(item.fontSize * 2)),
+          ..._rtlRun(text),
         }));
       }
     }
@@ -4723,9 +4725,10 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
           const hdrTexts = rotatedHeaders.get(tbl.startIdx);
           if (hdrTexts) {
             paragraphs.push(new Paragraph({
+              ..._rtlPara(hdrTexts.join('')),
               children: hdrTexts.flatMap((txt, i) => [
                 ...(i > 0 ? [new TextRun({ text: ' │ ', color: 'AAAAAA' })] : []),
-                new TextRun({ text: txt, bold: true }),
+                new TextRun({ text: txt, bold: true, ..._rtlRun(txt) }),
               ]),
               spacing: { before: 60, after: 40 },
             }));
@@ -4739,7 +4742,8 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
                 children: row.map(cellText =>
                   new TableCell({
                     children: [new Paragraph({
-                      children: [new TextRun({ text: cellText || '' })],
+                      ..._rtlPara(cellText || ''),
+                      children: [new TextRun({ text: cellText || '', ..._rtlRun(cellText || '') })],
                       spacing: { after: 0 },
                     })],
                   })
@@ -4836,14 +4840,14 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
             // If it DOES end with 。！？ it's likely the last line of a paragraph → keep 2.0×.
             const lastText       = lastLn.items.map(i => i.str).join('');
             const lastIsCjk      = _isCjk(lastText);
-            const lastIsRtl      = lastLn.rtl;
             const lastEndsSent   = /[。！？…]$/.test(lastText.trimEnd());
+            // RTL used a tighter 1.3× (assumed 1.0–1.2× line spacing) — real Arabic/
+            // Hebrew/Persian sits at ~1.3–1.8×, so every wrapped line became its own
+            // Word paragraph: ground truth 2026-10-01, paragraph-break precision
+            // 44–47% at 1.3×; same fix as pdf2md (bb600487).
             const mergeThreshold = (lastIsCjk && !lastEndsSent)
               ? lastMaxFont * 3.5   // CJK continuation line — absorb generous leading
-              : lastIsRtl
-              ? lastMaxFont * 1.3   // RTL (Arabic/Hebrew): paragraph gaps are typically
-                                    // 1.5×+ fontSize, line spacing ~1.0–1.2× — split earlier
-              : lastMaxFont * 2.0;  // LTR/Cyrillic — conservative merge
+              : lastMaxFont * 2.0;  // conservative merge
 
             if (isHead || lastIsHead || gap > mergeThreshold) _flushPara();
           }
@@ -4895,7 +4899,8 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
               new TableCell({
                 ...(span > 1 ? { columnSpan: span } : {}),
                 children: [new Paragraph({
-                  children: [new TextRun({ text, bold: idx === 0 })],
+                  ..._rtlPara(text),
+                  children: [new TextRun({ text, bold: idx === 0, ..._rtlRun(text) })],
                   spacing: { after: 0 },
                 })],
               })
@@ -4992,7 +4997,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
         // pass empty for that row. Filtering items directly costs nothing
         // and stays correct even if that invariant ever breaks.
         const colLines = lines
-          .map(ln => ({ y: ln.y, items: ln.items.filter(inRegion) }))
+          .map(ln => ({ y: ln.y, rtl: ln.rtl, items: ln.items.filter(inRegion) }))
           .filter(ln => ln.items.length);
         const colRotatedItems = rotatedItems.filter(inRegion);
         const colBorderGrids  = borderGrids.filter(g => g.x >= region.left && (g.x + g.w) <= region.right);
@@ -5596,6 +5601,14 @@ async function _p2wRenderImages(pdfDoc, dpi, pageLimit) {
 function _isRtl(str) {
   return /[\u0590-\u05FF\u0600-\u06FF\u0750-\u077F\uFB1D-\uFB4F\uFB50-\uFDFF\uFE70-\uFEFF]/.test(str);
 }
+
+// DOCX right-to-left markup: w:bidi on a paragraph sets its direction, w:rtl on a
+// run tells Word the run is right-to-left complex-script text (its cs font, size
+// and bold apply; digits and punctuation take the run's direction). Word writes
+// both for Arabic/Hebrew; pdf2word wrote only w:bidi, and only on body paragraphs
+// — ground truth 2026-10-01: 0% of RTL runs had w:rtl.
+function _rtlRun(text) { return _isRtl(text) ? { rightToLeft: true } : {}; }
+function _rtlPara(text) { return _isRtl(text) ? { bidirectional: true } : {}; }
 
 // _isCjk moved to textLayoutUtils.js (shared with pdf2md's core).
 

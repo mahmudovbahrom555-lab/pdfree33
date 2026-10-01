@@ -32,6 +32,8 @@ npm run corpus:diff:pdf2md          # text oracle: recall / garbage / inflation 
 python3 scripts/corpus-diff/check.py <out-dir> -v   # per-file metrics (text tools)
 npm run corpus:groundtruth          # pdf2md structure vs ground truth: recall, reading order,
                                     # paragraph-boundary precision/recall, headings
+npm run corpus:groundtruth:word     # same for PDF→Word via the real tool page, plus Arabic
+                                    # presentation forms left and RTL markup (w:bidi, w:rtl)
 ```
 
 ## Adding a file

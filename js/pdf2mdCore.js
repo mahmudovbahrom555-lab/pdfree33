@@ -46,7 +46,7 @@
 import { detectTables, looksLikeProseNotData } from './pdf2wordTables.js';
 import { detectColumnRegions, pageIsRtl } from './pdf2wordColumns.js';
 import { BULLET_RE, NUMBERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, _splitCrossColumnLines, _isCjk,
+         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, _splitCrossColumnLines, _isCjk,
          joinHyphenatedLineEnd } from './textLayoutUtils.js';
 
 // Latin typographic ligatures (Unicode "Alphabetic Presentation Forms" block,
@@ -468,7 +468,10 @@ export async function _p2mdExtractText(pdfDoc, {
       const rtlCnt = (txt.match(/[\u0590-\u05FF\u0600-\u06FF\u0750-\u077F\uFB1D-\uFB4F\uFB50-\uFDFF\uFE70-\uFEFF]/g) || []).length;
       ln.rtl = rtlCnt > 0;
       if (rtlCnt === 0) ln.items.sort((a, b) => a.x - b.x);
-      else reorderVisualRtlLine(ln.items);
+      else {
+        reorderVisualRtlLine(ln.items);
+        for (const item of ln.items) item.str = toArabicBaseLetters(item.str);
+      }
     });
 
     // Column-aware re-splitting — same fix pdf2word's _p2wBuildPageData

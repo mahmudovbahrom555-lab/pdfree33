@@ -217,6 +217,18 @@ export function reorderVisualRtlLine(items) {
   items.splice(0, items.length, ...ordered);
 }
 
+// Arabic presentation forms (U+FB50–FDFF, U+FE70–FEFE: the shaped isolated/initial/
+// medial/final glyph codes many fonts map their glyphs to) → the plain letters they
+// stand for. They display fine, but Word, search, spell-check and screen readers
+// treat "ﺻﻴﻐﺔ" and "صيغة" as different text — 58% of the letters in pdf2word's
+// Persian output were such codes (ground truth, 2026-10-01). Run after
+// reorderVisualRtlLine, which reads the forms to restore half-spaces (ZWNJ).
+// U+FEFF (zero-width no-break space / BOM) is left alone.
+const _PRESENTATION_FORM_RE = /[\uFB50-\uFDFF\uFE70-\uFEFE]/g;
+export function toArabicBaseLetters(str) {
+  return str.replace(_PRESENTATION_FORM_RE, c => c.normalize('NFKC'));
+}
+
 // Converts a pdf.js RTL item string from visual (left-to-right screen) order to Unicode
 // logical order that Word's BiDi engine expects.  Character-level reverse() corrupts
 // embedded LTR words (e.g. "(Arabic)" → "(cibarA)"); this splits by run direction,

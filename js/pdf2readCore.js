@@ -34,7 +34,7 @@ import { detectTables, looksLikeProseNotData, looksLikeEnumeratedList } from './
 import { detectColumnRegions, pageIsRtl } from './pdf2wordColumns.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, _splitCrossColumnLines } from './textLayoutUtils.js';
+         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, _splitCrossColumnLines } from './textLayoutUtils.js';
 
 // XML 1.0's Char production disallows most C0 control characters (only
 // tab/LF/CR are valid: #x9 | #xA | #xD | [#x20-...]) — pdf.js text
@@ -487,7 +487,7 @@ export function _rpBuildPageBlocks(page, median, repeatTextSet, repeatPatternSet
   for (const region of ordered) {
     const inRegion = (it) => !!it && it.x >= region.left && it.x < region.right;
     const regionLines = lines
-      .map(ln => ({ y: ln.y, items: ln.items.filter(inRegion) }))
+      .map(ln => ({ y: ln.y, rtl: ln.rtl, items: ln.items.filter(inRegion) }))
       .filter(ln => ln.items.length);
     const regionGrids = borderGrids.filter(g => g.x >= region.left && (g.x + g.w) <= region.right);
     blocks.push(..._rpBuildRegionBlocks(regionLines, regionGrids, { x0: region.left, x1: region.right }, median, repeatTextSet, repeatPatternSet));
@@ -642,7 +642,10 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
       // Word's built-in BiDi algorithm handles display when bidirectional:true is set.
       // Exception: a stream drawn left-to-right (visual) — see reorderVisualRtlLine.
       if (rtlCnt === 0) ln.items.sort((a, b) => a.x - b.x);
-      else reorderVisualRtlLine(ln.items);
+      else {
+        reorderVisualRtlLine(ln.items);
+        for (const item of ln.items) item.str = toArabicBaseLetters(item.str);
+      }
     });
 
     // Column-aware line re-splitting — see _splitCrossColumnLines() below

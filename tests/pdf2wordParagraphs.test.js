@@ -248,19 +248,22 @@ await test('LTR/Cyrillic: gap just over 2.0x (24.01) breaks into two paragraphs'
   expect(paragraphs.length).toBe(2);
 });
 
-await test('RTL: gap just under 1.3x (15.59) merges into one paragraph', async () => {
+// RTL used its own 1.3× threshold until 2026-10-01; real Arabic/Hebrew/Persian
+// line spacing is ~1.3–1.8×, so wrapped lines became separate Word paragraphs
+// (ground truth: paragraph-break precision 44–47%). RTL now follows the 2.0× rule.
+await test('RTL: a wrapped line at real Arabic line spacing (1.5x = 18) stays in the same paragraph', async () => {
   const lines = [
     mkLine(mkItem('السطر الأول من الفقرة هنا', 50, 12), 700, true),
-    mkLine(mkItem('استمرار نفس الفقرة يظهر هنا', 50, 12), 700 - 15.59, true),
+    mkLine(mkItem('استمرار نفس الفقرة يظهر هنا', 50, 12), 700 - 18, true),
   ];
   const { paragraphs } = await build(lines);
   expect(paragraphs.length).toBe(1);
 });
 
-await test('RTL: gap just over 1.3x (15.61) breaks into two paragraphs', async () => {
+await test('RTL: gap just over 2.0x (24.01) breaks into two paragraphs, same as LTR', async () => {
   const lines = [
     mkLine(mkItem('السطر الأول من الفقرة هنا', 50, 12), 700, true),
-    mkLine(mkItem('هذه فقرة جديدة تماما هنا', 50, 12), 700 - 15.61, true),
+    mkLine(mkItem('هذه فقرة جديدة تماما هنا', 50, 12), 700 - 24.01, true),
   ];
   const { paragraphs } = await build(lines);
   expect(paragraphs.length).toBe(2);
