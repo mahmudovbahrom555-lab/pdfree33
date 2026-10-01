@@ -26,7 +26,8 @@ import { evaluateMarkdownStructural } from './eriScoreMd.js';
 import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PRESETS,
          detectColumnGutter, reconcileColumnSplit, ereaderSampleIndices } from './ereaderCrop.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, rtlItemsAreVisual, toArabicBaseLetters, _splitCrossColumnLines, _isCjk } from './textLayoutUtils.js';
+         _visualRTLToLogical, rtlItemsAreVisual, toArabicBaseLetters, _splitCrossColumnLines, _isCjk,
+         lineStartMargins, startsIndentedParagraph } from './textLayoutUtils.js';
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { _p2wBuildPageData } from './pdf2readCore.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
@@ -4538,6 +4539,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     // baseline, which is what separates a real sub-item from a false
     // positive like "A. Smith wrote the report." sitting flush with
     // ordinary body text.
+    const margins = lineStartMargins(lines); // first-line-indent paragraph breaks
     let pageBaselineX = 0;
     {
       const xFreq = new Map();
@@ -4849,7 +4851,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
               ? lastMaxFont * 3.5   // CJK continuation line — absorb generous leading
               : lastMaxFont * 2.0;  // conservative merge
 
-            if (isHead || lastIsHead || gap > mergeThreshold) _flushPara();
+            if (isHead || lastIsHead || gap > mergeThreshold || startsIndentedParagraph(lastLn, ln, margins)) _flushPara();
           }
           _paraBuffer.push(ln);
         }

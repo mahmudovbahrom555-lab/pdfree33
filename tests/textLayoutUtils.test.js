@@ -8,7 +8,8 @@
 // Run: node tests/textLayoutUtils.test.js
 
 import { strict as assert } from 'assert';
-import { joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical } from '../js/textLayoutUtils.js';
+import { joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
+  lineStartMargins, startsIndentedParagraph } from '../js/textLayoutUtils.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -187,6 +188,54 @@ test('a stream already running right-to-left (logical) is left untouched', () =>
   const before = items.map(i => i.str);
   reorderVisualRtlLine(items);
   assert.deepEqual(items.map(i => i.str), before);
+});
+
+// ── First-line-indent paragraphs (book layout: no gap, first line indented).
+const ln = (x, width, rtl = false, str = 'text') => ({ rtl, items: [{ str, x, width, fontSize: 11 }] });
+// paragraph breaks a line set produces under startsIndentedParagraph
+const breaks = lines => {
+  const m = lineStartMargins(lines);
+  return lines.slice(1).map((l, i) => startsIndentedParagraph(lines[i], l, m));
+};
+
+test('book layout (LTR): an indented line after a margin line starts a paragraph', () => {
+  // [indent, margin, margin, indent, margin, margin]
+  const lines = [ln(88, 400), ln(72, 416), ln(72, 300), ln(88, 400), ln(72, 416), ln(72, 200)];
+  assert.deepEqual(breaks(lines), [false, false, true, false, false]);
+});
+
+test('book layout (RTL): the indent is on the right edge', () => {
+  // right edges: 504 margin, 488 indented (16pt ≈ 1.5em at 11pt)
+  const lines = [ln(88, 400, true), ln(88, 416, true), ln(200, 304, true), ln(88, 400, true), ln(88, 416, true)];
+  assert.deepEqual(breaks(lines), [false, false, true, false]);
+});
+
+test('hanging indent (list item continuations) never breaks: the previous line is indented too', () => {
+  const lines = [ln(72, 416), ln(72, 416), ln(72, 300), ln(90, 398), ln(90, 398), ln(90, 300)];
+  assert.deepEqual(breaks(lines), [false, false, true, false, false]); // only where the shift starts
+});
+
+test('a centred display formula after a full-width line does not split the sentence', () => {
+  // arXiv (2026-10-01): "...can be written as" runs to the right margin, no full stop,
+  // then the formula line starts ~2 em in — not a paragraph start
+  const lines = [ln(72, 416), ln(72, 416), ln(72, 416, false, 'can be written as'), ln(95, 300, false, 'd r / dt = -grad Phi'),
+    ln(72, 416, false, 'where Phi is the potential')];
+  assert.deepEqual(breaks(lines), [false, false, false, false]);
+});
+
+test('a full-width line ending a sentence still lets the next indented line start a paragraph', () => {
+  const lines = [ln(72, 416), ln(72, 416), ln(72, 416, false, 'the end of a paragraph.'), ln(88, 400), ln(72, 416)];
+  assert.deepEqual(breaks(lines), [false, false, true, false]);
+});
+
+test('centred lines have no dominant margin, so nothing counts as indented', () => {
+  const lines = [ln(150, 200), ln(120, 260), ln(170, 160), ln(140, 220), ln(110, 280)];
+  assert.deepEqual(breaks(lines), [false, false, false, false]);
+});
+
+test('a shift wider than 4 em (block quote, centring) is not a first-line indent', () => {
+  const lines = [ln(72, 416), ln(72, 416), ln(72, 416), ln(140, 300), ln(72, 416)];
+  assert.deepEqual(breaks(lines), [false, false, false, false]);
 });
 
 const total = passed + failed;

@@ -302,6 +302,68 @@ export function _splitCrossColumnLines(lines, pageW) {
   }
 }
 
+// First-line-indent paragraphs (book/report style: no space between paragraphs,
+// each one's first line indented). The vertical-gap rule never sees these breaks
+// — ground truth 2026-10-01: paragraph-break recall 43% in that layout in every
+// language, where pdf2docx gets 77%. A line's START is its left edge, or its
+// right edge for RTL; the margin is the most common start among a line set (one
+// page, or one column after a split), trusted only when it is clearly dominant.
+const _EDGE_TOLERANCE = 2;  // pt — same edge despite rounding/kerning
+// A line's start edge (left; right for RTL) and end edge (right; left for RTL).
+const _lineStart = ln => (ln.rtl
+  ? Math.max(...ln.items.map(i => i.x + (i.width || 0)))
+  : Math.min(...ln.items.map(i => i.x)));
+const _lineEnd = ln => (ln.rtl
+  ? Math.min(...ln.items.map(i => i.x))
+  : Math.max(...ln.items.map(i => i.x + (i.width || 0))));
+const _lineEm = ln => Math.max(...ln.items.map(i => i.fontSize || 0)) || 10;
+// Most common value, trusted only when clearly dominant (≥3 lines and ≥40%):
+// centred or ragged text has no margin to measure from.
+function _dominant(values) {
+  let best, bestCount = 0;
+  for (const x of values) {
+    const count = values.filter(y => Math.abs(y - x) <= _EDGE_TOLERANCE).length;
+    if (count > bestCount) { best = x; bestCount = count; }
+  }
+  return bestCount >= 3 && bestCount >= 0.4 * values.length ? best : undefined;
+}
+export function lineStartMargins(lines) {
+  const margins = {};
+  for (const rtl of [false, true]) {
+    const set = lines.filter(ln => !!ln.rtl === rtl && ln.items.length);
+    margins[rtl ? 'rtl' : 'ltr'] = { start: _dominant(set.map(_lineStart)), end: _dominant(set.map(_lineEnd)) };
+  }
+  return margins;
+}
+// Indented by 0.8–4 em from its direction's start margin — wider shifts are
+// centring or block quotes, not a first-line indent.
+export function lineIsIndented(ln, margins) {
+  const m = margins[ln.rtl ? 'rtl' : 'ltr'];
+  if (m?.start === undefined || !ln.items.length) return false;
+  const indent = ln.rtl ? m.start - _lineStart(ln) : _lineStart(ln) - m.start;
+  const em = _lineEm(ln);
+  return indent >= 0.8 * em && indent <= 4 * em;
+}
+// The line before a paragraph start ends like a paragraph: short of the end
+// margin by more than 1 em, or on sentence-final punctuation. A full-width line
+// running into a display formula ("…can be written as" | centred equation) does
+// neither — without this the formula split its sentence (arXiv corpus 2026-10-01).
+const _SENTENCE_END_RE = /[.!?。！？؟…]["'”’»)\]]*$/;
+function _endsLikeParagraph(ln, margins) {
+  if (_SENTENCE_END_RE.test(ln.items.map(i => i.str).join('').trimEnd())) return true;
+  const m = margins[ln.rtl ? 'rtl' : 'ltr'];
+  if (m?.end === undefined) return false;
+  const short = ln.rtl ? _lineEnd(ln) - m.end : m.end - _lineEnd(ln);
+  return short > _lineEm(ln);
+}
+// A paragraph starts at an indented line that follows a line at the margin which
+// ends like a paragraph. The previous line must not be indented itself: under a
+// hanging indent (list item continuations) or a block quote every line is
+// shifted, and none of them start a paragraph.
+export function startsIndentedParagraph(prevLn, ln, margins) {
+  return lineIsIndented(ln, margins) && !lineIsIndented(prevLn, margins) && _endsLikeParagraph(prevLn, margins);
+}
+
 // CJK: Hiragana/Katakana, CJK Unified Ideographs, Hangul syllables, CJK Extension A/B.
 export function _isCjk(str) {
   return /[\u3040-\u30FF\u4E00-\u9FFF\uAC00-\uD7AF\u3400-\u4DBF\uF900-\uFAFF]/.test(str);
