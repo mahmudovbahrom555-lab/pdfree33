@@ -272,6 +272,13 @@ jobs:
         # of Helvetica. See tests/e2e/fill.e2e.mjs's own header comment.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:fill
 
+      - name: E2E — a hanging primary CDN falls back instead of hanging the tool
+        # js/lazyLibs.js fell back from jsdelivr to unpkg only on a script ERROR;
+        # on 2026-10-01 jsdelivr stopped answering (no error, no response) and
+        # PDF→Word sat on "Loading libraries…". This holds every jsdelivr request
+        # open forever and requires a .docx via the fallback CDN.
+        run: node tests/e2e/cdn-fallback.e2e.mjs
+
       - name: E2E — Word→PDF table with merged cells doesn't crash pdfmake
         # Real-browser regression gate for a real end-user bug report
         # (error ID DOCX2PDF-8490): a DOCX table with a merged cell (Word's

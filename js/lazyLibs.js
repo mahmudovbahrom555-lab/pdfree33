@@ -93,32 +93,13 @@ export function loadDocx() {
 }
 
 async function _loadDocxWithFallback() {
-  // jsdelivr and unpkg both mirror the same npm tarball for a pinned version —
-  // verified byte-identical (same sha384) at the time this hash was computed,
-  // so both fallback URLs share one integrity value.
-  const DOCX_SRI = 'sha384-4xaIisuLEy2lo2HkB2C4rEf7v8jbTb2kuogX6TkuEt9feTWKBSFSOzsqNNbV+sKh';
-  const CDNS = [
-    'https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js',
-    'https://unpkg.com/docx@8.5.0/build/index.umd.js',
-  ];
-  for (const url of CDNS) {
-    try {
-      await new Promise((resolve, reject) => {
-        if (document.querySelector(`script[src="${url}"]`)) { resolve(); return; }
-        const s = document.createElement('script');
-        s.src         = url;
-        s.integrity   = DOCX_SRI;
-        s.crossOrigin = 'anonymous';
-        // Captured synchronously at THIS script's own load completion —
-        // see this function's header comment for why that timing matters.
-        s.onload  = () => { window.__pdfreeDocxBuilder = window.docx; resolve(); };
-        s.onerror = () => reject(new Error(`CDN unavailable: ${url}`));
-        document.head.appendChild(s);
-      });
-      if (window.__pdfreeDocxBuilder) return;
-    } catch (_) { /* try next */ }
-  }
-  throw new Error(t('err_cdn_lib_unavailable', { lib: 'Word' }));
+  const ok = await _loadScriptWithFallback(
+    ['https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js', 'https://unpkg.com/docx@8.5.0/build/index.umd.js'],
+    'sha384-4xaIisuLEy2lo2HkB2C4rEf7v8jbTb2kuogX6TkuEt9feTWKBSFSOzsqNNbV+sKh',
+    () => !!window.__pdfreeDocxBuilder,
+    () => { window.__pdfreeDocxBuilder = window.docx; },
+  );
+  if (!ok) throw new Error(t('err_cdn_lib_unavailable', { lib: 'Word' }));
 }
 
 // Same two-URL fallback pattern as loadDocx() — see comment above.
@@ -134,28 +115,12 @@ export function loadExcelJs() {
 }
 
 async function _loadExcelJsWithFallback() {
-  // Same jsdelivr/unpkg byte-identical verification as docx above.
-  const EXCELJS_SRI = 'sha384-Pqp51FUN2/qzfxZxBCtF0stpc9ONI6MYZpVqmo8m20SoaQCzf+arZvACkLkirlPz';
-  const CDNS = [
-    'https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js',
-    'https://unpkg.com/exceljs@4.4.0/dist/exceljs.min.js',
-  ];
-  for (const url of CDNS) {
-    try {
-      await new Promise((resolve, reject) => {
-        if (document.querySelector(`script[src="${url}"]`)) { resolve(); return; }
-        const s = document.createElement('script');
-        s.src         = url;
-        s.integrity   = EXCELJS_SRI;
-        s.crossOrigin = 'anonymous';
-        s.onload  = resolve;
-        s.onerror = () => reject(new Error(`CDN unavailable: ${url}`));
-        document.head.appendChild(s);
-      });
-      if (window.ExcelJS) return;
-    } catch (_) { /* try next */ }
-  }
-  throw new Error(t('err_cdn_lib_unavailable', { lib: 'Excel' }));
+  const ok = await _loadScriptWithFallback(
+    ['https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js', 'https://unpkg.com/exceljs@4.4.0/dist/exceljs.min.js'],
+    'sha384-Pqp51FUN2/qzfxZxBCtF0stpc9ONI6MYZpVqmo8m20SoaQCzf+arZvACkLkirlPz',
+    () => !!window.ExcelJS,
+  );
+  if (!ok) throw new Error(t('err_cdn_lib_unavailable', { lib: 'Excel' }));
 }
 
 // Same two-URL fallback pattern as loadDocx()/loadExcelJs() — see comment above
@@ -175,28 +140,12 @@ export function loadPptxGenJs() {
 
 async function _loadPptxGenJsWithFallback() {
   await loadJSZip();
-  // Same jsdelivr/unpkg byte-identical verification as docx/exceljs above.
-  const PPTXGENJS_SRI = 'sha384-MKtHyQQnXtUFOKSavqQmtt5Qvk6cGeMJekOw28rk1RHMaEeFU5t0sG2KxvlG4Zue';
-  const CDNS = [
-    'https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.min.js',
-    'https://unpkg.com/pptxgenjs@3.12.0/dist/pptxgen.min.js',
-  ];
-  for (const url of CDNS) {
-    try {
-      await new Promise((resolve, reject) => {
-        if (document.querySelector(`script[src="${url}"]`)) { resolve(); return; }
-        const s = document.createElement('script');
-        s.src         = url;
-        s.integrity   = PPTXGENJS_SRI;
-        s.crossOrigin = 'anonymous';
-        s.onload  = resolve;
-        s.onerror = () => reject(new Error(`CDN unavailable: ${url}`));
-        document.head.appendChild(s);
-      });
-      if (window.PptxGenJS) return;
-    } catch (_) { /* try next */ }
-  }
-  throw new Error(t('err_cdn_lib_unavailable', { lib: 'PowerPoint' }));
+  const ok = await _loadScriptWithFallback(
+    ['https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.min.js', 'https://unpkg.com/pptxgenjs@3.12.0/dist/pptxgen.min.js'],
+    'sha384-MKtHyQQnXtUFOKSavqQmtt5Qvk6cGeMJekOw28rk1RHMaEeFU5t0sG2KxvlG4Zue',
+    () => !!window.PptxGenJS,
+  );
+  if (!ok) throw new Error(t('err_cdn_lib_unavailable', { lib: 'PowerPoint' }));
 }
 
 // OpenCV.js — used by js/scanGeometry.js for the jpg2pdf live-camera
@@ -271,27 +220,13 @@ export function loadDocxPreview() {
 
 async function _loadDocxPreviewWithFallback() {
   await loadJSZip();
-  const DOCX_PREVIEW_SRI = 'sha384-UkwbeBm1NknJfLd5UU4RI1j7PidBeZE3tIiKY1k+n7RQ+kEJ0dkTC0u53xTtRC9r';
-  const CDNS = [
-    'https://cdn.jsdelivr.net/npm/docx-preview@0.4.0/dist/docx-preview.min.js',
-    'https://unpkg.com/docx-preview@0.4.0/dist/docx-preview.min.js',
-  ];
-  for (const url of CDNS) {
-    try {
-      await new Promise((resolve, reject) => {
-        if (document.querySelector(`script[src="${url}"]`)) { resolve(); return; }
-        const s = document.createElement('script');
-        s.src         = url;
-        s.integrity   = DOCX_PREVIEW_SRI;
-        s.crossOrigin = 'anonymous';
-        s.onload  = () => { window.__pdfreeDocxPreview = window.docx; resolve(); };
-        s.onerror = () => reject(new Error(`CDN unavailable: ${url}`));
-        document.head.appendChild(s);
-      });
-      if (window.__pdfreeDocxPreview) return;
-    } catch (_) { /* try next */ }
-  }
-  throw new Error(t('err_cdn_lib_unavailable', { lib: 'Word' }));
+  const ok = await _loadScriptWithFallback(
+    ['https://cdn.jsdelivr.net/npm/docx-preview@0.4.0/dist/docx-preview.min.js', 'https://unpkg.com/docx-preview@0.4.0/dist/docx-preview.min.js'],
+    'sha384-UkwbeBm1NknJfLd5UU4RI1j7PidBeZE3tIiKY1k+n7RQ+kEJ0dkTC0u53xTtRC9r',
+    () => !!window.__pdfreeDocxPreview,
+    () => { window.__pdfreeDocxPreview = window.docx; },
+  );
+  if (!ok) throw new Error(t('err_cdn_lib_unavailable', { lib: 'Word' }));
 }
 
 // pdfmake — the Word→PDF tool's PDF-generation stage (real vector text,
@@ -314,30 +249,30 @@ export function loadPdfMake() {
   return _promises['pdfMake'];
 }
 
-async function _loadScriptWithFallback(urls, integrity, checkGlobal) {
-  for (const url of urls) {
+// A CDN that never answers (seen 2026-10-01: cdn.jsdelivr.net hanging, no
+// error, while unpkg answered in ~1s) fires neither onload nor onerror, so the
+// fallback below never ran and Word/Excel/PowerPoint/Quick Edit sat on "Loading
+// libraries…" for good. Each attempt that still has a fallback now gives up after
+// CDN_TIMEOUT_MS; the last one waits as long as the browser does — a big library
+// on a slow connection is never cut short when there is nothing left to try.
+const CDN_TIMEOUT_MS = 15000;
+async function _loadScriptWithFallback(urls, integrity, checkGlobal, onLoad) {
+  for (const [i, url] of urls.entries()) {
     try {
       await new Promise((resolve, reject) => {
         if (document.querySelector(`script[src="${url}"]`)) { resolve(); return; }
         const s = document.createElement('script');
+        const timer = i < urls.length - 1 ? setTimeout(() => {
+          s.remove();
+          reject(new Error(`CDN timed out: ${url}`));
+        }, CDN_TIMEOUT_MS) : null;
         s.src         = url;
         s.integrity   = integrity;
         s.crossOrigin = 'anonymous';
-        s.onload  = resolve;
-        s.onerror = () => reject(new Error(`CDN unavailable: ${url}`));
+        s.onload  = () => { clearTimeout(timer); onLoad?.(); resolve(); };
+        s.onerror = () => { clearTimeout(timer); reject(new Error(`CDN unavailable: ${url}`)); };
         document.head.appendChild(s);
       });
-      // Real bug found via a live E2E test: this used to be a bare
-      // `return;` (implicit `return undefined`) on success — every
-      // caller checks `if (!ok)`, and `undefined` is falsy, so this
-      // function reported failure on EVERY successful load, not just
-      // the genuinely-failed ones. loadPdfMake()/loadDocxPreview() threw
-      // "library unavailable" unconditionally, even though the actual
-      // script had loaded correctly and the library fully worked
-      // (confirmed directly: createPdf().getBlob() succeeded while this
-      // wrapper still reported failure) — this broke the Word→PDF tool
-      // completely until caught by testing the real end-to-end flow in a
-      // browser, not just unit-testing the individual pieces.
       if (checkGlobal()) return true;
     } catch (_) { /* try next */ }
   }
