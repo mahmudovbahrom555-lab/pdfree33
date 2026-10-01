@@ -226,6 +226,7 @@ window.PDFREE_LOCALE = {
   err_docx_parse_failed: 'Ce document Word n\'a pas pu être lu — il est peut-être corrompu, incomplet ou enregistré d\'une façon que cet outil ne reconnaît pas. Essayez de l\'enregistrer à nouveau depuis Word (ou votre traitement de texte) sous forme d\'un nouveau fichier .docx, puis réessayez.',
   err_watermark_unsupported_chars: 'Ce texte de filigrane ne peut pas être affiché — essayez un texte sans caractères chinois, japonais ou coréens.',
   warn_docx2pdf_unsupported_script: 'Certains caractères de ce document (chinois, japonais, coréen, arabe, hébreu, thaï ou emojis) ne peuvent pas être affichés avec la police actuelle de Word→PDF et peuvent apparaître comme des cases vides — le reste a été converti normalement.',
+  warn_docx2pdf_skipped_images: 'Certaines images de ce document sont dans un format qui ne peut pas être intégré au PDF (comme TIFF, WMF ou EMF) et ont été omises — enregistrez-les en PNG ou JPEG dans Word, puis reconvertissez pour les inclure.',
   err_cdn_lib_unavailable: "Bibliothèque {lib} indisponible — vérifiez votre connexion internet",
   err_compress_timeout: "⏱ Compression annulée — le fichier contient trop d'images pour le navigateur. Essayez le preset Light ou divisez le PDF en parties plus petites.",
   err_batch_timeout:    '⏱ Ce fichier a dépassé le délai — il est peut-être trop volumineux ou complexe pour le navigateur. Il sera marqué comme échoué et le lot continuera avec le reste.',

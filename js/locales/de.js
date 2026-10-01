@@ -227,6 +227,7 @@ window.PDFREE_LOCALE = {
   err_docx_parse_failed: 'Dieses Word-Dokument konnte nicht gelesen werden — es könnte beschädigt, unvollständig oder in einem nicht erkannten Format gespeichert sein. Speichern Sie es in Word (oder Ihrer Textverarbeitung) erneut als .docx-Datei und versuchen Sie es dann noch einmal.',
   err_watermark_unsupported_chars: 'Dieser Wasserzeichentext kann nicht dargestellt werden — versuche es ohne chinesische, japanische oder koreanische Zeichen.',
   warn_docx2pdf_unsupported_script: 'Einige Zeichen in diesem Dokument (Chinesisch, Japanisch, Koreanisch, Arabisch, Hebräisch, Thai oder Emoji) können mit der aktuellen Schriftart von Word→PDF nicht dargestellt werden und erscheinen möglicherweise als leere Kästchen — alles andere wurde normal konvertiert.',
+  warn_docx2pdf_skipped_images: 'Einige Bilder in diesem Dokument liegen in einem Format vor, das nicht in die PDF eingebettet werden kann (z. B. TIFF, WMF oder EMF), und wurden ausgelassen — speichern Sie sie in Word als PNG oder JPEG und konvertieren Sie erneut, um sie einzuschließen.',
   err_cdn_lib_unavailable: '{lib}-Bibliothek nicht verfügbar — bitte Internetverbindung prüfen',
   err_compress_timeout: '⏱ Komprimierung abgebrochen — die Datei enthält zu viele Bilder für den Browser. Versuche das Light-Preset oder teile die PDF zuerst auf.',
   err_batch_timeout:    '⏱ Diese Datei hat das Zeitlimit überschritten — sie ist möglicherweise zu groß oder zu komplex für den Browser. Sie wird als fehlgeschlagen markiert, der Stapel läuft weiter.',

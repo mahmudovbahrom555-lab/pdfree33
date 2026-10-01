@@ -228,6 +228,7 @@ window.PDFREE_LOCALE = {
   err_docx_parse_failed: '이 Word 문서를 읽을 수 없습니다. 손상되었거나, 불완전하거나, 이 도구가 인식하지 못하는 방식으로 저장되었을 수 있습니다. Word(또는 사용 중인 워드 프로세서)에서 새 .docx 파일로 다시 저장한 후 다시 시도하세요.',
   err_watermark_unsupported_chars: '이 워터마크 텍스트는 표시할 수 없습니다 — 중국어, 일본어, 한국어 문자가 없는 텍스트로 시도해 주세요.',
   warn_docx2pdf_unsupported_script: '이 문서의 일부 문자(중국어, 일본어, 한국어, 아랍어, 히브리어, 태국어 또는 이모지)는 Word→PDF의 현재 글꼴로 표시할 수 없어 빈 사각형으로 나타날 수 있습니다 — 나머지는 정상적으로 변환되었습니다.',
+  warn_docx2pdf_skipped_images: '이 문서의 일부 이미지는 PDF에 넣을 수 없는 형식(TIFF, WMF, EMF 등)이라 제외되었습니다 — Word에서 PNG 또는 JPEG로 저장한 뒤 다시 변환하면 포함됩니다.',
   err_cdn_lib_unavailable: '{lib} 라이브러리를 사용할 수 없습니다 — 인터넷 연결을 확인해 주세요',
   err_compress_timeout: '⏱ 압축 취소됨 — 파일에 이미지가 너무 많아 브라우저에서 처리할 수 없습니다. Light 프리셋을 사용하거나 먼저 PDF를 분할해 보세요.',
   err_batch_timeout:    '⏱ 이 파일 처리 시간이 초과되었습니다 — 브라우저가 처리하기에 너무 크거나 복잡할 수 있습니다. 이 파일은 실패로 표시되고 나머지 배치는 계속 진행됩니다.',

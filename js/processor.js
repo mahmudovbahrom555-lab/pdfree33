@@ -4133,15 +4133,26 @@ async function _runPdf2Md(filesSnapshot, { enableFormulaOcr = false } = {}) {
 // image). 60MB cap: generous for a real Word document (even one with
 // several embedded images) while still guarding against something
 // absurd hanging docx-preview's DOM rendering in the browser tab.
+// Word→PDF / Quick Edit losses the PDF still ships with — one toast, so the
+// second warning can't overwrite the first: text in scripts the bundled font
+// lacks, and pictures in a format neither pdfmake nor the browser can embed
+// (TIFF in Chrome, WMF/EMF — docxToPdfCore.js _imgToDataUrl).
+function _warnDocxToPdfLosses(hasUnsupportedScript, skippedImages) {
+  const warnings = [];
+  if (hasUnsupportedScript) warnings.push(t('warn_docx2pdf_unsupported_script'));
+  if (skippedImages) warnings.push(t('warn_docx2pdf_skipped_images'));
+  if (warnings.length) showToast(warnings.join(' '), 8000);
+}
+
 async function _runDocx2Pdf(filesSnapshot, _extraParams) {
   const file = filesSnapshot[0];
   if (!_checkSize(file, 60)) { _abortUI(); return; }
 
   setProgress(5, 'Reading document…');
 
-  let blob, hasUnsupportedScript;
+  let blob, hasUnsupportedScript, skippedImages;
   try {
-    ({ blob, hasUnsupportedScript } = await docxToPdf(file, {
+    ({ blob, hasUnsupportedScript, skippedImages } = await docxToPdf(file, {
       isCancelled: () => !isProcessing,
       onProgress:  (pct) => setProgress(pct, pct < 60 ? 'Reading document…' : 'Building PDF…'),
     }));
@@ -4179,9 +4190,7 @@ async function _runDocx2Pdf(filesSnapshot, _extraParams) {
   // in the meantime, warn rather than let the user discover a silently
   // corrupted PDF later. Non-blocking: the PDF still downloads (partial
   // content is still better than none for any OTHER script it contains).
-  if (hasUnsupportedScript) {
-    showToast(t('warn_docx2pdf_unsupported_script'), 8000);
-  }
+  _warnDocxToPdfLosses(hasUnsupportedScript, skippedImages);
 
   document.dispatchEvent(new CustomEvent('pdfree:success', {
     detail: { tool: 'docx2pdf', blob, desc, filename }
@@ -4209,11 +4218,11 @@ async function _runQuickEdit(filesSnapshot, { editedContainer } = {}) {
 
   setProgress(70, 'Building PDF…');
 
-  let blob, hasUnsupportedScript;
+  let blob, hasUnsupportedScript, skippedImages;
   try {
     const parsed = await walkDomToPdfContent(editedContainer, { isCancelled: () => !isProcessing });
     if (!isProcessing) return;
-    hasUnsupportedScript = parsed.hasUnsupportedScript;
+    ({ hasUnsupportedScript, skippedImages } = parsed);
     blob = await pdfContentToBlob(parsed, {
       isCancelled: () => !isProcessing,
       onProgress:  pct => setProgress(70 + Math.round(pct * 0.3), 'Building PDF…'),
@@ -4246,9 +4255,7 @@ async function _runQuickEdit(filesSnapshot, { editedContainer } = {}) {
   // paragraphs the user never clicked -- with zero warning. Same
   // mitigation as word-to-pdf: warn, still ship the PDF (edits + every
   // other run still round-trip correctly).
-  if (hasUnsupportedScript) {
-    showToast(t('warn_docx2pdf_unsupported_script'), 8000);
-  }
+  _warnDocxToPdfLosses(hasUnsupportedScript, skippedImages);
 
   document.dispatchEvent(new CustomEvent('pdfree:success', {
     detail: { tool: 'quickEdit', blob, desc, filename }

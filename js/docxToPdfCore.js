@@ -131,11 +131,38 @@ async function _imgToDataUrl(img) {
   if (!blob.type || !blob.type.startsWith('image/')) {
     throw new Error(`Fetched resource is not an image (${blob.type || 'unknown type'})`);
   }
+  const embeddable = PDFMAKE_IMAGE_TYPES.has(blob.type) ? blob : await _reencodeAsPng(blob);
   return await new Promise((resolve) => {
     const reader = new FileReader();
     reader.onloadend = () => resolve(reader.result);
-    reader.readAsDataURL(blob);
+    reader.readAsDataURL(embeddable);
   });
+}
+
+// pdfmake (pdfkit underneath) embeds only JPEG and PNG. A GIF/BMP/TIFF/WMF/
+// EMF picture in the .docx used to reach it as-is and abort the WHOLE
+// conversion with "Invalid image: Unknown image format" — the only Word→PDF
+// error left in production analytics after the 2026-09-22 fixes (2026-10-01
+// re-check). Anything else the browser can decode is redrawn as PNG; what it
+// can't (TIFF in Chrome, WMF/EMF everywhere) throws here, so the caller skips
+// just that picture and reports it.
+const PDFMAKE_IMAGE_TYPES = new Set(['image/jpeg', 'image/png']);
+// Decoded via <img> rather than createImageBitmap, which iOS Safari 14.0–14.4 lacks.
+async function _reencodeAsPng(blob) {
+  const url = URL.createObjectURL(blob);
+  try {
+    const img = new Image();
+    img.src = url;
+    await img.decode();
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    canvas.getContext('2d').drawImage(img, 0, 0);
+    return await new Promise((resolve, reject) => canvas.toBlob(
+      png => (png ? resolve(png) : reject(new Error('PNG re-encode failed'))), 'image/png'));
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }
 
 function _rgbToHex(rgb) {
@@ -255,6 +282,7 @@ export async function renderDocxToDom(file, container, { isCancelled } = {}) {
 export async function walkDomToPdfContent(container, { isCancelled } = {}) {
   {
     const listCounters = {};
+    let skippedImages = 0; // pictures dropped by parseParagraph — reported, never silent
     const wrapperEl = container.querySelector('.docx-wrapper');
     const counterResetStr = wrapperEl ? getComputedStyle(wrapperEl).counterReset : '';
     if (counterResetStr) {
@@ -288,6 +316,7 @@ export async function walkDomToPdfContent(container, { isCancelled } = {}) {
           const width = wMatch ? parseFloat(wMatch[1]) : 200;
           return { image: dataUrl, width, margin: [0, 0, 0, 8] };
         } catch {
+          skippedImages++;
           return { text: ' ' };
         }
       }
@@ -511,7 +540,7 @@ export async function walkDomToPdfContent(container, { isCancelled } = {}) {
     // happen to slice text into runs.
     const hasUnsupportedScript = _UNSUPPORTED_SCRIPT_RE.test(container.textContent);
 
-    return { content: out, headerText, footerText, hasUnsupportedScript };
+    return { content: out, headerText, footerText, hasUnsupportedScript, skippedImages };
   }
 }
 
@@ -559,7 +588,7 @@ export async function pdfContentToBlob({ content, headerText, footerText }, { is
  * caller supplies.
  * @param {File} file
  * @param {{ isCancelled?: () => boolean, onProgress?: (pct:number) => void }} [opts]
- * @returns {Promise<{ blob: Blob, hasUnsupportedScript: boolean }>}
+ * @returns {Promise<{ blob: Blob, hasUnsupportedScript: boolean, skippedImages: number }>}
  */
 export async function docxToPdf(file, { isCancelled, onProgress } = {}) {
   onProgress?.(10);
@@ -577,7 +606,7 @@ export async function docxToPdf(file, { isCancelled, onProgress } = {}) {
     if (isCancelled?.()) throw new Error('cancelled');
     onProgress?.(60);
     const blob = await pdfContentToBlob(parsed, { isCancelled, onProgress });
-    return { blob, hasUnsupportedScript: parsed.hasUnsupportedScript };
+    return { blob, hasUnsupportedScript: parsed.hasUnsupportedScript, skippedImages: parsed.skippedImages };
   } finally {
     container.remove();
   }

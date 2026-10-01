@@ -44,6 +44,8 @@ const IMAGE_DOCX         = path.join(__dirname, '..', 'fixtures', 'eri', '004_li
 const ENCRYPTED_OR_LEGACY_DOCX = path.join(__dirname, '..', 'fixtures', 'docx2pdf_encrypted_or_legacy.docx');
 const MISSING_DOCXML_DOCX      = path.join(__dirname, '..', 'fixtures', 'docx2pdf_missing_document_xml.docx');
 const UNSUPPORTED_SCRIPT_DOCX  = path.join(__dirname, '..', 'fixtures', 'docx2pdf_unsupported_script.docx');
+const GIF_IMAGE_DOCX           = path.join(__dirname, '..', 'fixtures', 'docx2pdf_gif_image.docx');
+const TIFF_IMAGE_DOCX          = path.join(__dirname, '..', 'fixtures', 'docx2pdf_tiff_image.docx');
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -359,6 +361,54 @@ await test('a DOCX with CJK/Arabic/emoji text shows a warning toast instead of s
   } finally {
     await context.close();
   }
+});
+
+// Real production error, the only Word→PDF failure left in analytics after the
+// 2026-09-22 fixes (2026-10-01 re-check): pdfmake embeds only JPEG/PNG, so a
+// GIF/BMP/TIFF/WMF/EMF picture aborted the whole conversion with "Invalid image:
+// Unknown image format". Fixtures: python-docx, one 120×80 picture between two
+// paragraphs. GIF must now be re-encoded and embedded; TIFF (Chrome can't decode
+// it) must be skipped with a warning while the text still converts.
+async function convertRecordingToasts(filePath) {
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  const toasts = [];
+  await page.exposeFunction('__recordToast', (txt) => toasts.push(txt));
+  await page.addInitScript(BLOB_HOOK);
+  await page.goto(`${BASE_URL}/word-to-pdf/`, { waitUntil: 'load', timeout: 30000 });
+  await page.evaluate(() => {
+    const el = document.getElementById('toast');
+    if (!el) return;
+    new MutationObserver(() => {
+      if (el.textContent.trim()) window.__recordToast(el.textContent.trim());
+    }).observe(el, { childList: true, characterData: true, subtree: true });
+  });
+  await page.setInputFiles('#fileInput', filePath);
+  await page.waitForTimeout(500);
+  await page.evaluate(() => { window.__blob = null; });
+  await page.click('#mergeBtn');
+  await page.waitForFunction(() => window.__blob?.type === 'application/pdf', { timeout: 20000 })
+    .catch(() => { throw new Error(`No PDF produced. Toasts: ${JSON.stringify(toasts)}`); });
+  await page.waitForTimeout(300);
+  const pdfText = await page.evaluate(async () => new TextDecoder('latin1').decode(await window.__blob.arrayBuffer()));
+  await context.close();
+  // A canvas-made PNG always carries alpha, which pdfkit stores as a separate
+  // /SMask image object — count pictures, not their transparency masks.
+  const count = re => (pdfText.match(re) || []).length;
+  return { toasts, imageCount: count(/\/Subtype\s*\/Image/g) - count(/\/SMask\s+\d+\s+0\s+R/g) };
+}
+
+await test('a DOCX with a GIF picture converts with the picture embedded (re-encoded to PNG), no warning', async () => {
+  const { toasts, imageCount } = await convertRecordingToasts(GIF_IMAGE_DOCX);
+  if (imageCount !== 1) throw new Error(`Expected 1 embedded image, got ${imageCount}. Toasts: ${JSON.stringify(toasts)}`);
+  if (toasts.some(t => /TIFF|WMF|EMF/.test(t))) throw new Error(`Unexpected skipped-image warning: ${JSON.stringify(toasts)}`);
+});
+
+await test('a DOCX with a TIFF picture still converts — picture skipped with a specific warning, not "Unknown image format"', async () => {
+  const { toasts, imageCount } = await convertRecordingToasts(TIFF_IMAGE_DOCX);
+  if (toasts.some(t => /Unknown image format|Invalid image/i.test(t))) throw new Error(`Got the production crash back: ${JSON.stringify(toasts)}`);
+  if (!toasts.some(t => /TIFF, WMF or EMF/.test(t))) throw new Error(`Expected the skipped-image warning, saw: ${JSON.stringify(toasts)}`);
+  if (imageCount !== 0) throw new Error(`Expected the TIFF to be skipped (0 images), got ${imageCount}`);
 });
 
 await browser.close();

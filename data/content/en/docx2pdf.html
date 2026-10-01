@@ -35,7 +35,7 @@
         </div>
         <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
           <strong style="color:var(--text);font-size:15px;">Not supported yet</strong>
-          <p style="margin:6px 0 0;font-size:14px;">An image placed inline in the middle of a sentence (rather than on its own line) is skipped. Page-number fields ("Page X of Y") don't resolve to an actual number — this is a limitation of static rendering, not something PDFree calculates itself. Older .doc files aren't supported — re-save as .docx first.</p>
+          <p style="margin:6px 0 0;font-size:14px;">An image placed inline in the middle of a sentence (rather than on its own line) is skipped. Pictures in TIFF, WMF or EMF format are left out too, with a warning — saving them as PNG or JPEG in Word first includes them (GIF and BMP convert automatically). Page-number fields ("Page X of Y") don't resolve to an actual number — this is a limitation of static rendering, not something PDFree calculates itself. Older .doc files aren't supported — re-save as .docx first.</p>
         </div>
 
         <!-- Privacy -->
@@ -101,7 +101,7 @@
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">What formatting might not convert perfectly?</h3>
-          <p style="margin:0;font-size:14px;">A few rarer cases are approximated rather than pixel-perfect: multi-column sections are balanced by measured paragraph height rather than Word's exact line-by-line flow, so a section with one very long paragraph among several short ones can look uneven. Footnote text is collected into a "Footnotes" section at the end of the document rather than pinned to the bottom of the specific page it's referenced on. Table borders use the first cell's width and color for the whole table. An image placed inline in the middle of a sentence (rather than on its own line) is skipped. Page-number fields (like "Page X of Y") don't resolve to an actual number. Everyday documents — reports, letters, resumes, articles — convert cleanly.</p>
+          <p style="margin:0;font-size:14px;">A few rarer cases are approximated rather than pixel-perfect: multi-column sections are balanced by measured paragraph height rather than Word's exact line-by-line flow, so a section with one very long paragraph among several short ones can look uneven. Footnote text is collected into a "Footnotes" section at the end of the document rather than pinned to the bottom of the specific page it's referenced on. Table borders use the first cell's width and color for the whole table. An image placed inline in the middle of a sentence (rather than on its own line) is skipped. Pictures in TIFF, WMF or EMF format are left out too, with a warning — saving them as PNG or JPEG in Word first includes them (GIF and BMP convert automatically). Page-number fields (like "Page X of Y") don't resolve to an actual number. Everyday documents — reports, letters, resumes, articles — convert cleanly.</p>
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I convert multiple Word documents at once?</h3>

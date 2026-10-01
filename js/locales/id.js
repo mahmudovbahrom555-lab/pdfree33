@@ -227,6 +227,7 @@ window.PDFREE_LOCALE = {
   err_docx_parse_failed: 'Dokumen Word ini tidak dapat dibaca — mungkin rusak, tidak lengkap, atau disimpan dengan cara yang tidak dikenali alat ini. Coba simpan ulang dari Word (atau pengolah kata Anda) sebagai file .docx baru, lalu coba lagi.',
   err_watermark_unsupported_chars: 'Teks watermark ini tidak dapat dirender — coba teks tanpa karakter Tionghoa, Jepang, atau Korea.',
   warn_docx2pdf_unsupported_script: 'Beberapa karakter dalam dokumen ini (Tionghoa, Jepang, Korea, Arab, Ibrani, Thai, atau emoji) tidak dapat ditampilkan dengan font Word→PDF saat ini dan mungkin muncul sebagai kotak kosong — bagian lainnya dikonversi dengan normal.',
+  warn_docx2pdf_skipped_images: 'Beberapa gambar dalam dokumen ini memakai format yang tidak dapat disematkan ke PDF (seperti TIFF, WMF, atau EMF) dan dilewati — simpan sebagai PNG atau JPEG di Word lalu konversi ulang agar ikut disertakan.',
   err_cdn_lib_unavailable: 'Pustaka {lib} tidak tersedia — periksa koneksi internet Anda',
   err_compress_timeout: '⏱ Kompresi dibatalkan — file mengandung terlalu banyak gambar untuk browser. Coba preset Ringan atau pisahkan PDF terlebih dahulu.',
   err_batch_timeout:    '⏱ File ini melebihi batas waktu — mungkin terlalu besar atau kompleks untuk browser. File akan ditandai gagal dan batch akan lanjut memproses sisanya.',

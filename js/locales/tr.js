@@ -226,6 +226,7 @@ window.PDFREE_LOCALE = {
   err_docx_parse_failed: 'Bu Word belgesi okunamadı — bozuk, eksik olabilir veya bu aracın tanımadığı bir biçimde kaydedilmiş olabilir. Word\'den (veya kullandığınız kelime işlemciden) yeni bir .docx dosyası olarak yeniden kaydetmeyi deneyin, ardından tekrar deneyin.',
   err_watermark_unsupported_chars: 'Bu filigran metni oluşturulamıyor — Çince, Japonca veya Korece karakter içermeyen bir metin deneyin.',
   warn_docx2pdf_unsupported_script: 'Bu belgedeki bazı karakterler (Çince, Japonca, Korece, Arapça, İbranice, Tayca veya emoji) Word→PDF\'nin mevcut yazı tipiyle görüntülenemiyor ve boş kutular olarak görünebilir — geri kalanı normal şekilde dönüştürüldü.',
+  warn_docx2pdf_skipped_images: 'Bu belgedeki bazı görseller PDF\'ye eklenemeyen bir biçimde (TIFF, WMF veya EMF gibi) olduğu için atlandı — Word\'de PNG veya JPEG olarak kaydedip yeniden dönüştürürseniz eklenir.',
   err_cdn_lib_unavailable: '{lib} kütüphanesi kullanılamıyor — internet bağlantınızı kontrol edin',
   err_compress_timeout: '⏱ Sıkıştırma iptal edildi — dosyanın çok fazla resmi var, tarayıcı işleyemiyor. Hafif ayarı deneyin veya PDF\'yi önce bölün.',
   err_batch_timeout:    '⏱ Bu dosyanın işlenmesi zaman aşımına uğradı — dosya tarayıcı için çok büyük veya karmaşık olabilir. Bu dosya başarısız olarak işaretlenecek ve toplu işlem geri kalanla devam edecek.',

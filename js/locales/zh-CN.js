@@ -233,6 +233,7 @@ window.PDFREE_LOCALE = {
   err_docx_parse_failed: '无法读取此 Word 文档——它可能已损坏、不完整，或以此工具无法识别的方式保存。请尝试在 Word（或您使用的文字处理软件）中另存为新的 .docx 文件后重试。',
   err_watermark_unsupported_chars: '此水印文字无法渲染 — 请尝试不含中文、日文或韩文字符的文字。',
   warn_docx2pdf_unsupported_script: '此文档中的部分字符(中文、日文、韩文、阿拉伯文、希伯来文、泰文或表情符号)无法用 Word→PDF 当前的字体渲染,可能显示为空白方框 — 其余内容已正常转换。',
+  warn_docx2pdf_skipped_images: '此文档中的部分图片格式无法嵌入 PDF(如 TIFF、WMF 或 EMF),已被略去 — 在 Word 中将其另存为 PNG 或 JPEG 后重新转换即可包含。',
   err_cdn_lib_unavailable: '{lib} 库不可用 — 请检查您的网络连接',
   err_compress_timeout: '⏱ 压缩超时 — 文件可能包含过多图片，超出浏览器处理能力。请尝试"轻度"预设，或先将 PDF 拆分为较小的部分。',
   err_batch_timeout:    '⏱ 此文件处理超时 — 文件可能过大或过于复杂。已标记为失败，批处理将继续处理其余文件。',

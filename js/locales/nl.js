@@ -226,6 +226,7 @@ window.PDFREE_LOCALE = {
   err_docx_parse_failed: 'Dit Word-document kon niet worden gelezen — het is mogelijk beschadigd, onvolledig, of opgeslagen op een manier die deze tool niet herkent. Probeer het opnieuw op te slaan vanuit Word (of je tekstverwerker) als een nieuw .docx-bestand en probeer het dan opnieuw.',
   err_watermark_unsupported_chars: 'Deze watermarktekst kan niet worden weergegeven — probeer tekst zonder Chinese, Japanse of Koreaanse tekens.',
   warn_docx2pdf_unsupported_script: 'Sommige tekens in dit document (Chinees, Japans, Koreaans, Arabisch, Hebreeuws, Thai of emoji) kunnen niet worden weergegeven met het huidige lettertype van Word→PDF en verschijnen mogelijk als lege vakjes — de rest is normaal geconverteerd.',
+  warn_docx2pdf_skipped_images: 'Sommige afbeeldingen in dit document hebben een formaat dat niet in de PDF kan worden ingesloten (zoals TIFF, WMF of EMF) en zijn weggelaten — sla ze in Word op als PNG of JPEG en converteer opnieuw om ze mee te nemen.',
   err_cdn_lib_unavailable: '{lib}-bibliotheek niet beschikbaar — controleer je internetverbinding',
   err_compress_timeout: '⏱ Comprimeren geannuleerd — het bestand heeft te veel afbeeldingen voor de browser. Probeer de Light-instelling of splits de PDF eerst.',
   err_batch_timeout:    '⏱ Deze bestandsverwerking duurde te lang — het bestand is mogelijk te groot of te complex voor de browser. Het wordt als mislukt gemarkeerd en de batch gaat verder met de rest.',

@@ -208,6 +208,7 @@ export const EN = {
   err_docx_parse_failed: "This Word document couldn't be read — it may be corrupted, incomplete, or saved in a way this tool doesn't recognize. Try re-saving it from Word (or your word processor) as a fresh .docx file, then try again.",
   err_watermark_unsupported_chars: 'This watermark text can’t be rendered — try text without Chinese, Japanese, or Korean characters.',
   warn_docx2pdf_unsupported_script: "Some characters in this document (Chinese, Japanese, Korean, Arabic, Hebrew, Thai, or emoji) can't be rendered by Word→PDF's current font and may appear as blank boxes — everything else converted normally.",
+  warn_docx2pdf_skipped_images: "Some images in this document are in a format that can't be embedded in the PDF (such as TIFF, WMF or EMF) and were left out — save them as PNG or JPEG in Word and convert again to include them.",
   err_cdn_lib_unavailable: '{lib} library unavailable — check your internet connection',
   err_compress_timeout: '⏱ Compression timed out — the file may be too image-heavy for the browser. Try the Light preset or split the PDF into smaller parts first.',
   err_batch_timeout:    '⏱ This file timed out — it may be too large or complex for the browser. It will be marked as failed and the batch will continue with the rest.',
