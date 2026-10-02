@@ -157,11 +157,16 @@ export function reorderVisualRtlLine(items) {
   // run on a slightly different baseline arrives out of stream order — restore it
   // from `seq` (the item's pdf.js index) before judging direction. A logical line
   // left as is then also keeps its true stream order.
+  // A step to an item more than 2 em away is no step within the text: two columns'
+  // lines merged on one baseline put the other column's run between them (ground
+  // truth ar-cols2 2026-10-02: the jump across the gutter outvoted the one real
+  // left-to-right step, so "مئة صفحة كلما احتجت." stayed "كلما احتجت.مئة صفحة").
   items.sort((a, b) => (a.seq ?? 0) - (b.seq ?? 0));
   let ltrSteps = 0, rtlSteps = 0, prev = null;
   for (const item of items) {
     if (!_STRONG_CHAR_RE.test(item.str)) continue;
-    if (prev) {
+    const gap = prev && Math.max(item.x - (prev.x + (prev.width || 0)), prev.x - (item.x + (item.width || 0)));
+    if (prev && gap <= 2 * (item.fontSize || 10)) {
       if (item.x > prev.x) ltrSteps++;
       else if (item.x < prev.x) rtlSteps++;
     }
@@ -317,9 +322,14 @@ export function _splitCrossColumnLines(lines, pageW) {
       byRegion.get(idx).push(item);
     }
     if (byRegion.size <= 1) continue; // this line only ever touched one region
+    // Each piece takes its own baseline (topmost item, as a line is formed): the
+    // columns' baselines can sit a few points apart, and the merged line's y came
+    // from whichever column's item was higher — the other column then measured its
+    // paragraph gaps from a foreign baseline (Arabic 2-col ground truth 2026-10-02:
+    // 15 + 21.8 pt read as 19.5 + 18, the paragraph break lost).
     const splitLines = [...byRegion.entries()]
       .sort((a, b) => a[0] - b[0])
-      .map(([, regionItems]) => ({ y: ln.y, rtl: ln.rtl, items: regionItems }));
+      .map(([, regionItems]) => ({ y: Math.max(...regionItems.map(i => i.y)), rtl: ln.rtl, items: regionItems }));
     lines.splice(li, 1, ...splitLines);
   }
 }

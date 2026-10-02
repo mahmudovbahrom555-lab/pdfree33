@@ -268,9 +268,10 @@ console.log('\n_splitCrossColumnLines — the real bug this whole file exists to
 function mkMergedLines(col1X, col2X, count, yStart, yStep = 12) {
   const out = [];
   for (let i = 0; i < count; i++) {
-    const items = [{ x: col1X, str: `C1-${i}` }];
-    if (i % 3 !== 2) items.push({ x: col2X, str: `C2-${i}` });
-    out.push({ y: yStart - i * yStep, rtl: false, items });
+    const y = yStart - i * yStep;
+    const items = [{ x: col1X, y, str: `C1-${i}` }];
+    if (i % 3 !== 2) items.push({ x: col2X, y, str: `C2-${i}` });
+    out.push({ y, rtl: false, items });
   }
   return out;
 }
@@ -292,15 +293,17 @@ test('a page of merged cross-column lines is split into clean per-column lines',
   if (!col2Texts.every(t => t.startsWith('C2-'))) throw new Error('column 2 split contains column 1 content');
 });
 
-test('split lines preserve the original Y and rtl flag', () => {
-  const lines = [{ y: 555, rtl: true, items: [{ x: 72, str: 'a' }, { x: 320, str: 'b' }] }, ...mkMergedLines(72, 320, 19, 740, 12)];
+test('split lines take their own column\'s baseline and keep the rtl flag', () => {
+  // the columns' baselines 4.5pt apart, merged into one line at the higher one —
+  // the lower column must not measure its paragraph gaps from the other's baseline
+  const lines = [{ y: 617.9, rtl: true, items: [{ x: 72, y: 617.9, str: 'a' }, { x: 320, y: 613.4, str: 'b' }] },
+    ...mkMergedLines(72, 320, 19, 600, 12)];
   _splitCrossColumnLines(lines, 612);
   const split = lines.filter(l => l.items[0].str === 'a' || l.items[0].str === 'b');
   expect(split.length).toBe(2);
-  for (const ln of split) {
-    expect(ln.y).toBe(555);
-    expect(ln.rtl).toBe(true);
-  }
+  expect(split.find(l => l.items[0].str === 'a').y).toBe(617.9);
+  expect(split.find(l => l.items[0].str === 'b').y).toBe(613.4);
+  for (const ln of split) expect(ln.rtl).toBe(true);
 });
 
 test('a line that only ever touches one region is left as a single line, not split', () => {
@@ -355,6 +358,13 @@ test('full-width lines (a title, an abstract) do not hide the gutter or get cut'
   const left = linesInRegion(lines, regions, 0);
   expect(left.filter(l => l.items[0].str === 'full width abstract').length).toBe(30); // whole, in the column it starts in
   expect(linesInRegion(lines, regions, 1).every(l => l.items.every(it => it.x >= 300))).toBe(true);
+});
+
+test('a column cut from a merged line gets that column\'s own baseline', () => {
+  const regions = detectColumnRegions(twoCol(), 595);
+  const merged = { y: 617.9, rtl: false, items: [{ ...run(72, 210, 'left'), y: 617.9 }, { ...run(310, 213, 'right'), y: 613.4 }] };
+  expect(linesInRegion([merged], regions, 0)[0].y).toBe(617.9);
+  expect(linesInRegion([merged], regions, 1)[0].y).toBe(613.4);
 });
 
 // ── Summary ──────────────────────────────────────────────────

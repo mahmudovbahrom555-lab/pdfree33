@@ -321,7 +321,8 @@ export function linesInRegion(lines, regions, idx) {
       continue;
     }
     const items = ln.items.filter(it => !!it && it.x >= r.left && it.x < r.right);
-    if (items.length) out.push({ y: ln.y, rtl: ln.rtl, items });
+    // its own baseline, not the other column's (see _splitCrossColumnLines)
+    if (items.length) out.push({ y: Math.max(...items.map(it => it.y)), rtl: ln.rtl, items });
   }
   return out;
 }

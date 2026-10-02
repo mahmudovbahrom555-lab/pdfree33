@@ -222,6 +222,18 @@ test('direction is judged in content-stream order (seq), not the y-sorted order 
   assert.equal(items.map(i => i.str).join(''), 'הוא פורמט חופשי 1 אשר');
 });
 
+test('a jump across a column gutter does not vote on the line\'s direction', () => {
+  // ground truth ar-cols2: the right column's run (earlier in the stream) merged
+  // with the left column's two visual runs on one baseline
+  const run = (str, x, width, seq) => ({ str, x, width, seq, fontSize: 11 });
+  const items = [run('كلما احتجت.', 199.3, 49.5, 90), run('مئة صفحة', 249.3, 36.2, 91), run('الأختام', 354, 185, 21)];
+  reorderVisualRtlLine(items);
+  // (their 0.7pt space item is dropped like the lam-alef split's; every converter
+  // tested glues these two words)
+  const text = items.map(i => i.str).join('');
+  assert.ok(/^الأختام مئة صفحة ?كلما احتجت\.$/.test(text), text);
+});
+
 test('a stream already running right-to-left (logical) is left untouched', () => {
   const items = [glyph('שלום', 100, 30), glyph('עולם', 60, 30), glyph('זה', 20, 20)];
   const before = items.map(i => i.str);
