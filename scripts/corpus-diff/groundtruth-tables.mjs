@@ -92,7 +92,8 @@ function cellMatches(truthText, value, out) {
 
 // Best placement of the true table in one sheet: column order × row/column offset.
 function place(truth, sheet) {
-  const width = Math.max(0, ...sheet.grid.map(r => (r ? r.length : 0)));
+  // Array.from: an empty row is a hole in the sparse grid, and a hole spread into Math.max is NaN
+  const width = Math.max(0, ...Array.from(sheet.grid, r => (r ? r.length : 0)));
   let best = { hits: 0, numbers: 0, order: 'logical' };
   for (const order of ['logical', 'visual']) {
     // visual = the drawn left-to-right order; for RTL that is the logical order reversed
