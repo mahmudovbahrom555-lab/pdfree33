@@ -332,7 +332,14 @@ export function lineStartMargins(lines) {
   const margins = {};
   for (const rtl of [false, true]) {
     const set = lines.filter(ln => !!ln.rtl === rtl && ln.items.length);
-    margins[rtl ? 'rtl' : 'ltr'] = { start: _dominant(set.map(_lineStart)), end: _dominant(set.map(_lineEnd)) };
+    // far: the farthest end edge — the column's extent even when ragged text
+    // (left-aligned, no justification) has no common end margin
+    const ends = set.map(_lineEnd);
+    margins[rtl ? 'rtl' : 'ltr'] = {
+      start: _dominant(set.map(_lineStart)),
+      end: _dominant(ends),
+      far: ends.length ? (rtl ? Math.min(...ends) : Math.max(...ends)) : undefined,
+    };
   }
   return margins;
 }
@@ -353,7 +360,7 @@ const _SENTENCE_END_RE = /[.!?。！？؟…]["'”’»)\]]*$/;
 // "Short" counts only for a line that starts like body text — at the start margin
 // or at a paragraph indent: a centred display formula is short too, and the
 // sentence goes on after it ("where …").
-function _endsLikeParagraph(ln, margins) {
+export function lineEndsParagraph(ln, margins) {
   if (_SENTENCE_END_RE.test(ln.items.map(i => i.str).join('').trimEnd())) return true;
   const m = margins[ln.rtl ? 'rtl' : 'ltr'];
   if (m?.end === undefined || m.start === undefined) return false;
@@ -366,7 +373,7 @@ function _endsLikeParagraph(ln, margins) {
 // hanging indent (list item continuations) or a block quote every line is
 // shifted, and none of them start a paragraph.
 export function startsIndentedParagraph(prevLn, ln, margins) {
-  return lineIsIndented(ln, margins) && !lineIsIndented(prevLn, margins) && _endsLikeParagraph(prevLn, margins);
+  return lineIsIndented(ln, margins) && !lineIsIndented(prevLn, margins) && lineEndsParagraph(prevLn, margins);
 }
 
 // Paragraph gap relative to the text's own line pitch. The fixed "gap > 2.0×
@@ -391,7 +398,47 @@ export function linePitch(lines) {
 }
 export function startsSpacedParagraph(prevLn, ln, pitch, margins) {
   if (pitch === undefined) return false;
-  return prevLn.y - ln.y > pitch * 1.25 && _endsLikeParagraph(prevLn, margins);
+  return prevLn.y - ln.y > pitch * 1.25 && lineEndsParagraph(prevLn, margins);
+}
+
+// A heading too long for its column wraps, and every wrapped line used to become
+// a heading of its own ("What's the difference between" / "Clean and Enhance
+// mode?" — ground truth 2026-10-01: 0/2 headings found on two-column pages in
+// en/ru/ja/zh). The next heading-sized line continues the previous one when it
+// has the same size and weight, sits one line below (≤1.9 em — Arabic faces such
+// as Amiri set a 15 pt heading 26 pt apart, 1.73 em), and the previous
+// line really wrapped: it fills ≥60% of the body text width, the next line's
+// first word wouldn't have fitted after it, and it doesn't end on sentence
+// punctuation. A short line above ("Chapter 1" / "Introduction") stays a
+// heading of its own.
+const _HEADING_END_RE = /[.!?:;。！？؟：]["'”’»)\]]*$/;
+export function continuesWrappedHeading(prevLn, ln, margins) {
+  if (!prevLn || !ln || !prevLn.items.length || !ln.items.length) return false;
+  const em = _lineEm(ln);
+  if (Math.abs(_lineEm(prevLn) - em) > 0.5) return false;
+  const bold = l => l.items.every(i => i.bold);
+  if (bold(prevLn) !== bold(ln)) return false;
+  const gap = prevLn.y - ln.y;
+  if (gap <= 0 || gap > 1.9 * em) return false;
+  if (_HEADING_END_RE.test(prevLn.items.map(i => i.str).join('').trimEnd())) return false;
+  const m = margins[prevLn.rtl ? 'rtl' : 'ltr'];
+  if (m?.start === undefined || m.far === undefined) return false;
+  const bodyWidth = Math.abs(m.far - m.start);
+  // it really wrapped: the room left before the column's farthest edge is less
+  // than the next line's first word (+1 em) — that word didn't fit. Stacked bold
+  // labels (a Wikipedia infobox: "Filename extension" / "Internet media type")
+  // leave far more room than that and stay apart. Word width is estimated from
+  // the next line's average character width; CJK wraps per character.
+  const reach = prevLn.rtl ? _lineEnd(prevLn) - m.far : m.far - _lineEnd(prevLn);
+  const text = ln.items.map(i => i.str).join('').trim();
+  const firstWord = _isCjk(text) ? text.slice(0, 1) : text.split(/\s+/)[0];
+  const charWidth = Math.abs(_lineEnd(ln) - _lineStart(ln)) / Math.max(text.length, 1);
+  // ≥10 em: a column of running text — the narrowest two-column ground-truth
+  // column is 15 em; a Wikipedia infobox label cell (72 pt, ~7 em) is a table
+  // cell whose stacked labels all "fill" it ("Filename" / "extension" /
+  // "Internet" chained into one heading before this)
+  return bodyWidth >= 10 * em && Math.abs(_lineEnd(prevLn) - _lineStart(prevLn)) >= 0.6 * bodyWidth
+    && reach <= firstWord.length * charWidth + em;
 }
 
 // CJK: Hiragana/Katakana, CJK Unified Ideographs, Hangul syllables, CJK Extension A/B.

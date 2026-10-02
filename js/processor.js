@@ -27,7 +27,8 @@ import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PR
          detectColumnGutter, reconcileColumnSplit, ereaderSampleIndices } from './ereaderCrop.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, toArabicBaseLetters, _splitCrossColumnLines, _isCjk,
-         lineStartMargins, startsIndentedParagraph, linePitch, startsSpacedParagraph } from './textLayoutUtils.js';
+         lineStartMargins, startsIndentedParagraph, linePitch, startsSpacedParagraph,
+         lineEndsParagraph, continuesWrappedHeading } from './textLayoutUtils.js';
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { _p2wBuildPageData } from './pdf2readCore.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
@@ -4523,7 +4524,12 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
   // text — what's left is a visual" logic needs to see the WHOLE page's
   // text, or it would misread the OTHER (not-yet-processed-in-this-call)
   // column's text as an inline visual while processing this one.
-  async function _processLines(pi, lines, rotatedItems, borderGrids, textItems, pageH) {
+  // carry: another column follows on this page — a paragraph whose last line
+  // doesn't end like one continues at the top of the next column (pdf2md's
+  // _emitLines does the same) instead of being cut in two.
+  // xRange: the column's horizontal bounds when the page is processed column by
+  // column — a gap between this column's lines is cropped only within it.
+  async function _processLines(pi, lines, rotatedItems, borderGrids, textItems, pageH, carry = false, xRange = null) {
     onProgress(50 + Math.round((pi / pageData.length) * 40),
                `Building page ${pi + 1}/${pageData.length}…`);
 
@@ -4620,7 +4626,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
       const coveredByGrid = useTables && borderGrids.some(g =>
         (g.y + g.h) <= yAbove + 10 && g.y >= yBelow - 10
       );
-      if (!coveredByGrid) visualGaps.push({ yAbove, yBelow });
+      if (!coveredByGrid) visualGaps.push({ yAbove, yBelow, ...(xRange || {}) });
     }
     // Render page once and crop image regions for detected gaps and inline visuals.
     // .catch() degrades gracefully — rest of the document is still produced.
@@ -4633,7 +4639,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
       );
       const { gapRuns, inlineRuns } = await _p2wRenderAllVisuals(
         pdfDoc, pi + 1, pageH, visualGaps, textItems,
-        borderGrids, median, ImageRun,
+        borderGrids, median, ImageRun, _pageWideGaps, xRange,
       ).catch(() => ({ gapRuns: [], inlineRuns: [] }));
       gapRunsArr.push(...gapRuns);
       inlineVisuals.push(...inlineRuns);
@@ -4847,8 +4853,10 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
               ? lastMaxFont * 3.5   // CJK continuation line — absorb generous leading
               : lastMaxFont * 2.0;  // conservative merge
 
-            if (isHead || lastIsHead || gap > mergeThreshold || startsIndentedParagraph(lastLn, ln, margins)
-                || startsSpacedParagraph(lastLn, ln, pitch, margins)) _flushPara();
+            // a heading too long for its column wraps: its lines stay one heading
+            const wrapsHeading = isHead && lastIsHead && continuesWrappedHeading(lastLn, ln, margins);
+            if (!wrapsHeading && (isHead || lastIsHead || gap > mergeThreshold || startsIndentedParagraph(lastLn, ln, margins)
+                || startsSpacedParagraph(lastLn, ln, pitch, margins))) _flushPara();
           }
           _paraBuffer.push(ln);
         }
@@ -4928,13 +4936,18 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
         }
       }
     }
-    _flushPara();   // flush last paragraph at end of each page's content (or column's, when split)
+    // flush last paragraph at end of each page's content (or column's, when split)
+    if (!(carry && _paraBuffer.length && !lineEndsParagraph(_paraBuffer[_paraBuffer.length - 1], margins))) _flushPara();
   }
+
+  // Full-width visual gaps already cropped on this page (see _processLines)
+  const _pageWideGaps = [];
 
   // ── Outer per-page loop: dispatches to _processLines once (no columns
   // detected — the common case) or once per detected column region ────────
   for (let pi = 0; pi < pageData.length; pi++) {
     if (isCancelled()) break;
+    _pageWideGaps.length = 0;
 
     if (pi > 0) {
       paragraphs.push(new Paragraph({ children: [], pageBreakBefore: true }));
@@ -4978,7 +4991,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
       // (majority of the page's own lines), entirely separate from the
       // existing per-line BiDi text shaping, which is untouched.
       const ordered = pageIsRtl(lines) ? [...regions].reverse() : regions;
-      for (const region of ordered) {
+      for (const [ri, region] of ordered.entries()) {
         if (isCancelled()) break;
         const inRegion = (it) => !!it && it.x >= region.left && it.x < region.right;
         // Filter ITEMS WITHIN each line, not whole lines by their first item.
@@ -4998,8 +5011,14 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
         const colLines = linesInRegion(lines, regions, regions.indexOf(region)); // full-width lines whole
         const colRotatedItems = rotatedItems.filter(inRegion);
         const colBorderGrids  = borderGrids.filter(g => g.x >= region.left && (g.x + g.w) <= region.right);
-        await _processLines(pi, colLines, colRotatedItems, colBorderGrids, textItems, pageH);
+        // carry a paragraph into the next column only across a real gutter
+        await _processLines(pi, colLines, colRotatedItems, colBorderGrids, textItems, pageH,
+          region.gutter && ri < ordered.length - 1,
+          // column-scoped visual crops only between real gutters — a midpoint
+          // boundary on a mixed page says nothing about where a figure ends
+          region.gutter ? { x0: region.left, x1: region.right } : null);
       }
+      _flushPara(); // nothing carries past the page's last column
     }
   }
 
@@ -5255,7 +5274,11 @@ function _p2wDetectFormat(canvas) {
 //   gapRuns    — ImageRuns for inter-line gaps (replaces _p2wRenderRegions)
 //   inlineRuns — ImageRuns for inline visual regions detected via render-and-subtract
 //                (catches raster XObjects AND vector charts with low text coverage)
-async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, borderGrids, medianFontSize, ImageRun) {
+// pageWide: full-width gaps already cropped on this page — shared across the
+// page's per-column calls (see the gap loop below).
+// xRange: the column being processed (page split into columns) — the inline
+// scan below then looks only inside it.
+async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, borderGrids, medianFontSize, ImageRun, pageWide = [], xRange = null) {
   const _RENDER_DPI = 150;
   const _MAX_W_PX   = 594;    // max width in px at 96 DPI (fits A4 and Letter margins)
   const _INK_THRESH = 0.02;   // gap crop: skip if < 2% of the tightened content's own bbox is non-white
@@ -5350,7 +5373,37 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
   // Track gap canvas Y ranges so inline scanner skips them (already captured)
   const gapCanvasRanges = [];
 
-  for (const { yAbove, yBelow } of gaps) {
+  for (const gap of gaps) {
+    let { yAbove, yBelow } = gap;
+    let { x0, x1 } = gap;
+    // Column by column (x0/x1 set), a gap is only known empty in its own
+    // column. If no other column has text at that height either (and it is
+    // figure-sized, not a margin), the band is empty across the page — a figure
+    // spanning both columns: cropped full
+    // width, once per page. Otherwise the crop stays inside the column, and a
+    // column gap overlapping a full-width band already cropped keeps only the
+    // part outside it. (Cropping the full width for every column gap put the
+    // other column's text into Word as pictures — 4–6 per two-column ground-
+    // truth page — and cropping strictly per column cut a full-width figure in
+    // two; ink in the gutter was tried and missed bar charts with white gaps.)
+    if (x0 !== undefined) {
+      for (const w of pageWide) {
+        if (w.yBelow < yAbove && w.yAbove > yBelow) {
+          if (yAbove - w.yAbove >= w.yBelow - yBelow) yBelow = Math.max(yBelow, w.yAbove);
+          else yAbove = Math.min(yAbove, w.yBelow);
+        }
+      }
+      if (yAbove - yBelow <= 0) continue;
+      // a figure, not a page margin or the space between two paragraphs: ≥40 pt
+      // tall and between lines (the top/bottom sentinels are pageH and 0)
+      const figureSized = yAbove - yBelow >= 40 && gap.yAbove < pageH && gap.yBelow > 0;
+      const otherText = textItems.some(it => it.y > yBelow + 2 && it.y < yAbove - 2
+        && (it.x + (it.width || 0) <= x0 || it.x >= x1) && String(it.str || '').trim());
+      if (figureSized && !otherText) {
+        pageWide.push({ yAbove, yBelow });
+        x0 = undefined; x1 = undefined;
+      }
+    }
     const pdfTop    = yAbove - medianFontSize * 0.5;
     const pdfBottom = yBelow + medianFontSize * 1.2;
     const cyTop     = Math.max(0,             Math.round((pageH - pdfTop)    * scale));
@@ -5360,17 +5413,22 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
 
     gapCanvasRanges.push({ cyTop, cyBottom });
 
+    const cx0 = x0 === undefined ? 0 : Math.max(0, Math.round(x0 * scale));
+    const cx1 = x1 === undefined ? canvas.width : Math.min(canvas.width, Math.round(x1 * scale));
     const tmp  = document.createElement('canvas');
-    tmp.width  = canvas.width;
+    tmp.width  = cx1 - cx0;
     tmp.height = cropH;
-    tmp.getContext('2d').drawImage(canvas, 0, cyTop, canvas.width, cropH, 0, 0, canvas.width, cropH);
+    tmp.getContext('2d').drawImage(canvas, cx0, cyTop, cx1 - cx0, cropH, 0, 0, cx1 - cx0, cropH);
 
     // Density is checked AFTER tightening, over the content's own bounding
     // box — not over this padded band, which can be much larger than a
     // small graphic sitting inside a wide layout gap and would dilute a
     // real image's ink ratio below threshold (see _tightenToInk).
     const { canvas: tight, width: tightW, height: tightH, density } = _tightenToInk(tmp);
-    if (density < _INK_THRESH) {
+    // Same minimum height inline visuals already need: ink this thin is glyph
+    // fragments reaching into the gap — Amiri's dots, harakat and descenders
+    // came out as 24×14 / 86×11 px "pictures" in Arabic Word output (2026-10-02).
+    if (density < _INK_THRESH || tightH < _MIN_VIS_H_PX) {
       if (tight !== tmp) { tight.width = 0; tight.height = 0; }
       tmp.width = 0; tmp.height = 0;
       continue;
@@ -5394,7 +5452,20 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
   // ── Part 2: inline visual runs (render-and-subtract) ───────────────────────
   // Build exclusion zones in canvas Y coords: gap bands + border grid bands.
   // Strips inside these zones are skipped to avoid duplicating already-captured content.
+  // Column by column, the inline scan runs once per column: scan only this
+  // column (each call scanning the full width found a full-width figure again
+  // in every column — a duplicate picture per column), and skip full-width
+  // bands already cropped on this page by any column.
+  const sx0 = xRange ? Math.max(0, Math.round(xRange.x0 * scale)) : 0;
+  const sx1 = xRange ? Math.min(canvas.width, Math.round(xRange.x1 * scale)) : canvas.width;
+  const scanW = Math.max(1, sx1 - sx0);
   const exclusions = [...gapCanvasRanges];
+  for (const w of pageWide) {
+    exclusions.push({
+      cyTop:    Math.max(0,             Math.round((pageH - w.yAbove) * scale)),
+      cyBottom: Math.min(canvas.height, Math.round((pageH - w.yBelow) * scale)),
+    });
+  }
   for (const g of borderGrids) {
     exclusions.push({
       cyTop:    Math.max(0,             Math.round((pageH - (g.y + g.h)) * scale)),
@@ -5409,6 +5480,7 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
   const stripTextCov = new Float32Array(numStrips).fill(0);
   for (const item of textItems) {
     if (!item.width || item.width <= 0) continue;
+    if (xRange && (item.x + item.width <= xRange.x0 || item.x >= xRange.x1)) continue;
     const cyItemTop    = Math.round((pageH - (item.y + item.fontSize)) * scale);
     const cyItemBottom = Math.round((pageH - item.y)                   * scale);
     const itemW        = Math.round(item.width * scale);
@@ -5417,7 +5489,7 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
     for (let s = s0; s <= s1; s++) stripTextCov[s] += itemW;
   }
   for (let s = 0; s < numStrips; s++) {
-    stripTextCov[s] = Math.min(1, stripTextCov[s] / Math.max(1, canvas.width));
+    stripTextCov[s] = Math.min(1, stripTextCov[s] / scanW);
   }
 
   // Compute ink density per strip from the already-rendered canvas.
@@ -5436,7 +5508,7 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
     const yEnd = Math.min(canvas.height, (s + 1) * _STRIP_H);
     let ink = 0, total = 0;
     for (let y = stripTop; y < yEnd; y++) {
-      for (let x = 0; x < canvas.width; x += _INK_STEP_INL) {
+      for (let x = sx0; x < sx1; x += _INK_STEP_INL) {
         const idx = (y * canvas.width + x) * 4;
         if (px[idx] < 240 || px[idx+1] < 240 || px[idx+2] < 240) ink++;
         total++;
@@ -5460,9 +5532,9 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
     // Skip regions covering >65% of page height — background image or full-page scan.
     if (cropH >= _MIN_VIS_H_PX && cropH / canvas.height < _BG_AREA_THRESH) {
       const tmp  = document.createElement('canvas');
-      tmp.width  = canvas.width;
+      tmp.width  = scanW;
       tmp.height = cropH;
-      tmp.getContext('2d').drawImage(canvas, 0, cyTop, canvas.width, cropH, 0, 0, canvas.width, cropH);
+      tmp.getContext('2d').drawImage(canvas, sx0, cyTop, scanW, cropH, 0, 0, scanW, cropH);
 
       const { canvas: tight, width: tightW, height: tightH } = _tightenToInk(tmp);
 

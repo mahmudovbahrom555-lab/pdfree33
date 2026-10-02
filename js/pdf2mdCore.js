@@ -48,6 +48,7 @@ import { detectColumnRegions, pageIsRtl } from './pdf2wordColumns.js';
 import { BULLET_RE, NUMBERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, _splitCrossColumnLines, _isCjk,
          lineStartMargins, startsIndentedParagraph, linePitch, startsSpacedParagraph,
+         lineEndsParagraph, continuesWrappedHeading,
          joinHyphenatedLineEnd } from './textLayoutUtils.js';
 
 // Latin typographic ligatures (Unicode "Alphabetic Presentation Forms" block,
@@ -782,9 +783,13 @@ export async function _p2mdExtractText(pdfDoc, {
   // lines from two columns that _splitCrossColumnLines already separated
   // into distinct line objects would still interleave by Y the moment this
   // function walked `lines` as one flat array again.
-  const _emitLines = (lines) => {
+  // carry: this is a column with another column after it on the same page — a
+  // paragraph whose last line doesn't end like one (full width, no full stop)
+  // continues at the top of the next column instead of being cut in two.
+  const _emitLines = (lines, carry = false) => {
     const margins = lineStartMargins(lines); // first-line-indent paragraph breaks
     const pitch = linePitch(lines);          // gap vs this column's own line spacing
+    let lastHeading = null;                  // { block, ln } — for wrapped headings
     // Same text-based detector pdf2excel uses (no border-grid pass — that's
     // only worth the extra render cost in pdf2word's richer visual pipeline).
     // Filtered through looksLikeProseNotData(): two unrelated prose lists
@@ -911,6 +916,12 @@ export async function _p2mdExtractText(pdfDoc, {
       }
 
       if (isHead) {
+        if (lastHeading && blocks[blocks.length - 1] === lastHeading.block && !_paraBuffer.length
+            && continuesWrappedHeading(lastHeading.ln, ln, margins)) {
+          lastHeading.block.text += (_isCjk(rawText) ? '' : ' ') + rawText;
+          lastHeading.ln = ln;
+          continue;
+        }
         _flushPara();
         let level = 3;
         if (boldOnlyHead) {
@@ -924,7 +935,9 @@ export async function _p2mdExtractText(pdfDoc, {
           if      (maxFont >= median * 2.2) level = 1;
           else if (maxFont >= median * 1.7) level = 2;
         }
-        blocks.push({ type: 'heading', level, text: rawText });
+        const block = { type: 'heading', level, text: rawText };
+        blocks.push(block);
+        lastHeading = { block, ln };
         continue;
       }
 
@@ -947,7 +960,7 @@ export async function _p2mdExtractText(pdfDoc, {
       }
       _paraBuffer.push(ln);
     }
-    _flushPara();
+    if (!(carry && _paraBuffer.length && !lineEndsParagraph(_paraBuffer[_paraBuffer.length - 1], margins))) _flushPara();
   };
 
   // Footnote/marginal-text separation — real gap found via literature
@@ -1007,11 +1020,13 @@ export async function _p2mdExtractText(pdfDoc, {
       _emitLines(bodyLines);
     } else {
       const ordered = pageIsRtl(bodyLines) ? [...regions].reverse() : regions;
-      for (const region of ordered) {
+      ordered.forEach((region, ri) => {
         const colLines = bodyLines.filter(ln =>
           ln.items.length && ln.items[0].x >= region.left && ln.items[0].x < region.right);
-        if (colLines.length) _emitLines(colLines);
-      }
+        // carry a paragraph into the next column only across a real gutter
+        if (colLines.length) _emitLines(colLines, region.gutter && ri < ordered.length - 1);
+      });
+      _flushPara(); // nothing carries past the page's last column
     }
 
     // Emitted as its own trailing paragraph for the page, AFTER the body

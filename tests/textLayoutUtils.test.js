@@ -9,7 +9,8 @@
 
 import { strict as assert } from 'assert';
 import { joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
-  lineStartMargins, startsIndentedParagraph, linePitch, startsSpacedParagraph } from '../js/textLayoutUtils.js';
+  lineStartMargins, startsIndentedParagraph, linePitch, startsSpacedParagraph,
+  continuesWrappedHeading } from '../js/textLayoutUtils.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -257,6 +258,33 @@ test('a taller gap before a display formula does not split the sentence', () => 
 
 test('too few lines to know the pitch: the rule stays out', () => {
   assert.equal(linePitch([row(700), row(684.6), row(660)]), undefined);
+});
+
+// ── Wrapped headings: a heading too long for its column is still one heading.
+const hl = (y, str, x, width, bold = true, fontSize = 15) => ({ y, rtl: false, items: [{ str, x, width, fontSize, bold }] });
+const body = Array.from({ length: 6 }, (_, i) => hl(600 - i * 15, 'body text', 56, 228, false, 11)); // column 56–284
+
+test('a heading wrapped at the column edge continues on the next line', () => {
+  const m = lineStartMargins(body);
+  const first = hl(700, "What's the difference between", 56, 226), second = hl(679, 'Clean and Enhance mode?', 56, 190);
+  assert.equal(continuesWrappedHeading(first, second, m), true);
+});
+
+test('"Chapter 1" above "Introduction" stays two headings (the first line never reached the edge)', () => {
+  const m = lineStartMargins(body);
+  assert.equal(continuesWrappedHeading(hl(700, 'Chapter 1', 56, 70), hl(679, 'Introduction', 56, 95), m), false);
+});
+
+test('stacked labels in a narrow cell (~7 em) are not one wrapped heading', () => {
+  const cell = Array.from({ length: 6 }, (_, i) => hl(600 - i * 15, 'value', 326, 72, false, 10.6));
+  const m = lineStartMargins(cell);
+  assert.equal(continuesWrappedHeading(hl(700, 'extension', 326, 70, true, 10.6), hl(686, 'Internet', 326, 40, true, 10.6), m), false);
+});
+
+test('a heading line ending on sentence punctuation, or a different size, does not continue', () => {
+  const m = lineStartMargins(body);
+  assert.equal(continuesWrappedHeading(hl(700, 'A complete heading line of its own.', 56, 226), hl(679, 'Another', 56, 80), m), false);
+  assert.equal(continuesWrappedHeading(hl(700, "What's the difference between", 56, 226), hl(679, 'smaller', 56, 80, true, 12), m), false);
 });
 
 const total = passed + failed;

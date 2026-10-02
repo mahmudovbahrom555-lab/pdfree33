@@ -272,6 +272,13 @@ jobs:
         # of Helvetica. See tests/e2e/fill.e2e.mjs's own header comment.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:fill
 
+      - name: E2E — PDF→Word pictures on two-column pages (no column text, no glyph fragments)
+        # Column-by-column visual gaps were cropped across the whole page width,
+        # putting the other column's text into Word as pictures (39 false pictures
+        # on the Wikipedia article); a full-width figure must still come out whole
+        # and once. See the test file's header.
+        run: node tests/e2e/pdf2word-visuals.e2e.mjs
+
       - name: E2E — a hanging primary CDN falls back instead of hanging the tool
         # js/lazyLibs.js fell back from jsdelivr to unpkg only on a script ERROR;
         # on 2026-10-01 jsdelivr stopped answering (no error, no response) and
