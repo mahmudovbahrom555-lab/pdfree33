@@ -131,6 +131,7 @@ const _BIDI_MIRROR = {'(':')',')':'(','[':']',']':'[','{':'}','}':'{','<':'>','>
 // left-to-right inside RTL text, so "۱۳۹۹" drawn digit by digit must stay in order.
 const _RTL_CHAR_RE = /[\u0590-\u05FF\u0600-\u065F\u066A-\u06EF\u06FA-\u06FF\u0750-\u077F\uFB1D-\uFB4F\uFB50-\uFDFF\uFE70-\uFEFF]/;
 const _STRONG_CHAR_RE = /[\p{L}\p{N}]/u;
+const _ARABIC_MARKS_RE = /^[\u064B-\u065F\u0670]+$/;
 // Isolated/final presentation forms of the dual-joining Arabic-script letters (the
 // 4-form groups; offsets 0 and 1), derived from Unicode's own NFKC mapping. Such a
 // glyph followed, with no gap, by another letter means the join was broken on
@@ -168,13 +169,33 @@ export function reorderVisualRtlLine(items) {
   }
   if (ltrSteps <= rtlSteps) return;
 
+  // Arabic harakat (fatha, damma, shadda, tanween...) arrive as their own zero-width
+  // items. Sorted on their own they landed on the neighbouring word ("مئةً صفحة" for
+  // "مستندًا من مئة صفحة"), and their x opened false gaps ("سُ طّح"). In a visual
+  // stream each mark is drawn just before the glyph it sits on (the cluster is laid
+  // out reversed), so it joins the next glyph in stream order — space items skipped —
+  // if that glyph is within 0.5 em: ground truth 2026-10-02 29/29, Wikipedia ar 15/15.
+  // x alone can't decide: the font's mark offset puts "يُ"'s damma inside the غ before
+  // it. The glyph's own left edge is the last letter of its item, so the mark is
+  // appended there. With no glyph that close the mark's own letter is missing from
+  // the text layer (a glyph with no Unicode mapping — every such case measured, 6/6);
+  // the mark is dropped rather than put on the wrong letter, where its x also split
+  // the word ("سُ طّح" for "يُسطّح").
+  const joined = new Set();
+  items.forEach((mark, i) => {
+    if (!_ARABIC_MARKS_RE.test(mark.str)) return;
+    joined.add(mark);
+    const base = items.slice(i + 1).find(item => item.str.trim() && !_ARABIC_MARKS_RE.test(item.str));
+    if (base && Math.abs(base.x - mark.x) <= 0.5 * (mark.fontSize || 10)) base.str = (base.str + mark.str).normalize('NFC');
+  });
+
   // Right edge first: pdf.js splits a lam-alef ligature glyph into items that share
   // one left x (e.g. "ال" width 9 and "إ" width 0), and only the right edge puts
   // them in reading order. Whitespace items narrower than a word gap (that split
   // leaves near-zero-width ones) are dropped — real gaps are recovered below.
   const right = item => item.x + (item.width || 0);
   const ordered = items
-    .filter(item => item.str.trim() || item.width > item.fontSize * 0.2)
+    .filter(item => !joined.has(item) && (item.str.trim() || item.width > item.fontSize * 0.2))
     .sort((a, b) => (right(b) - right(a)) || (b.x - a.x));
   // Left-to-right runs, as in the Unicode bidi algorithm: Latin words ('L') absorb
   // neutrals between them; numbers ('N') only a lone separator ("1,234", "۱۳۹۹/۱")

@@ -165,6 +165,44 @@ test('a lam-alef ligature split into same-x items is ordered by right edge', () 
   assert.ok(lineText(items).startsWith('الإ'), lineText(items));
 });
 
+test('a zero-width haraka at a letter\'s left edge stays on that letter, not the next word', () => {
+  // ground truth ar-web: "...أو مستندًا من مئة صفحة" — Chromium splits the run at the
+  // tanween, drawn 0.3pt left of its د; sorted alone it landed in "مئةً صفحة"
+  const run = (str, x, width) => ({ str, x, width, fontSize: 11 });
+  const items = [run('ا من مئة صفحة', 62, 56.1), run('ً', 117.7, 0), run('د', 118, 5.2),
+    run('ا من صفحة واحدة أو مستن', 123.2, 97)];
+  reorderVisualRtlLine(items);
+  assert.equal(items.map(i => i.str).join(''), 'ا من صفحة واحدة أو مستندًا من مئة صفحة');
+});
+
+test('a haraka moved into a single wide glyph joins that glyph (Wikipedia ar "أيضًا")', () => {
+  // glyphs left to right: ﺎ ﻀ ﻳ ﺃ, the tanween drawn 3.7pt inside ﻀ
+  const items = [glyph('ﺎ', 303, 5), glyph('ً', 312, 0), glyph('ﻀ', 308.3, 9.4), glyph('ﻳ', 317.7, 4), glyph('ﺃ', 321.7, 4)];
+  reorderVisualRtlLine(items);
+  assert.equal(lineText(items), 'أيضًا');
+});
+
+test('a haraka offset into the previous glyph still joins the glyph drawn after it ("ويُغمّق")', () => {
+  // ground truth ar-tight: the damma of يُ is drawn at 378.5, inside غ (376.9–380.9);
+  // in the stream it comes right before its ي, as the shadda comes before its م
+  const run = (str, x, width) => ({ str, x, width, fontSize: 11 });
+  const items = [run('ق النص', 84.2, 287.6), run('ّ', 371.6, 0), run(' ', 371.8, 0), run('م', 371.8, 5.1),
+    run('غ', 376.9, 4), run('ُ', 378.5, 0), run(' ', 380.9, 0), run('ي', 380.9, 2.1), run(' ', 383, 1.8),
+    run('نقي و', 384.3, 92.4)];
+  reorderVisualRtlLine(items);
+  assert.equal(items.map(i => i.str).join(''), 'نقي ويُغمّق النص');
+});
+
+test('a haraka whose own letter is missing from the text layer is dropped, not moved', () => {
+  // ground truth ar-tight "التنظيف يُسطّح": the initial ي has no Unicode mapping (pdf.js
+  // "\0", filtered out before), so its damma is followed by the previous word, 8.6pt away
+  const run = (str, x, width) => ({ str, x, width, fontSize: 11 });
+  const items = [run('ح', 470.7, 6), run('ّ', 477.1, 0), run('ط', 476.7, 6.1), run('س', 482.8, 5.4),
+    run('ُ', 485.2, 0), run('التنظيف', 493.8, 29.5)];
+  reorderVisualRtlLine(items);
+  assert.equal(items.map(i => i.str).join(''), 'التنظيف سطّح');
+});
+
 test('a mixed line written as visual runs ("?", "PDF", one Hebrew run) is put in reading order', () => {
   // Chromium's output for "האם יש הגבלה על גודל קבצי PDF?" (ground-truth set): the
   // runs left to right, the Hebrew run itself already logical inside its item
