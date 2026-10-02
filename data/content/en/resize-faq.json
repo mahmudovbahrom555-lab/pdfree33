@@ -44,7 +44,7 @@
     "name": "Is there a limit on how many pages I can resize?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. There's no page-count or file-size limit, and no per-hour task limit. Resize a 2-page form or a 500-page report as many times as you need."
+      "text": "No page-count limit and no per-hour task limit — resize a 2-page form or a 500-page report as many times as you need. Each file can be up to 200 MB. Everything runs on your own device, so very large files are faster on a computer than on an older phone."
     }
   },
   {
@@ -84,7 +84,7 @@
     "name": "Is the PDF resize tool completely free?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. PDFree is free with no subscription, no daily or hourly limits, and no signup. No watermark is added to the output and there's no file size restriction."
+      "text": "Yes. PDFree is free with no subscription, no daily or hourly limits, and no signup. No watermark is added to the output. Each file can be up to 200 MB."
     }
   }
 ]

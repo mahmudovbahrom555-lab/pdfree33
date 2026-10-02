@@ -4,7 +4,7 @@
     "name": "Is there a file size limit for merging PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "There are no artificial paywall limits. PDFree processes files locally in your browser — no subscription required. For the best experience, keep the total batch under 300 MB; larger batches may be slower on low-memory devices."
+      "text": "Yes, one: the files in a single merge can add up to 300 MB. There is no paywall, no daily cap and no file-count limit — PDFree processes files locally in your browser, so the 300 MB ceiling protects your device's memory rather than selling an upgrade. Bigger jobs? Merge in two steps."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "How many PDF files can I merge at once?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "There is no limit. PDFree processes everything in your browser's memory, so you can merge 2, 50, or 100+ files in a single operation. For large batches (50+ files or 500MB+ total), close other browser tabs to free up RAM."
+      "text": "As many as you like — there is no file-count limit and no daily limit, so you can merge 2, 50, or 100+ files in one go. The files in a single merge can add up to 300 MB. Everything runs in your browser's memory, so very large batches are faster on a computer than on an older phone — close other tabs if it struggles."
     }
   },
   {

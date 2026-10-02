@@ -20,7 +20,7 @@
     "name": "Is there a page limit for adding page numbers?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree has no page or file size limits. The only practical constraint is your device's available memory."
+      "text": "No page limit. Each file can be up to 200 MB. The only other practical constraint is your device's available memory."
     }
   },
   {
@@ -84,7 +84,7 @@
     "name": "Is the PDF page numbering tool free?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. PDFree is completely free — no subscription, no sign up, no watermarks on the output. There are no limits on file size or number of pages."
+      "text": "Yes. PDFree is completely free — no subscription, no sign up, no watermarks on the output, no daily limit and no page limit. Each file can be up to 200 MB."
     }
   },
   {

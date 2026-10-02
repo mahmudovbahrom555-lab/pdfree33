@@ -154,7 +154,7 @@
         "bn": "ekotrito-pdf"
       },
       "titles": {
-        "en": "Merge PDF Files Free — No Size Limit, No Upload | PDFree",
+        "en": "Merge PDF Files Free — No Daily Limit, No Upload | PDFree",
         "es": "Unir PDF Gratis — Sin Límite de Tamaño, Sin Registro | PDFree",
         "pt": "Juntar PDF Grátis — Sem Upload, Sem Registo, Sem Limite | PDFree",
         "de": "PDF Dateien Zusammenfügen — Kostenlos, Kein Upload | PDFree",
@@ -176,7 +176,7 @@
         "bn": "বিনামূল্যে PDF একত্রিত করুন — কোনো সাইজ সীমা নেই | PDFree"
       },
       "descs": {
-        "en": "Combine unlimited PDF files instantly. 100% private, no uploads, no file size limits.",
+        "en": "Combine unlimited PDF files instantly. 100% private, no uploads, no daily limits.",
         "es": "Combina archivos PDF ilimitados al instante. 100% privado, sin subir archivos, sin límites de tamaño.",
         "pt": "Combine arquivos PDF ilimitados instantaneamente. 100% privado, sem uploads, sem limites.",
         "de": "PDF-Dateien kostenlos online zusammenfügen. 100 % privat — Dateien verlassen deinen Browser nie. Kein Upload, keine Registrierung, keine Limits.",
@@ -286,7 +286,7 @@
         "bn": "PDF একত্রিতকরণ"
       },
       "metaDescs": {
-        "en": "Merge PDF files free — no size limit, no daily limit, no upload. Combine large PDFs or 100+ files at once in your browser. Works offline. No signup.",
+        "en": "Merge PDF files free — no daily limit, no file-count limit, no upload. Combine 100+ PDFs (up to 300 MB per merge) in your browser. Works offline. No signup.",
         "es": "Combina varios PDFs en uno gratis — arrastra para reordenar, rango de páginas por archivo. Sin subir nada. Sin registro, sin límite de tamaño.",
         "pt": "Combine vários PDFs grátis — arraste para reordenar, defina intervalo de páginas. Sem envio ao servidor. Sem registo, sem limite de tamanho.",
         "de": "Mehrere PDFs zusammenfügen — Reihenfolge per Drag & Drop, Seitenbereich wählbar. Im Browser, kein Upload. Keine Registrierung, kein Größenlimit.",
@@ -308,7 +308,7 @@
         "bn": "বিনামূল্যে PDF ফাইল একত্রিত করুন — কোনো সাইজ সীমা নেই, আপলোড করার প্রয়োজন নেই। আপনার ব্রাউজারে কাজ করে, নিবন্ধনের প্রয়োজন নেই।"
       },
       "ogTitles": {
-        "en": "Merge PDF Free — No Size Limit, Combine Large Files, No Upload",
+        "en": "Merge PDF Free — No Daily Limit, Combine Large Files, No Upload",
         "es": "Unir Archivos PDF Gratis — Sin Límite, Sin Registro | PDFree",
         "pt": "Juntar PDF Grátis — Sem Upload, Sem Registo, Sem Limite",
         "de": "PDF Zusammenfügen Kostenlos — Beliebig viele Dateien, kein Upload",
@@ -397,7 +397,7 @@
         "ar": "taqsim-pdf"
       },
       "titles": {
-        "en": "Split PDF Free — Separate Pages Online, No Upload | PDFree",
+        "en": "Split PDF Free — Separate Pages, No Daily Limit | PDFree",
         "es": "Dividir PDF Gratis — Extraer Páginas, Sin Subir | PDFree",
         "pt": "Dividir PDF Grátis — Extrair Páginas ou por Intervalo | PDFree",
         "de": "PDF Aufteilen Kostenlos — Seiten Extrahieren | PDFree",
@@ -505,7 +505,7 @@
         "ar": "تقسيم PDF"
       },
       "metaDescs": {
-        "en": "Free PDF splitter — extract exact pages or page ranges online, no upload, no signup. All processed in your browser.",
+        "en": "Free PDF splitter — extract pages or page ranges with no daily limit and no signup. Runs in your browser, nothing uploaded. PDFs up to 200 MB.",
         "es": "Divide un PDF en archivos separados — por rango, página a página o extrae páginas específicas. Sin subir nada. Sin registro.",
         "pt": "Divida um PDF em ficheiros separados — por intervalo, cada página ou extraia páginas específicas. Sem envio ao browser. Sem registo.",
         "de": "PDF aufteilen — nach Seitenbereich, jede Seite oder bestimmte Seiten extrahieren. Im Browser, kein Upload. Keine Registrierung, sofort fertig.",
@@ -600,7 +600,7 @@
         "ar": "daght-pdf"
       },
       "titles": {
-        "en": "Compress PDF Free — Smaller Files, No Quality Loss | PDFree",
+        "en": "Compress PDF Free — No Daily Limit, No Quality Loss | PDFree",
         "es": "Comprimir PDF Gratis — Reducir Tamaño, Sin Subir | PDFree",
         "pt": "Comprimir PDF Grátis — Reduzir Tamanho, sem Upload | PDFree",
         "de": "PDF Komprimieren Kostenlos — 20–80% kleiner | PDFree",
@@ -708,7 +708,7 @@
         "ar": "ضغط PDF"
       },
       "metaDescs": {
-        "en": "Reduce PDF file size 20–80% without quality loss — free PDF compressor that runs in your browser. Nothing uploaded or stored, no signup, no limits.",
+        "en": "Reduce PDF size 20–80% without visible quality loss — free, no daily limit, no signup. Runs in your browser, nothing uploaded. Files up to 150 MB.",
         "es": "Reduce el tamaño del PDF un 20–80 % sin pérdida de calidad — compresor PDF gratuito en tu navegador. Nada subido ni almacenado, sin registro.",
         "pt": "Reduza o tamanho do PDF em 20–80 % sem perda de qualidade — compressor PDF gratuito no navegador. Nada enviado ou armazenado, sem cadastro.",
         "de": "PDF-Dateigröße um 20–80 % reduzieren — kostenloser PDF-Kompressor im Browser. Nichts hochgeladen, nichts gespeichert, keine Anmeldung, keine Limits.",
@@ -804,7 +804,7 @@
         "ar": "tadwir-pdf"
       },
       "titles": {
-        "en": "Rotate PDF Free — Fix Sideways or Upside-Down Pages | PDFree",
+        "en": "Rotate PDF Free — Fix Sideways Pages, No Daily Limit | PDFree",
         "es": "Rotar PDF Gratis — Corregir Páginas Giradas o al Revés | PDFree",
         "pt": "Girar PDF Grátis — Corrigir Orientação das Páginas | PDFree",
         "de": "PDF Drehen Kostenlos — Schräge Seiten korrigieren | PDFree",
@@ -912,7 +912,7 @@
         "ar": "تدوير PDF"
       },
       "metaDescs": {
-        "en": "Fix sideways or upside-down PDF pages — rotate 90°, 180°, or 270° free. Runs in your browser, nothing uploaded or stored. No signup, no limits.",
+        "en": "Fix sideways or upside-down PDF pages — rotate 90°, 180° or 270° free, with no daily limit and no signup. Runs in your browser, nothing uploaded.",
         "es": "Corrige páginas PDF mal orientadas — rota 90°, 180° o 270° gratis. En tu navegador, nada subido ni almacenado. Sin registro.",
         "pt": "Corrija páginas PDF viradas — gire 90°, 180° ou 270° gratuitamente. No navegador, nada enviado ou armazenado. Sem cadastro.",
         "de": "Falsch ausgerichtete PDF-Seiten sofort korrigieren — 90°, 180° oder 270° drehen, kostenlos. Im Browser, nichts hochgeladen oder gespeichert. Keine Anmeldung.",
@@ -1007,7 +1007,7 @@
         "ar": "tartib-pdf"
       },
       "titles": {
-        "en": "Organize PDF Free — Reorder, Delete & Rotate Pages | PDFree",
+        "en": "Organize PDF Pages Free — No Daily Limit, No Upload | PDFree",
         "es": "Organizar PDF Gratis — Reordenar, Eliminar, Rotar | PDFree",
         "pt": "Organizar PDF Grátis — Reordenar, Excluir, Girar | PDFree",
         "de": "PDF Organisieren Kostenlos — Seiten sortieren, löschen | PDFree",
@@ -1115,7 +1115,7 @@
         "ar": "ترتيب PDF"
       },
       "metaDescs": {
-        "en": "Reorder, delete, and rotate PDF pages by dragging thumbnails — free. Runs in your browser, nothing uploaded or stored. No signup, no limits.",
+        "en": "Reorder, delete and rotate PDF pages by dragging thumbnails — free, no daily limit, no signup. Runs in your browser, nothing uploaded. Files up to 200 MB.",
         "es": "Reordena, elimina y rota páginas PDF arrastrando miniaturas — gratis. En tu navegador, nada subido ni almacenado. Sin registro.",
         "pt": "Reordene, exclua e gire páginas PDF arrastando miniaturas — grátis. No navegador, nada enviado ou armazenado. Sem cadastro.",
         "de": "PDF-Seiten per Drag & Drop neu anordnen, löschen und drehen — kostenlos. Im Browser, nichts hochgeladen oder gespeichert. Keine Anmeldung.",
@@ -2837,7 +2837,7 @@
         "ar": "istikhraj-pdf"
       },
       "titles": {
-        "en": "Extract Pages from PDF Free — Pick Any Pages or Range | PDFree",
+        "en": "Extract Pages from PDF Free — No Daily Limit, No Upload | PDFree",
         "es": "Extraer Páginas de PDF Gratis — Cualquier Página | PDFree",
         "pt": "Extrair Páginas de PDF Grátis — Qualquer Página | PDFree",
         "de": "Seiten aus PDF Extrahieren — Kostenlos, Kein Upload | PDFree",
@@ -2945,7 +2945,7 @@
         "ar": "استخراج صفحات PDF"
       },
       "metaDescs": {
-        "en": "Save any pages or page range from a PDF as a new file. Runs in your browser — files never leave your device, never stored on any server. No signup.",
+        "en": "Save any pages or page range from a PDF as a new file — free, no daily limit, no signup. Runs in your browser; files never leave your device. Up to 200 MB.",
         "es": "Guarda cualquier página o rango de páginas de un PDF como nuevo archivo. En el navegador — los archivos nunca salen de tu dispositivo. Sin registro.",
         "pt": "Salve qualquer página ou intervalo de páginas de um PDF como novo arquivo. No navegador — os arquivos nunca saem do seu dispositivo. Sem cadastro.",
         "de": "Beliebige Seiten oder Seitenbereiche als neue PDF-Datei speichern. Im Browser — Dateien verlassen dein Gerät nie, werden nirgends gespeichert. Keine Anmeldung.",
@@ -3243,7 +3243,7 @@
         "ar": "jpg-ila-pdf"
       },
       "titles": {
-        "en": "JPG to PDF Free — Convert Images to PDF, No Upload | PDFree",
+        "en": "JPG to PDF Free — No Daily Limit, No Upload | PDFree",
         "es": "JPG a PDF Gratis — Combinar Imágenes en PDF, sin Subir | PDFree",
         "pt": "JPG para PDF Grátis — Combinar Imagens num PDF | PDFree",
         "de": "JPG zu PDF Kostenlos — Bilder kombinieren, Kein Upload | PDFree",
@@ -3351,7 +3351,7 @@
         "ar": "JPG إلى PDF"
       },
       "metaDescs": {
-        "en": "Convert JPG, PNG and WebP images to PDF free — no upload, processed in your browser. Combine multiple photos into one PDF instantly. Works offline.",
+        "en": "Convert JPG, PNG and WebP images to PDF free — no daily limit, no image-count limit, no upload. Combine many photos into one PDF in your browser.",
         "es": "Convierte JPG, PNG o WebP en un PDF gratis — arrastra para reordenar, ajusta tamaño. Funciona en tu navegador, sin subir archivos. Sin registro.",
         "pt": "Converta imagens JPG, PNG ou WebP em PDF grátis — arraste para reordenar, redimensione. Funciona no browser, sem envio. Sem registo.",
         "de": "JPG, PNG oder WebP-Bilder in ein PDF umwandeln — Reihenfolge per Drag & Drop, Größe anpassen. Im Browser, kein Upload. Keine Registrierung.",
@@ -3446,7 +3446,7 @@
         "ar": "pdf-ila-jpg"
       },
       "titles": {
-        "en": "Convert PDF to JPG Free — No Upload, 300 DPI | PDFree",
+        "en": "Convert PDF to JPG Free — No Daily Limit, 300 DPI | PDFree",
         "es": "Convertir PDF a JPG Gratis — Alta Calidad, sin Subir | PDFree",
         "pt": "PDF para JPG Grátis — Alta Qualidade, sem Upload | PDFree",
         "de": "PDF in JPG Umwandeln — Kostenlos, 300 DPI, Kein Upload | PDFree",
@@ -3554,7 +3554,7 @@
         "ar": "PDF إلى JPG"
       },
       "metaDescs": {
-        "en": "Convert PDF pages to JPG or PNG in your browser — no upload ever. Choose 72, 150, or 300 DPI. Multiple pages export as a ZIP. Works offline, no account.",
+        "en": "Convert PDF pages to JPG or PNG in your browser — free, no daily limit, no upload. Choose 72, 150 or 300 DPI; many pages export as a ZIP. Works offline.",
         "es": "Convierte páginas PDF a imágenes JPG gratis — elige 72, 150 o 300 DPI. Funciona en tu navegador, sin subir archivos. Sin registro, sin marca de agua.",
         "pt": "Converta páginas PDF em JPG grátis — escolha 72, 150 ou 300 DPI. Sem envio ao browser. Sem registo, sem marca d'água, download instantâneo.",
         "de": "PDF-Seiten in JPG umwandeln — 72, 150 oder 300 DPI. Im Browser, kein Upload. Keine Registrierung, kein Wasserzeichen, sofortiger Download.",
@@ -4259,7 +4259,7 @@
         "ar": "pdf-ila-word"
       },
       "titles": {
-        "en": "Convert PDF to Word Without Uploading — Free & Private | PDFree",
+        "en": "Convert PDF to Word Free — No Daily Limit, No Upload | PDFree",
         "de": "PDF in Word Umwandeln — Bearbeitbares DOCX, Kein Upload | PDFree",
         "es": "Convertir PDF a Word Gratis — DOCX Editable, sin Subir | PDFree",
         "fr": "PDF en Word Gratuit — DOCX Éditable, sans Envoi | PDFree",
@@ -4367,7 +4367,7 @@
         "ar": "PDF إلى Word"
       },
       "metaDescs": {
-        "en": "Convert PDF to Word (.docx) in your browser — nothing uploaded, nothing stored. Tables, RTL text, and 15+ languages supported.",
+        "en": "Convert PDF to Word (.docx) free — no daily limit, no signup, nothing uploaded. Tables, RTL text and 15+ languages. PDFs up to 150 MB, in your browser.",
         "de": "PDF in Word umwandeln — Layout, Schriften und Tabellen bleiben erhalten. Im Browser, kein Upload. Keine Registrierung, sofortiger DOCX-Download.",
         "es": "Convierte PDF a Word editable gratis — mantiene diseño, fuentes y tablas. Sin subir archivos. Sin registro, descarga DOCX instantánea.",
         "fr": "Convertissez un PDF en Word éditable gratuitement — mise en page, polices et tableaux préservés. Aucun envoi. Sans inscription, DOCX instantané.",
@@ -4462,7 +4462,7 @@
         "ar": "pdf-ila-excel"
       },
       "titles": {
-        "en": "Convert PDF to Excel Without Uploading — Free & Private | PDFree",
+        "en": "Convert PDF to Excel Free — No Daily Limit, No Upload | PDFree",
         "de": "PDF zu Excel Konvertieren — Kostenlos & Privat | PDFree",
         "es": "Convertir PDF a Excel Sin Subir Archivos — Gratis | PDFree",
         "fr": "Convertir PDF en Excel — Gratuit, Sans Envoi | PDFree",
@@ -4570,7 +4570,7 @@
         "ar": "PDF→Excel"
       },
       "metaDescs": {
-        "en": "Convert PDF to Excel free — tables become separate .xlsx sheets. Runs in your browser, nothing uploaded or stored on any server. No account, no limits.",
+        "en": "Convert PDF to Excel free — tables become .xlsx sheets. No daily limit, no account, nothing uploaded: it runs in your browser. PDFs up to 150 MB.",
         "de": "PDF in Excel umwandeln — Tabellen werden zu separaten Tabellenblättern in einer echten .xlsx-Datei. Im Browser, nichts hochgeladen. Kein Konto.",
         "es": "Convertir PDF a Excel gratis — las tablas detectadas se convierten en hojas separadas en un .xlsx real. En el navegador, nada subido ni almacenado. Sin cuenta.",
         "fr": "Convertir PDF en Excel gratuitement — les tableaux deviennent des feuilles séparées dans un vrai fichier .xlsx. Rien téléchargé ni stocké. Sans compte.",
@@ -5950,15 +5950,15 @@
       "swUpdateLater": "Later",
       "seoH2": "The best free PDF tool for security and privacy",
       "seoP1": "PDFree is designed to provide professional-grade PDF manipulation without the risks associated with cloud uploads. When you use our tools, the processing happens directly inside your web browser using WebAssembly. This means your sensitive documents, such as legal contracts, financial reports, or personal ID scans, are never transmitted over the internet.",
-      "seoP2": "We believe essential tools should be accessible to everyone. That's why PDFree has absolutely no file size limits, no daily usage caps, and no mandatory watermarks. It is a completely free, unlimited utility built for students, professionals, and anyone who values digital privacy.",
+      "seoP2": "We believe essential tools should be accessible to everyone. That's why PDFree has no daily usage caps, no signup and no mandatory watermarks. It is a completely free utility built for students, professionals, and anyone who values digital privacy. Files are processed on your own device, so the largest file a tool accepts (150–300 MB for most) and how fast it runs depend on the tool and on your device's memory.",
       "faqTitle": "Frequently Asked Questions",
       "faqQ1": "Are my files stored on your servers?",
       "faqA1": "No. PDFree operates entirely on your device (client-side). We don't have servers that process your files, which guarantees 100% privacy.",
       "faqQ2": "Is there a limit to the file size or number of pages?",
       "faqA2": "No, there are no artificial limits. The only limitation is the RAM (memory) available on your computer or smartphone.",
       "whySectionTitle": "Why use PDFree instead of other PDF tools?",
-      "whyNoSizeLimit": "No file size limit",
-      "whyNoSizeLimitDesc": "Merge, compress or convert PDF files of any size — 500 MB, 1 GB, no restrictions.",
+      "whyNoSizeLimit": "No daily limit",
+      "whyNoSizeLimitDesc": "Use every tool as often as you like — no task caps, no paywall. Most tools take files up to 150–200 MB; very large files run faster on a computer than on an older phone.",
       "whyNoUpload": "Files never leave your device",
       "whyNoUploadDesc": "Everything runs in your browser. No upload, no server, no data exposure — works offline too.",
       "whyNoAccount": "No account required",

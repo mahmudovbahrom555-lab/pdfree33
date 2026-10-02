@@ -28,7 +28,7 @@
     "name": "Is there a page limit for conversion?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. There are no page count or file size limits. Very large PDFs (100+ pages at 300 DPI) may take longer to process. For best results with large files, close other browser tabs before converting."
+      "text": "No page-count limit. Each PDF can be up to 100 MB. Very large PDFs (100+ pages at 300 DPI) may take longer to process, since conversion runs on your own device — for best results with large files, close other browser tabs before converting."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Is the PDF to JPG converter completely free?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. PDFree is free with no subscription, no signup, and no watermarks on the output. There are no daily limits or file size restrictions."
+      "text": "Yes. PDFree is free with no subscription, no signup, and no watermarks on the output. There are no daily limits. Each PDF can be up to 100 MB."
     }
   },
   {

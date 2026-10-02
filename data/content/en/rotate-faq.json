@@ -20,7 +20,7 @@
     "name": "Is there a file size limit for rotating PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. There are no file size or page count limits."
+      "text": "Yes — each PDF can be up to 150 MB. There is no page-count limit and no daily limit. Everything runs on your own device, so very large files are faster on a computer than on an older phone."
     }
   },
   {

@@ -44,7 +44,7 @@
     "name": "Is there a limit on how many pages I can extract?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. You can extract any number of pages from a PDF of any size, as long as your browser has enough memory to hold the file."
+      "text": "No page-count limit — extract any number of pages, as often as you like. The PDF can be up to 200 MB. Everything runs on your own device, so very large files are faster on a computer than on an older phone."
     }
   },
   {

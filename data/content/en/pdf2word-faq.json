@@ -68,7 +68,7 @@
     "name": "What is the maximum file size?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "There is no hard limit. However, very large PDFs (100+ MB) may take longer and require more memory. For best results keep files under 100 MB in text mode and under 50 MB in image mode at 300 DPI."
+      "text": "150 MB per PDF, and image mode converts up to 500 pages. Very large PDFs (100+ MB) take longer and need more memory, since conversion runs on your own device — for best results keep files under 100 MB in text mode and under 50 MB in image mode at 300 DPI."
     }
   },
   {

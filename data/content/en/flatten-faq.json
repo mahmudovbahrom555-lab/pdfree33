@@ -76,7 +76,7 @@
     "name": "Can I flatten multiple PDF files at once?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. PDFree's batch mode flattens form fields and annotations across as many PDF files as you select, processing each one locally in your browser. Download all the flattened files together as a ZIP — no size cap, no signup required."
+      "text": "Yes. PDFree's batch mode flattens form fields and annotations across as many PDF files as you select, processing each one locally in your browser. Download all the flattened files together as a ZIP — no daily limit, no signup required. Each file in a batch can be up to 150 MB."
     }
   },
   {

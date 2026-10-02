@@ -12,7 +12,7 @@
     "name": "Is there a file size limit?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree has no file size or image count limits."
+      "text": "Each image can be up to 50 MB. There is no limit on how many images you combine and no daily limit. Everything runs on your own device, so very large files are faster on a computer than on an older phone."
     }
   },
   {
