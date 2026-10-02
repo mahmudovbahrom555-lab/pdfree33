@@ -243,6 +243,46 @@ export function reorderVisualRtlLine(items) {
   items.splice(0, items.length, ...ordered);
 }
 
+// One line's items as runs: neighbours less than 0.6 em apart — a word, or the
+// words of one table cell — become one item carrying the run's text; a wider gap
+// (between cells) or a table rule between them (`cuts`: the rules' x positions)
+// starts a new run. Each run is put in reading order on its own: Chromium writes
+// a table row's cells in logical order but each cell's runs in visual order, so
+// one vote over the whole row read "ورق طباعة A4" as "A4 ورق طباعة". Table code
+// assigns items to cells and joins a cell's items with spaces, which turned
+// Chromium-printed Persian, one glyph per item, into "ل ک ع م ج" for "جمع کل"
+// (table ground truth 2026-10-02). A gap over 0.2 em becomes a space unless
+// either side already has one (reorderVisualRtlLine adds them on visual text).
+const _CUT_SLACK = 2; // pt — a rule drawn against a cell's text still separates
+const _right = item => item.x + (item.width || 0);
+export function lineRuns(items, cuts = []) {
+  const segments = [];
+  let segRight = -Infinity;
+  for (const item of [...items].sort((a, b) => a.x - b.x)) {
+    const em = item.fontSize || 10;
+    const ruled = cuts.some(c => c > segRight - _CUT_SLACK && c < item.x + _CUT_SLACK);
+    if (!segments.length || item.x - segRight >= 0.6 * em || ruled) segments.push([]);
+    segments[segments.length - 1].push(item);
+    segRight = Math.max(segments[segments.length - 1].length > 1 ? segRight : -Infinity, _right(item));
+  }
+  return segments.map(seg => {
+    if (seg.some(item => _RTL_CHAR_RE.test(item.str))) reorderVisualRtlLine(seg);
+    let str = seg[0].str;
+    for (let k = 1; k < seg.length; k++) {
+      const a = seg[k - 1], b = seg[k];
+      const gap = Math.max(b.x - _right(a), a.x - _right(b));
+      const em = Math.max(a.fontSize || 0, b.fontSize || 0) || 10;
+      str += (gap > 0.2 * em && !a.str.endsWith(' ') && !b.str.startsWith(' ') ? ' ' : '') + b.str;
+    }
+    const x = Math.min(...seg.map(item => item.x));
+    return {
+      ...seg[0], str, x, width: Math.max(...seg.map(_right)) - x,
+      fontSize: Math.max(...seg.map(item => item.fontSize || 0)) || seg[0].fontSize,
+      bold: seg.every(item => item.bold),
+    };
+  });
+}
+
 // Arabic presentation forms (U+FB50–FDFF, U+FE70–FEFE: the shaped isolated/initial/
 // medial/final glyph codes many fonts map their glyphs to) → the plain letters they
 // stand for. They display fine, but Word, search, spell-check and screen readers

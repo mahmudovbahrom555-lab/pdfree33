@@ -59,6 +59,20 @@ test('отрицательное число парсится корректно'
   expect(_p2eCellValue('-42')).toEqual({ value: -42 });
 });
 
+test('арабско-индийские цифры с ٬ и ٫ становятся тем же Number', () => {
+  expect(_p2eCellValue('١٬٤٥٠٫٠٠')).toEqual({ value: 1450 });
+  expect(_p2eCellValue('١٢')).toEqual({ value: 12 });
+});
+
+test('персидские цифры становятся Number', () => {
+  expect(_p2eCellValue('۱۸٫۵۰')).toEqual({ value: 18.5 });
+});
+
+test('текст с арабскими цифрами остаётся исходным текстом', () => {
+  expect(_p2eCellValue('فاتورة رقم ١٠٤٢')).toEqual({ value: 'فاتورة رقم ١٠٤٢' });
+  expect(_p2eCellValue('٢٠٢٦/٠٩/١٤')).toEqual({ value: '٢٠٢٦/٠٩/١٤' });
+});
+
 // ── _p2eCellValue: проценты ────────────────────────────────
 console.log('\n_p2eCellValue — проценты:');
 

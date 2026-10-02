@@ -36,6 +36,7 @@ import { chromium } from 'playwright';
 import JSZip from 'jszip';
 import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { PRESENTATION_FORM, convertOnToolPage, tokens } from './gtCommon.mjs';
 
 const args = process.argv.slice(2);
 const base = (args.find(a => /^https?:/.test(a)) || 'http://localhost:8934').replace(/\/$/, '');
@@ -45,13 +46,6 @@ const tool = fromDir ? `docx files in ${fromDir}` : args.includes('--tool') ? ar
 if (!fromDir && !['pdf2md', 'pdf2word'].includes(tool)) throw new Error(`unknown --tool ${tool}`);
 const DIR = new URL('../../tests/corpus/groundtruth/', import.meta.url);
 const PDFJS = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-
-const CJK = '\\u3040-\\u30ff\\u3400-\\u4dbf\\u4e00-\\u9fff\\uac00-\\ud7af\\uf900-\\ufaff';
-const TOKEN = new RegExp(`[${CJK}]|[^\\s\\p{P}\\p{S}${CJK}]+`, 'gu');
-// Marks (harakat, niqqud) and tatweel ignored — optional diacritics, not words;
-// same tokens as the generator's MuPDF oracle check.
-const tokens = text => (text.normalize('NFKC').toLowerCase().replace(/\u200c/g, ' ')
-  .replace(/[\p{Mn}\u0640]/gu, '').match(TOKEN) || []);
 
 // LCS alignment: map[i] = index in `b` matched to a[i], or -1.
 function align(a, b) {
@@ -118,7 +112,6 @@ function score(truth, out) {
   };
 }
 
-const PRESENTATION_FORM = /[\uFB50-\uFDFF\uFE70-\uFEFE]/g;
 const RTL_LETTER = /[\u0590-\u05FF\u0600-\u06FF\uFB1D-\uFDFF\uFE70-\uFEFE]/;
 const xmlText = x => x.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
   .replace(/&apos;/g, "'").replace(/&amp;/g, '&');
@@ -156,42 +149,8 @@ await page.evaluate(() => {
   window.pdfjsLib.GlobalWorkerOptions.workerSrc = new URL('/js/vendor/pdf.worker.min.js', location.origin).toString();
 });
 
-// pdf2word: the real tool page — upload, Convert, catch the .docx it downloads.
-// jsdelivr is refused outright so the Word library comes straight from the
-// fallback CDN: this measures conversion quality, and a slow or hanging primary
-// CDN would only add minutes (CDN fallback has its own test, cdn-fallback.e2e.mjs).
-async function pdf2wordDocx(pdfPath) {
-  const ctx = await browser.newContext({ serviceWorkers: 'block' });
-  await ctx.route('**://cdn.jsdelivr.net/**', route => route.abort());
-  const tab = await ctx.newPage();
-  await tab.addInitScript(() => {
-    const orig = URL.createObjectURL.bind(URL);
-    URL.createObjectURL = blob => { if (blob instanceof Blob) window.__blob = blob; return orig(blob); };
-  });
-  await tab.goto(base + '/pdf-to-word/', { waitUntil: 'load' });
-  await tab.setInputFiles('#fileInput', pdfPath);
-  // the button enables before the page analysis ends, and a click while
-  // "Analysing PDF…" shows is swallowed — wait for both
-  await tab.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled
-    && !/Analys/.test(document.querySelector('#toast')?.textContent || '')
-    && /Output mode/.test(document.querySelector('#pdf2wordOptions')?.textContent || ''), null, { timeout: 60000 });
-  await tab.evaluate(() => { window.__blob = null; });
-  await tab.click('#mergeBtn');
-  await tab.waitForFunction(() => window.__blob && /officedocument/.test(window.__blob.type), null, { timeout: 90000 })
-    .catch(async () => {
-      const state = await tab.evaluate(() => [document.querySelector('#toast')?.textContent,
-        document.querySelector('#progressLabel')?.textContent].map(x => (x || '').trim()).join(' | '));
-      throw new Error(`${pdfPath}: no .docx within 90s (toast | progress: ${state})`);
-    });
-  const b64 = await tab.evaluate(async () => {
-    const buf = new Uint8Array(await window.__blob.arrayBuffer());
-    let s = '';
-    for (let i = 0; i < buf.length; i += 0x8000) s += String.fromCharCode(...buf.subarray(i, i + 0x8000));
-    return btoa(s);
-  });
-  await ctx.close();
-  return b64;
-}
+// pdf2word: the real tool page (see convertOnToolPage)
+const PDF2WORD = { slug: 'pdf-to-word', panel: '#pdf2wordOptions', ready: /Output mode/, mime: /officedocument/ };
 
 const rows = [];
 let skipped = 0;
@@ -203,7 +162,7 @@ for (const { name, truth } of docs) {
     if (!existsSync(file)) { skipped++; continue; }
     ({ blocks: out, rtl } = await docxBlocks(readFileSync(file).toString('base64')));
   } else if (tool === 'pdf2word') {
-    ({ blocks: out, rtl } = await docxBlocks(await pdf2wordDocx(fileURLToPath(pdfPath))));
+    ({ blocks: out, rtl } = await docxBlocks(await convertOnToolPage(browser, base, PDF2WORD, fileURLToPath(pdfPath))));
   } else {
     out = await page.evaluate(async (b64) => {
       const data = Uint8Array.from(atob(b64), c => c.charCodeAt(0));

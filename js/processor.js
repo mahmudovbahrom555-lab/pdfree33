@@ -27,6 +27,7 @@ import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PR
          detectColumnGutter, reconcileColumnSplit, ereaderSampleIndices } from './ereaderCrop.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, toArabicBaseLetters, _splitCrossColumnLines, _isCjk,
+         lineRuns,
          lineStartMargins, startsIndentedParagraph, linePitch, startsSpacedParagraph,
          lineEndsParagraph, continuesWrappedHeading } from './textLayoutUtils.js';
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
@@ -2911,13 +2912,14 @@ async function _p2eExtractTables(pdfDoc) {
     const rtlVisual = rtlItemsAreVisual(content.items);
     const items = content.items
       .filter(item => 'str' in item && item.str.split(' ').join('').trim())
-      .map(item => {
+      .map((item, seq) => {
         const fam = (content.styles[item.fontName]?.fontFamily || '').toLowerCase();
         return {
-          str: toArabicBaseLetters((item.dir === 'rtl' && rtlVisual) ? _visualRTLToLogical(item.str) : item.str)
-            .split(' ').join(''),
+          seq,      // content-stream order — see reorderVisualRtlLine
+          str: ((item.dir === 'rtl' && rtlVisual) ? _visualRTLToLogical(item.str) : item.str).split(' ').join(''),
           x: item.transform[4],
           y: item.transform[5],
+          width: item.width || 0,
           fontSize: (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10,
           bold: _isFontBold(item.fontName) || BOLD_FONT_NAME_RE.test(fam),
         };
@@ -2928,6 +2930,17 @@ async function _p2eExtractTables(pdfDoc) {
     if (!lines.length) { pagesWithNoText++; page.cleanup?.(); continue; }
 
     const grids = await detectTableGrids(page).catch(() => []);
+    // An RTL line is read in runs, each in its reading order with harakat on
+    // their letters, never across a table rule (lineRuns): cells joined item by
+    // item came out reversed and letter-spaced for Chromium-printed Persian
+    // ("ل ک ع م ج"; table ground truth 2026-10-02). Presentation forms → letters
+    // last: the reorder reads them.
+    const cuts = grids.flatMap(g => g.colXs);
+    for (const ln of lines) {
+      if (ln.items.some(it => _isRtl(it.str))) {
+        ln.items = lineRuns(ln.items, cuts).map(run => ({ ...run, str: toArabicBaseLetters(run.str) }));
+      }
+    }
     const pageResult = _p2eExtractPage(lines, grids, p);
     tables.push(...pageResult.tables);
     textRows.push(...pageResult.textRows);
@@ -3063,8 +3076,14 @@ export function _p2eConfidence({ tables, totalPages, pagesWithNoText }) {
 //     deliberately left as text — JS's Date parser assumes MM/DD/YYYY
 //     regardless of the source locale, so guessing would risk silently
 //     swapping day and month rather than just failing to format.
+//   • Arabic-Indic / Persian digits with their own separators (٬ thousands,
+//     ٫ decimal) read as the same numbers — "١٬٤٥٠٫٠٠" is 1450, so a column of
+//     them sums (table ground truth 2026-10-02: 0% of such cells were numbers)
+const _NATIVE_DIGIT_RE = /[\u0660-\u0669\u06F0-\u06F9]/g;
 export function _p2eCellValue(str) {
-  const s = (str ?? '').trim();
+  const s = (str ?? '').trim()
+    .replace(_NATIVE_DIGIT_RE, d => String(d.charCodeAt(0) & 0xF))
+    .replace(/\u066C/g, ',').replace(/\u066B/g, '.');
   if (!s) return { value: str };
 
   if (/^-?\d{1,3}(,\d{3})*(\.\d+)?%$/.test(s) || /^-?\d+(\.\d+)?%$/.test(s)) {

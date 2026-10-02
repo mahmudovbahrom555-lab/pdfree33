@@ -18,6 +18,7 @@
     "corpus:diff:pdf2md": "node scripts/corpus-diff/run.mjs --tool pdf2md --out corpus-diff-pdf2md && python3 scripts/corpus-diff/check.py corpus-diff-pdf2md",
     "corpus:groundtruth": "node scripts/corpus-diff/groundtruth.mjs",
     "corpus:groundtruth:word": "node scripts/corpus-diff/groundtruth.mjs --tool pdf2word",
+    "corpus:groundtruth:tables": "node scripts/corpus-diff/groundtruth-tables.mjs",
     "test:e2e:mobile-sticky-overlap": "node tests/e2e/mobile-sticky-overlap.e2e.mjs",
     "test:e2e:embed-sdk": "node tests/e2e/embed-sdk.e2e.mjs",
     "test:e2e:mobile-merge-golden-path": "node tests/e2e/mobile-merge-golden-path.e2e.mjs",

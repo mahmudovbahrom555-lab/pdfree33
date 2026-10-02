@@ -10,7 +10,7 @@
 import { strict as assert } from 'assert';
 import { joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
   lineStartMargins, startsIndentedParagraph, linePitch, startsSpacedParagraph,
-  continuesWrappedHeading } from '../js/textLayoutUtils.js';
+  continuesWrappedHeading, lineRuns } from '../js/textLayoutUtils.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -232,6 +232,30 @@ test('a jump across a column gutter does not vote on the line\'s direction', () 
   // tested glues these two words)
   const text = items.map(i => i.str).join('');
   assert.ok(/^الأختام مئة صفحة ?كلما احتجت\.$/.test(text), text);
+});
+
+// ── lineRuns: table code joins a cell's items with spaces, so an RTL line goes
+// to it as runs (table ground truth 2026-10-02).
+test('glyph-per-item Persian becomes one run per cell, in reading order', () => {
+  // "جمع کل" drawn left to right one glyph per item: ل ک | ع م ج
+  const items = [glyph('ل', 0), glyph('ک', 5), glyph('ع', 13), glyph('م', 18), glyph('ج', 23)]
+    .map((it, seq) => ({ ...it, seq }));
+  const runs = lineRuns(items);
+  assert.equal(runs.length, 1);
+  assert.equal(runs[0].str.normalize('NFKC'), 'جمع کل');
+});
+
+test('each cell of a row is read on its own: cells in logical order, a cell\'s runs visual', () => {
+  // Chromium: the row's cells right to left, "ورق طباعة A4" inside its cell left to right
+  const run = (str, x, width, seq) => ({ str, x, width, seq, fontSize: 10 });
+  const items = [run('A4', 200, 10, 1), run('ورق طباعة', 213, 40, 2), run('12', 150, 10, 3), run('18.50', 100, 20, 4)];
+  assert.deepEqual(lineRuns(items).map(r => r.str), ['18.50', '12', 'ورق طباعة A4']);
+});
+
+test('a table rule between two close items keeps them in separate runs', () => {
+  const run = (str, x, width) => ({ str, x, width, fontSize: 10 });
+  assert.equal(lineRuns([run('أ', 100, 5), run('ب', 109, 5)], [107]).length, 2);
+  assert.equal(lineRuns([run('أ', 100, 5), run('ب', 109, 5)]).length, 1);
 });
 
 test('a stream already running right-to-left (logical) is left untouched', () => {

@@ -1,0 +1,153 @@
+{
+ "lang": "en",
+ "dir": "ltr",
+ "layout": "plain",
+ "digits": "latn",
+ "oracleRecall": 1,
+ "title": "Invoice No. 1042",
+ "note": "All amounts in USD.",
+ "rows": [
+  [
+   "Item",
+   "Qty",
+   "Unit price",
+   "Total",
+   "Date"
+  ],
+  [
+   "A4 printing paper",
+   "12",
+   "18.50",
+   "222.00",
+   "2026-09-14"
+  ],
+  [
+   "Black printer ink",
+   "10",
+   "145.00",
+   "1,450.00",
+   "2026-09-14"
+  ],
+  [
+   "Plastic folders",
+   "40",
+   "2.75",
+   "110.00",
+   "2026-09-15"
+  ],
+  [
+   "Desk stapler",
+   "5",
+   "32.00",
+   "160.00",
+   "2026-09-15"
+  ],
+  [
+   "Blue ballpoint pens",
+   "24",
+   "1.25",
+   "30.00",
+   "2026-09-18"
+  ],
+  [
+   "Scientific calculator",
+   "2",
+   "89.90",
+   "179.80",
+   "2026-09-21"
+  ],
+  [
+   "Clear adhesive tape",
+   "18",
+   "4.40",
+   "79.20",
+   "2026-09-21"
+  ],
+  [
+   "Large A4 mailing envelopes with an adhesive strip",
+   "100",
+   "0.85",
+   "85.00",
+   "2026-09-22"
+  ],
+  [
+   "Total",
+   "",
+   "",
+   "2,316.00",
+   ""
+  ]
+ ],
+ "values": [
+  [
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  [
+   null,
+   12,
+   18.5,
+   222,
+   null
+  ],
+  [
+   null,
+   10,
+   145,
+   1450,
+   null
+  ],
+  [
+   null,
+   40,
+   2.75,
+   110,
+   null
+  ],
+  [
+   null,
+   5,
+   32,
+   160,
+   null
+  ],
+  [
+   null,
+   24,
+   1.25,
+   30,
+   null
+  ],
+  [
+   null,
+   2,
+   89.9,
+   179.8,
+   null
+  ],
+  [
+   null,
+   18,
+   4.4,
+   79.2,
+   null
+  ],
+  [
+   null,
+   100,
+   0.85,
+   85,
+   null
+  ],
+  [
+   null,
+   null,
+   null,
+   2316,
+   null
+  ]
+ ]
+}
