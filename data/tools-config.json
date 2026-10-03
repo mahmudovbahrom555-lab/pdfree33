@@ -5955,7 +5955,7 @@
       "faqQ1": "Are my files stored on your servers?",
       "faqA1": "No. PDFree operates entirely on your device (client-side). We don't have servers that process your files, which guarantees 100% privacy.",
       "faqQ2": "Is there a limit to the file size or number of pages?",
-      "faqA2": "No, there are no artificial limits. The only limitation is the RAM (memory) available on your computer or smartphone.",
+      "faqA2": "There are no daily limits and no page limits. File size is capped only to protect your device's memory: most tools take files up to 150–200 MB, and merge, split and compress up to 500 MB on a computer with 8 GB+ memory.",
       "whySectionTitle": "Why use PDFree instead of other PDF tools?",
       "whyNoSizeLimit": "No daily limit",
       "whyNoSizeLimitDesc": "Use every tool as often as you like — no task caps, no paywall. Most tools take files up to 150–200 MB; merge, split and compress up to 500 MB on a computer with 8 GB+ memory.",

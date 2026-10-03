@@ -30,7 +30,7 @@
   ">
 
   <title>Merge PDF Without Uploading — 100% Private, Free | PDFree</title>
-  <meta name="description" content="Merge PDF files without uploading to any server. All processing happens in your browser — files never leave your device. Free, no signup, no file size limits.">
+  <meta name="description" content="Merge PDF files without uploading to any server. All processing happens in your browser — files never leave your device. Free, no signup, no daily limits.">
 
   <meta property="og:title"       content="Merge PDF Without Uploading to Server | PDFree">
   <meta property="og:description" content="Merge PDFs entirely in your browser. Files never uploaded, never stored. Free, private, no limits.">
@@ -92,7 +92,7 @@
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "featureList": [
       "No file upload — files never leave your device",
-      "No file size limits",
+      "No daily limits",
       "No account required",
       "Works offline",
       "GDPR and HIPAA safe by design"
@@ -185,7 +185,7 @@
         "name": "Is there a file size limit for merging PDFs without uploading?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. PDFree has no file size limits because processing happens locally — your device's available memory is the only limit. Most modern devices can handle PDFs up to several hundred megabytes without issues."
+          "text": "No. PDFree has no 25MB upload cap because processing happens locally — one merge can be up to 500 MB on a computer (Chrome/Edge, 8 GB+ RAM) or 300 MB on phones, a ceiling that protects your device's memory. Most modern devices can handle PDFs up to several hundred megabytes without issues."
         }
       },
       {
@@ -285,7 +285,7 @@
       <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
       <span class="drop-icon" aria-hidden="true">📂</span>
       <div class="drop-title">Drop PDF files here</div>
-      <div class="drop-sub">or click to browse — unlimited files, any size</div>
+      <div class="drop-sub">or click to browse — unlimited files, up to 500 MB per merge on a computer</div>
       <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Choose files</label>
     </div>
 
@@ -405,7 +405,7 @@
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:10px 14px;color:var(--text);">File size limit</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:700;">None</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:700;">500 MB per merge (computer) · 300 MB (phone)</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limited (free)</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limited (free)</td>
               </tr>
@@ -483,11 +483,11 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">How is this different from iLovePDF or SmallPDF?</h3>
-            <p style="margin:0;font-size:14px;">iLovePDF and SmallPDF upload your files to their servers, process them there, and delete them after 1–2 hours. PDFree processes everything locally — your files never travel to any server. You also get no file size limits and no daily usage limits.</p>
+            <p style="margin:0;font-size:14px;">iLovePDF and SmallPDF upload your files to their servers, process them there, and delete them after 1–2 hours. PDFree processes everything locally — your files never travel to any server. You also get no daily usage limits.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Is there a file size limit?</h3>
-            <p style="margin:0;font-size:14px;">No. PDFree has no file size limits because processing is local. Your device's RAM is the only constraint — modern devices handle PDFs up to hundreds of megabytes without issues.</p>
+            <p style="margin:0;font-size:14px;">No. Processing is local, so there is no upload cap — up to 500 MB per merge on a computer, 300 MB on phones.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I merge PDFs completely offline?</h3>

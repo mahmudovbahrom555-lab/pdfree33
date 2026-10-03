@@ -10,7 +10,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Open your PDF",
-      "text": "Click 'Choose files' or drag your PDF into the drop zone. Any file size is accepted — the file loads in your browser and is never uploaded.",
+      "text": "Click 'Choose files' or drag your PDF into the drop zone. Files up to 500 MB in Chrome or Edge on a computer with 8 GB+ memory, or 150 MB on phones, Safari and Firefox, are accepted — the file loads in your browser and is never uploaded.",
       "url": "https://pdfree.io/compress-pdf/#step1"
     },
     {

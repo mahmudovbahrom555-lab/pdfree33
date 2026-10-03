@@ -44,7 +44,7 @@
     "name": "Is there a file size limit for compression?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree has no upload limit because nothing is uploaded. The only practical limit is your device's available RAM. Most computers comfortably handle PDFs up to several hundred megabytes."
+      "text": "Up to 500 MB in Chrome or Edge on a computer with 8 GB+ memory, and 150 MB on phones, Safari and Firefox — those don't report their memory, so they get the safe limit. Nothing is uploaded, so there is no upload cap; the limit only protects your device's memory. A 500 MB scan compressed in about 30 seconds on an 8 GB laptop in our tests."
     }
   },
   {
