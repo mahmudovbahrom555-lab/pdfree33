@@ -11,7 +11,8 @@ import { setProgress, hideProgress, setButtonProcessing, setButtonReady,
          showCancelBtn, hideCancelBtn, showToast, startLongOpHint, clearLongOpHint } from './ui.js';
 import { selectedFiles, setFilesLocked, renderList } from './files.js';
 import { trackToolError, trackBatchStart, trackBatchSuccess } from './analytics.js';
-import { TOOLS, MAX_COMPRESS_MB } from './config.js';
+import { TOOLS } from './config.js';
+import { maxFileMb } from './fileLimits.js';
 import { getRunner, getWorkerTool } from './toolRegistry.js';
 import { loadJSZip, loadDocx, loadExcelJs, loadPptxGenJs } from './lazyLibs.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
@@ -372,7 +373,7 @@ function _ensureMergeWorker() {
 }
 
 async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilename = '', createBookmarks = false, insertBlankPages = 'none' } = {}) {
-  if (!_checkTotalSize(filesSnapshot, 300)) { _abortUI(); return; }
+  if (!_checkTotalSize(filesSnapshot, maxFileMb('merge'))) { _abortUI(); return; }
   // Use pre-decrypted buffer when files.js already ran QPDF at file-add time.
   // .slice(0) copies so the cached buffer survives the postMessage transfer.
   const buffers = await Promise.all(filesSnapshot.map(async f =>
@@ -510,7 +511,7 @@ function _ensureSplitWorker() {
 }
 
 async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false } = {}, toolKey = 'split') {
-  if (!_checkSize(filesSnapshot[0], 200)) { _abortUI(); return; }
+  if (!_checkSize(filesSnapshot[0], maxFileMb(toolKey))) { _abortUI(); return; }
   const _sf = filesSnapshot[0];
   const buffer = _sf._decryptedBuffer ? _sf._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _sf.arrayBuffer());
   setProgress(5, t('prog_loading_pdf'));
@@ -670,7 +671,7 @@ function _ensureOrganizeWorker() {
 }
 
 async function _runOrganize(filesSnapshot, { pageOrder = [] } = {}) {
-  if (!_checkSize(filesSnapshot[0], 200)) { _abortUI(); return; }
+  if (!_checkSize(filesSnapshot[0], maxFileMb('organize'))) { _abortUI(); return; }
   const file   = filesSnapshot[0];
   const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
   setProgress(5, t('prog_organize'));
@@ -748,7 +749,7 @@ function _ensureGlossaryWorker() {
 }
 
 async function _runGlossary(filesSnapshot, { dictionary = [] } = {}) {
-  if (!_checkSize(filesSnapshot[0], 150)) { _abortUI(); return; }
+  if (!_checkSize(filesSnapshot[0], maxFileMb('glossary'))) { _abortUI(); return; }
   const file = filesSnapshot[0];
 
   if (dictionary.length === 0) {
@@ -858,7 +859,7 @@ function _ensureResizeWorker() {
 }
 
 async function _runResize(filesSnapshot, { targetSize = 'a4', mode = 'fit', marginPt = 28, orientation = 'auto', customSizePt } = {}) {
-  if (!_checkSize(filesSnapshot[0], 200)) { _abortUI(); return; }
+  if (!_checkSize(filesSnapshot[0], maxFileMb('resize'))) { _abortUI(); return; }
   const file   = filesSnapshot[0];
   const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
   setProgress(5, t('prog_resize'));
@@ -917,7 +918,7 @@ function _ensureMangaSplitWorker() {
 }
 
 async function _runMangaSplit(filesSnapshot, { rtl = true, skipPages = [] } = {}) {
-  if (!_checkSize(filesSnapshot[0], 200)) { _abortUI(); return; }
+  if (!_checkSize(filesSnapshot[0], maxFileMb('mangaSplit'))) { _abortUI(); return; }
   const file   = filesSnapshot[0];
   const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
   setProgress(5, t('prog_manga_split'));
@@ -986,7 +987,7 @@ async function _runFillOrder(filesSnapshot, params) {
     return;
   }
 
-  if (!_checkSize(filesSnapshot[0], 200)) { _abortUI(); return; }
+  if (!_checkSize(filesSnapshot[0], maxFileMb('fill'))) { _abortUI(); return; }
   const file     = filesSnapshot[0];
   const original = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
   setProgress(3, t('prog_fill_order'));
@@ -1089,7 +1090,7 @@ async function _watermarkTextRequest(fileBuffer, options, onProgress) {
 
 async function _runWatermarkText(filesSnapshot, params) {
   const file = filesSnapshot[0];
-  if (!_checkSize(file, 200)) { _abortUI(); return; }
+  if (!_checkSize(file, maxFileMb('watermark'))) { _abortUI(); return; }
   const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
 
   setProgress(5, t('prog_watermark'));
@@ -1165,7 +1166,7 @@ async function _formFieldsRequest(fileBuffer, fields, onProgress) {
 
 async function _runFormFields(filesSnapshot, params) {
   const file = filesSnapshot[0];
-  if (!_checkSize(file, 200)) { _abortUI(); return; }
+  if (!_checkSize(file, maxFileMb('formFields'))) { _abortUI(); return; }
   const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
 
   setProgress(5, t('prog_formfields'));
@@ -1220,7 +1221,7 @@ function _cleanScanWorkerRequest(worker, message, transfer, onProgress) {
 }
 
 async function _runCleanScan(filesSnapshot, { mode = 'clean', strength = 0.5, scale = 2 } = {}) {
-  if (!_checkSize(filesSnapshot[0], 150)) { _abortUI(); return; }
+  if (!_checkSize(filesSnapshot[0], maxFileMb('cleanScan'))) { _abortUI(); return; }
   const file = filesSnapshot[0];
 
   try {
@@ -1363,7 +1364,7 @@ const _EREADER_OUTPUT_HEIGHT  = 1800; // fixed output pixel height, every page �
 const _EREADER_PAGE_HEIGHT_PT = 792;  // fixed output PDF page height (points), every page
 
 async function _runEreader(filesSnapshot, { device = 'kindle', grayscale = true, contrast = 0.5, quality = 0.85, columnMode = 'auto' } = {}) {
-  if (!_checkSize(filesSnapshot[0], 150)) { _abortUI(); return; }
+  if (!_checkSize(filesSnapshot[0], maxFileMb('ereader'))) { _abortUI(); return; }
   const file = filesSnapshot[0];
 
   try {
@@ -1560,7 +1561,7 @@ function _compressPrep(buffer, file) {
 }
 
 async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = true, removeWatermarks = false, targetDpi = null, quality = null, targetSizeMb = null } = {}, toolKey = 'compress') {
-  if (!_checkSize(filesSnapshot[0], MAX_COMPRESS_MB)) { _abortUI(); return; }
+  if (!_checkSize(filesSnapshot[0], maxFileMb('compress'))) { _abortUI(); return; }
 
   const file     = filesSnapshot[0];
   const original = await _readCompressBuffer(file);
@@ -1684,9 +1685,10 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
 // below hardcoded the literal string 'jpg2pdf', silently counting every
 // real Clean Scan completion/error as jpg2pdf's instead.
 async function _runJpg2Pdf(filesSnapshot, params, toolKey = 'jpg2pdf') {
-  const oversized = filesSnapshot.find(f => f.size > 50 * MB);
+  const maxMb = maxFileMb('jpg2pdf');
+  const oversized = filesSnapshot.find(f => f.size > maxMb * MB);
   if (oversized) {
-    showToast(t('warn_file_too_large', { size: fmtSize(oversized.size), max: 50 }), 8000);
+    showToast(t('warn_file_too_large', { size: fmtSize(oversized.size), max: maxMb }), 8000);
     isProcessing = false; setFilesLocked(false); hideCancelBtn(); return;
   }
   // Read all images as ArrayBuffers and transfer to worker. HEIC/HEIF files
@@ -1873,7 +1875,7 @@ const _FRAME_BUDGET_MS = 16;   // ≈ one 60 FPS frame
 
 async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi }) {
   const file   = filesSnapshot[0];
-  if (!_checkSize(file, 100)) { _abortUI(); return; }
+  if (!_checkSize(file, maxFileMb('pdf2jpg'))) { _abortUI(); return; }
   const scale  = dpi / 72;
   const mime   = format === 'png' ? 'image/png' : 'image/jpeg';
   const ext    = format === 'png' ? 'png' : 'jpg';
@@ -2097,8 +2099,7 @@ async function _runWorkerTool(tool, filesSnapshot, params, bufferOverride) {
   }
 
   const file   = filesSnapshot[0];
-  const limits = { watermark: 200, pagenum: 200, meta: 200, protect: 200, rotate: 150, redact: 150, fill: 200, flatten: 200 };
-  if (!_checkSize(file, limits[tool] ?? 200)) { _abortUI(); return; }
+  if (!_checkSize(file, maxFileMb(tool))) { _abortUI(); return; }
   const buffer = bufferOverride ?? (file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer()));
 
   const labelMap = {
@@ -2233,10 +2234,8 @@ const BATCH_TOOLS = new Set(Object.keys(TOOLS).filter(k => TOOLS[k].batch));
 // either. rotate was tried here too but reverted (see config.js's rotate
 // entry) — per-page rotation genuinely can't generalize across files with
 // different page counts, unlike the tools that remain.
-const _BATCH_SIZE_LIMITS = {
-  compress: MAX_COMPRESS_MB, watermark: 200,
-  protect: 200, pagenum: 200, flatten: 150,
-};
+// per file in a batch — flatten's batch path holds less per file than its single run
+const _BATCH_SIZE_LIMITS = { flatten: 150 };
 const _BATCH_SUFFIX = {
   watermark: '-watermarked',
   protect: '-protected', pagenum: '-numbered', flatten: '-flattened',
@@ -2347,7 +2346,7 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
     setProgress(base, fileLabel);
 
     try {
-      if (!_checkSize(file, _BATCH_SIZE_LIMITS[tool] ?? 200)) {
+      if (!_checkSize(file, _BATCH_SIZE_LIMITS[tool] ?? maxFileMb(tool))) {
         throw new Error('File too large'); // _checkSize already toasted specifics
       }
 
@@ -2619,7 +2618,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
 
 async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150, stripMetadata = true } = {}) {
   const file = filesSnapshot[0];
-  if (!_checkSize(file, 150)) { _abortUI(); return; }
+  if (!_checkSize(file, maxFileMb('pdf2word'))) { _abortUI(); return; }
 
   let result;
   try {
@@ -2674,7 +2673,7 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150, stripMeta
 
 async function _runPdf2Excel(filesSnapshot) {
   const file = filesSnapshot[0];
-  if (!_checkSize(file, 150)) { _abortUI(); return; }
+  if (!_checkSize(file, maxFileMb('pdf2excel'))) { _abortUI(); return; }
 
   setProgress(5, 'Loading libraries…');
 
@@ -3652,7 +3651,7 @@ export function _p2pCropCanvasRegion(sourceCanvas, xPx, yPx, wPx, hPx) {
 
 async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'image' } = {}) {
   const file = filesSnapshot[0];
-  if (!_checkSize(file, 150)) { _abortUI(); return; }
+  if (!_checkSize(file, maxFileMb('pdf2ppt'))) { _abortUI(); return; }
 
   setProgress(5, 'Loading libraries…');
 
@@ -4026,7 +4025,7 @@ function _makeOcrFormulaCallback(getPct) {
 
 async function _runPdf2Md(filesSnapshot, { enableFormulaOcr = false } = {}) {
   const file = filesSnapshot[0];
-  if (!_checkSize(file, 150)) { _abortUI(); return; }
+  if (!_checkSize(file, maxFileMb('pdf2md'))) { _abortUI(); return; }
 
   if (!window.pdfjsLib) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
@@ -4162,7 +4161,7 @@ function _warnDocxToPdfLosses(hasUnsupportedScript, skippedImages) {
 
 async function _runDocx2Pdf(filesSnapshot, _extraParams) {
   const file = filesSnapshot[0];
-  if (!_checkSize(file, 60)) { _abortUI(); return; }
+  if (!_checkSize(file, maxFileMb('docx2pdf'))) { _abortUI(); return; }
 
   setProgress(5, 'Reading document…');
 
@@ -4291,7 +4290,7 @@ async function _runQuickEdit(filesSnapshot, { editedContainer } = {}) {
 
 async function _runUnlock(filesSnapshot, { password } = {}) {
   const file = filesSnapshot[0];
-  if (!_checkSize(file, 150)) { _abortUI(); return; }
+  if (!_checkSize(file, maxFileMb('unlock'))) { _abortUI(); return; }
 
   setProgress(20, 'Checking password…');
 

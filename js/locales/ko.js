@@ -872,7 +872,7 @@ window.PDFREE_LOCALE = {
   p2j_export_many:        '{n}개 이미지 내보내기',
 
   // compressUI.js
-  cmp_file_too_large:     '⚠️ 파일이 너무 커서 브라우저에서 압축할 수 없습니다 (최대 150MB). 먼저 분할하거나 데스크톱 도구를 사용하세요.',
+  cmp_file_too_large:     '⚠️ 파일이 너무 커서 브라우저에서 압축할 수 없습니다 (최대 {max}MB). 먼저 분할하거나 데스크톱 도구를 사용하세요.',
   cmp_encrypted_toast:    '⚠️ 암호화된 PDF — 일부 콘텐츠가 완전히 최적화되지 않을 수 있습니다',
   cmp_why_light_preset:   '💡 이미지도 재압축하려면 <strong>표준 프리셋으로 전환</strong>하세요 — 대부분의 용량 절감은 여기서 나옵니다.',
   cmp_why_no_images:      '📄 이 PDF에는 래스터 이미지가 없습니다 — 텍스트와 벡터는 압축 효과가 크지 않습니다. 절감은 메타데이터 및 구조 정리에서만 나옵니다.',

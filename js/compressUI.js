@@ -13,7 +13,7 @@
 // ============================================================
 
 import { id, fmtSize } from './utils.js';
-import { MAX_COMPRESS_MB } from './config.js';
+import { maxFileMb } from './fileLimits.js';
 import { showToast } from './ui.js';
 import { t, tp } from './i18n.js';
 import { sliderRow, checkbox, presetRememberCard } from './uiComponents.js';
@@ -208,7 +208,7 @@ export function initCompressOptions(file) {
 
   container.style.display = 'block';
 
-  if (file.size > MAX_COMPRESS_MB * 1024 * 1024) {
+  if (file.size > maxFileMb('compress') * 1024 * 1024) {
     container.innerHTML = `
       <div class="compress-info">
         <span class="compress-info__name" title="${_esc(file.name)}">${_esc(_truncName(file.name))}</span>
@@ -216,7 +216,7 @@ export function initCompressOptions(file) {
         <span class="compress-info__meta">${fmtSize(file.size)}</span>
       </div>
       <div class="compress-scan compress-scan--warn" role="alert">
-        ${t('cmp_file_too_large')}
+        ${t('cmp_file_too_large', { max: maxFileMb('compress') })}
       </div>`;
     return;
   }
@@ -795,7 +795,7 @@ export function initCompressEmailOptions(file) {
   // reports the DPI email mode actually uses.
   _targetDpi = 96;
 
-  if (file.size > MAX_COMPRESS_MB * 1024 * 1024) {
+  if (file.size > maxFileMb('compress') * 1024 * 1024) {
     container.innerHTML = `
       <div class="compress-info">
         <span class="compress-info__name" title="${_esc(file.name)}">${_esc(_truncName(file.name))}</span>
@@ -803,7 +803,7 @@ export function initCompressEmailOptions(file) {
         <span class="compress-info__meta">${fmtSize(file.size)}</span>
       </div>
       <div class="compress-scan compress-scan--warn" role="alert">
-        ${t('cmp_file_too_large')}
+        ${t('cmp_file_too_large', { max: maxFileMb('compress') })}
       </div>`;
     return;
   }

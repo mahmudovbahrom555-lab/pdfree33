@@ -890,7 +890,7 @@ export const EN = {
   p2j_export_many:        'Export {n} images',
 
   // ── compressUI.js ──────────────────────────────────────────────
-  cmp_file_too_large:     '⚠️ File too large for browser compression (max 150 MB). Try splitting it first, or use a desktop tool.',
+  cmp_file_too_large:     '⚠️ File too large for browser compression (max {max} MB). Try splitting it first, or use a desktop tool.',
   cmp_encrypted_toast:    '⚠️ Encrypted PDF — some content may not be fully optimized',
   cmp_why_light_preset:   "💡 <strong>Switch to Standard preset</strong> to also recompress images — that's where most savings come from.",
   cmp_why_no_images:      "📄 This PDF has no raster images — text and vectors don't compress much. Savings are from metadata and structure cleanup only.",

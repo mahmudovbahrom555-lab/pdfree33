@@ -9,9 +9,6 @@
 /** Build version — used to detect stale SW cache in console */
 export const APP_VERSION = '6.2';
 
-/** Compress PDF: hard limit — files above this are rejected before processing */
-export const MAX_COMPRESS_MB = 150;
-
 /** Compress PDF: pre-scan is skipped above this to protect main-thread memory */
 export const SCAN_LIMIT_MB = 25;
 

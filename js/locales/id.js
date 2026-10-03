@@ -871,7 +871,7 @@ window.PDFREE_LOCALE = {
   p2j_export_many:        'Ekspor {n} gambar',
 
   // compressUI.js
-  cmp_file_too_large:     '⚠️ File terlalu besar untuk kompresi di browser (maks 150 MB). Pisahkan dulu, atau gunakan alat desktop.',
+  cmp_file_too_large:     '⚠️ File terlalu besar untuk kompresi di browser (maks {max} MB). Pisahkan dulu, atau gunakan alat desktop.',
   cmp_encrypted_toast:    '⚠️ PDF terenkripsi — sebagian konten mungkin tidak sepenuhnya dioptimalkan',
   cmp_why_light_preset:   '💡 <strong>Beralih ke preset Standar</strong> untuk juga mengompres ulang gambar — di situlah sebagian besar penghematan berasal.',
   cmp_why_no_images:      '📄 PDF ini tidak memiliki gambar raster — teks dan vektor tidak banyak terkompresi. Penghematan hanya berasal dari pembersihan metadata dan struktur.',

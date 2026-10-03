@@ -870,7 +870,7 @@ window.PDFREE_LOCALE = {
   p2j_export_many:        '{n} görseli dışa aktar',
 
   // compressUI.js
-  cmp_file_too_large:     '⚠️ Dosya tarayıcıda sıkıştırma için çok büyük (maks. 150 MB). Önce bölün veya bir masaüstü aracı kullanın.',
+  cmp_file_too_large:     '⚠️ Dosya tarayıcıda sıkıştırma için çok büyük (maks. {max} MB). Önce bölün veya bir masaüstü aracı kullanın.',
   cmp_encrypted_toast:    '⚠️ Şifrelenmiş PDF — bazı içerikler tam olarak optimize edilemeyebilir',
   cmp_why_light_preset:   "💡 Görselleri de yeniden sıkıştırmak için <strong>Standart ön ayarına geçin</strong> — tasarrufun büyük kısmı buradan gelir.",
   cmp_why_no_images:      '📄 Bu PDF\'de raster görsel yok — metin ve vektörler pek sıkışmaz. Tasarruf yalnızca meta veri ve yapı temizliğinden gelir.',

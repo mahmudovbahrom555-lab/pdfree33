@@ -2,6 +2,7 @@
 // Copyright (C) 2025 PDFree Contributors
 
 import { loadPdfJs } from './pdf2jpgUI.js';
+import { maxFileMb } from './fileLimits.js';
 import { wireShareButton } from './shareButton.js';
 import { loadPdfLib } from './lazyLibs.js';
 import { t } from './i18n.js';
@@ -1023,7 +1024,7 @@ function _applyHeader(text, file, pageCount) {
 // Resolution is chosen per script family via SCRIPT_PROFILE (see constants):
 // CJK needs 3500px for dense ideographs; Arabic/complex 3200px; Latin 3000px.
 // All values cap total canvas size to prevent Mobile Safari tab kills.
-const MAX_FILE_MB  = 200;
+const MAX_FILE_MB  = maxFileMb('ocr');
 // Mobile Safari aggressively kills tabs under memory pressure.
 // Limit page count on iOS/iPadOS to prevent mid-job tab termination.
 // Users can still OCR longer documents by splitting the PDF first.

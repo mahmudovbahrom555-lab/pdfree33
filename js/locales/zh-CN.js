@@ -915,7 +915,7 @@ window.PDFREE_LOCALE = {
   p2j_export_many:        '导出 {n} 张图片',
 
   // ── compressUI.js ──────────────────────────────────────────────
-  cmp_file_too_large:     '⚠️ 文件过大，浏览器无法压缩（最大 150 MB）。请先拆分文件，或使用桌面端工具。',
+  cmp_file_too_large:     '⚠️ 文件过大，浏览器无法压缩（最大 {max} MB）。请先拆分文件，或使用桌面端工具。',
   cmp_encrypted_toast:    '⚠️ 加密的 PDF — 部分内容可能无法完全优化',
   cmp_why_light_preset:   '💡 <strong>切换到"标准"预设</strong>以同时重新压缩图片 — 这是节省空间的主要来源。',
   cmp_why_no_images:      '📄 此 PDF 不含位图图片 — 文本和矢量图形压缩空间有限。节省的空间来自元数据和结构清理。',

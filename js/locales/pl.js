@@ -870,7 +870,7 @@ window.PDFREE_LOCALE = {
   p2j_export_many:        'Eksportuj {n} obrazów',
 
   // compressUI.js
-  cmp_file_too_large:     '⚠️ Plik zbyt duży do kompresji w przeglądarce (maks. 150 MB). Podziel go najpierw lub użyj narzędzia desktopowego.',
+  cmp_file_too_large:     '⚠️ Plik zbyt duży do kompresji w przeglądarce (maks. {max} MB). Podziel go najpierw lub użyj narzędzia desktopowego.',
   cmp_encrypted_toast:    '⚠️ Zaszyfrowany plik PDF — część zawartości może nie zostać w pełni zoptymalizowana',
   cmp_why_light_preset:   '💡 <strong>Przełącz na ustawienie Standardowe</strong>, aby także skompresować obrazy ponownie — stamtąd pochodzi większość oszczędności.',
   cmp_why_no_images:      '📄 Ten plik PDF nie zawiera obrazów rastrowych — tekst i wektory nie kompresują się znacząco. Oszczędności pochodzą tylko z czyszczenia metadanych i struktury.',

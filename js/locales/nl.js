@@ -870,7 +870,7 @@ window.PDFREE_LOCALE = {
   p2j_export_many:        '{n} afbeeldingen exporteren',
 
   // compressUI.js
-  cmp_file_too_large:     '⚠️ Bestand te groot voor compressie in de browser (max 150 MB). Splits het eerst op of gebruik een desktoptool.',
+  cmp_file_too_large:     '⚠️ Bestand te groot voor compressie in de browser (max {max} MB). Splits het eerst op of gebruik een desktoptool.',
   cmp_encrypted_toast:    '⚠️ Versleuteld PDF — sommige inhoud wordt mogelijk niet volledig geoptimaliseerd',
   cmp_why_light_preset:   '💡 <strong>Schakel over naar de voorinstelling Standaard</strong> om ook afbeeldingen opnieuw te comprimeren — daar zit de meeste besparing.',
   cmp_why_no_images:      '📄 Deze PDF bevat geen rasterafbeeldingen — tekst en vectoren comprimeren nauwelijks. Besparingen komen alleen van het opschonen van metadata en structuur.',

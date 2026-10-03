@@ -871,7 +871,7 @@ window.PDFREE_LOCALE = {
   p2j_export_many:        'Xuất {n} ảnh',
 
   // compressUI.js
-  cmp_file_too_large:     '⚠️ File quá lớn để nén trong trình duyệt (tối đa 150 MB). Hãy tách file trước, hoặc dùng công cụ trên máy tính.',
+  cmp_file_too_large:     '⚠️ File quá lớn để nén trong trình duyệt (tối đa {max} MB). Hãy tách file trước, hoặc dùng công cụ trên máy tính.',
   cmp_encrypted_toast:    '⚠️ PDF đã mã hóa — một số nội dung có thể không được tối ưu hoàn toàn',
   cmp_why_light_preset:   '💡 <strong>Chuyển sang cấu hình Tiêu chuẩn</strong> để nén lại cả hình ảnh — đó là nơi tiết kiệm dung lượng nhiều nhất.',
   cmp_why_no_images:      '📄 PDF này không có hình ảnh raster — văn bản và vector không nén được nhiều. Dung lượng tiết kiệm chỉ đến từ việc dọn dẹp metadata và cấu trúc.',
