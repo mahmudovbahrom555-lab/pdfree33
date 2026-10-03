@@ -317,6 +317,70 @@ await test('single mode (extract): named-destination bookmarks are dropped, the 
   expect(entries.map(e => e.title).join(',')).toBe('Section 2');
 });
 
+// ── Each output holds only its own pages (2026-10-03) ──────────
+// pdf-lib's save() wrote every object, so each one-page file carried the whole
+// source (a 150 MB 47-page scan split into 47 × 150 MB and ran the tab out of
+// memory) and an extracted page still contained the left-out pages' images.
+// Fixture: 3 pages, each drawing its own incompressible image, plus the two
+// catalog structures that kept every page reachable in real PDFs — named
+// destinations (LaTeX) and a tag tree whose elements point at their page (/Pg).
+async function _buildImagePerPage3() {
+  const { PDFDocument, PDFName, PDFString } = PDFLib;
+  const doc = await PDFDocument.create();
+  const pageRefs = [], tags = [];
+  for (let i = 0; i < 3; i++) {
+    const page = doc.addPage([200, 200]);
+    const pixels = new Uint8Array(60 * 60 * 3).map(() => Math.floor(Math.random() * 256));
+    const image = doc.context.register(doc.context.stream(pixels, {
+      Type: 'XObject', Subtype: 'Image', Width: 60, Height: 60, ColorSpace: 'DeviceRGB', BitsPerComponent: 8,
+    }));
+    page.node.set(PDFName.of('Resources'), doc.context.obj({ XObject: { Im0: image } }));
+    page.node.set(PDFName.of('Contents'), doc.context.register(doc.context.stream('q 100 0 0 100 50 50 cm /Im0 Do Q')));
+    pageRefs.push(page.ref);
+    tags.push(doc.context.obj({ Type: 'StructElem', S: 'Figure', Pg: page.ref }));
+  }
+  doc.catalog.set(PDFName.of('Names'), doc.context.obj({
+    Dests: doc.context.obj({ Names: pageRefs.flatMap((ref, i) => [PDFString.of(`sec${i + 1}`), doc.context.obj([ref, PDFName.of('Fit')])]) }),
+  }));
+  doc.catalog.set(PDFName.of('StructTreeRoot'), doc.context.register(doc.context.obj({ Type: 'StructTreeRoot', K: tags })));
+  const bytes = await doc.save();
+  return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
+}
+const _imagePerPage3 = await _buildImagePerPage3();
+async function _imagesIn(buffer) {
+  const { PDFDocument, PDFName, PDFStream } = PDFLib;
+  const doc = await PDFDocument.load(buffer);
+  let images = 0;
+  for (const [, obj] of doc.context.enumerateIndirectObjects()) {
+    if (obj instanceof PDFStream && obj.dict.get(PDFName.of('Subtype')) === PDFName.of('Image')) images++;
+  }
+  return { images, pages: doc.getPageCount() };
+}
+
+await test('separate mode: each one-page file holds only its own page\'s image, not the whole source', async () => {
+  await handleSplit(clone(_imagePerPage3), { pages: [1, 2, 3], mode: 'separate' });
+  for (const msg of pageMsgs()) {
+    const { images, pages } = await _imagesIn(msg.buffer);
+    expect(pages).toBe(1);
+    expect(images).toBe(1);
+    if (msg.buffer.byteLength > _imagePerPage3.byteLength * 0.6) throw new Error(`${msg.name} is ${msg.buffer.byteLength} B of a ${_imagePerPage3.byteLength} B source`);
+  }
+});
+
+await test('single mode (extract): the pages left out are not in the file (named dests and tags pointed at them)', async () => {
+  await handleSplit(clone(_imagePerPage3), { pages: [2], mode: 'single' });
+  const { images, pages } = await _imagesIn(lastDone().result);
+  expect(pages).toBe(1);
+  expect(images).toBe(1);
+});
+
+await test('single mode (extract): keeping every page keeps every image', async () => {
+  await handleSplit(clone(_imagePerPage3), { pages: [1, 2, 3], mode: 'single' });
+  const { images, pages } = await _imagesIn(lastDone().result);
+  expect(pages).toBe(3);
+  expect(images).toBe(3);
+});
+
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);
 if (failed > 0) process.exit(1);

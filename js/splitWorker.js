@@ -320,6 +320,65 @@ function _filterOutlinesForSurvivors(doc, survivingRefTags) {
   }
 }
 
+// pdf-lib's save() writes every object the document holds, reachable or not, and
+// removePage() only unlinks a page from the /Pages tree — so each "one-page" file
+// still carried every other page's images, fonts and content: splitting a 150 MB
+// 47-page scan produced 47 files of 150 MB each (a 7 GB ZIP that ran the tab out
+// of memory), and an extracted page still contained the pages the user left out,
+// recoverable from the file (measured 2026-10-03). Unlinking is not enough either:
+// document-wide structures still point at every page — LaTeX's named
+// destinations (/Names /Dests), the accessibility tag tree (/StructTreeRoot, each
+// tag's /Pg), form widgets (/P) — and through a removed page its content stays
+// reachable. So a reference to a removed page is cut to null wherever it sits
+// (a reference to a missing object reads as null anyway, PDF 32000-1 §7.3.10):
+// links and tags for the kept pages stay intact, and whatever only the removed
+// pages used is no longer reached from the catalog or document info and is
+// dropped before saving.
+function _pruneUnreachable(doc) {
+  const { PDFRef, PDFDict, PDFArray, PDFStream, PDFName, PDFNull } = PDFLib;
+  const ctx = doc.context;
+  const isPage = obj => obj instanceof PDFDict && obj.get(PDFName.of('Type')) === PDFName.of('Page');
+  // the pages still in the /Pages tree (getPages() is cached and goes stale after removePage)
+  const kept = new Set();
+  const walkTree = node => {
+    const kids = node.lookupMaybe(PDFName.of('Kids'), PDFArray);
+    for (let i = 0; kids && i < kids.size(); i++) {
+      const ref = kids.get(i);
+      const kid = ctx.lookup(ref);
+      if (isPage(kid)) kept.add(ref.tag); else if (kid instanceof PDFDict) walkTree(kid);
+    }
+  };
+  walkTree(doc.catalog.lookup(PDFName.of('Pages'), PDFDict));
+  const removedPage = value => value instanceof PDFRef && !kept.has(value.tag) && isPage(ctx.lookup(value));
+
+  const reached = new Set();
+  // the trailer's roots: catalog, document info and, for an encrypted file, its /Encrypt dictionary
+  const stack = [ctx.trailerInfo.Root, ctx.trailerInfo.Info, ctx.trailerInfo.Encrypt].filter(Boolean);
+  while (stack.length) {
+    const obj = stack.pop();
+    if (obj instanceof PDFRef) {
+      if (reached.has(obj.tag)) continue;
+      reached.add(obj.tag);
+      const target = ctx.lookup(obj);
+      if (target) stack.push(target);
+    } else if (obj instanceof PDFDict) {
+      for (const [key, value] of obj.entries()) {
+        if (removedPage(value)) obj.set(key, PDFNull); else stack.push(value);
+      }
+    } else if (obj instanceof PDFArray) {
+      for (let i = 0; i < obj.size(); i++) {
+        const value = obj.get(i);
+        if (removedPage(value)) obj.set(i, PDFNull); else stack.push(value);
+      }
+    } else if (obj instanceof PDFStream) {
+      stack.push(obj.dict);
+    }
+  }
+  for (const [ref] of ctx.enumerateIndirectObjects()) {
+    if (!reached.has(ref.tag)) ctx.delete(ref);
+  }
+}
+
 // ── Split handler ────────────────────────────────────────────────────
 // 'single' branch is a verbatim copy of worker.js:630-685 (unchanged wire
 // shape). 'separate' branch is worker.js:693-716's same per-page algorithm,
@@ -395,6 +454,7 @@ async function handleSplit(fileBuffer, options) {
     // while preserving navigation for the pages that are actually still here.
     if (pages.length < pageCount) _filterOutlinesForSurvivors(srcDoc, survivingRefTags);
     self.postMessage({ type: 'progress', value: 90, label: 'Saving...' });
+    _pruneUnreachable(srcDoc);
     const bytes = await srcDoc.save();
     self.postMessage(
       { type: 'done', result: bytes.buffer, mode: 'single', totalPages: pages.length },
@@ -429,6 +489,7 @@ async function handleSplit(fileBuffer, options) {
       // own ref — any bookmark that was pointing at THIS specific page (there
       // may be more than one) is kept, everything else dropped.
       if (pageCount > 1) _filterOutlinesForSurvivors(pageDoc, new Set([survivingRefTag]));
+      _pruneUnreachable(pageDoc);
       const bytes = await pageDoc.save();
       // THE FIX: send this page immediately and let its buffer be transferred
       // (detached, freed) rather than accumulating into an array that would
