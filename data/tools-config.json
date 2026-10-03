@@ -286,7 +286,7 @@
         "bn": "PDF একত্রিতকরণ"
       },
       "metaDescs": {
-        "en": "Merge PDF files free — no daily limit, no file-count limit, no upload. Combine 100+ PDFs (up to 300 MB per merge) in your browser. Works offline. No signup.",
+        "en": "Merge PDF files free — no daily limit, no file-count limit, no upload. Combine 100+ PDFs, up to 500 MB per merge on a computer. Works offline. No signup.",
         "es": "Combina varios PDFs en uno gratis — arrastra para reordenar, rango de páginas por archivo. Sin subir nada. Sin registro, sin límite de tamaño.",
         "pt": "Combine vários PDFs grátis — arraste para reordenar, defina intervalo de páginas. Sem envio ao servidor. Sem registo, sem limite de tamanho.",
         "de": "Mehrere PDFs zusammenfügen — Reihenfolge per Drag & Drop, Seitenbereich wählbar. Im Browser, kein Upload. Keine Registrierung, kein Größenlimit.",
@@ -505,7 +505,7 @@
         "ar": "تقسيم PDF"
       },
       "metaDescs": {
-        "en": "Free PDF splitter — extract pages or page ranges with no daily limit and no signup. Runs in your browser, nothing uploaded. PDFs up to 200 MB.",
+        "en": "Free PDF splitter — extract pages or page ranges with no daily limit and no signup. Runs in your browser, nothing uploaded. Up to 500 MB on a computer.",
         "es": "Divide un PDF en archivos separados — por rango, página a página o extrae páginas específicas. Sin subir nada. Sin registro.",
         "pt": "Divida um PDF em ficheiros separados — por intervalo, cada página ou extraia páginas específicas. Sem envio ao browser. Sem registo.",
         "de": "PDF aufteilen — nach Seitenbereich, jede Seite oder bestimmte Seiten extrahieren. Im Browser, kein Upload. Keine Registrierung, sofort fertig.",
@@ -708,7 +708,7 @@
         "ar": "ضغط PDF"
       },
       "metaDescs": {
-        "en": "Reduce PDF size 20–80% without visible quality loss — free, no daily limit, no signup. Runs in your browser, nothing uploaded. Files up to 150 MB.",
+        "en": "Reduce PDF size 20–80% without visible quality loss — free, no daily limit, no signup. Runs in your browser, nothing uploaded. Up to 500 MB on a computer.",
         "es": "Reduce el tamaño del PDF un 20–80 % sin pérdida de calidad — compresor PDF gratuito en tu navegador. Nada subido ni almacenado, sin registro.",
         "pt": "Reduza o tamanho do PDF em 20–80 % sem perda de qualidade — compressor PDF gratuito no navegador. Nada enviado ou armazenado, sem cadastro.",
         "de": "PDF-Dateigröße um 20–80 % reduzieren — kostenloser PDF-Kompressor im Browser. Nichts hochgeladen, nichts gespeichert, keine Anmeldung, keine Limits.",
@@ -2945,7 +2945,7 @@
         "ar": "استخراج صفحات PDF"
       },
       "metaDescs": {
-        "en": "Save any pages or page range from a PDF as a new file — free, no daily limit, no signup. Runs in your browser; files never leave your device. Up to 200 MB.",
+        "en": "Save any pages or page range from a PDF as a new file — free, no daily limit, no signup. Runs in your browser, nothing uploaded. Up to 500 MB on a computer.",
         "es": "Guarda cualquier página o rango de páginas de un PDF como nuevo archivo. En el navegador — los archivos nunca salen de tu dispositivo. Sin registro.",
         "pt": "Salve qualquer página ou intervalo de páginas de um PDF como novo arquivo. No navegador — os arquivos nunca saem do seu dispositivo. Sem cadastro.",
         "de": "Beliebige Seiten oder Seitenbereiche als neue PDF-Datei speichern. Im Browser — Dateien verlassen dein Gerät nie, werden nirgends gespeichert. Keine Anmeldung.",
@@ -5950,7 +5950,7 @@
       "swUpdateLater": "Later",
       "seoH2": "The best free PDF tool for security and privacy",
       "seoP1": "PDFree is designed to provide professional-grade PDF manipulation without the risks associated with cloud uploads. When you use our tools, the processing happens directly inside your web browser using WebAssembly. This means your sensitive documents, such as legal contracts, financial reports, or personal ID scans, are never transmitted over the internet.",
-      "seoP2": "We believe essential tools should be accessible to everyone. That's why PDFree has no daily usage caps, no signup and no mandatory watermarks. It is a completely free utility built for students, professionals, and anyone who values digital privacy. Files are processed on your own device, so the largest file a tool accepts (150–300 MB for most) and how fast it runs depend on the tool and on your device's memory.",
+      "seoP2": "We believe essential tools should be accessible to everyone. That's why PDFree has no daily usage caps, no signup and no mandatory watermarks. It is a completely free utility built for students, professionals, and anyone who values digital privacy. Files are processed on your own device, so the largest file a tool accepts (150–200 MB for most tools, up to 500 MB for merge, split and compress on a computer with 8 GB+ memory) and how fast it runs depend on the tool and on your device's memory.",
       "faqTitle": "Frequently Asked Questions",
       "faqQ1": "Are my files stored on your servers?",
       "faqA1": "No. PDFree operates entirely on your device (client-side). We don't have servers that process your files, which guarantees 100% privacy.",
@@ -5958,7 +5958,7 @@
       "faqA2": "No, there are no artificial limits. The only limitation is the RAM (memory) available on your computer or smartphone.",
       "whySectionTitle": "Why use PDFree instead of other PDF tools?",
       "whyNoSizeLimit": "No daily limit",
-      "whyNoSizeLimitDesc": "Use every tool as often as you like — no task caps, no paywall. Most tools take files up to 150–200 MB; very large files run faster on a computer than on an older phone.",
+      "whyNoSizeLimitDesc": "Use every tool as often as you like — no task caps, no paywall. Most tools take files up to 150–200 MB; merge, split and compress up to 500 MB on a computer with 8 GB+ memory.",
       "whyNoUpload": "Files never leave your device",
       "whyNoUploadDesc": "Everything runs in your browser. No upload, no server, no data exposure — works offline too.",
       "whyNoAccount": "No account required",

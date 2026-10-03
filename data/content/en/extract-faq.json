@@ -44,7 +44,7 @@
     "name": "Is there a limit on how many pages I can extract?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No page-count limit — extract any number of pages, as often as you like. The PDF can be up to 200 MB. Everything runs on your own device, so very large files are faster on a computer than on an older phone."
+      "text": "No page-count limit — extract any number of pages, as often as you like. The PDF can be up to 500 MB in Chrome or Edge on a computer with 8 GB+ memory, 200 MB on phones, Safari and Firefox. Everything runs on your own device, so very large files are faster on a computer than on an older phone."
     }
   },
   {

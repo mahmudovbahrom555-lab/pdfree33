@@ -52,7 +52,7 @@
     "name": "Is there a limit on PDF size or page count?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No page-count limit. Each PDF can be up to 200 MB. Processing depends on your device's available memory — PDFs with hundreds of pages render thumbnails in seconds on a modern computer."
+      "text": "No page-count limit. Each PDF can be up to 500 MB in Chrome or Edge on a computer with 8 GB+ memory, 200 MB on phones, Safari and Firefox. Processing depends on your device's available memory — PDFs with hundreds of pages render thumbnails in seconds on a modern computer."
     }
   },
   {
