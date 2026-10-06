@@ -60,7 +60,7 @@
     "name": "Jaki jest limit rozmiaru pliku?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "OCR PDFree obsługuje pliki do 200 MB. Na urządzeniach mobilnych (iOS/iPadOS) przetwarzanie jest ograniczone do pierwszych 30 stron — najpierw podziel PDF, aby przetworzyć resztę. Brak limitów w przeglądarkach desktopowych."
+      "text": "OCR PDFree obsługuje pliki do 200 MB. Na urządzeniach mobilnych (iOS/iPadOS) przetwarzanie jest ograniczone do pierwszych 30 stron — najpierw podziel PDF, aby przetworzyć resztę. Na komputerach nie ma limitu liczby stron."
     }
   },
   {

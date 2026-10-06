@@ -52,7 +52,7 @@
     "name": "Jaki jest maksymalny rozmiar pliku?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie ma sztywnego limitu. Bardzo duże pliki PDF (100 MB i więcej) mogą jednak przetwarzać się dłużej i wymagać więcej pamięci. Dla najlepszych wyników zachowaj pliki poniżej 100 MB w trybie tekstowym i poniżej 50 MB w trybie obrazu przy 300 DPI."
+      "text": "Do 150 MB na plik PDF. Bardzo duże pliki PDF (100 MB i więcej) przetwarzają się dłużej i wymagają więcej pamięci, ponieważ konwersja odbywa się na Twoim urządzeniu. Dla najlepszych wyników zachowaj pliki poniżej 100 MB w trybie tekstowym i poniżej 50 MB w trybie obrazu przy 300 DPI."
     }
   },
   {

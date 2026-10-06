@@ -27,7 +27,7 @@
   {
     "@type": "Question",
     "name": "Apakah ada batas berapa banyak halaman yang bisa saya optimalkan?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Tidak. Tidak ada batas jumlah halaman atau ukuran file, dan tidak ada batas tugas per jam. Optimalkan PDF satu halaman atau buku beratus-ratus halaman sesering yang Anda butuhkan." }
+    "acceptedAnswer": { "@type": "Answer", "text": "Tidak. Tidak ada batas jumlah halaman dan tidak ada batas tugas per jam. Optimalkan PDF satu halaman atau buku beratus-ratus halaman sesering yang Anda butuhkan. Ukuran tiap file maksimal 150 MB. Semua diproses di perangkat Anda sendiri, jadi file yang sangat besar lebih cepat diproses di komputer daripada di ponsel lama." }
   },
   {
     "@type": "Question",
@@ -37,6 +37,6 @@
   {
     "@type": "Question",
     "name": "Apakah Pengoptimal E-Reader benar-benar gratis?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Ya. PDFree gratis tanpa langganan, tanpa batas harian atau per jam, dan tanpa pendaftaran. Tidak ada watermark yang ditambahkan ke hasil dan tidak ada batasan ukuran file." }
+    "acceptedAnswer": { "@type": "Answer", "text": "Ya. PDFree gratis tanpa langganan, tanpa batas harian atau per jam, dan tanpa pendaftaran. Tidak ada watermark yang ditambahkan ke hasil. Ukuran tiap file maksimal 150 MB." }
   }
 ]

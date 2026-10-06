@@ -44,7 +44,7 @@
     "name": "Czy istnieje limit rozmiaru pliku lub liczby stron?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. Brak sztucznych limitów — jedynym ograniczeniem jest dostępna pamięć Twojego urządzenia."
+      "text": "Tak — każdy PDF może mieć do 150 MB. Nie ma limitu liczby stron ani dziennego limitu. Wszystko działa na Twoim urządzeniu, więc bardzo duże pliki przetwarzają się szybciej na komputerze niż na starszym telefonie."
     }
   },
   {

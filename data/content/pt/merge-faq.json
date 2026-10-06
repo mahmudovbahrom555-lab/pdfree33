@@ -4,7 +4,7 @@
     "name": "Quantos arquivos PDF posso juntar de uma vez?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não há limite. O PDFree processa tudo na memória do navegador — você pode juntar 2, 50 ou 100+ arquivos em uma única operação. Para lotes grandes (50+ arquivos ou mais de 500 MB), feche outras abas para liberar RAM."
+      "text": "Não há limite de quantidade nem limite diário — você pode juntar 2, 50 ou 100+ arquivos em uma única operação. Juntos, eles podem somar até 500 MB em um computador (Chrome/Edge, 8 GB+ de RAM) ou 300 MB no celular. Tudo roda na memória do navegador, então lotes muito grandes são mais rápidos em um computador do que em um celular antigo — se travar, feche outras abas."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Existe algum limite de tamanho de arquivo para combinar PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não existem limites artificiais nem subscrições obrigatórias. O PDFree processa os arquivos localmente no seu navegador. Para melhor desempenho, recomendamos manter o total abaixo de 300 MB."
+      "text": "Sim, um: os arquivos de uma mesma junção podem somar até 500 MB no Chrome ou Edge em um computador com 8 GB ou mais de memória, ou 300 MB em celulares, no Safari e no Firefox. Não há plano pago, limite diário nem limite de quantidade de arquivos — o PDFree processa tudo localmente no seu navegador, então esse teto protege a memória do seu dispositivo em vez de vender um upgrade. Precisa de mais? Junte em duas etapas."
     }
   },
   {

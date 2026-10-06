@@ -36,7 +36,7 @@
     "name": "Có giới hạn số trang tôi có thể làm sạch không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không. Không có giới hạn số trang hay kích thước tệp, cũng không có giới hạn tác vụ mỗi giờ. Làm sạch một bản scan một trang hoặc tài liệu một trăm trang bao nhiêu lần tùy ý."
+      "text": "Không. Không có giới hạn số trang, cũng không có giới hạn tác vụ mỗi giờ; mỗi tệp có thể lên đến 150 MB. Làm sạch một bản scan một trang hoặc tài liệu một trăm trang bao nhiêu lần tùy ý."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Công cụ Làm Sạch Bản Scan có thực sự hoàn toàn miễn phí không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Có. PDFree miễn phí, không đăng ký gói, không giới hạn hàng ngày hoặc hàng giờ, và không cần đăng ký tài khoản. Không có watermark nào được thêm vào kết quả và không có giới hạn kích thước tệp."
+      "text": "Có. PDFree miễn phí, không đăng ký gói, không giới hạn hàng ngày hoặc hàng giờ, và không cần đăng ký tài khoản. Không có watermark nào được thêm vào kết quả."
     }
   },
   {

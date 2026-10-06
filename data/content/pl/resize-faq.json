@@ -36,7 +36,7 @@
     "name": "Czy istnieje limit liczby stron, którym mogę zmienić rozmiar?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. Nie ma limitu liczby stron ani rozmiaru pliku, ani limitu zadań na godzinę. Zmień rozmiar 2-stronicowego formularza lub 500-stronicowego raportu tyle razy, ile potrzebujesz."
+      "text": "Nie. Nie ma limitu liczby stron ani limitu zadań na godzinę — zmień rozmiar 2-stronicowego formularza lub 500-stronicowego raportu tyle razy, ile potrzebujesz. Każdy plik może mieć do 200 MB. Wszystko działa na Twoim urządzeniu, więc bardzo duże pliki przetwarzają się szybciej na komputerze niż na starszym telefonie."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "Czy narzędzie do zmiany rozmiaru PDF jest naprawdę darmowe?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tak. PDFree jest darmowy, bez subskrypcji, bez dziennych ani godzinowych limitów i bez rejestracji. Do wyniku nie są dodawane żadne znaki wodne i nie ma ograniczeń rozmiaru pliku."
+      "text": "Tak. PDFree jest darmowy, bez subskrypcji, bez dziennych ani godzinowych limitów i bez rejestracji. Do wyniku nie są dodawane żadne znaki wodne. Każdy plik może mieć do 200 MB."
     }
   }
 ]

@@ -68,7 +68,7 @@
     "name": "Gibt es ein Seitenlimit?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree hat keine Seiten- oder Dateigrößenbeschränkungen. Die einzige praktische Einschränkung ist der verfügbare Arbeitsspeicher Ihres Geräts."
+      "text": "Nein, ein Seitenlimit gibt es nicht. Die PDF-Datei darf bis zu 200 MB groß sein — die Grenze schützt den Arbeitsspeicher deines Geräts, denn alles wird lokal verarbeitet."
     }
   },
   {

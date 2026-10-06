@@ -44,7 +44,7 @@
     "name": "Czy istnieje limit liczby stron, które mogę wyodrębnić?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. Możesz wyodrębnić dowolną liczbę stron z pliku PDF dowolnego rozmiaru, o ile Twoja przeglądarka ma wystarczająco pamięci, aby pomieścić plik."
+      "text": "Nie. Możesz wyodrębnić dowolną liczbę stron, tak często, jak chcesz. Plik PDF może mieć do 500 MB w Chrome lub Edge na komputerze z co najmniej 8 GB pamięci RAM i do 200 MB na telefonach, w Safari i Firefoksie. Wszystko działa na Twoim urządzeniu, więc bardzo duże pliki przetwarzają się szybciej na komputerze niż na starszym telefonie."
     }
   },
   {

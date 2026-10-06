@@ -4,7 +4,7 @@
     "name": "Berapa banyak file PDF yang bisa digabungkan sekaligus?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak ada batasan. PDFree memproses semuanya di memori browser Anda, sehingga Anda dapat menggabungkan 2, 50, atau 100+ file dalam satu operasi. Untuk batch besar (50+ file atau total 500 MB+), tutup tab browser lain untuk membebaskan RAM."
+      "text": "Sebanyak yang Anda mau — tidak ada batas jumlah file dan tidak ada batas harian, jadi Anda bisa menggabungkan 2, 50, atau 100+ file sekaligus. Total ukuran file dalam satu penggabungan hingga 500 MB di komputer (Chrome/Edge, RAM 8 GB+) atau 300 MB di ponsel. Semua diproses di memori browser Anda, jadi batch yang sangat besar lebih cepat di komputer daripada di ponsel lama — tutup tab lain jika prosesnya terasa lambat."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Apakah ada batas ukuran file untuk menggabungkan PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak ada batasan buatan. PDFree memproses file secara lokal di browser Anda — tidak diperlukan langganan. Untuk pengalaman terbaik, pertahankan total batch di bawah 300 MB."
+      "text": "Ya, satu: total ukuran file dalam satu penggabungan hingga 500 MB di Chrome atau Edge pada komputer dengan memori 8 GB ke atas, atau 300 MB di ponsel, Safari, dan Firefox. Tidak ada paywall, tidak ada batas harian, dan tidak ada batas jumlah file — PDFree memproses file secara lokal di browser Anda, jadi batas ini hanya melindungi memori perangkat Anda."
     }
   },
   {

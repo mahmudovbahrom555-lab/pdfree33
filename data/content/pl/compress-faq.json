@@ -20,7 +20,7 @@
     "name": "Czy jest limit rozmiaru pliku?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree akceptuje pliki PDF do 150 MB. W przypadku większych plików najpierw podziel za pomocą Podziel PDF, skompresuj każdą część i połącz je z powrotem."
+      "text": "Do 500 MB w Chrome lub Edge na komputerze z co najmniej 8 GB pamięci RAM i do 150 MB na telefonach, w Safari i Firefoksie — te przeglądarki nie podają ilości pamięci, więc obowiązuje w nich bezpieczny limit. Nic nie jest przesyłane, więc nie ma limitu wysyłania; limit chroni jedynie pamięć Twojego urządzenia. W przypadku większych plików najpierw podziel je za pomocą Podziel PDF, skompresuj każdą część i połącz je z powrotem."
     }
   },
   {

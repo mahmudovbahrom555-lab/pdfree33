@@ -8,7 +8,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Datei laden",
-      "text": "Klicke auf 'Datei auswählen' oder ziehe die PDF in den Dropbereich. Beliebige Dateigröße wird akzeptiert."
+      "text": "Klicke auf 'Datei auswählen' oder ziehe die PDF in den Dropbereich. Akzeptiert werden Dateien bis 150 MB."
     },
     {
       "@type": "HowToStep",

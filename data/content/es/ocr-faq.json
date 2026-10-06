@@ -68,7 +68,7 @@
     "name": "¿Cuál es el límite de tamaño de archivo?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "El OCR de PDFree admite archivos de hasta 200 MB. En móvil (iOS/iPadOS), el procesamiento se limita a las primeras 30 páginas — divide el PDF primero para procesar el resto. No hay límites en navegadores de escritorio."
+      "text": "El OCR de PDFree admite archivos de hasta 200 MB. En móvil (iOS/iPadOS), el procesamiento se limita a las primeras 30 páginas para evitar problemas de memoria — divide el PDF primero para procesar el resto. En los navegadores de escritorio no hay límite de páginas."
     }
   },
   {

@@ -36,7 +36,7 @@
     "name": "Há um limite de quantas páginas posso limpar?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. Não há limite de número de páginas ou tamanho de arquivo, nem limite de tarefas por hora. Limpe uma digitalização de uma página ou um documento de cem páginas quantas vezes precisar."
+      "text": "Não há limite de número de páginas nem de tarefas por hora — limpe uma digitalização de uma página ou um documento de cem páginas quantas vezes precisar. Cada arquivo pode ter até 150 MB. Tudo é processado no seu próprio dispositivo, então arquivos muito grandes são processados mais rápido em um computador do que em um celular antigo."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "A ferramenta Limpar Digitalização é realmente totalmente gratuita?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. O PDFree é grátis, sem assinatura, sem limites diários ou por hora, e sem cadastro. Nenhuma marca d'água é adicionada ao resultado e não há restrição de tamanho de arquivo."
+      "text": "Sim. O PDFree é grátis, sem assinatura, sem limites diários ou por hora, e sem cadastro. Nenhuma marca d'água é adicionada ao resultado. Cada arquivo pode ter até 150 MB."
     }
   },
   {

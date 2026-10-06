@@ -28,7 +28,7 @@
     "name": "Apakah ada batas ukuran file?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak. PDFree tidak membatasi ukuran file. PDF besar diproses langsung di memori browser Anda."
+      "text": "Ya — tiap PDF maksimal 150 MB. PDF besar diproses langsung di memori browser Anda, jadi file yang sangat besar lebih cepat diproses di komputer daripada di ponsel lama."
     }
   },
   {

@@ -44,7 +44,7 @@
     "name": "Y a-t-il une limite de pages pour la conversion ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. Il n'y a aucune limite de nombre de pages ni de taille de fichier. Les très grands PDFs (100+ pages) peuvent prendre plus de temps."
+      "text": "Non. Il n'y a aucune limite de nombre de pages ; seule la taille de chaque fichier est plafonnée, à 100 Mo. Les très grands PDFs (100+ pages) peuvent prendre plus de temps."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. PDFree n'a pas de limites artificielles. La seule contrainte est la mémoire vive disponible sur votre appareil."
+      "text": "Aucune limite de pages. Chaque fichier peut peser jusqu'à 100 Mo. La seule autre contrainte pratique est la mémoire disponible sur votre appareil."
     }
   }
 ]

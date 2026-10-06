@@ -92,7 +92,7 @@
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "featureList": [
       "Nenhum upload de arquivo — nunca saem do seu dispositivo",
-      "Sem limite de tamanho de arquivo",
+      "Sem limite diário",
       "Não requer conta",
       "Funciona offline",
       "Seguro para LGPD e HIPAA por design"
@@ -185,7 +185,7 @@
         "name": "Existe um limite de tamanho de arquivo para juntar PDFs sem enviá-los?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Não. O PDFree não tem limites de tamanho de arquivo porque o processamento acontece localmente — a memória disponível do seu dispositivo é o único limite. A maioria dos dispositivos modernos lida com PDFs de várias centenas de megabytes sem problemas."
+          "text": "Sim, mas não há limite de upload: como o processamento acontece localmente, uma junção pode ter até 500 MB em um computador (Chrome/Edge, 8 GB+ de RAM) ou 300 MB no celular — um teto que protege a memória do seu dispositivo."
         }
       },
       {
@@ -285,7 +285,7 @@
       <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
       <span class="drop-icon" aria-hidden="true">📂</span>
       <div class="drop-title">Solte os arquivos PDF aqui</div>
-      <div class="drop-sub">ou clique para procurar — arquivos ilimitados, qualquer tamanho</div>
+      <div class="drop-sub">ou clique para procurar — arquivos ilimitados, até 500 MB por junção em um computador</div>
       <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Escolher arquivos</label>
     </div>
 
@@ -360,7 +360,7 @@
           </div>
           <div style="display:flex;gap:16px;align-items:flex-start;">
             <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;" id="step3">2</div>
-            <div><strong style="color:var(--text);">Adicione seus arquivos PDF</strong><br>Clique em "Escolher arquivos" ou arraste e solte. Adicione quantos precisar — sem limites de quantidade ou tamanho.</div>
+            <div><strong style="color:var(--text);">Adicione seus arquivos PDF</strong><br>Clique em "Escolher arquivos" ou arraste e solte. Adicione quantos precisar — sem limite de quantidade (até 500 MB por junção em um computador, 300 MB no celular).</div>
           </div>
           <div style="display:flex;gap:16px;align-items:flex-start;">
             <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
@@ -405,7 +405,7 @@
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:10px 14px;color:var(--text);">Limite de tamanho de arquivo</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Nenhum</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">500 MB por junção (computador) · 300 MB (celular)</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limitado (grátis)</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limitado (grátis)</td>
               </tr>
@@ -483,11 +483,11 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Qual a diferença em relação ao iLovePDF ou SmallPDF?</h3>
-            <p style="margin:0;font-size:14px;">O iLovePDF e o SmallPDF enviam seus arquivos para os servidores deles, processam-nos lá e os excluem após 1-2 horas. O PDFree processa tudo localmente — seus arquivos nunca viajam até um servidor. Você também não tem limites de tamanho de arquivo nem limites de uso diário.</p>
+            <p style="margin:0;font-size:14px;">O iLovePDF e o SmallPDF enviam seus arquivos para os servidores deles, processam-nos lá e os excluem após 1-2 horas. O PDFree processa tudo localmente — seus arquivos nunca viajam até um servidor. Você também não tem limites de uso diário.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Existe um limite de tamanho de arquivo?</h3>
-            <p style="margin:0;font-size:14px;">Não. O PDFree não tem limites de tamanho porque o processamento é local. A memória RAM do seu dispositivo é a única restrição — dispositivos modernos lidam com PDFs de várias centenas de megabytes sem problemas.</p>
+            <p style="margin:0;font-size:14px;">Sim, mas não há limite de upload: como o processamento acontece localmente, uma junção pode ter até 500 MB em um computador (Chrome/Edge, 8 GB+ de RAM) ou 300 MB no celular — um teto que protege a memória do seu dispositivo.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Posso juntar PDFs completamente offline?</h3>

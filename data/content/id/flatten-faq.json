@@ -60,7 +60,7 @@
     "name": "Bisakah saya meratakan beberapa file PDF sekaligus?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ya. Mode batch PDFree meratakan bidang formulir dan anotasi di sebanyak mungkin file PDF yang Anda pilih, memproses masing-masing secara lokal di browser Anda. Unduh semua file yang telah diratakan bersama dalam satu ZIP, tanpa batas ukuran."
+      "text": "Ya. Mode batch PDFree meratakan bidang formulir dan anotasi di sebanyak mungkin file PDF yang Anda pilih, memproses masing-masing secara lokal di browser Anda. Unduh semua file yang telah diratakan bersama dalam satu ZIP — tanpa batas harian, tanpa pendaftaran. Ukuran tiap file dalam batch maksimal 150 MB."
     }
   },
   {

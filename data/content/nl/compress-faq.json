@@ -20,7 +20,7 @@
     "name": "Is er een bestandsgrootte limiet?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree accepteert PDF's tot 150 MB. Voor grotere bestanden: eerst splitsen, dan comprimeren en daarna samenvoegen."
+      "text": "Tot 500 MB in Chrome of Edge op een computer met 8 GB+ geheugen, en 150 MB op telefoons, in Safari en in Firefox. Voor grotere bestanden: splits eerst met PDF splitsen, comprimeer elk deel en voeg ze daarna samen."
     }
   },
   {

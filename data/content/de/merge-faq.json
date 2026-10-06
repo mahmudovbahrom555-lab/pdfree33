@@ -4,7 +4,7 @@
     "name": "Wie viele PDF-Dateien kann ich auf einmal zusammenfügen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Es gibt kein Limit. PDFree verarbeitet alles im Arbeitsspeicher deines Browsers — du kannst 2, 50 oder 100+ Dateien in einem Vorgang zusammenfügen. Bei großen Stapeln (50+ Dateien oder über 500 MB) schließe andere Browser-Tabs, um RAM freizugeben."
+      "text": "So viele du willst — es gibt kein Limit für die Dateianzahl und kein Tageslimit, du kannst also 2, 50 oder 100+ Dateien in einem Vorgang zusammenfügen. Zusammen dürfen die Dateien einer Zusammenführung am Computer (Chrome/Edge, ab 8 GB RAM) bis zu 500 MB groß sein, auf Smartphones bis zu 300 MB. Alles läuft im Arbeitsspeicher deines Browsers — bei großen Stapeln schließe andere Browser-Tabs, um Speicher freizugeben."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Gibt es ein Dateigrößenlimit beim Zusammenführen von PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Es gibt keine künstlichen Limits oder Bezahlschranken. PDFree verarbeitet Dateien lokal in deinem Browser — kein Abonnement erforderlich. Für beste Ergebnisse empfehlen wir, die Gesamtgröße unter 300 MB zu halten; größere Batches können auf speicherarmen Geräten langsamer sein."
+      "text": "Ja, eine: Die Dateien einer Zusammenführung dürfen in Chrome oder Edge auf einem Computer mit mindestens 8 GB Arbeitsspeicher zusammen bis zu 500 MB groß sein, auf Smartphones sowie in Safari und Firefox bis zu 300 MB. Es gibt keine Bezahlschranke, kein Tageslimit und kein Dateianzahl-Limit — PDFree verarbeitet die Dateien lokal in deinem Browser, die Grenze schützt also den Arbeitsspeicher deines Geräts, statt ein Upgrade zu verkaufen. Größere Aufträge? Füge in zwei Schritten zusammen."
     }
   },
   {

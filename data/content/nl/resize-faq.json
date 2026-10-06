@@ -36,7 +36,7 @@
     "name": "Is er een limiet aan hoeveel pagina's ik van formaat kan veranderen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nee. Er is geen limiet voor aantal pagina's of bestandsgrootte, en geen taken-per-uur-limiet. Wijzig het formaat van een formulier van 2 pagina's of een rapport van 500 pagina's zo vaak als je wilt."
+      "text": "Nee. Er is geen limiet op het aantal pagina's en geen taken-per-uur-limiet — wijzig het formaat van een formulier van 2 pagina's of een rapport van 500 pagina's zo vaak als je wilt. Elk bestand mag tot 200 MB groot zijn. Alles draait op je eigen apparaat, dus zeer grote bestanden gaan sneller op een computer dan op een oudere telefoon."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "Is de tool om het PDF-formaat te wijzigen echt gratis?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree is gratis zonder abonnement, zonder dagelijkse of uurlijkse limieten en zonder registratie. Er wordt geen watermerk toegevoegd aan het resultaat en er zijn geen beperkingen op bestandsgrootte."
+      "text": "Ja. PDFree is gratis zonder abonnement, zonder dagelijkse of uurlijkse limieten en zonder registratie. Er wordt geen watermerk toegevoegd aan het resultaat. Elk bestand mag tot 200 MB groot zijn."
     }
   }
 ]

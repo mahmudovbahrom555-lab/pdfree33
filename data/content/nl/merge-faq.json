@@ -4,7 +4,7 @@
     "name": "Hoeveel PDF's kan ik tegelijk samenvoegen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Geen limiet. PDFree verwerkt alles in het browsergeheugen — je kunt 2, 50 of 100+ bestanden in één handeling samenvoegen. Voor grote batches (50+ bestanden of meer dan 500 MB) sluit andere tabbladen om RAM vrij te maken."
+      "text": "Zoveel als je wilt — er is geen limiet op het aantal bestanden en geen dagelijkse limiet, dus je kunt 2, 50 of 100+ bestanden in één handeling samenvoegen. De bestanden van één samenvoeging mogen samen tot 500 MB groot zijn op een computer (Chrome/Edge, 8 GB+ RAM) of 300 MB op telefoons en in andere browsers. Sluit bij grote batches andere tabbladen om geheugen vrij te maken."
     }
   },
   {

@@ -28,7 +28,7 @@
     "name": "Czy mogę zabezpieczyć duże pliki PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tak. Nie ma limitu rozmiaru. Przetwarzanie odbywa się w pamięci przeglądarki."
+      "text": "Tak — każdy PDF może mieć do 200 MB. Przetwarzanie odbywa się w pamięci przeglądarki, więc bardzo duże pliki działają szybciej na komputerze niż na starszym telefonie."
     }
   },
   {

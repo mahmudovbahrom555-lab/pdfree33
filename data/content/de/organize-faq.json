@@ -28,7 +28,7 @@
     "name": "Gibt es ein Limit, wie viele Seiten ich organisieren kann?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. Es gibt kein Seiten- oder Dateigrößenlimit. Sehr große Dokumente (150+ Seiten) erhalten einen kurzen Hinweis, dass Miniaturansichten auf älteren Geräten etwas langsamer laden können — Neuanordnen und Löschen funktionieren trotzdem genauso."
+      "text": "Nein, ein Seitenlimit gibt es nicht; die Datei darf bis zu 200 MB groß sein. Sehr große Dokumente (150+ Seiten) erhalten einen kurzen Hinweis, dass Miniaturansichten auf älteren Geräten etwas langsamer laden können — Neuanordnen und Löschen funktionieren trotzdem genauso."
     }
   },
   {
@@ -84,7 +84,7 @@
     "name": "Ist der PDF-Seiten-Organizer wirklich kostenlos?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree ist kostenlos, ohne Abonnement, ohne Tageslimit und ohne Anmeldung. Es werden keine Wasserzeichen hinzugefügt und es gibt keine Dateigrößenbeschränkungen."
+      "text": "Ja. PDFree ist kostenlos, ohne Abonnement, ohne Tageslimit und ohne Anmeldung. Es werden keine Wasserzeichen hinzugefügt."
     }
   }
 ]

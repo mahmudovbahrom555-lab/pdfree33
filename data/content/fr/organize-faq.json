@@ -28,7 +28,7 @@
     "name": "Y a-t-il une limite au nombre de pages que je peux organiser ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. Il n'y a pas de limite de nombre de pages ni de taille de fichier. Les très grands documents (150+ pages) affichent un bref avertissement indiquant que les miniatures peuvent mettre un peu plus de temps à charger sur les appareils anciens — réorganiser et supprimer fonctionnent exactement de la même façon."
+      "text": "Non. Il n'y a pas de limite de nombre de pages ; seule la taille de chaque fichier est plafonnée, à 200 Mo. Les très grands documents (150+ pages) affichent un bref avertissement indiquant que les miniatures peuvent mettre un peu plus de temps à charger sur les appareils anciens — réorganiser et supprimer fonctionnent exactement de la même façon."
     }
   },
   {
@@ -84,7 +84,7 @@
     "name": "L'organisateur de pages PDF est-il vraiment gratuit ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Oui. PDFree est gratuit, sans abonnement, sans limite quotidienne et sans inscription. Aucun filigrane n'est ajouté au résultat et il n'y a aucune restriction de taille de fichier."
+      "text": "Oui. PDFree est gratuit, sans abonnement, sans limite quotidienne et sans inscription. Aucun filigrane n'est ajouté au résultat, et chaque fichier peut peser jusqu'à 200 Mo."
     }
   }
 ]

@@ -36,7 +36,7 @@
     "name": "Temizleyebileceğim sayfa sayısında bir sınır var mı?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Hayır. Sayfa sayısı veya dosya boyutu sınırı yoktur ve saatlik görev sınırı da yoktur. İhtiyacınız olduğu kadar tek sayfalık bir taramayı veya yüz sayfalık bir belgeyi temizleyin."
+      "text": "Hayır. Sayfa sayısı sınırı ve saatlik görev sınırı yoktur — ihtiyacınız olduğu kadar tek sayfalık bir taramayı veya yüz sayfalık bir belgeyi temizleyin. Her dosya 150 MB'a kadar olabilir. Her şey kendi cihazınızda çalıştığından, çok büyük dosyalar eski bir telefona göre bilgisayarda daha hızlı işlenir."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Taramayı Temizle aracı gerçekten tamamen ücretsiz mi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. PDFree abonelik olmadan, günlük veya saatlik sınır olmadan ve kayıt olmadan ücretsizdir. Sonuca hiçbir filigran eklenmez ve dosya boyutu kısıtlaması yoktur."
+      "text": "Evet. PDFree abonelik olmadan, günlük veya saatlik sınır olmadan ve kayıt olmadan ücretsizdir. Sonuca hiçbir filigran eklenmez. Her dosya 150 MB'a kadar olabilir."
     }
   },
   {

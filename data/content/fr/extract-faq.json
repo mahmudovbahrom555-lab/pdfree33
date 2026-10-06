@@ -44,7 +44,7 @@
     "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. PDFree n'a pas de limites artificielles. La seule contrainte est la mémoire vive disponible sur votre appareil."
+      "text": "Aucune limite de pages. Chaque fichier peut peser jusqu'à 500 Mo dans Chrome ou Edge sur un ordinateur doté d'au moins 8 Go de mémoire, et 200 Mo sur téléphone, Safari et Firefox. Tout est traité sur votre appareil : cette limite protège sa mémoire, ce n'est pas une offre payante."
     }
   },
   {

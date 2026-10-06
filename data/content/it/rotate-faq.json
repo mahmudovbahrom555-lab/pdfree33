@@ -36,7 +36,7 @@
     "name": "C'è un limite di dimensione o numero di pagine?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Nessun limite artificiale — l'unico vincolo è la memoria disponibile sul tuo dispositivo."
+      "text": "Sì: ogni PDF può arrivare fino a 150 MB. Non c'è alcun limite al numero di pagine né un limite giornaliero. Tutto avviene sul tuo dispositivo, quindi i file molto grandi vengono elaborati più velocemente su un computer che su un telefono meno recente."
     }
   },
   {

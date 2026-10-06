@@ -44,7 +44,7 @@
     "name": "Is er een limiet aan hoeveel pagina's ik kan extraheren?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nee. Je kunt elk aantal pagina's extraheren uit een PDF van elke grootte, zolang je browser genoeg geheugen heeft om het bestand te bevatten."
+      "text": "Nee, er is geen limiet op het aantal pagina's — extraheer zoveel pagina's als je wilt, zo vaak als je wilt. De PDF mag tot 500 MB groot zijn in Chrome of Edge op een computer met 8 GB+ geheugen, en 200 MB op telefoons, in Safari en in Firefox. Alles draait op je eigen apparaat, dus zeer grote bestanden gaan sneller op een computer dan op een oudere telefoon."
     }
   },
   {

@@ -10,7 +10,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Ouvrez votre PDF",
-      "text": "Cliquez sur \" Sélectionner les fichiers \" ou faites glisser votre PDF dans la zone de dépôt. Toute taille de fichier est acceptée — le fichier se charge dans votre navigateur et n'est jamais téléversé.",
+      "text": "Cliquez sur \" Sélectionner les fichiers \" ou faites glisser votre PDF dans la zone de dépôt. Les fichiers jusqu'à 500 Mo sont acceptés sur ordinateur (150 Mo sur téléphone) — le fichier se charge dans votre navigateur et n'est jamais téléversé.",
       "url": "https://pdfree.io/compress-pdf/#step1"
     },
     {

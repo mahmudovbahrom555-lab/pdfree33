@@ -44,7 +44,7 @@
     "name": "Gibt es ein Limit für die Anzahl der Seiten, die ich extrahieren kann?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
+      "text": "Nein, die Seitenzahl ist nicht begrenzt — extrahiere beliebig viele Seiten, so oft du willst. Die PDF-Datei darf in Chrome oder Edge auf einem Computer mit mindestens 8 GB Arbeitsspeicher bis zu 500 MB groß sein, auf Smartphones sowie in Safari und Firefox bis zu 200 MB. Alles läuft auf deinem eigenen Gerät, deshalb geht es bei sehr großen Dateien auf einem Computer schneller als auf einem älteren Smartphone."
     }
   },
   {

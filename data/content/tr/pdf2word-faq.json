@@ -52,7 +52,7 @@
     "name": "Maksimum dosya boyutu nedir?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Kesin bir sınır yoktur. Ancak çok büyük PDF'ler (100 MB ve üzeri) işlenmesi daha uzun sürebilir ve daha fazla bellek gerektirebilir. En iyi sonuçlar için Metin Modu'nda 100 MB altı, 300 DPI Görsel Modu'nda ise 50 MB altı dosyalar kullanın."
+      "text": "PDF başına 150 MB. Dönüştürme kendi cihazınızda çalıştığından çok büyük PDF'lerin (100 MB ve üzeri) işlenmesi daha uzun sürebilir ve daha fazla bellek gerektirebilir. En iyi sonuçlar için Metin Modu'nda 100 MB altı, 300 DPI Görsel Modu'nda ise 50 MB altı dosyalar kullanın."
     }
   },
   {

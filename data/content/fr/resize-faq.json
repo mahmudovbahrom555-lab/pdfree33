@@ -36,7 +36,7 @@
     "name": "Y a-t-il une limite au nombre de pages que je peux redimensionner ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. Il n'y a aucune limite de nombre de pages ni de taille de fichier, et aucune limite de tâches par heure. Redimensionnez un formulaire de 2 pages ou un rapport de 500 pages autant de fois que nécessaire."
+      "text": "Non. Il n'y a aucune limite de nombre de pages ni de tâches par heure ; seule la taille de chaque fichier est plafonnée, à 200 Mo. Redimensionnez un formulaire de 2 pages ou un rapport de 500 pages autant de fois que nécessaire."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "L'outil de redimensionnement PDF est-il entièrement gratuit ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Oui. PDFree est gratuit, sans abonnement, sans limite quotidienne ou horaire, et sans inscription. Aucun filigrane n'est ajouté au résultat et il n'y a aucune restriction de taille de fichier."
+      "text": "Oui. PDFree est gratuit, sans abonnement, sans limite quotidienne ou horaire, et sans inscription. Aucun filigrane n'est ajouté au résultat, et chaque fichier peut peser jusqu'à 200 Mo."
     }
   }
 ]

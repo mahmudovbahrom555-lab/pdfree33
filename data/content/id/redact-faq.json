@@ -52,7 +52,7 @@
     "name": "Apakah ada batas ukuran file?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak. PDFree tidak memiliki batas ukuran file atau jumlah halaman. Satu-satunya batasan praktis adalah memori perangkat Anda."
+      "text": "Ya — ukuran tiap file maksimal 150 MB, dan tidak ada batas jumlah halaman. Semua diproses di perangkat Anda sendiri, jadi file yang sangat besar lebih cepat diproses di komputer daripada di ponsel lama."
     }
   },
   {

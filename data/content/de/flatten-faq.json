@@ -76,7 +76,7 @@
     "name": "Kann ich mehrere PDF-Dateien gleichzeitig abflachen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Der Stapelmodus flacht Formularfelder und Anmerkungen in beliebig vielen PDF-Dateien ab, jede einzeln im Browser verarbeitet. Lade alle abgeflachten Dateien gemeinsam als ZIP herunter — ohne Größenbegrenzung."
+      "text": "Ja. Der Stapelmodus flacht Formularfelder und Anmerkungen in beliebig vielen PDF-Dateien ab, jede einzeln im Browser verarbeitet. Lade alle abgeflachten Dateien gemeinsam als ZIP herunter — jede einzelne Datei darf bis zu 150 MB groß sein."
     }
   },
   {

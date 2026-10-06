@@ -27,7 +27,7 @@
   {
     "@type": "Question",
     "name": "C'è un limite al numero di pagine che posso ottimizzare?",
-    "acceptedAnswer": { "@type": "Answer", "text": "No. Non c'è alcun limite al numero di pagine o alla dimensione del file, né un limite orario di operazioni. Ottimizza un PDF di una pagina o un libro di diverse centinaia di pagine tutte le volte che ti serve." }
+    "acceptedAnswer": { "@type": "Answer", "text": "No. Non c'è alcun limite al numero di pagine né un limite orario di operazioni: ottimizza un PDF di una pagina o un libro di diverse centinaia di pagine tutte le volte che ti serve. Ogni file può arrivare fino a 150 MB. Tutto avviene sul tuo dispositivo, quindi i file molto grandi vengono elaborati più velocemente su un computer che su un telefono meno recente." }
   },
   {
     "@type": "Question",
@@ -37,6 +37,6 @@
   {
     "@type": "Question",
     "name": "L'Ottimizzatore per E-Reader è completamente gratuito?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Sì. PDFree è gratuito senza abbonamento, senza limiti giornalieri o orari, e senza registrazione. Nessuna filigrana viene aggiunta al risultato e non c'è alcuna restrizione sulla dimensione del file." }
+    "acceptedAnswer": { "@type": "Answer", "text": "Sì. PDFree è gratuito senza abbonamento, senza limiti giornalieri o orari, e senza registrazione. Nessuna filigrana viene aggiunta al risultato. Ogni file può arrivare fino a 150 MB." }
   }
 ]

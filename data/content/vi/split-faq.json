@@ -68,7 +68,7 @@
     "name": "Có giới hạn về kích thước PDF hoặc số trang không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không có giới hạn phía server. Giới hạn thực tế là bộ nhớ khả dụng trong trình duyệt của bạn. PDF với hàng trăm trang và hình ảnh độ phân giải cao có thể mất vài giây để kết xuất hình thu nhỏ."
+      "text": "Không giới hạn số trang. Mỗi PDF có thể lên đến 500 MB trong Chrome hoặc Edge trên máy tính có bộ nhớ từ 8 GB trở lên, 200 MB trên điện thoại, Safari và Firefox. PDF với hàng trăm trang và hình ảnh độ phân giải cao có thể mất vài giây để kết xuất hình thu nhỏ."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "Có giới hạn trang khi tách không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không. PDFree không có giới hạn trang hoặc kích thước file. Xử lý phụ thuộc vào bộ nhớ khả dụng trên thiết bị của bạn. PDF với hàng trăm trang kết xuất hình thu nhỏ trong vài giây trên máy tính hiện đại."
+      "text": "Không giới hạn số trang. Mỗi PDF có thể lên đến 500 MB trong Chrome hoặc Edge trên máy tính có bộ nhớ từ 8 GB trở lên, 200 MB trên điện thoại, Safari và Firefox. Tốc độ xử lý phụ thuộc vào bộ nhớ khả dụng trên thiết bị của bạn — PDF với hàng trăm trang kết xuất hình thu nhỏ trong vài giây trên máy tính hiện đại."
     }
   },
   {

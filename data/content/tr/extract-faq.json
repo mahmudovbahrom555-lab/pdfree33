@@ -60,7 +60,7 @@
     "name": "Çıkarabileceğim sayfa sayısında bir sınır var mı?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Hayır. Tarayıcınızın belleği dosyayı tutmaya yettiği sürece, herhangi bir boyuttaki PDF'den istediğiniz kadar sayfa çıkarabilirsiniz."
+      "text": "Hayır, sayfa sayısı sınırı yoktur — istediğiniz kadar sayfayı, istediğiniz sıklıkta çıkarın. PDF, 8 GB+ belleğe sahip bir bilgisayarda Chrome veya Edge ile 500 MB'a, telefonlarda, Safari'de ve Firefox'ta 200 MB'a kadar olabilir. Her şey kendi cihazınızda çalıştığından, çok büyük dosyalar eski bir telefona göre bilgisayarda daha hızlı işlenir."
     }
   },
   {

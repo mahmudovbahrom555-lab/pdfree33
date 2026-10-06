@@ -36,7 +36,7 @@
     "name": "Gibt es ein Limit, wie viele Seiten ich in der Größe ändern kann?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. Es gibt kein Seitenzahl- oder Dateigrößenlimit und kein stündliches Aufgabenlimit. Ändere die Größe eines 2-seitigen Formulars oder eines 500-seitigen Berichts so oft du willst."
+      "text": "Nein. Es gibt kein Seitenlimit und kein stündliches Aufgabenlimit — die Datei darf bis zu 200 MB groß sein. Ändere die Größe eines 2-seitigen Formulars oder eines 500-seitigen Berichts so oft du willst."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "Ist das PDF-Resize-Tool wirklich kostenlos?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree ist kostenlos, ohne Abonnement, ohne Tages- oder Stundenlimit und ohne Anmeldung. Es wird kein Wasserzeichen hinzugefügt, und es gibt keine Dateigrößenbeschränkung."
+      "text": "Ja. PDFree ist kostenlos, ohne Abonnement, ohne Tages- oder Stundenlimit und ohne Anmeldung. Es wird kein Wasserzeichen hinzugefügt."
     }
   }
 ]

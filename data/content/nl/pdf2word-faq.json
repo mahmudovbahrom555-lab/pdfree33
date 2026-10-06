@@ -52,7 +52,7 @@
     "name": "Wat is de maximale bestandsgrootte?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Er is geen harde limiet. Zeer grote PDF's (100+ MB) kunnen echter langer duren om te verwerken en meer geheugen vereisen. Houd voor de beste resultaten bestanden onder 100 MB in tekstmodus en onder 50 MB in afbeeldingsmodus bij 300 DPI."
+      "text": "150 MB per PDF, en de afbeeldingsmodus converteert tot 500 pagina's. Zeer grote PDF's (100+ MB) duren langer en vragen meer geheugen, omdat de conversie op je eigen apparaat draait. Houd voor de beste resultaten bestanden onder 100 MB in tekstmodus en onder 50 MB in afbeeldingsmodus bij 300 DPI."
     }
   },
   {

@@ -44,7 +44,7 @@
     "name": "Y a-t-il des limites de taille ou de nombre de pages ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. PDFree n'a pas de limites artificielles. La seule contrainte est la mémoire vive disponible sur votre appareil."
+      "text": "Chaque image peut peser jusqu'à 50 Mo. Le nombre d'images et de pages n'est pas limité, et il n'y a aucune limite quotidienne."
     }
   }
 ]

@@ -76,7 +76,7 @@
     "name": "Birden fazla PDF dosyasını aynı anda düzleştirebilir miyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. PDFree'nin toplu modu, seçtiğiniz kadar PDF dosyasındaki form alanlarını ve notları düzleştirir, her birini tarayıcınızda yerel olarak işler. Tüm düzleştirilmiş dosyaları tek bir ZIP olarak birlikte indirirsiniz, boyut sınırı yoktur."
+      "text": "Evet. PDFree'nin toplu modu, seçtiğiniz kadar PDF dosyasındaki form alanlarını ve notları düzleştirir, her birini tarayıcınızda yerel olarak işler. Tüm düzleştirilmiş dosyaları tek bir ZIP olarak birlikte indirirsiniz — günlük limit yok, kayıt gerekmez. Toplu işlemdeki her dosya 150 MB'a kadar olabilir."
     }
   },
   {

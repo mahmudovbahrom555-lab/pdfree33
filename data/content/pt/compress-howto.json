@@ -10,7 +10,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Abra o seu PDF",
-      "text": "Clique em \"Escolher arquivos\" ou arraste o seu PDF para a zona de soltar. Qualquer tamanho de arquivo é aceite — o arquivo é carregado no seu navegador e nunca enviado para nenhum servidor.",
+      "text": "Clique em \"Escolher arquivos\" ou arraste o seu PDF para a zona de soltar. São aceitos arquivos de até 500 MB no Chrome ou Edge em um computador com 8 GB ou mais de memória, e de até 150 MB em celulares, no Safari e no Firefox — o arquivo é carregado no seu navegador e nunca enviado para nenhum servidor.",
       "url": "https://pdfree.io/compress-pdf/#step1"
     },
     {

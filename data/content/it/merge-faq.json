@@ -4,7 +4,7 @@
     "name": "Quanti file PDF posso unire in una volta?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nessun limite. PDFree elabora tutto nella memoria del browser — puoi unire 2, 50 o 100+ file in un'unica operazione. Per lotti grandi (50+ file o più di 500 MB), chiudi altre schede per liberare RAM."
+      "text": "Quanti ne vuoi: non c'è alcun limite al numero di file né un limite giornaliero, quindi puoi unire 2, 50 o 100+ file in un'unica operazione. I file di una singola unione possono arrivare complessivamente a 500 MB su un computer (Chrome/Edge, almeno 8 GB di RAM) o a 300 MB sui telefoni. Tutto avviene nella memoria del browser, quindi i lotti molto grandi vengono elaborati più velocemente su un computer che su un telefono meno recente — se rallenta, chiudi le altre schede."
     }
   },
   {

@@ -28,7 +28,7 @@
     "name": "Gibt es ein Limit für die Dateigröße oder Seitenanzahl?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein, es gibt keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Computers oder Smartphones."
+      "text": "Die Seitenzahl ist nicht begrenzt, die Datei darf bis zu 200 MB groß sein. Diese Grenze schützt den Arbeitsspeicher deines Computers oder Smartphones, denn alles wird lokal verarbeitet — eine Bezahlschranke ist sie nicht."
     }
   },
   {

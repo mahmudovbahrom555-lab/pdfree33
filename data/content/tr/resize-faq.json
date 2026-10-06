@@ -36,7 +36,7 @@
     "name": "Kaç sayfayı yeniden boyutlandırabileceğimin bir sınırı var mı?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Hayır. Sayfa sayısı veya dosya boyutu sınırı ve saatlik görev sınırı yoktur. 2 sayfalık bir formu veya 500 sayfalık bir raporu istediğiniz kadar yeniden boyutlandırın."
+      "text": "Hayır. Sayfa sayısı sınırı ve saatlik görev sınırı yoktur — 2 sayfalık bir formu veya 500 sayfalık bir raporu istediğiniz kadar yeniden boyutlandırın. Her dosya 200 MB'a kadar olabilir. Her şey kendi cihazınızda çalıştığından, çok büyük dosyalar eski bir telefona göre bilgisayarda daha hızlı işlenir."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "PDF boyutlandırma aracı tamamen ücretsiz mi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. PDFree abonelik olmadan, günlük veya saatlik sınır olmadan ve kayıt olmadan ücretsizdir. Sonuca filigran eklenmez ve dosya boyutu kısıtlaması yoktur."
+      "text": "Evet. PDFree abonelik olmadan, günlük veya saatlik sınır olmadan ve kayıt olmadan ücretsizdir. Sonuca filigran eklenmez. Her dosya 200 MB'a kadar olabilir."
     }
   }
 ]

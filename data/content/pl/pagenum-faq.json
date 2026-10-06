@@ -68,7 +68,7 @@
     "name": "Czy istnieje limit liczby stron?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. PDFree nie ma limitów liczby stron ani rozmiaru pliku. Jedynym praktycznym ograniczeniem jest dostępna pamięć operacyjna Twojego urządzenia."
+      "text": "Nie. Nie ma limitu liczby stron. Każdy plik może mieć do 200 MB; jedynym innym praktycznym ograniczeniem jest dostępna pamięć operacyjna Twojego urządzenia."
     }
   },
   {

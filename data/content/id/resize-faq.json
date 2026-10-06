@@ -36,7 +36,7 @@
     "name": "Apakah ada batas jumlah halaman yang bisa saya ubah ukurannya?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak. Tidak ada batas jumlah halaman atau ukuran file, dan tidak ada batas tugas per jam. Ubah ukuran formulir 2 halaman atau laporan 500 halaman sesering yang Anda butuhkan."
+      "text": "Tidak. Tidak ada batas jumlah halaman dan tidak ada batas tugas per jam. Ubah ukuran formulir 2 halaman atau laporan 500 halaman sesering yang Anda butuhkan. Ukuran tiap file maksimal 200 MB. Semua diproses di perangkat Anda sendiri, jadi file yang sangat besar lebih cepat diproses di komputer daripada di ponsel lama."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "Apakah alat ubah ukuran PDF ini benar-benar gratis?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ya. PDFree gratis tanpa langganan, tanpa batas harian atau per jam, dan tanpa daftar. Tidak ada watermark yang ditambahkan pada hasil dan tidak ada batasan ukuran file."
+      "text": "Ya. PDFree gratis tanpa langganan, tanpa batas harian atau per jam, dan tanpa daftar. Tidak ada watermark yang ditambahkan pada hasil. Ukuran tiap file maksimal 200 MB."
     }
   }
 ]

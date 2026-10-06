@@ -28,7 +28,7 @@
     "name": "Düzenleyebileceğim sayfa sayısında bir sınır var mı?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Hayır. Sayfa sayısı veya dosya boyutu sınırı yoktur. Çok büyük belgeler (150+ sayfa) için eski cihazlarda küçük resimlerin biraz daha yavaş yüklenebileceğine dair kısa bir uyarı gösterilir — sıralama ve silme tam olarak aynı şekilde çalışmaya devam eder."
+      "text": "Sayfa sayısı sınırı yoktur. Her dosya 200 MB'a kadar olabilir. Çok büyük belgeler (150+ sayfa) için eski cihazlarda küçük resimlerin biraz daha yavaş yüklenebileceğine dair kısa bir uyarı gösterilir — sıralama ve silme tam olarak aynı şekilde çalışmaya devam eder."
     }
   },
   {
@@ -84,7 +84,7 @@
     "name": "PDF sayfa düzenleme aracı gerçekten ücretsiz mi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. PDFree abonelik olmadan, günlük sınır olmadan ve kayıt olmadan ücretsizdir. Sonuca filigran eklenmez ve dosya boyutu kısıtlaması yoktur."
+      "text": "Evet. PDFree abonelik olmadan, günlük sınır olmadan ve kayıt olmadan ücretsizdir. Sonuca filigran eklenmez. Her dosya 200 MB'a kadar olabilir."
     }
   }
 ]

@@ -4,7 +4,7 @@
     "name": "Aynı anda kaç PDF birleştirebilirim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sınır yok. PDFree her şeyi tarayıcı belleğinde işler — tek işlemde 2, 50 veya 100+ dosyayı birleştirebilirsiniz. Büyük toplu işlemler (50+ dosya veya 500 MB üzeri) için RAM'i boşaltmak amacıyla diğer sekmeleri kapatın."
+      "text": "İstediğiniz kadar — dosya sayısı sınırı ve günlük limit yoktur, tek işlemde 2, 50 veya 100+ dosyayı birleştirebilirsiniz. Tek bir birleştirmedeki dosyaların toplamı bilgisayarda (Chrome/Edge, 8 GB+ RAM) 500 MB'a, telefonlarda 300 MB'a kadar çıkabilir. Her şey tarayıcı belleğinde işlendiğinden, çok büyük gruplar eski bir telefona göre bilgisayarda daha hızlı işlenir — zorlanırsa diğer sekmeleri kapatın."
     }
   },
   {

@@ -27,7 +27,7 @@
   {
     "@type": "Question",
     "name": "Y a-t-il une limite au nombre de pages que je peux optimiser ?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Non. Il n'y a aucune limite de nombre de pages ni de taille de fichier, ni de limite de tâches par heure. Optimisez un PDF d'une page ou un livre de plusieurs centaines de pages aussi souvent que nécessaire." }
+    "acceptedAnswer": { "@type": "Answer", "text": "Non. Il n'y a aucune limite de nombre de pages ni de tâches par heure ; seule la taille de chaque fichier est plafonnée, à 150 Mo. Optimisez un PDF d'une page ou un livre de plusieurs centaines de pages aussi souvent que nécessaire." }
   },
   {
     "@type": "Question",
@@ -37,6 +37,6 @@
   {
     "@type": "Question",
     "name": "L'Optimiseur pour Liseuse est-il entièrement gratuit ?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Oui. PDFree est gratuit, sans abonnement, sans limites quotidiennes ni horaires, et sans inscription. Aucun filigrane n'est ajouté au résultat et il n'y a aucune restriction de taille de fichier." }
+    "acceptedAnswer": { "@type": "Answer", "text": "Oui. PDFree est gratuit, sans abonnement, sans limites quotidiennes ni horaires, et sans inscription. Aucun filigrane n'est ajouté au résultat, et chaque fichier peut peser jusqu'à 150 Mo." }
   }
 ]

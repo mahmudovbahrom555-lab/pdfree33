@@ -84,7 +84,7 @@
     "name": "Puis-je aplatir plusieurs fichiers PDF à la fois ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Oui. Le mode par lots de PDFree aplatit les champs de formulaire et annotations d'autant de fichiers PDF que vous sélectionnez, chacun traité localement dans votre navigateur. Téléchargez tous les fichiers aplatis ensemble dans un ZIP, sans limite de taille."
+      "text": "Oui. Le mode par lots de PDFree aplatit les champs de formulaire et annotations d'autant de fichiers PDF que vous sélectionnez, chacun traité localement dans votre navigateur. Téléchargez tous les fichiers aplatis ensemble dans un ZIP, sans limite quotidienne. En mode par lots, chaque fichier peut peser jusqu'à 150 Mo."
     }
   },
   {

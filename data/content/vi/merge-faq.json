@@ -4,7 +4,7 @@
     "name": "Có thể ghép bao nhiêu file PDF cùng một lúc?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không có giới hạn. PDFree xử lý tất cả trong bộ nhớ trình duyệt của bạn, vì vậy bạn có thể ghép 2, 50 hoặc 100+ file trong một thao tác. Đối với lô lớn (50+ file hoặc tổng 500 MB+), hãy đóng các tab trình duyệt khác để giải phóng RAM."
+      "text": "Bao nhiêu tùy ý — không giới hạn số file và không giới hạn hàng ngày, vì vậy bạn có thể ghép 2, 50 hoặc 100+ file trong một thao tác. Tổng dung lượng các file trong một lần ghép có thể lên đến 500 MB trên máy tính (Chrome/Edge, RAM từ 8 GB) hoặc 300 MB trên điện thoại. Mọi thứ chạy trong bộ nhớ trình duyệt, nên lô rất lớn xử lý nhanh hơn trên máy tính so với điện thoại đời cũ — hãy đóng các tab khác nếu bị chậm."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Có giới hạn kích thước file khi ghép PDF không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không có giới hạn nhân tạo. PDFree xử lý file cục bộ trong trình duyệt của bạn — không cần đăng ký. Để có trải nghiệm tốt nhất, giữ tổng lô dưới 300 MB; các lô lớn hơn có thể chậm hơn trên thiết bị bộ nhớ thấp."
+      "text": "Có, chỉ một: tổng dung lượng các file trong một lần ghép có thể lên đến 500 MB trong Chrome hoặc Edge trên máy tính có bộ nhớ từ 8 GB trở lên, hoặc 300 MB trên điện thoại, Safari và Firefox. Không có tường phí, không giới hạn hàng ngày và không giới hạn số file — PDFree xử lý file cục bộ trong trình duyệt của bạn, nên mức trần này để bảo vệ bộ nhớ thiết bị chứ không phải để bán gói nâng cấp. Cần ghép nhiều hơn? Hãy ghép làm hai bước."
     }
   },
   {

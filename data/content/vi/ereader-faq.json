@@ -27,7 +27,7 @@
   {
     "@type": "Question",
     "name": "Có giới hạn số trang tôi có thể tối ưu không?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Không. Không có giới hạn số trang hay dung lượng tệp, và không có giới hạn tác vụ theo giờ. Tối ưu một PDF một trang hay một cuốn sách vài trăm trang bao nhiêu lần tùy bạn cần." }
+    "acceptedAnswer": { "@type": "Answer", "text": "Không. Không có giới hạn số trang và không có giới hạn tác vụ theo giờ; mỗi tệp có thể lên đến 150 MB. Tối ưu một PDF một trang hay một cuốn sách vài trăm trang bao nhiêu lần tùy bạn cần." }
   },
   {
     "@type": "Question",
@@ -37,6 +37,6 @@
   {
     "@type": "Question",
     "name": "Công cụ Tối Ưu Cho Máy Đọc Sách có hoàn toàn miễn phí không?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Có. PDFree miễn phí, không đăng ký thuê bao, không giới hạn hàng ngày hay hàng giờ, và không cần đăng ký tài khoản. Không có watermark nào được thêm vào kết quả và không có giới hạn dung lượng tệp." }
+    "acceptedAnswer": { "@type": "Answer", "text": "Có. PDFree miễn phí, không đăng ký thuê bao, không giới hạn hàng ngày hay hàng giờ, và không cần đăng ký tài khoản. Không có watermark nào được thêm vào kết quả." }
   }
 ]

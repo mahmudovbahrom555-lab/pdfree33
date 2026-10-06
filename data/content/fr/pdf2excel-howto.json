@@ -8,7 +8,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Charger le fichier",
-      "text": "Cliquez sur 'Choisir un fichier' ou faites glisser le PDF dans la zone de dépôt. Toute taille de fichier est acceptée."
+      "text": "Cliquez sur 'Choisir un fichier' ou faites glisser le PDF dans la zone de dépôt. Les fichiers jusqu'à 150 Mo sont acceptés."
     },
     {
       "@type": "HowToStep",

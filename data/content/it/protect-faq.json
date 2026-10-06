@@ -28,7 +28,7 @@
     "name": "Posso proteggere PDF di grandi dimensioni?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sì. Non c'è limite di dimensione. L'elaborazione avviene nella memoria del browser."
+      "text": "Sì, fino a 200 MB per file. L'elaborazione avviene nella memoria del browser, quindi i file molto grandi sono più veloci su un computer che su un telefono meno recente."
     }
   },
   {

@@ -4,7 +4,7 @@
     "name": "Ile plików PDF mogę połączyć naraz?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Bez limitu. PDFree przetwarza wszystko w pamięci przeglądarki — możesz połączyć 2, 50 lub 100+ plików w jednej operacji. W przypadku dużych partii (50+ plików lub ponad 500 MB) zamknij inne karty, aby zwolnić RAM."
+      "text": "Bez limitu liczby plików. PDFree przetwarza wszystko w pamięci przeglądarki — możesz połączyć 2, 50 lub 100+ plików w jednej operacji. Wszystkie pliki jednego łączenia mogą mieć razem do 500 MB w Chrome lub Edge na komputerze z co najmniej 8 GB pamięci RAM i do 300 MB na telefonach, w Safari i Firefoksie. Przy dużych partiach zamknij inne karty, aby zwolnić pamięć."
     }
   },
   {

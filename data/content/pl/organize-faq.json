@@ -28,7 +28,7 @@
     "name": "Czy jest limit liczby stron, które mogę zorganizować?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. Nie ma limitu liczby stron ani rozmiaru pliku. Bardzo duże dokumenty (150+ stron) otrzymują krótkie ostrzeżenie, że miniatury mogą wczytywać się nieco wolniej na starszych urządzeniach — zmiana kolejności i usuwanie działają dokładnie tak samo."
+      "text": "Nie. Nie ma limitu liczby stron; każdy plik może mieć do 200 MB. Bardzo duże dokumenty (150+ stron) otrzymują krótkie ostrzeżenie, że miniatury mogą wczytywać się nieco wolniej na starszych urządzeniach — zmiana kolejności i usuwanie działają dokładnie tak samo."
     }
   },
   {
@@ -84,7 +84,7 @@
     "name": "Czy organizator stron PDF jest naprawdę darmowy?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tak. PDFree jest darmowy, bez subskrypcji, bez dziennych limitów i bez rejestracji. Do wyniku nie są dodawane żadne znaki wodne i nie ma ograniczeń rozmiaru pliku."
+      "text": "Tak. PDFree jest darmowy, bez subskrypcji, bez dziennych limitów i bez rejestracji. Do wyniku nie są dodawane żadne znaki wodne. Każdy plik może mieć do 200 MB."
     }
   }
 ]

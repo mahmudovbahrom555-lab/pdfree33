@@ -10,7 +10,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Abra su PDF",
-      "text": "Haga clic en \"Elegir archivos\" o arrastre su PDF a la zona de carga. Se acepta cualquier tamaño de archivo — el archivo se carga en su navegador y nunca se sube.",
+      "text": "Haga clic en \"Elegir archivos\" o arrastre su PDF a la zona de carga. Se aceptan archivos de hasta 500 MB en Chrome o Edge en un ordenador con 8 GB o más de memoria, o de 150 MB en móviles, Safari y Firefox — el archivo se carga en su navegador y nunca se sube.",
       "url": "https://pdfree.io/compress-pdf/#step1"
     },
     {

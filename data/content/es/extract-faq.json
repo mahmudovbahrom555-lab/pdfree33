@@ -44,7 +44,7 @@
     "name": "¿Hay un límite en el número de páginas que puedo extraer?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Puedes extraer cualquier número de páginas de un PDF de cualquier tamaño, siempre que tu navegador tenga suficiente memoria."
+      "text": "No hay límite de páginas: extrae tantas como quieras, con la frecuencia que quieras. El PDF puede pesar hasta 500 MB en Chrome o Edge en un ordenador con 8 GB o más de memoria, y 200 MB en móviles, Safari y Firefox. Todo se ejecuta en tu propio dispositivo, así que los archivos muy grandes van más rápido en un ordenador que en un móvil antiguo."
     }
   },
   {

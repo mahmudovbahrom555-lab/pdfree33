@@ -28,7 +28,7 @@
     "name": "Czy jest limit rozmiaru pliku?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. PDFree nie ma limitu rozmiaru pliku. Duże pliki PDF są przetwarzane bezpośrednio w pamięci przeglądarki."
+      "text": "Każdy PDF może mieć do 150 MB. Nic nie jest przesyłane, więc limit chroni jedynie pamięć Twojego urządzenia — duże pliki PDF są przetwarzane bezpośrednio w pamięci przeglądarki."
     }
   },
   {

@@ -60,7 +60,7 @@
     "name": "Qual è il limite di dimensione del file?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "L'OCR di PDFree supporta file fino a 200 MB. Su mobile (iOS/iPadOS), l'elaborazione è limitata alle prime 30 pagine — dividi prima il PDF per elaborare il resto. Nessun limite sui browser desktop."
+      "text": "L'OCR di PDFree supporta file fino a 200 MB. Su mobile (iOS/iPadOS), l'elaborazione è limitata alle prime 30 pagine — dividi prima il PDF per elaborare il resto. Sui browser desktop non c'è alcun limite di pagine."
     }
   },
   {

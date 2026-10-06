@@ -68,7 +68,7 @@
     "name": "¿Hay un límite de páginas?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree no tiene límites de páginas ni de tamaño de archivo. La única limitación práctica es la memoria disponible en tu dispositivo."
+      "text": "No hay límite de páginas. Cada archivo puede pesar hasta 200 MB; aparte de eso, el único límite práctico es la memoria disponible en tu dispositivo."
     }
   },
   {

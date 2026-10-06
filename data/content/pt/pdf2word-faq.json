@@ -60,7 +60,7 @@
     "name": "Qual é o tamanho máximo de arquivo?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não há um limite fixo. PDFs muito grandes (mais de 100 MB) podem demorar mais e exigir mais memória. Para melhores resultados, fique abaixo de 100 MB no modo texto e 50 MB no modo imagem a 300 DPI."
+      "text": "150 MB por PDF. PDFs muito grandes (mais de 100 MB) podem demorar mais e exigir mais memória. Para melhores resultados, fique abaixo de 100 MB no modo texto e 50 MB no modo imagem a 300 DPI."
     }
   },
   {

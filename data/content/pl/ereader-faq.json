@@ -27,7 +27,7 @@
   {
     "@type": "Question",
     "name": "Czy jest limit liczby stron, które mogę zoptymalizować?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Nie. Nie ma limitu liczby stron ani rozmiaru pliku, ani godzinowego limitu zadań. Optymalizuj jednostronicowy PDF lub liczącą kilkaset stron książkę tak często, jak potrzebujesz." }
+    "acceptedAnswer": { "@type": "Answer", "text": "Nie. Nie ma limitu liczby stron ani godzinowego limitu zadań — optymalizuj jednostronicowy PDF lub liczącą kilkaset stron książkę tak często, jak potrzebujesz. Każdy plik może mieć do 150 MB. Wszystko działa na Twoim urządzeniu, więc bardzo duże pliki przetwarzają się szybciej na komputerze niż na starszym telefonie." }
   },
   {
     "@type": "Question",
@@ -37,6 +37,6 @@
   {
     "@type": "Question",
     "name": "Czy Optymalizator do E-Czytnika jest całkowicie darmowy?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Tak. PDFree jest darmowe, bez subskrypcji, bez dziennych ani godzinowych limitów i bez rejestracji. Do wyniku nie jest dodawany żaden znak wodny i nie ma ograniczenia rozmiaru pliku." }
+    "acceptedAnswer": { "@type": "Answer", "text": "Tak. PDFree jest darmowe, bez subskrypcji, bez dziennych ani godzinowych limitów i bez rejestracji. Do wyniku nie jest dodawany żaden znak wodny. Każdy plik może mieć do 150 MB." }
   }
 ]

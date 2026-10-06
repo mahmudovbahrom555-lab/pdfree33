@@ -4,7 +4,7 @@
     "name": "Combien de fichiers PDF puis-je fusionner à la fois ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Il n'y a pas de limite. PDFree traite tout dans la mémoire du navigateur — vous pouvez fusionner 2, 50 ou 100+ fichiers en une seule opération. Pour les grands lots (50+ fichiers ou 500 Mo+), fermez les autres onglets pour libérer de la RAM."
+      "text": "Autant que vous le souhaitez : il n'y a aucune limite de nombre de fichiers ni limite quotidienne, vous pouvez donc fusionner 2, 50 ou 100+ fichiers en une seule opération. Les fichiers d'une même fusion peuvent totaliser jusqu'à 500 Mo sur ordinateur (Chrome/Edge, 8 Go de RAM ou plus) ou 300 Mo sur téléphone. Tout est traité dans la mémoire du navigateur, donc les très gros lots vont plus vite sur ordinateur que sur un téléphone ancien — fermez les autres onglets si besoin."
     }
   },
   {

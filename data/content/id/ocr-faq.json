@@ -60,7 +60,7 @@
     "name": "Berapa batas ukuran file?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "OCR PDFree mendukung file hingga 200 MB. Di ponsel (iOS/iPadOS), pemrosesan dibatasi hanya 30 halaman pertama — pisahkan PDF dulu untuk memproses sisanya. Tidak ada batasan di browser desktop."
+      "text": "OCR PDFree mendukung file hingga 200 MB. Di ponsel (iOS/iPadOS), pemrosesan dibatasi hanya 30 halaman pertama — pisahkan PDF dulu untuk memproses sisanya. Di browser desktop tidak ada batas jumlah halaman."
     }
   },
   {

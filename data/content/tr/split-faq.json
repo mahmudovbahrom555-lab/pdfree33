@@ -28,7 +28,7 @@
     "name": "Büyük PDF dosyalarını bölebilir miyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. PDFree büyük PDF'leri tarayıcıda işler. Çok büyük dosyalar (500 MB+) için yeterli RAM olduğundan emin olun."
+      "text": "Evet. Her PDF, 8 GB+ belleğe sahip bir bilgisayarda Chrome veya Edge ile 500 MB'a, telefonlarda, Safari'de ve Firefox'ta 200 MB'a kadar olabilir. Sayfa sayısı sınırı yoktur. Her şey kendi cihazınızda çalıştığından, çok büyük dosyalar eski bir telefona göre bilgisayarda daha hızlı işlenir."
     }
   },
   {

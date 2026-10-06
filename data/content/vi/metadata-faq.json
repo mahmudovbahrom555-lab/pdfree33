@@ -36,7 +36,7 @@
     "name": "Có giới hạn kích thước file không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không. PDFree không giới hạn kích thước file hay số trang."
+      "text": "Có, mỗi file tối đa 200 MB và không giới hạn số trang. Giới hạn này chỉ để bảo vệ bộ nhớ thiết bị của bạn, vì mọi xử lý đều diễn ra ngay trên thiết bị."
     }
   },
   {

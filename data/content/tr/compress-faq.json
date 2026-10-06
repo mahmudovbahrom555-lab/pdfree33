@@ -20,7 +20,7 @@
     "name": "Dosya boyutu limiti var mı?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree 150 MB'a kadar PDF kabul eder. Daha büyük dosyalar için önce PDF Böl ile bölün, her parçayı sıkıştırın ve tekrar birleştirin."
+      "text": "8 GB+ belleğe sahip bir bilgisayarda Chrome veya Edge ile 500 MB'a, telefonlarda, Safari'de ve Firefox'ta 150 MB'a kadar — bu tarayıcılar bellek miktarını bildirmediği için güvenli sınır uygulanır. Hiçbir şey yüklenmediği için yükleme sınırı yoktur; bu sınır yalnızca cihazınızın belleğini korur. Daha büyük dosyalar için önce PDF Böl ile bölün, her parçayı sıkıştırın ve tekrar birleştirin."
     }
   },
   {

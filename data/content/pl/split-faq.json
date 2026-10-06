@@ -28,7 +28,7 @@
     "name": "Czy mogę dzielić duże pliki PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tak. PDFree przetwarza duże PDF-y w przeglądarce. W przypadku bardzo dużych plików (500+ MB) upewnij się, że masz wystarczająco dużo RAM."
+      "text": "Tak. PDFree przetwarza duże PDF-y w przeglądarce — do 500 MB w Chrome lub Edge na komputerze z co najmniej 8 GB pamięci RAM i do 200 MB na telefonach, w Safari i Firefoksie. Nie ma limitu liczby stron."
     }
   },
   {

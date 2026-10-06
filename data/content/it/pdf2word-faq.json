@@ -52,7 +52,7 @@
     "name": "Qual è la dimensione massima del file?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non c'è un limite rigido. Tuttavia, PDF molto grandi (oltre 100 MB) potrebbero richiedere più tempo di elaborazione e più memoria. Per risultati ottimali, mantieni i file sotto i 100 MB in modalità testo e sotto i 50 MB in modalità immagine a 300 DPI."
+      "text": "150 MB per PDF, e la modalità immagine converte fino a 500 pagine. I PDF molto grandi (oltre 100 MB) richiedono più tempo e più memoria, perché la conversione avviene sul tuo dispositivo. Per risultati ottimali, mantieni i file sotto i 100 MB in modalità testo e sotto i 50 MB in modalità immagine a 300 DPI."
     }
   },
   {

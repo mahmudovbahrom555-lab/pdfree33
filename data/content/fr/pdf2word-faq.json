@@ -60,7 +60,7 @@
     "name": "Quelle est la taille de fichier maximale ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Il n'y a pas de limite fixe. Les PDFs très volumineux (plus de 100 Mo) peuvent prendre plus de temps et nécessiter plus de mémoire. Pour de meilleurs résultats, restez en dessous de 100 Mo en mode texte et 50 Mo en mode image à 300 DPI."
+      "text": "Chaque PDF peut peser jusqu'à 150 Mo. Les fichiers très volumineux (plus de 100 Mo) peuvent prendre plus de temps et nécessiter plus de mémoire. Pour de meilleurs résultats, restez en dessous de 100 Mo en mode texte et 50 Mo en mode image à 300 DPI."
     }
   },
   {

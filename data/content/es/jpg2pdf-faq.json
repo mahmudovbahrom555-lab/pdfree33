@@ -52,7 +52,7 @@
     "name": "¿Cuántas imágenes puedo convertir a la vez?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No hay límite fijo. Puedes añadir tantas imágenes como necesites — la única restricción es la memoria RAM de tu dispositivo."
+      "text": "No hay límite: puedes añadir tantas imágenes como necesites. Cada imagen puede pesar hasta 50 MB, y el tiempo de proceso crece con el tamaño total de las imágenes."
     }
   }
 ]

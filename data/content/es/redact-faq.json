@@ -44,7 +44,7 @@
     "name": "¿Hay un límite de tamaño o número de páginas para tachar un PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. No hay límites artificiales. La única limitación es la memoria RAM disponible en tu computadora o smartphone."
+      "text": "No hay límite de páginas. Cada PDF puede pesar hasta 150 MB; como todo se ejecuta en tu propio dispositivo, los archivos muy grandes van más rápido en una computadora que en un smartphone antiguo."
     }
   },
   {

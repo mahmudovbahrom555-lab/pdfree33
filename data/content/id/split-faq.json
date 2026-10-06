@@ -68,7 +68,7 @@
     "name": "Apakah ada batasan ukuran PDF atau jumlah halaman?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak ada batasan sisi server. Batasan praktis adalah memori yang tersedia di browser Anda. PDF dengan ratusan halaman dan gambar resolusi tinggi mungkin memerlukan beberapa detik untuk merender thumbnail."
+      "text": "Tidak ada batas jumlah halaman. Ukuran tiap PDF hingga 500 MB di Chrome atau Edge pada komputer dengan memori 8 GB ke atas, dan 200 MB di ponsel, Safari, dan Firefox. Kecepatan pemrosesan bergantung pada memori perangkat Anda — PDF dengan ratusan halaman dan gambar resolusi tinggi mungkin memerlukan beberapa detik untuk merender thumbnail."
     }
   },
   {

@@ -36,7 +36,7 @@
     "name": "Gibt es ein Limit, wie viele Seiten ich säubern kann?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. Es gibt kein Seiten- oder Dateigrößenlimit und kein stündliches Aufgabenlimit. Säubere einen einseitigen Scan oder ein hundertseitiges Dokument, so oft du willst."
+      "text": "Nein. Es gibt kein Seitenlimit und kein stündliches Aufgabenlimit — die Datei darf bis zu 150 MB groß sein. Säubere einen einseitigen Scan oder ein hundertseitiges Dokument, so oft du willst."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Ist das Clean-Scan-Tool wirklich komplett kostenlos?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree ist kostenlos ohne Abo, ohne tägliche oder stündliche Limits und ohne Anmeldung. Der Ausgabe wird kein Wasserzeichen hinzugefügt, und es gibt keine Dateigrößenbeschränkung."
+      "text": "Ja. PDFree ist kostenlos ohne Abo, ohne tägliche oder stündliche Limits und ohne Anmeldung. Der Ausgabe wird kein Wasserzeichen hinzugefügt."
     }
   },
   {

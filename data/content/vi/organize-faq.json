@@ -28,7 +28,7 @@
     "name": "Có giới hạn số trang tôi có thể sắp xếp không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không. Không có giới hạn số trang hay dung lượng file. Các tài liệu rất lớn (150+ trang) sẽ nhận được thông báo ngắn rằng hình thu nhỏ có thể tải chậm hơn một chút trên thiết bị cũ — sắp xếp lại và xóa vẫn hoạt động y hệt."
+      "text": "Không. Không có giới hạn số trang; mỗi file có thể lên đến 200 MB. Các tài liệu rất lớn (150+ trang) sẽ nhận được thông báo ngắn rằng hình thu nhỏ có thể tải chậm hơn một chút trên thiết bị cũ — sắp xếp lại và xóa vẫn hoạt động y hệt."
     }
   },
   {
@@ -84,7 +84,7 @@
     "name": "Công cụ sắp xếp trang PDF này có hoàn toàn miễn phí không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Có. PDFree miễn phí, không cần đăng ký gói, không giới hạn hàng ngày, và không cần đăng ký tài khoản. Không có watermark được thêm vào kết quả và không có giới hạn dung lượng file."
+      "text": "Có. PDFree miễn phí, không cần đăng ký gói, không giới hạn hàng ngày, và không cần đăng ký tài khoản. Không có watermark được thêm vào kết quả."
     }
   }
 ]

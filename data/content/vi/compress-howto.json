@@ -10,7 +10,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Mở PDF của bạn",
-      "text": "Nhấp 'Chọn file' hoặc kéo PDF vào vùng thả. Bất kỳ kích thước file nào đều được chấp nhận — file được tải trong trình duyệt của bạn và không bao giờ được tải lên.",
+      "text": "Nhấp 'Chọn file' hoặc kéo PDF vào vùng thả. Chấp nhận file tối đa 500 MB trong Chrome hoặc Edge trên máy tính có bộ nhớ từ 8 GB trở lên, hoặc 150 MB trên điện thoại, Safari và Firefox — file được tải trong trình duyệt của bạn và không bao giờ được tải lên.",
       "url": "https://pdfree.io/vi/nen-pdf/#step1"
     },
     {

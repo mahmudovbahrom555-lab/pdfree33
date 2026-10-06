@@ -8,7 +8,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Carregar arquivo",
-      "text": "Clique em 'Selecionar arquivo' ou arraste o PDF para a área de soltar. Qualquer tamanho de arquivo é aceito."
+      "text": "Clique em 'Selecionar arquivo' ou arraste o PDF para a área de soltar. Cada arquivo pode ter até 150 MB."
     },
     {
       "@type": "HowToStep",

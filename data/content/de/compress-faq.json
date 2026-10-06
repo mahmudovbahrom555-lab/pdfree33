@@ -28,7 +28,7 @@
     "name": "Gibt es ein Dateigrößenlimit?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree hat keine künstlichen Limits. Die einzige Begrenzung ist der verfügbare Arbeitsspeicher deines Geräts."
+      "text": "Bis zu 500 MB in Chrome oder Edge auf einem Computer mit mindestens 8 GB Arbeitsspeicher, bis zu 150 MB auf Smartphones sowie in Safari und Firefox — diese Browser melden ihren Arbeitsspeicher nicht, deshalb gilt dort die sichere Grenze. Da nichts hochgeladen wird, gibt es kein Upload-Limit; die Grenze schützt nur den Arbeitsspeicher deines Geräts."
     }
   },
   {

@@ -68,7 +68,7 @@
     "name": "Is er een limiet aan het aantal pagina's?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nee. PDFree heeft geen limieten voor het aantal pagina's of de bestandsgrootte. De enige praktische beperking is het beschikbare werkgeheugen van je apparaat."
+      "text": "Nee, er is geen paginalimiet. Elk bestand mag tot 200 MB groot zijn; verder is alleen het beschikbare werkgeheugen van je apparaat een praktische beperking."
     }
   },
   {

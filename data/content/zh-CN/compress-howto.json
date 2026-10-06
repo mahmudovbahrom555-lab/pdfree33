@@ -10,7 +10,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "打开您的 PDF",
-      "text": "点击“选择文件”或将 PDF 拖入拖放区域。接受任意大小的文件 —— 文件会加载到浏览器中，永远不会被上传。",
+      "text": "点击“选择文件”或将 PDF 拖入拖放区域。可接受的文件在内存 8 GB 及以上电脑的 Chrome 或 Edge 中最大 500 MB，在手机、Safari 和 Firefox 上最大 150 MB —— 文件会加载到浏览器中，永远不会被上传。",
       "url": "https://pdfree.io/zh/yasuo-pdf/#step1"
     },
     {

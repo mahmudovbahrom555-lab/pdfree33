@@ -36,7 +36,7 @@
     "name": "¿Hay un límite de tamaño de archivo?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. La única limitación es la memoria RAM disponible en tu dispositivo."
+      "text": "Sí, cada archivo puede pesar hasta 200 MB. No hay límite diario, y como todo se procesa en tu propio dispositivo, los archivos muy grandes van más rápido en un ordenador que en un móvil antiguo."
     }
   },
   {

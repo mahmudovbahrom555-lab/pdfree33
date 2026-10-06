@@ -28,7 +28,7 @@
     "name": "Kan ik grote PDF's splitsen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree verwerkt grote PDF's in de browser. Voor bestanden groter dan 500 MB is voldoende RAM aanbevolen."
+      "text": "Ja. Elke PDF mag tot 500 MB groot zijn in Chrome of Edge op een computer met 8 GB+ geheugen, en 200 MB op telefoons, in Safari en in Firefox. Er is geen limiet op het aantal pagina's."
     }
   },
   {

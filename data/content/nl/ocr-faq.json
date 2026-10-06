@@ -60,7 +60,7 @@
     "name": "Wat is de maximale bestandsgrootte?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree OCR ondersteunt bestanden tot 200 MB. Op mobiel (iOS/iPadOS) is de verwerking beperkt tot de eerste 30 pagina's om geheugenproblemen te voorkomen — splits de PDF eerst om de rest te verwerken. Geen limieten op desktopbrowsers."
+      "text": "PDFree OCR ondersteunt bestanden tot 200 MB. Op mobiel (iOS/iPadOS) is de verwerking beperkt tot de eerste 30 pagina's om geheugenproblemen te voorkomen — splits de PDF eerst om de rest te verwerken. In desktopbrowsers is er geen paginalimiet."
     }
   },
   {

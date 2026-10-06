@@ -27,7 +27,7 @@
   {
     "@type": "Question",
     "name": "Gibt es ein Limit, wie viele Seiten ich optimieren kann?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Nein. Es gibt kein Limit für Seitenzahl oder Dateigröße und keine stündliche Aufgabenbegrenzung. Optimiere ein einseitiges PDF oder ein mehrere hundert Seiten starkes Buch, so oft du willst." }
+    "acceptedAnswer": { "@type": "Answer", "text": "Nein. Es gibt kein Seitenlimit und keine stündliche Aufgabenbegrenzung — die Datei darf bis zu 150 MB groß sein. Optimiere ein einseitiges PDF oder ein mehrere hundert Seiten starkes Buch, so oft du willst." }
   },
   {
     "@type": "Question",
@@ -37,6 +37,6 @@
   {
     "@type": "Question",
     "name": "Ist der E-Reader-Optimierer wirklich kostenlos?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Ja. PDFree ist kostenlos ohne Abo, ohne tägliche oder stündliche Limits und ohne Anmeldung. Der Ausgabe wird kein Wasserzeichen hinzugefügt und es gibt keine Dateigrößenbeschränkung." }
+    "acceptedAnswer": { "@type": "Answer", "text": "Ja. PDFree ist kostenlos ohne Abo, ohne tägliche oder stündliche Limits und ohne Anmeldung. Der Ausgabe wird kein Wasserzeichen hinzugefügt." }
   }
 ]

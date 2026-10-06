@@ -28,7 +28,7 @@
     "name": "Posso dividere PDF di grandi dimensioni?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sì. PDFree gestisce PDF di grandi dimensioni nel browser. Per file molto grandi (500+ MB), assicurati di avere RAM sufficiente."
+      "text": "Sì, senza limiti di pagine. Ogni PDF può arrivare fino a 500 MB in Chrome o Edge su un computer con almeno 8 GB di memoria, e fino a 200 MB su telefoni, Safari e Firefox. L'elaborazione dipende dalla memoria disponibile sul tuo dispositivo: su un computer moderno, i PDF con centinaia di pagine generano le miniature in pochi secondi."
     }
   },
   {

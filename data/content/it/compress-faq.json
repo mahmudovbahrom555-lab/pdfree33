@@ -20,7 +20,7 @@
     "name": "C'è un limite di dimensione del file?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree accetta PDF fino a 150 MB. Per file più grandi, dividili prima con lo strumento Dividi PDF, comprimi ogni parte, poi uniscile di nuovo."
+      "text": "Fino a 500 MB in Chrome o Edge su un computer con almeno 8 GB di memoria, e fino a 150 MB su telefoni, Safari e Firefox: questi browser non indicano quanta memoria hanno, quindi ricevono il limite prudenziale. Non viene caricato nulla, quindi non esiste un limite di upload — il limite serve solo a proteggere la memoria del tuo dispositivo. Per file più grandi, dividili prima con lo strumento Dividi PDF, comprimi ogni parte, poi uniscile di nuovo."
     }
   },
   {

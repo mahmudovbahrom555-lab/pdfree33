@@ -28,7 +28,7 @@
     "name": "¿Hay un límite de páginas para la conversión?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. No hay límites de número de páginas ni de tamaño de archivo. Los PDFs muy grandes (100+ páginas a 300 DPI) pueden tardar más en procesarse. Para mejores resultados con archivos grandes, cierra otras pestañas del navegador antes de convertir."
+      "text": "No hay límite de páginas, y cada PDF puede pesar hasta 100 MB. Los PDFs muy grandes (100+ páginas a 300 DPI) pueden tardar más en procesarse. Para mejores resultados con archivos grandes, cierra otras pestañas del navegador antes de convertir."
     }
   },
   {

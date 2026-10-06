@@ -36,7 +36,7 @@
     "name": "C'è un limite a quante pagine posso ridimensionare?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Non c'è limite al numero di pagine né alla dimensione del file, né un limite di attività all'ora. Ridimensiona un modulo di 2 pagine o un report di 500 pagine tutte le volte che ti serve."
+      "text": "No. Non c'è limite al numero di pagine né un limite di attività all'ora: ridimensiona un modulo di 2 pagine o un report di 500 pagine tutte le volte che ti serve. Ogni file può arrivare fino a 200 MB. Tutto avviene sul tuo dispositivo, quindi i file molto grandi vengono elaborati più velocemente su un computer che su un telefono meno recente."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "Lo strumento per ridimensionare PDF è davvero gratuito?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sì. PDFree è gratuito senza abbonamento, senza limiti giornalieri o orari, e senza registrazione. Nessuna filigrana viene aggiunta al risultato e non ci sono restrizioni sulla dimensione del file."
+      "text": "Sì. PDFree è gratuito senza abbonamento, senza limiti giornalieri o orari, e senza registrazione. Nessuna filigrana viene aggiunta al risultato. Ogni file può arrivare fino a 200 MB."
     }
   }
 ]

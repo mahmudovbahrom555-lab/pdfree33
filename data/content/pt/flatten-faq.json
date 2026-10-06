@@ -84,7 +84,7 @@
     "name": "Posso achatar vários arquivos PDF de uma vez?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. O modo em lote do PDFree achata campos de formulário e anotações em quantos arquivos PDF você selecionar, processando cada um localmente no seu navegador. Baixe todos os arquivos achatados juntos em um ZIP, sem limite de tamanho."
+      "text": "Sim. O modo em lote do PDFree achata campos de formulário e anotações em quantos arquivos PDF você selecionar, processando cada um localmente no seu navegador. Baixe todos os arquivos achatados juntos em um ZIP, sem limite diário. Cada arquivo do lote pode ter até 150 MB."
     }
   },
   {

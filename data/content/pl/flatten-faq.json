@@ -68,7 +68,7 @@
     "name": "Czy mogę spłaszczyć wiele plików PDF naraz?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tak. Tryb wsadowy PDFree spłaszcza pola formularzy i adnotacje w dowolnej liczbie wybranych plików PDF, przetwarzając każdy lokalnie w przeglądarce. Pobierz wszystkie spłaszczone pliki razem jako jedno archiwum ZIP, bez limitu rozmiaru."
+      "text": "Tak. Tryb wsadowy PDFree spłaszcza pola formularzy i adnotacje w dowolnej liczbie wybranych plików PDF, przetwarzając każdy lokalnie w przeglądarce. Pobierz wszystkie spłaszczone pliki razem jako jedno archiwum ZIP — bez dziennego limitu. Każdy plik w partii może mieć do 150 MB."
     }
   },
   {

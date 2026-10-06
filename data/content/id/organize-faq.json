@@ -28,7 +28,7 @@
     "name": "Apakah ada batas jumlah halaman yang bisa saya atur?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak. Tidak ada batas jumlah halaman atau ukuran file. Dokumen sangat besar (150+ halaman) akan mendapat peringatan singkat bahwa thumbnail mungkin sedikit lebih lambat dimuat di perangkat lama — mengurutkan ulang dan menghapus tetap berfungsi sama persis."
+      "text": "Tidak ada batas jumlah halaman. Ukuran tiap file maksimal 200 MB. Dokumen sangat besar (150+ halaman) akan mendapat peringatan singkat bahwa thumbnail mungkin sedikit lebih lambat dimuat di perangkat lama — mengurutkan ulang dan menghapus tetap berfungsi sama persis."
     }
   },
   {
@@ -84,7 +84,7 @@
     "name": "Apakah alat pengatur halaman PDF ini benar-benar gratis?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ya. PDFree gratis tanpa langganan, tanpa batas harian, dan tanpa daftar. Tidak ada watermark yang ditambahkan pada hasil dan tidak ada batasan ukuran file."
+      "text": "Ya. PDFree gratis tanpa langganan, tanpa batas harian, dan tanpa daftar. Tidak ada watermark yang ditambahkan pada hasil. Ukuran tiap file maksimal 200 MB."
     }
   }
 ]

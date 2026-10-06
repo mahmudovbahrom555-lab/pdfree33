@@ -36,7 +36,7 @@
     "name": "¿Hay un límite de páginas?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. La única limitación es la memoria RAM disponible en tu dispositivo."
+      "text": "No hay límite de páginas. Cada archivo puede pesar hasta 150 MB; como todo se ejecuta en tu propio dispositivo, los archivos muy grandes van más rápido en un ordenador que en un móvil antiguo."
     }
   },
   {

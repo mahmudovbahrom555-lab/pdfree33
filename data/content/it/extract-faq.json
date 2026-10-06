@@ -44,7 +44,7 @@
     "name": "C'è un limite al numero di pagine che posso estrarre?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Puoi estrarre qualsiasi numero di pagine da un PDF di qualsiasi dimensione, purché il tuo browser abbia memoria sufficiente per contenere il file."
+      "text": "No. Puoi estrarre qualsiasi numero di pagine, tutte le volte che vuoi. Il PDF può arrivare fino a 500 MB in Chrome o Edge su un computer con almeno 8 GB di memoria, e fino a 200 MB su telefoni, Safari e Firefox. Tutto avviene sul tuo dispositivo, quindi i file molto grandi vengono elaborati più velocemente su un computer che su un telefono meno recente."
     }
   },
   {

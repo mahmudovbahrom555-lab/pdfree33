@@ -68,7 +68,7 @@
     "name": "Kan ik meerdere PDF-bestanden tegelijk afvlakken?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree's batchmodus vlakt formuliervelden en annotaties af in zoveel PDF-bestanden als je selecteert, elk lokaal verwerkt in je browser. Download alle afgevlakte bestanden samen als één ZIP, zonder groottelimiet."
+      "text": "Ja. PDFree's batchmodus vlakt formuliervelden en annotaties af in zoveel PDF-bestanden als je selecteert, elk lokaal verwerkt in je browser. Download alle afgevlakte bestanden samen als één ZIP, zonder dagelijkse limiet. Elk bestand in een batch mag tot 150 MB groot zijn."
     }
   },
   {

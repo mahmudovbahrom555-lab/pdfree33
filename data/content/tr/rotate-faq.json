@@ -20,7 +20,7 @@
     "name": "PDF döndürmek için bir dosya boyutu sınırı var mı?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Hayır. Dosya boyutu veya sayfa sayısı sınırı yoktur."
+      "text": "Evet — her PDF 150 MB'a kadar olabilir. Sayfa sayısı sınırı ve günlük limit yoktur. Her şey kendi cihazınızda çalıştığından, çok büyük dosyalar eski bir telefona göre bilgisayarda daha hızlı işlenir."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Bu araç tamamen ücretsiz mi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. PDFree abonelik, günlük limit veya kayıt gerektirmeden ücretsizdir. Çıktıya hiçbir filigran eklenmez ve dosya boyutu kısıtlaması yoktur."
+      "text": "Evet. PDFree abonelik, günlük limit veya kayıt gerektirmeden ücretsizdir. Çıktıya hiçbir filigran eklenmez."
     }
   },
   {

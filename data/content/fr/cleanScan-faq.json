@@ -36,7 +36,7 @@
     "name": "Y a-t-il une limite au nombre de pages que je peux nettoyer ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. Il n'y a aucune limite de nombre de pages ou de taille de fichier, ni de limite de tâches par heure. Nettoyez un scan d'une page ou un document de cent pages, aussi souvent que nécessaire."
+      "text": "Non. Il n'y a aucune limite de nombre de pages ni de tâches par heure ; seule la taille de chaque fichier est plafonnée, à 150 Mo. Nettoyez un scan d'une page ou un document de cent pages, aussi souvent que nécessaire."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "L'outil Nettoyer Scan est-il vraiment entièrement gratuit ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Oui. PDFree est gratuit, sans abonnement, sans limites quotidiennes ou horaires, et sans inscription. Aucun filigrane n'est ajouté au résultat et il n'y a aucune restriction de taille de fichier."
+      "text": "Oui. PDFree est gratuit, sans abonnement, sans limites quotidiennes ou horaires, et sans inscription. Aucun filigrane n'est ajouté au résultat, et chaque fichier peut peser jusqu'à 150 Mo."
     }
   },
   {

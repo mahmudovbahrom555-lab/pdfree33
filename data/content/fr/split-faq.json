@@ -44,7 +44,7 @@
     "name": "Y a-t-il une limite de pages lors de la division ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. PDFree n'a aucune limite de pages ni de taille de fichier. Le traitement dépend de la mémoire disponible sur votre appareil. Les PDFs de centaines de pages génèrent des miniatures en quelques secondes sur un ordinateur moderne."
+      "text": "Non, aucune limite de pages. Chaque PDF peut peser jusqu'à 500 Mo dans Chrome ou Edge sur un ordinateur doté d'au moins 8 Go de mémoire, et 200 Mo sur téléphone, Safari et Firefox. Le traitement dépend de la mémoire disponible sur votre appareil. Les PDFs de centaines de pages génèrent des miniatures en quelques secondes sur un ordinateur moderne."
     }
   },
   {

@@ -4,7 +4,7 @@
     "name": "¿Cuántos archivos PDF puedo unir a la vez?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No hay límite. PDFree procesa todo en la memoria del navegador — puedes unir 2, 50 o 100+ archivos en una sola operación. Para lotes grandes (50+ archivos o más de 500 MB), cierra otras pestañas del navegador para liberar RAM."
+      "text": "Tantos como quieras: no hay límite de archivos ni límite diario, así que puedes unir 2, 50 o 100+ archivos de una vez. Los archivos de una misma unión pueden sumar hasta 500 MB en un ordenador (Chrome/Edge, 8 GB+ de RAM) o 300 MB en móviles. Todo se ejecuta en la memoria del navegador, así que los lotes muy grandes van más rápido en un ordenador que en un móvil antiguo; si va lento, cierra otras pestañas."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "¿Hay un límite de tamaño de archivo para fusionar PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No hay límites artificiales ni muros de pago. PDFree procesa los archivos localmente en tu navegador — sin suscripción. Para mejor rendimiento, recomendamos mantener el total por debajo de 300 MB; lotes más grandes pueden ser más lentos en dispositivos con poca memoria."
+      "text": "Sí, uno: los archivos de una misma unión pueden sumar hasta 500 MB en Chrome o Edge en un ordenador con 8 GB o más de memoria, o 300 MB en móviles, Safari y Firefox. No hay muro de pago, ni límite diario, ni límite de archivos: PDFree procesa los archivos localmente en tu navegador, así que el tope protege la memoria de tu dispositivo en lugar de venderte una suscripción. ¿Un trabajo más grande? Únelo en dos pasos."
     }
   },
   {

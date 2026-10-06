@@ -36,7 +36,7 @@
     "name": "Czy jest limit liczby stron, które mogę wyczyścić?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. Nie ma limitu liczby stron ani rozmiaru pliku, ani limitu zadań na godzinę. Czyść jednostronicowy skan lub stustronicowy dokument tak często, jak potrzebujesz."
+      "text": "Nie. Nie ma limitu liczby stron ani limitu zadań na godzinę — czyść jednostronicowy skan lub stustronicowy dokument tak często, jak potrzebujesz. Każdy plik może mieć do 150 MB. Wszystko działa na Twoim urządzeniu, więc bardzo duże pliki przetwarzają się szybciej na komputerze niż na starszym telefonie."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Czy narzędzie Wyczyść Skan jest naprawdę całkowicie darmowe?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tak. PDFree jest darmowe, bez subskrypcji, bez dziennych lub godzinowych limitów i bez rejestracji. Do wyniku nie dodaje się znaku wodnego i nie ma ograniczenia rozmiaru pliku."
+      "text": "Tak. PDFree jest darmowe, bez subskrypcji, bez dziennych lub godzinowych limitów i bez rejestracji. Do wyniku nie dodaje się znaku wodnego. Każdy plik może mieć do 150 MB."
     }
   },
   {

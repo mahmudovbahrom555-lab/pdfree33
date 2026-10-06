@@ -28,7 +28,7 @@
     "name": "Is er een limiet op de bestandsgrootte?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nee. PDFree heeft geen bestandsgroottelimiet. Grote PDF's worden direct in het browsergeheugen verwerkt."
+      "text": "Ja: elke PDF mag tot 150 MB groot zijn. Dat is geen betaalmuur — de conversie draait in het geheugen van je eigen browser, en de limiet beschermt dat geheugen. Er is geen dagelijkse limiet."
     }
   },
   {

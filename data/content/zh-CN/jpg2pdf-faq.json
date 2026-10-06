@@ -12,7 +12,7 @@
     "name": "有文件大小限制吗？",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "没有。PDFree 没有文件大小或图片数量限制。"
+      "text": "没有图片数量限制，每张图片最大 50 MB。"
     }
   },
   {

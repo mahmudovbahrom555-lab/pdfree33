@@ -28,7 +28,7 @@
     "name": "¿Hay un límite de tamaño de archivo?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. La única limitación es la memoria RAM disponible en tu dispositivo."
+      "text": "Sí: hasta 500 MB en Chrome o Edge en un ordenador con 8 GB o más de memoria, y 150 MB en móviles, Safari y Firefox, que no informan de su memoria y reciben el límite seguro. Como nada se sube, no hay tope de subida; el límite solo protege la memoria de tu dispositivo."
     }
   },
   {

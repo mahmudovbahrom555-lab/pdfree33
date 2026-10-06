@@ -60,7 +60,7 @@
     "name": "Gibt es eine maximale Dateigröße?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Es gibt keine feste Grenze. Sehr große PDFs (100+ MB) können jedoch länger dauern und mehr Arbeitsspeicher benötigen. Für beste Ergebnisse empfehlen wir Dateien unter 100 MB im Textmodus und unter 50 MB im Bildmodus bei 300 DPI."
+      "text": "Ja: bis zu 150 MB pro PDF. Sehr große Dateien brauchen länger und mehr Arbeitsspeicher — für beste Ergebnisse empfehlen wir Dateien unter 100 MB im Textmodus und unter 50 MB im Bildmodus bei 300 DPI."
     }
   },
   {

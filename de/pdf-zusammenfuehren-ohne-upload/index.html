@@ -33,7 +33,7 @@
   <meta name="description" content="PDF-Dateien zusammenführen, ohne sie auf einen Server hochzuladen — alles läuft in deinem Browser. Kostenlos, keine Registrierung.">
 
   <meta property="og:title"       content="PDF Zusammenführen Ohne Server-Upload | PDFree">
-  <meta property="og:description" content="PDFs vollständig in deinem Browser zusammenführen. Dateien werden nie hochgeladen, nie gespeichert. Kostenlos, privat, ohne Limits.">
+  <meta property="og:description" content="PDFs vollständig in deinem Browser zusammenführen. Dateien werden nie hochgeladen, nie gespeichert. Kostenlos, privat, ohne Tageslimit.">
   <meta property="og:type"        content="website">
   <meta property="og:url"         content="https://pdfree.io/de/pdf-zusammenfuehren-ohne-upload/">
   <meta property="og:site_name"   content="PDFree">
@@ -45,7 +45,7 @@
   <meta name="twitter:card"  content="summary_large_image">
   <meta name="twitter:site"  content="@pdfree_io">
   <meta name="twitter:title" content="PDF Zusammenführen Ohne Server-Upload | PDFree">
-  <meta name="twitter:description" content="PDFs vollständig in deinem Browser zusammenführen. Dateien werden nie hochgeladen, nie gespeichert. Kostenlos, privat, ohne Limits.">
+  <meta name="twitter:description" content="PDFs vollständig in deinem Browser zusammenführen. Dateien werden nie hochgeladen, nie gespeichert. Kostenlos, privat, ohne Tageslimit.">
   <meta name="twitter:image" content="https://pdfree.io/icons/og-image.jpg">
   <meta name="twitter:image:alt" content="PDF Zusammenführen Ohne Server-Upload | PDFree">
 
@@ -92,7 +92,7 @@
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "featureList": [
       "Kein Datei-Upload — Dateien verlassen dein Gerät nie",
-      "Keine Dateigrößenbeschränkung",
+      "Kein Tageslimit",
       "Kein Konto erforderlich",
       "Funktioniert offline",
       "DSGVO- und sicherheitskonform durch Architektur"
@@ -185,7 +185,7 @@
         "name": "Gibt es ein Dateigrößenlimit beim Zusammenführen ohne Upload?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Nein. PDFree hat keine Dateigrößenbeschränkung, weil die Verarbeitung lokal erfolgt — der verfügbare Arbeitsspeicher deines Geräts ist die einzige Grenze. Die meisten modernen Geräte verarbeiten PDFs bis zu mehreren hundert Megabyte problemlos."
+          "text": "Ja, eine: Die Dateien einer Zusammenführung dürfen in Chrome oder Edge auf einem Computer mit mindestens 8 GB Arbeitsspeicher zusammen bis zu 500 MB groß sein, auf Smartphones sowie in Safari und Firefox bis zu 300 MB. Da nichts hochgeladen wird, gibt es kein Upload-Limit — die Grenze schützt nur den Arbeitsspeicher deines Geräts."
         }
       },
       {
@@ -266,7 +266,7 @@
   <section style="background:var(--green-light);border-bottom:1px solid rgba(45,122,79,0.15);padding:24px 24px 20px;text-align:center;">
     <div style="max-width:720px;margin:0 auto;">
       <h1 style="font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-0.5px;line-height:1.2;color:var(--text);margin:0 0 6px;">PDF Zusammenführen Ohne Server-Upload</h1>
-      <p style="font-size:14px;color:var(--green);margin:0;font-weight:500;">100 % privat — Dateien verlassen dein Gerät nie. Kein Upload, kein Konto, keine Limits.</p>
+      <p style="font-size:14px;color:var(--green);margin:0;font-weight:500;">100 % privat — Dateien verlassen dein Gerät nie. Kein Upload, kein Konto, kein Tageslimit.</p>
     </div>
   </section>
 
@@ -285,7 +285,7 @@
       <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
       <span class="drop-icon" aria-hidden="true">📂</span>
       <div class="drop-title">PDF-Dateien hier ablegen</div>
-      <div class="drop-sub">oder klicken zum Durchsuchen — unbegrenzt viele Dateien, jede Größe</div>
+      <div class="drop-sub">oder klicken zum Durchsuchen — unbegrenzt viele Dateien, bis zu 500 MB am Computer</div>
       <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Dateien auswählen</label>
     </div>
 
@@ -405,7 +405,7 @@
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:10px 14px;color:var(--text);">Dateigrößenlimit</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Keins</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">500 MB (Computer) · 300 MB (Smartphone)</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">Begrenzt (kostenlos)</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">Begrenzt (kostenlos)</td>
               </tr>
@@ -483,11 +483,11 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Wie unterscheidet sich das von iLovePDF oder SmallPDF?</h3>
-            <p style="margin:0;font-size:14px;">iLovePDF und SmallPDF laden deine Dateien auf ihre Server hoch, verarbeiten sie dort und löschen sie nach 1–2 Stunden. PDFree verarbeitet alles lokal — deine Dateien reisen nie zu einem Server. Du bekommst außerdem keine Dateigrößenlimits und keine Tageslimits.</p>
+            <p style="margin:0;font-size:14px;">iLovePDF und SmallPDF laden deine Dateien auf ihre Server hoch, verarbeiten sie dort und löschen sie nach 1–2 Stunden. PDFree verarbeitet alles lokal — deine Dateien reisen nie zu einem Server. Du bekommst außerdem kein Tageslimit und kein 25-MB-Limit — eine Zusammenführung darf am Computer bis zu 500 MB groß sein.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Gibt es ein Dateigrößenlimit?</h3>
-            <p style="margin:0;font-size:14px;">Nein. PDFree hat keine Dateigrößenbeschränkung, da die Verarbeitung lokal erfolgt. Der Arbeitsspeicher deines Geräts ist die einzige Einschränkung — moderne Geräte verarbeiten PDFs bis zu mehreren hundert Megabyte problemlos.</p>
+            <p style="margin:0;font-size:14px;">Ja, eine: Die Dateien einer Zusammenführung dürfen in Chrome oder Edge auf einem Computer mit mindestens 8 GB Arbeitsspeicher zusammen bis zu 500 MB groß sein, auf Smartphones sowie in Safari und Firefox bis zu 300 MB. Da nichts hochgeladen wird, gibt es kein Upload-Limit — die Grenze schützt nur den Arbeitsspeicher deines Geräts.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Kann ich PDFs vollständig offline zusammenführen?</h3>

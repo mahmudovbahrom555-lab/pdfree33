@@ -15,7 +15,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "PDF öffnen",
-      "text": "Klicken Sie auf \"Dateien auswählen\" oder ziehen Sie Ihr PDF in die Ablagezone. Jede Dateigröße wird akzeptiert — die Datei wird in Ihrem Browser geladen und niemals hochgeladen.",
+      "text": "Klicken Sie auf \"Dateien auswählen\" oder ziehen Sie Ihr PDF in die Ablagezone. Akzeptiert werden Dateien bis 500 MB in Chrome oder Edge auf einem Computer mit mindestens 8 GB Arbeitsspeicher und bis 150 MB auf Smartphones, in Safari und Firefox — die Datei wird in Ihrem Browser geladen und niemals hochgeladen.",
       "url": "https://pdfree.io/compress-pdf/#step1"
     },
     {

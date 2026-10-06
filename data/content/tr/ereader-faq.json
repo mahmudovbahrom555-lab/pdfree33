@@ -27,7 +27,7 @@
   {
     "@type": "Question",
     "name": "Kaç sayfa optimize edebileceğime dair bir sınır var mı?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Hayır. Sayfa sayısı veya dosya boyutu sınırı yoktur ve saatlik görev sınırı yoktur. İhtiyacınız kadar sık, tek sayfalık bir PDF'yi veya birkaç yüz sayfalık bir kitabı optimize edin." }
+    "acceptedAnswer": { "@type": "Answer", "text": "Hayır. Sayfa sayısı sınırı ve saatlik görev sınırı yoktur — ihtiyacınız kadar sık, tek sayfalık bir PDF'yi veya birkaç yüz sayfalık bir kitabı optimize edin. Her dosya 150 MB'a kadar olabilir. Her şey kendi cihazınızda çalıştığından, çok büyük dosyalar eski bir telefona göre bilgisayarda daha hızlı işlenir." }
   },
   {
     "@type": "Question",
@@ -37,6 +37,6 @@
   {
     "@type": "Question",
     "name": "E-Okuyucu Optimize Edici tamamen ücretsiz mi?",
-    "acceptedAnswer": { "@type": "Answer", "text": "Evet. PDFree abonelik olmadan, günlük veya saatlik sınır olmadan ve kayıt olmadan ücretsizdir. Sonuca herhangi bir filigran eklenmez ve dosya boyutu kısıtlaması yoktur." }
+    "acceptedAnswer": { "@type": "Answer", "text": "Evet. PDFree abonelik olmadan, günlük veya saatlik sınır olmadan ve kayıt olmadan ücretsizdir. Sonuca herhangi bir filigran eklenmez. Her dosya 150 MB'a kadar olabilir." }
   }
 ]

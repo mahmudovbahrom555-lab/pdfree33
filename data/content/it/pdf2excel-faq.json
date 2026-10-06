@@ -28,7 +28,7 @@
     "name": "C'è un limite di dimensione del file?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree non ha limiti di dimensione. I PDF grandi vengono elaborati direttamente nella memoria del browser."
+      "text": "Sì: ogni PDF può arrivare fino a 150 MB, senza limiti giornalieri né paywall. I PDF grandi vengono elaborati direttamente nella memoria del browser, quindi sono più veloci su un computer che su un telefono meno recente."
     }
   },
   {

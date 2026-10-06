@@ -20,7 +20,7 @@
     "name": "Có giới hạn số trang không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không. PDFree không giới hạn số trang hay kích thước file. Giới hạn thực tế duy nhất là bộ nhớ thiết bị của bạn."
+      "text": "Không. PDFree không giới hạn số trang. Mỗi file có thể lên đến 200 MB — giới hạn này chỉ để bảo vệ bộ nhớ thiết bị của bạn."
     }
   },
   {

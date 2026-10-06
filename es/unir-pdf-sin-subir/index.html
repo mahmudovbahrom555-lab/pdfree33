@@ -92,7 +92,7 @@
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "featureList": [
       "Sin subida de archivos — nunca salen de tu dispositivo",
-      "Sin límites de tamaño de archivo",
+      "Sin límite diario",
       "No requiere cuenta",
       "Funciona sin conexión",
       "Seguro para RGPD e HIPAA por diseño"
@@ -185,7 +185,7 @@
         "name": "¿Cuánta memoria RAM necesito para unir archivos PDF grandes sin subirlos?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Depende del tamaño total de tus PDFs, pero la mayoría de dispositivos modernos (4 GB de RAM o más) unen sin problemas archivos de varios cientos de megabytes. Como no hay subida ni servidor, el único límite real es la memoria disponible en tu propio dispositivo — no una cuota impuesta por PDFree. Para lotes muy grandes, cerrar otras pestañas del navegador libera RAM adicional."
+          "text": "Una misma unión puede sumar hasta 500 MB en Chrome o Edge en un ordenador con 8 GB o más de RAM, y 300 MB en móviles, Safari y Firefox, que no informan de su memoria y reciben el límite seguro. Como no hay subida ni servidor, ese tope no es una cuota de PDFree: solo protege la memoria de tu dispositivo. Para lotes muy grandes, cerrar otras pestañas del navegador libera RAM adicional."
         }
       },
       {
@@ -285,7 +285,7 @@
       <input type="file" id="fileInput" multiple accept=".pdf" aria-hidden="true">
       <span class="drop-icon" aria-hidden="true">📂</span>
       <div class="drop-title">Suelta los archivos PDF aquí</div>
-      <div class="drop-sub">o haz clic para explorar — archivos ilimitados, cualquier tamaño</div>
+      <div class="drop-sub">o haz clic para explorar — archivos ilimitados, hasta 500 MB por unión</div>
       <label class="drop-btn" id="chooseFilesBtn" for="fileInput">Elegir archivos</label>
     </div>
 
@@ -360,7 +360,7 @@
           </div>
           <div style="display:flex;gap:16px;align-items:flex-start;">
             <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;" id="step3">2</div>
-            <div><strong style="color:var(--text);">Añade tus archivos PDF</strong><br>Haz clic en "Elegir archivos" o arrastra y suelta. Añade tantos como necesites — no hay límites de cantidad ni tamaño.</div>
+            <div><strong style="color:var(--text);">Añade tus archivos PDF</strong><br>Haz clic en "Elegir archivos" o arrastra y suelta. Añade tantos como necesites — no hay límite de cantidad, y juntos pueden sumar hasta 500 MB en un ordenador (300 MB en móviles).</div>
           </div>
           <div style="display:flex;gap:16px;align-items:flex-start;">
             <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
@@ -405,7 +405,7 @@
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:10px 14px;color:var(--text);">Límite de tamaño de archivo</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Ninguno</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">500 MB por unión (ordenador) · 300 MB (móvil)</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limitado (gratis)</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limitado (gratis)</td>
               </tr>
@@ -483,11 +483,11 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿En qué se diferencia de iLovePDF o SmallPDF?</h3>
-            <p style="margin:0;font-size:14px;">iLovePDF y SmallPDF suben tus archivos a sus servidores, los procesan allí y los eliminan tras 1-2 horas. PDFree procesa todo localmente — tus archivos nunca viajan a ningún servidor. Tampoco tienes límites de tamaño de archivo ni límites de uso diario.</p>
+            <p style="margin:0;font-size:14px;">iLovePDF y SmallPDF suben tus archivos a sus servidores, los procesan allí y los eliminan tras 1-2 horas. PDFree procesa todo localmente — tus archivos nunca viajan a ningún servidor. Tampoco tienes límite de uso diario, y una unión puede sumar hasta 500 MB en un ordenador (300 MB en móviles).</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Cuánta memoria RAM necesito para unir archivos PDF grandes sin subirlos?</h3>
-            <p style="margin:0;font-size:14px;">Depende del tamaño total de tus PDFs, pero la mayoría de dispositivos modernos (4 GB de RAM o más) unen sin problemas archivos de varios cientos de megabytes. El único límite real es la memoria de tu dispositivo — no una cuota impuesta por PDFree.</p>
+            <p style="margin:0;font-size:14px;">Una misma unión puede sumar hasta 500 MB en Chrome o Edge en un ordenador con 8 GB o más de RAM, y 300 MB en móviles, Safari y Firefox, que no informan de su memoria y reciben el límite seguro. Como no hay subida ni servidor, ese tope no es una cuota de PDFree: solo protege la memoria de tu dispositivo. Para lotes muy grandes, cerrar otras pestañas del navegador libera RAM adicional.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿PDFree guarda algún rastro de mis archivos en la caché del navegador tras unirlos?</h3>

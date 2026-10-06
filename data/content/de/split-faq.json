@@ -44,7 +44,7 @@
     "name": "Gibt es ein Limit für Seitenanzahl oder Dateigröße?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree hat keine Seiten- oder Dateigrößenlimits. Die Verarbeitung hängt vom verfügbaren Arbeitsspeicher deines Geräts ab. PDFs mit Hunderten von Seiten rendern Vorschauen in Sekunden auf einem modernen Computer."
+      "text": "Für die Seitenzahl nicht. Jede PDF-Datei darf in Chrome oder Edge auf einem Computer mit mindestens 8 GB Arbeitsspeicher bis zu 500 MB groß sein, auf Smartphones sowie in Safari und Firefox bis zu 200 MB. Die Verarbeitung hängt vom verfügbaren Arbeitsspeicher deines Geräts ab — PDFs mit Hunderten von Seiten rendern Miniaturansichten auf einem modernen Computer in Sekunden."
     }
   },
   {

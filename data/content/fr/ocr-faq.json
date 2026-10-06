@@ -68,7 +68,7 @@
     "name": "Quelle est la taille maximale de fichier ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "L'OCR PDFree prend en charge les fichiers jusqu'à 200 Mo. Sur mobile (iOS/iPadOS), le traitement est limité aux 30 premières pages — divisez d'abord le PDF pour traiter le reste. Aucune limite sur les navigateurs de bureau."
+      "text": "L'OCR PDFree prend en charge les fichiers jusqu'à 200 Mo. Sur mobile (iOS/iPadOS), le traitement est limité aux 30 premières pages — divisez d'abord le PDF pour traiter le reste. Aucune limite de pages sur ordinateur."
     }
   },
   {

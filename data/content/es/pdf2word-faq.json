@@ -60,7 +60,7 @@
     "name": "¿Cuál es el tamaño máximo de archivo?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No hay un límite fijo. Los PDFs muy grandes (más de 100 MB) pueden tardar más y requerir más memoria. Para mejores resultados, archivos por debajo de 100 MB en modo texto y por debajo de 50 MB en modo imagen a 300 DPI."
+      "text": "150 MB por PDF, y el modo imagen convierte hasta 500 páginas. Los PDFs muy grandes (más de 100 MB) tardan más y necesitan más memoria, porque la conversión se hace en tu propio dispositivo; para obtener los mejores resultados, mantén los archivos por debajo de 100 MB en modo texto y de 50 MB en modo imagen a 300 DPI."
     }
   },
   {

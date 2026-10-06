@@ -28,7 +28,7 @@
     "name": "Is er een limiet aan hoeveel pagina's ik kan organiseren?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nee. Er is geen limiet voor aantal pagina's of bestandsgrootte. Zeer grote documenten (150+ pagina's) krijgen een korte melding dat miniaturen iets langzamer kunnen laden op oudere apparaten — herschikken en verwijderen werken verder precies hetzelfde."
+      "text": "Nee, er is geen limiet op het aantal pagina's. Elk bestand mag tot 200 MB groot zijn. Zeer grote documenten (150+ pagina's) krijgen een korte melding dat miniaturen iets langzamer kunnen laden op oudere apparaten — herschikken en verwijderen werken verder precies hetzelfde."
     }
   },
   {
@@ -84,7 +84,7 @@
     "name": "Is de PDF-paginaorganizer echt gratis?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree is gratis zonder abonnement, zonder dagelijkse limieten en zonder registratie. Er worden geen watermerken toegevoegd aan het resultaat en er zijn geen beperkingen op bestandsgrootte."
+      "text": "Ja. PDFree is gratis zonder abonnement, zonder dagelijkse limieten en zonder registratie. Er worden geen watermerken toegevoegd aan het resultaat. Elk bestand mag tot 200 MB groot zijn."
     }
   }
 ]
