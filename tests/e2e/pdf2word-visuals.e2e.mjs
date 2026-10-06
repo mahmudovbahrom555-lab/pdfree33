@@ -16,6 +16,14 @@
 // Ground-truth pages (tests/corpus/groundtruth/*-cols2.pdf, ar-web.pdf) have
 // no pictures at all, so any picture there is a false one.
 //
+// Scanned pages with an OCR text layer (user report 2026-10-06, an Arabic book
+// scan): a line the OCR missed exists only in the page image, and the rule that
+// drops glyph fragments dropped it from the Word file altogether. Fixtures:
+// tests/fixtures/pdf2word_scan_ocr_*.pdf — ar-web.pdf rendered to one 200-dpi
+// JPEG page with an invisible Amiri text layer of its 17 lines, complete or
+// with every third line left out (5 lines). Expected: each left-out line as a
+// picture, and no picture when the text layer is complete.
+//
 // Run: node tests/e2e/pdf2word-visuals.e2e.mjs   (dist/ served on :8934)
 
 import { chromium } from 'playwright';
@@ -84,6 +92,18 @@ for (const name of ['en-cols2', 'ar-cols2', 'he-cols2', 'ar-web']) {
     if (pics.length) throw new Error(`got ${pics.length} false picture(s): ${JSON.stringify(pics.map(p => `${Math.round(p.w)}x${Math.round(p.h)}`))}`);
   });
 }
+
+await test('a scanned page: each line its OCR text layer missed comes out as a picture of that line', async () => {
+  const pics = await pictures(path.join(__dirname, '..', 'fixtures', 'pdf2word_scan_ocr_missed_lines.pdf'));
+  if (pics.length !== 5) throw new Error(`expected the 5 missed lines, got ${pics.length}: ${JSON.stringify(pics.map(p => `${Math.round(p.w)}x${Math.round(p.h)}`))}`);
+  const tall = pics.filter(p => p.h > 40);
+  if (tall.length) throw new Error(`each picture should be one line, got ${JSON.stringify(tall.map(p => `${Math.round(p.w)}x${Math.round(p.h)}`))}`);
+});
+
+await test('a scanned page whose OCR text layer is complete: no pictures', async () => {
+  const pics = await pictures(path.join(__dirname, '..', 'fixtures', 'pdf2word_scan_ocr_complete.pdf'));
+  if (pics.length) throw new Error(`got ${pics.length} false picture(s): ${JSON.stringify(pics.map(p => `${Math.round(p.w)}x${Math.round(p.h)}`))}`);
+});
 
 await browser.close();
 console.log(`\n${'─'.repeat(40)}`);

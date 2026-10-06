@@ -5316,7 +5316,29 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
   canvas.height = Math.round(vp.height);
   const ctx = canvas.getContext('2d');
   await page.render({ canvasContext: ctx, viewport: vp }).promise;
+  // A scan: one image covering most of the page, its text an OCR layer.
+  const scanned = _detectPageImages(await page.getOperatorList())
+    .some(im => im.width * im.height >= 0.8 * (vp.width / scale) * pageH);
   page.cleanup?.();
+  // On a scan the paper is rarely white (aged, yellowed, grey): ink is what is
+  // clearly darker than the paper — its luminance 50 below the page's 90th
+  // percentile — or the whole band of tinted paper counts as ink (blank strips
+  // of paper came out as pictures, and recognised lines weren't recognised).
+  let scanInkLum = null;
+  if (scanned) {
+    const px = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    const hist = new Uint32Array(256);
+    for (let i = 0; i < px.length; i += 16) hist[Math.round(0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2])]++;
+    const total = hist.reduce((a, b) => a + b, 0);
+    let acc = 0, p90 = 255;
+    for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc >= 0.9 * total) { p90 = v; break; } }
+    scanInkLum = p90 - 50;
+  }
+  // Is the pixel at byte offset i of RGBA data `d` ink? Near-white is paper
+  // everywhere; on a scan, paper is whatever is not clearly darker than it.
+  const isNotWhite = (d, i) => d[i] < 240 || d[i + 1] < 240 || d[i + 2] < 240;
+  const isInkAt = scanInkLum === null ? isNotWhite
+    : (d, i) => 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2] < scanInkLum;
 
   // Crops `src` to its actual ink bounding box (+ small padding) in BOTH
   // dimensions, instead of leaving it at the full band the caller cropped
@@ -5351,14 +5373,14 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
   // and was silently dropped whole, not just cropped loosely. Measuring
   // density over the content's own bounding box is what the threshold was
   // actually meant to test.
-  function _tightenToInk(src) {
+  function _tightenToInk(src, inkAt = isNotWhite) {
     const d = src.getContext('2d').getImageData(0, 0, src.width, src.height).data;
     let minX = src.width, maxX = -1, minY = src.height, maxY = -1;
     let inkCount = 0;
     for (let y = 0; y < src.height; y++) {
       for (let x = 0; x < src.width; x++) {
         const idx = (y * src.width + x) * 4;
-        if (d[idx] < 240 || d[idx + 1] < 240 || d[idx + 2] < 240) {
+        if (inkAt(d, idx)) {
           inkCount++;
           if (x < minX) minX = x;
           if (x > maxX) maxX = x;
@@ -5384,6 +5406,66 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
     cropped.height = h;
     cropped.getContext('2d').drawImage(src, x0, y0, w, h, 0, 0, w, h);
     return { canvas: cropped, width: w, height: h, density };
+  }
+
+  // Whitens the ink in a gap band (`src`, cut at canvas row `cyTop`, column
+  // `cx0`) that the text layer already has: each run of consecutive inked rows
+  // with at least half its ink inside text items' boxes — 0.6 em below the
+  // baseline to 1.2 above, 0.3 em either side (Amiri's deep descenders and
+  // stacked harakat; a scan's OCR layer never sits exactly on its image).
+  // Ink the text layer lacks stays: a figure (its own labels are a minority of
+  // its ink) or a line a scan's OCR missed. A run taller than 1.5 lines is
+  // first split where its ink is thinnest — two lines touching only by a few
+  // descender pixels. Returns the runs kept, as [firstRow, lastRow].
+  function _wipeTextInk(src, cyTop, cx0) {
+    const W = src.width, H = src.height;
+    const ctx = src.getContext('2d');
+    const d = ctx.getImageData(0, 0, W, H).data;
+    const mask = new Uint8Array(W * H);
+    for (const it of textItems) {
+      if (!it.width || it.width <= 0) continue;
+      const fs = it.fontSize || medianFontSize;
+      const x0 = Math.max(0, Math.floor((it.x - 0.3 * fs) * scale) - cx0);
+      const x1 = Math.min(W, Math.ceil((it.x + it.width + 0.3 * fs) * scale) - cx0);
+      const y0 = Math.max(0, Math.floor((pageH - (it.y + 1.2 * fs)) * scale) - cyTop);
+      const y1 = Math.min(H, Math.ceil((pageH - (it.y - 0.6 * fs)) * scale) - cyTop);
+      for (let y = y0; y < y1; y++) mask.fill(1, y * W + x0, y * W + Math.max(x0, x1));
+    }
+    const rowInk = new Array(H).fill(0);
+    const rowText = new Array(H).fill(0);
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        if (!isInkAt(d, (y * W + x) * 4)) continue;
+        rowInk[y]++;
+        if (mask[y * W + x]) rowText[y]++;
+      }
+    }
+    const linePx = medianFontSize * scale;
+    const runs = [];
+    for (let y = 0; y < H;) {
+      if (!rowInk[y]) { y++; continue; }
+      let end = y;
+      while (end + 1 < H && rowInk[end + 1]) end++;
+      runs.push([y, end]);
+      y = end + 1;
+    }
+    const split = ([a, b]) => {
+      if (b - a + 1 <= 1.5 * linePx) return [[a, b]];
+      const margin = Math.round(0.4 * linePx);
+      let cut = -1;
+      for (let y = a + margin; y <= b - margin; y++) if (cut < 0 || rowInk[y] < rowInk[cut]) cut = y;
+      const peak = Math.max(...rowInk.slice(a, b + 1));
+      if (cut < 0 || rowInk[cut] > 0.15 * peak) return [[a, b]];
+      return [...split([a, cut]), ...split([cut + 1, b])];
+    };
+    const kept = [];
+    ctx.fillStyle = '#fff';
+    for (const [a, b] of runs.flatMap(split)) {
+      let ink = 0, text = 0;
+      for (let y = a; y <= b; y++) { ink += rowInk[y]; text += rowText[y]; }
+      if (text >= 0.5 * ink) ctx.fillRect(0, a, W, b + 1 - a); else kept.push([a, b]);
+    }
+    return kept;
   }
 
   // ── Part 1: gap runs ────────────────────────────────────────────────────────
@@ -5422,34 +5504,65 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
         x0 = undefined; x1 = undefined;
       }
     }
-    const pdfTop    = yAbove - medianFontSize * 0.5;
-    const pdfBottom = yBelow + medianFontSize * 1.2;
-    const cyTop     = Math.max(0,             Math.round((pageH - pdfTop)    * scale));
-    const cyBottom  = Math.min(canvas.height, Math.round((pageH - pdfBottom) * scale));
-    const cropH     = cyBottom - cyTop;
-    if (cropH <= 4) continue;
-
-    gapCanvasRanges.push({ cyTop, cyBottom });
-
     const cx0 = x0 === undefined ? 0 : Math.max(0, Math.round(x0 * scale));
     const cx1 = x1 === undefined ? canvas.width : Math.min(canvas.width, Math.round(x1 * scale));
-    const tmp  = document.createElement('canvas');
-    tmp.width  = cx1 - cx0;
-    tmp.height = cropH;
-    tmp.getContext('2d').drawImage(canvas, cx0, cyTop, cx1 - cx0, cropH, 0, 0, cx1 - cx0, cropH);
+    const cutBand = (pdfTop, pdfBottom) => {
+      const top    = Math.max(0,             Math.round((pageH - pdfTop)    * scale));
+      const bottom = Math.min(canvas.height, Math.round((pageH - pdfBottom) * scale));
+      if (bottom - top <= 4) return null;
+      const band = document.createElement('canvas');
+      band.width  = cx1 - cx0;
+      band.height = bottom - top;
+      band.getContext('2d').drawImage(canvas, cx0, top, band.width, band.height, 0, 0, band.width, band.height);
+      return { band, top, bottom };
+    };
+    const release = (...cs) => { for (const c of cs) if (c) { c.width = 0; c.height = 0; } };
+
+    // The band keeps clear of the bounding lines' glyphs.
+    const cut = cutBand(yAbove - medianFontSize * 0.5, yBelow + medianFontSize * 1.2);
+    if (!cut) continue;
+    const { band: tmp, top: cyTop, bottom: cyBottom } = cut;
+    gapCanvasRanges.push({ cyTop, cyBottom });
 
     // Density is checked AFTER tightening, over the content's own bounding
     // box — not over this padded band, which can be much larger than a
     // small graphic sitting inside a wide layout gap and would dilute a
     // real image's ink ratio below threshold (see _tightenToInk).
-    const { canvas: tight, width: tightW, height: tightH, density } = _tightenToInk(tmp);
+    let { canvas: tight, width: tightW, height: tightH, density } = _tightenToInk(tmp);
     // Same minimum height inline visuals already need: ink this thin is glyph
     // fragments reaching into the gap — Amiri's dots, harakat and descenders
     // came out as 24×14 / 86×11 px "pictures" in Arabic Word output (2026-10-02).
     if (density < _INK_THRESH || tightH < _MIN_VIS_H_PX) {
-      if (tight !== tmp) { tight.width = 0; tight.height = 0; }
-      tmp.width = 0; tmp.height = 0;
-      continue;
+      release(tight !== tmp && tight, tmp);
+      // On a scan the gap may hold a line the OCR text layer missed — dropped
+      // from the Word file altogether by the figure-height rule (user report
+      // 2026-10-06, Arabic book scan). Only then, and only adding: the band is
+      // re-cut from baseline to baseline so the whole line is inside it, the
+      // text layer's own ink is wiped (see _wipeTextInk), and ink the size of
+      // a line of text (0.6–2 em tall, ≥ 2.5 em wide, ink ≥ 6 % of its box) is
+      // kept. Measured: missed Arabic lines 0.96–1.70 em at 8.6–10.8 % ink;
+      // tinted paper, specks and torn page edges on real Internet Archive scans
+      // 2.4–4.3 % or 3.8 em tall. Wiping by OCR boxes is never applied to what
+      // the rule above keeps: OCR layers put garbage text over handwriting and
+      // illustrations.
+      if (!scanned) continue;
+      const wide = cutBand(yAbove, yBelow);
+      if (!wide) continue;
+      const kept = _wipeTextInk(wide.band, wide.top, cx0);
+      if (!kept.length) { release(wide.band); continue; }
+      const tallest = kept.reduce((m, r) => (r[1] - r[0] > m[1] - m[0] ? r : m));
+      const c = wide.band.getContext('2d');
+      c.fillStyle = '#fff';
+      for (const r of kept) if (r !== tallest) c.fillRect(0, r[0], wide.band.width, r[1] + 1 - r[0]);
+      ({ canvas: tight, width: tightW, height: tightH, density } = _tightenToInk(wide.band, isInkAt));
+      const emPx = medianFontSize * scale;
+      const lineH = tallest[1] - tallest[0] + 1;
+      if (density < 0.06 || lineH < 0.6 * emPx || lineH > 2 * emPx || tightW < 2.5 * emPx) {
+        release(tight !== wide.band && tight, wide.band);
+        continue;
+      }
+      if (tight !== wide.band) release(wide.band);
+      gapCanvasRanges.push({ cyTop: wide.top, cyBottom: wide.bottom });
     }
 
     const fmt  = _p2wDetectFormat(tight);
