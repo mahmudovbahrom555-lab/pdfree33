@@ -348,6 +348,31 @@ test('lines outside every grid still go through the text-alignment detector', ()
   expect(tables[0].colXs).toBe(undefined);
 });
 
+test('justified prose set word by word is not a table, though its words line up (Korean Wikipedia, 2026-10-06)', () => {
+  const words = ['포스트스크립트는', '원래', '인쇄', '작업을', '출력', '장치로', '단방향', '선형', '전송하는', '매우',
+    '다른', '유스', '케이스를', '위해', '설계되었으며'];
+  const lines = [700, 685, 670, 655].map((y, r) => makeLineAt(y, words.slice(r, r + 10).map((w, k) => [w, k * 50])));
+  const { tables, textRows } = _p2eExtractPage(lines, [], 1);
+  expect(tables.length).toBe(0);
+  expect(textRows.length).toBe(4);
+});
+
+test('a wrapped row\'s bold total is still bold: bold rows follow the rows, not the line count', () => {
+  const B = (y, cells) => ({ y, items: cells.map(([str, x]) => ({ str, x, width: str.length * 6, fontSize: 11, bold: true })) });
+  const lines = [
+    makeLineAt(700, [['Paper', 0], ['12', 100], ['222.00', 150]]),
+    makeLineAt(680, [['Ink', 0], ['10', 100], ['1,450.00', 150]]),
+    { y: 663, items: [{ str: 'Large envelopes', x: 0, width: 90, fontSize: 11 }] },
+    makeLineAt(656, [['100', 100], ['85.00', 150]]),
+    { y: 649, items: [{ str: 'with a strip', x: 0, width: 70, fontSize: 11 }] },
+    B(628, [['Total', 0], ['1,757.00', 150]]),
+  ];
+  const { tables } = _p2eExtractPage(lines, [], 1);
+  expect(tables.length).toBe(1);
+  expect(tables[0].rows.length).toBe(4);
+  expect([...tables[0].boldRows]).toEqual([3]);
+});
+
 // ── _p2eStitchTables: one table across pages → one worksheet ──
 console.log('\n_p2eStitchTables:');
 

@@ -2928,7 +2928,7 @@ async function _p2eExtractTables(pdfDoc) {
 
     if (!lines.length) { pagesWithNoText++; page.cleanup?.(); continue; }
 
-    const grids = await detectTableGrids(page).catch(() => []);
+    const grids = await detectTableGrids(page, { paintedOnly: true }).catch(() => []);
     // An RTL line is read in runs, each in its reading order with harakat on
     // their letters, never across a table rule (lineRuns): cells joined item by
     // item came out reversed and letter-spaced for Chromium-printed Persian
@@ -3005,10 +3005,17 @@ export function _p2eExtractPage(lines, grids, page) {
 
   const restIdx = lines.map((_, li) => li).filter(li => !consumed.has(li));
   const rest    = restIdx.map(li => lines[li]);
-  for (const tbl of detectTables(rest)) {
-    const tblLines = rest.slice(tbl.startIdx, tbl.endIdx + 1);
+  // Prose that merely lines up is not a table — the same two guards pdf2word and
+  // pdf2md apply to detectTables(). Justified text set word by word (Chromium
+  // prints of Wikipedia) aligns into 10+ "columns" of single words: 23 such
+  // tables on the Korean article (2026-10-06), until then hidden only because
+  // a false page-sized ruled grid (a clipping path, see pdf2wordBorders.js)
+  // swallowed the whole page first.
+  const textTables = detectTables(rest)
+    .filter(t => !looksLikeProseNotData(t.rows) && !looksLikeEnumeratedList(t.rows));
+  for (const tbl of textTables) {
     const boldRows = new Set();
-    tblLines.forEach((ln, i) => { if (_p2eAllBold([ln])) boldRows.add(i); });
+    tbl.rowLines.forEach((lis, r) => { if (_p2eAllBold(lis.map(li => rest[li]))) boldRows.add(r); });
     for (let i = tbl.startIdx; i <= tbl.endIdx; i++) consumed.add(restIdx[i]);
     tables.push({ page, rows: tbl.rows, confidence: tbl.confidence, boldRows });
   }

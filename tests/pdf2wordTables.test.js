@@ -317,6 +317,102 @@ test('a header row re-printed on page 2 of a multi-page table is consumed, not a
   expect(tables[0].endIdx).toBe(5);
 });
 
+// ── detectTables: borderless invoice tables (table ground truth 2026-10-06) ──
+// Shapes measured on tests/corpus/groundtruth/tables/*-plain.pdf: centred
+// header, right-aligned numbers, an item name wrapping above and below its row,
+// a total row with two of five cells, a note under the table, RTL item names
+// aligned on their right edge, a word split at its "fi" ligature.
+console.log('\ndetectTables — borderless invoice tables:');
+
+// cells: [x, str, width] — fontSize 11, like the ground-truth invoices
+function mkLine(y, cells) {
+  return { y, items: cells.map(([x, str, width]) => ({ x, str, width, fontSize: 11 })) };
+}
+const ROW = (y, name, nameW = 90) => mkLine(y, [[66, name, nameW], [243, '12', 13], [302, '18.50', 28], [359, '222.00', 35], [414, '2026-09-14', 57]]);
+
+test('a centred header row above left-aligned data is the table\'s first row', () => {
+  const lines = [
+    mkLine(739, [[128, 'Item', 26], [236, 'Qty', 20], [276, 'Unit price', 54], [358, 'Total', 27], [429, 'Date', 26]]),
+    ROW(717, 'Paper'), ROW(696, 'Ink'), ROW(675, 'Folders'),
+  ];
+  const [t] = detectTables(lines);
+  expect(t.startIdx).toBe(0);
+  expect(JSON.stringify(t.rows[0])).toBe(JSON.stringify(['Item', 'Qty', 'Unit price', 'Total', 'Date']));
+  expect(t.rows.length).toBe(4);
+});
+
+test('a word split at a ligature ("Scienti" "fi" "c calculator") is one cell, not a column of its own', () => {
+  const lines = [ROW(717, 'Paper'), ROW(696, 'Ink'),
+    mkLine(675, [[66, 'Scienti', 34], [100, 'fi', 7], [107, 'c calculator', 58], [243, '12', 13], [302, '18.50', 28], [359, '222.00', 35], [414, '2026-09-14', 57]])];
+  const [t] = detectTables(lines);
+  expect(t.colCount).toBe(5);
+  expect(t.rows[2][0]).toBe('Scientific calculator');
+});
+
+test('a cell wrapping above and below its vertically centred row joins that row, in order', () => {
+  const lines = [ROW(717, 'Paper'), ROW(696, 'Ink'),
+    mkLine(670.6, [[66, 'Large A4 mailing envelopes', 142]]),
+    mkLine(663.1, [[237, '100', 19], [308, '0.85', 22], [366, '85.00', 28], [414, '2026-09-22', 57]]),
+    mkLine(655.6, [[66, 'with an adhesive strip', 113]]),
+    ROW(634, 'Tape')];
+  const [t] = detectTables(lines);
+  expect(t.rows.length).toBe(4);
+  expect(t.rows[2][0]).toBe('Large A4 mailing envelopes with an adhesive strip');
+  expect(t.rows[2][1]).toBe('100');
+  expect(JSON.stringify(t.rowLines[2])).toBe(JSON.stringify([2, 3, 4]));
+});
+
+test('RTL: a long item name (aligned on its right edge) stays in its column; its first line goes to its own row', () => {
+  const ar = (y, name, w) => mkLine(y, [[143, '2026/09/14', 55], [218, '222.00', 33], [279, '18.50', 27], [340, '12', 12], [530 - w, name, w]]);
+  const lines = [ar(708, 'ورق طباعة A4', 55), ar(683, 'حبر طابعة أسود', 56), ar(658, 'ملفات بلاستيكية', 61),
+    mkLine(534.6, [[381, 'مغلفات بريدية كبيرة مقاس A4 مع', 149]]),
+    mkLine(524.9, [[143, '2026/09/22', 55], [218, '85.00', 27], [279, '0.85', 21], [340, '100', 18]]),
+    mkLine(515.9, [[508, 'لاصق', 22]])];
+  lines[3].y = 633.6; lines[4].y = 623.9; lines[5].y = 614.9;
+  const [t] = detectTables(lines);
+  expect(t.colCount).toBe(5);
+  expect(t.rows.length).toBe(4);
+  expect(t.rows[2][4]).toBe('ملفات بلاستيكية'); // not glued onto the record above
+  expect(t.rows[3][4]).toBe('مغلفات بريدية كبيرة مقاس A4 مع لاصق');
+});
+
+test('Arabic-Indic amounts (left-aligned like any number) stay one column', () => {
+  const ar = (y, amount, w) => mkLine(y, [[218, amount, w], [340, '١٢', 12], [475, 'ورق', 55]]);
+  const [t] = detectTables([ar(708, '٢٢٢٫٠٠', 33), ar(683, '١٬٤٥٠٫٠٠', 41), ar(658, '٣٠٫٠٠', 27)]);
+  expect(t.colCount).toBe(3);
+});
+
+test('a total row with 2 of 5 cells at the table\'s own row pitch is its last row; a note under the table is not glued into it', () => {
+  const lines = [ROW(717, 'Paper'), ROW(696, 'Ink'), ROW(675, 'Folders'),
+    mkLine(654, [[66, 'Total', 27], [350, '2,316.00', 44]]),
+    mkLine(624, [[359, 'All amounts in USD.', 102]])];
+  const [t] = detectTables(lines);
+  expect(t.rows.length).toBe(4);
+  expect(JSON.stringify(t.rows[3])).toBe(JSON.stringify(['Total', '', '', '2,316.00', '']));
+  expect(t.endIdx).toBe(3);
+});
+
+test('a header one group label above the first row ("2-GPU Execution") — label kept as its own row', () => {
+  const r = (y, m) => mkLine(y, [[105, m, 40], [221, '0.27', 17], [254, '35.67', 23], [293, '0.22', 17]]);
+  const lines = [
+    mkLine(711, [[223, 'SR', 13], [256, 'Step', 19], [295, 'SR', 13]]),
+    mkLine(695, [[269, '2-GPU Execution', 74]]),
+    r(679, 'ResNet'), r(666, 'RCLIP'), r(653, 'BLIP2'),
+  ];
+  const [t] = detectTables(lines);
+  expect(t.startIdx).toBe(0);
+  expect(JSON.stringify(t.rows[0])).toBe(JSON.stringify(['', 'SR', 'Step', 'SR']));
+  expect(t.rows[1].join('')).toBe('2-GPU Execution');
+  expect(t.rows.length).toBe(5);
+});
+
+test('a rejected candidate leaves the caller\'s lines untouched (no text glued into their items)', () => {
+  // two prose lines and a continuation at a column position — too few rows for a table
+  const lines = [mkRow(700, [[50, 'one'], [300, 'two']]), mkRow(688, [[300, 'three']])];
+  detectTables(lines);
+  expect(lines[0].items[1].str).toBe('two');
+});
+
 // ── Summary ──────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);

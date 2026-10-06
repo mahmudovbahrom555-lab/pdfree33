@@ -45,6 +45,7 @@ const MIN_COVERAGE_FRACTION = 0.5;
  * @returns {TableResult[]}
  */
 export function detectTables(lines, { debug = false } = {}) {
+  lines = lines.map(_joinTouchingItems);
   const tables = [];
   let i = 0;
 
@@ -76,11 +77,18 @@ export function detectTables(lines, { debug = false } = {}) {
     //    as literal data ("Description", "Qty", … sitting mid-table).
     let j = i + 1;
     const effectiveLines = [line];
+    // Per row, the indices in `lines` it was read from (a row can span several
+    // lines: a multi-line cell, a wrap continuation).
+    const rowLines = [[i]];
     // Track how many consecutive stub rows we've accepted.
     // A stub row = exactly 1 item that is a positive sequential integer.
     // This handles blank template tables (school forms, contracts) where
     // only the № column contains text and all data cells are empty.
     let stubSeq = 0;   // next expected stub row number (0 = none yet)
+    // A cell's first line printed above the rest of its row (see below),
+    // waiting for that row: { line, idx }.
+    let pending = null;
+    let lastY = line.y;
 
     while (j < lines.length) {
       const next = lines[j];
@@ -90,20 +98,29 @@ export function detectTables(lines, { debug = false } = {}) {
       if (next.items.length >= MIN_COLS) {
         const nextCols   = _clusterColumns(next.items, COL_TOLERANCE);
         const alignScore = _columnAlignScore(baseCols, nextCols, COL_TOLERANCE);
-        if (alignScore >= ALIGN_THRESHOLD) {
-          if (_looksLikeRepeatedHeader(effectiveLines[0], next)) {
+        if (alignScore >= ALIGN_THRESHOLD || _isSparseRow(nextCols, effectiveLines, lastY - next.y)) {
+          if (!pending && _looksLikeRepeatedHeader(effectiveLines[0], next)) {
             stubSeq = 0;
             j++;
             continue; // consumed, deliberately not added as a data row
           }
           // Reset stub sequence when we see a properly-filled row
           stubSeq = 0;
-          effectiveLines.push(next);
+          if (pending) {
+            effectiveLines.push({ ...next, items: [...next.items, ...pending.line.items].sort((a, b) => a.x - b.x) });
+            rowLines.push([pending.idx, j]);
+            pending = null;
+          } else {
+            effectiveLines.push(next);
+            rowLines.push([j]);
+          }
+          lastY = next.y;
           j++;
           continue;
         }
         break;
       }
+      if (pending) break;
 
       // Single-item line — check for stub row (empty template row with only №)
       // Condition: single integer item ≥1, sequential (1, 2, 3…) or restarting at 1
@@ -111,6 +128,38 @@ export function detectTables(lines, { debug = false } = {}) {
       if (stubN !== null && (stubSeq === 0 ? stubN === 1 : stubN === stubSeq + 1)) {
         stubSeq = stubN;
         effectiveLines.push(next);
+        rowLines.push([j]);
+        lastY = next.y;
+        j++;
+        continue;
+      }
+
+      // A multi-line cell in a row whose other cells are vertically centred:
+      // the cell's lines sit above and below the rest of its row, closer to it
+      // than any two separate lines of text can be (< 0.9 em between
+      // baselines). The first belongs to the row BELOW it — appended to the
+      // row above, RTL tables (the long cell in their rightmost column) put
+      // it into the wrong record; later ones belong to the row above. Table
+      // ground truth 2026-10-06 (an item name wrapping in a borderless invoice).
+      const em      = next.items[0].fontSize || 10;
+      const after   = lines[j + 1];
+      const toPrev  = lastY - next.y;
+      const toNext  = after?.items?.length ? next.y - after.y : Infinity;
+      if (toNext < 0.9 * em && toNext < toPrev) {
+        pending = { line: next, idx: j };
+        j++;
+        continue;
+      }
+      if (toPrev < 0.9 * em) {
+        const last = effectiveLines[effectiveLines.length - 1];
+        const wrapItem = next.items[0];
+        const target = last.items.reduce((best, it) =>
+          Math.abs(_anchor(it) - _anchor(wrapItem)) < Math.abs(_anchor(best) - _anchor(wrapItem)) ? it : best, last.items[0]);
+        effectiveLines[effectiveLines.length - 1] = {
+          ...last, items: last.items.map(it => (it === target ? { ...it, str: `${it.str} ${wrapItem.str}` } : it)),
+        };
+        rowLines[rowLines.length - 1].push(j);
+        lastY = next.y;
         j++;
         continue;
       }
@@ -138,23 +187,40 @@ export function detectTables(lines, { debug = false } = {}) {
       // table instead of two real parallel columns, since detectColumnRegions()
       // deliberately refuses to split anything detectTables() is confident
       // about (its own "prefer false negatives" table guard).
+      //
+      // Only at a wrapped line's own spacing from the row (≤ 1.5 em): a note
+      // printed under a table lands on a column position too, and was glued
+      // into its last cell (a Hebrew invoice's total row, 2026-10-06).
       const wrapItem = next.items[0];
+      const wrapX = _anchor(wrapItem);
       const candidateCols = baseCols.slice(1); // exclude the leftmost column
       const nearestCol = candidateCols.length
         ? candidateCols.reduce((best, bc) =>
-            Math.abs(bc - wrapItem.x) < Math.abs(best - wrapItem.x) ? bc : best, candidateCols[0])
+            Math.abs(bc - wrapX) < Math.abs(best - wrapX) ? bc : best, candidateCols[0])
         : null;
-      if (nearestCol !== null && Math.abs(nearestCol - wrapItem.x) <= COL_TOLERANCE) {
+      if (nearestCol !== null && Math.abs(nearestCol - wrapX) <= COL_TOLERANCE && toPrev <= 1.5 * em) {
         const lastLine   = effectiveLines[effectiveLines.length - 1];
         const targetItem = lastLine.items.reduce((best, it) =>
-          Math.abs(it.x - nearestCol) < Math.abs(best.x - nearestCol) ? it : best, lastLine.items[0]);
-        targetItem.str = `${targetItem.str} ${wrapItem.str}`;
+          Math.abs(_anchor(it) - nearestCol) < Math.abs(_anchor(best) - nearestCol) ? it : best, lastLine.items[0]);
+        // Into a copy: the caller's lines stay as they were. Written into the
+        // item itself, the text stayed appended even when this candidate was
+        // then rejected (prose, too few rows) — the caller's own paragraphs got
+        // other lines glued in: duplicated, scrambled Arabic in PDF→Word (a
+        // right-aligned RTL line lands on a column position by its start).
+        effectiveLines[effectiveLines.length - 1] = {
+          ...lastLine,
+          items: lastLine.items.map(it => (it === targetItem ? { ...it, str: `${it.str} ${wrapItem.str}` } : it)),
+        };
+        rowLines[rowLines.length - 1].push(j);
+        lastY = next.y;
         j++;
         continue;
       }
 
       break;
     }
+    // A cell line still waiting for its row isn't part of this table.
+    if (pending) j = pending.idx;
 
     const rowCount = effectiveLines.length;
     if (rowCount >= MIN_ROWS) {
@@ -169,14 +235,36 @@ export function detectTables(lines, { debug = false } = {}) {
       const scores       = _computeScores(rows, colBounds.length, stubFraction);
 
       if (scores.confidence >= CONF_THRESHOLD) {
+        // The header can sit one group label higher ("2-GPU Execution" over
+        // the first block of rows, an arXiv results table) — the label then
+        // stays as a row of its own under it.
+        let startIdx = i;
+        const prevEnd = tables[tables.length - 1]?.endIdx ?? -1;
+        const label = i - 1 > prevEnd && lines[i - 1].items?.length === 1 ? i - 1 : null;
+        const h = label === null ? i - 1 : i - 2;
+        const header = h > prevEnd ? _headerAbove(lines[h], effectiveLines, colBounds, i - h) : null;
+        if (header) {
+          startIdx = h;
+          if (label !== null) {
+            const item = lines[label].items[0];
+            const c = _nearestCol(_anchor(item), colBounds);
+            rows.unshift(colBounds.map((_, k) => (k === c ? item.str.trim() : '')));
+            cellFonts.unshift(colBounds.map((_, k) => (k === c ? item.fontFamily : undefined)));
+            rowLines.unshift([label]);
+          }
+          rows.unshift(header.texts);
+          cellFonts.unshift(header.fonts);
+          rowLines.unshift([h]);
+        }
         tables.push({
-          startIdx:   i,
+          startIdx,
           endIdx:     j - 1,    // inclusive
           rows,
           cellFonts,  // parallel to rows — cellFonts[r][c] is item.fontFamily or undefined.
                       // Purely additive: pdf2word/pdf2excel/pdf2md only ever read `rows`,
                       // so this is inert for them. Consumed by pdf2ppt for per-cell font
                       // preservation in reconstructed PPTX tables.
+          rowLines,   // parallel to rows — the indices in `lines` each row was read from
           colCount:   colBounds.length,
           alignScore: scores.alignScore,
           fillScore:  scores.fillScore,
@@ -211,6 +299,104 @@ export function groupItemsIntoLines(items, ytol = DEFAULT_LINE_YTOL) {
   }
   lines.forEach(ln => ln.items.sort((a, b) => a.x - b.x));
   return lines;
+}
+
+// ── Line preparation ──────────────────────────────────────────────────────────
+
+// Joins items that touch (≤ 0.1 em apart) into one: they are pieces of one word.
+// pdf.js splits a word at a ligature glyph — "Scienti" "fi" "c calculator" — and
+// each piece counted as a column of its own (table ground truth 2026-10-06). A
+// real column gap is never that narrow. Left-to-right text only: pieces of an
+// RTL run are not in reading order side by side. Returns `line` itself when
+// nothing touches.
+const TOUCH_EM = 0.1;
+const _RTL_RE = /[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/;
+
+// Where an item lines up with its column: right-to-left text is aligned on its
+// right edge (its start), so its left edge moves with the text's length — a long
+// Arabic item name made a column of its own (table ground truth 2026-10-06).
+// Everything else on its left edge, as before — numbers too, in Arabic-Indic
+// and Persian digits (٠–٩ ٪ ٫ ٬, ۰–۹) as well: anchored on their right edge,
+// the left-aligned amount columns of an RTL invoice split in two.
+const _RTL_LETTER_RE = /[\u0590-\u05FF\u0600-\u065F\u066E-\u06EF\u06FA-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/;
+function _anchor(item) {
+  return _RTL_LETTER_RE.test(item.str) && item.width > 0 ? item.x + item.width : item.x;
+}
+function _joinTouchingItems(line) {
+  const items = line.items;
+  if (!items || items.length < 2) return line;
+  const joined = [];
+  for (const item of items) {
+    const prev = joined[joined.length - 1];
+    const gap  = prev ? item.x - (prev.x + (prev.width || 0)) : Infinity;
+    const em   = Math.max(prev?.fontSize || 0, item.fontSize || 0) || 10;
+    if (prev && prev.width > 0 && item.width > 0 && Math.abs(gap) <= TOUCH_EM * em &&
+        !_RTL_RE.test(prev.str) && !_RTL_RE.test(item.str)) {
+      joined[joined.length - 1] = { ...prev, str: prev.str + item.str, width: item.x + item.width - prev.x };
+    } else {
+      joined.push(item);
+    }
+  }
+  return joined.length === items.length ? line : { ...line, items: joined };
+}
+
+// A row with fewer than half the table's cells filled — a total row with only a
+// label and an amount — still belongs to the table when each of its items sits
+// on one of the columns of the rows above (all of them: a centred header row is
+// not where the columns are) and it follows those rows at their own pitch
+// (≤ 1.5× their median spacing). A line elsewhere on the page rarely lands
+// exactly on 2+ columns right under the table.
+function _isSparseRow(lineCols, effectiveLines, gap) {
+  if (lineCols.length < MIN_COLS || effectiveLines.length < 2) return false;
+  const tableCols = _clusterColumns(effectiveLines.flatMap(ln => ln.items), COL_TOLERANCE);
+  if (!lineCols.every(lc => tableCols.some(tc => Math.abs(tc - lc) <= COL_TOLERANCE))) return false;
+  return gap <= 1.5 * _rowPitch(effectiveLines);
+}
+
+function _rowPitch(effectiveLines) {
+  const gaps = effectiveLines.slice(1).map((ln, k) => effectiveLines[k].y - ln.y).sort((a, b) => a - b);
+  return gaps[Math.floor(gaps.length / 2)];
+}
+
+// The table's header is the line right above its first row when it was not
+// already its first row: a centred heading starts far from its column's
+// left-aligned data, and a right-aligned number column's data starts wherever
+// its number does, so the header row never aligns by left edge (table ground
+// truth 2026-10-06: every borderless table lost its header). Accepted when it
+// has 2+ items, each overlapping exactly one column's extent (the span of that
+// column's own cells) and no two the same column, no further above the first
+// row than one row pitch per line between them plus one. A prose line spans
+// several columns and is never one.
+function _headerAbove(candidate, effectiveLines, colBounds, linesAbove) {
+  if (!candidate?.items || candidate.items.length < MIN_COLS) return null;
+  if (candidate.y - effectiveLines[0].y > (linesAbove + 1) * _rowPitch(effectiveLines)) return null;
+  const extents = colBounds.map(() => [Infinity, -Infinity]);
+  for (const ln of effectiveLines) {
+    for (const it of ln.items) {
+      const c = _nearestCol(_anchor(it), colBounds);
+      extents[c][0] = Math.min(extents[c][0], it.x);
+      extents[c][1] = Math.max(extents[c][1], it.x + (it.width || 0));
+    }
+  }
+  const texts = colBounds.map(() => '');
+  const fonts = colBounds.map(() => undefined);
+  for (const it of candidate.items) {
+    const right = it.x + (it.width || 0);
+    const hits = extents.flatMap(([l, r], c) => (Math.min(r, right) > Math.max(l, it.x) ? [c] : []));
+    if (hits.length !== 1 || texts[hits[0]]) return null;
+    texts[hits[0]] = it.str.trim();
+    fonts[hits[0]] = it.fontFamily;
+  }
+  return { texts, fonts };
+}
+
+function _nearestCol(x, colBounds) {
+  let bestCol = 0, bestDist = Infinity;
+  for (let c = 0; c < colBounds.length; c++) {
+    const d = Math.abs(x - colBounds[c].center);
+    if (d < bestDist) { bestDist = d; bestCol = c; }
+  }
+  return bestCol;
 }
 
 // ── Repeated header detection ─────────────────────────────────────────────────
@@ -253,24 +439,24 @@ function _stubRowNumber(line) {
 // ── Column clustering ─────────────────────────────────────────────────────────
 
 /**
- * Group items into columns by proximity of their X-coordinate.
+ * Group items into columns by proximity of their anchor X (see _anchor).
  * Returns sorted array of column center X values.
  */
 function _clusterColumns(items, tolerance) {
   const clusters = [];   // [{center, sum, count}]
 
-  for (const item of [...items].sort((a, b) => a.x - b.x)) {
+  for (const x of items.map(_anchor).sort((a, b) => a - b)) {
     let best = null, bestDist = Infinity;
     for (const c of clusters) {
-      const d = Math.abs(c.center - item.x);
+      const d = Math.abs(c.center - x);
       if (d < bestDist) { bestDist = d; best = c; }
     }
     if (best && bestDist <= tolerance) {
-      best.sum   += item.x;
+      best.sum   += x;
       best.count += 1;
       best.center = best.sum / best.count;  // running mean
     } else {
-      clusters.push({ center: item.x, sum: item.x, count: 1 });
+      clusters.push({ center: x, sum: x, count: 1 });
     }
   }
 
@@ -323,11 +509,7 @@ function _columnAlignScore(baseCols, lineCols, tolerance) {
  * Mid-points between adjacent column centres define cell left/right edges.
  */
 function _detectColumnBoundaries(lines, tolerance) {
-  const allX = lines.flatMap(ln => ln.items.map(i => i.x));
-  const centers = _clusterColumns(
-    allX.map(x => ({ x })),
-    tolerance
-  ).sort((a, b) => a - b);
+  const centers = _clusterColumns(lines.flatMap(ln => ln.items), tolerance);
 
   return centers.map((center, idx) => ({
     center,
@@ -350,11 +532,7 @@ function _assignToCellsWithFonts(items, colBounds) {
   const fonts = colBounds.map(() => undefined);
 
   for (const item of items) {
-    let bestCol = 0, bestDist = Infinity;
-    for (let c = 0; c < colBounds.length; c++) {
-      const d = Math.abs(item.x - colBounds[c].center);
-      if (d < bestDist) { bestDist = d; bestCol = c; }
-    }
+    const bestCol = _nearestCol(_anchor(item), colBounds);
     texts[bestCol].push(item.str);
     if (fonts[bestCol] === undefined && item.fontFamily) fonts[bestCol] = item.fontFamily;
   }

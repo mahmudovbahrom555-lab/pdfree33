@@ -60,18 +60,25 @@ const MAX_H_CANDIDATES      = 300;        // safety cap: bail out of the O(n²) 
 
 /**
  * @param {import('pdfjs-dist').PDFPageProxy} page
+ * @param {object}  [opts]
+ * @param {boolean} [opts.paintedOnly=false] — skip paths that are never
+ *   painted (clipping paths), see _extractSegments. Only PDF→Excel passes it
+ *   so far: in PDF→Word the false page-sized grid a Chromium print's clip
+ *   rectangle makes also keeps the visual-gap scan off the page, and without
+ *   it that scan crops text and infobox regions as pictures (Wikipedia
+ *   prints, 2026-10-06) — to be fixed there before Word turns this on.
  * @returns {Promise<TableGrid[]>}
  */
-export async function detectTableGrids(page) {
+export async function detectTableGrids(page, { paintedOnly = false } = {}) {
   const opList = await page.getOperatorList();
-  const { hLines, vLines } = _extractSegments(opList);
+  const { hLines, vLines } = _extractSegments(opList, paintedOnly);
   const viewport = page.getViewport({ scale: 1 });
   return _buildGrids(hLines, vLines, viewport.width, viewport.height);
 }
 
 // ── Segment extraction ────────────────────────────────────────────────────────
 
-function _extractSegments(opList) {
+function _extractSegments(opList, paintedOnly) {
   const { fnArray, argsArray } = opList;
   const hLines = []; // { x1, x2, y }
   const vLines = []; // { y1, y2, x }
@@ -107,6 +114,22 @@ function _extractSegments(opList) {
   const OPS_FORM_END    = 75;
   // All path drawing ops are batched into a single constructPath call
   const OPS_PATH        = 91;
+  // A path ended by endPath, after nothing or only a clip (W n / W* n), is never
+  // painted: it only sets a clipping region. Chromium's "Save as PDF" clips every
+  // page to its printable area this way; read as drawn lines, that rectangle
+  // framed a false page-sized grid whose only "row divider" was the rule under a
+  // borderless table's header — it swallowed the whole table (0 % of its cells
+  // in PDF→Excel, table ground truth 2026-10-06) and pulled the title and note
+  // above and below a ruled table in as rows of it.
+  const OPS_CLIP        = 29;
+  const OPS_EO_CLIP     = 30;
+  const OPS_END_PATH    = 28;
+  const unpainted = (i) => {
+    if (!paintedOnly) return false;
+    let k = i + 1;
+    while (fnArray[k] === OPS_CLIP || fnArray[k] === OPS_EO_CLIP) k++;
+    return fnArray[k] === OPS_END_PATH;
+  };
 
   // Composes CTM `m` with a PDF matrix [a,b,c,d,e,f] the same way `cm` does.
   const _composeMatrix = (m, [a, b, c, d, e, f]) => ({
@@ -155,6 +178,7 @@ function _extractSegments(opList) {
         break;
       }
       case OPS_PATH: {
+        if (unpainted(i)) break;
         // args = [[sub-op codes], [flat coord array], [minX,maxX,minY,maxY]]
         const subOps = args[0];
         const co     = args[1]; // flat coordinate values

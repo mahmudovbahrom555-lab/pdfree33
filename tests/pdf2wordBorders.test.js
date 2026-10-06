@@ -261,6 +261,32 @@ await test('a real table drawn well inside the page is still found once the page
   expect(grids[0].colCount).toBe(2);
 });
 
+// ── A clipping path is not a drawn line (table ground truth 2026-10-06) ─────
+// Chromium's "Save as PDF" clips each page to its printable area (re W* n). Its
+// edges framed a false page-sized grid with a borderless table's header rule as
+// the only "row divider", and the whole table was lost in PDF→Excel.
+console.log('\ndetectTableGrids — clipping paths:');
+const OPS_EO_CLIP = 30, OPS_END_PATH = 28, OPS_FILL = 22;
+
+await test('a clip rectangle (path + eoClip + endPath, never painted) frames no grid', async () => {
+  const ops = [
+    rectOp(56, 56, 484, 732), { fn: OPS_EO_CLIP, args: null }, { fn: OPS_END_PATH, args: null },
+    rectOp(66, 730, 474, 0.75), { fn: OPS_FILL, args: null },   // the rule under a header
+  ];
+  const grids = await detectTableGrids(fakePage(ops, { width: 595, height: 842 }), { paintedOnly: true });
+  expect(grids.length).toBe(0);
+});
+
+await test('the same rectangle filled (painted) still counts as lines', async () => {
+  const ops = [
+    rectOp(40, 40, 160, 120), { fn: OPS_FILL, args: null },
+    lineOp(40, 80, 200, 80), lineOp(40, 120, 200, 120), lineOp(120, 40, 120, 160),
+  ];
+  const grids = await detectTableGrids(fakePage(ops), { paintedOnly: true });
+  expect(grids.length).toBe(1);
+  expect(grids[0].rowCount).toBe(3);
+});
+
 // ── Guard rails: too little to call a table ─────────────────────────────────
 console.log('\ndetectTableGrids — guard rails:');
 
