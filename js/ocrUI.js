@@ -305,7 +305,13 @@ function _detectScriptFromText(text, ocrConf = 100) {
 
 // Sample pages [1, middle, last] — stop as soon as enough text is found.
 // Prefers the existing text layer (free) over a quick OCR pass (cheap).
-const DETECT_PX = 800;
+// 1600px, not 800: an A4 page at 800px is ~70 dpi, where Tesseract is unsure
+// of every script — an Arabic scan read with `ara` scored 47–57, under the 65
+// a probe needs, so every Arabic scan stopped at "Select a language first" and
+// a phone photo of one was taken for English (2026-10-08, synthetic scans of
+// the prose ground truth). At 1600px: 75–77 on Arabic scans, Russian photo
+// 54 → 94, English unchanged.
+const DETECT_PX = 1600;
 // Script family classification. To add a new language, put it in the right group —
 // no other table needs updating.
 const SCRIPT_GROUPS = {
@@ -409,7 +415,9 @@ async function _detectLanguage(pdfDoc, worker) {
     cvs.height = Math.round(vp.height);
     await page.render({ canvasContext: cvs.getContext('2d'), viewport: vp }).promise;
 
-    // 3. Quick OCR pass — primary detection
+    // 3. Quick OCR pass — primary detection. On the plain render: Enhance
+    // (see _enhanceForOcrAsync), tuned for full resolution, lowered the `ara`
+    // probe on clean and office scans at this size (77 → 62, 75 → 54).
     const res  = await worker.recognize(cvs);
     const txt  = res?.data?.text ?? '';
     const conf = res?.data?.confidence ?? 0;
@@ -1233,7 +1241,10 @@ async function _runOcr(file, gen) {
       const pageRotation = page.rotate || 0;
       ocrCanvas = pageRotation !== 0 ? _counterRotateCanvas(canvas, pageRotation) : canvas;
 
-      const gray = await _toGrayscaleAsync(ocrCanvas, CJK_LANGS.has(_primaryScript(resolvedLang)));
+      // CJK keeps its own grayscale + Otsu path (not measured with Enhance).
+      const gray = CJK_LANGS.has(_primaryScript(resolvedLang))
+        ? await _toGrayscaleAsync(ocrCanvas, true)
+        : await _enhanceForOcrAsync(ocrCanvas).catch(() => _toGrayscaleAsync(ocrCanvas, false));
       const result = await worker.recognize(gray);
       // Adaptive confidence threshold — see COMPLEX_LANGS constant.
       // Latin (eng/fra/…): 55% — Tesseract is reliable; below 55% is almost always garbage.
@@ -1385,6 +1396,39 @@ function _ensureGrayscaleWorker() {
     _grayscaleWorker = new Worker(new URL('./ocrGrayscaleWorker.js', import.meta.url));
   }
   return _grayscaleWorker;
+}
+
+// Clean Scan's Enhance (js/cleanScanWorker.js: background flattening, denoise,
+// contrast — no binarization) before Tesseract. Measured through this tool on
+// synthetic scans with known text (2026-10-08), share of words found / share
+// of output words right:
+//   Arabic + Persian phone photos (shadow, tilt)   47 / 27 % → 76 / 72 %
+//   Arabic + Persian office scans (200 dpi)        74 / 72 % → 76 / 69 %
+//                                                  (single pages ±5 either way)
+//   Arabic + Persian clean scans (300 dpi)         80 / 78 % → 81 / 79 %,
+//                                                  ~2 s slower per page
+//   English, Russian                               unchanged (99–100 %),
+//                                                  photos 2–3× faster
+// Clean Scan's Clean mode (binarized) did worse on photos (68 / 54 %). Rejects
+// where OffscreenCanvas 2D is missing (Safari < 16.4) — callers fall back to
+// plain grayscale.
+let _enhanceWorker = null;
+async function _enhanceForOcrAsync(src) {
+  _enhanceWorker ??= new Worker(new URL('./cleanScanWorker.js', import.meta.url));
+  const bitmap = await createImageBitmap(src);
+  const { data, width, height } = await new Promise((resolve, reject) => {
+    _enhanceWorker.onmessage = (e) => {
+      if (e.data.type === 'ocrImage') resolve(e.data);
+      else if (e.data.type === 'error') reject(new Error(e.data.message));
+    };
+    _enhanceWorker.onerror = (e) => reject(new Error(e.message || 'Worker error'));
+    _enhanceWorker.postMessage({ type: 'enhanceForOcr', bitmap }, [bitmap]);
+  });
+  const dst = document.createElement('canvas');
+  dst.width  = width;
+  dst.height = height;
+  dst.getContext('2d').putImageData(new ImageData(data, width, height), 0, 0);
+  return dst;
 }
 
 async function _toGrayscaleAsync(src, binarize) {

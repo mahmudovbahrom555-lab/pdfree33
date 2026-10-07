@@ -21,15 +21,20 @@
 //
 //    in  → { type: 'assemble', pages: [{index, bytes, format, width, height}], pageSizes: [{width, height}] }
 //    out → { type: 'progress', value, label } | { type: 'done', result, pageCount } | { type: 'error', message }
+//
+//    in  → { type: 'enhanceForOcr', bitmap: ImageBitmap }
+//    out → { type: 'ocrImage', data: Uint8ClampedArray, width, height } (data transferred)
+//    The OCR tool's preprocessing (js/ocrUI.js): Enhance's background
+//    flattening, denoise and contrast, as raw pixels (no PNG/JPEG round trip).
 // ============================================================
-
-importScripts('./vendor/pdf-lib.min.js');
 
 self.onmessage = async (e) => {
   try {
     const { type } = e.data;
     if (type === 'processPage') {
       await handleProcessPage(e.data.index, e.data.bitmap, e.data.mode, e.data.strength);
+    } else if (type === 'enhanceForOcr') {
+      handleEnhanceForOcr(e.data.bitmap);
     } else if (type === 'assemble') {
       await handleAssemble(e.data.pages, e.data.pageSizes);
     }
@@ -53,17 +58,7 @@ async function handleProcessPage(index, bitmap, mode, strength) {
   const gray = _toGrayscaleCanvas(src);
 
   if (mode === 'enhance') {
-    // Enhance stays continuous-tone (no binarization) — the coarse
-    // flat-field correction below is safe here: worst case is an
-    // imperfect shadow correction, not the false-ink blob artifacts a bad
-    // estimate causes once fed into Clean's threshold (see _applyClean's
-    // own header comment for why Clean uses a different, local approach
-    // instead of this global one).
-    const bg = _estimateBackground(gray);
-    _flatFieldCorrect(gray, bg);
-    _applyMedianFilter(gray);
-    _unsharpMask(gray, 2, 2.0);
-    _applyEnhance(gray, strength);
+    _enhancePipeline(gray, strength);
   } else {
     _applyMedianFilter(gray);
     _unsharpMask(gray, 2, 2.0);
@@ -77,6 +72,35 @@ async function handleProcessPage(index, bitmap, mode, strength) {
   const bytes  = await blob.arrayBuffer();
 
   self.postMessage({ type: 'pageDone', index, bytes, format, width: w, height: h }, [bytes]);
+}
+
+// Enhance stays continuous-tone (no binarization) — the coarse flat-field
+// correction is safe here: worst case is an imperfect shadow correction, not
+// the false-ink blob artifacts a bad estimate causes once fed into Clean's
+// threshold (see _applyClean's own header comment for why Clean uses a
+// different, local approach instead of this global one).
+function _enhancePipeline(gray, strength) {
+  const bg = _estimateBackground(gray);
+  _flatFieldCorrect(gray, bg);
+  _applyMedianFilter(gray);
+  _unsharpMask(gray, 2, 2.0);
+  _applyEnhance(gray, strength);
+}
+
+// OCR preprocessing: Enhance at its default strength. Measured on Arabic and
+// Persian scans through the real OCR tool (2026-10-08): phone photos (shadow,
+// tilt) 47 → 76% of words found and 27 → 72% of output words right; office
+// and clean scans about even (see _enhanceForOcrAsync in js/ocrUI.js). Clean
+// (binarized) was worse on photos (68 / 54%).
+function handleEnhanceForOcr(bitmap) {
+  const w = bitmap.width, h = bitmap.height;
+  const src = new OffscreenCanvas(w, h);
+  src.getContext('2d').drawImage(bitmap, 0, 0);
+  bitmap.close?.();
+  const gray = _toGrayscaleCanvas(src);
+  _enhancePipeline(gray, 0.5);
+  const { data } = gray.getContext('2d').getImageData(0, 0, w, h);
+  self.postMessage({ type: 'ocrImage', data, width: w, height: h }, [data.buffer]);
 }
 
 // Grayscale — same ITU-R BT.601 weights as js/ocrUI.js's _toGrayscale
@@ -448,6 +472,9 @@ function _applyEnhance(canvas, strength) {
 // ── Final assembly ───────────────────────────────────────────────
 
 async function handleAssemble(pages, pageSizes) {
+  // Loaded here, not at the top: the OCR tool's preprocessing never assembles
+  // a PDF and shouldn't pay for pdf-lib.
+  if (!self.PDFLib) importScripts('./vendor/pdf-lib.min.js');
   const { PDFDocument } = self.PDFLib;
   progress(90, 'Assembling PDF…');
 
