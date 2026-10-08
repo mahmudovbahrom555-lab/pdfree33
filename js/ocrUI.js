@@ -456,7 +456,14 @@ async function _detectLanguage(pdfDoc, worker) {
             tried, winner, winnerConfidence: winnerConf,
             switched: true, confidenceInitial: conf,
           };
-          return { lang: winner, confident: winnerConf >= 65 };
+          // Arabic-script models score low even on correct text: a phone photo
+          // of an Arabic or Persian page scored 48–64 (`ara`), short of 65, so
+          // it always stopped at "Select a language first" though the language
+          // was right. A clear lead over English — 19–32 points on those photos,
+          // at most 14 on Hebrew scans, for which there is no model — is
+          // evidence enough from 45 up (synthetic scans, 2026-10-08).
+          const rtlLead = SCRIPT_GROUPS.rtl.includes(winner) && winnerConf >= 45 && winnerConf - conf >= 17;
+          return { lang: winner, confident: winnerConf >= 65 || rtlLead };
         }
         // Probe didn't win — restore to initial lang before trying next
         await worker.reinitialize(primary.lang);
