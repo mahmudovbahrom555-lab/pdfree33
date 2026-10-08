@@ -52,6 +52,18 @@ export function loadPdfLib() {
   );
 }
 
+// fontkit — pdf-lib needs it to embed a TrueType font (registerFontkit). Vendored
+// locally (js/vendor/fontkit.umd.js, the same file the PDF/A, form-field and
+// watermark workers importScripts), so no CDN and no SRI question. The OCR
+// tool's searchable PDF embeds a Noto font for every non-Latin language and
+// never loaded this on the main thread: the embed silently fell back to
+// Helvetica, which can't encode Arabic, Cyrillic or CJK, so every such word
+// was dropped from the invisible text layer (2026-10-08).
+export function loadFontkit() {
+  if (window.fontkit) return Promise.resolve();
+  return _load('fontkit', new URL('./vendor/fontkit.umd.js', import.meta.url).href);
+}
+
 export function loadJSZip() {
   if (window.JSZip) return Promise.resolve();
   return _load(

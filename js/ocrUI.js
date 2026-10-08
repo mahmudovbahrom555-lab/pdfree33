@@ -4,7 +4,7 @@
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { maxFileMb } from './fileLimits.js';
 import { wireShareButton } from './shareButton.js';
-import { loadPdfLib } from './lazyLibs.js';
+import { loadPdfLib, loadFontkit } from './lazyLibs.js';
 import { t } from './i18n.js';
 import { saveHandoff } from './handoff.js';
 import { truncateMiddle, esc } from './utils.js';
@@ -941,7 +941,7 @@ async function _runOcr(file, gen) {
       // Store viewport transform — used in _buildSearchablePdf to map canvas→PDF coords
       // correctly for any page rotation (0, 90, 180, 270°)
       ocrPages.push({
-        pageNum: p, words: rec.words,
+        pageNum: p, lines: rec.lines,
         canvasW: rec.canvasW, canvasH: rec.canvasH,
         vpTransform: rec.vpTransform,
       });
@@ -1111,6 +1111,10 @@ function _ensureFontkitRegistered(pdfDoc) {
   }
 }
 
+const _NO_SHAPING = Object.fromEntries(['ccmp', 'locl', 'isol', 'init', 'medi', 'med2', 'fina', 'fin2', 'fin3',
+  'rlig', 'rclt', 'calt', 'liga', 'clig', 'dlig', 'mark', 'mkmk', 'kern', 'curs', 'ljmo', 'vjmo', 'tjmo']
+  .map(tag => [tag, false]));
+
 // Returns an embedded font suitable for the selected OCR language.
 // Latin languages: Helvetica (no network request).
 // Non-Latin: fetch the appropriate Noto Sans TTF from Google Fonts CDN,
@@ -1144,13 +1148,14 @@ async function _getFontForLang(pdfDoc, lang) {
     // fontkit must be registered before embedFont can accept raw TTF bytes.
     // subset:true keeps only the glyphs that appear in the document — critical
     // for CJK fonts (Noto Sans SC is 17 MB full; a typical page uses <100 KB).
+    await loadFontkit();
     _ensureFontkitRegistered(pdfDoc);
-    if (!window.fontkit) {
-      // fontkit script not yet loaded — Noto cannot be embedded; use Helvetica.
-      // Invisible layer will lack non-Latin glyphs but PDF will not be corrupted.
-      return pdfDoc.embedFont(StandardFonts.Helvetica);
-    }
-    return pdfDoc.embedFont(bytes, { subset: true });
+    // No shaping: the layer is invisible, only its text matters. Shaped,
+    // Noto Sans Arabic draws a letter as a dotless base plus separate dots, so
+    // the glyph → character map back is ambiguous — ت, ي and ن share one base
+    // and "التنظيف" was extracted as "الينظيف" (2026-10-08). Each character
+    // as its own nominal glyph maps back one to one.
+    return pdfDoc.embedFont(bytes, { subset: true, features: _NO_SHAPING });
   } catch {
     // CDN unreachable or embed failed — fall back to Helvetica.
     // The invisible text layer will not contain non-Latin glyphs,
@@ -1178,7 +1183,7 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
   }
   const {
     PDFDocument,
-    pushGraphicsState, popGraphicsState, setTextRenderingMode,
+    pushGraphicsState, popGraphicsState, setTextRenderingMode, setCharacterSqueeze,
     TextRenderingMode,
   } = window.PDFLib;
 
@@ -1192,7 +1197,7 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
   const font   = await _getFontForLang(pdfDoc, lang ?? 'eng');
   const pages  = pdfDoc.getPages();
 
-  for (const { pageNum, words, vpTransform } of ocrPages) {
+  for (const { pageNum, lines, vpTransform } of ocrPages) {
     const page = pages[pageNum - 1];
     if (!page) continue;
 
@@ -1206,39 +1211,57 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
       setTextRenderingMode(TR_INVISIBLE),
     );
 
-    for (const w of words) {
-      if (!w.text.trim() || w.confidence < 20) continue;
-      const { x0, y0, x1, y1 } = w.bbox;
-
-      // Transform all four bbox corners to PDF user-space, then derive the
-      // axis-aligned bounding box. This is rotation-agnostic: for 0°/180° pages
-      // the canvas x-axis is the PDF x-axis; for 90°/270° they are swapped.
-      const corners = [
-        _applyTransform(inv, x0, y0),
-        _applyTransform(inv, x0, y1),
-        _applyTransform(inv, x1, y0),
-        _applyTransform(inv, x1, y1),
-      ];
-      const pdfX0 = Math.min(corners[0].x, corners[1].x, corners[2].x, corners[3].x);
-      const pdfY0 = Math.min(corners[0].y, corners[1].y, corners[2].y, corners[3].y);
-      const pdfX1 = Math.max(corners[0].x, corners[1].x, corners[2].x, corners[3].x);
-      const pdfY1 = Math.max(corners[0].y, corners[1].y, corners[2].y, corners[3].y);
-
-      const wordW    = pdfX1 - pdfX0;
-      const wordH    = pdfY1 - pdfY0;
-      const fontSize = Math.max(4, Math.min(wordH * 0.85, 72));
-
-      try {
-        page.drawText(w.text, {
-          x:        pdfX0,
-          y:        pdfY0,
-          size:     fontSize,
-          font,
-          maxWidth: wordW + 2,
-        });
-      } catch {
-        // Skip words with unsupported glyphs or out-of-bounds coords
-      }
+    // One baseline and one size per Tesseract line: the median of its words'
+    // bottoms and heights. Placed each at its own box bottom, an Arabic line's
+    // words sat up to 8pt apart (descenders), and readers split the line into
+    // fragments — PDF→Word read 16% of a searchable Arabic scan (2026-10-08).
+    // A space is drawn in the gap between two words, its own text show, so
+    // copied and extracted text keeps word breaks: appended to a right-to-left
+    // word, pdf.js dropped it and read "ماالفرقبين". Each word and each space
+    // is squeezed or stretched (Tz) to its exact width on the scan — at the
+    // font's own width, words overlapped their neighbours and readers saw no
+    // gap, hence no space (the same fit Tesseract's own PDF output uses).
+    const squeezeTo = (text, size, width) => {
+      const natural = font.widthOfTextAtSize(text, size);
+      return natural > 0 ? Math.max(10, Math.min(1000, (width / natural) * 100)) : 100;
+    };
+    const median = vals => [...vals].sort((a, b) => a - b)[Math.floor(vals.length / 2)];
+    for (const line of lines) {
+      const boxes = line.words.filter(w => w.kept && w.confidence >= 20).map(w => {
+        const { x0, y0, x1, y1 } = w.bbox;
+        // Transform all four bbox corners to PDF user-space, then derive the
+        // axis-aligned bounding box. This is rotation-agnostic: for 0°/180°
+        // pages the canvas x-axis is the PDF x-axis; for 90°/270° they are
+        // swapped.
+        const corners = [
+          _applyTransform(inv, x0, y0),
+          _applyTransform(inv, x0, y1),
+          _applyTransform(inv, x1, y0),
+          _applyTransform(inv, x1, y1),
+        ];
+        const xs = corners.map(c => c.x), ys = corners.map(c => c.y);
+        return { text: w.text, x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) };
+      });
+      if (!boxes.length) continue;
+      const y        = median(boxes.map(b => b.y0));
+      const fontSize = Math.max(4, Math.min(median(boxes.map(b => b.y1 - b.y0)) * 0.85, 72));
+      boxes.forEach((b, i) => {
+        try {
+          page.pushOperators(setCharacterSqueeze(squeezeTo(b.text, fontSize, b.x1 - b.x0)));
+          page.drawText(b.text, { x: b.x0, y, size: fontSize, font });
+          const next = boxes[i + 1];
+          if (next) {
+            // The gap between this word and the next, whichever side it is on.
+            const [gapX, gapEnd] = next.x0 >= b.x1 ? [b.x1, next.x0] : [next.x1, b.x0];
+            if (gapEnd > gapX) {
+              page.pushOperators(setCharacterSqueeze(squeezeTo(' ', fontSize, gapEnd - gapX)));
+              page.drawText(' ', { x: gapX, y, size: fontSize, font });
+            }
+          }
+        } catch {
+          // Skip words with unsupported glyphs or out-of-bounds coords
+        }
+      });
     }
 
     // Restore graphics state — Tr resets to what it was before our q.
