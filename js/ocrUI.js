@@ -61,7 +61,7 @@ const CJK_LANGS = new Set(['jpn', 'chi_sim', 'chi_tra', 'kor']);
 //   2. Skip OCR quality score display — calibrated Latin tiers (90/80/60%) mislead
 //      users of these scripts until per-language baselines are established from real data.
 // Note: kor (Korean) included — Hangul confidence patterns match other complex scripts.
-const COMPLEX_LANGS = new Set(['ara', 'jpn', 'chi_sim', 'chi_tra', 'kor', 'hin', 'tha']);
+const COMPLEX_LANGS = new Set(['ara', 'fas', 'jpn', 'chi_sim', 'chi_tra', 'kor', 'hin', 'tha']);
 
 // ── State ────────────────────────────────────────────────────────────────────
 let _file            = null;
@@ -104,6 +104,7 @@ const LANGUAGES = {
   ],
   complex: [
     { code: 'ara',         name: 'Arabic',                        size: '1.5 MB', rtl: true },
+    { code: 'fas',         name: 'Persian',                       size: '0.4 MB', rtl: true },
     { code: 'jpn',         name: 'Japanese',                      size: '10 MB'  },
     { code: 'jpn+eng',     name: 'Japanese + English (bilingual)', size: '14 MB'  },
     { code: 'chi_sim',     name: 'Chinese (Simplified)',           size: '15 MB'  },
@@ -317,7 +318,7 @@ const DETECT_PX = 1600;
 const SCRIPT_GROUPS = {
   latin:      ['eng', 'fra', 'deu', 'spa', 'ita', 'por', 'nld', 'pol', 'tur', 'uzb'],
   cyrillic:   ['rus'],
-  rtl:        ['ara'],
+  rtl:        ['ara', 'fas'],
   cjk:        ['jpn', 'chi_sim', 'chi_tra', 'kor'],
   devanagari: ['hin'],
   thai:       ['tha'],
@@ -436,14 +437,26 @@ async function _detectLanguage(pdfDoc, worker) {
         const fbConf = fbRes?.data?.confidence ?? 0;
 
         if (fbConf > conf + 15) {
+          let winner = probe, winnerConf = fbConf;
+          // Arabic and Persian share a script, and the `ara` model never
+          // outputs Persian's own letters (پ چ ژ گ ک ی: 0 in 24 scans), so
+          // only the two models' confidence tells them apart: on Persian scans
+          // `fas` is within 2 of `ara`, on Arabic ones 12–25 below (2026-10-08).
+          // Read with `fas`, Persian scans have 85–88 % of words right, not 72–75.
+          if (probe === 'ara') {
+            tried.push('fas');
+            await worker.reinitialize('fas');
+            const fasConf = (await worker.recognize(cvs))?.data?.confidence ?? 0;
+            if (fasConf >= fbConf - 6) { winner = 'fas'; winnerConf = fasConf; }
+          }
           cvs.width = 0; cvs.height = 0;
           _lastDetectionMetrics = {
             source: 'ocr-fallback',
             initial: primary.lang, suspicious,
-            tried, winner: probe, winnerConfidence: fbConf,
+            tried, winner, winnerConfidence: winnerConf,
             switched: true, confidenceInitial: conf,
           };
-          return { lang: probe, confident: fbConf >= 65 };
+          return { lang: winner, confident: winnerConf >= 65 };
         }
         // Probe didn't win — restore to initial lang before trying next
         await worker.reinitialize(primary.lang);
@@ -1561,12 +1574,13 @@ function _rotateBackBbox({ x0, y0, x1, y1 }, R, W, H) {
 
 // Languages whose scripts fall outside Latin-1 (Windows-1252).
 // Helvetica only covers codepoints 0-255; everything here starts at U+0400+.
-const NON_LATIN_LANGS = new Set(['ara', 'jpn', 'chi_sim', 'chi_tra', 'kor', 'hin', 'tha', 'rus', 'pol']);
+const NON_LATIN_LANGS = new Set(['ara', 'fas', 'jpn', 'chi_sim', 'chi_tra', 'kor', 'hin', 'tha', 'rus', 'pol']);
 
 // TTF URLs from Google Fonts CDN (variable fonts; verified 2026-05).
 // pdf-lib requires TTF or OTF — WOFF/WOFF2 cannot be embedded.
 const NOTO_FONT_URLS = {
   ara:     'https://fonts.gstatic.com/s/notosansarabic/v33/nwpPtLGrOAZMl5nJ_wfgRg3DrWFZQML36H986K0.ttf',
+  fas:     'https://fonts.gstatic.com/s/notosansarabic/v33/nwpPtLGrOAZMl5nJ_wfgRg3DrWFZQML36H986K0.ttf',
   jpn:     'https://fonts.gstatic.com/s/notosansjp/v56/-F62fjtqLzI2JPCgQBnw7HFoxgIO2lZ9hg.ttf',
   chi_sim: 'https://fonts.gstatic.com/s/notosanssc/v40/k3kXo84MPvpLmixcA63oeALhKYiJ-Q7m8w.ttf',
   chi_tra: 'https://fonts.gstatic.com/s/notosanstc/v39/-nF7OG829Oofr2wohFbTp9iFPysLA_ZJ1g.ttf',
