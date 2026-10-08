@@ -36,7 +36,7 @@ import { detectTables, looksLikeProseNotData, looksLikeEnumeratedList } from './
 import { detectColumnRegions, pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, _splitCrossColumnLines } from './textLayoutUtils.js';
+         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, _splitCrossColumnLines, textLayerLooksBroken } from './textLayoutUtils.js';
 
 // XML 1.0's Char production disallows most C0 control characters (only
 // tab/LF/CR are valid: #x9 | #xA | #xD | [#x20-...]) — pdf.js text
@@ -495,7 +495,8 @@ export function _rpBuildPageBlocks(page, median, repeatTextSet, repeatPatternSet
 }
 
 // ── Page-data extraction (pdf.js → lines/items) ─────────────────────────
-// `ocrPage(page, pageNum)` (optional): called for a page with no text layer;
+// `ocrPage(page, pageNum)` (optional): called for a page with no text layer,
+// or with a broken one (textLayerLooksBroken: glyph codes instead of text);
 // resolves to text items read from the page image ({ str, x, y, width,
 // fontSize } in PDF user space, in reading order, each word carrying its
 // trailing space) or to null to leave the page as it is. The caller brings the
@@ -512,7 +513,8 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
   const _cs = {
     totalPages:         pdfDoc.numPages,
     fullPageFallbacks:  0,   // pages with no text layer (scanned)
-    ocrPages:           0,   // of those, pages read with the caller's OCR
+    ocrPages:           0,   // pages read with the caller's OCR (no or broken text layer)
+    brokenLayerPages:   0,   // of those, pages whose text layer was garbage
     totalLines:         0,
     rtlLines:           0,
     mathChars:          0,
@@ -623,10 +625,14 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
         };
       });
 
-    // A page with no text layer (a scan): its words from the caller's OCR, if any.
+    // A page with no text layer (a scan), or a broken one: its words from the
+    // caller's OCR, if any. A broken layer whose page OCR can't read (language
+    // not detected) is kept as it is.
     const hasText = allMapped.some(i => i.str.trim());
-    const ocrItems = !hasText && ocrPage ? await ocrPage(page, p) : null;
+    const broken  = hasText && textLayerLooksBroken(content.items.map(i => i.str ?? '').join(' '));
+    const ocrItems = (!hasText || broken) && ocrPage ? await ocrPage(page, p) : null;
     if (ocrItems?.length) {
+      if (broken) { allMapped.length = 0; _cs.brokenLayerPages++; }
       ocrItems.forEach((item, seq) => allMapped.push({
         seq, str: item.str, x: item.x, y: item.y, width: item.width, fontSize: item.fontSize,
         rotated: false, bold: false, italic: false, fontFamily: undefined, ocr: true,

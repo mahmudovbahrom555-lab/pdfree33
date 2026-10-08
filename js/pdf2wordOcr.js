@@ -70,8 +70,9 @@ export function ocrItemsFromPage(rec) {
 }
 
 // The `ocrPage` seam for one PDF→Word run, plus close() to free the engine.
-// The language is detected once, on first use, from the document itself
-// (detectOcrLanguage samples its pages). When it isn't detected with
+// The language is detected once, on first use, from the document's page
+// images (detectOcrLanguage samples its pages; their text layer, broken or
+// absent, says nothing). When it isn't detected with
 // confidence — a script with no model, such as Hebrew — every page keeps
 // today's behaviour (a picture of the page) instead of risking garbage text.
 // Rotated pages (/Rotate 90/180/270) are left as they are for now.
@@ -81,7 +82,7 @@ export function createOcrLayer(pdfDoc, { onPage = () => {} } = {}) {
     try {
       await loadTesseract();
       const worker = await createOcrWorker('eng');
-      const detection = await detectOcrLanguage(pdfDoc, worker);
+      const detection = await detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer: true });
       if (!detection.confident) { await worker.terminate(); return null; }
       if (detection.lang !== 'eng') await switchOcrLanguage(worker, detection.lang);
       return { worker, lang: detection.lang };

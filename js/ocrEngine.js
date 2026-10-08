@@ -211,7 +211,9 @@ function _isDetectionSuspicious(txt, conf) {
 // (left set to the detected language when a probe wins, else to its initial
 // language). Returns { lang, confident, metrics } — metrics describe how the
 // decision was reached (source, probes tried, winning confidence).
-export async function detectOcrLanguage(pdfDoc, worker) {
+// `ignoreTextLayer`: judge from the page image only — for pages whose text
+// layer is garbage (PDF→Word's OCR layer reads only such pages and scans).
+export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = false } = {}) {
   const total = pdfDoc.numPages;
   const pages = [...new Set([1, Math.ceil(total / 2), total])];
 
@@ -219,8 +221,7 @@ export async function detectOcrLanguage(pdfDoc, worker) {
     const page = await pdfDoc.getPage(p);
 
     // 1. Check text layer first — zero cost, unicode analysis is accurate here
-    const tc = await page.getTextContent();
-    const layerText = tc.items.map(i => i.str).join('');
+    const layerText = ignoreTextLayer ? '' : (await page.getTextContent()).items.map(i => i.str).join('');
     if (layerText.trim().length >= 50) {
       const result = _detectScriptFromText(layerText, 100);
       return { ...result, metrics: {

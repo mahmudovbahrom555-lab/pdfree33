@@ -513,6 +513,40 @@ export function continuesWrappedHeading(prevLn, ln, margins) {
 }
 
 // CJK: Hiragana/Katakana, CJK Unified Ideographs, Hangul syllables, CJK Extension A/B.
+// Is a page's text layer garbage rather than text? A font without a usable
+// ToUnicode map makes extraction return glyph codes: control characters
+// (glyph 1, 3 …) and letters from scripts that have nothing to do with each
+// other side by side — an Arabic page came back as Malayalam, Kannada, Hebrew
+// and Arabic fragments in one "word", an English one as ":KDW" for "What".
+// Measured on the prose ground truth with ToUnicode stripped vs every page of
+// the corpus (2026-10-08): control characters 8.6–18 % of the text broken
+// (good pages ≤ 0.9 %), script changes between adjacent letters 9.7–46 %
+// broken (good ≤ 2.3 %, Japanese with Latin words). Broken when either is
+// clearly over the good range. Han, kana and bopomofo count as one script
+// (Japanese mixes them by nature). Pages under 200 characters aren't judged.
+const _SCRIPT_RES = ['Latin', 'Arabic', 'Hebrew', 'Cyrillic', 'Greek', 'Han', 'Hiragana', 'Katakana', 'Bopomofo',
+  'Hangul', 'Devanagari', 'Thai', 'Malayalam', 'Kannada', 'Tamil', 'Telugu', 'Bengali', 'Gujarati', 'Gurmukhi',
+  'Oriya', 'Armenian', 'Georgian', 'Ethiopic', 'Sinhala', 'Myanmar', 'Khmer', 'Lao', 'Tibetan', 'Syriac', 'Thaana',
+  'Mongolian', 'Cherokee', 'Canadian_Aboriginal', 'Runic', 'Ogham', 'Yi', 'Tifinagh', 'Vai', 'Javanese', 'Balinese',
+  'Sundanese', 'Coptic', 'Glagolitic', 'Samaritan', 'Mandaic', 'Bamum', 'Lisu']
+  .map(s => [['Han', 'Hiragana', 'Katakana', 'Bopomofo'].includes(s) ? 'CJK' : s, new RegExp(`\\p{Script=${s}}`, 'u')]);
+// eslint-disable-next-line no-control-regex -- intentional: counting control chars
+const _CONTROL_RE = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFD]/;
+const _scriptOf = ch => { for (const [s, re] of _SCRIPT_RES) if (re.test(ch)) return s; return null; };
+export function textLayerLooksBroken(text) {
+  let chars = 0, control = 0, pairs = 0, switches = 0, prev = null;
+  for (const ch of text) {
+    if (/\s/.test(ch)) { prev = null; continue; }
+    chars++;
+    if (_CONTROL_RE.test(ch)) control++;
+    const script = /\p{L}/u.test(ch) ? _scriptOf(ch) : null;
+    if (script && prev) { pairs++; if (script !== prev) switches++; }
+    prev = script;
+  }
+  if (chars < 200) return false;
+  return control / chars >= 0.05 || (pairs > 0 && switches / pairs >= 0.06);
+}
+
 export function _isCjk(str) {
   return /[\u3040-\u30FF\u4E00-\u9FFF\uAC00-\uD7AF\u3400-\u4DBF\uF900-\uFAFF]/.test(str);
 }

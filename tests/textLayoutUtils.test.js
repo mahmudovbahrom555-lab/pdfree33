@@ -10,7 +10,7 @@
 import { strict as assert } from 'assert';
 import { joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
   lineStartMargins, startsIndentedParagraph, linePitch, startsSpacedParagraph,
-  continuesWrappedHeading, lineRuns } from '../js/textLayoutUtils.js';
+  continuesWrappedHeading, lineRuns , textLayerLooksBroken } from '../js/textLayoutUtils.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -359,6 +359,22 @@ test('a heading line ending on sentence punctuation, or a different size, does n
   const m = lineStartMargins(body);
   assert.equal(continuesWrappedHeading(hl(700, 'A complete heading line of its own.', 56, 226), hl(679, 'Another', 56, 80), m), false);
   assert.equal(continuesWrappedHeading(hl(700, "What's the difference between", 56, 226), hl(679, 'smaller', 56, 80, true, 12), m), false);
+});
+
+
+// textLayerLooksBroken — real extraction from the prose ground truth with its
+// fonts' ToUnicode maps stripped (2026-10-08), next to the same pages intact.
+console.log('\ntextLayerLooksBroken:');
+test('real text in any script is not broken (Arabic, Japanese with Latin words, short pages)', () => {
+  assert.equal(textLayerLooksBroken('التنظيف يُسطّح الخلفية إلى أبيض نقي ويُغمّق النص لأقصى تباين — الأنسب للصفحات النصية. '.repeat(5)), false);
+  assert.equal(textLayerLooksBroken('PDFree を使えば、ファイルをアップロードせずにブラウザ内で PDF を変換できます。'.repeat(8)), false);
+  assert.equal(textLayerLooksBroken('Привет, мир! Это обычный текст на русском языке, без мусора. '.repeat(6)), false);
+  assert.equal(textLayerLooksBroken('/അ೪ۻٍ\u0001'), false); // under 200 characters: not judged
+});
+test('glyph codes instead of text are broken (control characters, scripts mixed inside words)', () => {
+  assert.equal(textLayerLooksBroken(':KDW\u0003V\u0003WKH\u0003GLffHUHQFH\u0003EHWZHHQ\u0003&OHDQ\u0003DQG\u0003'.repeat(6)), true);
+  assert.equal(textLayerLooksBroken('/അ೪ۻٍ\u05ebڤ7X\u0001؉מ܊ר\u05ebڤ7\u0001\u0b58কۛX\u0001അ೪ּ\u0001Rۑءڤ7'.repeat(8)), true);
+  assert.equal(textLayerLooksBroken('ʢʱʳʩʱɐʱوجˑɐمجحɐتیʱˑدحمɐاه\u200cلѫافɐˎاغʱʩɐͤʩربɐایʤ'.repeat(6)), true);  // Persian, no control chars
 });
 
 const total = passed + failed;
