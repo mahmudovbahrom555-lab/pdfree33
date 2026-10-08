@@ -8,23 +8,6 @@ import { chipGroup, group, loadingRow, checkbox } from './uiComponents.js';
 import { detectTables } from './pdf2wordTables.js';
 import { t, tp } from './i18n.js';
 
-// Locale-correct slug for the "Run OCR first" cross-link in the scanned-PDF
-// hint below. This module is shared across every locale's page, and the OCR
-// tool is served at a translated pathname in several non-English locales
-// (e.g. /ru/raspoznat-tekst-pdf/) — a bare '/ocr-pdf/' href resolves to the
-// English page regardless of which locale the user is on. Mirrors the
-// per-locale slugs in data/tools-config.json (same table/pattern as the fix
-// in js/ocrUI.js).
-const OCR_SLUGS = { en: 'ocr-pdf', de: 'ocr-pdf', es: 'ocr-pdf', fr: 'ocr-pdf', pt: 'ocr-pdf', id: 'ocr-pdf', vi: 'nhan-dang-van-ban-pdf', ru: 'raspoznat-tekst-pdf', ja: 'pdf-moji-ninshiki', tr: 'metin-tanima-pdf', it: 'riconosci-testo-pdf', ko: 'pdf-munja-insik', nl: 'pdf-tekstherkenning', pl: 'rozpoznaj-tekst-pdf' };
-const KNOWN_LOCALES = new Set(['de', 'es', 'fr', 'pt', 'id', 'vi', 'ru', 'ja', 'it', 'ko', 'nl', 'pl', 'tr']);
-
-function _ocrHref() {
-  const seg = location.pathname.split('/')[1];
-  const lc  = KNOWN_LOCALES.has(seg) ? seg : 'en';
-  const slug = OCR_SLUGS[lc] || OCR_SLUGS.en;
-  return lc === 'en' ? `/${slug}/` : `/${lc}/${slug}/`;
-}
-
 // ── Constants ─────────────────────────────────────────────────────────────────
 // JPEG compression ratio at quality 0.85 over typical PDF content
 // (mix of text, graphics). Actual ratio: 10–16×; 12× is a safe middle estimate.
@@ -316,9 +299,10 @@ async function _scanTablesBackground(doc, gen) {
   const el = id('pdf2wordOptions');
   if (!el) return;
 
-  // ── OCR hint: pure-image PDF has no extractable text layer ───────────────
+  // ── OCR note: pure-image PDF has no extractable text layer ───────────────
   // Fewer than 3 meaningful text items per scanned page = scanned image only.
-  // Word output will be image-based; recommend OCR first.
+  // Its text is recognized during conversion (js/pdf2wordOcr.js) — the note
+  // says so, and that it takes a few seconds per page.
   const ocrHintEl  = el.querySelector('#p2wOcrHint');
   const isPureImage = (totalTextItems / pageLimit) < 3;
   if (isPureImage) {
@@ -329,11 +313,8 @@ async function _scanTablesBackground(doc, gen) {
         div.id        = 'p2wOcrHint';
         div.className = 'compress-scan compress-scan--found';
         div.style.cssText = 'margin-top:8px;font-size:13px;padding:10px 12px';
-        div.setAttribute('role', 'alert');
-        div.innerHTML =
-          t('p2w_ocr_hint') +
-          `<a href="${_ocrHref()}" style="color:inherit;font-weight:600;white-space:nowrap">` +
-          `${t('p2w_run_ocr_link')}</a>${t('p2w_ocr_to_get_editable')}`;
+        div.setAttribute('role', 'status');
+        div.textContent = t('p2w_ocr_hint');
         hint.before(div);
       }
     }

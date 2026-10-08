@@ -33,6 +33,7 @@ import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          lineEndsParagraph, continuesWrappedHeading } from './textLayoutUtils.js';
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { _p2wBuildPageData } from './pdf2readCore.js';
+import { createOcrLayer } from './pdf2wordOcr.js';
 import { detectTableGrids } from './pdf2wordBorders.js';
 import { recognizeFormula } from './formulaOcr.js';
 import { docxToPdf, walkDomToPdfContent, pdfContentToBlob } from './docxToPdfCore.js';
@@ -2523,10 +2524,20 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
   let pageData, median, repeatTextSet, repeatPatternSet, cs;   // text mode only — kept for the ERI retry below
   if (mode === 'text') {
     onProgress?.(10, 'Extracting text…');
-    ({ pageData, median, repeatTextSet, repeatPatternSet, cs } = await _p2wBuildPageData(pdfDoc, {
-      onProgress:  (pct, label) => onProgress?.(pct, label),
-      isCancelled,
-    }));
+    // Scanned pages: their text read with the shared OCR engine (pdf2wordOcr.js).
+    const ocr = createOcrLayer(pdfDoc, {
+      onPage: (p, lang) => onProgress?.(10 + Math.round((p / pdfDoc.numPages) * 40),
+        `Recognizing text (${lang}) on page ${p}/${pdfDoc.numPages}…`),
+    });
+    try {
+      ({ pageData, median, repeatTextSet, repeatPatternSet, cs } = await _p2wBuildPageData(pdfDoc, {
+        onProgress:  (pct, label) => onProgress?.(pct, label),
+        isCancelled,
+        ocrPage:     ocr.ocrPage,
+      }));
+    } finally {
+      await ocr.close();
+    }
     ({ paragraphs, cs } = await _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { repeatPatternSet, isCancelled, onProgress }));
     confidence = _p2wConfidence(cs, median);
   } else {

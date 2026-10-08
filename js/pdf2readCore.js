@@ -14,11 +14,13 @@
 //  packages/pdf2read-core/src/index.js in Node) owns loading the PDF and
 //  producing that object.
 //
-//  Browser-coupling is limited to 2 injectable seams on _p2wBuildPageData,
-//  both optional, same no-op-by-default pattern pdf2mdCore.js's
+//  Browser-coupling is limited to 3 injectable seams on _p2wBuildPageData,
+//  all optional, same no-op-by-default pattern pdf2mdCore.js's
 //  _p2mdExtractText already established:
 //    onProgress(pct, label)   — UI progress callback; no-op by default.
 //    isCancelled()            — mid-run cancellation check; never-cancel default.
+//    ocrPage(page, pageNum)   — text items for a page with no text layer (the
+//                               browser passes its OCR engine); none by default.
 //  No canvasFactory seam is needed here (unlike pdf2mdCore.js) — this module
 //  never renders a canvas itself. An `image`-type block from
 //  _rpBuildRegionBlocks/_rpBuildPageBlocks carries only a bounding-box
@@ -493,7 +495,12 @@ export function _rpBuildPageBlocks(page, median, repeatTextSet, repeatPatternSet
 }
 
 // ── Page-data extraction (pdf.js → lines/items) ─────────────────────────
-export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCancelled = () => false } = {}) {
+// `ocrPage(page, pageNum)` (optional): called for a page with no text layer;
+// resolves to text items read from the page image ({ str, x, y, width,
+// fontSize } in PDF user space, in reading order, each word carrying its
+// trailing space) or to null to leave the page as it is. The caller brings the
+// OCR engine — this core stays environment-agnostic.
+export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCancelled = () => false, ocrPage = null } = {}) {
   const YTOL = 6;   // px — items within 6px on Y → same line (was 4; increased to group
                    //  characters with slight baseline variation, e.g. Cyrillic in some PDFs)
 
@@ -505,6 +512,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
   const _cs = {
     totalPages:         pdfDoc.numPages,
     fullPageFallbacks:  0,   // pages with no text layer (scanned)
+    ocrPages:           0,   // of those, pages read with the caller's OCR
     totalLines:         0,
     rtlLines:           0,
     mathChars:          0,
@@ -614,6 +622,17 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
           fontFamily: _pptxSafeFontFace(_rawFontName(item.fontName), fam),
         };
       });
+
+    // A page with no text layer (a scan): its words from the caller's OCR, if any.
+    const hasText = allMapped.some(i => i.str.trim());
+    const ocrItems = !hasText && ocrPage ? await ocrPage(page, p) : null;
+    if (ocrItems?.length) {
+      ocrItems.forEach((item, seq) => allMapped.push({
+        seq, str: item.str, x: item.x, y: item.y, width: item.width, fontSize: item.fontSize,
+        rotated: false, bold: false, italic: false, fontFamily: undefined, ocr: true,
+      }));
+      _cs.ocrPages++;
+    }
 
     // Rotated items (vertical column headers in tables) are processed separately
     // so they don't pollute normal line-grouping.
