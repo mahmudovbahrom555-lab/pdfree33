@@ -378,6 +378,45 @@ console.log('\n_p2eStitchTables:');
 
 const T = (page, rows, colXs) => ({ page, rows, confidence: 1, boldRows: new Set(), colXs });
 
+// Borderless tables (user report 2026-10-08: "put into multiple tabs Table1,
+// Table 2"): pages run through _p2eExtractPage, then stitched.
+const P = (page, lines) => _p2eExtractPage(lines, [], page).tables;
+const HDR = y => makeLineAt(y, [['Item', 0], ['Qty', 100], ['Price', 150], ['Date', 220]]);
+const ROWS = (y0, n, tag) => Array.from({ length: n }, (_, k) =>
+  makeLineAt(y0 - 20 * k, [[`${tag}${k}`, 0], [String(k + 1), 100], [`${k}.50`, 150], ['2026-09-14', 220]]));
+
+test('a borderless table continuing on the next page becomes one table — page number and reprinted header in between', () => {
+  const out = _p2eStitchTables([
+    ...P(1, [HDR(700), ...ROWS(680, 5, 'a'), makeLineAt(40, [['1', 150]])]),
+    ...P(2, [HDR(780), ...ROWS(760, 4, 'b'), makeLineAt(40, [['Page 2 of 2', 120]])]),
+  ]);
+  expect(out.length).toBe(1);
+  expect(out[0].rows.length).toBe(10); // header once + 5 + 4
+  expect(out[0].rows.filter(r => r[0] === 'Item').length).toBe(1);
+});
+
+test('a heading over a same-column table on the next page keeps them apart ("Expenses")', () => {
+  const out = _p2eStitchTables([
+    ...P(1, [HDR(700), ...ROWS(680, 5, 'a')]),
+    ...P(2, [makeLineAt(800, [['Expenses', 0]]), HDR(780), ...ROWS(760, 4, 'b')]),
+  ]);
+  expect(out.length).toBe(2);
+});
+
+test('a borderless table followed by text on its page, or with other columns on the next page, is not continued', () => {
+  const textBelow = _p2eStitchTables([
+    ...P(1, [HDR(700), ...ROWS(680, 5, 'a'), makeLineAt(500, [['These totals are subject to change and are provided for reference only.', 0]])]),
+    ...P(2, [HDR(780), ...ROWS(760, 4, 'b')]),
+  ]);
+  expect(textBelow.length).toBe(2);
+  const otherCols = _p2eStitchTables([
+    ...P(1, [HDR(700), ...ROWS(680, 5, 'a')]),
+    ...P(2, [makeLineAt(780, [['Category', 0], ['Amount', 300]]),
+      ...Array.from({ length: 4 }, (_, k) => makeLineAt(760 - 20 * k, [[`c${k}`, 0], [`${k}00.00`, 300]]))]),
+  ]);
+  expect(otherCols.length).toBe(2);
+});
+
 test('a ruled table continuing on the next page becomes one table; a reprinted header is dropped', () => {
   const out = _p2eStitchTables([
     T(1, [['No', 'Name'], ['1', 'A']], [0, 100, 200]),

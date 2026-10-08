@@ -3016,8 +3016,18 @@ export function _p2eExtractPage(lines, grids, page) {
   for (const tbl of textTables) {
     const boldRows = new Set();
     tbl.rowLines.forEach((lis, r) => { if (_p2eAllBold(lis.map(li => rest[li]))) boldRows.add(r); });
-    for (let i = tbl.startIdx; i <= tbl.endIdx; i++) consumed.add(restIdx[i]);
-    tables.push({ page, rows: tbl.rows, confidence: tbl.confidence, boldRows });
+    const own = new Set();
+    for (let i = tbl.startIdx; i <= tbl.endIdx; i++) { consumed.add(restIdx[i]); own.add(restIdx[i]); }
+    // Whether anything but page furniture stands below / above the table on its
+    // page — a table can only continue onto the next page if nothing does (see
+    // _p2eStitchTables).
+    const ys = [...own].map(li => lines[li].y);
+    const top = Math.max(...ys), bottom = Math.min(...ys);
+    const others = lines.filter((ln, li) => !own.has(li) && !_p2ePageFurniture(ln));
+    tables.push({
+      page, rows: tbl.rows, confidence: tbl.confidence, boldRows, colCenters: tbl.colCenters,
+      clearBelow: !others.some(ln => ln.y < bottom), clearAbove: !others.some(ln => ln.y > top),
+    });
   }
 
   const textRows = [];
@@ -3029,19 +3039,40 @@ export function _p2eExtractPage(lines, grids, page) {
   return { tables, textRows };
 }
 
-// Joins a ruled table that continues onto the next page back into ONE
-// table (→ one worksheet), instead of one worksheet per page. Only grid
-// tables carry colXs, so only those are stitched — a text-detected table's
-// columns are inferred per page and can't be matched this reliably. Rows
-// repeating the first table's leading rows (a header reprinted on every
-// page) are dropped from the continuation.
+// A line that is only a page number ("3", "- 3 -", "Page 3 of 12", "صفحة ٣",
+// "Страница 3 из 12") — page furniture, which may stand between a table and
+// the page edge without ending the table.
+const _P2E_PAGE_NUMBER_RE = /^[-–—\s]*(?:(?:page|p\.|seite|página|страница|стр\.|صفحة|صفحه|עמוד)\s*)?[0-9٠-٩۰-۹]+(?:\s*(?:of|von|de|из|من|از|\/)\s*[0-9٠-٩۰-۹]+)?[-–—\s]*$/i;
+export function _p2ePageFurniture(ln) {
+  return _P2E_PAGE_NUMBER_RE.test(ln.items.map(i => i.str).join(' ').trim());
+}
+
+// Joins a table that continues onto the next page back into ONE table
+// (→ one worksheet), instead of one worksheet per page. Rows repeating the
+// first table's leading rows (a header reprinted on every page) are dropped
+// from the continuation.
+//   Ruled tables: the same drawn column rules (colXs) on consecutive pages.
+//   Borderless tables (detectTables): the same columns (colCenters, within
+//     8pt), and the table runs to the bottom of its page and the next one
+//     starts at the top — nothing but a page number below the first or above
+//     the second (clearBelow/clearAbove). A heading such as "Expenses" over a
+//     table with the same columns keeps them apart: two tables with matching
+//     columns are merged only when nothing but the page break separates them.
+//     User report 2026-10-08 ("put into multiple tabs Table1, Table 2"):
+//     borderless tables were never stitched, so a multi-page one became one
+//     sheet per page.
 export function _p2eStitchTables(tables) {
   const out = [];
   let last = null, lastPage = 0;
   for (const tbl of tables) {
-    const continues = last && tbl.colXs && last.colXs && tbl.page === lastPage + 1 &&
+    const next = last && tbl.page === lastPage + 1;
+    const ruled = next && tbl.colXs && last.colXs &&
       tbl.colXs.length === last.colXs.length &&
       tbl.colXs.every((x, i) => Math.abs(x - last.colXs[i]) <= 4);
+    const borderless = next && tbl.colCenters && last.colCenters && last.clearBelow && tbl.clearAbove &&
+      tbl.colCenters.length === last.colCenters.length &&
+      tbl.colCenters.every((x, i) => Math.abs(x - last.colCenters[i]) <= 8);
+    const continues = ruled || borderless;
     if (!continues) {
       last = { ...tbl, rows: [...tbl.rows], boldRows: new Set(tbl.boldRows) };
       lastPage = tbl.page;
@@ -3055,6 +3086,7 @@ export function _p2eStitchTables(tables) {
       if (tbl.boldRows.has(i + skip)) last.boldRows.add(last.rows.length);
       last.rows.push(row);
     });
+    last.clearBelow = tbl.clearBelow;
     lastPage = tbl.page;
   }
   return out;

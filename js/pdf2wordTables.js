@@ -124,8 +124,11 @@ export function detectTables(lines, { debug = false } = {}) {
 
       // Single-item line — check for stub row (empty template row with only №)
       // Condition: single integer item ≥1, sequential (1, 2, 3…) or restarting at 1
+      // …at the table's own row pitch: a page number "1" at the foot of the page
+      // under a table is not its next template row (it became one, 2026-10-08).
       const stubN = _stubRowNumber(next);
-      if (stubN !== null && (stubSeq === 0 ? stubN === 1 : stubN === stubSeq + 1)) {
+      const atPitch = effectiveLines.length < 2 || lastY - next.y <= 1.5 * _rowPitch(effectiveLines);
+      if (stubN !== null && atPitch && (stubSeq === 0 ? stubN === 1 : stubN === stubSeq + 1)) {
         stubSeq = stubN;
         effectiveLines.push(next);
         rowLines.push([j]);
@@ -265,6 +268,7 @@ export function detectTables(lines, { debug = false } = {}) {
                       // so this is inert for them. Consumed by pdf2ppt for per-cell font
                       // preservation in reconstructed PPTX tables.
           rowLines,   // parallel to rows — the indices in `lines` each row was read from
+          colCenters: colBounds.map(c => c.center), // pdf2excel matches a table continued on the next page by these
           colCount:   colBounds.length,
           alignScore: scores.alignScore,
           fillScore:  scores.fillScore,
