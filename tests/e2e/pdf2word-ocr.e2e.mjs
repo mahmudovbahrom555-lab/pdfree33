@@ -54,10 +54,17 @@ function recall(text, doc) {
 
 const browser = await chromium.launch();
 
-async function convert(pdf) {
+// `block`: URL patterns to fail (a model or the engine that doesn't download).
+async function convert(pdf, { block = null } = {}) {
   const ctx = await browser.newContext({ serviceWorkers: 'block' });
   try {
+    if (block) await ctx.route(block, r => r.abort());
     const page = await ctx.newPage();
+    // Uncaught errors: every one is a 'Tool Error' event — tesseract.js threw
+    // one per progress message (a `logger: undefined` overrode its no-op), 282
+    // on this one-page scan, and analytics read it as a flood of failures.
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(e.message));
     await page.addInitScript(() => {
       const orig = URL.createObjectURL.bind(URL);
       URL.createObjectURL = blob => { if (blob instanceof Blob) window.__blob = blob; return orig(blob); };
@@ -80,7 +87,7 @@ async function convert(pdf) {
     const paras = (xml.match(/<w:p[ >][\s\S]*?<\/w:p>/g) || [])
       .map(p => [...p.matchAll(/<w:t[^>]*>([^<]*)<\/w:t>/g)].map(m => m[1]).join(''))
       .filter(t => t.trim());
-    return { note, paras, text: paras.join('\n') };
+    return { note, paras, text: paras.join('\n'), pageErrors };
   } finally {
     await ctx.close();
   }
@@ -94,6 +101,14 @@ await test('an Arabic scan with no text layer comes out as Arabic text, not a pi
   const r = recall(out.text, 'ar-web');
   if (r < 0.6) throw new Error(`expected at least 60% of the words, got ${(r * 100).toFixed(0)}%`);
   if (out.paras.length < 4) throw new Error(`expected the page's paragraphs, got ${out.paras.length}`);
+  if (out.pageErrors.length) throw new Error(`${out.pageErrors.length} uncaught errors, e.g. ${out.pageErrors[0]}`);
+});
+
+await test('a language model that doesn\'t download: the page stays a picture, the conversion still ends', async () => {
+  // tesseract.js never settles createWorker when a model fails to load — PDF→Word
+  // hung for good (2026-10-09; likely in mainland China, where the CDN is flaky).
+  const out = await convert(path.join(__dirname, '..', 'fixtures', 'pdf2word_scan_ar_no_text.pdf'), { block: /traineddata|tessdata/ });
+  if (out.pageErrors.length) throw new Error(`${out.pageErrors.length} uncaught errors, e.g. ${out.pageErrors[0]}`);
 });
 
 await test('a Persian scan is read with the Persian model (its own letters present)', async () => {

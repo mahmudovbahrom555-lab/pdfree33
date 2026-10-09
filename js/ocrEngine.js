@@ -88,15 +88,43 @@ async function _applyLangParams(worker, lang) {
   }
 }
 
+// tesseract.js 5.1.1 (src/createWorker.js) on a failed job: rejects the
+// job's promise AND, with no errorHandler, throws from its message handler —
+// an uncaught error per failure, which flooded analytics (one PDF→Word session:
+// 714 js_error, 2026-10-09). And when a language model fails to download, the
+// promise createWorker returns never settles (its load chain ends in
+// .catch(() => {}), and only a failed 'load' step rejects it): PDF→Word hung for
+// good, reproduced by blocking the model request. So: errors while the worker
+// is being created reject here at once; after that they only reject their own
+// job's promise; and a load that hangs gives up after _OCR_LOAD_TIMEOUT_MS.
+const _OCR_LOAD_TIMEOUT_MS = 120000;
+function _withTimeout(promise, what) {
+  let timer;
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => { timer = setTimeout(() => reject(new Error(`${what} timed out`)), _OCR_LOAD_TIMEOUT_MS); }),
+  ]).finally(() => clearTimeout(timer));
+}
 export async function createOcrWorker(lang, logger) {
-  const worker = await window.Tesseract.createWorker(_tesseractLang(lang), 1, { logger });
+  let failLoad;
+  const loadFailed = new Promise((_, reject) => { failLoad = reject; });
+  let ready = false;
+  const created = window.Tesseract.createWorker(_tesseractLang(lang), 1, {
+    // never `logger: undefined`: it overrides tesseract.js's own no-op, and
+    // every progress message then threw "b is not a function" — dozens per
+    // page of every PDF→Word scan, the bulk of the js_error flood
+    logger: logger ?? (() => {}),
+    errorHandler: err => { if (!ready) failLoad(new Error(`OCR engine: ${err}`)); },
+  });
+  const worker = await _withTimeout(Promise.race([created, loadFailed]), 'OCR engine load');
+  ready = true;
   await _applyLangParams(worker, lang);
   return worker;
 }
 
 // reinitialize() resets engine params — they are re-applied for the new language.
 export async function switchOcrLanguage(worker, lang) {
-  await worker.reinitialize(_tesseractLang(lang));
+  await _withTimeout(worker.reinitialize(_tesseractLang(lang)), 'OCR language load');
   await _applyLangParams(worker, lang);
 }
 

@@ -1833,14 +1833,25 @@ function _retrieveSharedFile(uuid) {
 // Catches errors that no individual try/catch handles — worker crashes,
 // CDN load failures, unexpected exceptions. Closed over `currentTool`
 // so no window global needed.
+// Each distinct error is tracked once per page load, with its message: a
+// repeating one (Tesseract throwing per failed job) sent 714 bare 'js_error'
+// events from one session and drowned every error metric, with nothing to say
+// what it was (2026-10-09).
+const _trackedErrors = new Set();
+function _trackUncaught(kind, message) {
+  const type = `${kind}: ${String(message || '').slice(0, 80)}`;
+  if (_trackedErrors.has(type)) return;
+  _trackedErrors.add(type);
+  trackToolError(currentTool, type);
+}
 window.addEventListener('unhandledrejection', event => {
   console.error('[PDFree] Unhandled rejection:', event.reason);
-  trackToolError(currentTool, 'unhandled_rejection');
+  _trackUncaught('unhandled_rejection', event.reason?.message ?? event.reason);
 });
 
 window.addEventListener('error', event => {
   if (!event.message) return;          // some browser events fire without message
   console.error('[PDFree] Uncaught error:', event.message);
-  trackToolError(currentTool, 'js_error');
+  _trackUncaught('js_error', event.message);
 });
 

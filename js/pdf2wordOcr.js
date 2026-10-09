@@ -156,8 +156,12 @@ export function createOcrLayer(pdfDoc, { onPage = () => {} } = {}) {
       const ready = await engine;
       if (!ready) return null;
       onPage(pageNum, ready.lang);
-      const rec = await recognizePage(ready.worker, page, ready.lang, { level: true });
-      return ocrItemsFromPage(rec);
+      try {
+        const rec = await recognizePage(ready.worker, page, ready.lang, { level: true });
+        return ocrItemsFromPage(rec);
+      } catch {
+        return null;   // this page's OCR failed — it stays a picture, the rest goes on
+      }
     },
     async close() {
       const ready = engine && await engine;
