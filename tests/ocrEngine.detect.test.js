@@ -26,40 +26,72 @@ const pdfDoc = {
 };
 // A worker reading a page with `conf[model]` confidence; English output that
 // looks like garbage, so the probes run.
+let englishText = '1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 x';
 function stubWorker(conf) {
   let model = 'eng';
-  const loaded = [];
-  return {
-    loaded,
-    reinitialize: async lang => { model = lang; loaded.push(lang); },
-    recognize: async () => ({ data: { text: model === 'eng' ? '1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 x' : 'text text text text', confidence: conf[model] ?? 10 } }),
+  const w = {
+    loaded: [],
+    terminated: false,
+    paramsFor: null,   // the model the last setParameters call was made for
+    reinitialize: async lang => { model = lang; w.loaded.push(lang); w.paramsFor = null; },
+    setParameters: async () => { w.paramsFor = model; },
+    recognize: async () => ({ data: { text: model === 'eng' ? englishText : 'text text text text', confidence: conf[model] ?? 10 } }),
+    terminate: async () => { w.terminated = true; },
   };
+  return w;
+}
+// detectOcrLanguage(pdfDoc, main worker, opts) with the probe workers it made
+async function detect(conf, opts = {}) {
+  const w = stubWorker(conf);
+  const probes = [];
+  const newWorker = async () => { const p = stubWorker(conf); probes.push(p); return p; };
+  const d = await detectOcrLanguage(pdfDoc, w, { ignoreTextLayer: true, ...opts, newWorker });
+  return { d, w, probes, probed: probes.flatMap(p => p.loaded) };
 }
 
 await test('Chinese is read with the Chinese model, not the Japanese one that gained first', async () => {
   // zh-CN office scan: jpn 63 beat eng 32 by 15+, and the old loop stopped there
-  const w = stubWorker({ eng: 32, rus: 20, ara: 25, fas: 20, jpn: 63, chi_sim: 91 });
-  const d = await detectOcrLanguage(pdfDoc, w, { ignoreTextLayer: true });
+  const { d, w, probes } = await detect({ eng: 32, rus: 20, ara: 25, fas: 20, jpn: 63, chi_sim: 91 });
   assert.equal(d.lang, 'chi_sim');
   assert.equal(d.confident, true);
-  assert.equal(w.loaded[w.loaded.length - 1], 'chi_sim');   // left on the model it chose
+  assert.deepEqual(w.loaded, ['chi_sim']);   // left on the model it chose, with its parameters
+  assert.equal(w.paramsFor, 'chi_sim');
+  assert.ok(probes.length === 1 && probes[0].terminated, 'one probe worker, closed');
 });
 
 await test('a Japanese scan an unsure Arabic probe "won" goes on to the Japanese model', async () => {
   // ja clean scan: ara 38 beat eng 17 by 15+ — not sure, so probing goes on
-  const w = stubWorker({ eng: 17, rus: 15, ara: 38, fas: 30, jpn: 92, chi_sim: 49 });
-  const d = await detectOcrLanguage(pdfDoc, w, { ignoreTextLayer: true });
+  const { d } = await detect({ eng: 17, rus: 15, ara: 38, fas: 30, jpn: 92, chi_sim: 49 });
   assert.equal(d.lang, 'jpn');
   assert.equal(d.confident, true);
 });
 
 await test('an Arabic photo stops at Arabic: no 10–15 MB CJK model is downloaded', async () => {
   // ar photo: ara 55, a 20-point lead over English — sure by the RTL rule
-  const w = stubWorker({ eng: 35, rus: 20, ara: 55, fas: 40, jpn: 30, chi_sim: 30 });
-  const d = await detectOcrLanguage(pdfDoc, w, { ignoreTextLayer: true });
+  const { d, probed } = await detect({ eng: 35, rus: 20, ara: 55, fas: 40, jpn: 30, chi_sim: 30 });
   assert.equal(d.lang, 'ara');
   assert.equal(d.confident, true);
-  assert.ok(!w.loaded.includes('jpn') && !w.loaded.includes('chi_sim'), `loaded ${w.loaded}`);
+  assert.ok(!probed.includes('jpn') && !probed.includes('chi_sim'), `probed ${probed}`);
+});
+
+// The site locale's model (`hint`) is tried even when English looks sure.
+await test('a Chinese invoice English reads at 67 goes to the Chinese hint (80)', async () => {
+  englishText = 'Invoice No 1042 Item Qty Unit price Total Date paper ink folders stapler pens';  // not suspicious
+  const { d, w, probed } = await detect({ eng: 67, chi_sim: 80, jpn: 60 }, { hint: 'chi_sim' });
+  assert.equal(d.lang, 'chi_sim');
+  assert.equal(d.confident, true);
+  assert.ok(!probed.includes('jpn'), 'the hint winning needs no Japanese download');
+  assert.equal(w.paramsFor, 'chi_sim');
+});
+
+await test('an English invoice on the Chinese site stays English, its worker untouched by the probe', async () => {
+  englishText = 'Invoice No 1042 Item Qty Unit price Total Date paper ink folders stapler pens';
+  const { d, w, probes, probed } = await detect({ eng: 84, chi_sim: 40 }, { hint: 'chi_sim' });
+  assert.equal(d.lang, 'eng');
+  assert.deepEqual(probed, ['chi_sim']);
+  // eng read after chi_sim on the same worker lost a third of its words (70 → 47)
+  assert.deepEqual(w.loaded, []);
+  assert.ok(probes[0].terminated);
 });
 
 console.log(`\n${'─'.repeat(50)}`);

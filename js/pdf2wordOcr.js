@@ -11,7 +11,8 @@
 // The page image never leaves the device.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { loadTesseract, createOcrWorker, switchOcrLanguage, detectOcrLanguage, recognizePage } from './ocrEngine.js';
+import { loadTesseract, createOcrWorker, switchOcrLanguage, detectOcrLanguage, recognizePage, ocrLangForLocale } from './ocrEngine.js';
+import { getLang } from './config.js';
 
 // Text items for pdf2readCore from one recognized page (recognizePage output),
 // in Tesseract's reading order. A line's words are joined into runs — the
@@ -141,7 +142,7 @@ export function createOcrLayer(pdfDoc, { onPage = () => {} } = {}) {
     try {
       await loadTesseract();
       const worker = await createOcrWorker('eng');
-      const detection = await detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer: true });
+      const detection = await detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer: true, hint: ocrLangForLocale(getLang()) });
       if (!detection.confident) { await worker.terminate(); return null; }
       if (detection.lang !== 'eng') await switchOcrLanguage(worker, detection.lang);
       return { worker, lang: detection.lang };

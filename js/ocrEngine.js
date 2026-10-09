@@ -241,7 +241,15 @@ function _isDetectionSuspicious(txt, conf) {
 // decision was reached (source, probes tried, winning confidence).
 // `ignoreTextLayer`: judge from the page image only — for pages whose text
 // layer is garbage (PDF→Word's OCR layer reads only such pages and scans).
-export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = false } = {}) {
+// The OCR model for a site locale — the language a document opened on that
+// page most likely is (see detectOcrLanguage's `hint`). null: no model.
+const _LOCALE_OCR = { 'zh-CN': 'chi_sim', ja: 'jpn', ko: 'kor', ar: 'ara', fa: 'fas', ru: 'rus' };
+export function ocrLangForLocale(locale) {
+  return _LOCALE_OCR[locale] ?? null;
+}
+
+// `newWorker`: how a probe worker is made (createOcrWorker; tests pass a stub).
+export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = false, hint = null, newWorker = createOcrWorker } = {}) {
   const total = pdfDoc.numPages;
   const pages = [...new Set([1, Math.ceil(total / 2), total])];
 
@@ -277,7 +285,15 @@ export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = fals
     if (txt.trim().length >= 20) {
       const primary    = _detectScriptFromText(txt, conf);
       const suspicious = _isDetectionSuspicious(txt, conf);
-      const probes     = suspicious ? (FALLBACK_PROBES[_scriptGroupOf(primary.lang)] ?? []) : [];
+      // `hint`: the site locale's model (ocrLangForLocale) — tried first and
+      // always, even when English reads the page with confidence: a Chinese
+      // invoice scan read 67 with `eng` (garbage) and 80 with chi_sim, never
+      // tried; table rules hold every model down (eng 31, chi_sim 42 on a
+      // bordered one), under the +15 a probe needs. Someone on the Chinese
+      // site with a Chinese scan is the common case; an English scan there
+      // still reads better with `eng` (84 vs 40) and stays English.
+      const hinted     = hint && hint !== primary.lang ? [{ probe: hint }] : [];
+      const probes     = [...hinted, ...(suspicious ? (FALLBACK_PROBES[_scriptGroupOf(primary.lang)] ?? []) : [])];
       const tried      = [];  // track every probe attempted
 
       // 4. Multi-signal fallback: try probes in order, keep the best one that
@@ -295,17 +311,26 @@ export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = fals
       // was right. A clear lead over English — 19–32 points on those photos,
       // at most 14 on Hebrew scans, for which there is no model — is
       // evidence enough from 45 up (synthetic scans, 2026-10-08).
-      const sure = b => b.conf >= 65 || (SCRIPT_GROUPS.rtl.includes(b.lang) && b.conf >= 45 && b.conf - conf >= 17);
+      const sure = b => b.conf >= 65 || (SCRIPT_GROUPS.rtl.includes(b.lang) && b.conf >= 45 && b.conf - conf >= 17)
+        || (b.lang === hint && b.conf >= 40);
+      // Probes run on a worker of their own: a Tesseract worker taken to
+      // another model and back keeps that model's settings — an English
+      // invoice probed with chi_sim, then read with `eng` again, lost a third
+      // of its words (70 → 47; every scan English read with less than 60 had
+      // the same since probing began). `worker` stays as it was.
+      let probeWorker = null;
       const tryModel = async lang => {
         tried.push(lang);
-        await worker.reinitialize(lang);
-        return { lang, conf: (await worker.recognize(cvs))?.data?.confidence ?? 0 };
+        probeWorker ??= await newWorker('eng');
+        await probeWorker.reinitialize(lang);
+        return { lang, conf: (await probeWorker.recognize(cvs))?.data?.confidence ?? 0 };
       };
       let best = null;
+      try {
       for (const { probe } of probes) {
         if (tried.includes(probe)) continue;
         const r = await tryModel(probe);
-        if (r.conf <= conf + 15 || (best && r.conf <= best.conf)) continue;
+        if (r.conf <= conf + (probe === hint ? 5 : 15) || (best && r.conf <= best.conf)) continue;
         best = r;
         // Arabic and Persian share a script, and the `ara` model never
         // outputs Persian's own letters (پ چ ژ گ ک ی: 0 in 24 scans), so
@@ -316,15 +341,18 @@ export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = fals
           const f = await tryModel('fas');
           if (f.conf >= r.conf - 6) best = f;
         }
-        const pair = { jpn: 'chi_sim', chi_sim: 'jpn' }[r.lang];
+        const pair = r.lang === hint ? null : { jpn: 'chi_sim', chi_sim: 'jpn' }[r.lang];
         if (pair && !tried.includes(pair)) {
           const c = await tryModel(pair);
           if (c.conf > best.conf) best = c;
         }
         if (sure(best)) break;
       }
+      } finally {
+        await probeWorker?.terminate();
+      }
       if (best) {
-        if (tried[tried.length - 1] !== best.lang) await worker.reinitialize(best.lang);
+        await switchOcrLanguage(worker, best.lang);
         cvs.width = 0; cvs.height = 0;
         return { lang: best.lang, confident: sure(best), metrics: {
           source: 'ocr-fallback',
@@ -333,7 +361,6 @@ export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = fals
           switched: true, confidenceInitial: conf,
         } };
       }
-      if (tried.length) await worker.reinitialize(primary.lang);
 
       cvs.width = 0; cvs.height = 0;
       return { ...primary, metrics: {
