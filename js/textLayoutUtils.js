@@ -286,6 +286,55 @@ export function lineRuns(items, cuts = []) {
   });
 }
 
+// A left-to-right line's items, with pieces that touch (a gap under 0.05 em,
+// no table rule between them) joined into one: pdf.js breaks a run of CJK text
+// at every glyph it reads as a radical ("项" + "⽬", "⿊" + "⾊" + "打印机墨" +
+// "⽔"), and in PDF→Excel each piece counted as a cell — a Chinese invoice's
+// header came out one column off (81% of its cells in place) and text rows got
+// spaces mid-word ("所有 ⾦ 额均以") (2026-10-09). A real gap, even a narrow one,
+// stays: those are words or cells. Only where both sides are Chinese or
+// Japanese characters: a Latin item's width can take in the space after it,
+// and "cell" touching "b2" was read as "cellb2" (Quick Edit e2e).
+const _HAN_KANA_EDGE_RE = /[\u3040-\u30FF\u3400-\u9FFF\uF900-\uFAFF]/;
+export function joinTouchingItems(items, cuts = []) {
+  const out = [];
+  for (const item of [...items].sort((a, b) => a.x - b.x)) {
+    const prev = out[out.length - 1];
+    const em = Math.max(prev?.fontSize || 0, item.fontSize || 0) || 10;
+    const gap = prev && item.x - _right(prev);
+    const ruled = prev && cuts.some(c => c > _right(prev) - _CUT_SLACK && c < item.x + _CUT_SLACK);
+    if (prev && Math.abs(gap) <= 0.05 * em && !ruled
+        && _HAN_KANA_EDGE_RE.test(prev.str.slice(-1)) && _HAN_KANA_EDGE_RE.test(item.str.charAt(0))) {
+      prev.str += item.str;
+      prev.width = _right(item) - prev.x;
+      prev.bold = prev.bold && item.bold;
+    } else {
+      out.push({ ...item });
+    }
+  }
+  return out;
+}
+
+// CJK radicals → the ideographs they stand for. A CJK font draws 目 and the
+// Kangxi radical ⽬ with one glyph, and pdf.js gives that glyph the radical's
+// code point: 1082 of the ~10 300 characters of a Chrome-printed Chinese
+// Wikipedia page (一 人 大 文 日 用 自 …) came out as radicals — they look the
+// same, but searching or copying "文件" finds nothing (2026-10-09; MuPDF reads
+// the same file without a single one). Kangxi radicals (U+2F00–2FD5) have a
+// compatibility mapping (NFKC); the simplified forms in CJK Radicals
+// Supplement (⻔ ⻚ ⻓ …) don't, and are mapped here by their Unicode names
+// (C-SIMPLIFIED GATE → 门, LEAF → 页, LONG → 长, LONG ONE → 長 in Japanese, …).
+const _RADICAL_SUPPLEMENT = {
+  '⺟': '母', '⺠': '民', '⻁': '虎', '⻄': '西', '⻅': '见', '⻆': '角', '⻉': '贝', '⻋': '车',
+  '⻑': '長', '⻓': '长', '⻔': '门', '⻘': '青', '⻚': '页', '⻛': '风', '⻜': '飞', '⻝': '食', '⻢': '马',
+  '⻣': '骨', '⻤': '鬼', '⻥': '鱼', '⻦': '鸟', '⻨': '麦', '⻩': '黄', '⻬': '齐', '⻮': '齿',
+  '⻰': '龙', '⻳': '龟',
+};
+const _CJK_RADICAL_RE = /[⺀-⻳⼀-⿕]/g;
+export function toUnifiedIdeographs(str) {
+  return str.replace(_CJK_RADICAL_RE, c => _RADICAL_SUPPLEMENT[c] ?? c.normalize('NFKC'));
+}
+
 // Arabic presentation forms (U+FB50–FDFF, U+FE70–FEFE: the shaped isolated/initial/
 // medial/final glyph codes many fonts map their glyphs to) → the plain letters they
 // stand for. They display fine, but Word, search, spell-check and screen readers

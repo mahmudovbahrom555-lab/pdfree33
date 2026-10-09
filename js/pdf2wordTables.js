@@ -212,7 +212,7 @@ export function detectTables(lines, { debug = false } = {}) {
         // right-aligned RTL line lands on a column position by its start).
         effectiveLines[effectiveLines.length - 1] = {
           ...lastLine,
-          items: lastLine.items.map(it => (it === targetItem ? { ...it, str: `${it.str} ${wrapItem.str}` } : it)),
+          items: lastLine.items.map(it => (it === targetItem ? { ...it, str: _joinWrapped(it.str, wrapItem.str) } : it)),
         };
         rowLines[rowLines.length - 1].push(j);
         lastY = next.y;
@@ -231,6 +231,7 @@ export function detectTables(lines, { debug = false } = {}) {
       const perLine    = effectiveLines.map(ln => _assignToCellsWithFonts(ln.items, colBounds));
       const rows       = perLine.map(r => r.texts);
       const cellFonts  = perLine.map(r => r.fonts);
+      _foldHeaderOnlyColumns(rows, cellFonts, colBounds);
 
       // Stub rows lower fillScore — compensate by boosting alignScore weight
       // when the table is mostly empty (template form pattern).
@@ -323,6 +324,34 @@ const _RTL_RE = /[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/;
 // and Persian digits (٠–٩ ٪ ٫ ٬, ۰–۹) as well: anchored on their right edge,
 // the left-aligned amount columns of an RTL invoice split in two.
 const _RTL_LETTER_RE = /[\u0590-\u05FF\u0600-\u065F\u066E-\u06EF\u06FA-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/;
+// A cell's text wrapped onto the next line: Chinese and Japanese run on with
+// no space between lines ("…邮寄信" + "封" is one word, not "信 封"); every
+// other script, Korean included, gets a space.
+const _HAN_KANA_RE = /[\u3040-\u30FF\u3400-\u9FFF\uF900-\uFAFF]/;
+function _joinWrapped(a, b) {
+  return _HAN_KANA_RE.test(a.slice(-1)) && _HAN_KANA_RE.test(b.charAt(0)) ? a + b : `${a} ${b}`;
+}
+
+// A column holding only the first row's cell is a header centred over the
+// left-aligned column beside it, whose own header cell is empty: it is folded
+// into that column. A header that happens to line up with most columns (a
+// Chinese invoice: 4 of 5) is read as the table's first row, and its centred
+// first heading made a column of its own — "项目" in B over an empty column,
+// the items in A (19% of the cells off, 2026-10-09).
+function _foldHeaderOnlyColumns(rows, cellFonts, colBounds) {
+  for (let c = colBounds.length - 1; c >= 0; c--) {
+    if (!rows[0][c]?.trim() || rows.slice(1).some(r => r[c]?.trim())) continue;
+    const into = [c - 1, c + 1].find(n => n >= 0 && n < colBounds.length
+      && !rows[0][n]?.trim() && rows.slice(1).some(r => r[n]?.trim()));
+    if (into === undefined) continue;
+    rows[0][into] = rows[0][c];
+    cellFonts[0][into] = cellFonts[0][c];
+    for (const r of rows) r.splice(c, 1);
+    for (const f of cellFonts) f.splice(c, 1);
+    colBounds.splice(c, 1);
+  }
+}
+
 function _anchor(item) {
   return _RTL_LETTER_RE.test(item.str) && item.width > 0 ? item.x + item.width : item.x;
 }

@@ -13,7 +13,9 @@
 // Output: <lang>-<layout>[-<digits>].pdf + .json ({ lang, dir, layout, digits,
 // oracleRecall, title, note, rows, values }); rows[0] is the header, values holds
 // each cell's number (or null). Regenerate: node tests/corpus/groundtruth/tables/make_tables.mjs
-// (fonts as for the prose set, see ../gtShared.mjs). The PDFs are committed.
+// [lang ...] — only the languages named, if any: rendering again changes the
+// bytes of PDFs already committed (fonts as for the prose set, see
+// ../gtShared.mjs). The PDFs are committed.
 
 import { chromium } from 'playwright';
 import { writeFileSync } from 'node:fs';
@@ -47,6 +49,13 @@ const LANGS = {
       'ماشین\u200Cحساب مهندسی', 'چسب نواری شفاف', 'پاکت نامه بزرگ اندازه A4 با نوار چسب'],
     date: d => `1405/06/${d + 9}`, digits: { arabext: '۰۱۲۳۴۵۶۷۸۹' },
   },
+  'zh-CN': {
+    dir: 'ltr', font: FONTS['zh-CN'], title: '发票编号 1042', note: '所有金额均以人民币计。',
+    header: ['项目', '数量', '单价', '金额', '日期'], total: '合计',
+    names: ['A4打印纸', '黑色打印机墨水', '塑料文件夹', '桌面订书机', '蓝色圆珠笔',
+      '科学计算器', '透明胶带', '带不干胶封条的A4大号邮寄信封'],
+    date: d => `2026-09-${d}`,
+  },
   he: {
     dir: 'rtl', font: FONTS.he, title: 'חשבונית מס׳ 1042', note: 'כל הסכומים בשקלים.',
     header: ['פריט', 'כמות', 'מחיר ליחידה', 'סה״כ', 'תאריך'], total: 'סה״כ לתשלום',
@@ -69,7 +78,8 @@ const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&
 
 const browser = await chromium.launch();
 const page = await browser.newPage();
-for (const [lang, L] of Object.entries(LANGS)) {
+const only = process.argv.slice(2);
+for (const [lang, L] of Object.entries(LANGS).filter(([l]) => !only.length || only.includes(l))) {
   const sum = ITEMS.reduce((s, [q, p]) => s + q * p, 0);
   const rows = [L.header,
     ...ITEMS.map(([q, p], i) => [L.names[i], String(q), money(p), money(q * p), L.date(DATES[i])]),

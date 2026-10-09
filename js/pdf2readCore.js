@@ -36,7 +36,7 @@ import { detectTables, looksLikeProseNotData, looksLikeEnumeratedList } from './
 import { detectColumnRegions, pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
 import { detectTableGrids, lineInGrid } from './pdf2wordBorders.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, _splitCrossColumnLines, textLayerLooksBroken } from './textLayoutUtils.js';
+         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken } from './textLayoutUtils.js';
 
 // XML 1.0's Char production disallows most C0 control characters (only
 // tab/LF/CR are valid: #x9 | #xA | #xD | [#x20-...]) — pdf.js text
@@ -609,7 +609,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
         // the exact byte) — in Quick Edit specifically, docx-preview's own
         // re-parse of that invalid XML throws, surfacing as a raw,
         // untranslated 'DOCX_PARSE_FAILED' with the editor never opening.
-        const str = ((item.dir === 'rtl' && rtlVisual) ? _visualRTLToLogical(item.str) : item.str)
+        const str = toUnifiedIdeographs((item.dir === 'rtl' && rtlVisual) ? _visualRTLToLogical(item.str) : item.str)
           .replace(_XML_ILLEGAL_CONTROL_RE, '');
         return {
           seq,      // content-stream order — see reorderVisualRtlLine

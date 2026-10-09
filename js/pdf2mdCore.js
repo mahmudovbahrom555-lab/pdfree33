@@ -46,7 +46,7 @@
 import { detectTables, looksLikeProseNotData } from './pdf2wordTables.js';
 import { detectColumnRegions, pageIsRtl } from './pdf2wordColumns.js';
 import { BULLET_RE, NUMBERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, _splitCrossColumnLines, _isCjk,
+         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, _isCjk,
          lineStartMargins, startsIndentedParagraph, linePitch, startsSpacedParagraph,
          lineEndsParagraph, continuesWrappedHeading,
          joinHyphenatedLineEnd } from './textLayoutUtils.js';
@@ -407,7 +407,7 @@ export async function _p2mdExtractText(pdfDoc, {
         // extraction never got the equivalent fix until now. Real,
         // independently-documented failure mode for this exact
         // dependency (pdf.js): mozilla/pdf.js#11016, #11779, #18201.
-        const nfcStr = _foldLigatures(item.str.normalize('NFC'));
+        const nfcStr = toUnifiedIdeographs(_foldLigatures(item.str.normalize('NFC')));
         const str = ((item.dir === 'rtl' && rtlVisual) ? _visualRTLToLogical(nfcStr) : nfcStr)
           .split(' ').join('');
         // Formula wins over bold/italic when both would otherwise apply —

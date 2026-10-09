@@ -27,7 +27,7 @@ import { evaluateMarkdownStructural } from './eriScoreMd.js';
 import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PRESETS,
          detectColumnGutter, reconcileColumnSplit, ereaderSampleIndices } from './ereaderCrop.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, rtlItemsAreVisual, toArabicBaseLetters, _splitCrossColumnLines, _isCjk,
+         _visualRTLToLogical, rtlItemsAreVisual, toArabicBaseLetters, toUnifiedIdeographs, joinTouchingItems, _splitCrossColumnLines, _isCjk,
          lineRuns,
          lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
          lineEndsParagraph, continuesWrappedHeading } from './textLayoutUtils.js';
@@ -2926,7 +2926,7 @@ async function _p2eExtractTables(pdfDoc) {
         const fam = (content.styles[item.fontName]?.fontFamily || '').toLowerCase();
         return {
           seq,      // content-stream order — see reorderVisualRtlLine
-          str: ((item.dir === 'rtl' && rtlVisual) ? _visualRTLToLogical(item.str) : item.str).split(' ').join(''),
+          str: toUnifiedIdeographs((item.dir === 'rtl' && rtlVisual) ? _visualRTLToLogical(item.str) : item.str).split(' ').join(''),
           x: item.transform[4],
           y: item.transform[5],
           width: item.width || 0,
@@ -2949,6 +2949,8 @@ async function _p2eExtractTables(pdfDoc) {
     for (const ln of lines) {
       if (ln.items.some(it => _isRtl(it.str))) {
         ln.items = lineRuns(ln.items, cuts).map(run => ({ ...run, str: toArabicBaseLetters(run.str) }));
+      } else {
+        ln.items = joinTouchingItems(ln.items, cuts);
       }
     }
     const pageResult = _p2eExtractPage(lines, grids, p);
@@ -4981,7 +4983,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
         // instead of silently becoming an empty neighboring cell.
         const rtlGrid = hdrLines.filter(ln => ln.rtl).length * 2 > hdrLines.length;
         const gridRows = hdrLines.map((ln, idx) => {
-          const rawCells      = _assignLineToGridCols(ln.rtl ? cellRuns(ln, grid.colXs) : ln.items, grid.colXs);
+          const rawCells      = _assignLineToGridCols(ln.rtl ? cellRuns(ln, grid.colXs) : joinTouchingItems(ln.items, grid.colXs), grid.colXs);
           const activeDivider = _activeDividersForY(grid, ln.y);
           const cellGroups    = _groupGridCellsWithSpans(rawCells, activeDivider);
           return new TableRow({
@@ -5255,7 +5257,9 @@ export function _assignLineToGridCols(items, colXs) {
     }
     cells[col].push(item.str);
   }
-  return cells.map(parts => parts.join(' '));
+  // one space between a cell's pieces, none around them: a space item and an
+  // item's own trailing space left "18.50  " in every bordered cell in Word
+  return cells.map(parts => parts.map(t => t.trim()).filter(Boolean).join(' '));
 }
 
 // Sibling of _assignLineToGridCols() above — identical column-bucketing (same

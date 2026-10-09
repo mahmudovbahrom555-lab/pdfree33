@@ -10,7 +10,7 @@
 import { strict as assert } from 'assert';
 import { joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
   lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
-  continuesWrappedHeading, lineRuns , textLayerLooksBroken } from '../js/textLayoutUtils.js';
+  continuesWrappedHeading, lineRuns , textLayerLooksBroken, toUnifiedIdeographs, joinTouchingItems } from '../js/textLayoutUtils.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -403,6 +403,31 @@ test('glyph codes instead of text are broken (control characters, scripts mixed 
   assert.equal(textLayerLooksBroken(':KDW\u0003V\u0003WKH\u0003GLffHUHQFH\u0003EHWZHHQ\u0003&OHDQ\u0003DQG\u0003'.repeat(6)), true);
   assert.equal(textLayerLooksBroken('/അ೪ۻٍ\u05ebڤ7X\u0001؉מ܊ר\u05ebڤ7\u0001\u0b58কۛX\u0001അ೪ּ\u0001Rۑءڤ7'.repeat(8)), true);
   assert.equal(textLayerLooksBroken('ʢʱʳʩʱɐʱوجˑɐمجحɐتیʱˑدحمɐاه\u200cلѫافɐˎاغʱʩɐͤʩربɐایʤ'.repeat(6)), true);  // Persian, no control chars
+});
+
+// pdf.js reads a CJK glyph shared with a radical as the radical: Chrome-printed
+// Chinese came out with 一 人 文 as ⼀ ⼈ ⽂ (1082 on one Wikipedia page) —
+// same look, but search and copy fail (2026-10-09).
+test('Kangxi radicals and simplified radical forms become the ideographs', () => {
+  assert.equal(toUnifiedIdeographs('项⽬ ⾦额 ⿊⾊打印机'), '项目 金额 黑色打印机');
+  assert.equal(toUnifiedIdeographs('⼈⺠币 ⻚码 ⻔ 特⻑'), '人民币 页码 门 特長');
+});
+test('everything else is left as it is', () => {
+  assert.equal(toUnifiedIdeographs('PDF ﬁle — مرحبا 文件 ①'), 'PDF ﬁle — مرحبا 文件 ①');
+});
+
+// pdf.js breaks Chinese runs at glyphs it reads as radicals; the touching
+// pieces are one word. A Latin item's width can include the space after it.
+const piece = (str, x, width) => ({ str, x, width, fontSize: 11 });
+test('touching Chinese pieces join into one item', () => {
+  // radicals are already ideographs here (toUnifiedIdeographs, at item creation)
+  const out = joinTouchingItems([piece('水', 132.2, 10.99), piece('黑色', 66.2, 21.98), piece('打印机墨', 88.2, 43.98)]);
+  assert.deepEqual(out.map(i => i.str), ['黑色打印机墨水']);
+});
+test('touching Latin pieces, a real gap, and a table rule between stay apart', () => {
+  assert.equal(joinTouchingItems([piece('cell', 10, 20), piece('b2', 30, 10)]).length, 2);
+  assert.equal(joinTouchingItems([piece('数量', 10, 22), piece('单价', 40, 22)]).length, 2);
+  assert.equal(joinTouchingItems([piece('项', 10, 11), piece('目', 21, 11)], [21]).length, 2);
 });
 
 const total = passed + failed;
