@@ -1221,13 +1221,16 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
     // is squeezed or stretched (Tz) to its exact width on the scan — at the
     // font's own width, words overlapped their neighbours and readers saw no
     // gap, hence no space (the same fit Tesseract's own PDF output uses).
+    // On a tilted page (a phone photo, 2.5°) the baseline slopes: level at the
+    // median, a line's far end stood half a line off its text. The slope is the
+    // page's: the median slope between two words of one line, 50pt or more
+    // apart (word bottoms jump with descenders; a median doesn't).
     const squeezeTo = (text, size, width) => {
       const natural = font.widthOfTextAtSize(text, size);
       return natural > 0 ? Math.max(10, Math.min(1000, (width / natural) * 100)) : 100;
     };
     const median = vals => [...vals].sort((a, b) => a - b)[Math.floor(vals.length / 2)];
-    for (const line of lines) {
-      const boxes = line.words.filter(w => w.kept && w.confidence >= 20).map(w => {
+    const lineBoxes = lines.map(line => line.words.filter(w => w.kept && w.confidence >= 20).map(w => {
         const { x0, y0, x1, y1 } = w.bbox;
         // Transform all four bbox corners to PDF user-space, then derive the
         // axis-aligned bounding box. This is rotation-agnostic: for 0°/180°
@@ -1241,21 +1244,33 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
         ];
         const xs = corners.map(c => c.x), ys = corners.map(c => c.y);
         return { text: w.text, x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) };
-      });
+    }));
+    const slopes = [];
+    for (const boxes of lineBoxes) {
+      for (let i = 0; i < boxes.length; i++) {
+        for (let j = i + 1; j < boxes.length; j++) {
+          const dx = (boxes[j].x0 + boxes[j].x1 - boxes[i].x0 - boxes[i].x1) / 2;
+          if (Math.abs(dx) >= 50) slopes.push((boxes[j].y0 - boxes[i].y0) / dx);
+        }
+      }
+    }
+    const slope = slopes.length ? median(slopes) : 0;
+    for (const boxes of lineBoxes) {
       if (!boxes.length) continue;
-      const y        = median(boxes.map(b => b.y0));
+      const base     = median(boxes.map(b => b.y0 - slope * (b.x0 + b.x1) / 2));
+      const yAt      = x => base + slope * x;
       const fontSize = Math.max(4, Math.min(median(boxes.map(b => b.y1 - b.y0)) * 0.85, 72));
       boxes.forEach((b, i) => {
         try {
           page.pushOperators(setCharacterSqueeze(squeezeTo(b.text, fontSize, b.x1 - b.x0)));
-          page.drawText(b.text, { x: b.x0, y, size: fontSize, font });
+          page.drawText(b.text, { x: b.x0, y: yAt((b.x0 + b.x1) / 2), size: fontSize, font });
           const next = boxes[i + 1];
           if (next) {
             // The gap between this word and the next, whichever side it is on.
             const [gapX, gapEnd] = next.x0 >= b.x1 ? [b.x1, next.x0] : [next.x1, b.x0];
             if (gapEnd > gapX) {
               page.pushOperators(setCharacterSqueeze(squeezeTo(' ', fontSize, gapEnd - gapX)));
-              page.drawText(' ', { x: gapX, y, size: fontSize, font });
+              page.drawText(' ', { x: gapX, y: yAt((gapX + gapEnd) / 2), size: fontSize, font });
             }
           }
         } catch {

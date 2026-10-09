@@ -338,10 +338,12 @@ function _ensureGrayscaleWorker() {
 // where OffscreenCanvas 2D is missing (Safari < 16.4) — callers fall back to
 // plain grayscale.
 let _enhanceWorker = null;
+// Also deskews (see cleanScanWorker's _estimateSkewDeg): resolves to
+// { canvas, skewDeg }, skewDeg the rotation applied about the canvas centre.
 async function _enhanceForOcrAsync(src) {
   _enhanceWorker ??= new Worker(new URL('./cleanScanWorker.js', import.meta.url));
   const bitmap = await createImageBitmap(src);
-  const { data, width, height } = await new Promise((resolve, reject) => {
+  const { data, width, height, skewDeg } = await new Promise((resolve, reject) => {
     _enhanceWorker.onmessage = (e) => {
       if (e.data.type === 'ocrImage') resolve(e.data);
       else if (e.data.type === 'error') reject(new Error(e.data.message));
@@ -353,7 +355,21 @@ async function _enhanceForOcrAsync(src) {
   dst.width  = width;
   dst.height = height;
   dst.getContext('2d').putImageData(new ImageData(data, width, height), 0, 0);
-  return dst;
+  return { canvas: dst, skewDeg: skewDeg || 0 };
+}
+
+// A box from the deskewed image back to the image before deskew: its centre
+// rotated by −skewDeg about the image centre, its size kept. Not the box
+// around the rotated corners — at 2.5° that grows a 1775px-wide, 68px-high
+// line to 145px, which read as text twice the size (21pt instead of 10.5pt)
+// and ran every paragraph together.
+function _unskewBbox({ x0, y0, x1, y1 }, skewDeg, W, H) {
+  if (!skewDeg) return { x0, y0, x1, y1 };
+  const r = -skewDeg * Math.PI / 180, c = Math.cos(r), s = Math.sin(r);
+  const mx = (x0 + x1) / 2 - W / 2, my = (y0 + y1) / 2 - H / 2;
+  const dx = W / 2 + mx * c - my * s - (x0 + x1) / 2;
+  const dy = H / 2 + mx * s + my * c - (y0 + y1) / 2;
+  return { x0: x0 + dx, y0: y0 + dy, x1: x1 + dx, y1: y1 + dy };
 }
 
 async function _toGrayscaleAsync(src, binarize) {
@@ -417,11 +433,16 @@ function _rotateBackBbox({ x0, y0, x1, y1 }, R, W, H) {
 //   words  — [{ text, confidence, bbox }] at or above minConfidence(lang)
 //   lines  — Tesseract's lines, every word with `kept` (false below the
 //            confidence threshold — its box still marks where text stands):
-//            [{ words: [{ text, confidence, bbox, kept }], bbox, baseline, rowHeight }]
+//            [{ words: [{ text, confidence, bbox, kept }], bbox, baseline }]
 //   text   — the page as plain text, paragraphs separated by a blank line
 //   canvasW, canvasH, vpTransform, rotation
+// Boxes sit where the text stands on the page image (to lay text over it), or
+// with `level` where it stands once the page is deskewed: text lines level,
+// for layout reconstruction. Mapped back onto a page tilted 2.5°, a short line
+// lands ~10pt above or below a full one, and line gaps of 16.5/24.8pt (line /
+// paragraph) read as 15–26pt — paragraph breaks lost in the noise.
 // Canvases are released before returning.
-export async function recognizePage(worker, page, lang) {
+export async function recognizePage(worker, page, lang, { level = false } = {}) {
   // Adaptive scale — aim for the script profile's size on the longest side, as
   // a hard cap. Old logic (scale=2 default) downsampled high-DPI CamScanner
   // pages from ~2480px to ~1190px before Tesseract, losing fraction bars and
@@ -451,13 +472,18 @@ export async function recognizePage(worker, page, lang) {
     ocrCanvas = rotation !== 0 ? _counterRotateCanvas(canvas, rotation) : canvas;
 
     // CJK keeps its own grayscale + Otsu path (not measured with Enhance).
-    const gray = CJK_LANGS.has(ps)
-      ? await _toGrayscaleAsync(ocrCanvas, true)
-      : await _enhanceForOcrAsync(ocrCanvas).catch(() => _toGrayscaleAsync(ocrCanvas, false));
+    const { canvas: gray, skewDeg } = CJK_LANGS.has(ps)
+      ? { canvas: await _toGrayscaleAsync(ocrCanvas, true), skewDeg: 0 }
+      : await _enhanceForOcrAsync(ocrCanvas)
+        .catch(async () => ({ canvas: await _toGrayscaleAsync(ocrCanvas, false), skewDeg: 0 }));
     const result = await worker.recognize(gray);
 
     const minConf = minConfidence(lang);
-    const back = bbox => (rotation !== 0 ? _rotateBackBbox(bbox, rotation, canvas.width, canvas.height) : bbox);
+    // Deskewed image → image before deskew (unless `level`) → display canvas (page /Rotate).
+    const back = bbox => {
+      const unskewed = level ? bbox : _unskewBbox(bbox, skewDeg, gray.width, gray.height);
+      return rotation !== 0 ? _rotateBackBbox(unskewed, rotation, canvas.width, canvas.height) : unskewed;
+    };
     const keep = w => w.text.normalize('NFC').trim() && w.confidence >= minConf;
     const toWord = w => ({ text: w.text.normalize('NFC').trim(), confidence: w.confidence, bbox: back(w.bbox) });
 
@@ -465,8 +491,8 @@ export async function recognizePage(worker, page, lang) {
     const lines = (result.data.lines || []).map(line => ({
       words:     line.words.filter(w => w.text.trim()).map(w => ({ ...toWord(w), kept: !!keep(w) })),
       bbox:      back(line.bbox),
-      baseline:  line.baseline,
-      rowHeight: line.rowAttributes?.row_height ?? (line.bbox.y1 - line.bbox.y0),
+      // Mapped back like a box: level, at the line's height at mid-line.
+      baseline:  line.baseline && { ...back(line.baseline), has_baseline: line.baseline.has_baseline },
     })).filter(line => line.words.some(w => w.kept));
 
     // Plain text from paragraph/line structure

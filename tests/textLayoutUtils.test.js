@@ -9,7 +9,7 @@
 
 import { strict as assert } from 'assert';
 import { joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
-  lineStartMargins, startsIndentedParagraph, linePitch, startsSpacedParagraph,
+  lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
   continuesWrappedHeading, lineRuns , textLayerLooksBroken } from '../js/textLayoutUtils.js';
 
 let passed = 0, failed = 0;
@@ -332,6 +332,25 @@ test('a taller gap before a display formula does not split the sentence', () => 
 
 test('too few lines to know the pitch: the rule stays out', () => {
   assert.equal(linePitch([row(700), row(684.6), row(660)]), undefined);
+});
+
+// OCR'd FAQ page (Persian scan, 2026-10-09): 2-line paragraphs, lines 16.5pt
+// apart, paragraphs 24.8pt, one line Tesseract missed (a 33pt gap). Half the
+// gaps are paragraph gaps — the median is one; the lower quartile is the lines.
+test('OCR line pitch: the lines\' spacing even when half the gaps are paragraph gaps', () => {
+  const ys = [700, 683.5, 658.7, 642.2, 617.4, 600.9, 576.1, 543.1, 526.6, 501.8, 485.3];
+  const lines = ys.map(y => row(y));
+  assert.ok(linePitch(lines) > 20, `median ${linePitch(lines)}`);
+  const pitch = ocrLinePitch(lines);
+  assert.ok(Math.abs(pitch - 16.5) < 0.01, `pitch ${pitch}`);
+  // breaks at 1.3× of it: exactly the paragraph gaps (and the missed line)
+  assert.deepEqual(ys.slice(1).map((y, i) => ys[i] - y > pitch * 1.3), [false, true, false, true, false, true, true, false, true, false]);
+});
+
+test('OCR line pitch: two columns interleaved half a line apart are not the pitch', () => {
+  const ys = [700, 692, 684.5, 677, 669, 661.5, 654, 646];  // two columns, 15.5pt each, offset 8pt
+  const lines = ys.map(y => row(y));
+  assert.equal(ocrLinePitch(lines), undefined);
 });
 
 // ── Wrapped headings: a heading too long for its column is still one heading.

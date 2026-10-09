@@ -23,9 +23,10 @@
 //    out → { type: 'progress', value, label } | { type: 'done', result, pageCount } | { type: 'error', message }
 //
 //    in  → { type: 'enhanceForOcr', bitmap: ImageBitmap }
-//    out → { type: 'ocrImage', data: Uint8ClampedArray, width, height } (data transferred)
-//    The OCR tool's preprocessing (js/ocrUI.js): Enhance's background
-//    flattening, denoise and contrast, as raw pixels (no PNG/JPEG round trip).
+//    out → { type: 'ocrImage', data: Uint8ClampedArray, width, height, skewDeg } (data transferred)
+//    The OCR engine's preprocessing (js/ocrEngine.js): Enhance's background
+//    flattening, denoise and contrast, then deskew, as raw pixels (no PNG/JPEG
+//    round trip). skewDeg: the rotation applied (0 when none).
 // ============================================================
 
 self.onmessage = async (e) => {
@@ -99,8 +100,58 @@ function handleEnhanceForOcr(bitmap) {
   bitmap.close?.();
   const gray = _toGrayscaleCanvas(src);
   _enhancePipeline(gray, 0.5);
-  const { data } = gray.getContext('2d').getImageData(0, 0, w, h);
-  self.postMessage({ type: 'ocrImage', data, width: w, height: h }, [data.buffer]);
+  const skewDeg = -_estimateSkewDeg(gray);
+  const out = skewDeg ? _rotateCanvas(gray, skewDeg) : gray;
+  const { data } = out.getContext('2d').getImageData(0, 0, w, h);
+  self.postMessage({ type: 'ocrImage', data, width: w, height: h, skewDeg }, [data.buffer]);
+}
+
+// Deskew. A page photographed or scanned at an angle has text lines that
+// drift across the page: at 2.5° over an A4 width they drift more than a
+// line's height, and Tesseract merged pairs of lines into one (120px "lines"
+// on a 60px line pitch), dropping words and running paragraphs together
+// (2026-10-08, synthetic phone photos). The angle: the one, within ±5° in
+// 0.25° steps, at which the ink's horizontal projection is sharpest (sum of
+// squared row counts, on a ≤ 800px-wide copy) — text lines line up. Under
+// 0.3° nothing is rotated.
+const _SKEW_MAX_DEG = 5, _SKEW_STEP_DEG = 0.25, _SKEW_MIN_DEG = 0.3, _SKEW_SAMPLE_W = 800;
+function _estimateSkewDeg(gray) {
+  const scale = Math.min(1, _SKEW_SAMPLE_W / gray.width);
+  const w = Math.max(1, Math.round(gray.width * scale)), h = Math.max(1, Math.round(gray.height * scale));
+  const small = new OffscreenCanvas(w, h);
+  small.getContext('2d').drawImage(gray, 0, 0, w, h);
+  const d = small.getContext('2d').getImageData(0, 0, w, h).data;
+  const xs = [], ys = [];
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) if (d[(y * w + x) * 4] < 128) { xs.push(x); ys.push(y); }
+  }
+  if (xs.length < 500) return 0;
+  let best = 0, bestScore = -1;
+  for (let a = -_SKEW_MAX_DEG; a <= _SKEW_MAX_DEG + 1e-9; a += _SKEW_STEP_DEG) {
+    // Lines along y = c + x·tan(a) fall into one row of y − x·tan(a).
+    const t = Math.tan(a * Math.PI / 180);
+    const off = Math.ceil(w * Math.abs(t)) + 1;
+    const hist = new Int32Array(h + 2 * off + 2);
+    for (let i = 0; i < xs.length; i++) hist[Math.round(ys[i] - xs[i] * t) + off]++;
+    let score = 0;
+    for (const c of hist) score += c * c;
+    if (score > bestScore) { bestScore = score; best = a; }
+  }
+  return Math.abs(best) >= _SKEW_MIN_DEG ? best : 0;
+}
+
+// `src` rotated by `deg` (canvas sense: positive turns clockwise) about its
+// centre, same size, white where nothing maps.
+function _rotateCanvas(src, deg) {
+  const w = src.width, h = src.height;
+  const dst = new OffscreenCanvas(w, h);
+  const ctx = dst.getContext('2d');
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, w, h);
+  ctx.translate(w / 2, h / 2);
+  ctx.rotate(deg * Math.PI / 180);
+  ctx.drawImage(src, -w / 2, -h / 2);
+  return dst;
 }
 
 // Grayscale — same ITU-R BT.601 weights as js/ocrUI.js's _toGrayscale

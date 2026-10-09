@@ -29,7 +29,7 @@ import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PR
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, toArabicBaseLetters, _splitCrossColumnLines, _isCjk,
          lineRuns,
-         lineStartMargins, startsIndentedParagraph, linePitch, startsSpacedParagraph,
+         lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
          lineEndsParagraph, continuesWrappedHeading } from './textLayoutUtils.js';
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { _p2wBuildPageData } from './pdf2readCore.js';
@@ -4610,6 +4610,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     // ordinary body text.
     const margins = lineStartMargins(lines); // first-line-indent paragraph breaks
     const pitch = linePitch(lines);          // gap vs this page's/column's own line spacing
+    const ocrPitch = ocrLinePitch(lines);
     let pageBaselineX = 0;
     {
       const xFreq = new Map();
@@ -4920,10 +4921,15 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
             const mergeThreshold = (lastIsCjk && !lastEndsSent)
               ? lastMaxFont * 3.5   // CJK continuation line — absorb generous leading
               : lastMaxFont * 2.0;  // conservative merge
+            // An OCR'd line's font size is a guess from its box height, off by
+            // ±30% with the typeface (11pt Amiri boxes 1.6 em, Vazirmatn 1.2 em):
+            // against 2 em, every wrapped line broke or no paragraph did. The
+            // page's own line pitch decides there (see ocrLinePitch).
+            const breakGap = ocrPitch !== undefined && lastLn.items.some(i => i.ocr) ? ocrPitch * 1.3 : mergeThreshold;
 
             // a heading too long for its column wraps: its lines stay one heading
             const wrapsHeading = isHead && lastIsHead && continuesWrappedHeading(lastLn, ln, margins);
-            if (!wrapsHeading && (isHead || lastIsHead || gap > mergeThreshold || startsIndentedParagraph(lastLn, ln, margins)
+            if (!wrapsHeading && (isHead || lastIsHead || gap > breakGap || startsIndentedParagraph(lastLn, ln, margins)
                 || startsSpacedParagraph(lastLn, ln, pitch, margins))) _flushPara();
           }
           _paraBuffer.push(ln);

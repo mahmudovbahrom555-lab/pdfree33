@@ -26,27 +26,35 @@ import { loadTesseract, createOcrWorker, switchOcrLanguage, detectOcrLanguage, r
 // an Arabic scan: 73 "paragraphs" on a 9-paragraph page). Every run of a
 // Tesseract line gets that line's baseline — on a tilted phone photo the words
 // of one line drift several points apart, and grouped by their own y the line
-// fell apart. Font size: 0.8 of the line's row height, which spans ascenders
-// to descenders (11pt body text measured 14pt). Row heights of body lines
-// scatter by ±20% — a line within 25% of the page's median gets the median,
-// or every taller-than-average body line became a heading (up to 20 false
-// headings on an office scan, 2026-10-08).
-const ROW_SNAP = 1.25;
+// fell apart. Font size: the line's box height / 1.2 — 11pt body text boxes
+// measure 1.2 em in Persian, English and Russian (2026-10-09, deskewed scans).
+// The typeface sets it: Arabic in Amiri, a tall naskh, measures 1.6 em and
+// comes out ~14pt. Too big is the safe side — an OCR'd page's paragraphs break
+// on its own line pitch, not on font size (_p2wBuildParagraphs) — while too
+// small turned every line gap past 2 em into a paragraph break (0.6 of the
+// box: 8pt for 11pt Persian, paragraph precision 92% → 47%). Tesseract's own
+// row_height scattered 19–68px over body lines of one Arabic page, and the
+// box height still 56–87px — harakat and descenders — while a 15pt heading
+// measured 1.2× the median: on OCR lines size does not tell a heading. Every
+// line gets the page's median size unless it is a clear outlier (≥ 1.5×);
+// sized one by one, body lines became up to 20 false headings (2026-10-08).
+const ROW_SNAP = 1.5;
 const RUN_GAP_EM = 0.8;
-const ROW_TO_FONT = 0.8;
+const ROW_TO_FONT = 1 / 1.2;
 export function ocrItemsFromPage(rec) {
   const [a, , , d, e, f] = rec.vpTransform;      // rotation 0: x' = a·x + e, y' = d·y + f
   const toX = cx => (cx - e) / a;
   const toY = cy => (cy - f) / d;
   const items = [];
-  const rows = rec.lines.map(line => line.rowHeight).sort((p, q) => p - q);
+  const rows = rec.lines.map(line => line.bbox.y1 - line.bbox.y0).sort((p, q) => p - q);
   const medianRow = rows[Math.floor(rows.length / 2)] || 0;
   for (const line of rec.lines) {
     const base = line.baseline && line.baseline.has_baseline !== false
       ? (line.baseline.y0 + line.baseline.y1) / 2
       : line.bbox.y1;
     const y = toY(base);
-    const row = line.rowHeight / medianRow < ROW_SNAP && medianRow / line.rowHeight < ROW_SNAP ? medianRow : line.rowHeight;
+    const height = line.bbox.y1 - line.bbox.y0;
+    const row = height / medianRow < ROW_SNAP ? medianRow : height;
     const fontSize = Math.max(1, (row / a) * ROW_TO_FONT);
     const runs = [];
     for (const w of line.words) {
@@ -97,7 +105,7 @@ export function createOcrLayer(pdfDoc, { onPage = () => {} } = {}) {
       const ready = await engine;
       if (!ready) return null;
       onPage(pageNum, ready.lang);
-      const rec = await recognizePage(ready.worker, page, ready.lang);
+      const rec = await recognizePage(ready.worker, page, ready.lang, { level: true });
       return ocrItemsFromPage(rec);
     },
     async close() {

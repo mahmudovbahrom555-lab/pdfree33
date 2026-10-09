@@ -467,6 +467,24 @@ export function linePitch(lines) {
   gaps.sort((a, b) => a - b);
   return gaps[Math.floor(gaps.length / 2)];
 }
+// The line pitch of OCR'd lines, whose paragraph breaks go by gaps alone (font
+// size is a guess there — see _p2wBuildParagraphs). The lower quartile of the
+// gaps, not the median: in a FAQ of 2–3-line paragraphs half the gaps are
+// paragraph gaps, and a line Tesseract missed doubles one more — the median
+// landed on a paragraph gap (Persian scan: 22.1pt for lines 16.5pt apart,
+// paragraphs 24.8pt; 1 of 7 breaks found). Same gap range as linePitch: below
+// 0.8 em are lines of two columns interleaved half a line apart.
+export function ocrLinePitch(lines) {
+  const gaps = [];
+  for (let i = 1; i < lines.length; i++) {
+    const gap = lines[i - 1].y - lines[i].y;
+    const em = _lineEm(lines[i - 1]);
+    if (gap >= 0.8 * em && gap <= 3 * em) gaps.push(gap);
+  }
+  if (gaps.length < 3) return undefined;
+  gaps.sort((a, b) => a - b);
+  return gaps[Math.floor(gaps.length / 4)];
+}
 export function startsSpacedParagraph(prevLn, ln, pitch, margins) {
   if (pitch === undefined) return false;
   return prevLn.y - ln.y > pitch * 1.25 && lineEndsParagraph(prevLn, margins);
