@@ -235,12 +235,6 @@ function _isDetectionSuspicious(txt, conf) {
   return meaningful > 5 && (letters / (meaningful || 1)) < 0.25;
 }
 
-// Detects a document's language: samples pages [1, middle, last] with `worker`
-// (left set to the detected language when a probe wins, else to its initial
-// language). Returns { lang, confident, metrics } — metrics describe how the
-// decision was reached (source, probes tried, winning confidence).
-// `ignoreTextLayer`: judge from the page image only — for pages whose text
-// layer is garbage (PDF→Word's OCR layer reads only such pages and scans).
 // The OCR model for a site locale — the language a document opened on that
 // page most likely is (see detectOcrLanguage's `hint`). null: no model.
 const _LOCALE_OCR = { 'zh-CN': 'chi_sim', ja: 'jpn', ko: 'kor', ar: 'ara', fa: 'fas', ru: 'rus' };
@@ -248,6 +242,110 @@ export function ocrLangForLocale(locale) {
   return _LOCALE_OCR[locale] ?? null;
 }
 
+// Judges one image of a page: a quick OCR pass with `worker`, then probes on a
+// worker of their own. Returns detectOcrLanguage's result, without switching
+// `worker` (the caller does, once it has its answer), or null when the image
+// has too little text to judge.
+async function _judgeImage(cvs, worker, hint, newWorker) {
+  // Quick OCR pass — primary detection.
+  const res  = await worker.recognize(cvs);
+  const txt  = res?.data?.text ?? '';
+  const conf = res?.data?.confidence ?? 0;
+
+  if (txt.trim().length >= 20) {
+    const primary    = _detectScriptFromText(txt, conf);
+    const suspicious = _isDetectionSuspicious(txt, conf);
+    // `hint`: the site locale's model (ocrLangForLocale) — tried first and
+    // always, even when English reads the page with confidence: a Chinese
+    // invoice scan read 67 with `eng` (garbage) and 80 with chi_sim, never
+    // tried; table rules hold every model down (eng 31, chi_sim 42 on a
+    // bordered one), under the +15 a probe needs. Someone on the Chinese
+    // site with a Chinese scan is the common case; an English scan there
+    // still reads better with `eng` (84 vs 40) and stays English.
+    const hinted     = hint && hint !== primary.lang ? [{ probe: hint }] : [];
+    const probes     = [...hinted, ...(suspicious ? (FALLBACK_PROBES[_scriptGroupOf(primary.lang)] ?? []) : [])];
+    const tried      = [];  // track every probe attempted
+
+    // 4. Multi-signal fallback: try probes in order, keep the best one that
+    // gains ≥ 15 over the first pass, and stop once the best is sure. Stopping
+    // at the first gain read Chinese with the Japanese model (jpn 51–65, never
+    // trying chi_sim at 83–91) and a clean Japanese scan as Arabic (ara 38 vs
+    // eng 17; jpn would be 92): 8 of 9 Chinese scans and that Japanese one
+    // came out of PDF→Word as pictures, 0% of their text (2026-10-09). A CJK
+    // winner is checked against the other CJK model, as Arabic is against
+    // Persian; an Arabic document still stops at `ara` and never downloads
+    // a 10–15 MB CJK model.
+    // Arabic-script models score low even on correct text: a phone photo
+    // of an Arabic or Persian page scored 48–64 (`ara`), short of 65, so
+    // it always stopped at "Select a language first" though the language
+    // was right. A clear lead over English — 19–32 points on those photos,
+    // at most 14 on Hebrew scans, for which there is no model — is
+    // evidence enough from 45 up (synthetic scans, 2026-10-08).
+    const sure = b => b.conf >= 65 || (SCRIPT_GROUPS.rtl.includes(b.lang) && b.conf >= 45 && b.conf - conf >= 17)
+      || (b.lang === hint && b.conf >= 40);
+    // Probes run on a worker of their own: a Tesseract worker taken to
+    // another model and back keeps that model's settings — an English
+    // invoice probed with chi_sim, then read with `eng` again, lost a third
+    // of its words (70 → 47; every scan English read with less than 60 had
+    // the same since probing began). `worker` stays as it was.
+    let probeWorker = null;
+    const tryModel = async lang => {
+      tried.push(lang);
+      probeWorker ??= await newWorker('eng');
+      await probeWorker.reinitialize(lang);
+      return { lang, conf: (await probeWorker.recognize(cvs))?.data?.confidence ?? 0 };
+    };
+    let best = null;
+    try {
+    for (const { probe } of probes) {
+      if (tried.includes(probe)) continue;
+      const r = await tryModel(probe);
+      if (r.conf <= conf + (probe === hint ? 5 : 15) || (best && r.conf <= best.conf)) continue;
+      best = r;
+      // Arabic and Persian share a script, and the `ara` model never
+      // outputs Persian's own letters (پ چ ژ گ ک ی: 0 in 24 scans), so
+      // only the two models' confidence tells them apart: on Persian scans
+      // `fas` is within 2 of `ara`, on Arabic ones 12–25 below (2026-10-08).
+      // Read with `fas`, Persian scans have 85–88 % of words right, not 72–75.
+      if (r.lang === 'ara') {
+        const f = await tryModel('fas');
+        if (f.conf >= r.conf - 6) best = f;
+      }
+      const pair = r.lang === hint ? null : { jpn: 'chi_sim', chi_sim: 'jpn' }[r.lang];
+      if (pair && !tried.includes(pair)) {
+        const c = await tryModel(pair);
+        if (c.conf > best.conf) best = c;
+      }
+      if (sure(best)) break;
+    }
+    } finally {
+      await probeWorker?.terminate();
+    }
+    if (best) {
+      return { lang: best.lang, confident: sure(best), metrics: {
+        source: 'ocr-fallback',
+        initial: primary.lang, suspicious,
+        tried, winner: best.lang, winnerConfidence: best.conf,
+        switched: true, confidenceInitial: conf,
+      } };
+    }
+
+    return { ...primary, metrics: {
+      source: 'ocr-primary',
+      initial: primary.lang, suspicious,
+      tried, winner: primary.lang, winnerConfidence: conf,
+      switched: false,
+    } };
+  }
+  return null;
+}
+
+// Detects a document's language: samples pages [1, middle, last] with `worker`
+// (left set to the detected language when a probe wins, else to its initial
+// language). Returns { lang, confident, metrics } — metrics describe how the
+// decision was reached (source, probes tried, winning confidence).
+// `ignoreTextLayer`: judge from the page image only — for pages whose text
+// layer is garbage (PDF→Word's OCR layer reads only such pages and scans).
 // `newWorker`: how a probe worker is made (createOcrWorker; tests pass a stub).
 export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = false, hint = null, newWorker = createOcrWorker } = {}) {
   const total = pdfDoc.numPages;
@@ -275,103 +373,25 @@ export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = fals
     cvs.height = Math.round(vp.height);
     await page.render({ canvasContext: cvs.getContext('2d'), viewport: vp }).promise;
 
-    // 3. Quick OCR pass — primary detection. On the plain render: Enhance
-    // (see _enhanceForOcrAsync), tuned for full resolution, lowered the `ara`
-    // probe on clean and office scans at this size (77 → 62, 75 → 54).
-    const res  = await worker.recognize(cvs);
-    const txt  = res?.data?.text ?? '';
-    const conf = res?.data?.confidence ?? 0;
-
-    if (txt.trim().length >= 20) {
-      const primary    = _detectScriptFromText(txt, conf);
-      const suspicious = _isDetectionSuspicious(txt, conf);
-      // `hint`: the site locale's model (ocrLangForLocale) — tried first and
-      // always, even when English reads the page with confidence: a Chinese
-      // invoice scan read 67 with `eng` (garbage) and 80 with chi_sim, never
-      // tried; table rules hold every model down (eng 31, chi_sim 42 on a
-      // bordered one), under the +15 a probe needs. Someone on the Chinese
-      // site with a Chinese scan is the common case; an English scan there
-      // still reads better with `eng` (84 vs 40) and stays English.
-      const hinted     = hint && hint !== primary.lang ? [{ probe: hint }] : [];
-      const probes     = [...hinted, ...(suspicious ? (FALLBACK_PROBES[_scriptGroupOf(primary.lang)] ?? []) : [])];
-      const tried      = [];  // track every probe attempted
-
-      // 4. Multi-signal fallback: try probes in order, keep the best one that
-      // gains ≥ 15 over the first pass, and stop once the best is sure. Stopping
-      // at the first gain read Chinese with the Japanese model (jpn 51–65, never
-      // trying chi_sim at 83–91) and a clean Japanese scan as Arabic (ara 38 vs
-      // eng 17; jpn would be 92): 8 of 9 Chinese scans and that Japanese one
-      // came out of PDF→Word as pictures, 0% of their text (2026-10-09). A CJK
-      // winner is checked against the other CJK model, as Arabic is against
-      // Persian; an Arabic document still stops at `ara` and never downloads
-      // a 10–15 MB CJK model.
-      // Arabic-script models score low even on correct text: a phone photo
-      // of an Arabic or Persian page scored 48–64 (`ara`), short of 65, so
-      // it always stopped at "Select a language first" though the language
-      // was right. A clear lead over English — 19–32 points on those photos,
-      // at most 14 on Hebrew scans, for which there is no model — is
-      // evidence enough from 45 up (synthetic scans, 2026-10-08).
-      const sure = b => b.conf >= 65 || (SCRIPT_GROUPS.rtl.includes(b.lang) && b.conf >= 45 && b.conf - conf >= 17)
-        || (b.lang === hint && b.conf >= 40);
-      // Probes run on a worker of their own: a Tesseract worker taken to
-      // another model and back keeps that model's settings — an English
-      // invoice probed with chi_sim, then read with `eng` again, lost a third
-      // of its words (70 → 47; every scan English read with less than 60 had
-      // the same since probing began). `worker` stays as it was.
-      let probeWorker = null;
-      const tryModel = async lang => {
-        tried.push(lang);
-        probeWorker ??= await newWorker('eng');
-        await probeWorker.reinitialize(lang);
-        return { lang, conf: (await probeWorker.recognize(cvs))?.data?.confidence ?? 0 };
-      };
-      let best = null;
-      try {
-      for (const { probe } of probes) {
-        if (tried.includes(probe)) continue;
-        const r = await tryModel(probe);
-        if (r.conf <= conf + (probe === hint ? 5 : 15) || (best && r.conf <= best.conf)) continue;
-        best = r;
-        // Arabic and Persian share a script, and the `ara` model never
-        // outputs Persian's own letters (پ چ ژ گ ک ی: 0 in 24 scans), so
-        // only the two models' confidence tells them apart: on Persian scans
-        // `fas` is within 2 of `ara`, on Arabic ones 12–25 below (2026-10-08).
-        // Read with `fas`, Persian scans have 85–88 % of words right, not 72–75.
-        if (r.lang === 'ara') {
-          const f = await tryModel('fas');
-          if (f.conf >= r.conf - 6) best = f;
-        }
-        const pair = r.lang === hint ? null : { jpn: 'chi_sim', chi_sim: 'jpn' }[r.lang];
-        if (pair && !tried.includes(pair)) {
-          const c = await tryModel(pair);
-          if (c.conf > best.conf) best = c;
-        }
-        if (sure(best)) break;
+    // 3. Judge the plain render; when that leaves it unsure, the Enhanced
+    // one. Not Enhanced first: tuned for full resolution, it lowered the `ara`
+    // probe on clean and office scans at this size (77 → 62, 75 → 54). A phone photo (shadow, tilt) reads at 14–33 with every model on
+    // the plain render — never sure, so PDF→Word left it a picture, an English
+    // invoice photo included — and at 46–72 Enhanced (2026-10-10).
+    let d = await _judgeImage(cvs, worker, hint, newWorker);
+    if (!d?.confident) {
+      const enh = await _enhanceForOcrAsync(cvs).catch(() => null);
+      if (enh) {
+        const e = await _judgeImage(enh.canvas, worker, hint, newWorker);
+        enh.canvas.width = 0; enh.canvas.height = 0;
+        if (e?.confident) d = { ...e, metrics: { ...e.metrics, enhanced: true } };
       }
-      } finally {
-        await probeWorker?.terminate();
-      }
-      if (best) {
-        await switchOcrLanguage(worker, best.lang);
-        cvs.width = 0; cvs.height = 0;
-        return { lang: best.lang, confident: sure(best), metrics: {
-          source: 'ocr-fallback',
-          initial: primary.lang, suspicious,
-          tried, winner: best.lang, winnerConfidence: best.conf,
-          switched: true, confidenceInitial: conf,
-        } };
-      }
-
-      cvs.width = 0; cvs.height = 0;
-      return { ...primary, metrics: {
-        source: 'ocr-primary',
-        initial: primary.lang, suspicious,
-        tried, winner: primary.lang, winnerConfidence: conf,
-        switched: false,
-      } };
     }
-
     cvs.width = 0; cvs.height = 0;
+    if (d) {
+      if (d.metrics.switched) await switchOcrLanguage(worker, d.lang);
+      return d;
+    }
     // Not enough text on this page — try next sample page
   }
 
