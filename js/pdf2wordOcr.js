@@ -38,6 +38,18 @@ import { loadTesseract, createOcrWorker, switchOcrLanguage, detectOcrLanguage, r
 // measured 1.2× the median: on OCR lines size does not tell a heading. Every
 // line gets the page's median size unless it is a clear outlier (≥ 1.5×);
 // sized one by one, body lines became up to 20 false headings (2026-10-08).
+// A line split by a column-sized gap (≥ 1.5 em — a gutter measures ~1.6 em,
+// word gaps a fraction) is pieces of different lines: each piece of 3+ words
+// keeps its own level, the line's baseline moved by the median bottom of the
+// piece's words against the line's (a median of 3+ words is past
+// descenders). Within one column a piece's own level only added noise — a
+// run split at a wide word gap broke its paragraph. On a two-column page Tesseract
+// joins a line of each column into one — columns 4.5pt apart, now the upper,
+// now the lower neighbour — and on the joined line's one baseline the
+// columns' line gaps alternated 11/19pt for 15.5 (ar-cols2: paragraph
+// precision 41–64%).
+const OWN_LEVEL_WORDS = 3;
+const COLUMN_GAP_EM = 1.5;
 const ROW_SNAP = 1.5;
 const RUN_GAP_EM = 0.8;
 const ROW_TO_FONT = 1 / 1.2;
@@ -48,15 +60,17 @@ export function ocrItemsFromPage(rec) {
   const items = [];
   const rows = rec.lines.map(line => line.bbox.y1 - line.bbox.y0).sort((p, q) => p - q);
   const medianRow = rows[Math.floor(rows.length / 2)] || 0;
+  const median = vals => [...vals].sort((p, q) => p - q)[Math.floor(vals.length / 2)];
   for (const line of rec.lines) {
     const base = line.baseline && line.baseline.has_baseline !== false
       ? (line.baseline.y0 + line.baseline.y1) / 2
       : line.bbox.y1;
-    const y = toY(base);
+    const lineBottom = median(line.words.map(w => w.bbox.y1));
     const height = line.bbox.y1 - line.bbox.y0;
     const row = height / medianRow < ROW_SNAP ? medianRow : height;
     const fontSize = Math.max(1, (row / a) * ROW_TO_FONT);
     const runs = [];
+    const pieces = [[]];                         // bottoms of each piece's words, shared by its runs
     for (const w of line.words) {
       const box = { x0: toX(w.bbox.x0), x1: toX(w.bbox.x1) };
       const run = runs[runs.length - 1];
@@ -66,13 +80,20 @@ export function ocrItemsFromPage(rec) {
         run.x0 = Math.min(run.x0, box.x0);
         run.x1 = Math.max(run.x1, box.x1);
       } else {
-        runs.push({ words: w.kept ? [w.text] : [], ...box });
+        const piece = run && gap > COLUMN_GAP_EM * fontSize ? [] : pieces[pieces.length - 1];
+        if (piece !== pieces[pieces.length - 1]) pieces.push(piece);
+        runs.push({ words: w.kept ? [w.text] : [], piece, ...box });
       }
+      runs[runs.length - 1].piece.push(w.bbox.y1);
     }
-    runs.filter(run => run.words.length).forEach((run, i, kept) => items.push({
-      str: run.words.join(' ') + (i < kept.length - 1 ? ' ' : ''),
-      x: run.x0, y, width: run.x1 - run.x0, fontSize,
-    }));
+    runs.filter(run => run.words.length).forEach((run, i, kept) => {
+      const ownLevel = pieces.length > 1 && run.piece.length >= OWN_LEVEL_WORDS;
+      items.push({
+        str: run.words.join(' ') + (i < kept.length - 1 ? ' ' : ''),
+        x: run.x0, y: toY(ownLevel ? base + median(run.piece) - lineBottom : base),
+        width: run.x1 - run.x0, fontSize,
+      });
+    });
   }
   return items;
 }
