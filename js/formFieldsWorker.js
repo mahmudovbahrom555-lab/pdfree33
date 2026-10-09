@@ -149,6 +149,18 @@ function _isSafePdfName(v) {
 // option in the group can't be represented as a PDF name; /Opt still carries
 // the correct text for readers that use it, which is a strictly better
 // fallback than corrupting the name.
+// FIELD_LOOK — no fill behind a field, only its thin grey border. A white
+// background hid the document under every field (user report 2026-10-09, an
+// Italian contract: "lo sfondo non rende leggibile il resto del documento").
+// pdf-lib 1.17.1 writes a white /MK /BG unless the option is PRESENT and
+// undefined ('backgroundColor' in options) for text fields, dropdowns and
+// checkboxes; radio options take white whatever is passed (`??`), so their
+// widgets lose the /BG afterwards and are redrawn (_clearRadioBackground).
+function _clearRadioBackground(rg, PDFName) {
+  for (const w of rg.acroField.getWidgets()) w.getAppearanceCharacteristics()?.dict.delete(PDFName.of('BG'));
+  rg.updateAppearances();
+}
+
 function _relabelRadioStates(rg, values, PDFName, PDFDict) {
   if (!values.length || !values.every(_isSafePdfName)) return;
   const widgets = rg.acroField.getWidgets();
@@ -271,7 +283,7 @@ self.onmessage = async (e) => {
             x: ptX, y: ptY, width: ptW, height: ptH,
             borderWidth:     1,
             borderColor:     rgb(0.55, 0.55, 0.55),
-            backgroundColor: rgb(1, 1, 1),
+            backgroundColor: undefined,   // see FIELD_LOOK
           });
         } else if (f.type === 'dropdown') {
           // Options must be attached BEFORE addToPage: addToPage builds the
@@ -288,7 +300,7 @@ self.onmessage = async (e) => {
             font,
             borderWidth:     1,
             borderColor:     rgb(0.55, 0.55, 0.55),
-            backgroundColor: rgb(1, 1, 1),
+            backgroundColor: undefined,   // see FIELD_LOOK
           });
         } else if (f.type === 'checkbox') {
           // No font option — PDFCheckBox renders its tick via a built-in
@@ -303,7 +315,7 @@ self.onmessage = async (e) => {
             x: ptX, y: ptY, width: ptW, height: ptH,
             borderWidth:     1,
             borderColor:     rgb(0.55, 0.55, 0.55),
-            backgroundColor: rgb(1, 1, 1),
+            backgroundColor: undefined,   // see FIELD_LOOK
           });
         } else {
           const tf = form.createTextField(name);
@@ -312,7 +324,7 @@ self.onmessage = async (e) => {
             font,
             borderWidth:     1,
             borderColor:     rgb(0.55, 0.55, 0.55),
-            backgroundColor: rgb(1, 1, 1),
+            backgroundColor: undefined,   // see FIELD_LOOK
           });
         }
         added++;
@@ -328,6 +340,8 @@ self.onmessage = async (e) => {
     // could otherwise regenerate appearances over the top of this) — see
     // _relabelRadioStates for the real bug this fixes.
     radioGroups.forEach(entry => {
+      try { _clearRadioBackground(entry.rg, PDFName); }
+      catch { /* a group whose widgets can't be redrawn keeps pdf-lib's white */ }
       try { _relabelRadioStates(entry.rg, entry.values, PDFName, PDFDict); }
       catch { /* a group that can't be relabelled keeps pdf-lib's index names + /Opt */ }
     });

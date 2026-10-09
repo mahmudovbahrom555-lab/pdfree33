@@ -36,7 +36,7 @@
 // ============================================================
 
 import { chromium } from 'playwright';
-import { PDFDocument, PDFTextField, PDFCheckBox, PDFRadioGroup, PDFDropdown } from 'pdf-lib';
+import { PDFDocument, PDFTextField, PDFCheckBox, PDFRadioGroup, PDFDropdown, PDFName, PDFDict, PDFRawStream, decodePDFRawStream } from 'pdf-lib';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -121,6 +121,28 @@ async function saveAndCapture(page) {
     return btoa(binary);
   });
   return { result, buffer: Buffer.from(base64, 'base64') };
+}
+
+// No field may paint a background over the document beneath it (user report
+// 2026-10-09: "lo sfondo non rende leggibile il resto del documento" — every
+// field was filled white). Checked two ways per widget: no /MK /BG (what a
+// viewer redraws the field with) and no white fill in its own appearance
+// streams (what is shown before anyone touches it).
+function expectNoBackground(form) {
+  for (const field of form.getFields()) {
+    for (const w of field.acroField.getWidgets()) {
+      if (w.getAppearanceCharacteristics()?.getBackgroundColor()) {
+        throw new Error(`${field.getName()}: widget has a /MK /BG background`);
+      }
+      const n = w.dict.lookup(PDFName.of('AP'), PDFDict)?.lookup(PDFName.of('N'));
+      const streams = n instanceof PDFRawStream ? [n]
+        : n instanceof PDFDict ? n.values().map(v => w.dict.context.lookup(v)).filter(v => v instanceof PDFRawStream) : [];
+      for (const st of streams) {
+        const ops = Buffer.from(decodePDFRawStream(st).decode()).toString('latin1');
+        if (/\b1 1 1 rg\b/.test(ops)) throw new Error(`${field.getName()}: appearance stream fills white`);
+      }
+    }
+  }
 }
 
 console.log(`\nformFields E2E — click-to-place produces a real AcroForm PDF (real browser, ${BASE_URL}):`);
@@ -550,6 +572,7 @@ await test('dropdown: comma-separated choices become a real /Opt list Fill rende
   expect(JSON.stringify(dd.getOptions())).toBe(JSON.stringify(['Small', 'Medium', 'Large']));
   expect(dd.getSelected().length).toBe(0);
   if (dd.acroField.getWidgets().length < 1) throw new Error('dropdown field has no widget annotation');
+  expectNoBackground(pdf.getForm());
 
   // Independent check #2 — the site's own real Fill tool. A <select> (not a
   // text input) is the thing worth asserting: it means pdf.js reported a
@@ -654,6 +677,7 @@ await test('two radio groups stay separate, and every type coexists in one docum
 
   if (!(form.getField('Notes') instanceof PDFTextField)) throw new Error('Notes is not a text field');
   if (!(form.getField('Confirmed') instanceof PDFCheckBox)) throw new Error('Confirmed is not a checkbox');
+  expectNoBackground(form);
 });
 
 await test('Cyrillic field name survives sanitization + a real Unicode font (not WinAnsi Helvetica) backs the field', async () => {
