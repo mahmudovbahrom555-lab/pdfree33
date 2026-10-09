@@ -356,7 +356,7 @@ export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = fals
 
 // ── Page preprocessing ───────────────────────────────────────────────────────
 
-// Grayscale (+ Otsu binarization for CJK) in a dedicated worker — the pixel
+// Grayscale (Enhance's fallback) in a dedicated worker — the pixel
 // loop used to run on the main thread before recognize() and caused a 240ms
 // frame gap on a real 6.3MB scan (4x CPU throttle; see js/ocrGrayscaleWorker.js).
 let _grayscaleWorker = null;
@@ -416,7 +416,7 @@ function _unskewBbox({ x0, y0, x1, y1 }, skewDeg, W, H) {
   return { x0: x0 + dx, y0: y0 + dy, x1: x1 + dx, y1: y1 + dy };
 }
 
-async function _toGrayscaleAsync(src, binarize) {
+async function _toGrayscaleAsync(src) {
   const w = src.width, h = src.height;
   const ctx = src.getContext('2d');
   const imageData = ctx.getImageData(0, 0, w, h);
@@ -430,7 +430,7 @@ async function _toGrayscaleAsync(src, binarize) {
     };
     worker.onerror = (e) => reject(new Error(e.message || 'Worker error'));
     worker.postMessage(
-      { type: 'grayscale', data: imageData.data, w, h, binarize },
+      { type: 'grayscale', data: imageData.data, w, h },
       [imageData.data.buffer]
     );
   });
@@ -522,11 +522,12 @@ export async function recognizePage(worker, page, lang, { level = false } = {}) 
     const rotation = page.rotate || 0;
     ocrCanvas = rotation !== 0 ? _counterRotateCanvas(canvas, rotation) : canvas;
 
-    // CJK keeps its own grayscale + Otsu path (not measured with Enhance).
-    const { canvas: gray, skewDeg } = CJK_LANGS.has(ps)
-      ? { canvas: await _toGrayscaleAsync(ocrCanvas, true), skewDeg: 0 }
-      : await _enhanceForOcrAsync(ocrCanvas)
-        .catch(async () => ({ canvas: await _toGrayscaleAsync(ocrCanvas, false), skewDeg: 0 }));
+    // Enhance (and its deskew) for every script. CJK had its own grayscale +
+    // Otsu path, never measured against it: on tilted Chinese and Japanese
+    // phone photos its reading order was 41–69%, Enhanced 96–99%, paragraphs
+    // and headings with it (2026-10-09, synthetic scans).
+    const { canvas: gray, skewDeg } = await _enhanceForOcrAsync(ocrCanvas)
+      .catch(async () => ({ canvas: await _toGrayscaleAsync(ocrCanvas), skewDeg: 0 }));
     const result = await worker.recognize(gray);
     const W = gray.width, H = gray.height;
     const px = gray.getContext('2d').getImageData(0, 0, W, H).data;

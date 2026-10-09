@@ -794,7 +794,7 @@ const MAX_PAGES_IOS = 30;
 //   open PDF → text-layer check (skip OCR if found) → resolve language
 //   (manual pick, or 'auto': detectOcrLanguage — if inconclusive, abort and ask
 //   the user) → createOcrWorker / switchOcrLanguage → per page: recognizePage
-//   (render, counter-rotate, Enhance or CJK binarize, recognize, confidence
+//   (render, counter-rotate, Enhance, recognize, confidence
 //   gate) → build searchable PDF (+ optional .txt export).
 async function _runOcr(file, gen) {
   if (file.size > MAX_FILE_MB * 1024 * 1024) {
