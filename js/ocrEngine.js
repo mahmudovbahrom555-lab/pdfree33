@@ -198,10 +198,10 @@ const DETECT_PX = 1600;
 //   signal — which suspicion signal this probe is designed to catch
 //            (documentation only for now; all probes run when ANY signal fires)
 //
-// Lazy-loading: each probe only runs if the previous one didn't gain ≥15%.
-// Arabic docs exit at step 2; Japanese at step 3; Chinese at step 4.
-// CJK models (10–15 MB) are only downloaded when Cyrillic + RTL both fail,
-// and the download is reused for full OCR — no extra cost.
+// Lazy-loading: probes run until one that gained ≥15% is sure (see
+// detectOcrLanguage). Arabic docs exit at step 2; CJK models (10–15 MB) are
+// only downloaded when Cyrillic and RTL aren't sure, and the download is
+// reused for full OCR — no extra cost.
 const FALLBACK_PROBES = {
   latin: [
     { group: 'cyrillic', probe: 'rus',     signal: 'low_confidence' },
@@ -280,44 +280,60 @@ export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = fals
       const probes     = suspicious ? (FALLBACK_PROBES[_scriptGroupOf(primary.lang)] ?? []) : [];
       const tried      = [];  // track every probe attempted
 
-      // 4. Multi-signal fallback: try probes sequentially, stop on first gain ≥15%
+      // 4. Multi-signal fallback: try probes in order, keep the best one that
+      // gains ≥ 15 over the first pass, and stop once the best is sure. Stopping
+      // at the first gain read Chinese with the Japanese model (jpn 51–65, never
+      // trying chi_sim at 83–91) and a clean Japanese scan as Arabic (ara 38 vs
+      // eng 17; jpn would be 92): 8 of 9 Chinese scans and that Japanese one
+      // came out of PDF→Word as pictures, 0% of their text (2026-10-09). A CJK
+      // winner is checked against the other CJK model, as Arabic is against
+      // Persian; an Arabic document still stops at `ara` and never downloads
+      // a 10–15 MB CJK model.
+      // Arabic-script models score low even on correct text: a phone photo
+      // of an Arabic or Persian page scored 48–64 (`ara`), short of 65, so
+      // it always stopped at "Select a language first" though the language
+      // was right. A clear lead over English — 19–32 points on those photos,
+      // at most 14 on Hebrew scans, for which there is no model — is
+      // evidence enough from 45 up (synthetic scans, 2026-10-08).
+      const sure = b => b.conf >= 65 || (SCRIPT_GROUPS.rtl.includes(b.lang) && b.conf >= 45 && b.conf - conf >= 17);
+      const tryModel = async lang => {
+        tried.push(lang);
+        await worker.reinitialize(lang);
+        return { lang, conf: (await worker.recognize(cvs))?.data?.confidence ?? 0 };
+      };
+      let best = null;
       for (const { probe } of probes) {
-        tried.push(probe);
-        await worker.reinitialize(probe);
-        const fbRes  = await worker.recognize(cvs);
-        const fbConf = fbRes?.data?.confidence ?? 0;
-
-        if (fbConf > conf + 15) {
-          let winner = probe, winnerConf = fbConf;
-          // Arabic and Persian share a script, and the `ara` model never
-          // outputs Persian's own letters (پ چ ژ گ ک ی: 0 in 24 scans), so
-          // only the two models' confidence tells them apart: on Persian scans
-          // `fas` is within 2 of `ara`, on Arabic ones 12–25 below (2026-10-08).
-          // Read with `fas`, Persian scans have 85–88 % of words right, not 72–75.
-          if (probe === 'ara') {
-            tried.push('fas');
-            await worker.reinitialize('fas');
-            const fasConf = (await worker.recognize(cvs))?.data?.confidence ?? 0;
-            if (fasConf >= fbConf - 6) { winner = 'fas'; winnerConf = fasConf; }
-          }
-          cvs.width = 0; cvs.height = 0;
-          // Arabic-script models score low even on correct text: a phone photo
-          // of an Arabic or Persian page scored 48–64 (`ara`), short of 65, so
-          // it always stopped at "Select a language first" though the language
-          // was right. A clear lead over English — 19–32 points on those photos,
-          // at most 14 on Hebrew scans, for which there is no model — is
-          // evidence enough from 45 up (synthetic scans, 2026-10-08).
-          const rtlLead = SCRIPT_GROUPS.rtl.includes(winner) && winnerConf >= 45 && winnerConf - conf >= 17;
-          return { lang: winner, confident: winnerConf >= 65 || rtlLead, metrics: {
-            source: 'ocr-fallback',
-            initial: primary.lang, suspicious,
-            tried, winner, winnerConfidence: winnerConf,
-            switched: true, confidenceInitial: conf,
-          } };
+        if (tried.includes(probe)) continue;
+        const r = await tryModel(probe);
+        if (r.conf <= conf + 15 || (best && r.conf <= best.conf)) continue;
+        best = r;
+        // Arabic and Persian share a script, and the `ara` model never
+        // outputs Persian's own letters (پ چ ژ گ ک ی: 0 in 24 scans), so
+        // only the two models' confidence tells them apart: on Persian scans
+        // `fas` is within 2 of `ara`, on Arabic ones 12–25 below (2026-10-08).
+        // Read with `fas`, Persian scans have 85–88 % of words right, not 72–75.
+        if (r.lang === 'ara') {
+          const f = await tryModel('fas');
+          if (f.conf >= r.conf - 6) best = f;
         }
-        // Probe didn't win — restore to initial lang before trying next
-        await worker.reinitialize(primary.lang);
+        const pair = { jpn: 'chi_sim', chi_sim: 'jpn' }[r.lang];
+        if (pair && !tried.includes(pair)) {
+          const c = await tryModel(pair);
+          if (c.conf > best.conf) best = c;
+        }
+        if (sure(best)) break;
       }
+      if (best) {
+        if (tried[tried.length - 1] !== best.lang) await worker.reinitialize(best.lang);
+        cvs.width = 0; cvs.height = 0;
+        return { lang: best.lang, confident: sure(best), metrics: {
+          source: 'ocr-fallback',
+          initial: primary.lang, suspicious,
+          tried, winner: best.lang, winnerConfidence: best.conf,
+          switched: true, confidenceInitial: conf,
+        } };
+      }
+      if (tried.length) await worker.reinitialize(primary.lang);
 
       cvs.width = 0; cvs.height = 0;
       return { ...primary, metrics: {
