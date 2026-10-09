@@ -62,11 +62,10 @@ const MAX_H_CANDIDATES      = 300;        // safety cap: bail out of the O(n²) 
  * @param {import('pdfjs-dist').PDFPageProxy} page
  * @param {object}  [opts]
  * @param {boolean} [opts.paintedOnly=false] — skip paths that are never
- *   painted (clipping paths), see _extractSegments. Only PDF→Excel passes it
- *   so far: in PDF→Word the false page-sized grid a Chromium print's clip
- *   rectangle makes also keeps the visual-gap scan off the page, and without
- *   it that scan crops text and infobox regions as pictures (Wikipedia
- *   prints, 2026-10-06) — to be fixed there before Word turns this on.
+ *   painted (clipping paths), see _extractSegments. A Chromium print clips
+ *   each page to its printable area, and read as drawn lines that clip made a
+ *   page-sized grid: PDF→Word turned whole Wikipedia prints into one-column
+ *   tables (Arabic: the article as glyphs joined by spaces, 31% of its words).
  * @returns {Promise<TableGrid[]>}
  */
 export async function detectTableGrids(page, { paintedOnly = false } = {}) {
@@ -74,6 +73,20 @@ export async function detectTableGrids(page, { paintedOnly = false } = {}) {
   const { hLines, vLines } = _extractSegments(opList, paintedOnly);
   const viewport = page.getViewport({ scale: 1 });
   return _buildGrids(hLines, vLines, viewport.width, viewport.height);
+}
+
+// A text line (pdf2readCore's {y, items}) belongs to a grid when it lies in the
+// grid's y-range and most of its items' centres in its x-range. Matched by y
+// alone, a Wikipedia infobox — a grid down the left half of the page — took the
+// article text beside it as table rows (Arabic Wikipedia print, 2026-10-09).
+const _GRID_SLACK = 4;
+export function lineInGrid(ln, grid) {
+  if (ln.y < grid.y - _GRID_SLACK || ln.y > grid.y + grid.h + _GRID_SLACK) return false;
+  const inside = ln.items.filter(i => {
+    const cx = i.x + (i.width || 0) / 2;
+    return cx >= grid.x - _GRID_SLACK && cx <= grid.x + grid.w + _GRID_SLACK;
+  });
+  return inside.length * 2 >= ln.items.length;
 }
 
 // ── Segment extraction ────────────────────────────────────────────────────────

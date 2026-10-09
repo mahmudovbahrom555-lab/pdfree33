@@ -34,7 +34,7 @@ import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { _p2wBuildPageData } from './pdf2readCore.js';
 import { createOcrLayer } from './pdf2wordOcr.js';
-import { detectTableGrids } from './pdf2wordBorders.js';
+import { detectTableGrids, lineInGrid } from './pdf2wordBorders.js';
 import { recognizeFormula } from './formulaOcr.js';
 import { docxToPdf, walkDomToPdfContent, pdfContentToBlob } from './docxToPdfCore.js';
 export { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE, _splitCrossColumnLines };
@@ -3431,7 +3431,7 @@ function _p2pBuildRegionShapes(lines, borderGrids, xBounds, median, repeatTextSe
     for (let li = 0; li < lines.length; li++) {
       if (lineToTable.has(li)) continue;
       const ln = lines[li];
-      if (ln.y >= grid.y - 4 && ln.y <= grid.y + grid.h + 4) gridLines.push({ li, ln });
+      if (lineInGrid(ln, grid)) gridLines.push({ li, ln });
     }
     if (!gridLines.length) continue;
     gridLines.sort((a, b) => b.ln.y - a.ln.y); // top first
@@ -4958,8 +4958,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
         const hdrLines = [];
         for (let li2 = 0; li2 < lines.length; li2++) {
           const ln = lines[li2];
-          if (!consumedLines.has(li2) && !lineToTable.has(li2) &&
-              ln.y >= grid.y - 4 && ln.y <= grid.y + grid.h + 4) {
+          if (!consumedLines.has(li2) && !lineToTable.has(li2) && lineInGrid(ln, grid)) {
             hdrLines.push(ln);
             consumedLines.add(li2);
           }
@@ -5524,6 +5523,45 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
     return kept;
   }
 
+  // The text layer's ink: text items' boxes (0.6 em below the baseline to 1.2
+  // above, 0.3 em either side, as in _wipeTextInk). A picture needs ink beyond
+  // it — both parts below.
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const px = imageData.data;
+  const textMask = new Uint8Array(canvas.width * canvas.height);
+  for (const it of textItems) {
+    if (!it.width || it.width <= 0 || !String(it.str || '').trim()) continue;
+    const fs = it.fontSize || medianFontSize;
+    const x0 = Math.max(0, Math.floor((it.x - 0.3 * fs) * scale));
+    const x1 = Math.min(canvas.width, Math.ceil((it.x + it.width + 0.3 * fs) * scale));
+    const y0 = Math.max(0, Math.floor((pageH - (it.y + 1.2 * fs)) * scale));
+    const y1 = Math.min(canvas.height, Math.ceil((pageH - (it.y - 0.6 * fs)) * scale));
+    for (let y = y0; y < y1; y++) textMask.fill(1, y * canvas.width + x0, y * canvas.width + Math.max(x0, x1));
+  }
+  // Is there a graphic in canvas box [x0, x1) × [y0, y1) — ink beyond the
+  // text (≥ 4 px of it) on at least _MIN_VIS_H_PX / 2 rows, no more than 16
+  // rows (~8 pt) apart? Gap crops made of a heading's underline rules (2–4
+  // rows each), list bullets a line apart, an empty framed box (1–2 px
+  // edges), or the other column's text on a page split at its midpoint came
+  // out as pictures of text (Wikipedia prints, arXiv pages, 2026-10-09). Not
+  // one unbroken run, nor a density: a logo's wordmark lines are rows apart,
+  // and a thin-line chart is ~1% ink over its box once its labels are left
+  // out.
+  const graphicIn = (x0, y0, x1, y1) => {
+    let rows = 0, blank = 0;
+    for (let y = y0; y < y1; y++) {
+      let n = 0;
+      for (let x = x0; x < x1 && n < 4; x++) {
+        const i = y * canvas.width + x;
+        if (!textMask[i] && isNotWhite(px, i * 4)) n++;
+      }
+      if (n < 4) { if (rows && ++blank > 16) { rows = 0; blank = 0; } continue; }
+      blank = 0;
+      if (++rows >= _MIN_VIS_H_PX / 2) return true;
+    }
+    return false;
+  };
+
   // ── Part 1: gap runs ────────────────────────────────────────────────────────
   const gapRuns = [];
   // Track gap canvas Y ranges so inline scanner skips them (already captured)
@@ -5619,6 +5657,11 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
       }
       if (tight !== wide.band) release(wide.band);
       gapCanvasRanges.push({ cyTop: wide.top, cyBottom: wide.bottom });
+    } else if (!scanned && !graphicIn(cx0, cyTop, cx1, cyBottom)) {
+      // no picture here, but a figure beside it is still the inline scan's
+      gapCanvasRanges.pop();
+      release(tight !== tmp && tight, tmp);
+      continue;
     }
 
     const fmt  = _p2wDetectFormat(tight);
@@ -5679,11 +5722,16 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
     stripTextCov[s] = Math.min(1, stripTextCov[s] / scanW);
   }
 
-  // Compute ink density per strip from the already-rendered canvas.
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  const px = imageData.data;
+  // Compute ink density per strip from the already-rendered canvas, twice:
+  // with all ink, and with only the ink beyond the text (textMask). A visual
+  // needs a strip of the second kind: counted with the text, a strip of short
+  // list lines or a heading over its underline passed the 7% bar and came out
+  // as a picture of text — 7–8 per page on Wikipedia prints (2026-10-09; a
+  // full-width 1px rule alone is ~5% of a strip). It then takes in its
+  // neighbours by all ink: a chart's axis labels are text items, and without
+  // them its crop stopped above the axis.
 
-  const isVisual = new Uint8Array(numStrips);
+  const isVisual = new Uint8Array(numStrips);   // 2: graphics beyond the text; 1: ink, maybe all text
   for (let s = 0; s < numStrips; s++) {
     // Skip strips in exclusion zones
     const stripTop = s * _STRIP_H;
@@ -5693,15 +5741,19 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
     if (stripTextCov[s] >= _TEXT_COV_THRESH) continue;
 
     const yEnd = Math.min(canvas.height, (s + 1) * _STRIP_H);
-    let ink = 0, total = 0;
+    let ink = 0, nonText = 0, total = 0;
     for (let y = stripTop; y < yEnd; y++) {
       for (let x = sx0; x < sx1; x += _INK_STEP_INL) {
         const idx = (y * canvas.width + x) * 4;
-        if (px[idx] < 240 || px[idx+1] < 240 || px[idx+2] < 240) ink++;
+        if (px[idx] < 240 || px[idx+1] < 240 || px[idx+2] < 240) {
+          ink++;
+          if (!textMask[y * canvas.width + x]) nonText++;
+        }
         total++;
       }
     }
-    if (total > 0 && ink / total >= _INK_THRESH_INL) isVisual[s] = 1;
+    if (total > 0 && nonText / total >= _INK_THRESH_INL) isVisual[s] = 2;
+    else if (total > 0 && ink / total >= _INK_THRESH_INL) isVisual[s] = 1;
   }
 
   // Merge adjacent visual strips; filter by minimum height; crop and encode.
@@ -5711,6 +5763,7 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
     if (!isVisual[s]) { s++; continue; }
     let sEnd = s;
     while (sEnd + 1 < numStrips && isVisual[sEnd + 1]) sEnd++;
+    if (!isVisual.subarray(s, sEnd + 1).includes(2)) { s = sEnd + 1; continue; }
 
     const cyTop  = s    * _STRIP_H;
     const cyBot  = Math.min(canvas.height, (sEnd + 1) * _STRIP_H);
@@ -5736,6 +5789,8 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
         let h = Math.round(tightH * 96 / _RENDER_DPI);
         if (w > _MAX_W_PX) { h = Math.round(h * _MAX_W_PX / w); w = _MAX_W_PX; }
         const pdfY = pageH - cyTop / scale;
+        // the page's other column passes skip a full-width crop already made
+        if (!xRange) pageWide.push({ yAbove: pdfY, yBelow: pageH - cyBot / scale });
         inlineRuns.push({
           pdfY,
           imgRun: new ImageRun({ data: buf, transformation: { width: w, height: h }, type: fmt === 'png' ? 'png' : 'jpg' }),

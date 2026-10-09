@@ -34,7 +34,7 @@
 
 import { detectTables, looksLikeProseNotData, looksLikeEnumeratedList } from './pdf2wordTables.js';
 import { detectColumnRegions, pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
-import { detectTableGrids } from './pdf2wordBorders.js';
+import { detectTableGrids, lineInGrid } from './pdf2wordBorders.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, _splitCrossColumnLines, textLayerLooksBroken } from './textLayoutUtils.js';
 
@@ -272,7 +272,7 @@ function _rpBuildRegionBlocks(lines, borderGrids, xBounds, median, repeatTextSet
     for (let li = 0; li < lines.length; li++) {
       if (lineToTable.has(li)) continue;
       const ln = lines[li];
-      if (ln.y >= grid.y - 4 && ln.y <= grid.y + grid.h + 4) gridLines.push({ li, ln });
+      if (lineInGrid(ln, grid)) gridLines.push({ li, ln });
     }
     if (!gridLines.length) continue;
     gridLines.sort((a, b) => b.ln.y - a.ln.y);
@@ -546,7 +546,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
     // "CAAAAA+NotoSans-Bold" vs "DAAAAA+NotoSans-Regular").
     const [content, borderGrids] = await Promise.all([
       page.getTextContent({ normalizeWhitespace: false }),
-      detectTableGrids(page).catch(() => []),
+      detectTableGrids(page, { paintedOnly: true }).catch(() => []),
       page.getOperatorList().catch(() => {}),
     ]);
     const _boldFontCache = new Map(); // fontName -> boolean, one commonObjs lookup per unique font per page

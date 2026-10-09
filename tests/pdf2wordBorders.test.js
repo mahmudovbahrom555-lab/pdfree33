@@ -73,7 +73,7 @@ global.document = {
 global.window    = globalThis;
 global.Worker    = class { postMessage() {} terminate() {} addEventListener() {} };
 
-const { detectTableGrids } = await import('../js/pdf2wordBorders.js');
+const { detectTableGrids, lineInGrid } = await import('../js/pdf2wordBorders.js');
 const { _assignLineToGridCols, _activeDividersForY, _groupGridCellsWithSpans } = await import('../js/processor.js');
 
 let passed = 0, failed = 0;
@@ -376,6 +376,21 @@ await test('text starting just past a divider snapped RIGHT of its true position
     [40, 152, 292]);
   expect(cells[0]).toBe('Parkent tumani');
   expect(cells[1]).toBe('Parkent tuman ixtisoslashtirilgan');
+});
+
+// ── lineInGrid: a line belongs to a grid in its y-range AND x-range ─────
+// Arabic Wikipedia print (2026-10-09): an infobox grid down the left half of
+// page 1 took the article text beside it, matched by y alone, as table rows.
+const infobox = { x: 44, y: 240, w: 252, h: 476 };
+const glyph = (x, y) => ({ x, y, width: 4, str: 'ا' });
+await test('a line beside a grid at the same height is not the grid\'s', async () => {
+  expect(lineInGrid({ y: 500, items: [glyph(320, 500), glyph(324, 500), glyph(328, 500)] }, infobox)).toBe(false);
+});
+await test('a line inside the grid is the grid\'s', async () => {
+  expect(lineInGrid({ y: 500, items: [glyph(60, 500), glyph(64, 500)] }, infobox)).toBe(true);
+});
+await test('a line in the grid\'s x-range but above it is not the grid\'s', async () => {
+  expect(lineInGrid({ y: 760, items: [glyph(60, 760)] }, infobox)).toBe(false);
 });
 
 // ── Summary ──────────────────────────────────────────────────
