@@ -5547,28 +5547,95 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
     const y1 = Math.min(canvas.height, Math.ceil((pageH - (it.y - 0.6 * fs)) * scale));
     for (let y = y0; y < y1; y++) textMask.fill(1, y * canvas.width + x0, y * canvas.width + Math.max(x0, x1));
   }
-  // Is there a graphic in canvas box [x0, x1) × [y0, y1) — ink beyond the
-  // text (≥ 4 px of it) on at least _MIN_VIS_H_PX / 2 rows, no more than 16
-  // rows (~8 pt) apart? Gap crops made of a heading's underline rules (2–4
-  // rows each), list bullets a line apart, an empty framed box (1–2 px
-  // edges), or the other column's text on a page split at its midpoint came
-  // out as pictures of text (Wikipedia prints, arXiv pages, 2026-10-09). Not
-  // one unbroken run, nor a density: a logo's wordmark lines are rows apart,
-  // and a thin-line chart is ~1% ink over its box once its labels are left
-  // out.
-  const graphicIn = (x0, y0, x1, y1) => {
-    let rows = 0, blank = 0;
-    for (let y = y0; y < y1; y++) {
-      let n = 0;
-      for (let x = x0; x < x1 && n < 4; x++) {
-        const i = y * canvas.width + x;
-        if (!textMask[i] && isNotWhite(px, i * 4)) n++;
+  // Where is the graphic in canvas box [x0, x1) × [y0, y1)? Its pixels are
+  // ink beyond the text that isn't a thin rule (a run ≥ 3 em long, nothing
+  // 3 px either side of it: table borders, underlines, frames — a chart's
+  // filled bars are thicker). A graphic needs ≥ 4 px of them on at least
+  // _MIN_VIS_H_PX / 2 rows, no more than 16 rows (~8 pt) apart; its box is
+  // those rows, across the columns holding ≥ 2 of its pixels there. Returns
+  // { x0, y0, x1, y1 } or null. Cropped to the full band, a Wikipedia
+  // infobox's icon came with the infobox's text and the next column's, and
+  // gaps holding only rules, bullets or the other column's text came out as
+  // pictures of text (2026-10-09). Not one unbroken run, nor a density: a
+  // logo's wordmark lines are rows apart, and a thin-line chart is ~1% ink
+  // over its box once its labels are left out.
+  const graphicBox = (x0, y0, x1, y1) => {
+    const w = x1 - x0, h = y1 - y0;
+    if (w <= 0 || h <= 0) return null;
+    const ink = new Uint8Array(w * h);
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const i = (y0 + y) * canvas.width + x0 + x;
+        if (!textMask[i] && isNotWhite(px, i * 4)) ink[y * w + x] = 1;
       }
-      if (n < 4) { if (rows && ++blank > 16) { rows = 0; blank = 0; } continue; }
-      blank = 0;
-      if (++rows >= _MIN_VIS_H_PX / 2) return true;
     }
-    return false;
+    const ruleLen = 3 * medianFontSize * scale;
+    const rule = new Uint8Array(w * h);
+    const at = (x, y) => x >= 0 && y >= 0 && x < w && y < h && ink[y * w + x];
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w;) {
+        if (!ink[y * w + x]) { x++; continue; }
+        let e = x;
+        while (e < w && ink[y * w + e]) e++;
+        if (e - x >= ruleLen) for (let k = x; k < e; k++) if (!at(k, y - 3) && !at(k, y + 3)) rule[y * w + k] = 1;
+        x = e;
+      }
+    }
+    for (let x = 0; x < w; x++) {
+      for (let y = 0; y < h;) {
+        if (!ink[y * w + x]) { y++; continue; }
+        let e = y;
+        while (e < h && ink[e * w + x]) e++;
+        if (e - y >= ruleLen) for (let k = y; k < e; k++) if (!at(x - 3, k) && !at(x + 3, k)) rule[k * w + x] = 1;
+        y = e;
+      }
+    }
+    const graphic = i => ink[i] && !rule[i];
+    let rows = 0, blank = 0, first = -1;
+    for (let y = 0; y < h; y++) {
+      let n = 0;
+      for (let x = 0; x < w && n < 4; x++) if (graphic(y * w + x)) n++;
+      if (n < 4) { if (rows && ++blank > 16) { rows = 0; blank = 0; } continue; }
+      if (!rows) first = y;
+      blank = 0;
+      if (++rows < _MIN_VIS_H_PX / 2) continue;
+      let last = y;   // the run goes on while its rows keep coming
+      for (let yy = y + 1, gap = 0; yy < h && gap <= 16; yy++) {
+        let m = 0;
+        for (let x = 0; x < w && m < 4; x++) if (graphic(yy * w + x)) m++;
+        if (m >= 4) { last = yy; gap = 0; } else gap++;
+      }
+      let gx0 = w, gx1 = -1;
+      for (let x = 0; x < w; x++) {
+        let c = 0;
+        for (let yy = first; yy <= last && c < 2; yy++) if (graphic(yy * w + x)) c++;
+        if (c >= 2) { if (x < gx0) gx0 = x; gx1 = x; }
+      }
+      if (gx1 < 0) return null;
+      return { x0: x0 + gx0, y0: y0 + first, x1: x0 + gx1 + 1, y1: y0 + last + 1 };
+    }
+    return null;
+  };
+  // A graphic is cropped once per page: column passes of a page split at its
+  // midpoint found the same one and put a Wikipedia logo in Word three times.
+  // (pageWide is the page's own array, shared by its passes.)
+  pageWide.crops ??= new Set();
+  const firstCrop = box => {
+    const key = `${pageNum}:${box.x0},${box.y0},${box.x1},${box.y1}`;
+    if (pageWide.crops.has(key)) return false;
+    pageWide.crops.add(key);
+    return true;
+  };
+  // A graphic's crop: its box and 3 em around it (a chart's axis labels and
+  // legend are text items, outside its box), within [x0, x1) × [y0, y1).
+  const cropAround = (box, x0, y0, x1, y1) => {
+    const m = Math.round(3 * medianFontSize * scale);
+    const cx = Math.max(x0, box.x0 - m), cy = Math.max(y0, box.y0 - m);
+    const c = document.createElement('canvas');
+    c.width  = Math.min(x1, box.x1 + m) - cx;
+    c.height = Math.min(y1, box.y1 + m) - cy;
+    c.getContext('2d').drawImage(canvas, cx, cy, c.width, c.height, 0, 0, c.width, c.height);
+    return c;
   };
 
   // ── Part 1: gap runs ────────────────────────────────────────────────────────
@@ -5666,11 +5733,19 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
       }
       if (tight !== wide.band) release(wide.band);
       gapCanvasRanges.push({ cyTop: wide.top, cyBottom: wide.bottom });
-    } else if (!scanned && !graphicIn(cx0, cyTop, cx1, cyBottom)) {
-      // no picture here, but a figure beside it is still the inline scan's
-      gapCanvasRanges.pop();
-      release(tight !== tmp && tight, tmp);
-      continue;
+    } else if (!scanned) {
+      const box = graphicBox(cx0, cyTop, cx1, cyBottom);
+      release(tight !== tmp && tight);
+      if (box && !firstCrop(box)) { release(tmp); continue; }
+      if (!box) {
+        // no picture here, but a figure beside it is still the inline scan's
+        gapCanvasRanges.pop();
+        release(tmp);
+        continue;
+      }
+      const around = cropAround(box, cx0, cyTop, cx1, cyBottom);
+      ({ canvas: tight, width: tightW, height: tightH } = _tightenToInk(around));
+      if (tight !== around) release(around);
     }
 
     const fmt  = _p2wDetectFormat(tight);
@@ -5779,11 +5854,10 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
     const cropH  = cyBot - cyTop;
 
     // Skip regions covering >65% of page height — background image or full-page scan.
-    if (cropH >= _MIN_VIS_H_PX && cropH / canvas.height < _BG_AREA_THRESH) {
-      const tmp  = document.createElement('canvas');
-      tmp.width  = scanW;
-      tmp.height = cropH;
-      tmp.getContext('2d').drawImage(canvas, sx0, cyTop, scanW, cropH, 0, 0, scanW, cropH);
+    const box = cropH >= _MIN_VIS_H_PX && cropH / canvas.height < _BG_AREA_THRESH
+      ? graphicBox(sx0, cyTop, sx1, cyBot) : null;
+    if (box && firstCrop(box)) {
+      const tmp = cropAround(box, sx0, cyTop, sx1, cyBot);
 
       const { canvas: tight, width: tightW, height: tightH } = _tightenToInk(tmp);
 
