@@ -4706,14 +4706,16 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     // .catch() degrades gracefully — rest of the document is still produced.
     const gapRunsArr  = [];
     const inlineVisuals = [];
-    if (visualGaps.length > 0 && !isCancelled()) {
+    const placements = await _pagePlacements(pi);
+    const imageCrops = _p2wImageCrops(placements, pageData[pi].pageW || 0, pageH, xRange);
+    if ((visualGaps.length > 0 || imageCrops.length > 0) && !isCancelled()) {
       onProgress(
         50 + Math.round((pi / pageData.length) * 40),
         `Capturing visuals on page ${pi + 1}/${pageData.length}…`,
       );
       const { gapRuns, inlineRuns } = await _p2wRenderAllVisuals(
         pdfDoc, pi + 1, pageH, visualGaps, textItems,
-        borderGrids, median, ImageRun, _pageWideGaps, xRange,
+        borderGrids, median, ImageRun, _pageWideGaps, xRange, placements, imageCrops,
       ).catch(() => ({ gapRuns: [], inlineRuns: [] }));
       gapRunsArr.push(...gapRuns);
       inlineVisuals.push(...inlineRuns);
@@ -5024,6 +5026,17 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
 
   // Full-width visual gaps already cropped on this page (see _processLines)
   const _pageWideGaps = [];
+  // The page's raster image placements, once per page for all its column passes.
+  const _placementsByPage = new Map();
+  const _pagePlacements = async pi => {
+    if (!_placementsByPage.has(pi)) {
+      _placementsByPage.set(pi, Promise.resolve()
+        .then(() => pdfDoc.getPage(pi + 1))
+        .then(async page => _detectPageImages(await page.getOperatorList()))
+        .catch(() => []));   // no placements → the gap and strip scans alone, as before
+    }
+    return _placementsByPage.get(pi);
+  };
 
   // ── Outer per-page loop: dispatches to _processLines once (no columns
   // detected — the common case) or once per detected column region ────────
@@ -5214,6 +5227,24 @@ function _p2wGroupRotated(items, xTol = 20) {
 // at or after its own left divider — can't fall back into its neighbour.
 const GRID_SLACK = 2;
 
+// Raster images placed on a page (pdf2mdCore's _detectPageImages: page-space
+// boxes, y up) that become Word pictures by their own box — not by the gaps
+// between text lines, which sliced an image beside a column of text into
+// strips one line gap tall (Vietnamese Wikipedia: a map as three 80 px
+// strips, 2026-10-09). Not a scan (≥ 80% of the page: the scan path's), and on
+// a page split into columns, only in the column holding the image's centre.
+// Returns [{ x0, x1, yTop, yBottom }] clamped to the page.
+export function _p2wImageCrops(placements, pageW, pageH, xRange = null) {
+  return placements
+    .filter(im => im.width * im.height < 0.8 * pageW * pageH)
+    .filter(im => !xRange || (im.x + im.width / 2 >= xRange.x0 && im.x + im.width / 2 < xRange.x1))
+    .map(im => ({
+      x0: Math.max(0, im.x), x1: Math.min(pageW, im.x + im.width),
+      yTop: Math.min(pageH, im.yTop), yBottom: Math.max(0, im.yTop - im.height),
+    }))
+    .filter(c => c.x1 > c.x0 && c.yTop > c.yBottom);
+}
+
 export function _assignLineToGridCols(items, colXs) {
   const colCount = colXs.length - 1;
   const cells = Array.from({ length: colCount }, () => []);
@@ -5360,7 +5391,7 @@ function _p2wDetectFormat(canvas) {
 // page's per-column calls (see the gap loop below).
 // xRange: the column being processed (page split into columns) — the inline
 // scan below then looks only inside it.
-async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, borderGrids, medianFontSize, ImageRun, pageWide = [], xRange = null) {
+async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, borderGrids, medianFontSize, ImageRun, pageWide = [], xRange = null, placements = [], imageCrops = []) {
   const _RENDER_DPI = 150;
   const _MAX_W_PX   = 594;    // max width in px at 96 DPI (fits A4 and Letter margins)
   const _INK_THRESH = 0.02;   // gap crop: skip if < 2% of the tightened content's own bbox is non-white
@@ -5381,8 +5412,7 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
   const ctx = canvas.getContext('2d');
   await page.render({ canvasContext: ctx, viewport: vp }).promise;
   // A scan: one image covering most of the page, its text an OCR layer.
-  const scanned = _detectPageImages(await page.getOperatorList())
-    .some(im => im.width * im.height >= 0.8 * (vp.width / scale) * pageH);
+  const scanned = placements.some(im => im.width * im.height >= 0.8 * (vp.width / scale) * pageH);
   page.cleanup?.();
   // On a scan the paper is rarely white (aged, yellowed, grey): ink is what is
   // clearly darker than the paper — its luminance 50 below the page's 90th
@@ -5638,6 +5668,36 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
     return c;
   };
 
+  // ── Part 0: raster images, by their own box (see _p2wImageCrops) ───────────
+  // Their ink then counts as accounted for, like text's: the gap and strip
+  // scans below no longer find them, slice by slice.
+  const imageRuns = [];
+  for (const c of imageCrops) {
+    const box = {
+      x0: Math.max(0, Math.floor(c.x0 * scale)), x1: Math.min(canvas.width, Math.ceil(c.x1 * scale)),
+      y0: Math.max(0, Math.floor((pageH - c.yTop) * scale)), y1: Math.min(canvas.height, Math.ceil((pageH - c.yBottom) * scale)),
+    };
+    for (let y = box.y0; y < box.y1; y++) textMask.fill(1, y * canvas.width + box.x0, y * canvas.width + box.x1);
+    if (!firstCrop(box)) continue;
+    const crop = document.createElement('canvas');
+    crop.width = box.x1 - box.x0;
+    crop.height = box.y1 - box.y0;
+    crop.getContext('2d').drawImage(canvas, box.x0, box.y0, crop.width, crop.height, 0, 0, crop.width, crop.height);
+    const { canvas: tight, width: tightW, height: tightH, density } = _tightenToInk(crop);
+    if (density > 0) {
+      const fmt  = _p2wDetectFormat(tight);
+      const blob = await new Promise(res => tight.toBlob(res, `image/${fmt}`, fmt === 'jpeg' ? 0.92 : undefined));
+      if (blob) {
+        let w = Math.round(tightW * 96 / _RENDER_DPI);
+        let h = Math.round(tightH * 96 / _RENDER_DPI);
+        if (w > _MAX_W_PX) { h = Math.round(h * _MAX_W_PX / w); w = _MAX_W_PX; }
+        imageRuns.push({ pdfY: c.yTop, imgRun: new ImageRun({ data: await blob.arrayBuffer(), transformation: { width: w, height: h }, type: fmt === 'png' ? 'png' : 'jpg' }) });
+      }
+    }
+    if (tight !== crop) { tight.width = 0; tight.height = 0; }
+    crop.width = 0; crop.height = 0;
+  }
+
   // ── Part 1: gap runs ────────────────────────────────────────────────────────
   const gapRuns = [];
   // Track gap canvas Y ranges so inline scanner skips them (already captured)
@@ -5885,7 +5945,7 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
 
   canvas.width = 0; canvas.height = 0;
   canvas.remove();
-  return { gapRuns, inlineRuns };
+  return { gapRuns, inlineRuns: [...imageRuns, ...inlineRuns] };
 }
 
 // Renders a PDF page that has no extractable text (diagram-only page) as a

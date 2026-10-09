@@ -74,7 +74,7 @@ global.window    = globalThis;
 global.Worker    = class { postMessage() {} terminate() {} addEventListener() {} };
 
 const { detectTableGrids, lineInGrid } = await import('../js/pdf2wordBorders.js');
-const { _assignLineToGridCols, _activeDividersForY, _groupGridCellsWithSpans } = await import('../js/processor.js');
+const { _assignLineToGridCols, _activeDividersForY, _groupGridCellsWithSpans, _p2wImageCrops } = await import('../js/processor.js');
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -391,6 +391,27 @@ await test('a line inside the grid is the grid\'s', async () => {
 });
 await test('a line in the grid\'s x-range but above it is not the grid\'s', async () => {
   expect(lineInGrid({ y: 760, items: [glyph(60, 760)] }, infobox)).toBe(false);
+});
+
+// ── _p2wImageCrops: raster images become pictures by their own box ───────
+// Vietnamese Wikipedia (2026-10-09): a map beside a column of text was cut
+// into three 80 px strips by the gaps between that column's lines.
+const A4 = [595, 842];
+await test('an image beside the text is cropped whole, by its own box', async () => {
+  const crops = _p2wImageCrops([{ x: 300, yTop: 600, width: 250, height: 180 }], ...A4);
+  expect(JSON.stringify(crops)).toBe(JSON.stringify([{ x0: 300, x1: 550, yTop: 600, yBottom: 420 }]));
+});
+await test('a scan (an image over most of the page) is left to the scan path', async () => {
+  expect(_p2wImageCrops([{ x: 0, yTop: 842, width: 595, height: 842 }], ...A4).length).toBe(0);
+});
+await test('on a page split into columns an image goes to the column holding its centre', async () => {
+  const map = [{ x: 320, yTop: 600, width: 200, height: 150 }];
+  expect(_p2wImageCrops(map, ...A4, { x0: 0, x1: 297 }).length).toBe(0);
+  expect(_p2wImageCrops(map, ...A4, { x0: 297, x1: 595 }).length).toBe(1);
+});
+await test('an image reaching past the page edge is clamped to the page', async () => {
+  const [c] = _p2wImageCrops([{ x: -20, yTop: 900, width: 200, height: 200 }], ...A4);
+  expect(JSON.stringify(c)).toBe(JSON.stringify({ x0: 0, x1: 180, yTop: 842, yBottom: 700 }));
 });
 
 // ── Summary ──────────────────────────────────────────────────
