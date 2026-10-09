@@ -433,7 +433,14 @@ function _rotateBackBbox({ x0, y0, x1, y1 }, R, W, H) {
 //   words  — [{ text, confidence, bbox }] at or above minConfidence(lang)
 //   lines  — Tesseract's lines, every word with `kept` (false below the
 //            confidence threshold — its box still marks where text stands):
-//            [{ words: [{ text, confidence, bbox, kept }], bbox, baseline }]
+//            [{ words: [{ text, confidence, bbox, kept, ink }], bbox, baseline, stroke }]
+//            ink: { dark, edge } — a word's ink pixels and ink-edge pixels;
+//            stroke: the line's strokes' thickness, Σdark ÷ Σedge over its
+//            words — bold sets thicker strokes (2026-10-09:
+//            bold headings 1.36–2.12× the page median, body lines ≤ 1.05×).
+//            The share of ink in the boxes told bold apart in Latin and
+//            Persian but not in Amiri, whose words leave much of their box
+//            empty (body lines up to 1.22×, a heading 1.26×).
 //   text   — the page as plain text, paragraphs separated by a blank line
 //   canvasW, canvasH, vpTransform, rotation
 // Boxes sit where the text stands on the page image (to lay text over it), or
@@ -477,6 +484,24 @@ export async function recognizePage(worker, page, lang, { level = false } = {}) 
       : await _enhanceForOcrAsync(ocrCanvas)
         .catch(async () => ({ canvas: await _toGrayscaleAsync(ocrCanvas, false), skewDeg: 0 }));
     const result = await worker.recognize(gray);
+    const W = gray.width, H = gray.height;
+    const px = gray.getContext('2d').getImageData(0, 0, W, H).data;
+    const ink = (x, y) => x >= 0 && y >= 0 && x < W && y < H && px[(y * W + x) * 4] < 128;
+    const inkOf = bbox => {
+      let dark = 0, edge = 0;
+      for (let y = Math.max(0, Math.round(bbox.y0)); y < Math.min(H, bbox.y1); y++) {
+        for (let x = Math.max(0, Math.round(bbox.x0)); x < Math.min(W, bbox.x1); x++) {
+          if (!ink(x, y)) continue;
+          dark++;
+          if (!ink(x - 1, y) || !ink(x + 1, y) || !ink(x, y - 1) || !ink(x, y + 1)) edge++;
+        }
+      }
+      return { dark, edge };
+    };
+    const strokeOf = words => {
+      const dark = words.reduce((s, w) => s + w.ink.dark, 0), edge = words.reduce((s, w) => s + w.ink.edge, 0);
+      return edge ? dark / edge : 0;
+    };
 
     const minConf = minConfidence(lang);
     // Deskewed image → image before deskew (unless `level`) → display canvas (page /Rotate).
@@ -488,12 +513,16 @@ export async function recognizePage(worker, page, lang, { level = false } = {}) 
     const toWord = w => ({ text: w.text.normalize('NFC').trim(), confidence: w.confidence, bbox: back(w.bbox) });
 
     const words = result.data.words.filter(keep).map(toWord);
-    const lines = (result.data.lines || []).map(line => ({
-      words:     line.words.filter(w => w.text.trim()).map(w => ({ ...toWord(w), kept: !!keep(w) })),
-      bbox:      back(line.bbox),
-      // Mapped back like a box: level, at the line's height at mid-line.
-      baseline:  line.baseline && { ...back(line.baseline), has_baseline: line.baseline.has_baseline },
-    })).filter(line => line.words.some(w => w.kept));
+    const lines = (result.data.lines || []).map(line => {
+      const lineWords = line.words.filter(w => w.text.trim()).map(w => ({ ...toWord(w), kept: !!keep(w), ink: inkOf(w.bbox) }));
+      return {
+        words:    lineWords,
+        bbox:     back(line.bbox),
+        // Mapped back like a box: level, at the line's height at mid-line.
+        baseline: line.baseline && { ...back(line.baseline), has_baseline: line.baseline.has_baseline },
+        stroke:   strokeOf(lineWords),
+      };
+    }).filter(line => line.words.some(w => w.kept));
 
     // Plain text from paragraph/line structure
     const paragraphs = result.data.paragraphs

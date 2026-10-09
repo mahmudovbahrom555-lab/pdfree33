@@ -635,7 +635,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
       if (broken) { allMapped.length = 0; _cs.brokenLayerPages++; }
       ocrItems.forEach((item, seq) => allMapped.push({
         seq, str: item.str, x: item.x, y: item.y, width: item.width, fontSize: item.fontSize,
-        rotated: false, bold: false, italic: false, fontFamily: undefined, ocr: true,
+        rotated: false, bold: !!item.bold, italic: false, fontFamily: undefined, ocr: true,
       }));
       _cs.ocrPages++;
     }

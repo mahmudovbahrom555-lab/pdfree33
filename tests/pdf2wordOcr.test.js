@@ -43,6 +43,38 @@ test('a wide word gap within one column does not move a run off its line', () =>
   assert.equal(items[0].y, 842 - 98);
 });
 
+// Bold from stroke thickness (ink ÷ ink edge, recognizePage's `ink`/`stroke`):
+// body strokes 2px thick, a heading's 3px. 5+ lines for a page median.
+const inked = (w, dark, edge) => ({ ...w, ink: { dark, edge } });
+const strokeLine = (words, y) => {
+  const l = line(words);
+  l.bbox = { ...l.bbox, y0: y - 24, y1: y };
+  l.baseline = { ...l.baseline, y0: y - 6, y1: y - 6 };
+  const dark = words.reduce((s, w) => s + w.ink.dark, 0), edge = words.reduce((s, w) => s + w.ink.edge, 0);
+  return { ...l, stroke: dark / edge };
+};
+const body = y => strokeLine([inked(word('x', 440, 600, y - 2), 200, 100), inked(word('y', 100, 420, y - 2), 400, 200)], y);
+
+test('a line set in thicker strokes than the page\'s body is bold', () => {
+  const items = ocrItemsFromPage(page([
+    strokeLine([inked(word('Heading', 100, 600, 98), 750, 250)], 100),
+    body(140), body(170), body(200), body(230), body(260),
+  ]));
+  assert.equal(items[0].bold, true);
+  assert.ok(items.slice(1).every(i => !i.bold));
+});
+
+test('a line joined across two columns: only the bold column\'s piece is bold', () => {
+  const items = ocrItemsFromPage(page([
+    strokeLine([
+      inked(word('a', 560, 600, 98), 300, 100), inked(word('b', 500, 550, 98), 300, 100), inked(word('c', 440, 490, 98), 300, 100),
+      inked(word('d', 240, 300, 98), 200, 100), inked(word('e', 170, 230, 98), 200, 100), inked(word('f', 100, 160, 98), 200, 100),
+    ], 100),
+    body(140), body(170), body(200), body(230), body(260),
+  ]));
+  assert.deepEqual(items.slice(0, 2).map(i => i.bold), [true, false]);
+});
+
 const total = passed + failed;
 console.log(`\n${'─'.repeat(50)}`);
 console.log(`Tests: ${total} | ✓ ${passed} | ${failed} failed`);

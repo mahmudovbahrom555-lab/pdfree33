@@ -48,6 +48,15 @@ import { loadTesseract, createOcrWorker, switchOcrLanguage, detectOcrLanguage, r
 // now the lower neighbour — and on the joined line's one baseline the
 // columns' line gaps alternated 11/19pt for 15.5 (ar-cols2: paragraph
 // precision 41–64%).
+// Bold: strokes 1.25× the page's median line thickness or more
+// (recognizePage's `stroke`) — Tesseract's LSTM reports no font attributes,
+// and on OCR lines size does not tell a heading. On pages of 5+ lines. Told
+// per piece of a line (see COLUMN_GAP_EM): measured over a line joined
+// across two columns, a heading in one made the other column's body text
+// bold — 4–5 false headings on fa-cols2.
+const BOLD_STROKE = 1.25;
+const BOLD_MIN_LINES = 5;
+const BOLD_SNAP = 0.25;
 const OWN_LEVEL_WORDS = 3;
 const COLUMN_GAP_EM = 1.5;
 const ROW_SNAP = 1.5;
@@ -61,16 +70,31 @@ export function ocrItemsFromPage(rec) {
   const rows = rec.lines.map(line => line.bbox.y1 - line.bbox.y0).sort((p, q) => p - q);
   const medianRow = rows[Math.floor(rows.length / 2)] || 0;
   const median = vals => [...vals].sort((p, q) => p - q)[Math.floor(vals.length / 2)];
+  const boldStroke = rec.lines.length >= BOLD_MIN_LINES ? BOLD_STROKE * median(rec.lines.map(line => line.stroke)) : Infinity;
+  const boldRow = median(rec.lines.filter(line => line.stroke >= boldStroke).map(line => line.bbox.y1 - line.bbox.y0)) ?? 0;
   for (const line of rec.lines) {
     const base = line.baseline && line.baseline.has_baseline !== false
       ? (line.baseline.y0 + line.baseline.y1) / 2
       : line.bbox.y1;
     const lineBottom = median(line.words.map(w => w.bbox.y1));
     const height = line.bbox.y1 - line.bbox.y0;
-    const row = height / medianRow < ROW_SNAP ? medianRow : height;
-    const fontSize = Math.max(1, (row / a) * ROW_TO_FONT);
+    // A piece's size from its own words' box: a line Tesseract joined across
+    // two columns spans both columns' lines, 1.5× and more the median, and
+    // its body text came out at heading size (fa-cols2). Bold text is sized
+    // apart from body text — a heading's box is 1.2–1.36× the median, and
+    // snapped to body size its two wrapped lines sat 2 em apart: two
+    // headings — at the median of the page's bold lines within 25% of it
+    // (a wrapped heading's short last line measured 12pt against 12.5pt, and
+    // the two sizes made two headings again).
+    const sizeOf = (h, bold) => {
+      const row = bold ? (Math.abs(h / boldRow - 1) < BOLD_SNAP ? boldRow : h)
+        : h / medianRow >= ROW_SNAP ? h : medianRow;
+      return Math.max(1, (row / a) * ROW_TO_FONT);
+    };
+    const fontSize = sizeOf(height, false);
     const runs = [];
-    const pieces = [[]];                         // bottoms of each piece's words, shared by its runs
+    const newPiece = () => ({ bottoms: [], top: Infinity, dark: 0, edge: 0 });   // shared by the piece's runs
+    const pieces = [newPiece()];
     for (const w of line.words) {
       const box = { x0: toX(w.bbox.x0), x1: toX(w.bbox.x1) };
       const run = runs[runs.length - 1];
@@ -80,18 +104,24 @@ export function ocrItemsFromPage(rec) {
         run.x0 = Math.min(run.x0, box.x0);
         run.x1 = Math.max(run.x1, box.x1);
       } else {
-        const piece = run && gap > COLUMN_GAP_EM * fontSize ? [] : pieces[pieces.length - 1];
+        const piece = run && gap > COLUMN_GAP_EM * fontSize ? newPiece() : pieces[pieces.length - 1];
         if (piece !== pieces[pieces.length - 1]) pieces.push(piece);
         runs.push({ words: w.kept ? [w.text] : [], piece, ...box });
       }
-      runs[runs.length - 1].piece.push(w.bbox.y1);
+      const piece = runs[runs.length - 1].piece;
+      piece.bottoms.push(w.bbox.y1);
+      piece.top = Math.min(piece.top, w.bbox.y0);
+      piece.dark += w.ink?.dark ?? 0;
+      piece.edge += w.ink?.edge ?? 0;
     }
     runs.filter(run => run.words.length).forEach((run, i, kept) => {
-      const ownLevel = pieces.length > 1 && run.piece.length >= OWN_LEVEL_WORDS;
+      const { bottoms, top, dark, edge } = run.piece;
+      const bold = edge > 0 && dark / edge >= boldStroke;
+      const ownLevel = pieces.length > 1 && bottoms.length >= OWN_LEVEL_WORDS;
       items.push({
         str: run.words.join(' ') + (i < kept.length - 1 ? ' ' : ''),
-        x: run.x0, y: toY(ownLevel ? base + median(run.piece) - lineBottom : base),
-        width: run.x1 - run.x0, fontSize,
+        x: run.x0, y: toY(ownLevel ? base + median(bottoms) - lineBottom : base),
+        width: run.x1 - run.x0, fontSize: sizeOf(Math.max(...bottoms) - top, bold), bold,
       });
     });
   }
