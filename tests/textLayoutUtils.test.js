@@ -140,6 +140,15 @@ test('numbers keep left-to-right digit order; brackets in RTL flow are mirrored 
   assert.equal(lineText(items), 'سال ۱۳۹۹ (pdf)');
 });
 
+test('a line reordered again (run by run, for table cells) keeps its brackets', () => {
+  const items = [glyph('(', 0), glyph('pdf', 5, 15), glyph(')', 20), glyph('۱', 30), glyph('۳', 35),
+    glyph('۹', 40), glyph('۹', 45), glyph('ل', 55), glyph('ا', 60), glyph('س', 65)];
+  items.forEach((it, seq) => { it.seq = seq; });
+  reorderVisualRtlLine(items);
+  reorderVisualRtlLine(items);
+  assert.equal(lineText(items), 'سال ۱۳۹۹ (pdf)');
+});
+
 test('citation brackets between numbers do not join the numbers into one run', () => {
   // logical "متن [6][7]": every bracket resolves RTL and is drawn mirrored, so the
   // glyphs left to right read [ 7 ] [ 6 ] and then the word

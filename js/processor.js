@@ -4653,8 +4653,13 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     // outright by the old stricter scoring, so this conflict never fired in
     // practice. Confirmed via tests/pdf2wordParagraphs.test.js's real
     // gridSpan-merge regression test, which failed without this filter.
+    // An RTL line's cells as runs, each in its reading order (lineRuns, as in
+    // PDF→Excel): item by item, a cell's Latin word ("ورق طباعة A4") was a
+    // column of its own and Chromium's glyphs were joined with spaces. Copies:
+    // lineRuns rewrites items' text, and a rejected table's lines stay prose.
+    const cellRuns = (ln, cuts) => lineRuns(ln.items.map(it => ({ ...it })), cuts);
     const tables = useTables
-      ? detectTables(lines)
+      ? detectTables(lines.map(ln => (ln.rtl ? { ...ln, items: cellRuns(ln) } : ln)))
           .filter(t => !looksLikeProseNotData(t.rows) && !looksLikeEnumeratedList(t.rows))
           .filter(t => {
             const tMinY = Math.min(lines[t.startIdx].y, lines[t.endIdx].y);
@@ -4808,11 +4813,13 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
           }
 
           // ── Emit docx Table ───────────────────────────────────────────────
+          const rtlTable = _isRtlTable(tbl.rows);
           paragraphs.push(new Table({
             width: { size: 100, type: WidthType.PERCENTAGE },
+            visuallyRightToLeft: rtlTable,
             rows: tbl.rows.map(row =>
               new TableRow({
-                children: row.map(cellText =>
+                children: (rtlTable ? [...row].reverse() : row).map(cellText =>
                   new TableCell({
                     children: [new Paragraph({
                       ..._rtlPara(cellText || ''),
@@ -4970,12 +4977,13 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
         // is missing for THIS row (grid.colDividers, via
         // _activeDividersForY) are merged into a real docx columnSpan
         // instead of silently becoming an empty neighboring cell.
+        const rtlGrid = hdrLines.filter(ln => ln.rtl).length * 2 > hdrLines.length;
         const gridRows = hdrLines.map((ln, idx) => {
-          const rawCells      = _assignLineToGridCols(ln.items, grid.colXs);
+          const rawCells      = _assignLineToGridCols(ln.rtl ? cellRuns(ln, grid.colXs) : ln.items, grid.colXs);
           const activeDivider = _activeDividersForY(grid, ln.y);
           const cellGroups    = _groupGridCellsWithSpans(rawCells, activeDivider);
           return new TableRow({
-            children: cellGroups.map(({ text, span }) =>
+            children: (rtlGrid ? [...cellGroups].reverse() : cellGroups).map(({ text, span }) =>
               new TableCell({
                 ...(span > 1 ? { columnSpan: span } : {}),
                 children: [new Paragraph({
@@ -5003,6 +5011,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
         if (gridRows.length > 0) {
           paragraphs.push(new Table({
             width: { size: 100, type: WidthType.PERCENTAGE },
+            visuallyRightToLeft: rtlGrid,
             rows: gridRows,
           }));
           paragraphs.push(new Paragraph({ children: [], spacing: { after: 120 } }));
@@ -5919,6 +5928,17 @@ function _isRtl(str) {
 // both for Arabic/Hebrew; pdf2word wrote only w:bidi, and only on body paragraphs
 // — ground truth 2026-10-01: 0% of RTL runs had w:rtl.
 function _rtlRun(text) { return _isRtl(text) ? { rightToLeft: true } : {}; }
+// A right-to-left table — most of its non-empty cells RTL text — is written in
+// reading order (first cell = rightmost column) with <w:bidiVisual/>: it looks
+// the same in Word, and Tab, copying and screen readers go right to left.
+// Written left to right, as drawn, an Arabic invoice read date-first (2026-10-09).
+// Numbers are neutral: an invoice's cells are mostly figures, and counted as
+// left-to-right they outvoted its Arabic labels.
+function _isRtlTable(rows) {
+  const cells = rows.flat().filter(c => c && c.trim());
+  const rtl = cells.filter(_isRtl).length;
+  return rtl > cells.filter(c => !_isRtl(c) && /\p{L}/u.test(c)).length;
+}
 function _rtlPara(text) { return _isRtl(text) ? { bidirectional: true } : {}; }
 
 // _isCjk moved to textLayoutUtils.js (shared with pdf2md's core).

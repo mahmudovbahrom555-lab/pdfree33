@@ -225,10 +225,13 @@ export function reorderVisualRtlLine(items) {
     i = end;
   }
   // A bracket in right-to-left flow is drawn as its mirror glyph and extracted as
-  // that glyph's character; once the line reads right-to-left, mirror it back.
+  // that glyph's character; once the line reads right-to-left, mirror it back —
+  // once: a line already reordered is reordered again run by run for its table
+  // cells (lineRuns, pdf2word), and a second mirroring turned "(pdf)" back.
   for (const item of ordered) {
-    if (!inLtrRun.has(item) && !_STRONG_CHAR_RE.test(item.str)) {
+    if (!inLtrRun.has(item) && !item.mirrored && !_STRONG_CHAR_RE.test(item.str)) {
       item.str = item.str.replace(/[()[\]{}<>]/g, c => _BIDI_MIRROR[c]);
+      item.mirrored = true;
     }
   }
   for (let i = 1; i < ordered.length; i++) {
