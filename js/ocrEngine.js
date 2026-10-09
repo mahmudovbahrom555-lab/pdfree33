@@ -152,7 +152,8 @@ function _detectScriptFromText(text, ocrConf = 100) {
     else if (cp >= 0x0400 && cp <= 0x04FF)  cyr++;
     else if (cp >= 0x0600 && cp <= 0x06FF)  ara++;
     else if (cp >= 0x3040 && cp <= 0x30FF)  jpnKana++;
-    else if (cp >= 0x4E00 && cp <= 0x9FFF)  cjk++;
+    // from 0x4E01: 一 (U+4E00) is how the CJK models read table rules
+    else if (cp >= 0x4E01 && cp <= 0x9FFF)  cjk++;
     else if (cp >= 0xAC00 && cp <= 0xD7A3)  han++;
     else if (cp >= 0x0900 && cp <= 0x097F)  dev++;
     else if (cp >= 0x0E00 && cp <= 0x0E7F)  tha++;
@@ -293,14 +294,21 @@ async function _judgeImage(cvs, worker, hint, newWorker) {
       tried.push(lang);
       probeWorker ??= await newWorker('eng');
       await probeWorker.reinitialize(lang);
-      return { lang, conf: (await probeWorker.recognize(cvs))?.data?.confidence ?? 0 };
+      const res = await probeWorker.recognize(cvs);
+      return { lang, conf: res?.data?.confidence ?? 0, text: res?.data?.text ?? '' };
     };
     let best = null;
     try {
     for (const { probe } of probes) {
       if (tried.includes(probe)) continue;
       const r = await tryModel(probe);
-      if (r.conf <= conf + (probe === hint ? 5 : 15) || (best && r.conf <= best.conf)) continue;
+      // The hint wins by 5; reading the page in its own script, from 3
+      // below: a ruled Chinese scan read 61 with both chi_sim and `eng`, which
+      // reads its digits well — an English one read with chi_sim comes out
+      // Latin, so it still needs the 5.
+      const need = probe !== hint ? 15
+        : _scriptGroupOf(_detectScriptFromText(r.text).lang) === _scriptGroupOf(hint) ? -3 : 5;
+      if (r.conf <= conf + need || (best && r.conf <= best.conf)) continue;
       best = r;
       // Arabic and Persian share a script, and the `ara` model never
       // outputs Persian's own letters (پ چ ژ گ ک ی: 0 in 24 scans), so

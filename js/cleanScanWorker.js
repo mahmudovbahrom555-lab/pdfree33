@@ -103,7 +103,105 @@ function handleEnhanceForOcr(bitmap) {
   const skewDeg = -_estimateSkewDeg(gray);
   const out = skewDeg ? _rotateCanvas(gray, skewDeg) : gray;
   const { data } = out.getContext('2d').getImageData(0, 0, w, h);
+  _eraseRules(data, w, h);
   self.postMessage({ type: 'ocrImage', data, width: w, height: h, skewDeg }, [data.buffer]);
+}
+
+// Table rules, erased (after deskew, so they run straight). Tesseract read a
+// ruled invoice far worse than the same one without rules — rules taken for
+// strokes, cells merged into lines. A rule: a run of ink at most
+// _RULE_MAX_THICK of the page width thick across, and long — a column rule
+// _RULE_MIN_LEN of the width, a row rule _RULE_MIN_LEN_H: the baseline of a
+// long Persian word, as thin, is 5 % of it (اپلیکیشن, and it was erased).
+// A rule runs on over gaps of _RULE_GAP and over anything crossing it no
+// wider than a rule — a glyph stroke, or a rule the other way, so a row rule
+// is as wide as its table and a column rule between two row rules is not cut
+// short — and those stay: a glyph is kept, and only where rules both ways
+// meet is the crossing erased. Grey counts as ink (_RULE_INK): a scanned rule
+// is dark only in parts, and what was left of it read as dashes. Its grey
+// edges go with it: left alone they were two faint lines in its place.
+const _RULE_MIN_LEN = 0.05, _RULE_MIN_LEN_H = 0.1, _RULE_MAX_THICK = 1 / 150;
+const _RULE_GAP = 2, _RULE_EDGE = 2, _RULE_INK = 200;
+function _eraseRules(data, w, h) {
+  const n = w * h;
+  const ink = new Uint8Array(n);
+  for (let i = 0; i < n; i++) ink[i] = data[i * 4] < _RULE_INK ? 1 : 0;
+  const minLen = Math.max(40, Math.round(w * _RULE_MIN_LEN));
+  const minLenH = Math.max(40, Math.round(w * _RULE_MIN_LEN_H));
+  const maxThick = Math.max(3, Math.round(w * _RULE_MAX_THICK));
+  // Directions: along rows (horizontal rules) and along columns (vertical).
+  // `step`: to the next pixel along; `stride`: to the next row/column.
+  const H = { outer: h, inner: w, step: 1, stride: w };
+  const V = { outer: w, inner: h, step: w, stride: 1 };
+  // length of the ink run through each pixel along `dir`
+  const runs = ({ outer, inner, step, stride }) => {
+    const ext = new Uint16Array(n);
+    for (let o = 0; o < outer; o++) {
+      let start = -1;
+      for (let k = 0; k <= inner; k++) {
+        if (k < inner && ink[o * stride + k * step]) { if (start < 0) start = k; continue; }
+        if (start >= 0) {
+          for (let j = start; j < k; j++) ext[o * stride + j * step] = k - start;
+          start = -1;
+        }
+      }
+    }
+    return ext;
+  };
+  const rule = new Uint8Array(n);   // 1: in a horizontal rule, 2: vertical
+  // Runs along `dir` of ink thin across it, long enough to be a rule. A
+  // pixel's neighbours across count too: a scanned rule wanders a pixel or
+  // two (3 columns over a table's height), in pieces too short line by line.
+  const mark = ({ outer, inner, step, stride }, thick, id) => {
+    const thin = r => ink[r] && thick[r] <= maxThick;
+    for (let o = 0; o < outer; o++) {
+      const lanes = [o > 0 ? -stride : 0, 0, o < outer - 1 ? stride : 0];
+      let start = -1, last = -1;
+      for (let k = 0; k <= inner; k++) {
+        const i = o * stride + k * step;
+        if (k < inner && lanes.some(d => thin(i + d))) {
+          if (start < 0) start = k;
+          last = k;
+          continue;
+        }
+        if (start < 0 || (k < inner && k - last <= (lanes.some(d => ink[i + d]) ? maxThick : _RULE_GAP))) continue;
+        if (last - start + 1 >= (id === 1 ? minLenH : minLen)) {
+          for (let j = start; j <= last; j++) {
+            for (const d of lanes) if (thin(o * stride + j * step + d)) rule[o * stride + j * step + d] = id;
+          }
+        }
+        start = -1;
+      }
+    }
+  };
+  mark(H, runs(V), 1);
+  mark(V, runs(H), 2);
+  // where rules both ways meet: rule 1 left and right, rule 2 above and below
+  const near = (i, d, id) => {
+    for (let e = 1; e <= maxThick + 1; e++) {
+      const j = i + e * d;
+      if (j < 0 || j >= n || (Math.abs(d) === 1 && Math.floor(j / w) !== Math.floor(i / w))) return false;
+      if (rule[j] === id) return true;
+      if (!ink[j]) return false;
+    }
+    return false;
+  };
+  for (let i = 0; i < n; i++) {
+    if (ink[i] && !rule[i] && near(i, -1, 1) && near(i, 1, 1) && near(i, -w, 2) && near(i, w, 2)) rule[i] = 3;
+  }
+  const white = i => { data[i * 4] = data[i * 4 + 1] = data[i * 4 + 2] = 255; };
+  for (let i = 0; i < n; i++) {
+    if (!rule[i]) continue;
+    white(i);
+    if (rule[i] === 3) continue;
+    // grey edges across the rule; ink there is a glyph's, kept
+    const across = rule[i] === 1 ? w : 1;
+    for (let e = 1; e <= _RULE_EDGE; e++) {
+      for (const j of [i - e * across, i + e * across]) {
+        if (j >= 0 && j < n && !ink[j] && (across === w || Math.floor(j / w) === Math.floor(i / w))) white(j);
+      }
+    }
+  }
 }
 
 // Deskew. A page photographed or scanned at an angle has text lines that
