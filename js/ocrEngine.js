@@ -122,10 +122,23 @@ export async function createOcrWorker(lang, logger) {
   return worker;
 }
 
-// reinitialize() resets engine params — they are re-applied for the new language.
-export async function switchOcrLanguage(worker, lang) {
-  await _withTimeout(worker.reinitialize(_tesseractLang(lang)), 'OCR language load');
-  await _applyLangParams(worker, lang);
+// A line's OCR words as text. Tesseract splits Chinese and Japanese into
+// "words" too, and a space between each pair came out in Word — "为 什么 压缩
+// 后 的", 500–600 per page of every Chinese or Japanese scan (2026-10-10).
+// Where both sides are Chinese/Japanese characters or full-width punctuation
+// there is none; next to Latin there is ("的 PDF 看", as typeset). Korean
+// separates words with spaces: Hangul is not in the set.
+const _CJK_JOIN_RE = /[\u3000-\u30FF\u3400-\u9FFF\uF900-\uFAFF\uFF00-\uFFEF]/;
+export function cjkJoin(a, b) {
+  return _CJK_JOIN_RE.test(a.slice(-1)) && _CJK_JOIN_RE.test(b.charAt(0));
+}
+export function joinOcrWords(words) {
+  let out = '';
+  for (const w of words) {
+    if (!w) continue;
+    out += out && !cjkJoin(out, w) ? ` ${w}` : w;
+  }
+  return out;
 }
 
 // Adaptive confidence threshold — see COMPLEX_LANGS.
@@ -216,7 +229,7 @@ const FALLBACK_PROBES = {
 };
 
 // Multi-signal suspicion check — returns true when OCR output looks like
-// misidentification. Two independent signals:
+// misidentification. Three independent signals:
 //
 //  Signal A — low confidence (< 60): catches Cyrillic.
 //    eng model maps Ц→U, Г→T etc.; word confidence drops because combinations
@@ -228,8 +241,13 @@ const FALLBACK_PROBES = {
 //    punctuation are excluded from the denominator — a short invoice like
 //    "Invoice: Total: $500" has lots of colons/spaces that would otherwise
 //    dilute the signal and falsely trigger the fallback.
-function _isDetectionSuspicious(txt, conf) {
+function _isDetectionSuspicious(txt, conf, words = []) {
   if (conf < 60) return true;
+  // Signal C — part of the page unreadable: English and Chinese paragraphs
+  // in turn read 61–74 with `eng` (each Chinese one garbage), with 19–35 % of
+  // words under 40; English pages 80–95, at most 12 % (2026-10-10).
+  const read = words.filter(w => w.text?.trim());
+  if (conf < 80 && read.length >= 20 && read.filter(w => w.confidence < 40).length >= 0.15 * read.length) return true;
   const letters    = (txt.match(/[a-zA-Z]/g) ?? []).length;
   const digits     = (txt.match(/[0-9]/g)    ?? []).length;
   const meaningful = letters + digits;
@@ -241,6 +259,24 @@ function _isDetectionSuspicious(txt, conf) {
 const _LOCALE_OCR = { 'zh-CN': 'chi_sim', ja: 'jpn', ko: 'kor', ar: 'ara', fa: 'fas', ru: 'rus' };
 export function ocrLangForLocale(locale) {
   return _LOCALE_OCR[locale] ?? null;
+}
+
+// Whether `lang`'s model read `text` in its own script. A CJK model reads
+// Latin as Latin, so it is its own script when Chinese/Japanese/Korean
+// characters are 10 % of the letters (English page read with chi_sim: 2 %;
+// English and Chinese paragraphs in turn: 26 %); other models by
+// _detectScriptFromText.
+function _readsOwnScript(lang, text) {
+  if (CJK_LANGS.has(lang)) {
+    const cjk = (text.match(/[\u3040-\u30FF\u4E01-\u9FFF\uAC00-\uD7A3]/g) ?? []).length;
+    return cjk >= 0.1 * (cjk + (text.match(/[A-Za-z]/g) ?? []).length) && cjk > 0;
+  }
+  return _scriptGroupOf(_detectScriptFromText(text).lang) === _scriptGroupOf(lang);
+}
+// Latin letters' share of Latin + Han in `text`.
+function _latinShare(text) {
+  const latin = (text.match(/[A-Za-z]/g) ?? []).length;
+  return latin / ((latin + (text.match(/[\u4E01-\u9FFF]/g) ?? []).length) || 1);
 }
 
 // Judges one image of a page: a quick OCR pass with `worker`, then probes on a
@@ -255,7 +291,7 @@ async function _judgeImage(cvs, worker, hint, newWorker) {
 
   if (txt.trim().length >= 20) {
     const primary    = _detectScriptFromText(txt, conf);
-    const suspicious = _isDetectionSuspicious(txt, conf);
+    const suspicious = _isDetectionSuspicious(txt, conf, res?.data?.words);
     // `hint`: the site locale's model (ocrLangForLocale) — tried first and
     // always, even when English reads the page with confidence: a Chinese
     // invoice scan read 67 with `eng` (garbage) and 80 with chi_sim, never
@@ -305,9 +341,11 @@ async function _judgeImage(cvs, worker, hint, newWorker) {
       // The hint wins by 5; reading the page in its own script, from 3
       // below: a ruled Chinese scan read 61 with both chi_sim and `eng`, which
       // reads its digits well — an English one read with chi_sim comes out
-      // Latin, so it still needs the 5.
-      const need = probe !== hint ? 15
-        : _scriptGroupOf(_detectScriptFromText(r.text).lang) === _scriptGroupOf(hint) ? -3 : 5;
+      // Latin, so it still needs the 5. A CJK model reading its own script
+      // wins by 10: English and Chinese paragraphs in turn read 13–17 above
+      // `eng` with chi_sim (photos 13–14), an English page below it.
+      const own = _readsOwnScript(probe, r.text);
+      const need = probe === hint ? (own ? -3 : 5) : own && CJK_LANGS.has(probe) ? 10 : 15;
       if (r.conf <= conf + need || (best && r.conf <= best.conf)) continue;
       best = r;
       // Arabic and Persian share a script, and the `ara` model never
@@ -330,6 +368,12 @@ async function _judgeImage(cvs, worker, hint, newWorker) {
       await probeWorker?.terminate();
     }
     if (best) {
+      // Chinese with whole English passages: read with chi_sim alone, 73–83 %
+      // of their English words; chi_sim+eng 87–96 %, Chinese as before, 35 %
+      // slower — so only where Latin letters are 40 % of what chi_sim read
+      // (English and Chinese paragraphs in turn: 72 %; a Chinese page full of
+      // product names: 22 %) (2026-10-10).
+      if (best.lang === 'chi_sim' && _latinShare(best.text) >= 0.4) best = { ...best, lang: 'chi_sim+eng' };
       return { lang: best.lang, confident: sure(best), metrics: {
         source: 'ocr-fallback',
         initial: primary.lang, suspicious,
@@ -349,9 +393,13 @@ async function _judgeImage(cvs, worker, hint, newWorker) {
 }
 
 // Detects a document's language: samples pages [1, middle, last] with `worker`
-// (left set to the detected language when a probe wins, else to its initial
-// language). Returns { lang, confident, metrics } — metrics describe how the
-// decision was reached (source, probes tried, winning confidence).
+// (an `eng` one). Returns { lang, confident, metrics } — metrics describe how
+// the decision was reached (source, probes tried, winning confidence). The
+// document is read by a new worker made for `lang`, not by `worker` taken
+// to it: a worker that has read a page with `eng` reads worse with any model
+// after reinitialize() — Latin words ran together ("fade or remove" →
+// "fadeorremove", 73–81 % of a Chinese–English document's English words
+// instead of 87–96 %) (2026-10-10).
 // `ignoreTextLayer`: judge from the page image only — for pages whose text
 // layer is garbage (PDF→Word's OCR layer reads only such pages and scans).
 // `newWorker`: how a probe worker is made (createOcrWorker; tests pass a stub).
@@ -396,10 +444,7 @@ export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = fals
       }
     }
     cvs.width = 0; cvs.height = 0;
-    if (d) {
-      if (d.metrics.switched) await switchOcrLanguage(worker, d.lang);
-      return d;
-    }
+    if (d) return d;
     // Not enough text on this page — try next sample page
   }
 
@@ -627,7 +672,7 @@ export async function recognizePage(worker, page, lang, { level = false } = {}) 
     // Plain text from paragraph/line structure
     const paragraphs = result.data.paragraphs
       .map(para => para.lines
-        .map(line => line.words.map(w => w.text).join(' ').trim())
+        .map(line => joinOcrWords(line.words.map(w => w.text.trim())))
         .filter(Boolean)
         .join('\n'))
       .filter(Boolean);

@@ -9,7 +9,7 @@ import { t } from './i18n.js';
 import { saveHandoff } from './handoff.js';
 import { truncateMiddle, esc } from './utils.js';
 import { showCancelBtn, hideCancelBtn } from './ui.js';
-import { CJK_LANGS, COMPLEX_LANGS, primaryScript, loadTesseract, createOcrWorker, switchOcrLanguage,
+import { CJK_LANGS, COMPLEX_LANGS, primaryScript, loadTesseract, createOcrWorker,
          detectOcrLanguage, recognizePage, ocrLangForLocale } from './ocrEngine.js';
 import { getLang } from './config.js';
 
@@ -794,7 +794,7 @@ const MAX_PAGES_IOS = 30;
 // OCR pipeline:
 //   open PDF → text-layer check (skip OCR if found) → resolve language
 //   (manual pick, or 'auto': detectOcrLanguage — if inconclusive, abort and ask
-//   the user) → createOcrWorker / switchOcrLanguage → per page: recognizePage
+//   the user) → createOcrWorker (a new one for a detected language) → per page: recognizePage
 //   (render, counter-rotate, Enhance, recognize, confidence
 //   gate) → build searchable PDF (+ optional .txt export).
 async function _runOcr(file, gen) {
@@ -843,13 +843,14 @@ async function _runOcr(file, gen) {
   _updateProgress(13, t('ocr_initializing_engine'));
   _setBtnProgress(t('ocr_initializing_short'));
   // Always start with resolved lang (eng for auto); switch after detection if needed
-  worker = await createOcrWorker(resolvedLang, m => {
+  const logger = m => {
     if (m.status === 'recognizing text') {
       _updateProgress(Math.round(m.progress * 100), t('ocr_recognizing_text', { lang: _getLangName(resolvedLang) }));
     } else if (m.status && m.progress != null) {
       _updateProgress(Math.round(m.progress * 15), t('ocr_loading_lang_short', { lang: _getLangName(resolvedLang) }));
     }
-  });
+  };
+  worker = await createOcrWorker(resolvedLang, logger);
 
   // Auto-detection: sample document, detect dominant script, switch if needed
   if (_selectedLang === 'auto') {
@@ -883,10 +884,12 @@ async function _runOcr(file, gen) {
     if (!detection.confident) {
       throw new Error('__LANG_REQUIRED__');
     }
-    // Switch to the detected model if detection found non-English script
+    // A new worker for a detected non-English model (see detectOcrLanguage)
     if (detection.lang !== 'eng') {
       _updateProgress(15, t('ocr_loading_lang_model', { lang: _getLangName(detection.lang) }));
-      await switchOcrLanguage(worker, detection.lang);
+      await worker.terminate();
+      worker = null;
+      worker = await createOcrWorker(detection.lang, logger);
     }
   }
 

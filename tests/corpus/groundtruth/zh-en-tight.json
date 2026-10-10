@@ -1,0 +1,40 @@
+{
+ "lang": "zh-en",
+ "dir": "ltr",
+ "layout": "tight",
+ "oracleRecall": 1,
+ "blocks": [
+  {
+   "type": "heading",
+   "text": "为什么压缩后的 PDF 看起来一样，体积却变小了？"
+  },
+  {
+   "type": "para",
+   "text": "PDF 文件中通常包含不可见的冗余内容：Adobe Reader 生成的页面缩略图、重复内嵌的字体、XMP 元数据流、内嵌颜色配置文件，以及来自 Adobe 应用的 PieceInfo 私有数据。PDFree 会移除这些隐藏的多余内容。可见内容 —— 文字、图片、排版 —— 完全不变。"
+  },
+  {
+   "type": "para",
+   "text": "Clean mode can fade or remove color content, since it's designed to push everything toward black text on a white background. If a page contains color you want to keep, use Enhance mode instead — the tool warns you automatically when it detects color on the page you're previewing."
+  },
+  {
+   "type": "para",
+   "text": "可以 —— 这是最常见的使用场景。大多数邮件服务商将附件上限设为 25MB。选择“标准”预设压缩您的 PDF 用于邮件发送：通常能缩小 30–50% 的体积，且不会有明显的画质损失。如果文件仍然过大，可以尝试“最大”预设，最多可缩小 50–80%，但会牺牲一些图片清晰度。"
+  },
+  {
+   "type": "heading",
+   "text": "Is there a limit on how many pages I can clean?"
+  },
+  {
+   "type": "para",
+   "text": "No page-count limit and no per-hour task limit — clean a single-page scan or a hundred-page document as often as you need. Each file can be up to 150 MB. Everything runs on your own device, so very large files are faster on a computer than on an older phone."
+  },
+  {
+   "type": "para",
+   "text": "PDFree 会检测您 PDF 中真实的 AcroForm 字段 —— 文本框、复选框、单选按钮、下拉菜单和签名字段 —— 并将它们渲染为真正可填写的表单。您不需要手动绘制文本框或猜测位置。如果您的 PDF 没有内嵌字段，PDFree 会直接告知您，而不会假装检测到了并不存在的字段。"
+  },
+  {
+   "type": "para",
+   "text": "You can, but it isn't the intended use — cleaning converts each page into an image, so real selectable text in a normal digital PDF would become a picture of text. The tool detects when a PDF looks like it has real text content and shows a warning before you process it."
+  }
+ ]
+}

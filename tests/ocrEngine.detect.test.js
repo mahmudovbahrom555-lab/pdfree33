@@ -27,23 +27,28 @@ const pdfDoc = {
 // A worker reading a page with `conf[model]` confidence; English output that
 // looks like garbage, so the probes run.
 let englishText = '1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 x';
-// `texts[model]`: what that model reads (default: Latin).
-function stubWorker(conf, texts = {}) {
+// `texts[model]`: what that model reads (default: text in its own script).
+const OWN_TEXT = {
+  chi_sim: '压缩后的文件看起来一样体积却变小了', jpn: 'クリーンモードと補正モードの違い',
+  ara: 'ما الفرق بين الوضعين', fas: 'تفاوت بین دو حالت چیست', rus: 'в чем разница между режимами',
+};
+function stubWorker(conf, texts = {}, words = []) {
   let model = 'eng';
   const w = {
     loaded: [],
     terminated: false,
-    paramsFor: null,   // the model the last setParameters call was made for
-    reinitialize: async lang => { model = lang; w.loaded.push(lang); w.paramsFor = null; },
-    setParameters: async () => { w.paramsFor = model; },
-    recognize: async () => ({ data: { text: texts[model] ?? (model === 'eng' ? englishText : 'text text text text'), confidence: conf[model] ?? 10 } }),
+    reinitialize: async lang => { model = lang; w.loaded.push(lang); },
+    recognize: async () => ({ data: {
+      text: texts[model] ?? (model === 'eng' ? englishText : OWN_TEXT[model] ?? 'text text text text'),
+      confidence: conf[model] ?? 10, words: model === 'eng' ? words : [],
+    } }),
     terminate: async () => { w.terminated = true; },
   };
   return w;
 }
 // detectOcrLanguage(pdfDoc, main worker, opts) with the probe workers it made
-async function detect(conf, opts = {}, texts = {}) {
-  const w = stubWorker(conf, texts);
+async function detect(conf, opts = {}, texts = {}, words = []) {
+  const w = stubWorker(conf, texts, words);
   const probes = [];
   const newWorker = async () => { const p = stubWorker(conf, texts); probes.push(p); return p; };
   const d = await detectOcrLanguage(pdfDoc, w, { ignoreTextLayer: true, ...opts, newWorker });
@@ -55,8 +60,8 @@ await test('Chinese is read with the Chinese model, not the Japanese one that ga
   const { d, w, probes } = await detect({ eng: 32, rus: 20, ara: 25, fas: 20, jpn: 63, chi_sim: 91 });
   assert.equal(d.lang, 'chi_sim');
   assert.equal(d.confident, true);
-  assert.deepEqual(w.loaded, ['chi_sim']);   // left on the model it chose, with its parameters
-  assert.equal(w.paramsFor, 'chi_sim');
+  // `worker` is not taken to the model: a new one reads the document
+  assert.deepEqual(w.loaded, []);
   assert.ok(probes.length === 1 && probes[0].terminated, 'one probe worker, closed');
 });
 
@@ -82,7 +87,7 @@ await test('a Chinese invoice English reads at 67 goes to the Chinese hint (80)'
   assert.equal(d.lang, 'chi_sim');
   assert.equal(d.confident, true);
   assert.ok(!probed.includes('jpn'), 'the hint winning needs no Japanese download');
-  assert.equal(w.paramsFor, 'chi_sim');
+  assert.deepEqual(w.loaded, []);
 });
 
 await test('an English invoice on the Chinese site stays English, its worker untouched by the probe', async () => {
@@ -108,6 +113,31 @@ await test('an English scan chi_sim reads 3 below English stays English: chi_sim
   const { d } = await detect({ eng: 66, chi_sim: 63 }, { hint: 'chi_sim' },
     { chi_sim: 'Invoice No. 1042 一 一 一 一 一 一 一 一 一 一 一 一 | rem 1 gj um price | Total pate 公 rintingpaper' });
   assert.equal(d.lang, 'eng');
+});
+
+// English and Chinese paragraphs in turn, on the English site: `eng` reads the
+// English well and the Chinese as garbage — 71 overall, 22 % of words under 40.
+const MIXED_ENG = 'Clean flattens the background to pure white and darkens the text for maximum contrast';
+const MIXED_ZH = '清理会将背景统一为纯白 Clean flattens the background to pure white and darkens the text for maximum contrast 并加深文字以获得最大对比度';
+const engWords = (n, low) => Array.from({ length: n }, (_, i) => ({ text: 'w', confidence: i < low ? 20 : 90 }));
+await test('English and Chinese paragraphs in turn on the English site: chi_sim+eng', async () => {
+  englishText = MIXED_ENG;
+  const { d } = await detect({ eng: 71, chi_sim: 86, jpn: 72 }, {}, { chi_sim: MIXED_ZH }, engWords(100, 22));
+  assert.equal(d.lang, 'chi_sim+eng');
+  assert.equal(d.confident, true);
+});
+
+await test('an English photo with a few unsure words is not probed', async () => {
+  englishText = MIXED_ENG;
+  const { d, probed } = await detect({ eng: 80, chi_sim: 72 }, {}, {}, engWords(100, 12));
+  assert.equal(d.lang, 'eng');
+  assert.deepEqual(probed, []);
+});
+
+await test('a Chinese page full of product names stays chi_sim alone', async () => {
+  const { d } = await detect({ eng: 30, chi_sim: 88 }, { hint: 'chi_sim' },
+    { chi_sim: '使用 Adobe Reader 或 Chrome 打开压缩后的文件，看起来一样，体积却变小了，邮件服务商附件上限' });
+  assert.equal(d.lang, 'chi_sim');
 });
 
 console.log(`\n${'─'.repeat(50)}`);

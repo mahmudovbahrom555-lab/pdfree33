@@ -11,7 +11,7 @@
 // The page image never leaves the device.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { loadTesseract, createOcrWorker, switchOcrLanguage, detectOcrLanguage, recognizePage, ocrLangForLocale } from './ocrEngine.js';
+import { loadTesseract, createOcrWorker, detectOcrLanguage, recognizePage, ocrLangForLocale, joinOcrWords, cjkJoin } from './ocrEngine.js';
 import { getLang } from './config.js';
 
 // Text items for pdf2readCore from one recognized page (recognizePage output),
@@ -62,6 +62,10 @@ const OWN_LEVEL_WORDS = 3;
 const COLUMN_GAP_EM = 1.5;
 const ROW_SNAP = 1.5;
 const RUN_GAP_EM = 0.8;
+// Between two Chinese or Japanese characters: Tesseract's boxes hug the ink,
+// and beside a narrow glyph (一 小 起) the gap is 0.8–1.2 em — the line broke
+// into runs there, a space at each (2026-10-10). Still under a column's.
+const CJK_RUN_GAP_EM = 1.25;
 const ROW_TO_FONT = 1 / 1.2;
 export function ocrItemsFromPage(rec) {
   const [a, , , d, e, f] = rec.vpTransform;      // rotation 0: x' = a·x + e, y' = d·y + f
@@ -100,7 +104,7 @@ export function ocrItemsFromPage(rec) {
       const box = { x0: toX(w.bbox.x0), x1: toX(w.bbox.x1) };
       const run = runs[runs.length - 1];
       const gap = run && Math.max(box.x0 - run.x1, run.x0 - box.x1);
-      if (run && gap <= RUN_GAP_EM * fontSize) {
+      if (run && gap <= (cjkJoin(run.last, w.text) ? CJK_RUN_GAP_EM : RUN_GAP_EM) * fontSize) {
         if (w.kept) run.words.push(w.text);
         run.x0 = Math.min(run.x0, box.x0);
         run.x1 = Math.max(run.x1, box.x1);
@@ -109,6 +113,7 @@ export function ocrItemsFromPage(rec) {
         if (piece !== pieces[pieces.length - 1]) pieces.push(piece);
         runs.push({ words: w.kept ? [w.text] : [], piece, ...box });
       }
+      runs[runs.length - 1].last = w.text;
       const piece = runs[runs.length - 1].piece;
       piece.bottoms.push(w.bbox.y1);
       piece.top = Math.min(piece.top, w.bbox.y0);
@@ -120,7 +125,7 @@ export function ocrItemsFromPage(rec) {
       const bold = edge > 0 && dark / edge >= boldStroke;
       const ownLevel = pieces.length > 1 && bottoms.length >= OWN_LEVEL_WORDS;
       items.push({
-        str: run.words.join(' ') + (i < kept.length - 1 ? ' ' : ''),
+        str: joinOcrWords(run.words) + (i < kept.length - 1 ? ' ' : ''),
         x: run.x0, y: toY(ownLevel ? base + median(bottoms) - lineBottom : base),
         width: run.x1 - run.x0, fontSize: sizeOf(Math.max(...bottoms) - top, bold), bold,
       });
@@ -141,10 +146,14 @@ export function createOcrLayer(pdfDoc, { onPage = () => {} } = {}) {
   const start = async () => {
     try {
       await loadTesseract();
-      const worker = await createOcrWorker('eng');
+      let worker = await createOcrWorker('eng');
       const detection = await detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer: true, hint: ocrLangForLocale(getLang()) });
       if (!detection.confident) { await worker.terminate(); return null; }
-      if (detection.lang !== 'eng') await switchOcrLanguage(worker, detection.lang);
+      // a new worker for another language (see detectOcrLanguage)
+      if (detection.lang !== 'eng') {
+        await worker.terminate();
+        worker = await createOcrWorker(detection.lang);
+      }
       return { worker, lang: detection.lang };
     } catch {
       return null;   // engine or model unavailable (offline) — pages stay pictures

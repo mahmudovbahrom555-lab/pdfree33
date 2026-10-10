@@ -75,6 +75,26 @@ test('a line joined across two columns: only the bold column\'s piece is bold', 
   assert.deepEqual(items.slice(0, 2).map(i => i.bold), [true, false]);
 });
 
+test('Chinese words are joined without spaces, Latin among them keeps its own', () => {
+  // Tesseract's chi_sim "words": 为 什么 压缩 后 的 PDF 看 起来 ，
+  const texts = ['为', '什么', '压缩', '后', '的', 'PDF', '看', '起来', '，'];
+  const items = ocrItemsFromPage(page([line(texts.map((t, i) => word(t, 100 + i * 42, 140 + i * 42, 100)))]));
+  assert.equal(items.length, 1);
+  assert.equal(items[0].str, '为什么压缩后的 PDF 看起来，');
+});
+
+test('a Chinese line stays one run across a narrow glyph\'s wide gap (1.1 em)', () => {
+  // 20pt type: 看 起 来 with 22pt between 看 and 起
+  const items = ocrItemsFromPage(page([line([word('看', 100, 120, 100), word('起', 142, 162, 100), word('来', 166, 186, 100)])]));
+  assert.equal(items.length, 1);
+  assert.equal(items[0].str, '看起来');
+});
+
+test('Korean words keep their spaces', () => {
+  const items = ocrItemsFromPage(page([line([word('파일을', 100, 160, 100), word('변환합니다', 166, 260, 100)])]));
+  assert.equal(items[0].str, '파일을 변환합니다');
+});
+
 const total = passed + failed;
 console.log(`\n${'─'.repeat(50)}`);
 console.log(`Tests: ${total} | ✓ ${passed} | ${failed} failed`);

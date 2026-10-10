@@ -12,8 +12,12 @@
 //   tight  line-height 1.2, no space, first-line indent (book style)
 //   loose  line-height 1.8, space between paragraphs
 //   cols2  two columns
+// zh-en: Chinese and English paragraphs in turn (bilingual contracts,
+// English abstracts), each from its own FAQ, in the Chinese font with the
+// Latin one for English.
 // Output: <lang>-<layout>.pdf + <lang>-<layout>.json ({ lang, dir, layout, oracleRecall, blocks }).
-// Regenerate: node tests/corpus/groundtruth/make_groundtruth.mjs (needs network
+// Regenerate: node tests/corpus/groundtruth/make_groundtruth.mjs [name ...]
+// (names: only those documents, e.g. zh-en-web — the others stay as committed; needs network
 // and `pip install fonttools`; fonts are cached in .fonts/, not committed). The
 // PDFs are committed — Chromium/font updates would otherwise shift every
 // measurement.
@@ -35,6 +39,7 @@ const LANGS = {
   ja: { dir: 'ltr', font: FONTS.ja },
   'zh-CN': { dir: 'ltr', font: FONTS['zh-CN'] },
   ko: { dir: 'ltr', font: FONTS.ko },
+  'zh-en': { dir: 'ltr', font: FONTS['zh-CN'], mix: ['zh-CN', 'en'] },
 };
 const LAYOUTS = {
   web:   'p { line-height: 1.5; margin: 0 0 0.75em; }',
@@ -61,10 +66,18 @@ function faqPairs(lang) {
 
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+// a mixed document's pairs: its languages' in turn
+function pairsFor(lang, mix) {
+  if (!mix) return faqPairs(lang);
+  const [a, b] = mix.map(faqPairs);
+  return a.map((x, i) => (i % 2 ? b[i] : x));
+}
+
+const only = process.argv.slice(2);
 const browser = await chromium.launch();
 const page = await browser.newPage();
-for (const [lang, { dir, font }] of Object.entries(LANGS)) {
-  const p = faqPairs(lang);
+for (const [lang, { dir, font, mix }] of Object.entries(LANGS)) {
+  const p = pairsFor(lang, mix);
   const blocks = [
     { type: 'heading', text: p[0].q }, { type: 'para', text: p[0].a },
     { type: 'para', text: p[1].a }, { type: 'para', text: p[2].a },
@@ -72,6 +85,7 @@ for (const [lang, { dir, font }] of Object.entries(LANGS)) {
     { type: 'para', text: p[4].a }, { type: 'para', text: p[5].a },
   ];
   for (const [layout, css] of Object.entries(LAYOUTS)) {
+    if (only.length && !only.includes(`${lang}-${layout}`)) continue;
     const html = `<!doctype html><html lang="${lang}" dir="${dir}"><head><meta charset="utf-8">
 <style>${fontFaces('GT', font)}
 ${font === FONTS.latin ? '' : fontFaces('GTLatin', FONTS.latin)}
