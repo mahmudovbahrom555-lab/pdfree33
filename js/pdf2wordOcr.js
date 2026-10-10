@@ -11,7 +11,8 @@
 // The page image never leaves the device.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { loadTesseract, createOcrWorker, detectOcrLanguage, recognizePage, ocrLangForLocale, joinOcrWords, cjkJoin } from './ocrEngine.js';
+import { loadTesseract, createOcrWorker, detectOcrLanguage, recognizePage, ocrLangForLocale, joinOcrWords } from './ocrEngine.js';
+import { cjkJoin } from './cjkText.js';
 import { getLang } from './config.js';
 
 // Text items for pdf2readCore from one recognized page (recognizePage output),

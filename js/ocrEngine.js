@@ -8,6 +8,8 @@
 // Everything runs in the browser — the page image never leaves the device.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { cjkJoin } from './cjkText.js';
+
 const TESSERACT_CDN = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
 // Subresource Integrity — same reasoning as every loader in js/lazyLibs.js (see that
 // file's header comment): CSP allowlists jsdelivr but doesn't verify WHAT it serves.
@@ -123,15 +125,8 @@ export async function createOcrWorker(lang, logger) {
 }
 
 // A line's OCR words as text. Tesseract splits Chinese and Japanese into
-// "words" too, and a space between each pair came out in Word — "为 什么 压缩
-// 后 的", 500–600 per page of every Chinese or Japanese scan (2026-10-10).
-// Where both sides are Chinese/Japanese characters or full-width punctuation
-// there is none; next to Latin there is ("的 PDF 看", as typeset). Korean
-// separates words with spaces: Hangul is not in the set.
-const _CJK_JOIN_RE = /[\u3000-\u30FF\u3400-\u9FFF\uF900-\uFAFF\uFF00-\uFFEF]/;
-export function cjkJoin(a, b) {
-  return _CJK_JOIN_RE.test(a.slice(-1)) && _CJK_JOIN_RE.test(b.charAt(0));
-}
+// "words" too: a space between each pair came out in Word, 500–600 per page
+// of every Chinese or Japanese scan (2026-10-10) — see cjkJoin.
 export function joinOcrWords(words) {
   let out = '';
   for (const w of words) {

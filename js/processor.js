@@ -35,6 +35,7 @@ import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory 
 import { _p2wBuildPageData } from './pdf2readCore.js';
 import { createOcrLayer } from './pdf2wordOcr.js';
 import { detectTableGrids, lineInGrid } from './pdf2wordBorders.js';
+import { cjkJoin } from './cjkText.js';
 import { recognizeFormula } from './formulaOcr.js';
 import { docxToPdf, walkDomToPdfContent, pdfContentToBlob } from './docxToPdfCore.js';
 export { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE, _splitCrossColumnLines };
@@ -4549,7 +4550,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
           // side already has one (fixes word merging across RTL and LTR line wraps).
           const prevLn  = _paraBuffer[li - 1];
           const lastStr = prevLn.items[prevLn.items.length - 1]?.str ?? '';
-          if (!lastStr.endsWith(' ') && !text0.startsWith(' ')) {
+          if (!lastStr.endsWith(' ') && !text0.startsWith(' ') && !cjkJoin(lastStr, text0)) {
             text = ' ' + text;
           }
         } else if (prev && !ln.rtl && !prev.str.endsWith(' ') && !text0.startsWith(' ')) {
