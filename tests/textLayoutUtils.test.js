@@ -372,6 +372,15 @@ test('a heading wrapped at the column edge continues on the next line', () => {
   assert.equal(continuesWrappedHeading(first, second, m), true);
 });
 
+test('an OCR heading wrapped at the edge continues though its lines measured 12.5 and 9.5 pt', () => {
+  const m = lineStartMargins(body);
+  const ocr = ln => ({ ...ln, items: ln.items.map(i => ({ ...i, ocr: true })) });
+  const first = ocr(hl(700, "What's the difference between", 56, 226, true, 12.5)), second = ocr(hl(682, 'Clean and Enhance mode?', 56, 190, true, 9.5));
+  assert.equal(continuesWrappedHeading(first, second, m), true);
+  // from a text layer, the same sizes are two different headings
+  assert.equal(continuesWrappedHeading(hl(700, "What's the difference between", 56, 226, true, 12.5), hl(682, 'Clean and Enhance mode?', 56, 190, true, 9.5), m), false);
+});
+
 test('"Chapter 1" above "Introduction" stays two headings (the first line never reached the edge)', () => {
   const m = lineStartMargins(body);
   assert.equal(continuesWrappedHeading(hl(700, 'Chapter 1', 56, 70), hl(679, 'Introduction', 56, 95), m), false);

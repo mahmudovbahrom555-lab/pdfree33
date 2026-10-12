@@ -511,6 +511,39 @@ function _unskewBbox({ x0, y0, x1, y1 }, skewDeg, W, H) {
   return { x0: x0 + dx, y0: y0 + dy, x1: x1 + dx, y1: y1 + dy };
 }
 
+// Words Tesseract read twice. On a two-column page it can read a stretch of
+// one column's heading again as part of a line that runs on into the other
+// column: "آیا برای ادغام فایل‌های …" and then "یا برای ادغام فایل‌های ادغام
+// کرد؟" (fa-cols2) — heading fragments and false headings in Word. A word of
+// a later line is a repeat when an earlier line has a word that contains it
+// (or is contained in it) at the same place: centres closer than the wider
+// word across, and than half the lower box's height down — 9–20 px for
+// repeats, a line pitch (~57 px at 300 dpi) for the next line, whose tall
+// Arabic boxes still overlap this one's by more than half ("لصفحة" under
+// "صفحة" was dropped when overlap decided). Keyed by box and
+// text: data.words and data.lines hold their own copies.
+export const _wordKey = w => `${w.bbox.x0},${w.bbox.y0},${w.bbox.x1},${w.bbox.y1}|${w.text}`;
+export function _duplicateWords(lines) {
+  const seen = [], dup = new Set();
+  for (const line of lines) {
+    const own = [];
+    for (const w of line.words) {
+      const t = w.text.normalize('NFC').trim();
+      if (!t) continue;
+      const { x0, x1, y0, y1 } = w.bbox, cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+      if (t.length >= 2 && seen.some(e => (e.t.includes(t) || t.includes(e.t))
+          && Math.abs(cx - e.cx) < Math.max(x1 - x0, e.w)
+          && Math.abs(cy - e.cy) < 0.5 * Math.min(y1 - y0, e.h))) {
+        dup.add(_wordKey(w));
+        continue;
+      }
+      own.push({ t, cx, cy, w: x1 - x0, h: y1 - y0 });
+    }
+    seen.push(...own);
+  }
+  return dup;
+}
+
 async function _toGrayscaleAsync(src) {
   const w = src.width, h = src.height;
   const ctx = src.getContext('2d');
@@ -649,12 +682,13 @@ export async function recognizePage(worker, page, lang, { level = false } = {}) 
       const unskewed = level ? bbox : _unskewBbox(bbox, skewDeg, gray.width, gray.height);
       return rotation !== 0 ? _rotateBackBbox(unskewed, rotation, canvas.width, canvas.height) : unskewed;
     };
-    const keep = w => w.text.normalize('NFC').trim() && w.confidence >= minConf;
+    const dup = _duplicateWords(result.data.lines || []);
+    const keep = w => w.text.normalize('NFC').trim() && w.confidence >= minConf && !dup.has(_wordKey(w));
     const toWord = w => ({ text: w.text.normalize('NFC').trim(), confidence: w.confidence, bbox: back(w.bbox) });
 
     const words = result.data.words.filter(keep).map(toWord);
     const lines = (result.data.lines || []).map(line => {
-      const lineWords = line.words.filter(w => w.text.trim()).map(w => ({ ...toWord(w), kept: !!keep(w), ink: inkOf(w.bbox) }));
+      const lineWords = line.words.filter(w => w.text.trim() && !dup.has(_wordKey(w))).map(w => ({ ...toWord(w), kept: !!keep(w), ink: inkOf(w.bbox) }));
       return {
         words:    lineWords,
         bbox:     back(line.bbox),
@@ -667,7 +701,7 @@ export async function recognizePage(worker, page, lang, { level = false } = {}) 
     // Plain text from paragraph/line structure
     const paragraphs = result.data.paragraphs
       .map(para => para.lines
-        .map(line => joinOcrWords(line.words.map(w => w.text.trim())))
+        .map(line => joinOcrWords(line.words.filter(w => !dup.has(_wordKey(w))).map(w => w.text.trim())))
         .filter(Boolean)
         .join('\n'))
       .filter(Boolean);

@@ -6,6 +6,7 @@
 
 import { strict as assert } from 'assert';
 import { ocrItemsFromPage } from '../js/pdf2wordOcr.js';
+import { _duplicateWords, _wordKey } from '../js/ocrEngine.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -93,6 +94,28 @@ test('a Chinese line stays one run across a narrow glyph\'s wide gap (1.1 em)', 
 test('Korean words keep their spaces', () => {
   const items = ocrItemsFromPage(page([line([word('파일을', 100, 160, 100), word('변환합니다', 166, 260, 100)])]));
   assert.equal(items[0].str, '파일을 변환합니다');
+});
+
+// Tesseract's own boxes from a fa-cols2 scan (300 dpi): line 2 reads line 1's
+// heading words again, then runs on into the other column.
+const tw = (text, x0, x1, y0, y1) => ({ text, bbox: { x0, x1, y0, y1 } });
+test('a word Tesseract read twice, in a later line at the same place, is dropped', () => {
+  const l1 = { words: [tw('آیا', 2004, 2047, 285, 331), tw('برای', 1939, 1946, 292, 331), tw('ادغام', 1794, 1876, 291, 331), tw('فایل‌های', 1588, 1739, 287, 331)] };
+  const l2 = { words: [tw('یا', 1992, 2034, 288, 369), tw('برای', 1897, 2030, 307, 346), tw('ادغام', 1758, 1788, 309, 348), tw('فایل‌های', 1546, 1697, 292, 345),
+    tw('ادغام', 962, 1080, 288, 386), tw('کرد؟', 850, 944, 288, 386)] };
+  const dup = _duplicateWords([l1, l2]);
+  assert.deepEqual(l2.words.filter(w => dup.has(_wordKey(w))).map(w => w.text), ['یا', 'برای', 'ادغام', 'فایل‌های']);
+  assert.ok(l1.words.every(w => !dup.has(_wordKey(w))));
+});
+
+test('the same word on the next line is not a repeat', () => {
+  const l1 = { words: [tw('برای', 1897, 1990, 300, 346)] };
+  const l2 = { words: [tw('برای', 1900, 1992, 357, 403)] };   // a line pitch (57px) below
+  assert.equal(_duplicateWords([l1, l2]).size, 0);
+  // tall Arabic boxes of the next line overlapping this one's by more than half
+  const a1 = { words: [tw('صفحة', 932, 1011, 960, 1030)] };
+  const a2 = { words: [tw('لصفحة', 925, 1015, 990, 1075)] };
+  assert.equal(_duplicateWords([a1, a2]).size, 0);
 });
 
 const total = passed + failed;

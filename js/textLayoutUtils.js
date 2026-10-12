@@ -556,7 +556,11 @@ const _HEADING_END_RE = /[.!?:;。！？؟：]["'”’»)\]]*$/;
 export function continuesWrappedHeading(prevLn, ln, margins) {
   if (!prevLn || !ln || !prevLn.items.length || !ln.items.length) return false;
   const em = _lineEm(ln);
-  if (Math.abs(_lineEm(prevLn) - em) > 0.5) return false;
+  // An OCR'd line's size is a guess from its box (±30 %): a Persian heading's
+  // two lines came out 12.5 and 9.5 pt, and each became a heading of its own.
+  const ocr = [...prevLn.items, ...ln.items].some(i => i.ocr);
+  const tolerance = ocr ? 0.3 * Math.max(_lineEm(prevLn), em) : 0.5;
+  if (Math.abs(_lineEm(prevLn) - em) > tolerance) return false;
   const bold = l => l.items.every(i => i.bold);
   if (bold(prevLn) !== bold(ln)) return false;
   const gap = prevLn.y - ln.y;
