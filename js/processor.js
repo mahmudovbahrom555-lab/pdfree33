@@ -247,6 +247,30 @@ class _BatchCancelled extends Error {}
 
 // ── Main entry point ──────────────────────────────────────────
 
+// The tools' workers load vendor/pdf-lib.min.js (513 KB) with importScripts,
+// which doesn't retry: from China, where pdfree.io takes 0.7–3.6 s and
+// sometimes doesn't answer, Merge, Split, Resize and others failed with
+// "NetworkError: Failed to execute 'importScripts'" — 11 of the 12 such
+// errors since 2026-10-10 (Analytics Engine, 2026-10-13). Fetched here first,
+// three tries, so the worker's importScripts finds it in the HTTP cache. If
+// every try fails, the run goes on as before.
+let _pdfLibWarm = null;
+function _warmPdfLib() {
+  _pdfLibWarm ??= (async () => {
+    const url = new URL('./vendor/pdf-lib.min.js', import.meta.url);
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        const res = await fetch(url);
+        if (res.ok) { await res.arrayBuffer(); return true; }
+      } catch { /* network — try again */ }
+      if (attempt < 3) await new Promise(r => setTimeout(r, 1000 * attempt));
+    }
+    _pdfLibWarm = null;   // the next run tries again
+    return false;
+  })();
+  return _pdfLibWarm;
+}
+
 function _abortUI() {
   isProcessing = false;
   setFilesLocked(false);
@@ -274,6 +298,7 @@ export async function doProcess(currentTool, extraParams = {}) {
   setFilesLocked(true);
   setButtonProcessing();
   setProgress(5, t('prog_reading'));
+  await _warmPdfLib();
   startLongOpHint(12000);
   showCancelBtn();
 
