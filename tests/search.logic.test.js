@@ -569,6 +569,26 @@ test('English tags still work on a Japanese-language index (bilingual fallback)'
   expect(topKey('compress', jaIndex)).toBe('compress');
 });
 
+// ── Chinese: pinyin, Traditional characters, whole-sentence requests ──
+// Real Search Miss / Search Query rows from Analytics Engine (2026-10-13).
+const zhIndex = buildIndex(TOOLS, 'zh-CN', loadLocaleSearchTags('zh-CN'));
+test('pinyin finds the tool (bianji → Quick Edit, xuanzhuan → Rotate, hebing → Merge)', () => {
+  expect(topKey('bianji', zhIndex)).toBe('quickEdit');
+  expect(topKey('xuanzhuan', zhIndex)).toBe('rotate');
+  expect(topKey('hebing', zhIndex)).toBe('merge');
+});
+test('编辑 (edit) finds Quick Edit, not Redact', () => {
+  expect(topKey('编辑pdf', zhIndex)).toBe('quickEdit');
+});
+test('Traditional characters are read as Simplified (PDF轉成EXCEL, 壓縮, 浮水印)', () => {
+  expect(topKey('PDF轉成EXCEL', zhIndex)).toBe('pdf2excel');
+  expect(topKey('壓縮', zhIndex)).toBe('compress');
+  expect(topKey('浮水印', zhIndex)).toBe('watermark');
+});
+test('a whole Chinese request holding a synonym finds it (PDF全部图片左旋转 → Rotate)', () => {
+  expect(topKey('PDF全部图片左旋转', zhIndex)).toBe('rotate');
+});
+
 // ── Summary ───────────────────────────────────────────────────
 console.log(`\n${passed} passed, ${failed} failed`);
 if (failed > 0) process.exit(1);

@@ -32,6 +32,15 @@ function foldDiacritics(s) {
     .replace(/ı/g, 'i').replace(/đ/g, 'd').replace(/ł/g, 'l').replace(/ß/g, 'ss');
 }
 
+// Traditional Chinese characters of PDF-tool queries → Simplified, the
+// script our Chinese synonyms are in: "PDF轉成EXCEL" (Taiwan, Hong Kong — and
+// /zh/ pages a browser translated to Traditional) found nothing (2026-10-13).
+const _T2S = Object.fromEntries([...'轉转換换檔档圖图頁页壓压縮缩併并編编輯辑單单簽签註注刪删鎖锁掃扫識识別别擷撷寫写對对讀读書书製制調调開开檢检碼码號号層层標标題题張张復复劃划線线變变為为從从個个機机電电腦脑網网載载傳传檔档護护頻频際际'
+  .match(/../g)].map(([t, s]) => [t, s]));
+function toSimplified(s) {
+  return s.replace(/[\u3400-\u9FFF]/g, c => _T2S[c] || c);
+}
+
 /**
  * Build a flat search index from the TOOLS dict.
  * Called once at homepage init; result is passed to search().
@@ -169,7 +178,7 @@ function minQueryLength(q) {
 const NO_FUZZY_RE = /\d/;
 
 export function search(query, index) {
-  const q = foldDiacritics(query.toLowerCase().trim());
+  const q = toSimplified(foldDiacritics(query.toLowerCase().trim()));
   if (q.length < minQueryLength(q)) return [];
 
   return index
@@ -183,6 +192,13 @@ export function search(query, index) {
       else if (entry.tags.some(t => t.startsWith(q)))        score = 70;
       else if (names.some(n => n.includes(q)))               score = 60;
       else if (entry.tags.some(t => t.includes(q)))          score = 50;
+      // A Chinese/Japanese sentence holding a synonym: "PDF全部图片左旋转"
+      // (rotate every page left) has 旋转 in it but matched nothing — CJK
+      // users type the whole request. CJK synonyms of 2+ characters only;
+      // the longest one found ranks highest.
+      else if (CJK_RE.test(q) && entry.tags.some(t => t.length >= 2 && CJK_RE.test(t) && q.includes(t))) {
+        score = 40 + Math.min(9, Math.max(...entry.tags.filter(t => t.length >= 2 && CJK_RE.test(t) && q.includes(t)).map(t => t.length)));
+      }
       else {
         let dist = Infinity;
         if (!NO_FUZZY_RE.test(q)) {

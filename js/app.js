@@ -1399,10 +1399,17 @@ function initSearch() {
     candidatesEl.hidden = false;
   }
 
-  searchEl.addEventListener('input', () => {
+  // Not while a Chinese/Japanese keyboard is still composing: its pinyin or
+  // zhuyin ("bian'ji", "p'd", "PDF轉成ㄌ") was searched letter by letter —
+  // "no results" flickering under the user, and each sent as a Search Miss
+  // (the zh-CN misses were mostly these, 2026-10-13). compositionend runs
+  // the search on the characters chosen.
+  const _scheduleSearch = () => {
     clearTimeout(_debounce);
     _debounce = setTimeout(() => _runSearch(searchEl.value), 200);
-  });
+  };
+  searchEl.addEventListener('input', e => { if (!e.isComposing) _scheduleSearch(); });
+  searchEl.addEventListener('compositionend', _scheduleSearch);
 
   function _runSearch(query) {
     const q = query.trim();
