@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Put Multiple PDF Pages on One Sheet",
+  "description": "Print 2, 4, 6, 9 or 16 PDF pages per sheet — 100% in your browser.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Add your PDF files",
+      "text": "Click Choose files or drop one or more PDFs into the drop zone."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Pick pages per sheet",
+      "text": "Choose 2, 4, 6, 9 or 16, or Invoices on A4 for invoices at their real size."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download the new PDF",
+      "text": "Click Arrange Pages — the PDF downloads immediately, ready to print."
+    }
+  ]
+}

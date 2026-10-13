@@ -341,6 +341,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     worker:       () => _runWorkerTool(getWorkerTool(currentTool) ?? currentTool, filesSnapshot, extraParams),
     organize:     () => _runOrganize(filesSnapshot, extraParams),
     resize:       () => _runResize(filesSnapshot, extraParams),
+    nup:          () => _runNup(filesSnapshot, extraParams),
     mangaSplit:   () => _runMangaSplit(filesSnapshot, extraParams),
     fillOrder:    () => _runFillOrder(filesSnapshot, extraParams),
     cleanScan:    () => _runCleanScan(filesSnapshot, extraParams),
@@ -934,6 +935,51 @@ async function _runResize(filesSnapshot, { targetSize = 'a4', mode = 'fit', marg
     hideCancelBtn();
     _handleError('resize', e.message || 'Worker error');
   };
+}
+
+// ── Pages per Sheet (N-up) ─────────────────────────────────────
+//
+// Own persistent Worker, same rationale as _resizeWorker above. Several
+// PDFs make one stack (invoices come one per file); the geometry is
+// js/nupLayout.js's, shared with nupUI.js's preview.
+let _nupWorker = null;
+function _ensureNupWorker() {
+  if (!_nupWorker) {
+    _nupWorker = new Worker(new URL('./nupWorker.js', import.meta.url));
+  }
+  return _nupWorker;
+}
+
+async function _runNup(filesSnapshot, options = {}) {
+  if (!_checkTotalSize(filesSnapshot, maxFileMb('nup'))) { _abortUI(); return; }
+  const buffers = await Promise.all(filesSnapshot.map(async f =>
+    f._decryptedBuffer ? f._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(f))
+  ));
+  setProgress(5, t('prog_nup'));
+
+  const worker = _ensureNupWorker();
+  worker.postMessage({ files: buffers, options }, buffers);
+  const done = () => { isProcessing = false; setFilesLocked(false); hideCancelBtn(); };
+
+  worker.onmessage = (e) => {
+    const data = e.data;
+    if (data.type === 'progress') {
+      setProgress(data.value, data.label);
+    } else if (data.type === 'done') {
+      if (!(data.result instanceof ArrayBuffer)) { done(); _handleError('nup', 'Unexpected result from worker'); return; }
+      done();
+      setProgress(100, t('prog_done'));
+      const blob = new Blob([data.result], { type: 'application/pdf' });
+      const base = filesSnapshot[0].name.replace(/\.pdf$/i, '');
+      const filename = `${base}-${options.mode === 'invoices' ? 'invoices' : 'n-up'}.pdf`;
+      const desc = t('desc_nup', { pages: data.pageCount, sheets: data.sheetCount, size: fmtSize(blob.size) });
+      document.dispatchEvent(new CustomEvent('pdfree:success', { detail: { tool: 'nup', blob, desc, filename } }));
+    } else if (data.type === 'error') {
+      done();
+      _handleError('nup', data.message);
+    }
+  };
+  worker.onerror = (e) => { done(); _handleError('nup', e.message || 'Worker error'); };
 }
 
 // ── Split Manga Pages ──────────────────────────────────────────

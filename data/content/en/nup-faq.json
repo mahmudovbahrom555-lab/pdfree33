@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Is my PDF uploaded anywhere?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. The pages are laid out entirely in your browser; the file never leaves your device."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does the text stay selectable?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Each page is placed as vector content, not as an image — text stays sharp and can be selected and searched as in the original."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "How many pages can go on one sheet?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "2, 4, 6, 9 or 16. The tool picks the paper orientation and grid that make the pages largest; you can also set portrait or landscape yourself."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I put invoices two to an A4 page at their real size?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes — choose Invoices on A4. Each invoice keeps its own size (it is never enlarged), two or four go on a sheet, and an optional 30 mm binding margin leaves room for punching or gluing."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I combine several PDF files?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Add several PDFs — their pages follow one another in the order of the file list, then are laid out on sheets."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Does it work for Arabic, Persian or Hebrew documents?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Right to left places page 1 in the top-right cell, the reading order of those documents."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Are links and filled-in form fields kept?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Everything you see is kept: text, images, filled-in form values, stamps, seals and comments are drawn onto the sheet exactly where they were. The result is flat, though: links are no longer clickable and form fields can no longer be edited, so fill in a form before putting it on a sheet."
+    }
+  }
+]

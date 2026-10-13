@@ -334,6 +334,12 @@ jobs:
         # tests/e2e/quickEditSkeleton.e2e.mjs's own header comment.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:quickedit-skeleton
 
+      - name: E2E — Pages per Sheet (N-up, invoices on A4, annotations kept)
+        # Golden path, the invoices mode with several files, the zh page, the
+        # homepage search — and filled-in form values / notes drawn onto the
+        # sheet (embedPage() alone drops them). See tests/e2e/nup.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:nup
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do

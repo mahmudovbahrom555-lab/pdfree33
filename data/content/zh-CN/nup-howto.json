@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "如何把多张发票合并打印到一张 A4 纸上",
+  "description": "每张 A4 打印两张或四张发票——完全在浏览器中完成。",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "添加 PDF 发票",
+      "text": "点击选择文件，或把一个或多个 PDF 拖进来。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "选择「A4 发票」",
+      "text": "选择每张纸 2 张或 4 张，发票保持原始大小。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "下载并打印",
+      "text": "点击排版页面，新的 PDF 立即下载，直接打印即可。"
+    }
+  ]
+}

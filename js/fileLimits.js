@@ -23,6 +23,7 @@ const BASE = {
   extract: 200,
   organize: 200,
   resize: 200,
+  nup: 200,           // all files together
   mangaSplit: 200,
   fill: 200,
   watermark: 200,

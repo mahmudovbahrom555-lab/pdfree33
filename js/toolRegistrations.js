@@ -53,6 +53,7 @@ import { initGlossaryOptions, hideGlossaryOptions,
          getGlossaryParams }            from './glossaryUI.js';
 import { initResizeOptions, hideResizeOptions,
          getResizeParams }              from './resizeUI.js';
+import { initNupOptions, hideNupOptions, getNupParams } from './nupUI.js';
 import { initMangaSplitOptions, hideMangaSplitOptions,
          getMangaSplitParams, renderMangaSurvey } from './mangaSplitUI.js';
 import { initCleanScanOptions, hideCleanScanOptions,
@@ -490,6 +491,14 @@ registerTool('glossary', {
   },
   // No presetFilter — the dictionary is pasted fresh per document, same
   // reasoning as organize's page order: nothing here generalizes.
+});
+
+registerTool('nup', {
+  runner:    'nup', // dedicated js/nupWorker.js — see processor.js's _runNup
+  multiFile: true,
+  init:      initNupOptions,
+  hide:      hideNupOptions,
+  getParams: getNupParams,
 });
 
 registerTool('resize', {

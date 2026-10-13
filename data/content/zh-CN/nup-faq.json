@@ -1,0 +1,50 @@
+[
+  {
+    "@type": "Question",
+    "name": "我的发票会被上传吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。排版完全在您的浏览器中完成，文件不会离开您的设备。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "发票会被放大或变形吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "不会。「A4 发票」模式下每张发票保持原始大小，只会在必要时缩小，比例保持不变。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "一张 A4 可以放几张发票？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "两张或四张。普通模式下每张纸还可以放 2、4、6、9 或 16 页。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以一次合并多个发票文件吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。一次添加多个 PDF，页面按文件列表顺序依次排列到纸上。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "支持 OFD 格式的发票吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "目前只支持 PDF 格式。OFD 发票需要先用其他工具转换为 PDF。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "文字还能复制和搜索吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。页面以矢量方式放置，不会变成图片，文字和原文件一样清晰、可选取。"
+    }
+  }
+]

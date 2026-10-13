@@ -5897,6 +5897,55 @@
         "pl": "edycja tekstu pdf, poprawić literówkę w pdf, edytuj pdf online, zmień tekst w pdf bez przesyłania, edytor pdf bez rejestracji, popraw dane w pdf",
         "ar": "تعديل PDF اون لاين, تصحيح خطأ إملائي في PDF, تحرير نص PDF مجانا, تعديل ملف PDF بدون تحميل برنامج, تعديل PDF بدون رفع الملف, تحرير PDF مباشرة من المتصفح"
       }
+    },
+    {
+      "id": "nup",
+      "icon": "🗂️",
+      "toolKey": "nup",
+      "slugs": {
+        "en": "pages-per-sheet",
+        "zh-CN": "fapiao-hebing-dayin"
+      },
+      "titles": {
+        "en": "Pages per Sheet — Multiple PDF Pages on One Page, Free | PDFree",
+        "zh-CN": "发票合并打印 — 一张 A4 打印两张发票，PDF 多页合一 | PDFree"
+      },
+      "descs": {
+        "en": "Put 2, 4, 6, 9 or 16 PDF pages on one sheet, or invoices two to an A4 page — in your browser, no upload.",
+        "zh-CN": "把多张电子发票按原始大小排到一张 A4 纸上打印，或把 PDF 多页排到一张纸上——在浏览器中完成，无需上传。"
+      },
+      "navLabels": {
+        "en": "Pages per Sheet",
+        "zh-CN": "发票合并打印"
+      },
+      "cardNames": {
+        "en": "Pages per Sheet",
+        "zh-CN": "多页合一"
+      },
+      "cardDescs": {
+        "en": "Several PDF pages on one sheet",
+        "zh-CN": "多页或多张发票排到一张纸上"
+      },
+      "breadcrumb": {
+        "en": "Pages per Sheet",
+        "zh-CN": "发票合并打印"
+      },
+      "metaDescs": {
+        "en": "Print 2, 4, 6, 9 or 16 PDF pages per sheet, or put invoices two to an A4 page at their real size. Text stays selectable. 100% private — runs in your browser, no upload, no account.",
+        "zh-CN": "免费在线发票合并打印：多张电子发票按原始大小排到一张 A4 纸上，每张两张或四张；也可把 PDF 2、4、6、9、16 页排到一张纸上。本地处理，不上传，无需注册。"
+      },
+      "ogTitles": {
+        "en": "Pages per Sheet — Multiple PDF Pages on One Page",
+        "zh-CN": "发票合并打印 — 一张 A4 打印两张发票"
+      },
+      "ogDescs": {
+        "en": "Several PDF pages on one sheet, entirely in your browser. No upload, no account.",
+        "zh-CN": "多张发票合并到一张 A4 纸上打印，完全在浏览器中完成，无需上传。"
+      },
+      "keywords": {
+        "en": "pages per sheet, multiple pages per sheet, multiple pdf pages on one page, n-up pdf, 2 pages per sheet pdf, 4 pages per sheet pdf, print multiple pages on one page, combine pdf pages on one sheet",
+        "zh-CN": "发票合并打印, 发票合并, 电子发票合并打印, 一张a4打印两张发票, pdf多页合一, 一页多张, 每张纸多页, 发票拼版"
+      }
     }
   ],
   "ui": {
