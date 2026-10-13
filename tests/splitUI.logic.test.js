@@ -9,6 +9,8 @@
 //  Zero dependencies — runs with: node tests/splitUI.logic.test.js
 // ============================================================
 
+import { parseRange, pagesToRangeString } from '../js/pageSelectorUtils.js';
+
 let passed = 0, failed = 0;
 
 function test(name, fn) {
@@ -38,41 +40,8 @@ function expect(actual) {
 }
 
 // ══════════════════════════════════════════════════════════════
-// Range parsing (copy of _parseRange from splitUI.js)
+// Range parsing — the real functions (a copy here once hid changes to them)
 // ══════════════════════════════════════════════════════════════
-
-function parseRange(str, maxPage) {
-  const pages = new Set();
-  str.split(',').forEach(part => {
-    part = part.trim();
-    if (!part) return;
-    const dash = part.indexOf('-');
-    if (dash > 0) {
-      const from = parseInt(part.slice(0, dash));
-      const to   = parseInt(part.slice(dash + 1));
-      if (!isNaN(from) && !isNaN(to)) {
-        for (let p = Math.max(1, from); p <= Math.min(maxPage, to); p++) pages.add(p);
-      }
-    } else {
-      const p = parseInt(part);
-      if (!isNaN(p) && p >= 1 && p <= maxPage) pages.add(p);
-    }
-  });
-  return [...pages].sort((a, b) => a - b);
-}
-
-function pagesToRangeString(pages) {
-  if (!pages.length) return '';
-  const sorted = [...pages].sort((a, b) => a - b);
-  const ranges = [];
-  let start = sorted[0], end = sorted[0];
-  for (let i = 1; i < sorted.length; i++) {
-    if (sorted[i] === end + 1) { end = sorted[i]; }
-    else { ranges.push(start === end ? `${start}` : `${start}-${end}`); start = end = sorted[i]; }
-  }
-  ranges.push(start === end ? `${start}` : `${start}-${end}`);
-  return ranges.join(', ');
-}
 
 console.log('\n📄 Range parsing:');
 
@@ -89,6 +58,13 @@ test('deduplicates overlapping ranges', () => { expect(parseRange('1-5, 3-7', 10
 test('sorts output', () => { expect(parseRange('5, 1, 3', 10)).toEqual([1,3,5]); });
 test('handles non-numeric gracefully', () => { expect(parseRange('abc, 2', 10)).toEqual([2]); });
 test('single page equals itself', () => { expect(parseRange('7', 10)).toEqual([7]); });
+test('full-width digits, dash and comma (Chinese/Japanese keyboard)', () => { expect(parseRange('１－３，５', 10)).toEqual([1,2,3,5]); });
+test('Chinese comma after an ASCII range keeps the last page', () => { expect(parseRange('1-3，5', 10)).toEqual([1,2,3,5]); });
+test('the list mark 、 separates pages', () => { expect(parseRange('1、3、5', 10)).toEqual([1,3,5]); });
+test('ranges written with ～ 〜 ~ — – 至 到', () => {
+  for (const s of ['2～4', '2〜4', '2~4', '2—4', '2–4', '2至4', '2 到 4']) expect(parseRange(s, 10)).toEqual([2,3,4]);
+});
+test('full-width semicolon separates too', () => { expect(parseRange('1；3', 10)).toEqual([1,3]); });
 
 console.log('\n🔁 Range string serialization (round-trip):');
 

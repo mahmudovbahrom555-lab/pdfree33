@@ -17,13 +17,22 @@ import { esc } from './utils.js';
 /**
  * Parse a comma/range string into a sorted array of 1-indexed page numbers.
  * "1-3, 5, 7-9" → [1,2,3,5,7,8,9]
+ * Typed the way a Chinese or Japanese keyboard types it too: full-width
+ * "１－３，５", the list mark 、, ； and ranges written ～ 〜 ~ — – 至 到.
+ * Only ASCII "1-3, 5" was read: "１－３，５" selected nothing, "1-3，5" lost
+ * the 5, "1、3、5" was page 1 — 41 rage clicks on Extract's range field
+ * from China in a month, and Split's same field re-run 163 times
+ * (Analytics Engine, 2026-10-13).
  * @param {string} str
  * @param {number} maxPage
  * @returns {number[]}
  */
 export function parseRange(str, maxPage) {
   const pages = new Set();
-  str.split(',').forEach(part => {
+  str.normalize('NFKC')
+    .replace(/[、;]/g, ',')
+    .replace(/\s*(?:[~〜—–−‐‑]|至|到)\s*/g, '-')
+    .split(',').forEach(part => {
     part = part.trim();
     if (!part) return;
     const dash = part.indexOf('-');

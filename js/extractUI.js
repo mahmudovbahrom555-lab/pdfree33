@@ -236,8 +236,19 @@ function _bindEvents() {
   });
 
   document.getElementById('extRangeApply')?.addEventListener('click', _applyRange);
-  document.getElementById('extRangeInput')?.addEventListener('keydown', e => {
-    if (e.key === 'Enter') _applyRange();
+  // Applied as it's typed, not only on Enter/Apply: typing "3-5" and seeing
+  // nothing change drew repeated clicks into the field (41 rage clicks from
+  // China in a month). Not mid-composition — a Chinese/Japanese keyboard's
+  // Enter commits the characters being typed.
+  const rangeInput = document.getElementById('extRangeInput');
+  let rangeTimer;
+  rangeInput?.addEventListener('input', e => {
+    if (e.isComposing) return;
+    clearTimeout(rangeTimer);
+    rangeTimer = setTimeout(_applyRange, 400);
+  });
+  rangeInput?.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.isComposing) { clearTimeout(rangeTimer); _applyRange(); }
   });
 
   _container.querySelectorAll('.ext-quick-btn').forEach(btn => {
