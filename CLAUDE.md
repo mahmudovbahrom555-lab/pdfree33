@@ -324,6 +324,22 @@ convention — see e.g. `glossary_pdf_tool` in memory):**
 Don't expand to all 14 locales unless asked — that's a separate, larger decision the user makes
 explicitly each time, consistent with this project's general pause-on-expansion stance.
 
+## OCR engine and language model updates — RULE
+
+How an update reaches a user who already ran OCR (verified in the tesseract.js 5.1.1 source,
+2026-10-13):
+- Our own JS (`js/ocrEngine.js`, `js/ocrUI.js`): next page load after the deploy, ≤1 h (edge cache).
+- tesseract.js / tesseract.js-core: version-pinned jsDelivr URLs (immutable) — a new version in
+  `TESSERACT_CDN` downloads anew on the next OCR run by itself. Update its SRI hash with it.
+- **Language models: never by themselves.** tesseract.js caches them in IndexedDB under
+  `${cachePath || '.'}/<lang>.traineddata` — no version, no URL in the key. Change a model's source
+  (e.g. self-hosting on pdfree.io), version folder or quality (best vs best_int) without changing
+  the key, and every returning user keeps reading the OLD model from cache, silently.
+
+**So: any change to OCR language models also sets a NEW `cachePath` in `createWorker`
+(`js/ocrEngine.js`) — bump it on every model change — and is checked in a browser that already
+has the old model cached.**
+
 ## Architecture patterns
 - **Tool Registry**: `js/toolRegistry.js` + `js/toolRegistrations.js`
 - **Tool config**: `js/config.js` — TOOLS dict + i18n slugs + language config
