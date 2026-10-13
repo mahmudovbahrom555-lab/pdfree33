@@ -11,6 +11,11 @@
 //  on the device. Reproduced here the same way — select two PDFs, change one
 //  on disk, press Merge — the user must be told which file and what to do.
 //
+//  And a file removed from the list right after the button was pressed (the
+//  click waits a frame and the password check, the list not locked yet):
+//  PDF→JPG ran on an empty list — "Cannot read properties of undefined
+//  (reading 'size')", PDF2JPG-2431, 8 times in two weeks from India.
+//
 //  Run: node tests/e2e/file-unreadable.e2e.mjs   (dist/ served on :8934)
 // ============================================================
 
@@ -49,6 +54,19 @@ try {
     const toast = await page.evaluate(() => document.querySelector('#toast').innerText);
     if (/permission problems|reference to a file/.test(toast)) throw new Error(`raw browser text shown: ${toast}`);
     if (!/add it again/i.test(toast)) throw new Error(`no next step: ${toast}`);
+  });
+
+  await test('a file removed right after Convert was pressed is not processed — no error', async () => {
+    const page = await (await browser.newContext({ serviceWorkers: 'block' })).newPage();
+    const errors = []; page.on('pageerror', e => errors.push(e.message));
+    await page.goto(`${BASE_URL}/pdf2jpg/`, { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', path.join(GT, 'en-web.pdf'));
+    await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 60000 });
+    await page.waitForTimeout(1500);
+    await page.evaluate(() => { document.querySelector('#mergeBtn').click(); document.querySelector('.file-item-del').click(); });
+    await page.waitForTimeout(3000);
+    const toast = await page.evaluate(() => document.querySelector('#toast')?.innerText || '');
+    if (/reading 'size'|Error ID/.test(toast) || errors.length) throw new Error(`toast: ${toast} | errors: ${errors}`);
   });
 } finally {
   await browser.close();

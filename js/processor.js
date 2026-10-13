@@ -257,6 +257,12 @@ function _abortUI() {
 
 export async function doProcess(currentTool, extraParams = {}) {
   if (isProcessing) return;
+  // The button's click waits a frame and the password check before getting
+  // here, and the file list isn't locked yet: a file removed in between left
+  // nothing to process — PDF→JPG failed on "Cannot read properties of
+  // undefined (reading 'size')" (PDF2JPG-2431, 2026-10-13). The list is
+  // empty and the button already disabled; nothing to do.
+  if (!selectedFiles.length) return;
   cancelCompressScan(); // abort any in-flight background scan before starting compression
   cancelMergeScan();    // abort any in-flight merge page-count scan
   isProcessing = true;
@@ -6160,7 +6166,7 @@ function _handleError(tool, message, errorType = null) {
   } else if (
     // the same refusal read elsewhere (a worker, a UI module): Chrome's text,
     // and Firefox's and Safari's "The I/O read operation failed"
-    /could not be read, typically due to permission|I\/O read operation failed|NotReadableError/i.test(message || '')
+    /could not be read, typically due to permission|could not be found at the time an operation|I\/O read operation failed|NotReadableError|NotFoundError/i.test(message || '')
   ) {
     friendly   = t('err_file_unreadable_any');
     errorType  = 'file_unreadable';
