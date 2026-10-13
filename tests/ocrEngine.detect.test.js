@@ -32,6 +32,7 @@ const OWN_TEXT = {
   chi_sim: '压缩后的文件看起来一样体积却变小了', jpn: 'クリーンモードと補正モードの違い',
   ara: 'ما الفرق بين الوضعين', fas: 'تفاوت بین دو حالت چیست', rus: 'в чем разница между режимами',
 };
+// `words`: what `eng` reads word by word, or { model: words } for any model.
 function stubWorker(conf, texts = {}, words = []) {
   let model = 'eng';
   const w = {
@@ -40,7 +41,7 @@ function stubWorker(conf, texts = {}, words = []) {
     reinitialize: async lang => { model = lang; w.loaded.push(lang); },
     recognize: async () => ({ data: {
       text: texts[model] ?? (model === 'eng' ? englishText : OWN_TEXT[model] ?? 'text text text text'),
-      confidence: conf[model] ?? 10, words: model === 'eng' ? words : [],
+      confidence: conf[model] ?? 10, words: Array.isArray(words) ? (model === 'eng' ? words : []) : words[model] ?? [],
     } }),
     terminate: async () => { w.terminated = true; },
   };
@@ -50,7 +51,7 @@ function stubWorker(conf, texts = {}, words = []) {
 async function detect(conf, opts = {}, texts = {}, words = []) {
   const w = stubWorker(conf, texts, words);
   const probes = [];
-  const newWorker = async () => { const p = stubWorker(conf, texts); probes.push(p); return p; };
+  const newWorker = async () => { const p = stubWorker(conf, texts, words); probes.push(p); return p; };
   const d = await detectOcrLanguage(pdfDoc, w, { ignoreTextLayer: true, ...opts, newWorker });
   return { d, w, probes, probed: probes.flatMap(p => p.loaded) };
 }
@@ -138,6 +139,54 @@ await test('a Chinese page full of product names stays chi_sim alone', async () 
   const { d } = await detect({ eng: 30, chi_sim: 88 }, { hint: 'chi_sim' },
     { chi_sim: '使用 Adobe Reader 或 Chrome 打开压缩后的文件，看起来一样，体积却变小了，邮件服务商附件上限' });
   assert.equal(d.lang, 'chi_sim');
+});
+
+// `eng`'s words on a page: `latin` confident Latin words, `low` unreadable ones
+const pageWords = (n, latin, low) => Array.from({ length: n }, (_, i) =>
+  i < latin ? { text: 'document', confidence: 92 } : i < latin + low ? { text: 'ae', confidence: 20 } : { text: '12', confidence: 70 });
+
+// ara+eng's Arabic-script words: Arabic/Persian pages read them sure, Hebrew ones not
+const arabicWords = (n, confidence) => Array.from({ length: n }, () => ({ text: 'كتاب', confidence }));
+
+await test('Arabic and English paragraphs in turn: ara+eng, not English (Arabic lost)', async () => {
+  englishText = MIXED_ENG;
+  const { d } = await detect({ eng: 67, ara: 50, fas: 40, 'ara+eng': 85 }, {}, {},
+    { eng: pageWords(280, 115, 90), 'ara+eng': arabicWords(107, 81) });
+  assert.equal(d.lang, 'ara+eng');
+});
+
+await test('Hebrew and English paragraphs in turn: not ara+eng — its "Arabic" is unsure garbage', async () => {
+  englishText = MIXED_ENG;
+  const { d } = await detect({ eng: 67, ara: 45, fas: 43, 'ara+eng': 77 }, {}, {},
+    { eng: pageWords(280, 120, 80), 'ara+eng': arabicWords(15, 35) });
+  assert.equal(d.lang, 'eng');
+});
+
+await test('Persian and English paragraphs in turn: fas+eng (fas within 6 of ara)', async () => {
+  englishText = MIXED_ENG;
+  const { d } = await detect({ eng: 66, ara: 67, fas: 64, 'ara+eng': 90 }, {}, {},
+    { eng: pageWords(300, 125, 90), 'ara+eng': arabicWords(116, 88) });
+  assert.equal(d.lang, 'fas+eng');
+});
+
+await test('Persian and English on the Arabic site: fas+eng, sure though fas read 64', async () => {
+  englishText = MIXED_ENG;
+  const { d } = await detect({ eng: 66, ara: 64, fas: 64 }, { hint: 'ara' }, { ara: 'كتاب كتاب كتاب كتاب' }, pageWords(300, 125, 90));
+  assert.equal(d.lang, 'fas+eng');
+  assert.equal(d.confident, true);
+});
+
+await test('an English page with unsure words stays English: ara+eng reads it no better', async () => {
+  englishText = MIXED_ENG;
+  const { d } = await detect({ eng: 77, ara: 42, fas: 39, 'ara+eng': 77 }, {}, {}, pageWords(290, 140, 60));
+  assert.equal(d.lang, 'eng');
+});
+
+await test('an Arabic page with two Latin words stays ara alone', async () => {
+  englishText = '1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 x';
+  const { d, probed } = await detect({ eng: 32, rus: 20, ara: 77, fas: 52 }, {}, {}, pageWords(230, 2, 150));
+  assert.equal(d.lang, 'ara');
+  assert.ok(!probed.includes('ara+eng'));
 });
 
 console.log(`\n${'─'.repeat(50)}`);

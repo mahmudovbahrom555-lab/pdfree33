@@ -12,9 +12,9 @@
 //   tight  line-height 1.2, no space, first-line indent (book style)
 //   loose  line-height 1.8, space between paragraphs
 //   cols2  two columns
-// zh-en: Chinese and English paragraphs in turn (bilingual contracts,
-// English abstracts), each from its own FAQ, in the Chinese font with the
-// Latin one for English.
+// zh-en, ar-en, fa-en, he-en (no Hebrew OCR model — a guard): that language's paragraphs and English ones in turn
+// (bilingual contracts, English abstracts), each from its own FAQ, in the
+// language's font with the Latin one for English.
 // Output: <lang>-<layout>.pdf + <lang>-<layout>.json ({ lang, dir, layout, oracleRecall, blocks }).
 // Regenerate: node tests/corpus/groundtruth/make_groundtruth.mjs [name ...]
 // (names: only those documents, e.g. zh-en-web — the others stay as committed; needs network
@@ -40,6 +40,9 @@ const LANGS = {
   'zh-CN': { dir: 'ltr', font: FONTS['zh-CN'] },
   ko: { dir: 'ltr', font: FONTS.ko },
   'zh-en': { dir: 'ltr', font: FONTS['zh-CN'], mix: ['zh-CN', 'en'] },
+  'ar-en': { dir: 'rtl', font: FONTS.ar, mix: ['ar', 'en'] },
+  'fa-en': { dir: 'rtl', font: FONTS.fa, mix: ['fa', 'en'] },
+  'he-en': { dir: 'rtl', font: FONTS.he, mix: ['he', 'en'] },
 };
 const LAYOUTS = {
   web:   'p { line-height: 1.5; margin: 0 0 0.75em; }',

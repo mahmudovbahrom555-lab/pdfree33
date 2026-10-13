@@ -1,0 +1,40 @@
+{
+ "lang": "fa-en",
+ "dir": "rtl",
+ "layout": "web",
+ "oracleRecall": 0.934,
+ "blocks": [
+  {
+   "type": "heading",
+   "text": "آیا برای ادغام فایل‌های PDF محدودیت حجم وجود دارد؟"
+  },
+  {
+   "type": "para",
+   "text": "بله، فقط یک محدودیت: مجموع حجم فایل‌های هر ادغام در Chrome یا Edge روی کامپیوتری با 8 گیگابایت حافظه یا بیشتر می‌تواند تا 500 مگابایت باشد، و روی گوشی‌ها، Safari و Firefox تا 300 مگابایت. نه نسخه پولی در کار است، نه سقف روزانه، نه محدودیت تعداد فایل — PDFree فایل‌ها را به‌صورت محلی در مرورگر شما پردازش می‌کند، پس این سقف برای محافظت از حافظه دستگاه شماست، نه برای فروش اشتراک. کار بزرگ‌تری دارید؟ آن را در دو مرحله ادغام کنید."
+  },
+  {
+   "type": "para",
+   "text": "Clean mode can fade or remove color content, since it's designed to push everything toward black text on a white background. If a page contains color you want to keep, use Enhance mode instead — the tool warns you automatically when it detects color on the page you're previewing."
+  },
+  {
+   "type": "para",
+   "text": "بله. PDFree یک اپلیکیشن وب پیشرو (PWA) است. پس از اولین بارگذاری، به‌طور کامل آفلاین کار می‌کند — برای پردازش نیازی به اینترنت نیست."
+  },
+  {
+   "type": "heading",
+   "text": "Is there a limit on how many pages I can clean?"
+  },
+  {
+   "type": "para",
+   "text": "No page-count limit and no per-hour task limit — clean a single-page scan or a hundred-page document as often as you need. Each file can be up to 150 MB. Everything runs on your own device, so very large files are faster on a computer than on an older phone."
+  },
+  {
+   "type": "para",
+   "text": "بله. PDFree از کتابخانه pdf-lib برای کپی صفحات در سطح آبجکت PDF استفاده می‌کند — فونت‌ها، تصاویر، گرافیک برداری و فرمت دقیقاً مانند فایل‌های اصلی حفظ می‌شوند."
+  },
+  {
+   "type": "para",
+   "text": "You can, but it isn't the intended use — cleaning converts each page into an image, so real selectable text in a normal digital PDF would become a picture of text. The tool detects when a PDF looks like it has real text content and shows a warning before you process it."
+  }
+ ]
+}

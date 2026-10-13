@@ -1,0 +1,40 @@
+{
+ "lang": "he-en",
+ "dir": "rtl",
+ "layout": "web",
+ "oracleRecall": 0.939,
+ "blocks": [
+  {
+   "type": "heading",
+   "text": "האם יש הגבלה על גודל מיזוג קבצי PDF?"
+  },
+  {
+   "type": "para",
+   "text": "כן, הגבלה אחת: הגודל הכולל של הקבצים במיזוג אחד יכול להגיע עד 500 מגה-בייט ב-Chrome או ב-Edge במחשב עם זיכרון של 8 ג׳יגה-בייט ומעלה, ועד 300 מגה-בייט בטלפונים, ב-Safari וב-Firefox. אין חומת תשלום, אין מכסה יומית ואין הגבלה על מספר הקבצים — PDFree מעבד את הקבצים באופן מקומי בדפדפן שלכם, כך שהתקרה נועדה להגן על הזיכרון של המכשיר שלכם, לא למכור לכם שדרוג. יש לכם משימה גדולה יותר? מזגו בשני שלבים."
+  },
+  {
+   "type": "para",
+   "text": "Clean mode can fade or remove color content, since it's designed to push everything toward black text on a white background. If a page contains color you want to keep, use Enhance mode instead — the tool warns you automatically when it detects color on the page you're previewing."
+  },
+  {
+   "type": "para",
+   "text": "כן. PDFree הוא אפליקציית אינטרנט מתקדמת (PWA). לאחר הטעינה הראשונה, הוא פועל לגמרי לא מקוון — אין צורך באינטרנט במהלך העיבוד."
+  },
+  {
+   "type": "heading",
+   "text": "Is there a limit on how many pages I can clean?"
+  },
+  {
+   "type": "para",
+   "text": "No page-count limit and no per-hour task limit — clean a single-page scan or a hundred-page document as often as you need. Each file can be up to 150 MB. Everything runs on your own device, so very large files are faster on a computer than on an older phone."
+  },
+  {
+   "type": "para",
+   "text": "כן. PDFree משתמש בספריית pdf-lib להעתקת עמודים ברמת אובייקט ה-PDF — גופנים, תמונות, גרפיקה וקטורית ועיצוב נשארים זהים לחלוטין לקבצים המקוריים."
+  },
+  {
+   "type": "para",
+   "text": "You can, but it isn't the intended use — cleaning converts each page into an image, so real selectable text in a normal digital PDF would become a picture of text. The tool detects when a PDF looks like it has real text content and shows a warning before you process it."
+  }
+ ]
+}

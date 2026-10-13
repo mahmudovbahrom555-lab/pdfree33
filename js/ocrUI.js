@@ -83,6 +83,8 @@ const LANGUAGES = {
   complex: [
     { code: 'ara',         name: 'Arabic',                        size: '1.5 MB', rtl: true },
     { code: 'fas',         name: 'Persian',                       size: '0.4 MB', rtl: true },
+    { code: 'ara+eng',     name: 'Arabic + English (bilingual)',   size: '5.5 MB', rtl: true },
+    { code: 'fas+eng',     name: 'Persian + English (bilingual)',  size: '4.4 MB', rtl: true },
     { code: 'jpn',         name: 'Japanese',                      size: '10 MB'  },
     { code: 'jpn+eng',     name: 'Japanese + English (bilingual)', size: '14 MB'  },
     { code: 'chi_sim',     name: 'Chinese (Simplified)',           size: '15 MB'  },

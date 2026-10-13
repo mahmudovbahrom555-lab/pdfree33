@@ -268,6 +268,13 @@ function _readsOwnScript(lang, text) {
   }
   return _scriptGroupOf(_detectScriptFromText(text).lang) === _scriptGroupOf(lang);
 }
+// Share of `eng`'s words that are confident Latin words: Arabic and Persian
+// pages 0–4 %, Arabic/Persian and English paragraphs in turn 29–42 %, an
+// English page 57–83 % (2026-10-13).
+function _confidentLatinShare(words) {
+  const read = words.filter(w => w.text?.trim());
+  return read.filter(w => w.confidence >= 80 && /^[A-Za-z][A-Za-z'’.,;:!?()-]{2,}$/.test(w.text)).length / (read.length || 1);
+}
 // Latin letters' share of Latin + Han in `text`.
 function _latinShare(text) {
   const latin = (text.match(/[A-Za-z]/g) ?? []).length;
@@ -287,6 +294,7 @@ async function _judgeImage(cvs, worker, hint, newWorker) {
   if (txt.trim().length >= 20) {
     const primary    = _detectScriptFromText(txt, conf);
     const suspicious = _isDetectionSuspicious(txt, conf, res?.data?.words);
+    const latin      = _confidentLatinShare(res?.data?.words ?? []);
     // `hint`: the site locale's model (ocrLangForLocale) — tried first and
     // always, even when English reads the page with confidence: a Chinese
     // invoice scan read 67 with `eng` (garbage) and 80 with chi_sim, never
@@ -313,20 +321,25 @@ async function _judgeImage(cvs, worker, hint, newWorker) {
     // was right. A clear lead over English — 19–32 points on those photos,
     // at most 14 on Hebrew scans, for which there is no model — is
     // evidence enough from 45 up (synthetic scans, 2026-10-08).
-    const sure = b => b.conf >= 65 || (SCRIPT_GROUPS.rtl.includes(b.lang) && b.conf >= 45 && b.conf - conf >= 17)
-      || (b.lang === hint && b.conf >= 40);
+    const sure = b => b.conf >= 65 || (SCRIPT_GROUPS.rtl.includes(primaryScript(b.lang)) && b.conf >= 45 && b.conf - conf >= 17)
+      // the hint's script, not only its model: Persian chosen over the Arabic
+      // site's `ara` (64, its English paragraphs holding it under 65) was
+      // "unsure", and the page stayed a picture
+      || (hint && _scriptGroupOf(primaryScript(b.lang)) === _scriptGroupOf(hint) && b.conf >= 40);
     // Probes run on a worker of their own: a Tesseract worker taken to
     // another model and back keeps that model's settings — an English
     // invoice probed with chi_sim, then read with `eng` again, lost a third
     // of its words (70 → 47; every scan English read with less than 60 had
     // the same since probing began). `worker` stays as it was.
     let probeWorker = null;
+    const read = {};   // each model's reading of the page
     const tryModel = async lang => {
+      if (read[lang]) return read[lang];
       tried.push(lang);
       probeWorker ??= await newWorker('eng');
       await probeWorker.reinitialize(lang);
       const res = await probeWorker.recognize(cvs);
-      return { lang, conf: res?.data?.confidence ?? 0, text: res?.data?.text ?? '' };
+      return (read[lang] = { lang, conf: res?.data?.confidence ?? 0, text: res?.data?.text ?? '', words: res?.data?.words ?? [] });
     };
     let best = null;
     try {
@@ -359,6 +372,24 @@ async function _judgeImage(cvs, worker, hint, newWorker) {
       }
       if (sure(best)) break;
     }
+    // Arabic or Persian paragraphs and English ones in turn: each model reads
+    // half the page, `eng` 57–67 and `ara` 43–67 — no winner, and the page was
+    // read as English, its Arabic lost. ara+eng reads both: 9–24 above `eng`
+    // there, level with it on an English page and with `ara` on an Arabic one.
+    // Which of Arabic and Persian: by the single models, as above. Hebrew
+    // and English in turn gain as much (+3..+10) — Hebrew has no model, and
+    // ara+eng read it as a few Arabic-script words, unsure (mean 32–40, real
+    // Arabic or Persian 71–88): those were dropped as unsure, and the Hebrew
+    // paragraphs, kept as pictures before, were lost.
+    if (!best && suspicious && latin >= 0.1 && latin <= 0.5) {
+      const both = await tryModel('ara+eng');
+      const arabic = both.words.filter(w => /[\u0600-\u06FF]/.test(w.text));
+      const arabicConf = arabic.reduce((sum, w) => sum + w.confidence, 0) / (arabic.length || 1);
+      if (both.conf > conf + 8 && arabicConf >= 55) {
+        const [a, f] = [await tryModel('ara'), await tryModel('fas')];
+        best = f.conf >= a.conf - 6 ? { ...both, lang: 'fas+eng' } : both;
+      }
+    }
     } finally {
       await probeWorker?.terminate();
     }
@@ -369,6 +400,9 @@ async function _judgeImage(cvs, worker, hint, newWorker) {
       // (English and Chinese paragraphs in turn: 72 %; a Chinese page full of
       // product names: 22 %) (2026-10-10).
       if (best.lang === 'chi_sim' && _latinShare(best.text) >= 0.4) best = { ...best, lang: 'chi_sim+eng' };
+      // an Arabic or Persian page with English on it: ara/fas alone read every
+      // Latin word as Arabic-script garbage ("PDF" → "۳۵۴"), none of them right
+      if (SCRIPT_GROUPS.rtl.includes(best.lang) && latin >= 0.1) best = { ...best, lang: `${best.lang}+eng` };
       return { lang: best.lang, confident: sure(best), metrics: {
         source: 'ocr-fallback',
         initial: primary.lang, suspicious,
