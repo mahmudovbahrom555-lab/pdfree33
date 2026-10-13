@@ -53,6 +53,7 @@ window.PDFREE_LOCALE = {
   process_again:    '↺ Обработать снова',
   download_again:      '⬇ Скачать снова',
   auto_download_hint:  '✓ Файл {filename} сохранён на устройство',
+  downloads_where_hint: "Не видите файл? Откройте загрузки браузера — {keys}",
   download_toast:      '📥 Файл {filename} скачан',
 
   // files

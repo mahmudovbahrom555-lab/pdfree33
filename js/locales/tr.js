@@ -52,6 +52,7 @@ window.PDFREE_LOCALE = {
   process_again:    '↺ Tekrar İşle',
   download_again:   '⬇ Tekrar İndir',
   auto_download_hint: '✓ {filename} cihazınıza kaydedildi',
+  downloads_where_hint: "Göremiyor musunuz? Tarayıcının indirilenlerini açın — {keys}",
   download_toast:     '📥 {filename} indirildi',
 
   // files

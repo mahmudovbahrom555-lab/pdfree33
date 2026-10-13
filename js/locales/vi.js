@@ -53,6 +53,7 @@ window.PDFREE_LOCALE = {
   process_again:    '↺ Xử lý lại',
   download_again:      '⬇ Tải về lại',
   auto_download_hint:  '✓ Đã lưu {filename} vào thiết bị của bạn',
+  downloads_where_hint: "Không thấy tệp? Mở mục tải xuống của trình duyệt — {keys}",
   download_toast:      '📥 Đã tải {filename} về',
 
   // files

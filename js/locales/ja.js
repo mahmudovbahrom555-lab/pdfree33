@@ -55,6 +55,7 @@ window.PDFREE_LOCALE = {
   process_again:    '↺ もう一度処理する',
   download_again:      '⬇ もう一度ダウンロード',
   auto_download_hint:  '✓ {filename} を端末に保存しました',
+  downloads_where_hint: "見当たらない場合は、ブラウザのダウンロード一覧を開いてください — {keys}",
   download_toast:      '📥 {filename} をダウンロードしました',
 
   // files

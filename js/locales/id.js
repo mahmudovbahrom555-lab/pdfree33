@@ -53,6 +53,7 @@ window.PDFREE_LOCALE = {
   process_again:    '↺ Proses ulang',
   download_again:      '⬇ Unduh ulang',
   auto_download_hint:  '✓ {filename} tersimpan di perangkat Anda',
+  downloads_where_hint: "Tidak terlihat? Buka unduhan browser — {keys}",
   download_toast:      '📥 {filename} diunduh',
 
   // files

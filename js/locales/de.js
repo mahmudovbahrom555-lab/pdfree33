@@ -53,6 +53,7 @@ window.PDFREE_LOCALE = {
   process_again:    '↺ Erneut verarbeiten',
   download_again:      '⬇ Erneut herunterladen',
   auto_download_hint:  '✓ {filename} auf deinem Gerät gespeichert',
+  downloads_where_hint: "Nicht zu sehen? Öffnen Sie die Downloads Ihres Browsers — {keys}",
   download_toast:      '📥 {filename} heruntergeladen',
 
   // files

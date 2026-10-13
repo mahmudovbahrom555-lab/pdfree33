@@ -382,6 +382,21 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
   const _displayName = truncateMiddle(filename);
   const _hint = id('successAutoHint');
   if (_hint) { _hint.textContent = t('auto_download_hint', { filename: _displayName }); _hint.style.display = ''; }
+  // Desktop browsers save silently into Downloads with a small toolbar icon:
+  // "Download again" was clicked within seconds after 2–3 % of successes,
+  // nearly all on desktop Edge/Chrome, none on iPhone (2026-10-13) — the
+  // file had very likely arrived. Where to find it, on a mouse-driven screen.
+  let _where = id('successWhere');
+  if (_hint && window.matchMedia('(pointer: fine)').matches) {
+    if (!_where) {
+      _where = document.createElement('div');
+      _where.id = 'successWhere';
+      _where.style.cssText = 'font-size:13px;color:var(--text2);margin-top:4px;';
+      _hint.after(_where);
+    }
+    const mac = /Mac/i.test(navigator.userAgentData?.platform || navigator.platform || '');
+    _where.textContent = t('downloads_where_hint', { keys: mac ? '⌥⌘L' : 'Ctrl+J' });
+  }
 
   // Second, more transient confirmation channel — slight delay so it
   // doesn't visually compete with the auto-download/card update that

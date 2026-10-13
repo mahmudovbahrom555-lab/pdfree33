@@ -30,6 +30,7 @@ export const EN = {
   process_again:       '↺ Process again',
   download_again:      '⬇ Download again',
   auto_download_hint:  '✓ {filename} saved to your device',
+  downloads_where_hint: "Can't see it? Open your browser's downloads — {keys}",
   download_toast:      '📥 {filename} downloaded',
 
   // ── files.js ───────────────────────────────────────────────────

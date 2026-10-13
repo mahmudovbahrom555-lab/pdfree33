@@ -55,6 +55,7 @@ window.PDFREE_LOCALE = {
   process_again:       '↺ 再次处理',
   download_again:      '⬇ 重新下载',
   auto_download_hint:  '✓ {filename} 已保存到您的设备',
+  downloads_where_hint: "找不到文件？请打开浏览器的下载列表 — {keys}",
   download_toast:      '📥 {filename} 已下载',
 
   // ── files.js ───────────────────────────────────────────────────

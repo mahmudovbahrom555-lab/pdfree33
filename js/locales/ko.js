@@ -54,6 +54,7 @@ window.PDFREE_LOCALE = {
   process_again:    '↺ 다시 처리하기',
   download_again:   '⬇ 다시 다운로드',
   auto_download_hint: '✓ {filename} 파일이 기기에 저장되었습니다',
+  downloads_where_hint: "파일이 보이지 않나요? 브라우저의 다운로드 목록을 여세요 — {keys}",
   download_toast:     '📥 {filename} 파일이 다운로드되었습니다',
 
   // files

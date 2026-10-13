@@ -57,6 +57,7 @@ window.PDFREE_LOCALE = {
   process_again:       '↺ معالجة مرة أخرى',
   download_again:      '⬇ تنزيل مرة أخرى',
   auto_download_hint:  '✓ تم حفظ {filename} على جهازك',
+  downloads_where_hint: "لا ترى الملف؟ افتح تنزيلات المتصفح — {keys}",
   download_toast:      '📥 تم تنزيل {filename}',
 
   // ── files.js ───────────────────────────────────────────────────
