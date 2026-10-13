@@ -783,6 +783,9 @@ function _onMouseDown(e) {
 
       const rects = _currentRects();
       const currentRect = rects[_activeRectIdx];
+      // gone mid-drag (deleted, undone, another page): "Cannot set properties
+      // of undefined (setting 'x')" — Chrome and Safari, 2026-10-12
+      if (!currentRect) { _dragging = false; return; }
 
       if (_resizingHandle === 'move') {
         currentRect.x = r.x + dx * _canvasScale;

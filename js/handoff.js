@@ -14,7 +14,12 @@ function _openDb() {
   if (_dbPromise) return _dbPromise;
   _dbPromise = new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_NAME, 1);
-    req.onupgradeneeded = e => e.target.result.createObjectStore(STORE_NAME);
+    // only if missing: Firefox threw "Object store named 'files' already
+    // exists" here (draw-pdf, 2026-10-12) — an upgrade racing another tab's
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) db.createObjectStore(STORE_NAME);
+    };
     req.onsuccess = e => {
       _db = e.target.result;
       _db.onversionchange = () => { _db.close(); _db = null; };

@@ -6188,6 +6188,16 @@ function _handleError(tool, message, errorType = null) {
     friendly   = t('err_encrypted_pdf');
     errorType  = 'pdf_restricted';
   } else if (
+    // A damaged file, in pdf-lib's and pako's words: a compressed stream that
+    // won't inflate, a catalog that isn't one. Shown as is before ("Unknown
+    // compression method in flate stream: 87, 85", "r.catalog.Pages is not a
+    // function" — resize, compress, 2026-10-12); same advice as a file with
+    // an unusual structure.
+    /unknown compression method|incorrect header check|invalid (?:stored )?block|invalid distance|catalog\.pages is not a function|invalid pdf structure/i.test(message || '')
+  ) {
+    friendly   = t('err_encrypted_pdf');
+    errorType  = 'pdf_damaged';
+  } else if (
     // Raw JS-engine error text (V8/JSC), not something this app's own code
     // constructs — thrown directly by `new ArrayBuffer(n)` (or an internal
     // equivalent inside pdf-lib/JSZip) when the browser can't get the

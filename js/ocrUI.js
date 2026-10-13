@@ -1005,7 +1005,10 @@ function _openFontIdb() {
   if (_idbConn) return _idbConn;
   _idbConn = new Promise((resolve, reject) => {
     const req = indexedDB.open('pdfree-ocr-fonts', 1);
-    req.onupgradeneeded = e => e.target.result.createObjectStore('fonts');
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains('fonts')) db.createObjectStore('fonts');
+    };
     req.onsuccess    = e => resolve(e.target.result);
     req.onerror      = () => { _idbConn = null; reject(req.error); };
   });
