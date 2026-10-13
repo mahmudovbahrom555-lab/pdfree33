@@ -212,7 +212,6 @@ window.PDFREE_LOCALE = {
   retry:          '⟳ Thử lại',
 
   // ocrUI
-  install_ocr_first:   'Vui lòng cài đặt engine OCR trước — nhấp vào "Cài đặt OCR PDF"',
 
   // errors
   no_pages_selected:   'Không có trang hợp lệ nào được chọn',
@@ -924,7 +923,6 @@ window.PDFREE_LOCALE = {
   cmp_found_pieceinfo:    'PieceInfo',
 
   // ocrUI.js
-  ocr_download_failed:      'Tải xuống thất bại — kiểm tra kết nối và thử lại',
   ocr_lang_doc:              'Ngôn ngữ tài liệu',
   ocr_auto_recommended:      'Tự động (Đề xuất)',
   ocr_auto_detected:         'Tự động — Đã phát hiện: {lang}',
@@ -936,13 +934,9 @@ window.PDFREE_LOCALE = {
   ocr_has_text_layer:        'PDF này đã có lớp văn bản — không cần OCR, sẵn sàng để tải xuống',
   ocr_scanned_needs_ocr:     'PDF này là bản quét — cần OCR để trích xuất văn bản.',
   ocr_ready_msg:             'OCR đã sẵn sàng — nhấp "Làm PDF có thể tìm kiếm" để bắt đầu',
-  ocr_install_btn:           'Cài đặt OCR PDF · ~17 MB',
-  ocr_ios_hint:              'Để cài đặt ứng dụng: chạm Chia sẻ → Thêm vào Màn hình chính',
-  ocr_download_engine_btn:   'Tải công cụ OCR · ~17 MB',
   ocr_lang_installed:        '{lang} đã cài đặt — không cần tải xuống',
   ocr_lang_download_note:    'Tải xuống một lần (~{size}). Được lưu cục bộ trong trình duyệt của bạn.',
   ocr_cjk_note:              'Số và văn bản Latin được nhận dạng tốt. Chữ Hán dày đặc có thể giảm độ chính xác — hạn chế đã biết của Tesseract.',
-  ocr_downloading_engine:    'Đang tải công cụ OCR…',
   ocr_select_lang_first:     '↑ Vui lòng chọn ngôn ngữ trước',
   ocr_processing:            'Đang xử lý…',
   ocr_detection_inconclusive: 'Việc phát hiện ngôn ngữ không rõ ràng{note}. Chọn ngôn ngữ đúng ở trên, sau đó nhấp Chạy OCR.',
@@ -991,9 +985,11 @@ window.PDFREE_LOCALE = {
   ocr_ios_confirm:           'PDF này có {n} trang. Safari trên di động có thể hết bộ nhớ với tài liệu lớn.\n\nChỉ {max} trang đầu tiên sẽ được xử lý. Hãy tách PDF trước để xử lý các trang còn lại.\n\nTiếp tục?',
   ocr_cancelled_by_user:     'Đã bị người dùng hủy.',
   ocr_initializing_engine:   'Đang khởi tạo công cụ OCR…',
+  ocr_first_run_note: "Lần chạy đầu tiên sẽ tải công cụ nhận dạng một lần (khoảng 4 MB) — sau đó khởi động ngay.",
+  ocr_loading_engine_first: "Đang tải công cụ nhận dạng — chỉ lần đầu…",
+  ocr_loading_lang_pct: "Đang tải mô hình {lang}… {pct}%",
   ocr_initializing_short:    'Đang khởi tạo…',
   ocr_recognizing_text:      'Đang nhận dạng văn bản ({lang})…',
-  ocr_loading_lang_short:    'Đang tải {lang}…',
 
   // ── pdf2wordUI.js ────────────────────────────────────────
   p2w_cannot_read:           'Không thể đọc PDF: {msg}',

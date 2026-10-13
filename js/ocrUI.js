@@ -48,7 +48,6 @@ let _isTextPdf       = false;
 let _ocrReady        = false;
 let _loading         = false;
 let _generation      = 0;        // incremented on each new file; stale _analyse calls bail early
-let _deferredInstall = null;
 let _selectedLang      = 'auto';  // 'auto' or specific lang code
 let _detectedLang      = null;    // set after auto-detection; null when user chose manually
 let _requiresManualLang = false;  // true when auto-detection was inconclusive — blocks OCR
@@ -60,11 +59,6 @@ const _langCache       = new Map(); // "filename:size" → detected lang — avo
 // ── Last result — stored so the download button in success card can re-trigger
 let _lastResultBlob  = null;   // Blob for re-download from success card
 let _lastResultName  = null;   // Download filename
-
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  _deferredInstall = e;
-});
 
 // ── Language definitions ─────────────────────────────────────────────────────
 const LANGUAGES = {
@@ -144,10 +138,7 @@ export function hideOcrOptions() {
 
 export function getOcrParams() {
   return {
-    hasFile:    !!_file,
     loading:    _loading,
-    isOcrReady: _ocrReady,
-    isTextPdf:  _isTextPdf,
   };
 }
 
@@ -297,58 +288,20 @@ function _renderUI(container) {
     return;
   }
 
-  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent.toLowerCase()) && !window.MSStream;
 
-  if (_ocrReady) {
-    _ocrReady = true;
-    container.innerHTML = `
-      <div id="ocrInstallBlock" style="padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
-        <p style="margin:0 0 12px;font-size:14px;color:var(--text);">${t('ocr_scanned_needs_ocr')}</p>
-        <div id="ocrReadyMsg" style="padding:10px 14px;border:1px solid var(--green);border-radius:8px;font-size:13px;color:var(--text);background:var(--surface);">
-          &#x2713; ${t('ocr_ready_msg')}
-        </div>
-        ${_langSelectHTML()}
-        ${_txtCheckboxHTML()}
-      </div>`;
-    _bindLangSelect();
-    _bindCheckbox();
-    return;
-  }
-
+  // No separate install step: the main button downloads the engine itself
+  // (it used to stop at "Install OCR engine first" — a second button for a
+  // 0.6 s script load; the model download happens in the run either way).
+  // A returning user's cached engine says so; a first run says what comes.
   container.innerHTML = `
     <div id="ocrInstallBlock" style="padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--surface);">
-      <p style="margin:0 0 12px;font-size:14px;color:var(--text);">This PDF is scanned &mdash; OCR required to extract text.</p>
-
-      ${isIos ? '' : `
-      <button id="btnInstallOcr" type="button" style="
-        display:block;width:100%;padding:12px 16px;
-        background:var(--green);color:#fff;border:none;border-radius:8px;
-        font-size:14px;font-weight:600;cursor:pointer;text-align:center;">
-        ${t('ocr_install_btn')}
-      </button>`}
-
-      <div id="iosInstallHint" style="display:${isIos ? '' : 'none'};padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);margin-top:8px;">
-        <p style="margin:0 0 10px;font-size:13px;color:var(--text);">${t('ocr_ios_hint')}</p>
-        <button id="btnDownloadOcrOnly" type="button" style="
-          display:block;width:100%;padding:10px 14px;
-          background:var(--surface);color:var(--green-text);border:1.5px solid var(--green);border-radius:8px;
-          font-size:13px;font-weight:600;cursor:pointer;text-align:center;">
-          ${t('ocr_download_engine_btn')}
-        </button>
+      <p style="margin:0 0 12px;font-size:14px;color:var(--text);">${t('ocr_scanned_needs_ocr')}</p>
+      <div id="ocrReadyMsg" style="padding:10px 14px;border:1px solid var(--green);border-radius:8px;font-size:13px;color:var(--text);background:var(--surface);">
+        ${_ocrReady ? `&#x2713; ${t('ocr_ready_msg')}` : t('ocr_first_run_note')}
       </div>
-
-      <div id="ocrReadyMsg" style="display:none;padding:10px 14px;margin-top:12px;border:1px solid var(--green);border-radius:8px;font-size:13px;color:var(--text);background:var(--surface);">
-        &#x2713; ${t('ocr_ready_msg')}
-      </div>
-
       ${_langSelectHTML()}
       ${_txtCheckboxHTML()}
     </div>`;
-
-  const btnInstall  = document.getElementById('btnInstallOcr');
-  const btnDownload = document.getElementById('btnDownloadOcrOnly');
-  if (btnInstall)  btnInstall.addEventListener('click',  _installOcr);
-  if (btnDownload) btnDownload.addEventListener('click', _loadTesseract);
   _bindLangSelect();
   _bindCheckbox();
 }
@@ -421,46 +374,6 @@ function _showLangInfo(lang) {
 function _hideLangInfo() {
   const block = document.getElementById('langInfoBlock');
   if (block) { block.style.display = 'none'; block.innerHTML = ''; }
-}
-
-// ── OCR engine install ────────────────────────────────────────────────────────
-async function _installOcr() {
-  if (_deferredInstall) {
-    _deferredInstall.prompt();
-    await _deferredInstall.userChoice;
-    _deferredInstall = null;
-  }
-  await _loadTesseract();
-}
-
-async function _loadTesseract() {
-  if (window.Tesseract) { _ocrReady = true; _showOcrReady(); return; }
-
-  const btn = document.getElementById('btnInstallOcr') || document.getElementById('btnDownloadOcrOnly');
-  if (btn) { btn.disabled = true; btn.textContent = t('ocr_downloading_engine'); }
-
-  try {
-    await loadTesseract();
-
-    _ocrReady = true;
-    localStorage.setItem('pdfree_ocr_installed', '1');
-    _showOcrReady();
-  } catch (err) {
-    if (btn) { btn.disabled = false; btn.textContent = t('ocr_install_btn'); }
-    _showToast(t('ocr_download_failed'));
-  }
-}
-
-function _showOcrReady() {
-  const installBtn = document.getElementById('btnInstallOcr');
-  if (installBtn) installBtn.style.display = 'none';
-  const dlBtn = document.getElementById('btnDownloadOcrOnly');
-  if (dlBtn) dlBtn.style.display = 'none';
-  const readyMsg = document.getElementById('ocrReadyMsg');
-  if (readyMsg) readyMsg.style.display = '';
-
-  const mergeBtn = document.getElementById('mergeBtn');
-  if (mergeBtn) mergeBtn.disabled = false;
 }
 
 // ── Main button binding ──────────────────────────────────────────────────────
@@ -549,13 +462,6 @@ function _bindMergeBtn() {
     // Analysis still running — user clicked too early.
     if (_loading) {
       _showToast(t('val_analysing_pdf'));
-      e.stopImmediatePropagation();
-      return;
-    }
-
-    // Gate: OCR engine not installed.
-    if (!_isTextPdf && !_ocrReady) {
-      _showToast(t('install_ocr_first'));
       e.stopImmediatePropagation();
       return;
     }
@@ -848,16 +754,28 @@ async function _runOcr(file, gen) {
   // Resolve language: auto-detection or user-chosen
   let resolvedLang = _selectedLang === 'auto' ? 'eng' : _selectedLang;
 
+  // Stage 1 — the engine, downloaded on the first run only (~4 MB with the
+  // English model; another language's model 0.4–2.6 MB more).
+  if (!window.Tesseract) {
+    _updateProgress(12, t('ocr_loading_engine_first'));
+    _setBtnProgress(t('ocr_initializing_short'));
+    await loadTesseract();
+    _ocrReady = true;
+    try { localStorage.setItem('pdfree_ocr_installed', '1'); } catch { /* private browsing */ }
+  }
+
   let worker;
   try {
   _updateProgress(13, t('ocr_initializing_engine'));
   _setBtnProgress(t('ocr_initializing_short'));
   // Always start with resolved lang (eng for auto); switch after detection if needed
+  // Model download progress moves the bar forward through 13–15 % with the
+  // percentage in the label (it used to jump back to 0–15 % of the bar).
   const logger = m => {
     if (m.status === 'recognizing text') {
       _updateProgress(Math.round(m.progress * 100), t('ocr_recognizing_text', { lang: _getLangName(resolvedLang) }));
     } else if (m.status && m.progress != null) {
-      _updateProgress(Math.round(m.progress * 15), t('ocr_loading_lang_short', { lang: _getLangName(resolvedLang) }));
+      _updateProgress(13 + Math.round(m.progress * 2), t('ocr_loading_lang_pct', { lang: _getLangName(resolvedLang), pct: Math.round(m.progress * 100) }));
     }
   };
   worker = await createOcrWorker(resolvedLang, logger);

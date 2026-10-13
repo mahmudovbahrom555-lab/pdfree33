@@ -63,11 +63,7 @@ await test('an Arabic scan made searchable carries its Arabic words in the text 
     await page.goto(`${BASE_URL}/ocr-pdf/`, { waitUntil: 'load' });
     await page.setInputFiles('#fileInput', path.join(__dirname, '..', 'fixtures', 'pdf2word_scan_ar_no_text.pdf'));
     await page.waitForSelector('#ocrLangSelect', { timeout: 60000 });
-    const install = await page.$('#btnInstallOcr');
-    if (install && await install.isVisible()) {
-      await install.click();
-      await page.waitForFunction(() => !!window.Tesseract, null, { timeout: 180000 });
-    }
+    // one click: the main button downloads the engine itself (no install step)
     await page.selectOption('#ocrLangSelect', 'ara');
     await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 60000 });
     await page.click('#mergeBtn');

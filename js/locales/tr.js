@@ -211,7 +211,6 @@ window.PDFREE_LOCALE = {
   retry:          '⟳ Tekrar Dene',
 
   // ocrUI
-  install_ocr_first: 'Önce OCR motorunu yükleyin — "PDF OCR\'ı Yükle" düğmesine tıklayın',
 
   // errors
   no_pages_selected:    'Geçerli sayfa seçilmedi',
@@ -923,7 +922,6 @@ window.PDFREE_LOCALE = {
   cmp_found_pieceinfo:    'PieceInfo',
 
   // ocrUI.js
-  ocr_download_failed:      'İndirme başarısız oldu — bağlantınızı kontrol edin ve tekrar deneyin',
   ocr_lang_doc:              'Belge dili',
   ocr_auto_recommended:      'Otomatik (Önerilen)',
   ocr_auto_detected:         'Otomatik — Algılandı: {lang}',
@@ -935,13 +933,9 @@ window.PDFREE_LOCALE = {
   ocr_has_text_layer:        'Bu PDF\'de zaten bir metin katmanı var — OCR gerekmiyor, indirmeye hazır',
   ocr_scanned_needs_ocr:     'Bu PDF taranmış — metni çıkarmak için OCR gerekiyor.',
   ocr_ready_msg:             'OCR hazır — başlamak için "PDF\'yi Aranabilir Yap"a tıklayın',
-  ocr_install_btn:           'OCR PDF Kur · ~17 MB',
-  ocr_ios_hint:              'Uygulamayı kurmak için: Paylaş\'a dokunun → Ana Ekrana Ekle',
-  ocr_download_engine_btn:   'OCR Motorunu İndir · ~17 MB',
   ocr_lang_installed:        '{lang} kuruldu — indirme gerekmiyor',
   ocr_lang_download_note:    'Tek seferlik indirme (~{size}). Tarayıcınızda yerel olarak saklanır.',
   ocr_cjk_note:              'Rakamlar ve Latin metin iyi tanınır. Yoğun kanji/hanzi karakterlerinde doğruluk düşebilir — bilinen Tesseract sınırlaması.',
-  ocr_downloading_engine:    'OCR motoru indiriliyor…',
   ocr_select_lang_first:     '↑ Önce bir dil seçin',
   ocr_processing:            'İşleniyor…',
   ocr_detection_inconclusive: 'Dil algılama net değildi{note}. Yukarıdan doğru dili seçin, ardından OCR Çalıştır\'a tıklayın.',
@@ -990,9 +984,11 @@ window.PDFREE_LOCALE = {
   ocr_ios_confirm:           'Bu PDF\'de {n} sayfa var. Mobil Safari büyük belgelerde bellek yetersizliği yaşayabilir.\n\nYalnızca ilk {max} sayfa işlenecek. Kalan sayfaları işlemek için önce PDF\'yi bölün.\n\nDevam edilsin mi?',
   ocr_cancelled_by_user:     'Kullanıcı tarafından iptal edildi.',
   ocr_initializing_engine:   'OCR motoru başlatılıyor…',
+  ocr_first_run_note: "İlk çalıştırmada tanıma motoru bir kez indirilir (yaklaşık 4 MB) — sonrasında hemen başlar.",
+  ocr_loading_engine_first: "Tanıma motoru indiriliyor — yalnızca ilk seferde…",
+  ocr_loading_lang_pct: "{lang} modeli indiriliyor… %{pct}",
   ocr_initializing_short:    'Başlatılıyor…',
   ocr_recognizing_text:      'Metin tanınıyor ({lang})…',
-  ocr_loading_lang_short:    '{lang} yükleniyor…',
 
   // ── pdf2wordUI.js ────────────────────────────────────────
   p2w_cannot_read:           'PDF okunamıyor: {msg}',

@@ -212,7 +212,6 @@ window.PDFREE_LOCALE = {
   retry:          '⟳ Erneut versuchen',
 
   // ocrUI
-  install_ocr_first:   'Bitte zuerst die OCR-Engine installieren — klicke auf „OCR PDF installieren"',
 
   // errors
   no_pages_selected:   'Keine gültigen Seiten ausgewählt',
@@ -926,7 +925,6 @@ window.PDFREE_LOCALE = {
   cmp_found_pieceinfo:    'PieceInfo',
 
   // ocrUI.js
-  ocr_download_failed:      'Download fehlgeschlagen — überprüfe deine Verbindung und versuche es erneut',
   ocr_lang_doc:              'Dokumentsprache',
   ocr_auto_recommended:      'Automatisch (empfohlen)',
   ocr_auto_detected:         'Automatisch — erkannt: {lang}',
@@ -938,13 +936,9 @@ window.PDFREE_LOCALE = {
   ocr_has_text_layer:        'Dieses PDF hat bereits eine Textebene — keine OCR nötig, bereit zum Download',
   ocr_scanned_needs_ocr:     'Dieses PDF ist gescannt — OCR erforderlich, um Text zu extrahieren.',
   ocr_ready_msg:             'OCR bereit — klicke auf „PDF durchsuchbar machen", um zu starten',
-  ocr_install_btn:           'OCR PDF installieren · ~17 MB',
-  ocr_ios_hint:              'App installieren: Teilen antippen → Zum Home-Bildschirm',
-  ocr_download_engine_btn:   'OCR-Engine herunterladen · ~17 MB',
   ocr_lang_installed:        '{lang} installiert — kein Download nötig',
   ocr_lang_download_note:    'Einmaliger Download (~{size}). Wird lokal in deinem Browser gespeichert.',
   ocr_cjk_note:              'Zahlen und lateinischer Text werden gut erkannt. Dichte Kanji/Hanzi können eine geringere Genauigkeit haben — bekannte Tesseract-Einschränkung.',
-  ocr_downloading_engine:    'OCR-Engine wird heruntergeladen…',
   ocr_select_lang_first:     '↑ Zuerst eine Sprache auswählen',
   ocr_processing:            'Wird verarbeitet…',
   ocr_detection_inconclusive: 'Die Spracherkennung war nicht eindeutig{note}. Wähle oben die richtige Sprache aus und klicke dann auf OCR ausführen.',
@@ -993,9 +987,11 @@ window.PDFREE_LOCALE = {
   ocr_ios_confirm:           'Dieses PDF hat {n} Seiten. Mobile Safari könnte bei großen Dokumenten nicht genug Speicher haben.\n\nEs werden nur die ersten {max} Seiten verarbeitet. Teile das PDF zuerst auf, um die restlichen Seiten zu verarbeiten.\n\nFortfahren?',
   ocr_cancelled_by_user:     'Vom Benutzer abgebrochen.',
   ocr_initializing_engine:   'OCR-Engine wird initialisiert…',
+  ocr_first_run_note: "Beim ersten Start wird die Texterkennung einmalig heruntergeladen (ca. 4 MB) — danach startet sie sofort.",
+  ocr_loading_engine_first: "Texterkennung wird heruntergeladen — nur beim ersten Mal…",
+  ocr_loading_lang_pct: "Modell „{lang}“ wird heruntergeladen… {pct}%",
   ocr_initializing_short:    'Wird initialisiert…',
   ocr_recognizing_text:      'Text wird erkannt ({lang})…',
-  ocr_loading_lang_short:    '{lang} wird geladen…',
 
   // ── pdf2wordUI.js ────────────────────────────────────────
   p2w_cannot_read:           'PDF kann nicht gelesen werden: {msg}',

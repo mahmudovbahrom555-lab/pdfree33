@@ -218,7 +218,6 @@ window.PDFREE_LOCALE = {
   retry:          '⟳ 重试',
 
   // ── ocrUI.js ───────────────────────────────────────────────────
-  install_ocr_first:    '请先安装 OCR 引擎 — 点击"安装 OCR PDF"',
 
   // ── errors ────────────────────────────────────────────────────
   no_pages_selected:    '未选择任何有效页面',
@@ -968,7 +967,6 @@ window.PDFREE_LOCALE = {
   cmp_found_pieceinfo:    'PieceInfo',
 
   // ── ocrUI.js ───────────────────────────────────────────────────
-  ocr_download_failed:      '下载失败 — 请检查网络连接后重试',
   ocr_lang_doc:              '文档语言',
   ocr_auto_recommended:      '自动（推荐）',
   ocr_auto_detected:         '自动 — 已检测到：{lang}',
@@ -980,13 +978,9 @@ window.PDFREE_LOCALE = {
   ocr_has_text_layer:        '此 PDF 已包含文本层 — 无需 OCR，可直接下载',
   ocr_scanned_needs_ocr:     '此 PDF 为扫描件 — 需要 OCR 才能提取文本。',
   ocr_ready_msg:             '已就绪 — 点击"使 PDF 可搜索"开始',
-  ocr_install_btn:           '安装 OCR PDF · 约 17 MB',
-  ocr_ios_hint:              '安装应用：点击"分享" → "添加到主屏幕"',
-  ocr_download_engine_btn:   '下载 OCR 引擎 · 约 17 MB',
   ocr_lang_installed:        '{lang} 已安装 — 无需下载',
   ocr_lang_download_note:    '一次性下载（约 {size}）。存储在您浏览器的本地。',
   ocr_cjk_note:              '数字和拉丁文字识别效果良好。密集的汉字可能识别精度较低 — 这是 Tesseract 已知的局限。',
-  ocr_downloading_engine:    '正在下载 OCR 引擎…',
   ocr_select_lang_first:     '↑ 请先选择语言',
   ocr_processing:            '处理中…',
   ocr_detection_inconclusive: '语言检测结果不确定{note}。请在上方选择正确的语言，然后点击运行 OCR。',
@@ -1035,9 +1029,11 @@ window.PDFREE_LOCALE = {
   ocr_ios_confirm:           '此 PDF 共有 {n} 页。移动版 Safari 在处理大文档时可能会内存不足。\n\n仅前 {max} 页会被处理。请先拆分 PDF 以处理剩余页面。\n\n是否继续？',
   ocr_cancelled_by_user:     '用户已取消。',
   ocr_initializing_engine:   '正在初始化 OCR 引擎…',
+  ocr_first_run_note: "首次运行时会一次性下载识别引擎（约 4 MB），之后即可立即启动。",
+  ocr_loading_engine_first: "正在下载识别引擎（仅首次）…",
+  ocr_loading_lang_pct: "正在下载{lang}模型… {pct}%",
   ocr_initializing_short:    '初始化中…',
   ocr_recognizing_text:      '正在识别文字（{lang}）…',
-  ocr_loading_lang_short:    '正在加载 {lang}…',
 
   // ── pdf2wordUI.js ──────────────────────────────────────────────
   p2w_cannot_read:          '无法读取 PDF：{msg}',

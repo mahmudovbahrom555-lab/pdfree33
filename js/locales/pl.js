@@ -211,7 +211,6 @@ window.PDFREE_LOCALE = {
   retry:          '⟳ Spróbuj ponownie',
 
   // ocrUI
-  install_ocr_first: 'Najpierw zainstaluj silnik OCR — kliknij "Zainstaluj OCR PDF"',
 
   // errors
   no_pages_selected:    'Nie wybrano prawidłowych stron',
@@ -923,7 +922,6 @@ window.PDFREE_LOCALE = {
   cmp_found_pieceinfo:    'PieceInfo',
 
   // ocrUI.js
-  ocr_download_failed:      'Pobieranie nie powiodło się — sprawdź połączenie i spróbuj ponownie',
   ocr_lang_doc:              'Język dokumentu',
   ocr_auto_recommended:      'Automatyczny (zalecany)',
   ocr_auto_detected:         'Automatyczny — wykryto: {lang}',
@@ -935,13 +933,9 @@ window.PDFREE_LOCALE = {
   ocr_has_text_layer:        'Ten plik PDF ma już warstwę tekstową — OCR nie jest potrzebny, gotowy do pobrania',
   ocr_scanned_needs_ocr:     'Ten plik PDF jest zeskanowany — do wyodrębnienia tekstu wymagane jest OCR.',
   ocr_ready_msg:             'OCR gotowe — kliknij „Uczyń PDF przeszukiwalnym", aby zacząć',
-  ocr_install_btn:           'Zainstaluj OCR PDF · ~17 MB',
-  ocr_ios_hint:              'Aby zainstalować aplikację: dotknij Udostępnij → Dodaj do ekranu głównego',
-  ocr_download_engine_btn:   'Pobierz silnik OCR · ~17 MB',
   ocr_lang_installed:        '{lang} zainstalowany — pobieranie niepotrzebne',
   ocr_lang_download_note:    'Jednorazowe pobranie (~{size}). Zapisywane lokalnie w przeglądarce.',
   ocr_cjk_note:              'Cyfry i tekst łaciński są dobrze rozpoznawane. Gęste kanji/hanzi mogą mieć obniżoną dokładność — znane ograniczenie Tesseracta.',
-  ocr_downloading_engine:    'Pobieranie silnika OCR…',
   ocr_select_lang_first:     '↑ Najpierw wybierz język',
   ocr_processing:            'Przetwarzanie…',
   ocr_detection_inconclusive: 'Wykrywanie języka nie było jednoznaczne{note}. Wybierz właściwy język powyżej, a następnie kliknij Uruchom OCR.',
@@ -990,9 +984,11 @@ window.PDFREE_LOCALE = {
   ocr_ios_confirm:           'Ten plik PDF ma {n} stron. Mobilnej Safari może zabraknąć pamięci przy dużych dokumentach.\n\nPrzetworzonych zostanie tylko pierwszych {max} stron. Najpierw podziel PDF, aby przetworzyć pozostałe strony.\n\nKontynuować?',
   ocr_cancelled_by_user:     'Anulowano przez użytkownika.',
   ocr_initializing_engine:   'Inicjalizacja silnika OCR…',
+  ocr_first_run_note: "Przy pierwszym uruchomieniu silnik rozpoznawania zostanie pobrany jednorazowo (ok. 4 MB) — potem uruchamia się od razu.",
+  ocr_loading_engine_first: "Pobieranie silnika rozpoznawania — tylko za pierwszym razem…",
+  ocr_loading_lang_pct: "Pobieranie modelu {lang}… {pct}%",
   ocr_initializing_short:    'Inicjalizacja…',
   ocr_recognizing_text:      'Rozpoznawanie tekstu ({lang})…',
-  ocr_loading_lang_short:    'Ładowanie {lang}…',
 
   // ── pdf2wordUI.js ────────────────────────────────────────
   p2w_cannot_read:           'Nie można odczytać pliku PDF: {msg}',

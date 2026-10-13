@@ -193,7 +193,6 @@ export const EN = {
   retry:          '⟳ Try again',
 
   // ── ocrUI.js ───────────────────────────────────────────────────
-  install_ocr_first:    'Install OCR engine first — click "Install OCR PDF"',
 
   // ── errors ────────────────────────────────────────────────────
   no_pages_selected:    'No valid pages selected',
@@ -943,7 +942,6 @@ export const EN = {
   cmp_found_pieceinfo:    'PieceInfo',
 
   // ── ocrUI.js ───────────────────────────────────────────────────
-  ocr_download_failed:      'Download failed — check your connection and try again',
   ocr_lang_doc:              'Document language',
   ocr_auto_recommended:      'Auto (Recommended)',
   ocr_auto_detected:         'Auto — Detected: {lang}',
@@ -955,13 +953,9 @@ export const EN = {
   ocr_has_text_layer:        'This PDF already has a text layer — no OCR needed, ready to download',
   ocr_scanned_needs_ocr:     'This PDF is scanned — OCR required to extract text.',
   ocr_ready_msg:             'OCR ready — click "Make PDF Searchable" to start',
-  ocr_install_btn:           'Install OCR PDF · ~17 MB',
-  ocr_ios_hint:              'To install the app: tap Share → Add to Home Screen',
-  ocr_download_engine_btn:   'Download OCR Engine · ~17 MB',
   ocr_lang_installed:        '{lang} installed — no download needed',
   ocr_lang_download_note:    'One-time download (~{size}). Stored locally in your browser.',
   ocr_cjk_note:              'Numbers and Latin text recognized well. Dense kanji/hanzi may have reduced accuracy — known Tesseract limitation.',
-  ocr_downloading_engine:    'Downloading OCR engine…',
   ocr_select_lang_first:     '↑ Select a language first',
   ocr_processing:            'Processing…',
   ocr_detection_inconclusive: 'Language detection was inconclusive{note}. Choose the correct language above, then click Run OCR.',
@@ -1010,9 +1004,11 @@ export const EN = {
   ocr_ios_confirm:           'This PDF has {n} pages. Mobile Safari may run out of memory on large documents.\n\nOnly the first {max} pages will be processed. Split the PDF first to process remaining pages.\n\nContinue?',
   ocr_cancelled_by_user:     'Cancelled by user.',
   ocr_initializing_engine:   'Initializing OCR engine…',
+  ocr_first_run_note: "The first run downloads the recognition engine once (about 4 MB) — after that it starts right away.",
+  ocr_loading_engine_first: "Downloading the recognition engine — first time only…",
+  ocr_loading_lang_pct: "Downloading the {lang} model… {pct}%",
   ocr_initializing_short:    'Initializing…',
   ocr_recognizing_text:      'Recognizing text ({lang})…',
-  ocr_loading_lang_short:    'Loading {lang}…',
 
   // ── pdf2wordUI.js ──────────────────────────────────────────────
   p2w_cannot_read:          'Cannot read PDF: {msg}',

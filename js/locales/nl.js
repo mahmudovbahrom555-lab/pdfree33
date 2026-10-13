@@ -211,7 +211,6 @@ window.PDFREE_LOCALE = {
   retry:          '⟳ Opnieuw proberen',
 
   // ocrUI
-  install_ocr_first: 'Installeer eerst de OCR-engine — klik op "PDF OCR installeren"',
 
   // errors
   no_pages_selected:    'Geen geldige pagina\'s geselecteerd',
@@ -923,7 +922,6 @@ window.PDFREE_LOCALE = {
   cmp_found_pieceinfo:    'PieceInfo',
 
   // ocrUI.js
-  ocr_download_failed:      'Download mislukt — controleer je verbinding en probeer het opnieuw',
   ocr_lang_doc:              'Documenttaal',
   ocr_auto_recommended:      'Automatisch (Aanbevolen)',
   ocr_auto_detected:         'Automatisch — Gedetecteerd: {lang}',
@@ -935,13 +933,9 @@ window.PDFREE_LOCALE = {
   ocr_has_text_layer:        'Deze PDF heeft al een tekstlaag — geen OCR nodig, klaar om te downloaden',
   ocr_scanned_needs_ocr:     'Deze PDF is gescand — OCR is nodig om tekst te extraheren.',
   ocr_ready_msg:             'OCR gereed — klik op "Maak PDF doorzoekbaar" om te starten',
-  ocr_install_btn:           'OCR PDF installeren · ~17 MB',
-  ocr_ios_hint:              'App installeren: tik op Delen → Zet op beginscherm',
-  ocr_download_engine_btn:   'OCR-engine downloaden · ~17 MB',
   ocr_lang_installed:        '{lang} geïnstalleerd — geen download nodig',
   ocr_lang_download_note:    'Eenmalige download (~{size}). Lokaal opgeslagen in je browser.',
   ocr_cjk_note:              'Cijfers en Latijnse tekst worden goed herkend. Dichte kanji/hanzi kunnen minder nauwkeurig zijn — bekende beperking van Tesseract.',
-  ocr_downloading_engine:    'OCR-engine downloaden…',
   ocr_select_lang_first:     '↑ Selecteer eerst een taal',
   ocr_processing:            'Verwerken…',
   ocr_detection_inconclusive: 'Taaldetectie was niet doorslaggevend{note}. Kies hierboven de juiste taal en klik dan op OCR uitvoeren.',
@@ -990,9 +984,11 @@ window.PDFREE_LOCALE = {
   ocr_ios_confirm:           'Deze PDF heeft {n} pagina\'s. Mobiele Safari kan geheugen tekortkomen bij grote documenten.\n\nAlleen de eerste {max} pagina\'s worden verwerkt. Splits de PDF eerst om de resterende pagina\'s te verwerken.\n\nDoorgaan?',
   ocr_cancelled_by_user:     'Geannuleerd door gebruiker.',
   ocr_initializing_engine:   'OCR-engine initialiseren…',
+  ocr_first_run_note: "De eerste keer wordt de herkenningsengine eenmalig gedownload (ongeveer 4 MB) — daarna start hij meteen.",
+  ocr_loading_engine_first: "Herkenningsengine downloaden — alleen de eerste keer…",
+  ocr_loading_lang_pct: "Model {lang} downloaden… {pct}%",
   ocr_initializing_short:    'Initialiseren…',
   ocr_recognizing_text:      'Tekst herkennen ({lang})…',
-  ocr_loading_lang_short:    '{lang} laden…',
 
   // ── pdf2wordUI.js ────────────────────────────────────────
   p2w_cannot_read:           'Kan PDF niet lezen: {msg}',

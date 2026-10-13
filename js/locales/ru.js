@@ -212,7 +212,6 @@ window.PDFREE_LOCALE = {
   retry:          '⟳ Повторить',
 
   // ocrUI
-  install_ocr_first:   'Сначала установите OCR-модуль — нажмите «Установить OCR PDF»',
 
   // errors
   no_pages_selected:   'Не выбрано ни одной подходящей страницы',
@@ -924,7 +923,6 @@ window.PDFREE_LOCALE = {
   cmp_found_pieceinfo:    'PieceInfo',
 
   // ocrUI.js
-  ocr_download_failed:      'Ошибка загрузки — проверьте соединение и попробуйте снова',
   ocr_lang_doc:              'Язык документа',
   ocr_auto_recommended:      'Авто (рекомендуется)',
   ocr_auto_detected:         'Авто — определён: {lang}',
@@ -936,13 +934,9 @@ window.PDFREE_LOCALE = {
   ocr_has_text_layer:        'В этом PDF уже есть текстовый слой — OCR не требуется, готово к скачиванию',
   ocr_scanned_needs_ocr:     'Этот PDF отсканирован — для извлечения текста требуется OCR.',
   ocr_ready_msg:             'OCR готов — нажмите «Сделать PDF доступным для поиска», чтобы начать',
-  ocr_install_btn:           'Установить OCR PDF · ~17 МБ',
-  ocr_ios_hint:              'Чтобы установить приложение: нажмите «Поделиться» → «На экран «Домой»',
-  ocr_download_engine_btn:   'Скачать движок OCR · ~17 МБ',
   ocr_lang_installed:        '{lang} установлен — загрузка не требуется',
   ocr_lang_download_note:    'Единоразовая загрузка (~{size}). Хранится локально в вашем браузере.',
   ocr_cjk_note:              'Цифры и латинский текст распознаются хорошо. Плотные иероглифы могут иметь пониженную точность — известное ограничение Tesseract.',
-  ocr_downloading_engine:    'Загрузка движка OCR…',
   ocr_select_lang_first:     '↑ Сначала выберите язык',
   ocr_processing:            'Обработка…',
   ocr_detection_inconclusive: 'Определение языка оказалось неточным{note}. Выберите правильный язык выше, затем нажмите «Запустить OCR».',
@@ -991,9 +985,11 @@ window.PDFREE_LOCALE = {
   ocr_ios_confirm:           'В этом PDF {n} страниц. Мобильному Safari может не хватить памяти для больших документов.\n\nБудут обработаны только первые {max} страниц. Сначала разделите PDF, чтобы обработать оставшиеся страницы.\n\nПродолжить?',
   ocr_cancelled_by_user:     'Отменено пользователем.',
   ocr_initializing_engine:   'Инициализация движка OCR…',
+  ocr_first_run_note: "При первом запуске один раз скачается движок распознавания (около 4 МБ) — дальше он запускается сразу.",
+  ocr_loading_engine_first: "Загрузка движка распознавания — только в первый раз…",
+  ocr_loading_lang_pct: "Загрузка модели «{lang}»… {pct}%",
   ocr_initializing_short:    'Инициализация…',
   ocr_recognizing_text:      'Распознавание текста ({lang})…',
-  ocr_loading_lang_short:    'Загрузка {lang}…',
 
   // ── pdf2wordUI.js ────────────────────────────────────────
   p2w_cannot_read:           'Не удалось прочитать PDF: {msg}',

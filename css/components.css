@@ -304,7 +304,7 @@ button,
    follows it) moves them below that pinned strip so they render fully
    visible on first view instead of needing an unprompted scroll first. */
 @media (max-width: 700px) {
-  #btnInstallOcr, #glsDictionary {
+  #glsDictionary {
     margin-top: 120px;
   }
 }

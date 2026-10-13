@@ -220,7 +220,6 @@ window.PDFREE_LOCALE = {
   retry:          '⟳ إعادة المحاولة',
 
   // ── ocrUI.js ───────────────────────────────────────────────────
-  install_ocr_first:    'يرجى تثبيت محرك OCR أولاً — انقر على "تثبيت OCR PDF"',
 
   // ── errors ────────────────────────────────────────────────────
   no_pages_selected:    'لم يتم تحديد أي صفحات صالحة',
@@ -970,7 +969,6 @@ window.PDFREE_LOCALE = {
   cmp_found_pieceinfo:    'PieceInfo',
 
   // ── ocrUI.js ───────────────────────────────────────────────────
-  ocr_download_failed:      'فشل التنزيل — تحقق من اتصالك وحاول مرة أخرى',
   ocr_lang_doc:              'لغة المستند',
   ocr_auto_recommended:      'تلقائي (موصى به)',
   ocr_auto_detected:         'تلقائي — تم اكتشاف: {lang}',
@@ -982,13 +980,9 @@ window.PDFREE_LOCALE = {
   ocr_has_text_layer:        'يحتوي ملف PDF هذا بالفعل على طبقة نص — لا حاجة لـ OCR، جاهز للتنزيل',
   ocr_scanned_needs_ocr:     'ملف PDF هذا ممسوح ضوئيًا — يلزم OCR لاستخراج النص.',
   ocr_ready_msg:             'جاهز — انقر على "جعل PDF قابلًا للبحث" للبدء',
-  ocr_install_btn:           'تثبيت OCR PDF · حوالي 17 ميجابايت',
-  ocr_ios_hint:              'لتثبيت التطبيق: اضغط على "مشاركة" ← "إضافة إلى الشاشة الرئيسية"',
-  ocr_download_engine_btn:   'تنزيل محرك OCR · حوالي 17 ميجابايت',
   ocr_lang_installed:        'تم تثبيت {lang} — لا حاجة للتنزيل',
   ocr_lang_download_note:    'تنزيل لمرة واحدة (حوالي {size}). يُخزَّن محليًا في متصفحك.',
   ocr_cjk_note:              'يتم التعرف على الأرقام والنص اللاتيني بشكل جيد. الأحرف الصينية/اليابانية الكثيفة قد تكون دقتها أقل — قيد معروف في Tesseract.',
-  ocr_downloading_engine:    'جارٍ تنزيل محرك OCR…',
   ocr_select_lang_first:     '↑ اختر لغة أولاً',
   ocr_processing:            'جارٍ المعالجة…',
   ocr_detection_inconclusive: 'كانت نتيجة اكتشاف اللغة غير حاسمة{note}. اختر اللغة الصحيحة أعلاه، ثم انقر على تشغيل OCR.',
@@ -1037,9 +1031,11 @@ window.PDFREE_LOCALE = {
   ocr_ios_confirm:           'يحتوي ملف PDF هذا على {n} صفحة. قد ينفد إصدار Safari على الجوال من الذاكرة مع المستندات الكبيرة.\n\nسيتم معالجة أول {max} صفحة فقط. قسّم ملف PDF أولاً لمعالجة باقي الصفحات.\n\nهل تريد المتابعة؟',
   ocr_cancelled_by_user:     'تم الإلغاء من قِبل المستخدم.',
   ocr_initializing_engine:   'جارٍ تهيئة محرك OCR…',
+  ocr_first_run_note: "في أول تشغيل يُنزَّل محرك التعرّف مرة واحدة (نحو 4 ميغابايت)، وبعدها يبدأ فورًا.",
+  ocr_loading_engine_first: "جارٍ تنزيل محرك التعرّف — في المرة الأولى فقط…",
+  ocr_loading_lang_pct: "جارٍ تنزيل نموذج {lang}… {pct}%",
   ocr_initializing_short:    'جارٍ التهيئة…',
   ocr_recognizing_text:      'جارٍ التعرف على النص ({lang})…',
-  ocr_loading_lang_short:    'جارٍ تحميل {lang}…',
 
   // ── pdf2wordUI.js ──────────────────────────────────────────────
   p2w_cannot_read:          'تعذّر قراءة ملف PDF: {msg}',

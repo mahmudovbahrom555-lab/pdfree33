@@ -632,8 +632,6 @@ registerTool('ocr', {
   getParams: getOcrParams,
   validate:  p => {
     if (p.loading)                      return t('val_analysing_pdf');
-    if (!p.hasFile)                     return null;
-    if (!p.isTextPdf && !p.isOcrReady) return t('install_ocr_first');
     return null;
   },
 });

@@ -212,7 +212,6 @@ window.PDFREE_LOCALE = {
   retry:          '⟳ Coba lagi',
 
   // ocrUI
-  install_ocr_first:   'Harap instal engine OCR terlebih dahulu — klik "Instal OCR PDF"',
 
   // errors
   no_pages_selected:   'Tidak ada halaman valid yang dipilih',
@@ -924,7 +923,6 @@ window.PDFREE_LOCALE = {
   cmp_found_pieceinfo:    'PieceInfo',
 
   // ocrUI.js
-  ocr_download_failed:      'Unduhan gagal — periksa koneksi Anda dan coba lagi',
   ocr_lang_doc:              'Bahasa dokumen',
   ocr_auto_recommended:      'Otomatis (Direkomendasikan)',
   ocr_auto_detected:         'Otomatis — Terdeteksi: {lang}',
@@ -936,13 +934,9 @@ window.PDFREE_LOCALE = {
   ocr_has_text_layer:        'PDF ini sudah memiliki lapisan teks — OCR tidak diperlukan, siap diunduh',
   ocr_scanned_needs_ocr:     'PDF ini hasil pindaian — OCR diperlukan untuk mengekstrak teks.',
   ocr_ready_msg:             'OCR siap — klik "Jadikan PDF Dapat Dicari" untuk mulai',
-  ocr_install_btn:           'Pasang OCR PDF · ~17 MB',
-  ocr_ios_hint:              'Untuk memasang aplikasi: ketuk Bagikan → Tambah ke Layar Utama',
-  ocr_download_engine_btn:   'Unduh Mesin OCR · ~17 MB',
   ocr_lang_installed:        '{lang} terpasang — tidak perlu unduh',
   ocr_lang_download_note:    'Unduhan sekali (~{size}). Disimpan lokal di browser Anda.',
   ocr_cjk_note:              'Angka dan teks Latin dikenali dengan baik. Kanji/hanzi yang padat mungkin memiliki akurasi lebih rendah — keterbatasan Tesseract yang diketahui.',
-  ocr_downloading_engine:    'Mengunduh mesin OCR…',
   ocr_select_lang_first:     '↑ Pilih bahasa terlebih dahulu',
   ocr_processing:            'Memproses…',
   ocr_detection_inconclusive: 'Deteksi bahasa tidak meyakinkan{note}. Pilih bahasa yang benar di atas, lalu klik Jalankan OCR.',
@@ -991,9 +985,11 @@ window.PDFREE_LOCALE = {
   ocr_ios_confirm:           'PDF ini memiliki {n} halaman. Safari Mobile mungkin kehabisan memori pada dokumen besar.\n\nHanya {max} halaman pertama yang akan diproses. Pisahkan PDF terlebih dahulu untuk memproses halaman yang tersisa.\n\nLanjutkan?',
   ocr_cancelled_by_user:     'Dibatalkan oleh pengguna.',
   ocr_initializing_engine:   'Menginisialisasi mesin OCR…',
+  ocr_first_run_note: "Saat pertama kali, mesin pengenalan diunduh sekali (sekitar 4 MB) — setelah itu langsung berjalan.",
+  ocr_loading_engine_first: "Mengunduh mesin pengenalan — hanya pertama kali…",
+  ocr_loading_lang_pct: "Mengunduh model {lang}… {pct}%",
   ocr_initializing_short:    'Menginisialisasi…',
   ocr_recognizing_text:      'Mengenali teks ({lang})…',
-  ocr_loading_lang_short:    'Memuat {lang}…',
 
   // ── pdf2wordUI.js ────────────────────────────────────────
   p2w_cannot_read:           'Tidak dapat membaca PDF: {msg}',

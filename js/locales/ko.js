@@ -213,7 +213,6 @@ window.PDFREE_LOCALE = {
   retry:          '⟳ 다시 시도',
 
   // ocrUI
-  install_ocr_first: '먼저 OCR 엔진을 설치하세요 — "PDF OCR 설치"를 클릭하세요',
 
   // errors
   no_pages_selected:    '유효한 페이지가 선택되지 않았습니다',
@@ -925,7 +924,6 @@ window.PDFREE_LOCALE = {
   cmp_found_pieceinfo:    'PieceInfo',
 
   // ocrUI.js
-  ocr_download_failed:      '다운로드에 실패했습니다 — 연결 상태를 확인하고 다시 시도해 주세요',
   ocr_lang_doc:              '문서 언어',
   ocr_auto_recommended:      '자동 (추천)',
   ocr_auto_detected:         '자동 — 감지됨: {lang}',
@@ -937,13 +935,9 @@ window.PDFREE_LOCALE = {
   ocr_has_text_layer:        '이 PDF에는 이미 텍스트 레이어가 있습니다 — OCR이 필요 없으며 바로 다운로드할 수 있습니다',
   ocr_scanned_needs_ocr:     '이 PDF는 스캔된 문서입니다 — 텍스트를 추출하려면 OCR이 필요합니다.',
   ocr_ready_msg:             'OCR 준비 완료 — "PDF 검색 가능하게 만들기"를 클릭해 시작하세요',
-  ocr_install_btn:           'OCR PDF 설치 · 약 17 MB',
-  ocr_ios_hint:              '앱 설치 방법: 공유를 탭한 후 → 홈 화면에 추가',
-  ocr_download_engine_btn:   'OCR 엔진 다운로드 · 약 17 MB',
   ocr_lang_installed:        '{lang} 설치됨 — 다운로드 필요 없음',
   ocr_lang_download_note:    '일회성 다운로드 (약 {size}). 브라우저에 로컬로 저장됩니다.',
   ocr_cjk_note:              '숫자와 라틴 문자는 잘 인식됩니다. 밀도가 높은 한자는 정확도가 낮아질 수 있습니다 — Tesseract의 알려진 한계입니다.',
-  ocr_downloading_engine:    'OCR 엔진 다운로드 중…',
   ocr_select_lang_first:     '↑ 먼저 언어를 선택하세요',
   ocr_processing:            '처리 중…',
   ocr_detection_inconclusive: '언어 감지가 확실하지 않습니다{note}. 위에서 올바른 언어를 선택한 후 OCR 실행을 클릭하세요.',
@@ -992,9 +986,11 @@ window.PDFREE_LOCALE = {
   ocr_ios_confirm:           '이 PDF는 {n}페이지입니다. 모바일 Safari는 큰 문서에서 메모리가 부족할 수 있습니다.\n\n처음 {max}페이지만 처리됩니다. 나머지 페이지를 처리하려면 먼저 PDF를 분할하세요.\n\n계속하시겠습니까?',
   ocr_cancelled_by_user:     '사용자가 취소했습니다.',
   ocr_initializing_engine:   'OCR 엔진 초기화 중…',
+  ocr_first_run_note: "처음 실행할 때 인식 엔진(약 4MB)을 한 번만 다운로드하며, 이후에는 바로 시작됩니다.",
+  ocr_loading_engine_first: "인식 엔진 다운로드 중 — 처음 한 번만…",
+  ocr_loading_lang_pct: "{lang} 모델 다운로드 중… {pct}%",
   ocr_initializing_short:    '초기화 중…',
   ocr_recognizing_text:      '텍스트 인식 중 ({lang})…',
-  ocr_loading_lang_short:    '{lang} 불러오는 중…',
 
   // ── pdf2wordUI.js ────────────────────────────────────────
   p2w_cannot_read:           'PDF를 읽을 수 없습니다: {msg}',

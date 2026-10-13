@@ -211,7 +211,6 @@ window.PDFREE_LOCALE = {
   retry:          '⟳ Intentar de nuevo',
 
   // ocrUI
-  install_ocr_first:   'Instala primero el motor OCR — haz clic en "Instalar OCR PDF"',
 
   // errors
   no_pages_selected:   'No hay páginas válidas seleccionadas',
@@ -925,7 +924,6 @@ window.PDFREE_LOCALE = {
   cmp_found_pieceinfo:    'PieceInfo',
 
   // ocrUI.js
-  ocr_download_failed:      'Error de descarga — comprueba tu conexión e inténtalo de nuevo',
   ocr_lang_doc:              'Idioma del documento',
   ocr_auto_recommended:      'Automático (recomendado)',
   ocr_auto_detected:         'Automático — detectado: {lang}',
@@ -937,13 +935,9 @@ window.PDFREE_LOCALE = {
   ocr_has_text_layer:        'Este PDF ya tiene una capa de texto — no requiere OCR, listo para descargar',
   ocr_scanned_needs_ocr:     'Este PDF está escaneado — se requiere OCR para extraer el texto.',
   ocr_ready_msg:             'OCR listo — haz clic en «Hacer PDF buscable» para empezar',
-  ocr_install_btn:           'Instalar OCR PDF · ~17 MB',
-  ocr_ios_hint:              'Para instalar la app: toca Compartir → Añadir a pantalla de inicio',
-  ocr_download_engine_btn:   'Descargar motor OCR · ~17 MB',
   ocr_lang_installed:        '{lang} instalado — no se necesita descarga',
   ocr_lang_download_note:    'Descarga única (~{size}). Se guarda localmente en tu navegador.',
   ocr_cjk_note:              'Los números y el texto latino se reconocen bien. Los kanji/hanzi densos pueden tener menor precisión — limitación conocida de Tesseract.',
-  ocr_downloading_engine:    'Descargando motor OCR…',
   ocr_select_lang_first:     '↑ Selecciona primero un idioma',
   ocr_processing:            'Procesando…',
   ocr_detection_inconclusive: 'La detección de idioma no fue concluyente{note}. Elige el idioma correcto arriba y luego haz clic en Ejecutar OCR.',
@@ -992,9 +986,11 @@ window.PDFREE_LOCALE = {
   ocr_ios_confirm:           'Este PDF tiene {n} páginas. Mobile Safari podría quedarse sin memoria en documentos grandes.\n\nSolo se procesarán las primeras {max} páginas. Divide el PDF primero para procesar las páginas restantes.\n\n¿Continuar?',
   ocr_cancelled_by_user:     'Cancelado por el usuario.',
   ocr_initializing_engine:   'Inicializando motor OCR…',
+  ocr_first_run_note: "La primera vez se descarga el motor de reconocimiento una sola vez (unos 4 MB); después arranca al instante.",
+  ocr_loading_engine_first: "Descargando el motor de reconocimiento — solo la primera vez…",
+  ocr_loading_lang_pct: "Descargando el modelo de {lang}… {pct}%",
   ocr_initializing_short:    'Inicializando…',
   ocr_recognizing_text:      'Reconociendo texto ({lang})…',
-  ocr_loading_lang_short:    'Cargando {lang}…',
 
   // ── pdf2wordUI.js ────────────────────────────────────────
   p2w_cannot_read:           'No se puede leer el PDF: {msg}',

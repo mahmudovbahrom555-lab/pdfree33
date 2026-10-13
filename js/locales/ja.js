@@ -214,7 +214,6 @@ window.PDFREE_LOCALE = {
   retry:          '⟳ 再試行',
 
   // ocrUI
-  install_ocr_first:   '先にOCRエンジンをインストールしてください — 「OCR PDFをインストール」をクリック',
 
   // errors
   no_pages_selected:   '有効なページが選択されていません',
@@ -926,7 +925,6 @@ window.PDFREE_LOCALE = {
   cmp_found_pieceinfo:    'PieceInfo',
 
   // ocrUI.js
-  ocr_download_failed:      'ダウンロードに失敗しました — 接続を確認してもう一度お試しください',
   ocr_lang_doc:              '文書の言語',
   ocr_auto_recommended:      '自動（推奨）',
   ocr_auto_detected:         '自動 — 検出結果: {lang}',
@@ -938,13 +936,9 @@ window.PDFREE_LOCALE = {
   ocr_has_text_layer:        'このPDFには既にテキストレイヤーがあります — OCRは不要です。ダウンロード準備完了',
   ocr_scanned_needs_ocr:     'このPDFはスキャンされたものです — テキストを抽出するにはOCRが必要です。',
   ocr_ready_msg:             'OCR準備完了 — 「PDFを検索可能にする」をクリックして開始',
-  ocr_install_btn:           'OCR PDFをインストール · 約17 MB',
-  ocr_ios_hint:              'アプリをインストールするには: 共有をタップ → ホーム画面に追加',
-  ocr_download_engine_btn:   'OCRエンジンをダウンロード · 約17 MB',
   ocr_lang_installed:        '{lang}はインストール済みです — ダウンロード不要',
   ocr_lang_download_note:    '一度だけのダウンロード（約{size}）。ブラウザにローカル保存されます。',
   ocr_cjk_note:              '数字とラテン文字はよく認識されます。密度の高い漢字は精度が低下する場合があります — Tesseractの既知の制限です。',
-  ocr_downloading_engine:    'OCRエンジンをダウンロード中…',
   ocr_select_lang_first:     '↑ 先に言語を選択してください',
   ocr_processing:            '処理中…',
   ocr_detection_inconclusive: '言語の自動検出が確定しませんでした{note}。上記で正しい言語を選び、OCR実行をクリックしてください。',
@@ -993,9 +987,11 @@ window.PDFREE_LOCALE = {
   ocr_ios_confirm:           'このPDFには{n}ページあります。モバイルSafariでは大きな文書でメモリ不足になる場合があります。\n\n最初の{max}ページのみが処理されます。残りのページを処理するには、先にPDFを分割してください。\n\n続行しますか？',
   ocr_cancelled_by_user:     'ユーザーによりキャンセルされました。',
   ocr_initializing_engine:   'OCRエンジンを初期化中…',
+  ocr_first_run_note: "初回のみ認識エンジン(約4 MB)をダウンロードします。2回目以降はすぐに開始します。",
+  ocr_loading_engine_first: "認識エンジンをダウンロード中(初回のみ)…",
+  ocr_loading_lang_pct: "{lang}モデルをダウンロード中… {pct}%",
   ocr_initializing_short:    '初期化中…',
   ocr_recognizing_text:      'テキストを認識中（{lang}）…',
-  ocr_loading_lang_short:    '{lang}を読み込み中…',
 
   // ── pdf2wordUI.js ────────────────────────────────────────
   p2w_cannot_read:           'PDFを読み込めません: {msg}',
