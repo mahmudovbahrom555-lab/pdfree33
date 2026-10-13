@@ -8,6 +8,7 @@ import { trackToolError }   from './analytics.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
 import { presetRememberCard } from './uiComponents.js';
 import { loadPreset, clearPreset } from './presets.js';
+import './atPolyfill.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _pageCount     = 0;
@@ -546,7 +547,7 @@ async function _loadWithRetry(retriesLeft) {
   try {
     await _loadScript(`${PDFJS_CDN}/pdf.min.js`, PDFJS_SRI);
     window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-      new URL('./vendor/pdf.worker.min.js', import.meta.url).toString();
+      new URL('./pdfWorkerShim.js', import.meta.url).toString();
   } catch (err) {
     if (retriesLeft > 0) {
       await new Promise(r => setTimeout(r, 1000 * (PDFJS_MAX_RETRIES - retriesLeft + 1)));
