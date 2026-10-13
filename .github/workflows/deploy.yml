@@ -183,6 +183,11 @@ jobs:
         # tests/e2e/file-unreadable.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:file-unreadable
 
+      - name: E2E — the empty tool button opens the file picker, not a dead click
+        # It sat disabled until a file was added and a click did nothing (UX
+        # rule 5). See tests/e2e/empty-button.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:empty-button
+
       - name: Corpus diff — compress, production vs this build (real documents)
         # Every PDF in tests/corpus (open-licence real documents + synthetic
         # traps) goes through /compress-pdf/ on PRODUCTION and on this build;

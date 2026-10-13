@@ -628,6 +628,15 @@ function initEvents() {
   });
 
   id('mergeBtn')?.addEventListener('click', _onMergeBtnClick);
+  // The tool's big button sits disabled until a file is added, and clicking
+  // it did nothing at all — a dead button right under a new visitor's
+  // cursor (CLAUDE.md UX rule 5). With no file, it opens the file picker.
+  // A disabled button gets no click, but pointer events reach it (Chromium,
+  // WebKit), and pointerup carries the user activation the picker needs.
+  id('mergeBtn')?.addEventListener('pointerup', e => {
+    if (!e.currentTarget.disabled || selectedFiles.length || e.button !== 0) return;
+    id('fileInput').click();
+  });
 
   const cancelBtn = id('cancelBtn');
   if (cancelBtn) cancelBtn.addEventListener('click', () => {
