@@ -379,7 +379,7 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilena
   // Use pre-decrypted buffer when files.js already ran QPDF at file-add time.
   // .slice(0) copies so the cached buffer survives the postMessage transfer.
   const buffers = await Promise.all(filesSnapshot.map(async f =>
-    f._decryptedBuffer ? f._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await f.arrayBuffer())
+    f._decryptedBuffer ? f._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(f))
   ));
   setProgress(10, t('prog_merging'));
 
@@ -515,7 +515,7 @@ function _ensureSplitWorker() {
 async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false } = {}, toolKey = 'split') {
   if (!_checkSize(filesSnapshot[0], maxFileMb(toolKey))) { _abortUI(); return; }
   const _sf = filesSnapshot[0];
-  const buffer = _sf._decryptedBuffer ? _sf._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _sf.arrayBuffer());
+  const buffer = _sf._decryptedBuffer ? _sf._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(_sf));
   setProgress(5, t('prog_loading_pdf'));
 
   const worker = _ensureSplitWorker();
@@ -675,7 +675,7 @@ function _ensureOrganizeWorker() {
 async function _runOrganize(filesSnapshot, { pageOrder = [] } = {}) {
   if (!_checkSize(filesSnapshot[0], maxFileMb('organize'))) { _abortUI(); return; }
   const file   = filesSnapshot[0];
-  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(file));
   setProgress(5, t('prog_organize'));
 
   const worker = _ensureOrganizeWorker();
@@ -762,7 +762,7 @@ async function _runGlossary(filesSnapshot, { dictionary = [] } = {}) {
   try {
     setProgress(5, t('prog_glossary_load'));
     await loadPdfJs();
-    const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+    const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(file));
     // pdf.js's getDocument() spawns its own internal worker and transfers
     // the underlying ArrayBuffer to it — detaching `buffer` in the
     // process (confirmed empirically: without this .slice(0) copy, the
@@ -863,7 +863,7 @@ function _ensureResizeWorker() {
 async function _runResize(filesSnapshot, { targetSize = 'a4', mode = 'fit', marginPt = 28, orientation = 'auto', customSizePt } = {}) {
   if (!_checkSize(filesSnapshot[0], maxFileMb('resize'))) { _abortUI(); return; }
   const file   = filesSnapshot[0];
-  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(file));
   setProgress(5, t('prog_resize'));
 
   const worker = _ensureResizeWorker();
@@ -922,7 +922,7 @@ function _ensureMangaSplitWorker() {
 async function _runMangaSplit(filesSnapshot, { rtl = true, skipPages = [] } = {}) {
   if (!_checkSize(filesSnapshot[0], maxFileMb('mangaSplit'))) { _abortUI(); return; }
   const file   = filesSnapshot[0];
-  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(file));
   setProgress(5, t('prog_manga_split'));
 
   const worker = _ensureMangaSplitWorker();
@@ -991,7 +991,7 @@ async function _runFillOrder(filesSnapshot, params) {
 
   if (!_checkSize(filesSnapshot[0], maxFileMb('fill'))) { _abortUI(); return; }
   const file     = filesSnapshot[0];
-  const original = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+  const original = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(file));
   setProgress(3, t('prog_fill_order'));
 
   const worker = _ensureFillOrderWorker();
@@ -1093,7 +1093,7 @@ async function _watermarkTextRequest(fileBuffer, options, onProgress) {
 async function _runWatermarkText(filesSnapshot, params) {
   const file = filesSnapshot[0];
   if (!_checkSize(file, maxFileMb('watermark'))) { _abortUI(); return; }
-  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(file));
 
   setProgress(5, t('prog_watermark'));
 
@@ -1169,7 +1169,7 @@ async function _formFieldsRequest(fileBuffer, fields, onProgress) {
 async function _runFormFields(filesSnapshot, params) {
   const file = filesSnapshot[0];
   if (!_checkSize(file, maxFileMb('formFields'))) { _abortUI(); return; }
-  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(file));
 
   setProgress(5, t('prog_formfields'));
 
@@ -1229,7 +1229,7 @@ async function _runCleanScan(filesSnapshot, { mode = 'clean', strength = 0.5, sc
   try {
     setProgress(2, t('prog_clean_scan_load'));
     await loadPdfJs();
-    const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+    const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(file));
     const pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false, data: new Uint8Array(buffer) }).promise;
     const pageCount = pdfDoc.numPages;
     if (pageCount === 0) throw new Error('PDF has no pages');
@@ -1372,7 +1372,7 @@ async function _runEreader(filesSnapshot, { device = 'kindle', grayscale = true,
   try {
     setProgress(2, t('prog_ereader_load'));
     await loadPdfJs();
-    const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+    const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(file));
     const pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false, data: new Uint8Array(buffer) }).promise;
     const pageCount = pdfDoc.numPages;
     if (pageCount === 0) throw new Error('PDF has no pages');
@@ -1528,7 +1528,7 @@ async function _runEreader(filesSnapshot, { device = 'kindle', grayscale = true,
 // The file's bytes as compress sees them (decrypted when an owner password
 // was removed on add) — shared by the single-file and batch paths.
 async function _readCompressBuffer(file) {
-  return file._decryptedBuffer ? file._decryptedBuffer.slice(0) : preprocessPdfBuffer(await file.arrayBuffer());
+  return file._decryptedBuffer ? file._decryptedBuffer.slice(0) : preprocessPdfBuffer(await _readSelected(file));
 }
 
 // Lossless pre-pass (js/compressPrepWorker.js — see its header): images
@@ -1701,7 +1701,7 @@ async function _runJpg2Pdf(filesSnapshot, params, toolKey = 'jpg2pdf') {
   // buffer, which worker.js's own existing empty-buffer guard already
   // skips and reports — no worker.js changes needed either way.
   const buffers = await Promise.all(filesSnapshot.map(async f => {
-    if (!isHeicFile(f)) return f.arrayBuffer();
+    if (!isHeicFile(f)) return _readSelected(f);
     const jpegBlob = await decodeHeicToJpegBlob(f);
     return jpegBlob ? jpegBlob.arrayBuffer() : new ArrayBuffer(0);
   }));
@@ -1897,7 +1897,7 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi }) {
   // on all origins including localhost. No disableWorker needed.
   let pdfDoc;
   try {
-    const rawBuf = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+    const rawBuf = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(file));
     pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
       data:              new Uint8Array(rawBuf),
       useSystemFonts:    false,
@@ -2102,7 +2102,7 @@ async function _runWorkerTool(tool, filesSnapshot, params, bufferOverride) {
 
   const file   = filesSnapshot[0];
   if (!_checkSize(file, maxFileMb(tool))) { _abortUI(); return; }
-  const buffer = bufferOverride ?? (file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer()));
+  const buffer = bufferOverride ?? (file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(file)));
 
   const labelMap = {
     watermark: t('prog_watermark'),
@@ -2299,7 +2299,7 @@ async function _batchCompressOne(file, params, onProgress) {
 
 /** One file through a generic worker tool (watermark/protect/pagenum/flatten) — returns { name, buffer }. */
 async function _batchWorkerToolOne(tool, file, params, onProgress) {
-  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(file));
   // Same Unicode-font routing as the single-file path in _runWorkerTool —
   // see watermarkTextWorker.js for why. _watermarkTextRequest throwing
   // (e.g. code:'unsupported-characters') is caught by _runBatch's own
@@ -2487,7 +2487,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
 
   const rawBuf = file._decryptedBuffer
     ? file._decryptedBuffer.slice(0)
-    : await preprocessPdfBuffer(await file.arrayBuffer());
+    : await preprocessPdfBuffer(await _readSelected(file));
   const pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
     data:              new Uint8Array(rawBuf),
     useSystemFonts:    false,
@@ -2709,7 +2709,7 @@ async function _runPdf2Excel(filesSnapshot) {
   try {
     const rawBuf = file._decryptedBuffer
       ? file._decryptedBuffer.slice(0)
-      : await preprocessPdfBuffer(await file.arrayBuffer());
+      : await preprocessPdfBuffer(await _readSelected(file));
     pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
       data:              new Uint8Array(rawBuf),
       useSystemFonts:    false,
@@ -3728,7 +3728,7 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'image' } = {}) {
   try {
     const rawBuf = file._decryptedBuffer
       ? file._decryptedBuffer.slice(0)
-      : await preprocessPdfBuffer(await file.arrayBuffer());
+      : await preprocessPdfBuffer(await _readSelected(file));
     pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
       data:              new Uint8Array(rawBuf),
       useSystemFonts:    false,
@@ -4092,7 +4092,7 @@ async function _runPdf2Md(filesSnapshot, { enableFormulaOcr = false } = {}) {
   try {
     const rawBuf = file._decryptedBuffer
       ? file._decryptedBuffer.slice(0)
-      : await preprocessPdfBuffer(await file.arrayBuffer());
+      : await preprocessPdfBuffer(await _readSelected(file));
     pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
       data:              new Uint8Array(rawBuf),
       useSystemFonts:    false,
@@ -4355,7 +4355,7 @@ async function _runUnlock(filesSnapshot, { password } = {}) {
       // redundant WASM round-trip.
       decrypted = new Uint8Array(file._decryptedBuffer.slice(0));
     } else {
-      const bytes = new Uint8Array(await file.arrayBuffer());
+      const bytes = new Uint8Array(await _readSelected(file));
       decrypted = await decryptWithPassword(bytes, password ?? '');
     }
   } catch (err) {
@@ -6121,6 +6121,23 @@ function _errorId(tool, errorType) {
   return `${tool.toUpperCase()}-${_hashCode(`${tool}:${errorType}`)}`;
 }
 
+// A file the user selected, read. The browser can refuse a file it accepted
+// earlier: saved again by another app, moved or deleted, a cloud-drive file
+// not on the device (OneDrive, iCloud), a drive unplugged. Chrome then says
+// "The requested file could not be read, typically due to permission
+// problems that have occurred after a reference to a file was acquired." —
+// shown as is on a Merge error card (MERGE-C308, 2026-10-13), the user left
+// to guess. Its name goes with the error so they know which file to re-add.
+const _UNREADABLE = 'FILE_UNREADABLE:';
+async function _readSelected(file) {
+  try {
+    return await file.arrayBuffer();
+  } catch (err) {
+    if (err?.name === 'NotReadableError' || err?.name === 'NotFoundError') throw new Error(_UNREADABLE + file.name, { cause: err });
+    throw err;
+  }
+}
+
 function _handleError(tool, message, errorType = null) {
   hideProgress();
   setButtonReady(TOOLS[tool]?.btn || 'Try again');
@@ -6137,6 +6154,16 @@ function _handleError(tool, message, errorType = null) {
   let friendly = message;
   if (errorType !== null) {
     // caller already classified this — trust their message as-is.
+  } else if (message?.startsWith(_UNREADABLE)) {
+    friendly   = t('err_file_unreadable', { name: message.slice(_UNREADABLE.length) });
+    errorType  = 'file_unreadable';
+  } else if (
+    // the same refusal read elsewhere (a worker, a UI module): Chrome's text,
+    // and Firefox's and Safari's "The I/O read operation failed"
+    /could not be read, typically due to permission|I\/O read operation failed|NotReadableError/i.test(message || '')
+  ) {
+    friendly   = t('err_file_unreadable_any');
+    errorType  = 'file_unreadable';
   } else if (message?.includes('ENCRYPTOR_UNAVAILABLE')) {
     friendly   = t('err_enc_unavailable');
     errorType  = 'enc_lib_failed';
