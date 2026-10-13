@@ -12,6 +12,7 @@ import { showCancelBtn, hideCancelBtn } from './ui.js';
 import { CJK_LANGS, COMPLEX_LANGS, primaryScript, loadTesseract, createOcrWorker,
          detectOcrLanguage, recognizePage, ocrLangForLocale } from './ocrEngine.js';
 import { getLang } from './config.js';
+import { trackToolStart, trackToolSuccess, trackToolError } from './analytics.js';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const TEXT_CHAR_THRESHOLD = 100; // min chars across sampled pages → classified as text PDF (items-count was 5 — too low)
@@ -595,6 +596,9 @@ function _bindMergeBtn() {
     btn.disabled = true;
     btn.textContent = t('ocr_processing');
     btn.classList.add('ocr-btn--busy');
+    // Self-managed: app.js's tool funnel (Tool Start/Success/Error) never saw
+    // OCR — 54 opens from China in a month and no outcome either way.
+    trackToolStart('ocr');
     const bar = document.getElementById('progressBar');
     if (bar) bar.hidden = false;
     showCancelBtn();
@@ -617,6 +621,7 @@ function _bindMergeBtn() {
           _downloadText(text, _file.name);
         }
         // _showSuccess handles the main PDF auto-download via _lastResultBlob
+        trackToolSuccess('ocr', { outputSize: _lastResultBlob.size });
         _showSuccess(t('ocr_already_had_text'));
       } else {
         const myGen = ++_generation;
@@ -646,6 +651,7 @@ function _bindMergeBtn() {
         }
         // _showSuccess handles the main PDF auto-download via _lastResultBlob
         const qualityLabel = _ocrQualityLabel(avgConfidence, usedLang);
+        trackToolSuccess('ocr', { outputSize: _lastResultBlob.size });
         _showSuccess(t('ocr_searchable_saved', { quality: qualityLabel }));
       }
     } catch (err) {
@@ -654,8 +660,10 @@ function _bindMergeBtn() {
         // _showLangRequired() disables the button via _requiresManualLang flag;
         // the finally block calls _syncBtnLabel() which respects that flag.
         _showLangRequired(_detectedLang);
+        trackToolError('ocr', 'lang_required');
       } else {
         _showToast(t('ocr_error_prefix', { msg: err.message }));
+        trackToolError('ocr', `unknown: ${String(err.message).slice(0, 60)}`);
       }
     } finally {
       // _syncBtnLabel() checks _requiresManualLang — if set, keeps button disabled
