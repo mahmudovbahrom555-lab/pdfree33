@@ -35,6 +35,8 @@ function foldDiacritics(s) {
 // Traditional Chinese characters of PDF-tool queries → Simplified, the
 // script our Chinese synonyms are in: "PDF轉成EXCEL" (Taiwan, Hong Kong — and
 // /zh/ pages a browser translated to Traditional) found nothing (2026-10-13).
+// Searched as an alternative, never instead: Japanese writes 書 編 頁 縮 as
+// they are, and "スキャンした文書" mapped to "…文书" found the wrong tool.
 const _T2S = Object.fromEntries([...'轉转換换檔档圖图頁页壓压縮缩併并編编輯辑單单簽签註注刪删鎖锁掃扫識识別别擷撷寫写對对讀读書书製制調调開开檢检碼码號号層层標标題题張张復复劃划線线變变為为從从個个機机電电腦脑網网載载傳传檔档護护頻频際际'
   .match(/../g)].map(([t, s]) => [t, s]));
 function toSimplified(s) {
@@ -178,9 +180,19 @@ function minQueryLength(q) {
 const NO_FUZZY_RE = /\d/;
 
 export function search(query, index) {
-  const q = toSimplified(foldDiacritics(query.toLowerCase().trim()));
+  const q = foldDiacritics(query.toLowerCase().trim());
   if (q.length < minQueryLength(q)) return [];
+  const simplified = toSimplified(q);
+  const results = new Map();
+  for (const variant of simplified === q ? [q] : [q, simplified]) {
+    for (const hit of _search(variant, index)) {
+      if (!results.has(hit.key) || results.get(hit.key).score < hit.score) results.set(hit.key, hit);
+    }
+  }
+  return [...results.values()].sort((a, b) => b.score - a.score);
+}
 
+function _search(q, index) {
   return index
     .map(entry => {
       let score = 0;
