@@ -273,6 +273,7 @@ window.PDFREE_LOCALE = {
   error_msg:           'Fehler: {msg}',
   error_report_hint:   ' — zum Melden tippen',
   repair_offer: "Tippen, um die Datei zu reparieren und es erneut zu versuchen.",
+  repair_button: "Datei reparieren",
   repair_working: "Datei wird repariert…",
   repair_done: "Repariert — läuft erneut…",
   repair_nothing: "An dieser Datei ließ sich nichts reparieren. Tippen, um es zu melden.",
@@ -735,7 +736,6 @@ window.PDFREE_LOCALE = {
 
   // extractUI.js (backs split + extract)
   ext_loading:            'Seiten werden geladen…',
-  ext_load_failed:        'PDF konnte nicht geladen werden: {msg}',
   ext_too_many_pages:     'Dieses PDF enthält eine ungewöhnlich hohe Seitenzahl ({n}) und kann nicht sicher angezeigt werden.',
   ext_step_output_format: 'Ausgabeformat',
   ext_mode_single:        'Einzelne Datei',

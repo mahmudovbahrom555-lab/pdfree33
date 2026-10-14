@@ -22,6 +22,7 @@ import { showToast }        from './ui.js';
 import { wasRejectedAsNotPdf } from './files.js';
 import { chipGroup, checkbox, group, loadingRow, infoBanner } from './uiComponents.js';
 import { loadPdfLib }       from './lazyLibs.js';
+import { preprocessPdfBuffer } from './decryptPdf.js';
 import { t }                from './i18n.js';
 import { getLang }          from './config.js';
 import './nupLayout.js';
@@ -68,7 +69,10 @@ export async function initNupOptions(files) {
     const { PDFDocument } = window.PDFLib;
     const pages = [];
     for (const file of files) {
-      const doc = await PDFDocument.load(await file.arrayBuffer(), { ignoreEncryption: true });
+      // the decrypted bytes when there are some (an owner-password PDF):
+      // pdf-lib reads ciphertext otherwise and the panel never appeared
+      const buf = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await file.arrayBuffer());
+      const doc = await PDFDocument.load(buf, { ignoreEncryption: true });
       if (gen !== _gen) return;
       for (const page of doc.getPages()) {
         let box;

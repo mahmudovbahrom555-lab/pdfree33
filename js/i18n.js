@@ -251,6 +251,7 @@ export const EN = {
   error_msg:            'Error: {msg}',
   error_report_hint:    ' — tap to report',
   repair_offer: "Tap to repair it and try again.",
+  repair_button: "Repair the file",
   repair_working: "Repairing the file…",
   repair_done: "Repaired — running again…",
   repair_nothing: "Nothing in this file could be repaired. Tap to report it.",
@@ -749,7 +750,6 @@ export const EN = {
 
   // ── extractUI.js (backs split + extract) ──────────────────────
   ext_loading:            'Loading pages…',
-  ext_load_failed:        'Failed to load PDF: {msg}',
   ext_too_many_pages:     "This PDF declares an unusually large page count ({n}) and can't be displayed safely.",
   ext_step_output_format: 'Output format',
   ext_mode_single:        'Single file',

@@ -9,6 +9,7 @@ import { preprocessPdfBuffer } from './decryptPdf.js';
 import { presetRememberCard } from './uiComponents.js';
 import { loadPreset, clearPreset } from './presets.js';
 import './atPolyfill.js';
+import { showDamaged }       from './damagedPanel.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _pageCount     = 0;
@@ -133,12 +134,9 @@ export async function initPdf2JpgOptions(file) {
       id('p2jRetryLoad')?.addEventListener('click', () => initPdf2JpgOptions(file));
     } else {
       trackToolError('pdf2jpg', 'pdf_read_failed');
-      showToast(t('error_msg', { msg: err.message }));
-      container.style.display = 'none';
-      // _render() (which calls _updateMergeBtn()) never runs on this path —
-      // undo the disable from the top of this function so the button doesn't
-      // get stuck disabled forever with the file still selected.
-      if (mergeBtn) mergeBtn.disabled = false;
+      // the button stays off: with no pages read, it could only answer
+      // "select at least one page"
+      await showDamaged(container, [file], () => initPdf2JpgOptions(file), 'pdf2jpg');
     }
   }
 }

@@ -277,6 +277,7 @@ window.PDFREE_LOCALE = {
   error_msg:            '错误：{msg}',
   error_report_hint:    ' — 点击反馈',
   repair_offer: "点击修复文件并重试。",
+  repair_button: "修复文件",
   repair_working: "正在修复文件…",
   repair_done: "已修复，正在重新运行…",
   repair_nothing: "此文件中没有可修复的内容。点击报告问题。",
@@ -775,7 +776,6 @@ window.PDFREE_LOCALE = {
 
   // ── extractUI.js (backs split + extract) ──────────────────────
   ext_loading:            '正在加载页面…',
-  ext_load_failed:        'PDF 加载失败：{msg}',
   ext_too_many_pages:     '此 PDF 声明的页数异常庞大（{n} 页），无法安全显示。',
   ext_step_output_format: '输出格式',
   ext_mode_single:        '单一文件',

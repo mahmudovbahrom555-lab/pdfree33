@@ -274,6 +274,7 @@ window.PDFREE_LOCALE = {
   error_msg:      '오류: {msg}',
   error_report_hint: ' — 신고하려면 탭하세요',
   repair_offer: "눌러서 파일을 복구하고 다시 시도하세요.",
+  repair_button: "파일 복구",
   repair_working: "파일 복구 중…",
   repair_done: "복구했습니다 — 다시 실행 중…",
   repair_nothing: "이 파일에서 복구할 수 있는 부분이 없습니다. 눌러서 신고하세요.",
@@ -734,7 +735,6 @@ window.PDFREE_LOCALE = {
 
   // extractUI.js (backs split + extract)
   ext_loading:            '페이지를 불러오는 중…',
-  ext_load_failed:        'PDF를 불러오지 못했습니다: {msg}',
   ext_too_many_pages:     '이 PDF는 비정상적으로 많은 페이지 수({n}페이지)를 포함하고 있어 안전하게 표시할 수 없습니다.',
   ext_step_output_format: '출력 형식',
   ext_mode_single:        '단일 파일',

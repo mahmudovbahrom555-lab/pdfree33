@@ -272,6 +272,7 @@ window.PDFREE_LOCALE = {
   error_msg:      'Błąd: {msg}',
   error_report_hint: ' — dotknij, aby zgłosić',
   repair_offer: "Dotknij, aby naprawić plik i spróbować ponownie.",
+  repair_button: "Napraw plik",
   repair_working: "Naprawianie pliku…",
   repair_done: "Naprawiono — uruchamiamy ponownie…",
   repair_nothing: "W tym pliku nie udało się niczego naprawić. Dotknij, aby zgłosić problem.",
@@ -732,7 +733,6 @@ window.PDFREE_LOCALE = {
 
   // extractUI.js (backs split + extract)
   ext_loading:            'Wczytywanie stron…',
-  ext_load_failed:        'Nie udało się wczytać PDF: {msg}',
   ext_too_many_pages:     'Ten plik PDF deklaruje niezwykle dużą liczbę stron ({n}) i nie może zostać bezpiecznie wyświetlony.',
   ext_step_output_format: 'Format wyjściowy',
   ext_mode_single:        'Jeden plik',

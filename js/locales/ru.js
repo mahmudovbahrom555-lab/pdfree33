@@ -273,6 +273,7 @@ window.PDFREE_LOCALE = {
   error_msg:           'Ошибка: {msg}',
   error_report_hint:   ' — нажмите, чтобы сообщить',
   repair_offer: "Нажмите, чтобы починить файл и повторить.",
+  repair_button: "Починить файл",
   repair_working: "Чиним файл…",
   repair_done: "Починили — запускаем снова…",
   repair_nothing: "В этом файле нечего починить. Нажмите, чтобы сообщить о проблеме.",
@@ -733,7 +734,6 @@ window.PDFREE_LOCALE = {
 
   // extractUI.js (backs split + extract)
   ext_loading:            'Загрузка страниц…',
-  ext_load_failed:        'Не удалось загрузить PDF: {msg}',
   ext_too_many_pages:     'Этот PDF содержит необычно большое количество страниц ({n}) и не может быть безопасно отображён.',
   ext_step_output_format: 'Формат вывода',
   ext_mode_single:        'Один файл',

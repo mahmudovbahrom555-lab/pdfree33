@@ -17,6 +17,7 @@ import {
 import { t, tp } from './i18n.js';
 import { esc } from './utils.js';
 import { isBlankPage } from './blankPage.js';
+import { showDamaged } from './damagedPanel.js';
 import { showToast } from './ui.js';
 
 const THUMBS_PER_PAGE = 16;   // 4-column grid of 4 rows
@@ -97,7 +98,8 @@ export async function initExtractOptions(file, defaultMode = 'single') {
     await loadPdfJs();
     if (myGen !== _renderGen) return;
 
-    const buf = await file.arrayBuffer();
+    // repaired (or decrypted) bytes when there are some — see damagedPanel.js
+    const buf = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await file.arrayBuffer();
     _pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
       data: new Uint8Array(buf),
       verbosity: 0,
@@ -125,10 +127,11 @@ export async function initExtractOptions(file, defaultMode = 'single') {
     _updateRangeInput();
     _updateSelCount();
     await _renderThumbPage(myGen);
-  } catch (err) {
+  } catch {
     if (myGen !== _renderGen) return;
-    if (mergeBtn) mergeBtn.disabled = false;
-    _container.innerHTML = `<div class="split-loading">${esc(t('ext_load_failed', { msg: err.message }))}</div>`;
+    // no pages listed → the button stays off: on it, "select at least one
+    // page" was the only answer a damaged file got
+    await showDamaged(_container, [file], () => initExtractOptions(file, _defaultMode), _defaultMode === 'separate' ? 'split' : 'extract');
   }
 }
 

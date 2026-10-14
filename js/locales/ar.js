@@ -279,6 +279,7 @@ window.PDFREE_LOCALE = {
   error_msg:            'خطأ: {msg}',
   error_report_hint:    ' — انقر للإبلاغ',
   repair_offer: "انقر لإصلاح الملف والمحاولة مجددًا.",
+  repair_button: "إصلاح الملف",
   repair_working: "جارٍ إصلاح الملف…",
   repair_done: "تم الإصلاح — نعيد التشغيل…",
   repair_nothing: "لم يكن في هذا الملف ما يمكن إصلاحه. انقر للإبلاغ عن المشكلة.",
@@ -777,7 +778,6 @@ window.PDFREE_LOCALE = {
 
   // ── extractUI.js (backs split + extract) ──────────────────────
   ext_loading:            'جارٍ تحميل الصفحات…',
-  ext_load_failed:        'فشل تحميل ملف PDF: {msg}',
   ext_too_many_pages:     'يعلن ملف PDF هذا عن عدد صفحات كبير بشكل غير معتاد ({n}) ولا يمكن عرضه بأمان.',
   ext_step_output_format: 'صيغة المخرجات',
   ext_mode_single:        'ملف واحد',

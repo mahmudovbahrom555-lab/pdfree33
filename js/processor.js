@@ -6279,8 +6279,10 @@ function _handleError(tool, message, errorType = null) {
     // "catalog.Pages(...).traverse is not a function", both reproduced
     // 2026-10-14 — they still reached users as raw text.
     // + pdf.js's word for a broken page tree, "Page dictionary kids object
-    // is not an array" (PDF→Word, nightly robustness run 2026-10-14).
-    /unknown compression method|incorrect header check|invalid (?:stored )?block|invalid distance|bad encoding in flate stream|catalog\.pages\b.*is not a function|kids object is not an array|invalid pdf structure/i.test(message || '')
+    // is not an array", and pdf-lib's "Invalid header in flate stream" and
+    // "Failed to parse PDF document (line… ): Failed to parse invalid PDF
+    // object" (nightly robustness run 2026-10-14, real web PDFs).
+    /unknown compression method|incorrect header check|invalid header in flate stream|invalid (?:stored )?block|invalid distance|bad encoding in flate stream|catalog\.pages\b.*is not a function|kids object is not an array|failed to parse pdf document|invalid pdf structure/i.test(message || '')
   ) {
     friendly   = t('err_encrypted_pdf');
     errorType  = 'pdf_damaged';

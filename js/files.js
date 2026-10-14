@@ -57,8 +57,10 @@ async function _preflightPDF(file) {
     if (!head.includes('%PDF-')) return { notPDF: true };
 
     // Read last 8 KB — covers xref table / xref stream / Encrypt dict.
-    // 8 KB (vs 4 KB) adds margin for large Encrypt dicts with long O/U keys.
-    const TAIL = 8192;
+    // 64 KB: a trailer's /Encrypt is not always in the last few KB — a real
+    // 332-page Persian book had it 4.9 KB from the end (cloud corpus,
+    // 2026-10-14); same window as decryptPdf.js's _looksEncrypted.
+    const TAIL = 65536;
     const tailBuf = await file.slice(Math.max(0, file.size - TAIL)).arrayBuffer();
     const tail    = new TextDecoder('latin1').decode(tailBuf);
 

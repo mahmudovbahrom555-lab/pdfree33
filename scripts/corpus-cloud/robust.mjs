@@ -116,17 +116,18 @@ async function drive(page, tool, file, isCrashed) {
   const check = await page.evaluate(async () => {
     const b = window.__blob;
     const bytes = new Uint8Array(await b.arrayBuffer());
+    const size = bytes.length;   // read now: pdf.js takes the buffer over (detached → 0)
     const head = String.fromCharCode(...bytes.subarray(0, 5));
     if (b.type === 'application/pdf') {
       try {
         await (await import('/js/pdf2jpgUI.js')).loadPdfJs();
         const doc = await window.pdfjsLib.getDocument({ data: bytes }).promise;
         await doc.getPage(1);
-        return { type: b.type, size: bytes.length, ok: doc.numPages > 0, pages: doc.numPages };
-      } catch (e) { return { type: b.type, size: bytes.length, ok: false, why: String(e.message || e).slice(0, 150) }; }
+        return { type: b.type, size, ok: doc.numPages > 0, pages: doc.numPages };
+      } catch (e) { return { type: b.type, size, ok: false, why: String(e.message || e).slice(0, 150) }; }
     }
-    if (/zip|officedocument|comicbook/.test(b.type)) return { type: b.type, size: bytes.length, ok: head.startsWith('PK'), why: head.startsWith('PK') ? '' : 'not a ZIP' };
-    return { type: b.type, size: bytes.length, ok: bytes.length > 0 };
+    if (/zip|officedocument|comicbook/.test(b.type)) return { type: b.type, size, ok: head.startsWith('PK'), why: head.startsWith('PK') ? '' : 'not a ZIP' };
+    return { type: b.type, size, ok: size > 0 };
   });
   return { outcome: check.ok ? 'ok' : 'broken', reason: check.why, out: { type: EXT[check.type] || check.type, size: check.size, pages: check.pages } };
 }

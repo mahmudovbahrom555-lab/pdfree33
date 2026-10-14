@@ -273,6 +273,7 @@ window.PDFREE_LOCALE = {
   error_msg:           'Lỗi: {msg}',
   error_report_hint:   ' — chạm để báo cáo',
   repair_offer: "Chạm để sửa tệp và thử lại.",
+  repair_button: "Sửa tệp",
   repair_working: "Đang sửa tệp…",
   repair_done: "Đã sửa — đang chạy lại…",
   repair_nothing: "Không sửa được gì trong tệp này. Chạm để báo lỗi.",
@@ -733,7 +734,6 @@ window.PDFREE_LOCALE = {
 
   // extractUI.js (backs split + extract)
   ext_loading:            'Đang tải trang…',
-  ext_load_failed:        'Không thể tải PDF: {msg}',
   ext_too_many_pages:     'Tệp PDF này khai báo số trang bất thường ({n}) và không thể hiển thị an toàn.',
   ext_step_output_format: 'Định dạng đầu ra',
   ext_mode_single:        'Một file',

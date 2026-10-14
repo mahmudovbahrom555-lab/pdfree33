@@ -10,7 +10,8 @@
 //  file, re-runs the tool and produces the result, its text read back with
 //  the page's own pdf.js. Plus: a file with leading bytes before %PDF- is
 //  no longer rejected as "not a valid PDF".
-//  Fixtures: tests/fixtures/repair/ (built by pdf-lib, no user documents).
+//  Fixtures: tests/fixtures/repair/ (built by pdf-lib or by hand, no user
+//  documents).
 //  Run: node tests/e2e/repair.e2e.mjs   (dist/ served on :8934)
 // ============================================================
 
@@ -89,6 +90,22 @@ try {
     });
     await failThenRepair(page);
     await page.waitForFunction(() => window.__docx, null, { timeout: 90000 });
+  });
+
+  // Split lists pages before anything runs: on a file its engine can't open
+  // the panel now says it's damaged and offers the repair — it used to show
+  // the engine's text and leave the button on, which then answered "select
+  // at least one page". fixtures/repair/cut-short.pdf: a file cut off after
+  // its first objects (like a real 285-byte one from the cloud corpus) —
+  // nothing to rebuild, so the repair says so.
+  await test('Split on a file cut short: damaged-file panel with a repair button, process button off', async () => {
+    const page = await (await browser.newContext({ serviceWorkers: 'block' })).newPage();
+    await page.goto(BASE_URL + '/split-pdf/', { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', path.join(FIX, 'cut-short.pdf'));
+    await page.waitForSelector('#splitOptions [role="alert"] button', { timeout: 30000 });
+    if (!(await page.evaluate(() => document.querySelector('#mergeBtn').disabled))) throw new Error('process button left on');
+    await page.click('#splitOptions [role="alert"] button');
+    await page.waitForFunction(() => /repair/i.test(document.querySelector('#toast')?.innerText || ''), null, { timeout: 30000 });
   });
 
   await test('bytes before %PDF- (a saved HTTP response): accepted, not "not a valid PDF"', async () => {

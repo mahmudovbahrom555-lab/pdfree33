@@ -272,6 +272,7 @@ window.PDFREE_LOCALE = {
   error_msg:      'Hata: {msg}',
   error_report_hint: ' — bildirmek için dokun',
   repair_offer: "Onarıp yeniden denemek için dokunun.",
+  repair_button: "Dosyayı onar",
   repair_working: "Dosya onarılıyor…",
   repair_done: "Onarıldı — yeniden çalıştırılıyor…",
   repair_nothing: "Bu dosyada onarılabilecek bir şey yok. Bildirmek için dokunun.",
@@ -732,7 +733,6 @@ window.PDFREE_LOCALE = {
 
   // extractUI.js (backs split + extract)
   ext_loading:            'Sayfalar yükleniyor…',
-  ext_load_failed:        'PDF yüklenemedi: {msg}',
   ext_too_many_pages:     'Bu PDF alışılmadık derecede fazla sayfa ({n}) içeriyor ve güvenli şekilde görüntülenemiyor.',
   ext_step_output_format: 'Çıktı biçimi',
   ext_mode_single:        'Tek dosya',

@@ -275,6 +275,7 @@ window.PDFREE_LOCALE = {
   error_msg:           'エラー: {msg}',
   error_report_hint:   '（タップして報告）',
   repair_offer: "タップして修復し、もう一度試します。",
+  repair_button: "ファイルを修復",
   repair_working: "ファイルを修復しています…",
   repair_done: "修復しました — もう一度実行します…",
   repair_nothing: "このファイルには修復できる箇所がありませんでした。タップして報告できます。",
@@ -735,7 +736,6 @@ window.PDFREE_LOCALE = {
 
   // extractUI.js (backs split + extract)
   ext_loading:            'ページを読み込んでいます…',
-  ext_load_failed:        'PDFを読み込めませんでした: {msg}',
   ext_too_many_pages:     'このPDFには異常に多いページ数（{n}）が含まれており、安全に表示できません。',
   ext_step_output_format: '出力形式',
   ext_mode_single:        '単一ファイル',

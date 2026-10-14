@@ -18,6 +18,13 @@
 //  MB even on Maximum. Here such an image is Flate-encoded losslessly
 //  (identical pixels once decoded).
 //
+//  Also: an image whose /Width, /Height or /BitsPerComponent is given by
+//  reference ("/Width 10 0 R" — legal, written by some scanners) made
+//  handleCompress fail outright on dict.get(…)?.asNumber() (worker.js,
+//  off-limits). Those values are resolved to plain numbers here first —
+//  the same values, so the PDF means exactly the same. Found by the
+//  nightly robustness run (a real scanned PDF, 2026-10-14).
+//
 //  Only raw images handleCompress will then skip untouched qualify — those
 //  whose resolved /ColorSpace is an array (ICC, Indexed…); see the guard in
 //  _encodeRawImages for why plain DeviceRGB/DeviceGray ones must stay raw.
@@ -26,8 +33,8 @@
 //
 //  Message contract:
 //   in  → { file: ArrayBuffer }                               [transferred]
-//   out → { type: 'done', result: ArrayBuffer, encoded: number } [transferred]
-//         result is the original buffer when encoded === 0.
+//   out → { type: 'done', result: ArrayBuffer, encoded: number, resolved: number } [transferred]
+//         result is the original buffer when nothing was changed.
 //         Any failure also answers 'done' with the original buffer and
 //         encoded: 0 — this pass must never block a compression.
 // ============================================================
@@ -36,7 +43,7 @@ importScripts('./vendor/pdf-lib.min.js');
 
 self.onmessage = async (e) => {
   const buffer = e.data.file;
-  let out = { result: buffer, encoded: 0 };
+  let out = { result: buffer, encoded: 0, resolved: 0 };
   try {
     out = await _encodeRawImages(buffer);
   } catch { /* fall through with the original buffer */ }
@@ -70,18 +77,56 @@ function _mayHaveRawImage(bytes) {
   return false;
 }
 
+// Same cheap scan for "/Width 10 0 R" (or /Height, /BitsPerComponent): a
+// size given by reference. Text-level, so a false "yes" only costs a parse.
+const _DIM_REF = /\/(?:Width|Height|BitsPerComponent)\s+\d+\s+\d+\s+R\b/;
+function _mayHaveIndirectDims(bytes) {
+  // decoded piecewise (no 100 MB string for a big file), overlapping so a
+  // match across a chunk edge isn't lost; TextDecoder, not
+  // String.fromCharCode.apply — a 1 MB argument list overflows the stack
+  const CHUNK = 1 << 20, latin1 = new TextDecoder('latin1');
+  for (let i = 0; i < bytes.length; i += CHUNK - 64) {
+    if (_DIM_REF.test(latin1.decode(bytes.subarray(i, Math.min(bytes.length, i + CHUNK))))) return true;
+  }
+  return false;
+}
+
+// Plain numbers for an image's /Width, /Height, /BitsPerComponent given by
+// reference. Returns how many dicts changed.
+function _resolveImageDims(pdf) {
+  const { PDFName, PDFRawStream, PDFRef, PDFNumber } = PDFLib;
+  let changed = 0;
+  for (const [, obj] of pdf.context.enumerateIndirectObjects()) {
+    if (!(obj instanceof PDFRawStream)) continue;
+    const dict = obj.dict;
+    if (dict.get(PDFName.of('Subtype'))?.toString() !== '/Image') continue;
+    let touched = false;
+    for (const key of ['Width', 'Height', 'BitsPerComponent']) {
+      const v = dict.get(PDFName.of(key));
+      if (!(v instanceof PDFRef)) continue;
+      const num = pdf.context.lookup(v);
+      if (num instanceof PDFNumber) { dict.set(PDFName.of(key), num); touched = true; }
+    }
+    if (touched) changed++;
+  }
+  return changed;
+}
+
 async function _encodeRawImages(buffer) {
   const { PDFDocument, PDFName, PDFRawStream, PDFArray, PDFRef } = PDFLib;
-  if (!_mayHaveRawImage(new Uint8Array(buffer))) return { result: buffer, encoded: 0 };
+  const bytesIn = new Uint8Array(buffer);
+  const rawImages = _mayHaveRawImage(bytesIn), dimRefs = _mayHaveIndirectDims(bytesIn);
+  if (!rawImages && !dimRefs) return { result: buffer, encoded: 0, resolved: 0 };
   const pdf = await PDFDocument.load(buffer, { ignoreEncryption: true, updateMetadata: false });
   // Still-encrypted stream bytes are ciphertext: Flate-encoding them would
   // make a reader decrypt compressed bytes. Ciphertext happens not to
   // compress (so the 10% rule below already rejects it), but don't deflate
   // megabytes of it just to find that out.
-  if (pdf.isEncrypted) return { result: buffer, encoded: 0 };
+  if (pdf.isEncrypted) return { result: buffer, encoded: 0, resolved: 0 };
 
+  const resolved = dimRefs ? _resolveImageDims(pdf) : 0;
   let encoded = 0;
-  for (const [ref, obj] of pdf.context.enumerateIndirectObjects()) {
+  for (const [ref, obj] of rawImages ? pdf.context.enumerateIndirectObjects() : []) {
     if (!(obj instanceof PDFRawStream)) continue;
     const dict = obj.dict;
     if (dict.get(PDFName.of('Subtype'))?.toString() !== '/Image') continue;
@@ -110,7 +155,7 @@ async function _encodeRawImages(buffer) {
     encoded++;
   }
 
-  if (!encoded) return { result: buffer, encoded: 0 };
+  if (!encoded && !resolved) return { result: buffer, encoded: 0, resolved: 0 };
   const bytes = await pdf.save({ useObjectStreams: false, addDefaultPage: false, updateFieldAppearances: false });
-  return { result: bytes.buffer, encoded };
+  return { result: bytes.buffer, encoded, resolved };
 }

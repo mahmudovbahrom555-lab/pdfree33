@@ -79,11 +79,15 @@ async function _init() {
  * plus the first 1 KB as a safety net for xref-stream PDFs.
  * latin1 encoding ensures binary bytes pass through unchanged.
  */
+// The tail is 64 KB, not 2: a 332-page Persian book from the cloud corpus
+// (2026-10-14) had its trailer's /Encrypt 4.9 KB from the end — missed, so
+// it was never decrypted and every pdf-lib tool read ciphertext ("Invalid
+// header in flate stream"). 64 KB of latin1 is still nothing to decode.
 function _looksEncrypted(bytes) {
   const dec  = new TextDecoder('latin1');
-  const tail = dec.decode(bytes.subarray(Math.max(0, bytes.length - 2048)));
+  const tail = dec.decode(bytes.subarray(Math.max(0, bytes.length - 65536)));
   if (tail.includes('/Encrypt')) return true;
-  if (bytes.length > 2048) {
+  if (bytes.length > 65536) {
     const head = dec.decode(bytes.subarray(0, Math.min(1024, bytes.length)));
     if (head.includes('/Encrypt')) return true;
   }

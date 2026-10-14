@@ -14,7 +14,7 @@ array") are flagged: they mean an error nobody classified.
 import collections, json, re, sys
 
 PAIN = {'ar': 3, 'fa': 3, 'zh': 3, 'scan': 2, 'damaged': 2}
-FRIENDLY = re.compile(r'unusual or corrupted structure|password protected|not a valid PDF|nothing to remove|Try Standard|too large|limit', re.I)
+FRIENDLY = re.compile(r'unusual or corrupted structure|password protected|not a valid PDF|nothing to remove|Try Standard|too large|limit|timed out|ran out of memory', re.I)
 
 
 def signature(r):
