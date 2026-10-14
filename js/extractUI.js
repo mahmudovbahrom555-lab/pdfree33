@@ -16,6 +16,8 @@ import {
 } from './watermarkRemoveUI.js';
 import { t, tp } from './i18n.js';
 import { esc } from './utils.js';
+import { isBlankPage } from './blankPage.js';
+import { showToast } from './ui.js';
 
 const THUMBS_PER_PAGE = 16;   // 4-column grid of 4 rows
 const THUMB_SCALE     = 0.18;
@@ -184,6 +186,7 @@ function _panelHTML() {
             <button type="button" class="ext-quick-btn" data-preset="even">${t('ext_preset_even')}</button>
             <button type="button" class="ext-quick-btn" data-preset="first">${t('ext_preset_first')}</button>
             <button type="button" class="ext-quick-btn" data-preset="last">${t('ext_preset_last')}</button>
+            <button type="button" class="ext-quick-btn" data-preset="noblank">${t('ext_preset_noblank')}</button>
           </div>
         </div>
 
@@ -252,7 +255,7 @@ function _bindEvents() {
   });
 
   _container.querySelectorAll('.ext-quick-btn').forEach(btn => {
-    btn.addEventListener('click', () => _applyPreset(btn.dataset.preset));
+    btn.addEventListener('click', () => (btn.dataset.preset === 'noblank' ? _selectNonBlank(btn) : _applyPreset(btn.dataset.preset)));
   });
 
   document.getElementById('extReverse')?.addEventListener('change', e => {
@@ -463,6 +466,44 @@ function _applyRange() {
   _refreshThumbSelections();
   _updateSelCount();
   _maybeSuggestMode();
+}
+
+// "Without blank pages": every page rendered small and judged by
+// js/blankPage.js (its ink limit is set for this 200 px width — at 60 px a
+// page number vanished), all the others selected — Extract then saves the
+// PDF without them.
+const BLANK_CHECK_WIDTH = 200;
+async function _selectNonBlank(btn) {
+  if (!_pdfDoc || btn.disabled) return;
+  const gen = _renderGen, label = btn.textContent;
+  btn.disabled = true;
+  const keep = [];
+  try {
+    for (let p = 1; p <= _pageCount; p++) {
+      btn.textContent = t('ext_noblank_checking', { done: p, total: _pageCount });
+      const page = await _pdfDoc.getPage(p);
+      if (gen !== _renderGen) return;
+      const vp = page.getViewport({ scale: BLANK_CHECK_WIDTH / page.getViewport({ scale: 1 }).width });
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(vp.width)); canvas.height = Math.max(1, Math.round(vp.height));
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      await page.render({ canvasContext: ctx, viewport: vp }).promise;
+      if (gen !== _renderGen) return;
+      if (!isBlankPage(ctx.getImageData(0, 0, canvas.width, canvas.height).data, canvas.width, canvas.height)) keep.push(p);
+    }
+  } finally {
+    if (gen === _renderGen) { btn.disabled = false; btn.textContent = label; }
+  }
+  const blank = _pageCount - keep.length;
+  if (!blank) { showToast(t('ext_noblank_none')); return; }
+  if (!keep.length) { showToast(t('ext_noblank_all')); return; }
+  _selectedPages = new Set(keep);
+  _refreshThumbSelections();
+  _updateSelCount();
+  _updateRangeInput();
+  _maybeSuggestMode();
+  showToast(tp(blank, 'ext_noblank_found_one', 'ext_noblank_found_many', { n: blank }));
 }
 
 function _applyPreset(preset) {

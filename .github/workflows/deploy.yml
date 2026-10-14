@@ -361,6 +361,11 @@ jobs:
         # tests/e2e/draw-image.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:draw-image
 
+      - name: E2E — Extract, without blank pages
+        # A white page and a scanned blank sheet left out; a page holding only
+        # a page number kept. See tests/e2e/extract-noblank.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:extract-noblank
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do
