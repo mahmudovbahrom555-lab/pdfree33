@@ -157,6 +157,42 @@ try {
     if (got !== '1L | 2R | 3L | 4R 5L') throw new Error(got);
   });
 
+  // Cross-sell rows hand the result over without a re-upload, to the page in
+  // the user's own language (they used to land on the English page).
+  async function nextStep(fromPath, file) {
+    const page = await (await browser.newContext({ serviceWorkers: 'block' })).newPage();
+    await page.addInitScript(() => {
+      const orig = URL.createObjectURL.bind(URL);
+      URL.createObjectURL = b => { if (b instanceof Blob && /pdf/.test(b.type)) window.__pdf = b; return orig(b); };
+    });
+    await page.goto(BASE_URL + fromPath, { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', path.join(FIX, file));
+    await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 30000 });
+    await page.waitForTimeout(1500);
+    await page.click('#mergeBtn');
+    await page.waitForSelector('#nextStepRow a.next-step-row', { timeout: 60000 });
+    await page.evaluate(() => { window.__pdf = null; });
+    await Promise.all([page.waitForURL(u => !u.pathname.startsWith(fromPath), { timeout: 30000 }), page.click('#nextStepRow a.next-step-row')]);
+    await page.waitForSelector('#nupPreview svg', { timeout: 30000 });
+    return page;
+  }
+
+  await test('Resize → Pages per Sheet on /ru/: the Russian page, the resized file already loaded', async () => {
+    const page = await nextStep('/ru/izmenit-razmer-pdf/', 'five-pages.pdf');
+    const url = new URL(page.url());
+    if (url.pathname !== '/ru/neskolko-stranits-na-liste/') throw new Error(url.pathname);
+    const summary = await page.$eval('#nupPreview', el => el.innerText);
+    if (!/5/.test(summary)) throw new Error(summary);
+  });
+
+  await test('Split Manga → a right-to-left booklet: booklet mode and RTL preset, URL cleaned', async () => {
+    const page = await nextStep('/split-manga-pages/', 'five-pages.pdf');
+    if (new URL(page.url()).search) throw new Error(`query left in the URL: ${page.url()}`);
+    if (!(await page.isChecked('label[data-name="nupMode"][data-value="booklet"] input'))) throw new Error('not in booklet mode');
+    if (!(await page.isChecked('#nupRtl'))) throw new Error('RTL off');
+    if (await page.$$eval('#nupPreview svg', s => s.length) !== 2) throw new Error('booklet preview not shown');
+  });
+
   await test('homepage search finds it: "multiple pages on one page", and 发票合并打印 on /zh/', async () => {
     const page = await (await browser.newContext({ serviceWorkers: 'block' })).newPage();
     for (const [p, q] of [['/', 'multiple pages on one page'], ['/', 'combine every two pages in one'], ['/zh/', '发票合并打印']]) {

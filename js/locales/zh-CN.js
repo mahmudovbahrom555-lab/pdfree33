@@ -1174,6 +1174,10 @@ window.PDFREE_LOCALE = {
   merge_next_extract_sub:   '从合并后的文件中精确选取所需页面 — 立即打开，无需重新上传。',
   cleanscan_next_ocr_title: '继续使用"OCR PDF"',
   cleanscan_next_ocr_sub:   '让清理后的文本可选中、可搜索 — 更白更清晰的扫描件识别更准确。',
+  resize_next_nup_title: "继续使用\"多页合一\"",
+  resize_next_nup_sub: "每张纸放多页，或做成小册子 — 立即打开，无需重新上传。",
+  manga_next_booklet_title: "打印成小册子",
+  manga_next_booklet_sub: "页面按小册子顺序排列，装订方向与漫画阅读方向一致 — 双面打印、对折、装订即可。",
 
   // ── fillUI.js ──────────────────────────────────────────────────
   fill_analysing:            '正在分析表单字段…',

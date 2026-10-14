@@ -1152,6 +1152,10 @@ export const EN = {
   merge_next_extract_sub:   'Pick exactly the pages you need from this merged file — opens instantly, no re-upload.',
   cleanscan_next_ocr_title: 'Continue in OCR PDF',
   cleanscan_next_ocr_sub:   'Make the cleaned text selectable and searchable — a whiter, sharper scan recognizes more accurately.',
+  resize_next_nup_title: "Continue in Pages per Sheet",
+  resize_next_nup_sub: "Put several pages on each sheet, or make a booklet — opens instantly, no re-upload.",
+  manga_next_booklet_title: "Print as a booklet",
+  manga_next_booklet_sub: "Pages in booklet order, bound the way your manga reads — print double-sided, fold, staple.",
 
   // ── fillUI.js ──────────────────────────────────────────────────
   fill_analysing:            'Analysing form fields…',

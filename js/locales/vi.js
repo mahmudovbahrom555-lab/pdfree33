@@ -1126,6 +1126,10 @@ window.PDFREE_LOCALE = {
   merge_next_extract_sub:   'Chọn chính xác các trang bạn cần từ tệp đã gộp này — mở ngay lập tức, không cần tải lên lại.',
   cleanscan_next_ocr_title: 'Tiếp tục với OCR PDF',
   cleanscan_next_ocr_sub:   'Biến văn bản đã làm sạch thành có thể chọn và tìm kiếm được — bản quét trắng hơn, sắc nét hơn sẽ được nhận dạng chính xác hơn.',
+  resize_next_nup_title: "Tiếp tục với Nhiều trang trên một tờ",
+  resize_next_nup_sub: "Nhiều trang trên mỗi tờ hoặc sổ gập — mở ngay, không cần tải lại.",
+  manga_next_booklet_title: "In thành sổ gập",
+  manga_next_booklet_sub: "Các trang theo thứ tự sổ gập, gáy theo hướng đọc manga của bạn — in hai mặt, gấp, dập ghim.",
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Đang phân tích các trường biểu mẫu…',

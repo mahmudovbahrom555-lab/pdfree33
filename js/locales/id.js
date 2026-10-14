@@ -1126,6 +1126,10 @@ window.PDFREE_LOCALE = {
   merge_next_extract_sub:   'Pilih persis halaman yang Anda butuhkan dari file gabungan ini — terbuka seketika, tanpa perlu unggah ulang.',
   cleanscan_next_ocr_title: 'Lanjutkan ke OCR PDF',
   cleanscan_next_ocr_sub:   'Jadikan teks yang telah dibersihkan bisa dipilih dan dicari — pindaian yang lebih putih dan tajam dikenali lebih akurat.',
+  resize_next_nup_title: "Lanjut ke Halaman per Lembar",
+  resize_next_nup_sub: "Beberapa halaman di setiap lembar atau buklet — langsung terbuka, tanpa unggah ulang.",
+  manga_next_booklet_title: "Cetak sebagai buklet",
+  manga_next_booklet_sub: "Halaman dalam urutan buklet, dijilid sesuai arah baca manga Anda — cetak bolak-balik, lipat, jepret.",
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Menganalisis kolom formulir…',

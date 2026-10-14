@@ -56,8 +56,11 @@ export async function initNupOptions(files) {
   const gen = ++_gen;
   container.innerHTML = loadingRow(t('rsz_loading'));
   container.style.display = 'block';
-  // Right-to-left scripts read their pages right to left too
-  if (_pages.length === 0) _rtl = ['ar', 'fa', 'he', 'ur'].includes(getLang());
+  if (_pages.length === 0) {
+    // Right-to-left scripts read their pages right to left too
+    _rtl = ['ar', 'fa', 'he', 'ur'].includes(getLang());
+    _applyLinkParams();
+  }
 
   try {
     await loadPdfLib();
@@ -81,6 +84,17 @@ export async function initNupOptions(files) {
     showToast(t('rsz_err_load', { msg: err.message }), 5000);
     container.style.display = 'none';
   }
+}
+
+// Split Manga's "next step" opens this tool as a booklet, bound the way the
+// manga reads: ?mode=booklet&rtl=1. Read once, then dropped from the URL so
+// a reload or the next file starts from the defaults again.
+function _applyLinkParams() {
+  const q = new URLSearchParams(location.search);
+  if (!q.has('mode') && !q.has('rtl')) return;
+  if (PRESETS[q.get('mode')]) _mode = q.get('mode');
+  if (q.has('rtl')) _rtl = q.get('rtl') === '1';
+  history.replaceState(history.state, '', location.pathname + location.hash);
 }
 
 export function hideNupOptions() {

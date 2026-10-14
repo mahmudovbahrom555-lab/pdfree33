@@ -190,7 +190,7 @@ _NAV_TOOL_IDS = [
     'merge', 'split', 'compress', 'jpg2pdf', 'pdf2jpg',
     'watermark', 'pagenum', 'metadata', 'extract',
     # draw-on-pdf inserted here (EN-only, no locale slugs)
-    'rotate', 'organize', 'resize', 'protect', 'ocr', 'pdf2word', 'pdf2excel', 'pdf2ppt', 'pdf2md', 'unlock',
+    'rotate', 'organize', 'resize', 'nup', 'protect', 'ocr', 'pdf2word', 'pdf2excel', 'pdf2ppt', 'pdf2md', 'unlock',
     'cleanScan',
 ]
 

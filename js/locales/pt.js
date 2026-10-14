@@ -1127,6 +1127,10 @@ window.PDFREE_LOCALE = {
   merge_next_extract_sub:   'Escolha exatamente as páginas que você precisa deste arquivo combinado — abre instantaneamente, sem novo upload.',
   cleanscan_next_ocr_title: 'Continuar em OCR PDF',
   cleanscan_next_ocr_sub:   'Torne o texto limpo selecionável e pesquisável — uma digitalização mais branca e nítida é reconhecida com mais precisão.',
+  resize_next_nup_title: "Continuar em Páginas por folha",
+  resize_next_nup_sub: "Várias páginas em cada folha ou um livreto — abre na hora, sem reenviar.",
+  manga_next_booklet_title: "Imprimir como livreto",
+  manga_next_booklet_sub: "Páginas na ordem de livreto, encadernado como seu mangá é lido — imprima frente e verso, dobre e grampeie.",
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Analisando campos do formulário…',

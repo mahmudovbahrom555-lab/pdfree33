@@ -1128,6 +1128,10 @@ window.PDFREE_LOCALE = {
   merge_next_extract_sub:   'この結合済みファイルから必要なページだけを選択 — 即座に開き、再アップロード不要です。',
   cleanscan_next_ocr_title: 'OCR PDFに進む',
   cleanscan_next_ocr_sub:   'クリーニング済みのテキストを選択・検索可能にします — より白く鮮明なスキャンほど認識精度が上がります。',
+  resize_next_nup_title: "「1枚に複数ページ」で続ける",
+  resize_next_nup_sub: "1枚に複数ページ、または冊子に — すぐに開き、再アップロード不要。",
+  manga_next_booklet_title: "冊子として印刷",
+  manga_next_booklet_sub: "マンガの読む向きでとじる冊子順に並べ替え — 両面印刷して折り、ホチキスで留めるだけ。",
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'フォームフィールドを解析しています…',

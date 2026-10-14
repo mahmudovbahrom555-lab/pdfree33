@@ -1125,6 +1125,10 @@ window.PDFREE_LOCALE = {
   merge_next_extract_sub:   'Kies precies de pagina\'s die je nodig hebt uit dit samengevoegde bestand — opent direct, geen nieuwe upload nodig.',
   cleanscan_next_ocr_title: 'Doorgaan naar OCR PDF',
   cleanscan_next_ocr_sub:   'Maak de opgeschoonde tekst selecteerbaar en doorzoekbaar — een wittere, scherpere scan wordt nauwkeuriger herkend.',
+  resize_next_nup_title: "Verder in Pagina's per vel",
+  resize_next_nup_sub: "Meerdere pagina's per vel of een boekje — opent meteen, zonder opnieuw uploaden.",
+  manga_next_booklet_title: "Afdrukken als boekje",
+  manga_next_booklet_sub: "Pagina's in boekjesvolgorde, gebonden in de leesrichting van je manga — dubbelzijdig, vouwen, nieten.",
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Formuliervelden analyseren…',

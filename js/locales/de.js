@@ -1128,6 +1128,10 @@ window.PDFREE_LOCALE = {
   merge_next_extract_sub:   'Wähle genau die Seiten aus dieser zusammengeführten Datei, die du brauchst — öffnet sofort, kein erneutes Hochladen.',
   cleanscan_next_ocr_title: 'Weiter zu OCR PDF',
   cleanscan_next_ocr_sub:   'Mache den bereinigten Text auswählbar und durchsuchbar — ein weißerer, schärferer Scan wird genauer erkannt.',
+  resize_next_nup_title: "Weiter mit „Seiten pro Blatt“",
+  resize_next_nup_sub: "Mehrere Seiten auf jedes Blatt oder eine Broschüre — öffnet sofort, ohne erneutes Hochladen.",
+  manga_next_booklet_title: "Als Broschüre drucken",
+  manga_next_booklet_sub: "Seiten in Broschürenreihenfolge, gebunden in Leserichtung deines Mangas — beidseitig drucken, falten, heften.",
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             'Formularfelder werden analysiert…',

@@ -1127,6 +1127,10 @@ window.PDFREE_LOCALE = {
   merge_next_extract_sub:   '병합된 이 파일에서 필요한 페이지만 정확히 선택하세요 — 즉시 열리며 다시 업로드할 필요가 없습니다.',
   cleanscan_next_ocr_title: 'OCR PDF로 계속하기',
   cleanscan_next_ocr_sub:   '정리된 텍스트를 선택하고 검색할 수 있게 만드세요 — 더 희고 선명한 스캔일수록 더 정확하게 인식됩니다.',
+  resize_next_nup_title: "‘한 장에 여러 페이지’로 계속",
+  resize_next_nup_sub: "한 장에 여러 페이지 또는 소책자 — 바로 열리고 다시 업로드할 필요가 없습니다.",
+  manga_next_booklet_title: "소책자로 인쇄",
+  manga_next_booklet_sub: "만화를 읽는 방향대로 제본되는 소책자 순서 — 양면 인쇄 후 접어서 스테이플러로 찍으세요.",
 
   // ── fillUI.js ────────────────────────────────────────────
   fill_analysing:             '양식 필드를 분석하는 중…',

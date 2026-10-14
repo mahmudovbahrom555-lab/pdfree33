@@ -73,6 +73,7 @@ const TOOL_SLUGS = {
   ereader:          '/optimize-pdf-for-ereader/',
   organize:         '/organize-pdf/',
   resize:           '/resize-pdf-for-printing/',
+  nup:              '/pages-per-sheet/',
   mangaSplit:       '/split-manga-pages/',
   unlock:           '/unlock-pdf/',
   docx2pdf:         '/word-to-pdf/',
@@ -89,6 +90,15 @@ const TOOL_SLUGS = {
 const _PATH_TO_TOOL = Object.fromEntries(
   Object.entries(TOOL_SLUGS).map(([tool, slug]) => [slug, tool])
 );
+
+// The tool's page in this page's language: the build puts localized links
+// in every tool page's nav, and homepages carry them in nav and tool cards.
+// Without this a cross-sell from /ru/… landed on the English page, in
+// English (getLang() reads the page's lang).
+function _toolHref(tool) {
+  const link = document.querySelector(`a.nav-link[data-tool="${tool}"], .tools-grid a[data-tool="${tool}"]`);
+  return link ? new URL(link.getAttribute('href'), location.href).pathname : (TOOL_SLUGS[tool] || `/${tool}-pdf/`);
+}
 
 function _toolFromPath(pathname) {
   const p = pathname.endsWith('/') ? pathname : pathname + '/';
@@ -441,22 +451,29 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
     shareToolBtn.onclick = () => _doShareTool(tool);
   }
 
-  // Next-step cross-sell — Merge → Extract, Clean Scan → OCR. Reuses the
+  // Next-step cross-sell — Merge → Extract, Clean Scan → OCR, Resize →
+  // Pages per Sheet, Split Manga → a right-to-left booklet. Reuses the
   // existing data-handoff mechanism (see the document click listener below):
   // the click saves the still-in-memory result blob to IndexedDB and
   // navigates, so the destination tool's own init (Extract's pdf.js
   // thumbnail render / OCR's own analysis) picks it up with zero extra
   // clicks — no new plumbing needed here beyond the markup + i18n text.
+  // A printed manga is read right to left, so its booklet binds on the
+  // right — unless the spreads were split left to right (western comics).
   const NEXT_STEP = {
-    merge:     { href: '/extract-pdf/', icon: '📑', titleKey: 'merge_next_extract_title',     subKey: 'merge_next_extract_sub',   toTool: 'extract' },
-    cleanScan: { href: '/ocr-pdf/',     icon: '🔍', titleKey: 'cleanscan_next_ocr_title',      subKey: 'cleanscan_next_ocr_sub',   toTool: 'ocr' },
+    merge:      { icon: '📑', titleKey: 'merge_next_extract_title',  subKey: 'merge_next_extract_sub',  toTool: 'extract' },
+    cleanScan:  { icon: '🔍', titleKey: 'cleanscan_next_ocr_title',  subKey: 'cleanscan_next_ocr_sub',  toTool: 'ocr' },
+    resize:     { icon: '🗂️', titleKey: 'resize_next_nup_title',     subKey: 'resize_next_nup_sub',     toTool: 'nup' },
+    mangaSplit: { icon: '🗂️', titleKey: 'manga_next_booklet_title',  subKey: 'manga_next_booklet_sub',  toTool: 'nup',
+                  query: () => `?mode=booklet&rtl=${collectToolParams('mangaSplit').params.rtl ? 1 : 0}` },
   };
   const nextStepEl = id('nextStepRow');
   if (nextStepEl) {
     const step = NEXT_STEP[tool];
     if (step) {
+      const href = _toolHref(step.toTool) + (step.query ? step.query() : '');
       nextStepEl.innerHTML = `
-        <a href="${step.href}" class="next-step-row" data-handoff data-cross-sell-to="${step.toTool}">
+        <a href="${href}" class="next-step-row" data-handoff data-cross-sell-to="${step.toTool}">
           <div class="next-step-row__icon" aria-hidden="true">${step.icon}</div>
           <div class="next-step-row__body">
             <p class="next-step-row__title">${t(step.titleKey)}</p>
