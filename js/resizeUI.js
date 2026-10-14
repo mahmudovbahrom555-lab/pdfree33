@@ -18,6 +18,7 @@
 
 import { id, esc }          from './utils.js';
 import { showToast }        from './ui.js';
+import { wasRejectedAsNotPdf } from './files.js';
 import { loadingRow, infoBanner, presetRememberCard } from './uiComponents.js';
 import { loadPdfJs }        from './pdf2jpgUI.js'; // reuse CDN loader with retry logic
 import { loadPdfLib }       from './lazyLibs.js';
@@ -158,10 +159,11 @@ export async function initResizeOptions(file) {
     }
 
     _render(file);
-  } catch (err) {
+  } catch {
     if (gen !== _initGen) return;
-    showToast(t('rsz_err_load', { msg: err.message }), 5000);
     _hide(container);
+    if (await wasRejectedAsNotPdf([file])) return;   // already told: not a PDF
+    showToast(t('err_encrypted_pdf'), 6000);          // damaged — never the parser's raw text
   }
 }
 

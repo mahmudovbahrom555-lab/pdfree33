@@ -23,6 +23,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { trapCases } from '../../tests/corpus/traps.mjs';
+import { TOOLS, REF_PDF, EXT } from './tools.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const arg = (name, dflt) => { const i = process.argv.indexOf(`--${name}`); return i > -1 ? process.argv[i + 1] : dflt; };
@@ -31,26 +32,6 @@ const OLD  = arg('old', 'https://pdfree.io');
 const NEW  = arg('new', 'http://localhost:8934');
 const OUT  = path.resolve(arg('out', path.join(ROOT, 'corpus-diff-out')));
 
-const REF_PDF = path.join(ROOT, 'tests', 'fixtures', 'normal-1page.pdf');
-
-// Per tool: its page, which files one run adds (merge appends a fixed
-// 1-page reference — check.py rebuilds the same concatenation as the
-// expected original), and when the page is ready for the click (split
-// pre-selects every page only once its page list has loaded).
-const TOOLS = {
-  compress: { path: '/compress-pdf/', files: f => [f] },
-  merge:    { path: '/merge-pdf/',    files: f => [f, REF_PDF] },
-  split:    { path: '/split-pdf/',    files: f => [f],
-              ready: () => { const c = document.querySelector('#splitOptions');
-                             return !!c && c.children.length > 0 &&
-                               !(c.children.length === 1 && c.firstElementChild.classList.contains('split-loading')); } },
-  // Same readiness signal scripts/pdf2md_benchmark.mjs uses (the pre-scan
-  // must finish or validation refuses with "analysing")
-  pdf2md:   { path: '/pdf-to-markdown/', files: f => [f],
-              ready: () => { const el = document.getElementById('pdf2mdOptions');
-                             return !!el && el.style.display !== 'none' && !el.textContent.toLowerCase().includes('analysing'); } },
-};
-const EXT = { 'application/pdf': 'pdf', 'application/zip': 'zip', 'text/markdown': 'md' };
 if (!TOOLS[TOOL]) { console.error(`unknown tool: ${TOOL}`); process.exit(2); }
 
 const RUN_TIMEOUT_MS = 90_000;

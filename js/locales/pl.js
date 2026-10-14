@@ -356,7 +356,6 @@ window.PDFREE_LOCALE = {
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Wczytywanie PDF…',
-  rsz_err_load: 'Nie można odczytać PDF: {msg}',
   rsz_preview_alt: 'Podgląd strony 1',
   rsz_paper_size: 'Rozmiar papieru',
   rsz_size_custom: 'Niestandardowy',

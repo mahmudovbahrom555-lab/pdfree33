@@ -19,6 +19,7 @@
 
 import { id }               from './utils.js';
 import { showToast }        from './ui.js';
+import { wasRejectedAsNotPdf } from './files.js';
 import { chipGroup, checkbox, group, loadingRow, infoBanner } from './uiComponents.js';
 import { loadPdfLib }       from './lazyLibs.js';
 import { t }                from './i18n.js';
@@ -79,10 +80,11 @@ export async function initNupOptions(files) {
     if (!pages.length) { showToast(t('no_pages_pdf')); container.style.display = 'none'; return; }
     _pages = pages;
     _render(container);
-  } catch (err) {
+  } catch {
     if (gen !== _gen) return;
-    showToast(t('rsz_err_load', { msg: err.message }), 5000);
     container.style.display = 'none';
+    if (await wasRejectedAsNotPdf(files)) return;   // already told: not a PDF
+    showToast(t('err_encrypted_pdf'), 6000);         // damaged — never the parser's raw text
   }
 }
 

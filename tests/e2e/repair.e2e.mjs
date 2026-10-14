@@ -59,7 +59,7 @@ async function failThenRepair(page) {
   await page.click('#mergeBtn');
   await page.waitForFunction(() => /repair/i.test(document.querySelector('#toast')?.innerText || ''), null, { timeout: 60000 });
   const offer = await toast(page);
-  if (/Bad encoding|catalog|traverse/i.test(offer)) throw new Error(`raw engine text shown: ${offer}`);
+  if (/Bad encoding|catalog|traverse|kids object/i.test(offer)) throw new Error(`raw engine text shown: ${offer}`);
   await page.click('#toast');
 }
 
@@ -77,6 +77,18 @@ try {
     await failThenRepair(page);
     const { pages, text } = await resultText(page);
     if (pages !== 3 || !/Repair page 3/.test(text)) throw new Error(`${pages} pages: ${text.slice(0, 120)}`);
+  });
+
+  // pdf.js's own word for a broken page tree reached users raw (found by
+  // the nightly robustness run) — now offered the repair like the others
+  await test('PDF→Word, the same broken page tree: error offers repair → tap → a .docx', async () => {
+    const page = await open('/pdf-to-word/', path.join(FIX, 'bad-catalog.pdf'));
+    await page.evaluate(() => {
+      const orig = URL.createObjectURL.bind(URL);
+      URL.createObjectURL = b => { if (b instanceof Blob && /officedocument/.test(b.type)) window.__docx = b; return orig(b); };
+    });
+    await failThenRepair(page);
+    await page.waitForFunction(() => window.__docx, null, { timeout: 90000 });
   });
 
   await test('bytes before %PDF- (a saved HTTP response): accepted, not "not a valid PDF"', async () => {

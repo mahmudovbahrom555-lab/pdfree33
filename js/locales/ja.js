@@ -359,7 +359,6 @@ window.PDFREE_LOCALE = {
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'PDFを読み込んでいます…',
-  rsz_err_load: 'PDFを読み込めませんでした: {msg}',
   rsz_preview_alt: '1ページ目のプレビュー',
   rsz_paper_size: '用紙サイズ',
   rsz_size_custom: 'カスタム',

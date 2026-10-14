@@ -467,6 +467,16 @@ function _updateMeta() {
 
 
 
+// A tool panel that can't open a file asks this before showing an error of
+// its own: a file that isn't a PDF at all is removed by _preflightPDF, which
+// says so — a parser's raw "Failed to parse PDF document … No PDF header
+// found" on top of that only confused (Resize, Pages per Sheet; found by the
+// nightly robustness run, 2026-10-14).
+export async function wasRejectedAsNotPdf(files) {
+  await Promise.all(files.map(f => f._encryptionCheck).filter(Boolean));
+  return files.some(f => !selectedFiles.includes(f));
+}
+
 // ── Setup input listeners ──────────────────────────────────
 
 /**

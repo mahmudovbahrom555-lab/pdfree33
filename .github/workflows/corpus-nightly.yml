@@ -1,0 +1,112 @@
+name: Corpus nightly — robustness
+
+# The owner's main idea (2026-10-14): a large corpus, converted, measured,
+# fixed — pains first. Each night a tenth of tests/corpus/cloud/sample-v1.json
+# (a stratified sample of ~8M web PDFs, CC-MAIN-2021-31-PDF-UNTRUNCATED from
+# Digital Corpora: Arabic, Persian, Chinese, scans, damaged files, forms…)
+# goes through every tool in a real Chromium against this build; the report
+# clusters what failed, hung, crashed or came out broken. A report, not a
+# gate — deploys stay gated by the small corpus in deploy.yml.
+#
+# Documents are fetched one by one out of the remote zips (HTTP Range,
+# scripts/corpus-cloud/fetch.py) and live only on the runner: never
+# committed, never uploaded as artifacts — results only.
+
+on:
+  schedule:
+    - cron: '17 1 * * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'run — a night of the robustness run; sample — (re)build the sample list'
+        default: run
+        type: choice
+        options: [run, sample]
+      night:
+        description: 'which tenth of the sample (0–9); empty = day of the year'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  sample:
+    if: github.event_name == 'workflow_dispatch' && inputs.mode == 'sample'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Pick the stratified sample (Tika metadata streamed from S3)
+        run: python3 scripts/corpus-cloud/pick_sample.py > sample-v1.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: corpus-sample
+          path: sample-v1.json
+
+  run:
+    if: github.event_name == 'schedule' || inputs.mode == 'run'
+    runs-on: ubuntu-latest
+    timeout-minutes: 170
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      - run: pip3 install jinja2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Build site
+        run: python3 scripts/build.py
+      - run: npx playwright install --with-deps chromium
+      - name: This night's documents for this shard
+        env:
+          NIGHT: ${{ inputs.night }}
+        run: |
+          python3 - <<'EOF'
+          import json, os, datetime
+          sample = json.load(open('tests/corpus/cloud/sample-v1.json'))['sample']
+          night = int(os.environ['NIGHT']) if os.environ.get('NIGHT') else datetime.date.today().timetuple().tm_yday % 10
+          mine = [s['file'] for i, s in enumerate(sample) if i % 10 == night][${{ matrix.shard }}::5]
+          open('names.txt', 'w').write('\n'.join(mine))
+          print(f'night {night}, shard ${{ matrix.shard }}: {len(mine)} documents')
+          EOF
+      - name: Fetch them (HTTP Range out of the remote zips)
+        run: python3 scripts/corpus-cloud/fetch.py corpus-cloud-docs $(cat names.txt)
+      - name: Robustness run
+        run: |
+          python3 -m http.server 8934 --directory dist >/dev/null 2>&1 &
+          sleep 2
+          node scripts/corpus-cloud/robust.mjs --docs corpus-cloud-docs \
+            --sample tests/corpus/cloud/sample-v1.json --out corpus-cloud-out --jobs 2
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: corpus-results-${{ matrix.shard }}
+          path: corpus-cloud-out/results.jsonl
+
+  report:
+    needs: run
+    if: always() && needs.run.result != 'skipped'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: corpus-results-*
+          path: results
+      - name: Cluster
+        run: |
+          python3 scripts/corpus-cloud/report.py results/*/results.jsonl > report.md
+          cat report.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: corpus-report
+          path: report.md

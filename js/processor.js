@@ -6278,7 +6278,9 @@ function _handleError(tool, message, errorType = null) {
     // + "Bad encoding in flate stream" (a stream cut short) and
     // "catalog.Pages(...).traverse is not a function", both reproduced
     // 2026-10-14 — they still reached users as raw text.
-    /unknown compression method|incorrect header check|invalid (?:stored )?block|invalid distance|bad encoding in flate stream|catalog\.pages\b.*is not a function|invalid pdf structure/i.test(message || '')
+    // + pdf.js's word for a broken page tree, "Page dictionary kids object
+    // is not an array" (PDF→Word, nightly robustness run 2026-10-14).
+    /unknown compression method|incorrect header check|invalid (?:stored )?block|invalid distance|bad encoding in flate stream|catalog\.pages\b.*is not a function|kids object is not an array|invalid pdf structure/i.test(message || '')
   ) {
     friendly   = t('err_encrypted_pdf');
     errorType  = 'pdf_damaged';

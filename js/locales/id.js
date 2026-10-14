@@ -357,7 +357,6 @@ window.PDFREE_LOCALE = {
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Memuat PDF…',
-  rsz_err_load: 'Tidak dapat membaca PDF: {msg}',
   rsz_preview_alt: 'Pratinjau halaman 1',
   rsz_paper_size: 'Ukuran kertas',
   rsz_size_custom: 'Kustom',

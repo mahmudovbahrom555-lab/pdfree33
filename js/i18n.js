@@ -335,7 +335,6 @@ export const EN = {
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading:           'Loading PDF…',
-  rsz_err_load:          'Could not read PDF: {msg}',
   rsz_preview_alt:       'Page 1 preview',
   rsz_paper_size:        'Paper size',
   rsz_size_custom: "Custom",

@@ -358,7 +358,6 @@ window.PDFREE_LOCALE = {
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'PDF 불러오는 중…',
-  rsz_err_load: 'PDF를 읽을 수 없습니다: {msg}',
   rsz_preview_alt: '1페이지 미리보기',
   rsz_paper_size: '용지 크기',
   rsz_size_custom: '사용자 지정',

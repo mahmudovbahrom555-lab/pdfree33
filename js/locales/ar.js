@@ -363,7 +363,6 @@ window.PDFREE_LOCALE = {
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading:           'جارٍ تحميل ملف PDF…',
-  rsz_err_load:          'تعذّر قراءة ملف PDF: {msg}',
   rsz_preview_alt:       'معاينة الصفحة 1',
   rsz_paper_size:        'حجم الورق',
   rsz_size_custom: 'مخصص',

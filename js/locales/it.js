@@ -356,7 +356,6 @@ window.PDFREE_LOCALE = {
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Caricamento PDF…',
-  rsz_err_load: 'Impossibile leggere il PDF: {msg}',
   rsz_preview_alt: 'Anteprima pagina 1',
   rsz_paper_size: 'Formato carta',
   rsz_size_custom: 'Personalizzato',

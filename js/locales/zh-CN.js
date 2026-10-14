@@ -361,7 +361,6 @@ window.PDFREE_LOCALE = {
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading:           '正在加载 PDF…',
-  rsz_err_load:          '无法读取 PDF：{msg}',
   rsz_preview_alt:       '第 1 页预览',
   rsz_paper_size:        '纸张大小',
   rsz_size_custom: '自定义',

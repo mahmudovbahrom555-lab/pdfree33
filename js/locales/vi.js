@@ -357,7 +357,6 @@ window.PDFREE_LOCALE = {
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'Đang tải PDF…',
-  rsz_err_load: 'Không thể đọc PDF: {msg}',
   rsz_preview_alt: 'Xem trước trang 1',
   rsz_paper_size: 'Khổ giấy',
   rsz_size_custom: 'Tùy chỉnh',

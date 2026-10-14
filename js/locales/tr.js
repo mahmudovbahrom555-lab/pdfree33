@@ -356,7 +356,6 @@ window.PDFREE_LOCALE = {
 
   // ── resizeUI.js ──────────────────────────────────────────────
   rsz_loading: 'PDF yükleniyor…',
-  rsz_err_load: 'PDF okunamadı: {msg}',
   rsz_preview_alt: '1. sayfa önizlemesi',
   rsz_paper_size: 'Kağıt boyutu',
   rsz_size_custom: 'Özel',

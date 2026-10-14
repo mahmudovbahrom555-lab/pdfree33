@@ -36,6 +36,33 @@ npm run corpus:groundtruth:word     # same for PDF→Word via the real tool page
                                     # presentation forms left and RTL markup (w:bidi, w:rtl)
 ```
 
+## Cloud corpus — nightly robustness run (`scripts/corpus-cloud/`)
+
+The owner's main direction (2026-10-14): measure on as many real documents as
+possible, fix what fails, pains first. Two layers:
+
+- **Robustness** (this one, no ground truth needed): a stratified sample of
+  CC-MAIN-2021-31-PDF-UNTRUNCATED (Digital Corpora, ~8M PDFs crawled from the
+  web) — Arabic, Persian, Chinese, scans, damaged files, forms, the other
+  languages we serve, encrypted, long files, a random control group, picked by
+  `pick_sample.py` from the corpus's own Tika metadata into
+  `tests/corpus/cloud/sample-v1.json` (names only). `.github/workflows/corpus-nightly.yml`
+  runs a tenth of it each night through every tool (`robust.mjs`): ok, broken
+  output, the site's own error, refused, timeout, crash. `report.py` clusters
+  the failures by signature, pains weighted up, and flags raw engine messages
+  shown to users. A report, not a deploy gate.
+- **Quality** (next): smaller sets WITH ground truth for the converters.
+
+Documents are fetched one at a time out of the remote zips (`fetch.py`, HTTP
+Range) and never committed or uploaded — their licences are those of the sites
+they were crawled from. Only names and results are kept.
+
+```
+python3 scripts/corpus-cloud/fetch.py corpus-cloud-docs 0000007.pdf 0000500.pdf
+node scripts/corpus-cloud/robust.mjs --docs corpus-cloud-docs --out corpus-cloud-out
+python3 scripts/corpus-cloud/report.py corpus-cloud-out/results.jsonl
+```
+
 ## Adding a file
 
 - **Never** a user-supplied or personal document — this repository is public.
