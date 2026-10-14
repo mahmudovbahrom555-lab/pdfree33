@@ -152,6 +152,14 @@
         "@type": "Answer",
         "text": "Yes. Click the signature tool's upload option and choose a PNG or JPG photo of your signature — on paper, whiteboard, whatever you have. The background is removed automatically, leaving just the ink, so it drops onto the PDF looking like a real signature rather than a white rectangle. Everything happens in your browser; the photo is never uploaded anywhere."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I add a picture, logo or screenshot to a PDF?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Click the image button and choose a PNG, JPG or WebP file \u2014 or copy an image and press Ctrl+V (Cmd+V on a Mac) while the PDF is open. Drag it into place and resize it from the corner. Photos and screenshots are placed as they are; a signature, stamp or logo on white paper gets its white background removed so only the ink shows. Nothing is uploaded."
+      }
     }
   ]
 }
@@ -1006,7 +1014,7 @@
           <button type="button" class="tool-btn" id="btnHighlight" data-draw-tool="highlight" title="Highlight" aria-label="Highlight" aria-pressed="false">🖍️</button>
           <button type="button" class="tool-btn" id="btnLasso" data-draw-tool="lasso" title="Select" aria-label="Select" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.7c3.6 0 6.3 2.1 6.3 5.1 0 2.8-2.5 5.1-5.6 5.1-.6 0-1 .5-.8 1 .3.7-.2 1.4-.9 1.4-3 0-5.2-2.2-5.2-4.9C1.8 5.9 4.4 1.7 8 1.7z" stroke="currentColor" stroke-width="1.3" stroke-dasharray="2.3 2"/><circle cx="3.6" cy="13.2" r="1.1" fill="currentColor"/></svg></button>
           <button type="button" class="tool-btn" id="btnImage" data-draw-tool="image" title="Image" aria-label="Image" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="5.5" cy="6" r="1.3" stroke="currentColor" stroke-width="1.3"/><path d="M2 11.5l3.5-3.5c.4-.4 1-.4 1.4 0L9 10.2l1.6-1.6c.4-.4 1-.4 1.4 0l2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <input type="file" id="signatureImageInput" accept="image/png,image/jpeg" hidden>
+          <input type="file" id="signatureImageInput" accept="image/png,image/jpeg,image/webp" hidden>
         </div>
         <hr class="toolbar-sep">
         <!-- Settings: stroke width and eyedropper -->
@@ -1112,6 +1120,10 @@
                 <td style="padding:10px 14px;"><strong style="color:var(--text);">🖼 Upload signature image</strong> — background removed automatically</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 14px;color:var(--text2);">Add a picture, logo or screenshot</td>
+                <td style="padding:10px 14px;"><strong style="color:var(--text);">🖼 Image</strong> button, or paste with Ctrl+V — placed as it is</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:10px 14px;color:var(--text2);">Remove something you drew</td>
                 <td style="padding:10px 14px;"><strong style="color:var(--text);">⌫ Eraser</strong> — or Undo (Ctrl+Z)</td>
               </tr>
@@ -1182,6 +1194,10 @@
           <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
             <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I upload a photo of my real signature instead of drawing one?</h3>
             <p style="margin:0;font-size:14px;">Yes. Click the signature tool's upload option and choose a PNG or JPG photo of your signature — on paper, whiteboard, whatever you have. The background is removed automatically, leaving just the ink, so it drops onto the PDF looking like a real signature rather than a white rectangle. Everything happens in your browser; the photo is never uploaded anywhere.</p>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
+            <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I add a picture, logo or screenshot to a PDF?</h3>
+            <p style="margin:0;font-size:14px;">Yes. Click the image button and choose a PNG, JPG or WebP file — or copy an image and press Ctrl+V (Cmd+V on a Mac) while the PDF is open. Drag it into place and resize it from the corner. Photos and screenshots are placed as they are; a signature, stamp or logo on white paper gets its white background removed so only the ink shows. Nothing is uploaded.</p>
           </div>
         </div>
 

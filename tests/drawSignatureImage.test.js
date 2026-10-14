@@ -20,7 +20,7 @@ function expect(actual) {
   };
 }
 
-const { otsuThreshold, despeckleMask, hasRealAlpha, removeBackground } =
+const { otsuThreshold, despeckleMask, hasRealAlpha, removeBackground, looksLikeInkOnPaper } =
   await import('../js/drawSignatureImage.js');
 
 // Builds a flat RGBA buffer (opaque, alpha=255) from a 2D array of gray values.
@@ -206,6 +206,41 @@ test('removeBackground still discards an isolated noise speck (despeckle over th
   data[noiseI] = data[noiseI + 1] = data[noiseI + 2] = 100; // isolated mid-gray speck, no ink nearby
   removeBackground(data, w, h);
   if (data[noiseI + 3] !== 0) throw new Error(`Expected isolated noise speck fully removed, got alpha=${data[noiseI + 3]}`);
+});
+
+// looksLikeInkOnPaper — decides whether the background is removed. Seeded
+// pseudo-random noise so the cases are realistic, not flat test patterns.
+function noisyImage(w, h, pixel) {
+  let seed = 7;
+  const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+  const data = new Uint8ClampedArray(w * h * 4);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const [r, g, b] = pixel(x, y, rnd);
+    const i = (y * w + x) * 4;
+    data[i] = r; data[i + 1] = g; data[i + 2] = b; data[i + 3] = 255;
+  }
+  return data;
+}
+const stroke = (x, y) => Math.abs(y - 30 - 12 * Math.sin(x / 9)) < 3;   // a pen line across the image
+
+test('looksLikeInkOnPaper: a signature on white paper → yes', () => {
+  const d = noisyImage(120, 60, (x, y, r) => (stroke(x, y) ? [20, 30, 120] : [248 - r() * 6, 248 - r() * 6, 246 - r() * 6]));
+  if (!looksLikeInkOnPaper(d)) throw new Error('expected ink on paper');
+});
+
+test('looksLikeInkOnPaper: a signature photographed in poor light (grey, even page) → yes, as before', () => {
+  const d = noisyImage(120, 60, (x, y, r) => (stroke(x, y) ? [35, 35, 45] : [150 + r() * 14, 150 + r() * 14, 145 + r() * 14]));
+  if (!looksLikeInkOnPaper(d)) throw new Error('expected ink on paper');
+});
+
+test('looksLikeInkOnPaper: a photo (light varies across the whole frame) → no, placed as it is', () => {
+  const d = noisyImage(120, 60, (x, y, r) => { const v = 40 + 180 * (x / 120) * (0.5 + 0.5 * Math.sin(y / 7)) + r() * 30; return [v, v * 0.9, v * 0.7]; });
+  if (looksLikeInkOnPaper(d)) throw new Error('a photo must not be thresholded');
+});
+
+test('looksLikeInkOnPaper: a screenshot with large coloured areas → no', () => {
+  const d = noisyImage(120, 60, x => (x < 40 ? [30, 90, 200] : x < 80 ? [240, 240, 240] : [250, 180, 40]));
+  if (looksLikeInkOnPaper(d)) throw new Error('a screenshot must not be thresholded');
 });
 
 // ── Summary ────────────────────────────────────────────────────

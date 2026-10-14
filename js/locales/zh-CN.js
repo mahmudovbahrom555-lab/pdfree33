@@ -32,7 +32,7 @@ window.PDFREE_LOCALE = {
     quickEdit:        ['编辑pdf文本', '修正拼写错误', '快速编辑pdf', '修改pdf内容', '编辑', '编辑pdf', 'bianji', 'bianjipdf', 'pdfbianji'],
     formFields:       ['添加表单字段', '创建可填写pdf', '添加字段'],
     flatten:      ['展平pdf表单'],
-    'draw-pdf':   ['pdf标注', 'pdf画图'],
+    'draw-pdf':   ['pdf标注', 'pdf画图', '添加图片', 'pdf插入图片', '粘贴图片', '添加logo', '加图片'],
     ocr:          ['pdf文字识别', 'ocr识别'],
     pdf2word:     ['pdf转word', 'pdf转文档', 'pdf转成word', 'pdfzhuanword', 'pdfzhuan', 'zhuanhuan'],
     pdf2excel:    ['pdf转excel', 'pdf转表格', 'pdf转成excel', 'pdfzhuanexcel'],

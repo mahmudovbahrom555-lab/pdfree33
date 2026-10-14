@@ -27,7 +27,7 @@ window.PDFREE_LOCALE = {
     quickEdit:        ['modifica testo pdf', 'correggi errore pdf', 'modifica rapida pdf', 'correggi refuso'],
     formFields:       ['aggiungi campi modulo', 'crea modulo pdf', 'pdf compilabile', 'aggiungi campo'],
     'compress-email':  ['email', 'gmail', 'outlook', 'invia pdf', 'allegato', 'file piccolo', 'troppo grande per email'],
-    'draw-pdf':        ['disegnare', 'annotare', 'annotazione', 'evidenziare', 'freccia', 'forma', 'casella di testo', 'a mano libera', 'evidenzia'],
+    'draw-pdf':        ['disegnare', 'annotare', 'annotazione', 'evidenziare', 'freccia', 'forma', 'casella di testo', 'a mano libera', 'evidenzia', 'aggiungi immagine', 'inserire immagine nel pdf', 'incolla immagine', 'aggiungi logo'],
     ocr:              ['ocr', 'estrai testo', 'scansionato', 'scansione in testo', 'riconoscimento testo', 'ricercabile'],
     pdf2word:         ['word', 'docx', 'convertire in word', 'pdf in docx', 'modificabile'],
     pdf2excel:        ['excel', 'xlsx', 'convertire in excel', 'pdf in xlsx', 'estrai tabella'],

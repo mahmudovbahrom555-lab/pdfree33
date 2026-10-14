@@ -23,10 +23,13 @@
 //  original ink color/tone (a signature may be blue, not black) and
 //  makes everything else transparent instead of white.
 //
-//  Auto-detected, no user-facing toggle: any JPEG always gets
-//  background removal (it has no alpha to lose); a PNG only gets it if
-//  its alpha channel is uniformly opaque (never had real transparency
-//  set) — a PNG with genuine varying alpha is left untouched.
+//  Auto-detected, no user-facing toggle: an image gets background
+//  removal when it is ink on paper (looksLikeInkOnPaper — a signature,
+//  a stamp, a logo on white) and has no real transparency of its own.
+//  A photo or a screenshot is placed as it is: the image button and
+//  Ctrl/Cmd+V paste also serve "add an image to a PDF" (Search Miss
+//  "paste an image", 2026-10-14), where thresholding a photo down to its
+//  darkest pixels would ruin it. Until then every JPEG was thresholded.
 //
 //  Runs on the main thread, not a Worker — a signature image is small
 //  (downscaled to SIGNATURE_MAX_EDGE below) and this only runs once at
@@ -185,6 +188,30 @@ export function removeBackground(data, w, h) {
 }
 
 /**
+ * Ink on paper: most of the image is one even, light background (the
+ * pixels Otsu puts above its threshold) and the rest is clearly darker.
+ * Holds for a signature photographed in poor light too (a grey but even
+ * page); fails for a photo or a screenshot, whose light part is neither
+ * dominant nor even.
+ * @param {Uint8ClampedArray} data RGBA
+ */
+export function looksLikeInkOnPaper(data) {
+  const threshold = otsuThreshold(data);
+  let bgN = 0, bgSum = 0, bgSq = 0, inkN = 0, inkSum = 0;
+  for (let i = 0; i < data.length; i += 4) {
+    // rounded like otsuThreshold's histogram, or ink sitting exactly on the
+    // threshold bin (gray 37.3 vs threshold 37) counts as background
+    const g = Math.round(0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]);
+    if (g > threshold) { bgN++; bgSum += g; bgSq += g * g; } else { inkN++; inkSum += g; }
+  }
+  const n = data.length / 4;
+  if (!bgN || !inkN || bgN / n < 0.6) return false;
+  const bgMean = bgSum / bgN;
+  const bgStd = Math.sqrt(Math.max(0, bgSq / bgN - bgMean * bgMean));
+  return bgStd < 20 && bgMean - inkSum / inkN > 60;
+}
+
+/**
  * Loads a File (PNG or JPEG), auto-strips a light/white background when
  * needed (see header), returns a ready-to-place canvas.
  * @param {File} file
@@ -204,7 +231,7 @@ export async function loadSignatureImage(file) {
 
   const imgData = ctx.getImageData(0, 0, w, h);
   const isJpeg = file.type.includes('jpeg') || /\.jpe?g$/i.test(file.name);
-  if (isJpeg || !hasRealAlpha(imgData.data)) {
+  if ((isJpeg || !hasRealAlpha(imgData.data)) && looksLikeInkOnPaper(imgData.data)) {
     removeBackground(imgData.data, w, h);
     ctx.putImageData(imgData, 0, 0);
   }

@@ -28,7 +28,7 @@ window.PDFREE_LOCALE = {
     quickEdit:        ['edit teks pdf', 'perbaiki typo pdf', 'edit cepat pdf', 'ubah teks pdf'],
     formFields:       ['tambah kolom formulir', 'buat formulir pdf', 'pdf bisa diisi', 'tambah kolom'],
     'compress-email': ['email', 'gmail', 'kirim pdf', 'lampiran', 'file kecil', 'terlalu besar untuk email'],
-    'draw-pdf':       ['gambar bebas', 'coret-coret', 'anotasi', 'tandai', 'panah', 'bentuk', 'kotak teks', 'sorot'],
+    'draw-pdf':       ['gambar bebas', 'coret-coret', 'anotasi', 'tandai', 'panah', 'bentuk', 'kotak teks', 'sorot', 'tambah gambar', 'sisipkan gambar ke pdf', 'tempel gambar', 'tambah logo'],
     ocr:              ['ocr', 'ekstrak teks', 'hasil pindai', 'ubah scan jadi teks', 'pengenalan teks', 'bisa dicari'],
     pdf2word:         ['word', 'docx', 'ubah ke word', 'pdf ke docx', 'bisa diedit'],
     pdf2excel:        ['excel', 'xlsx', 'ubah ke excel', 'pdf ke xlsx', 'ambil tabel'],

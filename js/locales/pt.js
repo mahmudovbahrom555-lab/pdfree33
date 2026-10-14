@@ -27,7 +27,7 @@ window.PDFREE_LOCALE = {
     quickEdit:        ['editar texto pdf', 'corrigir erro pdf', 'edição rápida pdf', 'corrigir erro de digitação'],
     formFields:       ['adicionar campos', 'criar formulário pdf', 'pdf preenchível', 'adicionar campo'],
     'compress-email':  ['email', 'gmail', 'outlook', 'enviar pdf', 'anexo', 'arquivo pequeno', 'muito grande para email'],
-    'draw-pdf':        ['desenhar', 'anotar', 'anotação', 'marcação', 'seta', 'forma', 'caixa de texto', 'à mão livre', 'destacar'],
+    'draw-pdf':        ['desenhar', 'anotar', 'anotação', 'marcação', 'seta', 'forma', 'caixa de texto', 'à mão livre', 'destacar', 'adicionar imagem', 'inserir imagem no pdf', 'colar imagem', 'adicionar logo'],
     ocr:              ['ocr', 'extrair texto', 'digitalizado', 'escanear para texto', 'reconhecimento de texto', 'pesquisável'],
     pdf2word:         ['word', 'docx', 'converter para word', 'pdf para docx', 'editável'],
     pdf2excel:        ['excel', 'xlsx', 'converter para excel', 'pdf para xlsx', 'extrair tabela'],

@@ -354,6 +354,13 @@ jobs:
         # (fails against the build without it). See tests/e2e/repair.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:repair
 
+      - name: E2E — Draw on PDF, images (paste, photo kept, signature background removed)
+        # Ctrl/Cmd+V places an image; a photo is no longer thresholded like a
+        # signature (production thresholded it: 38 % of its pixels became
+        # transparent). Checked on the placed bitmap's pixels. See
+        # tests/e2e/draw-image.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:draw-image
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do

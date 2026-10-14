@@ -27,7 +27,7 @@ window.PDFREE_LOCALE = {
     quickEdit:        ['pdf metin düzenle', 'yazım hatası düzelt', 'hızlı düzenleme', 'pdf içeriğini değiştir'],
     formFields:       ['form alanı ekle', 'pdf form oluştur', 'doldurulabilir pdf', 'alan ekle'],
     'compress-email': ['e-posta', 'gmail', 'outlook', 'pdf gönder', 'ek dosya', 'küçük dosya', 'mail için çok büyük'],
-    'draw-pdf':       ['çiz', 'not al', 'açıklama ekle', 'işaretle', 'ok işareti', 'şekil', 'metin kutusu', 'serbest çizim', 'vurgula'],
+    'draw-pdf':       ['çiz', 'not al', 'açıklama ekle', 'işaretle', 'ok işareti', 'şekil', 'metin kutusu', 'serbest çizim', 'vurgula', 'resim ekle', 'pdfye resim ekle', 'resim yapıştır', 'logo ekle'],
     ocr:              ['ocr', 'metin çıkar', 'taranmış', 'taramayı metne çevir', 'metin tanıma', 'aranabilir'],
     pdf2word:         ['word', 'docx', "word'e çevir", 'pdf docx', 'düzenlenebilir'],
     pdf2excel:        ['excel', 'xlsx', "excel'e çevir", 'pdf xlsx', 'tablo çıkar'],

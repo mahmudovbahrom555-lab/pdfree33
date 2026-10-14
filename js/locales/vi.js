@@ -28,7 +28,7 @@ window.PDFREE_LOCALE = {
     quickEdit:        ['sửa văn bản pdf', 'sửa lỗi chính tả', 'chỉnh sửa nhanh', 'thay đổi văn bản pdf'],
     formFields:       ['thêm trường biểu mẫu', 'tạo biểu mẫu pdf', 'pdf có thể điền', 'thêm trường'],
     'compress-email': ['email', 'gmail', 'gửi pdf', 'tệp đính kèm', 'file nhỏ', 'quá to để gửi mail'],
-    'draw-pdf':       ['vẽ pdf', 'chú thích', 'đánh dấu', 'mũi tên', 'hình dạng', 'hộp văn bản', 'vẽ tay', 'tô sáng', 'ghi chú'],
+    'draw-pdf':       ['vẽ pdf', 'chú thích', 'đánh dấu', 'mũi tên', 'hình dạng', 'hộp văn bản', 'vẽ tay', 'tô sáng', 'ghi chú', 'thêm ảnh', 'chèn ảnh vào pdf', 'dán ảnh', 'thêm logo'],
     ocr:              ['ocr', 'trích văn bản', 'bản scan', 'chuyển scan thành văn bản', 'nhận dạng văn bản', 'có thể tìm kiếm'],
     pdf2word:         ['word', 'docx', 'chuyển sang word', 'pdf sang docx', 'chỉnh sửa được'],
     pdf2excel:        ['excel', 'xlsx', 'chuyển sang excel', 'pdf sang xlsx', 'trích bảng'],

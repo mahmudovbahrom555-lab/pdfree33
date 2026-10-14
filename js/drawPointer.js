@@ -21,7 +21,7 @@ import {
   // canvas
   getDrawCanvas, getPdfCanvas,
   // document
-  getCurrentPage, getPageCommandsRef, getEffectiveCommands, getPageTextCache,
+  getCurrentPage, getPageCount, getPageCommandsRef, getEffectiveCommands, getPageTextCache,
   // actions
   clearRedoForCurrentPage, redrawPage, setColor, activatePrevTool, setSelectedId, setSelectedHighlightId, undo, redo,
   setLassoSelection, computeMovePatch, computeGroupBounds,
@@ -1115,6 +1115,19 @@ export function initImageTool() {
     const file = e.target.files[0];
     input.value = ''; // allow re-selecting the same file next time
     if (!file) return;
+    await _placeSignatureImage(file);
+  });
+
+  // Ctrl/Cmd+V of an image (a screenshot, a copied picture or logo) places
+  // it like an uploaded one — Search Miss "paste an image", 2026-10-14.
+  // Text pasted into a field (the text tool's box) is left to the field.
+  document.addEventListener('paste', async (e) => {
+    if (!getPageCount()) return;   // no PDF open yet — nothing to place it on
+    if (e.target.closest?.('input, textarea, [contenteditable="true"]')) return;
+    const item = [...(e.clipboardData?.items || [])].find(i => i.kind === 'file' && i.type.startsWith('image/'));
+    const file = item?.getAsFile();
+    if (!file) return;
+    e.preventDefault();
     await _placeSignatureImage(file);
   });
 }
