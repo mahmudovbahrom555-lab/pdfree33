@@ -797,6 +797,7 @@ function initEvents() {
   // (see files.js's _updateMeta) — refresh it the moment the toggle changes, not
   // just on the next file add/remove.
   document.addEventListener('pdfree:wm-remove-changed', () => renderList(true));
+  document.addEventListener('pdfree:merge-order-changed', () => renderList(true));
 
   document.addEventListener('pdfree:success', e => _handleSuccess(e.detail));
 

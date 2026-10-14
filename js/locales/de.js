@@ -6,7 +6,7 @@ window.PDFREE_LOCALE = {
   // when users type in German. Keys must match js/config.js's TOOLS keys
   // exactly. Merged with (not replacing) the English tags in js/search.js.
   search_tags: {
-    merge:            ['zusammenführen', 'kombinieren', 'verbinden', 'vereinen', 'pdf zusammenfügen', 'mehrere pdfs', 'pdfs verbinden'],
+    merge:            ['zusammenführen', 'kombinieren', 'verbinden', 'vereinen', 'pdf zusammenfügen', 'mehrere pdfs', 'pdfs verbinden', 'seiten abwechselnd', 'verschachteln', 'vorder- und rückseiten', 'duplex scan'],
     split:            ['teilen', 'trennen', 'aufteilen', 'schneiden', 'seiten entfernen', 'seiten löschen'],
     compress:         ['komprimieren', 'verkleinern', 'kleiner machen', 'reduzieren', 'optimieren', 'dateigröße', 'zu groß'],
     jpg2pdf:          ['bild in pdf', 'foto in pdf', 'png in pdf', 'bilder zu pdf', 'jpg in pdf'],
@@ -700,6 +700,12 @@ window.PDFREE_LOCALE = {
   merge_blank_pages_none:   'Keine',
   merge_blank_pages_always: 'Immer',
   merge_blank_pages_odd:    'Bei ungerader Seitenzahl',
+  merge_order_title: "Seitenreihenfolge",
+  merge_order_append: "Eine Datei nach der anderen",
+  merge_order_alternate: "Seiten abwechseln",
+  merge_alternate_hint: "Vorder- und Rückseiten getrennt gescannt? Die Seiten kommen abwechselnd: die 1. jeder Datei, dann die 2.… Eine einzelne Datei wird halbiert (erst Vorder-, dann Rückseiten).",
+  merge_reverse_title: "Rückseiten in umgekehrter Reihenfolge",
+  merge_reverse_sub: "Der umgedrehte Stapel Rückseiten wurde von der letzten Seite an gescannt",
   val_select_page:          'Bitte mindestens eine Seite auswählen',
   val_pagenum_out_of_range: 'Seitenbereich liegt außerhalb — dieses Dokument hat {n} Seiten.',
   val_light_no_savings:     '⚠️ Die Voreinstellung „Gering" hat in diesem PDF nichts zu entfernen gefunden. Für echte Einsparungen „Standard" verwenden.',

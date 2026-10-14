@@ -12,6 +12,7 @@ import { t, tp } from './i18n.js';
 import { decryptOwnerOnly } from './decryptPdf.js';
 import { bindDragReorder } from './dragReorder.js';
 import { getWmRemove } from './watermarkRemoveUI.js';
+import { getMergeOrder } from './mergeOrderUI.js';
 
 // ── PDF encryption preflight ──────────────────────────────────
 //
@@ -452,7 +453,9 @@ function _updateMeta() {
       // user just wants to strip watermarks (handleMerge in worker.js runs fine on
       // one file) — the watermark-removal toggle is visible and interactive at
       // count===1, so requiring 2 files unconditionally made that toggle a dead end.
-      const mergeMin = _currentTool === 'merge' && !getWmRemove() ? 2 : 1;
+      // Same for Alternate pages: one scan holding fronts then backs is alternated
+      // by its own halves.
+      const mergeMin = _currentTool === 'merge' && !getWmRemove() && getMergeOrder().order !== 'alternate' ? 2 : 1;
       btn.disabled = count < mergeMin;
     }
   } else {

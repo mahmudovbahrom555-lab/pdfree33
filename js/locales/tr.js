@@ -5,7 +5,7 @@ window.PDFREE_LOCALE = {
   // when users type in Turkish. Keys must match js/config.js's TOOLS keys
   // exactly. Merged with (not replacing) the English tags in js/search.js.
   search_tags: {
-    merge:            ['birleştir', 'birleştirme', 'pdf birleştir', 'dosyaları birleştir', 'tek dosya yap', "pdf'leri birleştir"],
+    merge:            ['birleştir', 'birleştirme', 'pdf birleştir', 'dosyaları birleştir', 'tek dosya yap', "pdf'leri birleştir", 'sayfaları dönüşümlü', 'tek ve çift sayfaları birleştir', 'çift taraflı tarama'],
     split:            ['böl', 'ayır', 'bölme', 'parçala'],
     compress:         ['sıkıştır', 'küçült', 'boyut küçült', 'optimize et', 'dosya boyutu', 'çok büyük'],
     jpg2pdf:          ['resmi pdfye çevir', 'fotoğraf pdf', 'jpg pdf', 'png pdf', 'resim pdf'],
@@ -697,6 +697,12 @@ window.PDFREE_LOCALE = {
   merge_blank_pages_none:   'Yok',
   merge_blank_pages_always: 'Her zaman',
   merge_blank_pages_odd:    'Sayfa sayısı tek olduğunda',
+  merge_order_title: "Sayfa sırası",
+  merge_order_append: "Dosyalar art arda",
+  merge_order_alternate: "Sayfaları dönüşümlü sırala",
+  merge_alternate_hint: "Ön ve arka yüzler ayrı mı tarandı? Sayfalar sırayla alınır: her dosyanın 1. sayfası, sonra 2.… Tek dosya ikiye bölünür (önce ön yüzler, sonra arka yüzler).",
+  merge_reverse_title: "Arka yüzler ters sırada",
+  merge_reverse_sub: "Ters çevrilmiş arka yüz destesi son sayfadan başlanarak tarandı",
   val_select_page:          'Lütfen en az bir sayfa seçin',
   val_pagenum_out_of_range: 'Sayfa aralığı sınırların dışında — bu belgede {n} sayfa var.',
   val_light_no_savings:     "⚠️ Hafif ön ayarı bu PDF'de kaldırılacak bir şey bulamadı. Gerçek tasarruf için Standart'ı kullanın.",

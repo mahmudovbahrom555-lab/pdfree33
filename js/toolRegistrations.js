@@ -14,6 +14,7 @@ import { id, esc }      from './utils.js';
 import { t }             from './i18n.js';
 import { getWmRemove, wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
 import { checkbox, chipGroup } from './uiComponents.js';
+import { mergeOrderHtml, bindMergeOrder, getMergeOrder, resetMergeOrder } from './mergeOrderUI.js';
 import { cancelEreader, cancelSplit } from './processor.js';
 import { selectedFiles } from './files.js';
 
@@ -244,9 +245,11 @@ function _initMerge(files) {
   const alreadyRendered = !!document.getElementById('mergeFilenameInput');
   if (!alreadyRendered) {
     if (!_outputNameTouched) _outputStem = _computeDefaultStem(files || _lastFiles);
-    c.innerHTML     = _filenameHtml() + wmRemoveHtml() + _bookmarksHtml() + _blankPagesHtml();
+    c.innerHTML     = _filenameHtml() + wmRemoveHtml() + mergeOrderHtml()
+      + `<div id="mergeAppendExtras" style="display:${getMergeOrder().order === 'alternate' ? 'none' : 'block'};">${_bookmarksHtml() + _blankPagesHtml()}</div>`;
     c.style.display = 'block';
     bindWmRemove();
+    bindMergeOrder('mergeAppendExtras');
     _bindFilenameInput();
     _bindMergeExtras();
     return;
@@ -261,6 +264,7 @@ function _hideMerge() {
   const c = id('mergeOptions');
   if (c) { c.style.display = 'none'; c.innerHTML = ''; }
   resetWmRemove();
+  resetMergeOrder();
   _resetMergeExtras();
   _outputStem        = '';
   _outputNameTouched = false;
@@ -280,6 +284,7 @@ registerTool('merge', {
     outputFilename:   getMergeFilename(),
     createBookmarks:  _createBookmarks,
     insertBlankPages: _insertBlankPages,
+    ...getMergeOrder(),
   }),
 });
 

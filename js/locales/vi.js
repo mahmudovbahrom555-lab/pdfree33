@@ -6,7 +6,7 @@ window.PDFREE_LOCALE = {
   // when users type in Vietnamese. Keys must match js/config.js's TOOLS keys
   // exactly. Merged with (not replacing) the English tags in js/search.js.
   search_tags: {
-    merge:            ['ghép', 'ghép file', 'gộp', 'hợp nhất', 'nối file', 'ghép pdf', 'gộp file'],
+    merge:            ['ghép', 'ghép file', 'gộp', 'hợp nhất', 'nối file', 'ghép pdf', 'gộp file', 'xen kẽ trang', 'gộp trang chẵn lẻ', 'quét hai mặt'],
     split:            ['tách', 'chia', 'cắt', 'tách trang', 'chia nhỏ pdf'],
     compress:         ['nén', 'giảm dung lượng', 'thu nhỏ', 'tối ưu', 'file quá nặng', 'giảm kích thước'],
     jpg2pdf:          ['ảnh sang pdf', 'ảnh thành pdf', 'jpg sang pdf', 'png sang pdf', 'chuyển ảnh sang pdf'],
@@ -698,6 +698,12 @@ window.PDFREE_LOCALE = {
   merge_blank_pages_none:   'Không',
   merge_blank_pages_always: 'Luôn luôn',
   merge_blank_pages_odd:    'Khi số trang lẻ',
+  merge_order_title: "Thứ tự trang",
+  merge_order_append: "Lần lượt từng tệp",
+  merge_order_alternate: "Xen kẽ trang",
+  merge_alternate_hint: "Mặt trước và mặt sau được quét riêng? Các trang được lấy lần lượt: trang 1 của mỗi tệp, rồi trang 2… Một tệp duy nhất được chia đôi (mặt trước, rồi mặt sau).",
+  merge_reverse_title: "Mặt sau theo thứ tự ngược",
+  merge_reverse_sub: "Xấp mặt sau bị lật được quét từ trang cuối",
   val_select_page:          'Vui lòng chọn ít nhất một trang',
   val_pagenum_out_of_range: 'Phạm vi trang nằm ngoài giới hạn — tài liệu này có {n} trang.',
   val_light_no_savings:     '⚠️ Cấu hình Nhẹ không tìm thấy gì để loại bỏ trong PDF này. Dùng Tiêu chuẩn để tiết kiệm thực sự.',

@@ -5,7 +5,7 @@ window.PDFREE_LOCALE = {
   // when users type in Italian. Keys must match js/config.js's TOOLS keys
   // exactly. Merged with (not replacing) the English tags in js/search.js.
   search_tags: {
-    merge:            ['unisci', 'unire', 'combinare', 'fondere', 'unione file', 'più pdf', 'unisci pdf'],
+    merge:            ['unisci', 'unire', 'combinare', 'fondere', 'unione file', 'più pdf', 'unisci pdf', 'alternare pagine', 'interfoliare', 'fronte e retro', 'scansione fronte retro'],
     split:            ['dividi', 'dividere', 'separare', 'tagliare', 'rimuovi pagine', 'elimina pagine'],
     compress:         ['comprimi', 'comprimere', 'ridurre', 'più piccolo', 'ottimizzare', 'dimensione file', 'file troppo grande'],
     jpg2pdf:          ['immagine in pdf', 'foto in pdf', 'png in pdf', 'convertire foto'],
@@ -697,6 +697,12 @@ window.PDFREE_LOCALE = {
   merge_blank_pages_none:   'Nessuna',
   merge_blank_pages_always: 'Sempre',
   merge_blank_pages_odd:    'Con numero di pagine dispari',
+  merge_order_title: "Ordine delle pagine",
+  merge_order_append: "Un file dopo l’altro",
+  merge_order_alternate: "Alterna le pagine",
+  merge_alternate_hint: "Fronti e retri scansionati separatamente? Le pagine vengono prese a turno: la 1ª di ogni file, poi la 2ª… Un solo file viene diviso a metà (fronti, poi retri).",
+  merge_reverse_title: "Retri in ordine inverso",
+  merge_reverse_sub: "La pila dei retri, girata, è stata scansionata dall’ultima pagina",
   val_select_page:          'Seleziona almeno una pagina',
   val_pagenum_out_of_range: "L'intervallo di pagine non è valido — questo documento ha {n} pagine.",
   val_light_no_savings:     "⚠️ Il preset Leggero non ha trovato nulla da rimuovere in questo PDF. Usa Standard per un risparmio reale.",

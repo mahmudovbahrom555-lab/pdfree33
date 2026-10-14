@@ -8,7 +8,7 @@ window.PDFREE_LOCALE = {
   // Includes both native kanji/hiragana forms and katakana/romaji loanword
   // variants, since real users mix scripts and IME conversion habits.
   search_tags: {
-    merge:            ['結合', '結合する', '合体', 'ファイルを結合', 'まとめる', 'マージ', 'PDF結合'],
+    merge:            ['結合', '結合する', '合体', 'ファイルを結合', 'まとめる', 'マージ', 'PDF結合', 'ページを交互に', '奇数ページ 偶数ページ 結合', '両面スキャン', '表裏 結合'],
     split:            ['分割', '分ける', 'ページを削除', '切り分ける', 'スプリット'],
     compress:         ['圧縮', '圧縮する', '小さくする', 'ファイルサイズを小さく', '最適化', '容量が大きい'],
     jpg2pdf:          ['画像をPDFに', '写真をPDFに', 'JPGをPDFに', 'PNGをPDFに', '画像変換'],
@@ -700,6 +700,12 @@ window.PDFREE_LOCALE = {
   merge_blank_pages_none:   'なし',
   merge_blank_pages_always: '常に',
   merge_blank_pages_odd:    'ページ数が奇数のとき',
+  merge_order_title: "ページの順序",
+  merge_order_append: "ファイルごとに順番に",
+  merge_order_alternate: "ページを交互に",
+  merge_alternate_hint: "表面と裏面を別々にスキャンしましたか？各ファイルの1ページ目、次に2ページ目…と交互に並べます。ファイルが1つなら半分に分けます（前半が表面、後半が裏面）。",
+  merge_reverse_title: "裏面は逆順",
+  merge_reverse_sub: "裏返した裏面の束を最後のページからスキャンした場合",
   val_select_page:          '少なくとも1ページ選択してください',
   val_pagenum_out_of_range: 'ページ範囲が範囲外です — この文書には{n}ページあります。',
   val_light_no_savings:     '⚠️「軽度」プリセットでは、このPDFから削除できるものが見つかりませんでした。実際に削減するには「標準」を使用してください。',

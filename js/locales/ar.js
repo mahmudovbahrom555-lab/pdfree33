@@ -10,7 +10,7 @@
 // reused as-is, no new investigation needed for the homepage/other pages.
 window.PDFREE_LOCALE = {
   search_tags: {
-    merge:        ['دمج pdf', 'دمج ملفات', 'ضم ملفات pdf'],
+    merge:        ['دمج pdf', 'دمج ملفات', 'ضم ملفات pdf', 'تبديل الصفحات', 'دمج الصفحات الفردية والزوجية', 'مسح الوجهين'],
     split:        ['تقسيم pdf', 'فصل الصفحات', 'تجزئة pdf'],
     extract:      ['استخراج صفحات pdf', 'استخراج صفحات'],
     compress:     ['ضغط pdf', 'تصغير حجم pdf', 'تقليل حجم الملف'],
@@ -741,6 +741,12 @@ window.PDFREE_LOCALE = {
   merge_blank_pages_none:   'بدون',
   merge_blank_pages_always: 'دائمًا',
   merge_blank_pages_odd:    'عند وجود عدد صفحات فردي',
+  merge_order_title: "ترتيب الصفحات",
+  merge_order_append: "ملف تلو الآخر",
+  merge_order_alternate: "تبديل الصفحات",
+  merge_alternate_hint: "هل مسحت الوجوه الأمامية والخلفية كلًّا على حدة؟ تُؤخذ الصفحات بالتناوب: الأولى من كل ملف ثم الثانية… والملف الواحد يُقسَم نصفين (الأمامية ثم الخلفية).",
+  merge_reverse_title: "الوجوه الخلفية بترتيب معكوس",
+  merge_reverse_sub: "مُسحت رزمة الوجوه الخلفية المقلوبة بدءًا من الصفحة الأخيرة",
   val_select_page:          'يرجى تحديد صفحة واحدة على الأقل',
   val_pagenum_out_of_range: 'نطاق الصفحات خارج الحدود — يحتوي هذا المستند على {n} صفحة.',
   val_light_no_savings:     '⚠️ لم يجد النمط "خفيف" ما يمكن إزالته في ملف PDF هذا. جرّب النمط "قياسي" للحصول على توفير حقيقي.',

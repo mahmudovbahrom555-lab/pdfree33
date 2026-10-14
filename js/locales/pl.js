@@ -5,7 +5,7 @@ window.PDFREE_LOCALE = {
   // when users type in Polish. Keys must match js/config.js's TOOLS keys
   // exactly. Merged with (not replacing) the English tags in js/search.js.
   search_tags: {
-    merge:            ['scal', 'scalanie', 'połącz', 'złącz', 'łączenie plików', 'wiele pdf', 'połącz pdf'],
+    merge:            ['scal', 'scalanie', 'połącz', 'złącz', 'łączenie plików', 'wiele pdf', 'połącz pdf', 'przeplataj strony', 'strony parzyste i nieparzyste', 'skan dwustronny'],
     split:            ['podziel', 'podzielić', 'rozdziel', 'wytnij', 'usuwanie stron'],
     compress:         ['kompresuj', 'kompresja', 'zmniejsz', 'mniejszy', 'optymalizuj', 'rozmiar pliku', 'za duży plik'],
     jpg2pdf:          ['obraz do pdf', 'zdjęcie do pdf', 'png do pdf', 'zdjęcie na pdf'],
@@ -697,6 +697,12 @@ window.PDFREE_LOCALE = {
   merge_blank_pages_none:   'Brak',
   merge_blank_pages_always: 'Zawsze',
   merge_blank_pages_odd:    'Przy nieparzystej liczbie stron',
+  merge_order_title: "Kolejność stron",
+  merge_order_append: "Plik po pliku",
+  merge_order_alternate: "Przeplataj strony",
+  merge_alternate_hint: "Przody i tyły zeskanowane osobno? Strony są brane na zmianę: 1. z każdego pliku, potem 2.… Pojedynczy plik jest dzielony na pół (najpierw przody, potem tyły).",
+  merge_reverse_title: "Tyły w odwrotnej kolejności",
+  merge_reverse_sub: "Odwrócony plik tyłów został zeskanowany od ostatniej strony",
   val_select_page:          'Wybierz co najmniej jedną stronę',
   val_pagenum_out_of_range: 'Zakres stron jest nieprawidłowy — ten dokument ma {n} stron.',
   val_light_no_savings:     '⚠️ Ustawienie Lekkie nie znalazło niczego do usunięcia w tym pliku PDF. Użyj ustawienia Standardowe, aby uzyskać realne oszczędności.',

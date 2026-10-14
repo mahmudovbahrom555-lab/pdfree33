@@ -5,7 +5,7 @@ window.PDFREE_LOCALE = {
   // when users type in French. Keys must match js/config.js's TOOLS keys
   // exactly. Merged with (not replacing) the English tags in js/search.js.
   search_tags: {
-    merge:            ['fusionner', 'combiner', 'joindre', 'unir', 'fusion de fichiers', 'plusieurs pdf', 'joindre des pdf'],
+    merge:            ['fusionner', 'combiner', 'joindre', 'unir', 'fusion de fichiers', 'plusieurs pdf', 'joindre des pdf', 'intercaler les pages', 'alterner les pages', 'recto verso', 'numérisation recto verso'],
     split:            ['diviser', 'séparer', 'découper', 'couper', 'retirer des pages'],
     compress:         ['compresser', 'réduire', 'plus petit', 'diminuer', 'optimiser', 'taille du fichier', 'trop lourd'],
     jpg2pdf:          ['image en pdf', 'photo en pdf', 'png en pdf', 'convertir image en pdf', 'jpg en pdf'],
@@ -699,6 +699,12 @@ window.PDFREE_LOCALE = {
   merge_blank_pages_none:   'Aucune',
   merge_blank_pages_always: 'Toujours',
   merge_blank_pages_odd:    'Si nombre de pages impair',
+  merge_order_title: "Ordre des pages",
+  merge_order_append: "Un fichier après l’autre",
+  merge_order_alternate: "Alterner les pages",
+  merge_alternate_hint: "Rectos et versos numérisés séparément ? Les pages sont prises à tour de rôle : la 1re de chaque fichier, puis la 2e… Un fichier seul est coupé en deux (rectos, puis versos).",
+  merge_reverse_title: "Versos dans l’ordre inverse",
+  merge_reverse_sub: "La pile de versos, retournée, a été numérisée en commençant par la dernière page",
   val_select_page:          'Sélectionnez au moins une page',
   val_pagenum_out_of_range: 'La plage de pages est hors limites — ce document compte {n} pages.',
   val_light_no_savings:     "⚠️ Le préréglage Léger n'a rien trouvé à supprimer dans ce PDF. Utilisez Standard pour de vraies économies.",

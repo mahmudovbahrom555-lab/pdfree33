@@ -5,7 +5,7 @@ window.PDFREE_LOCALE = {
   // when users type in Spanish. Keys must match js/config.js's TOOLS keys
   // exactly. Merged with (not replacing) the English tags in js/search.js.
   search_tags: {
-    merge:            ['combinar', 'unir', 'fusionar', 'juntar', 'unir archivos', 'varios pdf', 'juntar pdf'],
+    merge:            ['combinar', 'unir', 'fusionar', 'juntar', 'unir archivos', 'varios pdf', 'juntar pdf', 'intercalar páginas', 'alternar páginas', 'anverso y reverso', 'escaneo a doble cara'],
     split:            ['dividir', 'separar', 'cortar', 'quitar páginas', 'división'],
     compress:         ['comprimir', 'reducir', 'más pequeño', 'achicar', 'optimizar', 'tamaño de archivo', 'muy pesado'],
     jpg2pdf:          ['imagen a pdf', 'foto a pdf', 'png a pdf', 'convertir imagen a pdf', 'jpg a pdf'],
@@ -699,6 +699,12 @@ window.PDFREE_LOCALE = {
   merge_blank_pages_none:   'Ninguna',
   merge_blank_pages_always: 'Siempre',
   merge_blank_pages_odd:    'Con número de páginas impar',
+  merge_order_title: "Orden de páginas",
+  merge_order_append: "Un archivo tras otro",
+  merge_order_alternate: "Alternar páginas",
+  merge_alternate_hint: "¿Anversos y reversos escaneados por separado? Las páginas se toman por turnos: la 1.ª de cada archivo, luego la 2.ª… Un solo archivo se divide por la mitad (anversos y luego reversos).",
+  merge_reverse_title: "Reversos en orden inverso",
+  merge_reverse_sub: "El montón de reversos, dado la vuelta, se escaneó empezando por la última página",
   val_select_page:          'Selecciona al menos una página',
   val_pagenum_out_of_range: 'El rango de páginas está fuera de límites — este documento tiene {n} páginas.',
   val_light_no_savings:     '⚠️ El preajuste Ligero no encontró nada que eliminar en este PDF. Usa Estándar para un ahorro real.',

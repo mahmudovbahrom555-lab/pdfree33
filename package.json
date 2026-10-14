@@ -29,6 +29,7 @@
     "test:e2e:docx2pdf": "node tests/e2e/docx2pdf.e2e.mjs",
     "test:e2e:quickedit": "node tests/e2e/quickEdit.e2e.mjs",
     "test:e2e:nup": "node tests/e2e/nup.e2e.mjs",
+    "test:e2e:merge-alternate": "node tests/e2e/merge-alternate.e2e.mjs",
     "test:e2e:quickedit-skeleton": "node tests/e2e/quickEditSkeleton.e2e.mjs",
     "check:prod:embed-sdk": "PDFREE_BASE_URL=https://pdfree.io node tests/e2e/embed-sdk.e2e.mjs",
     "check:prod:edge": "node scripts/check_edge_routing.mjs https://pdfree.io --browser --redirect-sample 20",

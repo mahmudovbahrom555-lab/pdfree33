@@ -52,8 +52,8 @@ const workerSrc = readFileSync(join(__dir, '../js/mergeWorker.js'), 'utf8')
   .replace(/self\.onmessage\s*=[\s\S]*?^};/m, '');
 
 const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-const workerModule = new AsyncFunction(workerSrc + '\nreturn { handleMerge };');
-const { handleMerge } = await workerModule();
+const workerModule = new AsyncFunction(workerSrc + '\nreturn { handleMerge, handleAlternate };');
+const { handleMerge, handleAlternate } = await workerModule();
 
 let passed = 0, failed = 0;
 
@@ -236,6 +236,56 @@ await test('blank-page insert does not throw when the preceding page has a malfo
 
   await handleMerge([corrupted, normal1()], ['a.pdf', 'b.pdf'], false, false, 'always');
   expect(lastDone().totalPages).toBe(5); // 3 + 1 blank + 1
+});
+
+// ══════════════════════════════════════════════════════════════
+// Alternate pages (interleave) — fronts and backs scanned apart
+// ══════════════════════════════════════════════════════════════
+
+console.log('\n📎 mergeWorker handleAlternate — interleave:');
+
+// A PDF whose pages carry their identity in their width (label → width),
+// so the output order is read back without any text extraction.
+async function labeled(labels) {
+  const { PDFDocument } = PDFLib;
+  const doc = await PDFDocument.create();
+  for (const w of labels) doc.addPage([100 + w, 200]);
+  return toArrayBuffer(Buffer.from(await doc.save()));
+}
+async function outputLabels() {
+  const { PDFDocument } = PDFLib;
+  const doc = await PDFDocument.load(lastDone().result);
+  return doc.getPages().map(p => Math.round(p.getWidth()) - 100);
+}
+
+await test('two files, same length: A1 B1 A2 B2 A3 B3', async () => {
+  await handleAlternate([await labeled([1, 3, 5]), await labeled([2, 4, 6])], ['fronts.pdf', 'backs.pdf']);
+  expect((await outputLabels()).join()).toBe('1,2,3,4,5,6');
+  expect(lastDone().totalPages).toBe(6);
+});
+
+await test('backs scanned last-first: reversing them restores 1…6', async () => {
+  await handleAlternate([await labeled([1, 3, 5]), await labeled([6, 4, 2])], ['fronts.pdf', 'backs.pdf'], false, true);
+  expect((await outputLabels()).join()).toBe('1,2,3,4,5,6');
+});
+
+await test('uneven files: the longer one’s leftover pages follow at the end', async () => {
+  await handleAlternate([await labeled([1, 3, 5, 7]), await labeled([2])], ['a.pdf', 'b.pdf']);
+  expect((await outputLabels()).join()).toBe('1,2,3,5,7');
+});
+
+await test('one file = fronts then backs in one scan: halves alternated (even and odd page counts)', async () => {
+  await handleAlternate([await labeled([1, 3, 5, 6, 4, 2])], ['scan.pdf'], false, true);
+  expect((await outputLabels()).join()).toBe('1,2,3,4,5,6');
+  await handleAlternate([await labeled([1, 3, 5, 4, 2])], ['scan.pdf'], false, true);
+  expect((await outputLabels()).join()).toBe('1,2,3,4,5');
+});
+
+await test('three files take turns; a damaged one is skipped and reported', async () => {
+  await handleAlternate([await labeled([1, 4]), corrupt(), await labeled([2, 5]), await labeled([3, 6])], ['a', 'bad', 'b', 'c']);
+  expect((await outputLabels()).join()).toBe('1,2,3,4,5,6');
+  expect(lastDone().fileErrors.length).toBe(1);
+  expect(lastDone().mergedCount).toBe(3);
 });
 
 console.log(`\n${'─'.repeat(50)}`);

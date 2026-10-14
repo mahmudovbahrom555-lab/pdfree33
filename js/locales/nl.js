@@ -5,7 +5,7 @@ window.PDFREE_LOCALE = {
   // when users type in Dutch. Keys must match js/config.js's TOOLS keys
   // exactly. Merged with (not replacing) the English tags in js/search.js.
   search_tags: {
-    merge:            ['samenvoegen', 'combineren', 'pdf\'s samenvoegen', 'meerdere pdf\'s', 'pdf combineren', 'documenten samenvoegen'],
+    merge:            ['samenvoegen', 'combineren', 'pdf\'s samenvoegen', 'meerdere pdf\'s', 'pdf combineren', 'documenten samenvoegen', "pagina's afwisselen", 'voor- en achterkant', 'dubbelzijdig scannen'],
     split:            ['splitsen', 'opsplitsen', 'scheiden', 'knippen', 'pagina\'s verwijderen', 'pagina\'s uitsnijden'],
     compress:         ['comprimeren', 'verkleinen', 'kleiner maken', 'optimaliseren', 'bestandsgrootte', 'te groot bestand'],
     jpg2pdf:          ['afbeelding naar pdf', 'foto naar pdf', 'png naar pdf', 'plaatje naar pdf'],
@@ -697,6 +697,12 @@ window.PDFREE_LOCALE = {
   merge_blank_pages_none:   'Geen',
   merge_blank_pages_always: 'Altijd',
   merge_blank_pages_odd:    'Bij een oneven aantal pagina\'s',
+  merge_order_title: "Paginavolgorde",
+  merge_order_append: "Het ene bestand na het andere",
+  merge_order_alternate: "Pagina's afwisselen",
+  merge_alternate_hint: "Voor- en achterkanten apart gescand? De pagina's worden om beurten genomen: de 1e van elk bestand, dan de 2e… Eén bestand wordt in tweeën gedeeld (eerst voorkanten, dan achterkanten).",
+  merge_reverse_title: "Achterkanten in omgekeerde volgorde",
+  merge_reverse_sub: "De omgedraaide stapel achterkanten is vanaf de laatste pagina gescand",
   val_select_page:          'Selecteer ten minste één pagina',
   val_pagenum_out_of_range: "Paginabereik valt buiten het bereik — dit document heeft {n} pagina's.",
   val_light_no_savings:     '⚠️ De voorinstelling Licht heeft niets gevonden om te verwijderen in deze PDF. Gebruik Standaard voor echte besparingen.',

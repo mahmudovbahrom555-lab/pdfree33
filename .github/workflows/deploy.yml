@@ -340,6 +340,12 @@ jobs:
         # sheet (embedPage() alone drops them). See tests/e2e/nup.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:nup
 
+      - name: E2E — Merge, alternate pages (fronts + backs scanned apart)
+        # Search Miss "interleave": two stacks, or one scan holding both, put
+        # back in order; the default merge order unchanged. See
+        # tests/e2e/merge-alternate.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:merge-alternate
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do

@@ -24,7 +24,8 @@
 //  Message contract (mirrors js/worker.js's merge handler, so
 //  processor.js's onmessage plumbing needs no shape changes):
 //    in  → { files: ArrayBuffer[], names: string[], removeWatermarks,
-//            createBookmarks, insertBlankPages }
+//            createBookmarks, insertBlankPages, order: 'append'|'alternate',
+//            reverseOthers }
 //    out → { type: 'progress', value, label }
 //        | { type: 'done', result, totalPages, fileErrors, mergedCount, pageCounts }
 //        | { type: 'error', message }
@@ -34,8 +35,9 @@ importScripts('./vendor/pdf-lib.min.js');
 
 self.onmessage = async (e) => {
   try {
-    const { files, names, removeWatermarks, createBookmarks, insertBlankPages } = e.data;
-    await handleMerge(files, names, removeWatermarks, createBookmarks, insertBlankPages);
+    const { files, names, removeWatermarks, createBookmarks, insertBlankPages, order, reverseOthers } = e.data;
+    if (order === 'alternate') await handleAlternate(files, names, removeWatermarks, reverseOthers);
+    else await handleMerge(files, names, removeWatermarks, createBookmarks, insertBlankPages);
   } catch (err) {
     self.postMessage({ type: 'error', message: err.message });
   }
@@ -301,6 +303,73 @@ function _addBookmarks(pdfDoc, entries) {
   itemRefs.forEach(ref => ctx.lookup(ref).set(PDFName.of('Parent'), rootRef));
 
   pdfDoc.catalog.set(PDFName.of('Outlines'), rootRef);
+}
+
+// ── Alternate pages (interleave) ───────────────────────────────
+//
+// Search Miss "interleave": a duplex job scanned on a one-sided scanner —
+// all fronts, then all backs. Pages are taken in turn, one from each
+// file: A1, B1, A2, B2… — a longer file's leftover pages follow at the
+// end. The backs usually come out last-page-first (the stack was turned
+// over), so reverseOthers reverses every file after the first.
+// One file alone is the same job scanned into a single PDF: its first
+// half (fronts) and second half (backs) are alternated.
+// Pure order logic, kept separate so tests can check it without PDFs.
+function alternateOrder(counts, reverseOthers) {
+  let runs = counts.map((n, f) => [...Array(n).keys()].map(p => [f, p]));
+  if (runs.length === 1) {
+    const half = Math.ceil(counts[0] / 2);
+    runs = [runs[0].slice(0, half), runs[0].slice(half)];
+  }
+  runs = runs.map((run, i) => (i > 0 && reverseOthers ? [...run].reverse() : run));
+  const out = [];
+  for (let k = 0; k < Math.max(...runs.map(r => r.length)); k++) {
+    for (const run of runs) if (k < run.length) out.push(run[k]);
+  }
+  return out;
+}
+
+async function handleAlternate(files, names, removeWatermarks = false, reverseOthers = false) {
+  const { PDFDocument } = PDFLib;
+  const merged = await PDFDocument.create();
+  const fileErrors = [];
+  const loaded = [];   // { pdf, name } of every file that loaded, in list order
+  for (let i = 0; i < files.length; i++) {
+    self.postMessage({ type: 'progress', value: Math.round(10 + (i / files.length) * 50), label: `Loading file ${i + 1} of ${files.length}…` });
+    try {
+      const pdf = await PDFDocument.load(files[i], { ignoreEncryption: true });
+      if (pdf.context.trailerInfo?.Encrypt) throw new Error('pdf-aes-encrypted');
+      if (removeWatermarks) _removeWatermarks(pdf);
+      _flattenPageTreeResources(pdf);
+      loaded.push({ pdf, name: names?.[i] ?? `file${i + 1}.pdf` });
+    } catch (err) {
+      fileErrors.push({ index: i + 1, name: names?.[i] ?? `file${i + 1}.pdf`, code: _classifyError(err), message: err?.message || String(err) });
+    }
+  }
+  if (!loaded.length) {
+    throw new Error(`All files failed to load: ${fileErrors.map(e => `${e.name} (${e.code})`).join(', ')}`);
+  }
+
+  // copy each file's pages once, then add them in alternating order
+  const copied = [];
+  for (const { pdf } of loaded) copied.push(await merged.copyPages(pdf, pdf.getPageIndices()));
+  self.postMessage({ type: 'progress', value: 75, label: 'Alternating pages…' });
+  const order = alternateOrder(copied.map(c => c.length), reverseOthers);
+  for (const [f, p] of order) merged.addPage(copied[f][p]);
+
+  self.postMessage({ type: 'progress', value: 95, label: 'Saving…' });
+  const bytes = await merged.save();
+  self.postMessage(
+    {
+      type:        'done',
+      result:      bytes.buffer,
+      totalPages:  order.length,
+      fileErrors:  fileErrors.length > 0 ? fileErrors : null,
+      mergedCount: loaded.length,
+      pageCounts:  loaded.map((l, i) => ({ name: l.name, pages: copied[i].length })),
+    },
+    [bytes.buffer]
+  );
 }
 
 // ── Merge handler ──────────────────────────────────────────────

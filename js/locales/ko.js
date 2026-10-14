@@ -7,7 +7,7 @@ window.PDFREE_LOCALE = {
   // Includes both native Korean phrasings and common loanwords (written in
   // Hangul, e.g. 드로잉/워터마크) since real search behavior mixes registers.
   search_tags: {
-    merge:            ['병합', '합치기', '결합', '합체', '여러 pdf', '파일 합치기', 'pdf 합치기', '머지'],
+    merge:            ['병합', '합치기', '결합', '합체', '여러 pdf', '파일 합치기', 'pdf 합치기', '머지', '페이지 번갈아', '홀수 짝수 페이지 합치기', '양면 스캔'],
     split:            ['분할', '나누기', '분리', '자르기', '페이지 제거', '스플릿'],
     compress:         ['압축', '압축하기', '용량 줄이기', '축소', '최적화', '파일 크기', '용량 너무 큼'],
     jpg2pdf:          ['이미지를 pdf로', '사진을 pdf로', 'png를 pdf로', '이미지 변환'],
@@ -699,6 +699,12 @@ window.PDFREE_LOCALE = {
   merge_blank_pages_none:   '없음',
   merge_blank_pages_always: '항상',
   merge_blank_pages_odd:    '페이지 수가 홀수일 때',
+  merge_order_title: "페이지 순서",
+  merge_order_append: "파일 순서대로",
+  merge_order_alternate: "페이지 번갈아 넣기",
+  merge_alternate_hint: "앞면과 뒷면을 따로 스캔했나요? 각 파일의 1쪽, 그다음 2쪽… 순서로 번갈아 넣습니다. 파일이 하나면 반으로 나눕니다(앞부분은 앞면, 뒷부분은 뒷면).",
+  merge_reverse_title: "뒷면이 역순",
+  merge_reverse_sub: "뒤집은 뒷면 묶음을 마지막 페이지부터 스캔한 경우",
   val_select_page:          '최소 한 페이지를 선택해 주세요',
   val_pagenum_out_of_range: '페이지 범위가 잘못되었습니다 — 이 문서는 {n}페이지입니다.',
   val_light_no_savings:     '⚠️ "가벼움" 프리셋으로 이 PDF에서 제거할 항목을 찾지 못했습니다. 실제로 용량을 줄이려면 "표준"을 사용해 주세요.',

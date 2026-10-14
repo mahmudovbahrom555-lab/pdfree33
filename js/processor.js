@@ -406,7 +406,7 @@ function _ensureMergeWorker() {
   return _mergeWorker;
 }
 
-async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilename = '', createBookmarks = false, insertBlankPages = 'none' } = {}) {
+async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilename = '', createBookmarks = false, insertBlankPages = 'none', order = 'append', reverseOthers = false } = {}) {
   if (!_checkTotalSize(filesSnapshot, maxFileMb('merge'))) { _abortUI(); return; }
   // Use pre-decrypted buffer when files.js already ran QPDF at file-add time.
   // .slice(0) copies so the cached buffer survives the postMessage transfer.
@@ -447,7 +447,7 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilena
   //     worker can include them in error reports for the "skipped files" toast.
   const names  = filesSnapshot.map(f => f.name);
   const worker = _ensureMergeWorker();
-  worker.postMessage({ files: buffers, names, removeWatermarks, createBookmarks, insertBlankPages }, buffers);
+  worker.postMessage({ files: buffers, names, removeWatermarks, createBookmarks, insertBlankPages, order, reverseOthers }, buffers);
 
   worker.onmessage = (e) => {
     const data = e.data;

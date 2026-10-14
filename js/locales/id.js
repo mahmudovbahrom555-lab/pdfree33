@@ -6,7 +6,7 @@ window.PDFREE_LOCALE = {
   // when users type in Indonesian. Keys must match js/config.js's TOOLS keys
   // exactly. Merged with (not replacing) the English tags in js/search.js.
   search_tags: {
-    merge:            ['gabungkan', 'gabung', 'satukan', 'gabung pdf', 'gabungkan file', 'satukan file', 'jadi satu file'],
+    merge:            ['gabungkan', 'gabung', 'satukan', 'gabung pdf', 'gabungkan file', 'satukan file', 'jadi satu file', 'selang-seling halaman', 'gabung halaman ganjil genap', 'pindai bolak-balik'],
     split:            ['pisahkan', 'pisah', 'potong', 'bagi pdf', 'pecah pdf'],
     compress:         ['kompres', 'perkecil', 'kecilkan ukuran', 'mampatkan', 'ukuran file besar', 'terlalu besar', 'perkecil ukuran'],
     jpg2pdf:          ['gambar ke pdf', 'foto ke pdf', 'jpg ke pdf', 'png ke pdf', 'ubah foto jadi pdf'],
@@ -698,6 +698,12 @@ window.PDFREE_LOCALE = {
   merge_blank_pages_none:   'Tidak ada',
   merge_blank_pages_always: 'Selalu',
   merge_blank_pages_odd:    'Jika jumlah halaman ganjil',
+  merge_order_title: "Urutan halaman",
+  merge_order_append: "Satu file setelah yang lain",
+  merge_order_alternate: "Selang-seling halaman",
+  merge_alternate_hint: "Sisi depan dan belakang dipindai terpisah? Halaman diambil bergiliran: ke-1 dari tiap file, lalu ke-2… Satu file dibagi dua (sisi depan, lalu belakang).",
+  merge_reverse_title: "Sisi belakang terbalik",
+  merge_reverse_sub: "Tumpukan sisi belakang yang dibalik dipindai mulai dari halaman terakhir",
   val_select_page:          'Pilih setidaknya satu halaman',
   val_pagenum_out_of_range: 'Rentang halaman di luar batas — dokumen ini memiliki {n} halaman.',
   val_light_no_savings:     '⚠️ Preset Ringan tidak menemukan apa pun untuk dihapus di PDF ini. Gunakan Standar untuk penghematan nyata.',

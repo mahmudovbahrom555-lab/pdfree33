@@ -8,7 +8,7 @@
 // locales (ru, de, es, fr, pt, id, tr, vi, ja, it, ko, nl, pl).
 window.PDFREE_LOCALE = {
   search_tags: {
-    merge:        ['合并pdf', '合并文件', '拼接pdf', 'hebing', 'hebingpdf', 'pdfhebing'],
+    merge:        ['合并pdf', '合并文件', '拼接pdf', 'hebing', 'hebingpdf', 'pdfhebing', '交替合并', '奇偶页合并', '双面扫描合并', '正反面合并'],
     split:        ['拆分pdf', '分割pdf', '拆分文件', 'chaifen', 'fenge', 'chaifenpdf'],
     extract:      ['提取pdf页面', '提取页面', 'tiqu', 'tiquyemian'],
     compress:     ['压缩pdf', '缩小pdf', '减小文件大小', 'yasuo', 'yasuopdf', 'pdfyasuo'],
@@ -739,6 +739,12 @@ window.PDFREE_LOCALE = {
   merge_blank_pages_none:   '无',
   merge_blank_pages_always: '始终',
   merge_blank_pages_odd:    '页数为奇数时',
+  merge_order_title: "页面顺序",
+  merge_order_append: "逐个文件",
+  merge_order_alternate: "交替排列页面",
+  merge_alternate_hint: "正面和反面是分开扫描的吗？按顺序轮流取页：每个文件的第 1 页，再第 2 页……只有一个文件时会分成两半（前半为正面，后半为反面）。",
+  merge_reverse_title: "反面为倒序",
+  merge_reverse_sub: "翻过来的反面那叠纸是从最后一页开始扫描的",
   val_select_page:          '请至少选择一页',
   val_pagenum_out_of_range: '页码范围超出边界 — 此文档共有 {n} 页。',
   val_light_no_savings:     '⚠️ "轻度"预设未在此 PDF 中找到可移除的内容。请尝试"标准"预设以获得实际压缩效果。',

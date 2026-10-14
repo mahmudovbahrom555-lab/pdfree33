@@ -5,7 +5,7 @@ window.PDFREE_LOCALE = {
   // when users type in Portuguese. Keys must match js/config.js's TOOLS keys
   // exactly. Merged with (not replacing) the English tags in js/search.js.
   search_tags: {
-    merge:            ['mesclar', 'combinar', 'unir', 'juntar', 'juntar arquivos', 'vários pdf', 'juntar pdfs'],
+    merge:            ['mesclar', 'combinar', 'unir', 'juntar', 'juntar arquivos', 'vários pdf', 'juntar pdfs', 'intercalar páginas', 'alternar páginas', 'frente e verso', 'digitalização frente e verso'],
     split:            ['dividir', 'separar', 'cortar', 'remover páginas', 'divisão'],
     compress:         ['comprimir', 'reduzir', 'menor', 'diminuir', 'otimizar', 'tamanho do arquivo', 'muito grande'],
     jpg2pdf:          ['imagem para pdf', 'foto para pdf', 'png para pdf', 'converter imagem em pdf', 'jpg para pdf'],
@@ -699,6 +699,12 @@ window.PDFREE_LOCALE = {
   merge_blank_pages_none:   'Nenhuma',
   merge_blank_pages_always: 'Sempre',
   merge_blank_pages_odd:    'Com número ímpar de páginas',
+  merge_order_title: "Ordem das páginas",
+  merge_order_append: "Um arquivo após o outro",
+  merge_order_alternate: "Intercalar páginas",
+  merge_alternate_hint: "Frentes e versos digitalizados separadamente? As páginas são tomadas em turnos: a 1ª de cada arquivo, depois a 2ª… Um único arquivo é dividido ao meio (frentes, depois versos).",
+  merge_reverse_title: "Versos em ordem inversa",
+  merge_reverse_sub: "A pilha de versos, virada, foi digitalizada a partir da última página",
   val_select_page:          'Selecione pelo menos uma página',
   val_pagenum_out_of_range: 'O intervalo de páginas está fora dos limites — este documento tem {n} páginas.',
   val_light_no_savings:     '⚠️ O predefinido Leve não encontrou nada para remover neste PDF. Use Padrão para uma economia real.',
