@@ -270,6 +270,10 @@ window.PDFREE_LOCALE = {
 
   error_msg:           'Erro: {msg}',
   error_report_hint:   ' — toque para reportar',
+  repair_offer: "Toque para repará-lo e tentar de novo.",
+  repair_working: "Reparando o arquivo…",
+  repair_done: "Reparado — executando de novo…",
+  repair_nothing: "Nada neste arquivo pôde ser reparado. Toque para relatar.",
   error_id_label:      'ID do erro: {id}',
   still_working:       'A processar… Documentos grandes podem demorar alguns minutos.',
 

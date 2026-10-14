@@ -277,6 +277,10 @@ window.PDFREE_LOCALE = {
 
   error_msg:            'خطأ: {msg}',
   error_report_hint:    ' — انقر للإبلاغ',
+  repair_offer: "انقر لإصلاح الملف والمحاولة مجددًا.",
+  repair_working: "جارٍ إصلاح الملف…",
+  repair_done: "تم الإصلاح — نعيد التشغيل…",
+  repair_nothing: "لم يكن في هذا الملف ما يمكن إصلاحه. انقر للإبلاغ عن المشكلة.",
   error_id_label:      'معرّف الخطأ: {id}',
   still_working:        'لا تزال المعالجة جارية… قد تستغرق المستندات الكبيرة عدة دقائق.',
 

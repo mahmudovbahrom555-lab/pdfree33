@@ -275,6 +275,10 @@ window.PDFREE_LOCALE = {
 
   error_msg:            '错误：{msg}',
   error_report_hint:    ' — 点击反馈',
+  repair_offer: "点击修复文件并重试。",
+  repair_working: "正在修复文件…",
+  repair_done: "已修复，正在重新运行…",
+  repair_nothing: "此文件中没有可修复的内容。点击报告问题。",
   error_id_label:      '错误 ID：{id}',
   still_working:        '仍在处理中…大文档可能需要几分钟时间。',
 

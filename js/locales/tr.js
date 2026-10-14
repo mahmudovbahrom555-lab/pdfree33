@@ -270,6 +270,10 @@ window.PDFREE_LOCALE = {
 
   error_msg:      'Hata: {msg}',
   error_report_hint: ' — bildirmek için dokun',
+  repair_offer: "Onarıp yeniden denemek için dokunun.",
+  repair_working: "Dosya onarılıyor…",
+  repair_done: "Onarıldı — yeniden çalıştırılıyor…",
+  repair_nothing: "Bu dosyada onarılabilecek bir şey yok. Bildirmek için dokunun.",
   error_id_label:      'Hata Kimliği: {id}',
   still_working:  'İşleniyor… Büyük belgeler birkaç dakika sürebilir.',
 

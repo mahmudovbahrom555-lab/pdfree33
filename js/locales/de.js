@@ -271,6 +271,10 @@ window.PDFREE_LOCALE = {
 
   error_msg:           'Fehler: {msg}',
   error_report_hint:   ' — zum Melden tippen',
+  repair_offer: "Tippen, um die Datei zu reparieren und es erneut zu versuchen.",
+  repair_working: "Datei wird repariert…",
+  repair_done: "Repariert — läuft erneut…",
+  repair_nothing: "An dieser Datei ließ sich nichts reparieren. Tippen, um es zu melden.",
   error_id_label:      'Fehler-ID: {id}',
   still_working:       'Wird noch verarbeitet… Große Dokumente können einige Minuten dauern.',
 

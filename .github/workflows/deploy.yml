@@ -346,6 +346,14 @@ jobs:
         # tests/e2e/merge-alternate.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:merge-alternate
 
+      - name: E2E — repair a damaged PDF from the error (cut stream, broken page tree)
+        # The damaged-file error offers "Tap to repair it and try again":
+        # Resize on a content stream cut short, Compress on a catalog not
+        # pointing at the page tree — each must fail, repair, and produce
+        # the file. Also: bytes before %PDF- are accepted. Checked both ways
+        # (fails against the build without it). See tests/e2e/repair.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:repair
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do

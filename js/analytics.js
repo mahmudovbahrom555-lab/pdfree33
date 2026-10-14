@@ -232,6 +232,16 @@ export function trackBehaviorAutoDownloadRecovery(tool) {
   _track('Auto Download Recovery', { tool });
 }
 
+/**
+ * "Tap to repair it and try again" on a damaged-file error (2026-10-14):
+ * outcome 'repaired' (a file was changed and the tool re-run) or 'nothing'
+ * (nothing the repair knows how to fix). Whether the re-run then succeeds
+ * shows up as the usual Tool Success / Tool Error right after it.
+ */
+export function trackRepair(tool, outcome) {
+  _track('Repair', { tool, outcome });
+}
+
 // ── Batch processing funnel ─────────────────────────────────────
 // Layered on top of the generic Tool Open → File Added → Tool Start →
 // Tool Success funnel above (app.js's shared pdfree:success handler calls

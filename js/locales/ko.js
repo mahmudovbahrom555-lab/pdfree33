@@ -272,6 +272,10 @@ window.PDFREE_LOCALE = {
 
   error_msg:      '오류: {msg}',
   error_report_hint: ' — 신고하려면 탭하세요',
+  repair_offer: "눌러서 파일을 복구하고 다시 시도하세요.",
+  repair_working: "파일 복구 중…",
+  repair_done: "복구했습니다 — 다시 실행 중…",
+  repair_nothing: "이 파일에서 복구할 수 있는 부분이 없습니다. 눌러서 신고하세요.",
   error_id_label:      '오류 ID: {id}',
   still_working:  '처리 중… 대용량 문서는 몇 분이 걸릴 수 있습니다.',
 

@@ -46,15 +46,15 @@ import { getMergeOrder } from './mergeOrderUI.js';
 async function _preflightPDF(file) {
   if (!file.name.toLowerCase().endsWith('.pdf')) return null;
   try {
-    // Verify PDF magic bytes (%PDF-) before any further processing.
+    // Verify the PDF header (%PDF-) before any further processing.
     // Extension check alone is insufficient — a renamed .exe or .html passes it.
-    // Reading only 5 bytes is O(1) regardless of file size.
-    const headBuf = await file.slice(0, 5).arrayBuffer();
-    const magic   = new Uint8Array(headBuf);
-    const isPDF   = magic[0] === 0x25 && magic[1] === 0x50 &&  // %P
-                    magic[2] === 0x44 && magic[3] === 0x46 &&  // DF
-                    magic[4] === 0x2D;                          // -
-    if (!isPDF) return { notPDF: true };
+    // Searched in the first 1024 bytes, not only at byte 0: readers (Acrobat,
+    // pdf.js, pdf-lib — all our engines) accept a header anywhere there, and
+    // real files carry leading bytes — a mail/HTTP header or a few NULs left by
+    // the program that saved them. Rejecting those turned a file every viewer
+    // opens into "not a valid PDF" here (found 2026-10-14 testing damaged files).
+    const head  = new TextDecoder('latin1').decode(await file.slice(0, 1024).arrayBuffer());
+    if (!head.includes('%PDF-')) return { notPDF: true };
 
     // Read last 8 KB — covers xref table / xref stream / Encrypt dict.
     // 8 KB (vs 4 KB) adds margin for large Encrypt dicts with long O/U keys.

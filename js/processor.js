@@ -10,7 +10,7 @@ import { t, tp } from './i18n.js';
 import { setProgress, hideProgress, setButtonProcessing, setButtonReady,
          showCancelBtn, hideCancelBtn, showToast, startLongOpHint, clearLongOpHint } from './ui.js';
 import { selectedFiles, setFilesLocked, renderList } from './files.js';
-import { trackToolError, trackBatchStart, trackBatchSuccess } from './analytics.js';
+import { trackToolError, trackBatchStart, trackBatchSuccess, trackRepair } from './analytics.js';
 import { TOOLS } from './config.js';
 import { maxFileMb } from './fileLimits.js';
 import { getRunner, getWorkerTool } from './toolRegistry.js';
@@ -6266,7 +6266,10 @@ function _handleError(tool, message, errorType = null) {
     // compression method in flate stream: 87, 85", "r.catalog.Pages is not a
     // function" — resize, compress, 2026-10-12); same advice as a file with
     // an unusual structure.
-    /unknown compression method|incorrect header check|invalid (?:stored )?block|invalid distance|catalog\.pages is not a function|invalid pdf structure/i.test(message || '')
+    // + "Bad encoding in flate stream" (a stream cut short) and
+    // "catalog.Pages(...).traverse is not a function", both reproduced
+    // 2026-10-14 — they still reached users as raw text.
+    /unknown compression method|incorrect header check|invalid (?:stored )?block|invalid distance|bad encoding in flate stream|catalog\.pages\b.*is not a function|invalid pdf structure/i.test(message || '')
   ) {
     friendly   = t('err_encrypted_pdf');
     errorType  = 'pdf_damaged';
@@ -6314,6 +6317,16 @@ function _handleError(tool, message, errorType = null) {
   document.dispatchEvent(new CustomEvent('pdfree:error', {
     detail: { tool, message: friendly, errorType: resolvedType, errorId }
   }));
+  // A damaged file: the most useful next step is repairing it, so the tap
+  // offers that — and still the report when there was nothing to repair.
+  if (resolvedType === 'pdf_damaged') {
+    showToast(
+      t('error_msg', { msg: friendly }) + '  ' + t('repair_offer') + '  ' + t('error_id_label', { id: errorId }),
+      12000,
+      () => _repairAndRetry(tool, { message: friendly, errorId }),
+    );
+    return;
+  }
   // Clickable toast: the moment of an actual failure is the highest-signal
   // point to hear from a user — opens the same feedback modal used on
   // success, pre-filled with the tool + error as read-only context.
@@ -6322,6 +6335,22 @@ function _handleError(tool, message, errorType = null) {
     8000,
     () => openFeedback('error', { tool, message: friendly, errorId }),
   );
+}
+
+// Repairs the selected files (js/repairPdf.js) and runs the tool again —
+// the repaired bytes sit where every runner reads first. Nothing repaired:
+// says so, and the tap opens the error report as before.
+async function _repairAndRetry(tool, report) {
+  showToast(t('repair_working'), 20000);
+  const { repairFiles } = await import('./repairPdf.js');
+  const repaired = await repairFiles(selectedFiles);
+  trackRepair(tool, repaired ? 'repaired' : 'nothing');
+  if (!repaired) {
+    showToast(t('repair_nothing'), 8000, () => openFeedback('error', { tool, ...report }));
+    return;
+  }
+  showToast(t('repair_done'), 4000);
+  document.getElementById('mergeBtn')?.click();
 }
 
 // ── True PDF Redaction ─────────────────────────────────────────

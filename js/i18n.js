@@ -249,6 +249,10 @@ export const EN = {
 
   error_msg:            'Error: {msg}',
   error_report_hint:    ' — tap to report',
+  repair_offer: "Tap to repair it and try again.",
+  repair_working: "Repairing the file…",
+  repair_done: "Repaired — running again…",
+  repair_nothing: "Nothing in this file could be repaired. Tap to report it.",
   error_id_label:      'Error ID: {id}',
   still_working:        'Still working… Large documents can take a few minutes.',
 

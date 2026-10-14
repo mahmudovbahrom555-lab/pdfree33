@@ -271,6 +271,10 @@ window.PDFREE_LOCALE = {
 
   error_msg:           'Lỗi: {msg}',
   error_report_hint:   ' — chạm để báo cáo',
+  repair_offer: "Chạm để sửa tệp và thử lại.",
+  repair_working: "Đang sửa tệp…",
+  repair_done: "Đã sửa — đang chạy lại…",
+  repair_nothing: "Không sửa được gì trong tệp này. Chạm để báo lỗi.",
   error_id_label:      'Mã lỗi: {id}',
   still_working:       'Vẫn đang xử lý… Tài liệu lớn có thể mất vài phút.',
 

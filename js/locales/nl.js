@@ -270,6 +270,10 @@ window.PDFREE_LOCALE = {
 
   error_msg:      'Fout: {msg}',
   error_report_hint: ' — tik om te melden',
+  repair_offer: "Tik om het te repareren en opnieuw te proberen.",
+  repair_working: "Bestand wordt gerepareerd…",
+  repair_done: "Gerepareerd — opnieuw bezig…",
+  repair_nothing: "Er viel niets te repareren in dit bestand. Tik om het te melden.",
   error_id_label:      'Fout-ID: {id}',
   still_working:  'Bezig… Grote documenten kunnen een paar minuten duren.',
 

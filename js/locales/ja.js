@@ -273,6 +273,10 @@ window.PDFREE_LOCALE = {
 
   error_msg:           'エラー: {msg}',
   error_report_hint:   '（タップして報告）',
+  repair_offer: "タップして修復し、もう一度試します。",
+  repair_working: "ファイルを修復しています…",
+  repair_done: "修復しました — もう一度実行します…",
+  repair_nothing: "このファイルには修復できる箇所がありませんでした。タップして報告できます。",
   error_id_label:      'エラーID: {id}',
   still_working:       'まだ処理中です… 大きな文書は数分かかる場合があります。',
 

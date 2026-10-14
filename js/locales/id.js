@@ -271,6 +271,10 @@ window.PDFREE_LOCALE = {
 
   error_msg:           'Kesalahan: {msg}',
   error_report_hint:   ' — ketuk untuk melaporkan',
+  repair_offer: "Ketuk untuk memperbaikinya dan coba lagi.",
+  repair_working: "Memperbaiki file…",
+  repair_done: "Sudah diperbaiki — menjalankan lagi…",
+  repair_nothing: "Tidak ada yang bisa diperbaiki di file ini. Ketuk untuk melaporkan.",
   error_id_label:      'ID Error: {id}',
   still_working:       'Masih memproses… Dokumen besar dapat memerlukan beberapa menit.',
 
