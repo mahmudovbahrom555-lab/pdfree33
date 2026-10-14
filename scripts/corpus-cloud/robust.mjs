@@ -21,7 +21,9 @@
 //
 //  node scripts/corpus-cloud/robust.mjs --docs <dir> --sample <sample.json>
 //       [--tools compress,merge,…] [--base http://localhost:8934]
-//       [--out <dir>] [--jobs 2]
+//       [--out <dir>] [--jobs 2] [--save]
+//  --save keeps each result as <out>/files/<doc>.<tool>.<ext>, for the
+//  quality detectors (scripts/quality/props.py) to read
 // ============================================================
 
 import { chromium } from 'playwright';
@@ -37,6 +39,7 @@ const OUT    = path.resolve(arg('out', 'corpus-cloud-out'));
 const JOBS   = Math.max(1, Number(arg('jobs', 2)));
 const TOOL_LIST = arg('tools', 'compress,merge,split,pdf2jpg,pdf2word,pdf2excel,resize,nup').split(',');
 const RUN_TIMEOUT_MS = 120_000;
+const SAVE = process.argv.includes('--save');
 
 for (const t of TOOL_LIST) if (!TOOLS[t]) { console.error(`unknown tool: ${t}`); process.exit(2); }
 
@@ -45,7 +48,7 @@ if (SAMPLE) for (const s of JSON.parse(fs.readFileSync(SAMPLE, 'utf8')).sample) 
 const docs = fs.readdirSync(DOCS).filter(f => f.toLowerCase().endsWith('.pdf')).sort();
 
 // One (document, tool) run → { outcome, reason, … , ms, pageErrors }.
-async function runOne(browser, tool, file) {
+async function runOne(browser, tool, file, saveAs) {
   const context = await browser.newContext({ serviceWorkers: 'block' });
   const page = await context.newPage();
   const pageErrors = [];
@@ -54,7 +57,7 @@ async function runOne(browser, tool, file) {
   page.on('crash', () => { crashed = true; });
   const started = Date.now();
   try {
-    return { ...(await drive(page, tool, file, () => crashed)), ms: Date.now() - started, pageErrors };
+    return { ...(await drive(page, tool, file, () => crashed, saveAs)), ms: Date.now() - started, pageErrors };
   } catch (e) {
     return { outcome: crashed ? 'crash' : 'harness', reason: e.message.slice(0, 200), ms: Date.now() - started, pageErrors };
   } finally {
@@ -62,7 +65,7 @@ async function runOne(browser, tool, file) {
   }
 }
 
-async function drive(page, tool, file, isCrashed) {
+async function drive(page, tool, file, isCrashed, saveAs) {
   await page.addInitScript(() => {
     // the result: the first file made after the click (previews and
     // thumbnails made before it don't count)
@@ -112,6 +115,14 @@ async function drive(page, tool, file, isCrashed) {
     if (Date.now() - clickedAt > RUN_TIMEOUT_MS) return { outcome: 'timeout', reason: `no result in ${RUN_TIMEOUT_MS / 1000}s` };
     await page.waitForTimeout(300);
   }
+  if (saveAs) {
+    const { b64, type } = await page.evaluate(async () => {
+      const u = new Uint8Array(await window.__blob.arrayBuffer()); let s = '';
+      for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode(...u.subarray(i, i + 0x8000));
+      return { b64: btoa(s), type: window.__blob.type };
+    });
+    fs.writeFileSync(`${saveAs}.${EXT[type] || 'bin'}`, Buffer.from(b64, 'base64'));
+  }
   // does the result open?
   const check = await page.evaluate(async () => {
     const b = window.__blob;
@@ -133,6 +144,7 @@ async function drive(page, tool, file, isCrashed) {
 }
 
 fs.mkdirSync(OUT, { recursive: true });
+if (SAVE) fs.mkdirSync(path.join(OUT, 'files'), { recursive: true });
 const outFile = path.join(OUT, 'results.jsonl');
 fs.writeFileSync(outFile, '');
 const browser = await chromium.launch();
@@ -141,7 +153,7 @@ let next = 0, done = 0;
 async function worker() {
   while (next < jobs.length) {
     const { doc, tool } = jobs[next++];
-    const res = await runOne(browser, tool, path.join(DOCS, doc));
+    const res = await runOne(browser, tool, path.join(DOCS, doc), SAVE ? path.join(OUT, 'files', `${doc}.${tool}`) : null);
     const line = { doc, tool, stratum: strata[doc]?.stratum ?? '', lang: strata[doc]?.lang ?? '',
       pages: strata[doc]?.pages ?? null, ...res };
     fs.appendFileSync(outFile, JSON.stringify(line) + '\n');
