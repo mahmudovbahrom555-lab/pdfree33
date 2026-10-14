@@ -414,6 +414,8 @@ export const EN = {
   cs_mode_clean:         'Clean',
   cs_mode_enhance:       'Enhance',
   cs_strength:           'Strength',
+  cs_straighten: "Straighten tilted pages",
+  cs_straighten_sub: "Turns each page back level when it was scanned or photographed at a slight angle (up to 5°)",
   cs_quality:            'Quality',
   cs_quality_standard:   'Standard',
   cs_quality_high:       'High quality',

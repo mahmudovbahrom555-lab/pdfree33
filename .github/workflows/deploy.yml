@@ -366,6 +366,12 @@ jobs:
         # a page number kept. See tests/e2e/extract-noblank.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:extract-noblank
 
+      - name: E2E — Clean Scan, straighten tilted pages
+        # A page scanned 3° off comes out level (row profile sharper than with
+        # the option off), and the option defaults to off. See
+        # tests/e2e/clean-scan-straighten.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:clean-scan-straighten
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do

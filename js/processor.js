@@ -1301,7 +1301,7 @@ function _cleanScanWorkerRequest(worker, message, transfer, onProgress) {
   });
 }
 
-async function _runCleanScan(filesSnapshot, { mode = 'clean', strength = 0.5, scale = 2 } = {}) {
+async function _runCleanScan(filesSnapshot, { mode = 'clean', strength = 0.5, scale = 2, straighten = false } = {}) {
   if (!_checkSize(filesSnapshot[0], maxFileMb('cleanScan'))) { _abortUI(); return; }
   const file = filesSnapshot[0];
 
@@ -1334,7 +1334,7 @@ async function _runCleanScan(filesSnapshot, { mode = 'clean', strength = 0.5, sc
       const bitmap = await createImageBitmap(canvas);
       const result = await _cleanScanWorkerRequest(
         worker,
-        { type: 'processPage', index: i - 1, bitmap, mode, strength },
+        { type: 'processPage', index: i - 1, bitmap, mode, strength, straighten },
         [bitmap]
       );
       pages.push(result);

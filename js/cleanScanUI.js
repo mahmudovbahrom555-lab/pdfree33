@@ -28,7 +28,7 @@
 
 import { id, esc }                   from './utils.js';
 import { showToast, setButtonDisabled, setButtonReady } from './ui.js';
-import { loadingRow, infoBanner }    from './uiComponents.js';
+import { loadingRow, infoBanner, checkbox } from './uiComponents.js';
 import { loadPdfJs }                 from './pdf2jpgUI.js';
 import { TOOLS, getLocalizedTool }   from './config.js';
 import { t, tp }                     from './i18n.js';
@@ -41,6 +41,7 @@ const PREVIEW_DEBOUNCE_MS = 150; // heavier than watermarkUI's 60ms — this red
 let _mode        = 'clean';    // 'clean' | 'enhance'
 let _strength     = 0.5;        // 0..1, nudges the auto (Otsu) baseline
 let _quality      = 'standard'; // 'standard' | 'high' — export render scale
+let _straighten   = false;      // deskew each page (off by default: no change for current users)
 let _pageCount    = 0;
 let _pdfJsDoc     = null;
 let _previewPage  = 1;
@@ -68,6 +69,7 @@ export function getCleanScanParams() {
   return {
     mode:     _mode,
     strength: _strength,
+    straighten: _straighten,
     scale:    _quality === 'high' ? 3 : 2,
     hasFile:  !!_pdfJsDoc,
     pageCount: _pageCount,
@@ -130,7 +132,7 @@ export function hideCleanScanOptions() {
   _cleanup();
   const container = id('cleanScanOptions');
   if (container) { container.style.display = 'none'; container.innerHTML = ''; }
-  _mode = 'clean'; _strength = 0.5; _quality = 'standard';
+  _mode = 'clean'; _strength = 0.5; _quality = 'standard'; _straighten = false;
   _pageCount = 0; _pdfJsDoc = null; _previewPage = 1;
   _hasColor = false; _looksDigital = false;
 }
@@ -230,7 +232,7 @@ async function _updatePreview() {
     const worker = _ensurePreviewWorker();
     const result = await _previewWorkerRequest(
       worker,
-      { type: 'processPage', index: 0, bitmap, mode: _mode, strength: _strength },
+      { type: 'processPage', index: 0, bitmap, mode: _mode, strength: _strength, straighten: _straighten },
       [bitmap]
     );
     if (myGen !== _previewGen) return;
@@ -279,6 +281,8 @@ function _render(file) {
       <span class="j2p-group__label">${t('cs_strength')}</span>
       <input type="range" id="csStrength" class="cs-slider" min="0" max="1" step="0.05" value="${_strength}" aria-label="${t('cs_strength')}">
     </div>
+
+    ${checkbox({ id: 'csStraighten', checked: _straighten, title: t('cs_straighten'), subtitle: t('cs_straighten_sub') })}
 
     ${_chipGroup('cs_quality', 'csQuality', _quality, [
       { value: 'standard', label: t('cs_quality_standard') },
@@ -363,6 +367,10 @@ function _bindEvents() {
       _syncChips('csQuality', _quality);
       // Quality only affects the final export scale, not the fixed-width
       // preview — no preview refresh needed.
+    }
+    if (e.target.id === 'csStraighten') {
+      _straighten = e.target.checked;
+      _schedulePreview();
     }
     if (e.target.id === 'csPreviewPage') {
       _previewPage = parseInt(e.target.value, 10) || 1;

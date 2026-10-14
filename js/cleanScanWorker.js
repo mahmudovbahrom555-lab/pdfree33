@@ -16,7 +16,7 @@
 //  the final assembly step needs pdf-lib.
 //
 //  Message contract:
-//    in  → { type: 'processPage', index, bitmap: ImageBitmap, mode: 'clean'|'enhance', strength: 0..1 }
+//    in  → { type: 'processPage', index, bitmap: ImageBitmap, mode: 'clean'|'enhance', strength: 0..1, straighten }
 //    out → { type: 'pageDone', index, bytes: ArrayBuffer, format: 'png'|'jpeg', width, height }
 //
 //    in  → { type: 'assemble', pages: [{index, bytes, format, width, height}], pageSizes: [{width, height}] }
@@ -33,7 +33,7 @@ self.onmessage = async (e) => {
   try {
     const { type } = e.data;
     if (type === 'processPage') {
-      await handleProcessPage(e.data.index, e.data.bitmap, e.data.mode, e.data.strength);
+      await handleProcessPage(e.data.index, e.data.bitmap, e.data.mode, e.data.strength, e.data.straighten);
     } else if (type === 'enhanceForOcr') {
       handleEnhanceForOcr(e.data.bitmap);
     } else if (type === 'assemble') {
@@ -50,7 +50,7 @@ function progress(value, label) {
 
 // ── Per-page pixel pipeline ─────────────────────────────────────
 
-async function handleProcessPage(index, bitmap, mode, strength) {
+async function handleProcessPage(index, bitmap, mode, strength, straighten = false) {
   const w = bitmap.width, h = bitmap.height;
   const src = new OffscreenCanvas(w, h);
   src.getContext('2d').drawImage(bitmap, 0, 0);
@@ -65,11 +65,16 @@ async function handleProcessPage(index, bitmap, mode, strength) {
     _unsharpMask(gray, 2, 2.0);
     _applyClean(gray, strength);
   }
+  // "Straighten tilted pages" — the OCR preprocessing's own deskew (same
+  // angle search, same ±5° range), measured on the cleaned page, whose
+  // text lines are what the angle is read from.
+  const skewDeg = straighten ? -_estimateSkewDeg(gray) : 0;
+  const page = skewDeg ? _rotateCanvas(gray, skewDeg) : gray;
 
   const format = mode === 'enhance' ? 'jpeg' : 'png';
   const blob   = mode === 'enhance'
-    ? await gray.convertToBlob({ type: 'image/jpeg', quality: 0.87 })
-    : await gray.convertToBlob({ type: 'image/png' });
+    ? await page.convertToBlob({ type: 'image/jpeg', quality: 0.87 })
+    : await page.convertToBlob({ type: 'image/png' });
   const bytes  = await blob.arrayBuffer();
 
   self.postMessage({ type: 'pageDone', index, bytes, format, width: w, height: h }, [bytes]);
