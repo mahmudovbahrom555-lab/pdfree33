@@ -9,7 +9,7 @@ window.PDFREE_LOCALE = {
     split:            ['splitsen', 'opsplitsen', 'scheiden', 'knippen', 'pagina\'s verwijderen', 'pagina\'s uitsnijden'],
     compress:         ['comprimeren', 'verkleinen', 'kleiner maken', 'optimaliseren', 'bestandsgrootte', 'te groot bestand'],
     jpg2pdf:          ['afbeelding naar pdf', 'foto naar pdf', 'png naar pdf', 'plaatje naar pdf'],
-    pdf2jpg:          ['pdf naar afbeelding', 'pagina\'s exporteren', 'converteren naar jpg', 'afbeeldingen extraheren'],
+    pdf2jpg:          ['pdf naar afbeelding', 'pagina\'s exporteren', 'converteren naar jpg', 'afbeeldingen extraheren', 'pdf naar cbz'],
     redact:           ['redigeren', 'verbergen', 'bedekken', 'zwart maken', 'censureren', 'onherkenbaar maken', 'vervagen'],
     rotate:           ['roteren', 'draaien', 'kantelen', 'oriëntatie', 'liggend', 'staand'],
     organize:         ['organiseren', 'herschikken', "pagina's sorteren", 'paginavolgorde'],
@@ -40,7 +40,7 @@ window.PDFREE_LOCALE = {
     glossary:         ['woordenlijst', 'definities', 'pdf woordenlijst', 'termen markeren', 'definities toevoegen'],
     docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'archivering', 'archiveerbaar', 'pdf/a controleren', 'iso 19005', 'langetermijnarchivering'],
-    read:             ['lezen', 'leesmodus', 'lezen op mobiel', 'pdf lezen op telefoon', 'leesweergave', 'tekst herschikken'],
+    read:             ['lezen', 'leesmodus', 'lezen op mobiel', 'pdf lezen op telefoon', 'leesweergave', 'tekst herschikken', 'donkere modus pdf', 'kleuren omkeren'],
   },
 
   // app
@@ -178,6 +178,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate_many: 'Gesplitst in {n} bestanden · {size}',
   desc_pdf2jpg_one:         '1 pagina · {ext} · {size}',
   desc_pdf2jpg_many:        '{n} van {total} {ext}-afbeeldingen · {size}',
+  desc_pdf2jpg_cbz: "Strip (CBZ) · {n} pagina's · {size}",
 
   // word units
   word_page:   'pagina',
@@ -882,6 +883,7 @@ window.PDFREE_LOCALE = {
   p2j_step_output_format: 'Uitvoerformaat',
   p2j_fmt_jpg_desc:       "Het beste voor foto's en algemeen gebruik",
   p2j_fmt_png_desc:       'Het beste voor screenshots en afbeeldingen',
+  p2j_fmt_cbz_desc: "Stripboekarchief voor strip- en mangalezers",
   p2j_step_image_quality: 'Beeldkwaliteit (resolutie)',
   p2j_dpi_72_lbl:         'Kleinere bestandsgrootte',
   p2j_dpi_72_sub:         'Web / E-mail',

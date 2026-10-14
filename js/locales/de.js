@@ -10,7 +10,7 @@ window.PDFREE_LOCALE = {
     split:            ['teilen', 'trennen', 'aufteilen', 'schneiden', 'seiten entfernen', 'seiten löschen'],
     compress:         ['komprimieren', 'verkleinern', 'kleiner machen', 'reduzieren', 'optimieren', 'dateigröße', 'zu groß'],
     jpg2pdf:          ['bild in pdf', 'foto in pdf', 'png in pdf', 'bilder zu pdf', 'jpg in pdf'],
-    pdf2jpg:          ['pdf in bild', 'seiten exportieren', 'in jpg umwandeln', 'bilder extrahieren'],
+    pdf2jpg:          ['pdf in bild', 'seiten exportieren', 'in jpg umwandeln', 'bilder extrahieren', 'pdf zu cbz', 'comic archiv'],
     redact:           ['schwärzen', 'verstecken', 'abdecken', 'zensieren', 'unkenntlich machen', 'text schwärzen'],
     rotate:           ['drehen', 'ausrichtung', 'wenden', 'querformat', 'hochformat'],
     organize:         ['organisieren', 'seiten sortieren', 'neu anordnen', 'seitenreihenfolge'],
@@ -41,7 +41,7 @@ window.PDFREE_LOCALE = {
     glossary:         ['glossar', 'begriffe', 'definitionen', 'pdf glossar', 'begriffe hervorheben', 'definitionen hinzufügen'],
     docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'archivierung', 'archivtauglich', 'pdf/a prüfen', 'iso 19005', 'langzeitarchivierung'],
-    read:             ['lesen', 'lesemodus', 'mobil lesen', 'pdf am handy lesen', 'lesbarkeit verbessern', 'text neu anordnen'],
+    read:             ['lesen', 'lesemodus', 'mobil lesen', 'pdf am handy lesen', 'lesbarkeit verbessern', 'text neu anordnen', 'dunkelmodus pdf', 'farben invertieren'],
   },
 
   // app
@@ -179,6 +179,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate_many: 'In {n} Dateien aufgeteilt · {size}',
   desc_pdf2jpg_one:         '1 Seite · {ext} · {size}',
   desc_pdf2jpg_many:        '{n} von {total} {ext}-Bildern · {size}',
+  desc_pdf2jpg_cbz: "Comic (CBZ) · {n} Seiten · {size}",
 
   // word units
   word_page:   'Seite',
@@ -885,6 +886,7 @@ window.PDFREE_LOCALE = {
   p2j_step_output_format: 'Ausgabeformat',
   p2j_fmt_jpg_desc:       'Am besten für Fotos und allgemeine Nutzung',
   p2j_fmt_png_desc:       'Am besten für Screenshots und Grafiken',
+  p2j_fmt_cbz_desc: "Comic-Archiv für Comic- und Manga-Reader",
   p2j_step_image_quality: 'Bildqualität (Auflösung)',
   p2j_dpi_72_lbl:         'Kleinere Dateigröße',
   p2j_dpi_72_sub:         'Web / E-Mail',

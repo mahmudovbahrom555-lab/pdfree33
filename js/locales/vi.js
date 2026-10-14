@@ -10,7 +10,7 @@ window.PDFREE_LOCALE = {
     split:            ['tách', 'chia', 'cắt', 'tách trang', 'chia nhỏ pdf'],
     compress:         ['nén', 'giảm dung lượng', 'thu nhỏ', 'tối ưu', 'file quá nặng', 'giảm kích thước'],
     jpg2pdf:          ['ảnh sang pdf', 'ảnh thành pdf', 'jpg sang pdf', 'png sang pdf', 'chuyển ảnh sang pdf'],
-    pdf2jpg:          ['pdf sang ảnh', 'pdf sang jpg', 'xuất trang', 'chuyển sang jpg', 'trích ảnh'],
+    pdf2jpg:          ['pdf sang ảnh', 'pdf sang jpg', 'xuất trang', 'chuyển sang jpg', 'trích ảnh', 'pdf sang cbz'],
     redact:           ['che thông tin', 'xóa thông tin', 'kiểm duyệt', 'làm mờ', 'ẩn văn bản', 'tô đen', 'che'],
     rotate:           ['xoay', 'xoay trang', 'lật trang', 'hướng trang', 'ngang', 'dọc'],
     organize:         ['sắp xếp', 'sắp xếp lại', 'xóa trang', 'sắp xếp trang', 'thứ tự trang'],
@@ -41,7 +41,7 @@ window.PDFREE_LOCALE = {
     glossary:         ['từ điển', 'định nghĩa', 'từ điển pdf', 'đánh dấu thuật ngữ', 'thêm định nghĩa'],
     docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'lưu trữ', 'lưu trữ lâu dài', 'kiểm tra pdf/a', 'iso 19005'],
-    read:             ['chế độ đọc', 'đọc trên điện thoại', 'đọc pdf trên điện thoại', 'chế độ xem đọc', 'sắp xếp lại văn bản'],
+    read:             ['chế độ đọc', 'đọc trên điện thoại', 'đọc pdf trên điện thoại', 'chế độ xem đọc', 'sắp xếp lại văn bản', 'chế độ tối pdf', 'đảo màu'],
   },
 
   // app
@@ -179,6 +179,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate_many: 'Chia thành {n} file · {size}',
   desc_pdf2jpg_one:         '1 trang · {ext} · {size}',
   desc_pdf2jpg_many:        '{n}/{total} ảnh {ext} · {size}',
+  desc_pdf2jpg_cbz: "Truyện tranh (CBZ) · {n} trang · {size}",
 
   // word units
   word_page:   'trang',
@@ -883,6 +884,7 @@ window.PDFREE_LOCALE = {
   p2j_step_output_format: 'Định dạng đầu ra',
   p2j_fmt_jpg_desc:       'Tốt nhất cho ảnh và sử dụng chung',
   p2j_fmt_png_desc:       'Tốt nhất cho ảnh chụp màn hình và đồ họa',
+  p2j_fmt_cbz_desc: "Tệp truyện tranh cho trình đọc truyện và manga",
   p2j_step_image_quality: 'Chất lượng hình ảnh (độ phân giải)',
   p2j_dpi_72_lbl:         'Dung lượng file nhỏ hơn',
   p2j_dpi_72_sub:         'Web / Email',

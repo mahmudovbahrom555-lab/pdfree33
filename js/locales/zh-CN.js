@@ -14,7 +14,7 @@ window.PDFREE_LOCALE = {
     compress:     ['压缩pdf', '缩小pdf', '减小文件大小', 'yasuo', 'yasuopdf', 'pdfyasuo'],
     jpg2pdf:      ['jpg转pdf', '图片转pdf', '照片转pdf'],
     scanDocument: ['扫描文件', '手机扫描'],
-    pdf2jpg:      ['pdf转jpg', 'pdf转图片'],
+    pdf2jpg:      ['pdf转jpg', 'pdf转图片', 'pdf转cbz', '漫画cbz'],
     watermark:    ['添加水印', 'pdf水印', '浮水印', 'shuiyin'],
     pagenum:      ['pdf页码', '添加页码', 'yema'],
     meta:         ['pdf元数据', '编辑元数据'],
@@ -41,7 +41,7 @@ window.PDFREE_LOCALE = {
     docx2pdf:     ['word转pdf'],
     unlock:       ['pdf解锁', '移除密码', 'jiemi', 'jiesuo'],
     compare:      ['对比pdf', 'pdf差异比较'],
-    read:         ['pdf阅读模式', '重排版阅读'],
+    read:         ['pdf阅读模式', '重排版阅读', '深色模式pdf', '反色', '夜间模式'],
     pdf2pdfa:     ['pdf转pdfa', 'pdfa合规检查'],
     'compress-email': ['压缩pdf发邮件', '邮件附件压缩'],
   },
@@ -185,6 +185,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate_many: '已拆分为 {n} 个文件 · {size}',
   desc_pdf2jpg_one:         '1 页 · {ext} · {size}',
   desc_pdf2jpg_many:        '{n} / {total} 张 {ext} 图片 · {size}',
+  desc_pdf2jpg_cbz: "漫画（CBZ）· {n} 页 · {size}",
 
   // word units for composing double-plural strings
   word_page:   '页',
@@ -927,6 +928,7 @@ window.PDFREE_LOCALE = {
   p2j_step_output_format: '输出格式',
   p2j_fmt_jpg_desc:       '最适合照片和一般用途',
   p2j_fmt_png_desc:       '最适合截图和图形内容',
+  p2j_fmt_cbz_desc: "适用于漫画阅读器的漫画压缩包",
   p2j_step_image_quality: '图片质量（分辨率）',
   p2j_dpi_72_lbl:         '文件更小',
   p2j_dpi_72_sub:         '网页 / 邮件',

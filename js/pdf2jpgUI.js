@@ -203,6 +203,14 @@ function _render() {
             <span class="p2j-fmt-card__name">PNG</span>
             <span class="p2j-fmt-card__desc">${t('p2j_fmt_png_desc')}</span>
           </label>
+          <label class="p2j-fmt-card${_format === 'cbz' ? ' p2j-fmt-card--on' : ''}" data-fmt="cbz">
+            <input type="radio" name="p2jFormat" value="cbz"${_format === 'cbz' ? ' checked' : ''}>
+            <svg class="p2j-fmt-card__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M4 4h7v16H4zM13 4h7v16h-7z"/>
+            </svg>
+            <span class="p2j-fmt-card__name">CBZ</span>
+            <span class="p2j-fmt-card__desc">${t('p2j_fmt_cbz_desc')}</span>
+          </label>
         </div>
       </div>
 

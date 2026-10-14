@@ -9,7 +9,7 @@ window.PDFREE_LOCALE = {
     split:            ['böl', 'ayır', 'bölme', 'parçala'],
     compress:         ['sıkıştır', 'küçült', 'boyut küçült', 'optimize et', 'dosya boyutu', 'çok büyük'],
     jpg2pdf:          ['resmi pdfye çevir', 'fotoğraf pdf', 'jpg pdf', 'png pdf', 'resim pdf'],
-    pdf2jpg:          ['pdf resim', 'pdf jpg', 'sayfa dışa aktar', "jpg'e çevir", 'resim çıkar'],
+    pdf2jpg:          ['pdf resim', 'pdf jpg', 'sayfa dışa aktar', "jpg'e çevir", 'resim çıkar', "pdf'den cbz"],
     redact:           ['sansürle', 'gizle', 'karart', 'kapat', 'sakla', 'metni sil', 'maskele'],
     rotate:           ['döndür', 'çevir', 'yönlendirme', 'yatay', 'dikey', 'sayfa döndür'],
     organize:         ['düzenle', 'yeniden sırala', 'sayfa sil', 'sayfaları sırala', 'sayfa sırası'],
@@ -40,7 +40,7 @@ window.PDFREE_LOCALE = {
     glossary:         ['sözlük', 'tanımlar', 'pdf sözlük', 'terimleri vurgula', 'tanım ekle'],
     docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'arşiv', 'arşivleme', 'pdf/a kontrol', 'iso 19005', 'uzun süreli arşivleme'],
-    read:             ['oku', 'okuma modu', 'telefonda oku', 'pdf telefonda okuma', 'okuma görünümü', 'metni yeniden düzenle'],
+    read:             ['oku', 'okuma modu', 'telefonda oku', 'pdf telefonda okuma', 'okuma görünümü', 'metni yeniden düzenle', 'karanlık mod pdf', 'renkleri ters çevir'],
   },
 
   // app
@@ -178,6 +178,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate_many: '{n} dosyaya bölündü · {size}',
   desc_pdf2jpg_one:         '1 sayfa · {ext} · {size}',
   desc_pdf2jpg_many:        '{total} üzerinden {n} {ext} resmi · {size}',
+  desc_pdf2jpg_cbz: "Çizgi roman (CBZ) · {n} sayfa · {size}",
 
   // word units
   word_page:   'sayfa',
@@ -882,6 +883,7 @@ window.PDFREE_LOCALE = {
   p2j_step_output_format: 'Çıktı biçimi',
   p2j_fmt_jpg_desc:       'Fotoğraflar ve genel kullanım için en iyisi',
   p2j_fmt_png_desc:       'Ekran görüntüleri ve grafikler için en iyisi',
+  p2j_fmt_cbz_desc: "Çizgi roman ve manga okuyucuları için arşiv",
   p2j_step_image_quality: 'Görsel kalitesi (çözünürlük)',
   p2j_dpi_72_lbl:         'Daha küçük dosya boyutu',
   p2j_dpi_72_sub:         'Web / E-posta',

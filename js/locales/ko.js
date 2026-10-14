@@ -11,7 +11,7 @@ window.PDFREE_LOCALE = {
     split:            ['분할', '나누기', '분리', '자르기', '페이지 제거', '스플릿'],
     compress:         ['압축', '압축하기', '용량 줄이기', '축소', '최적화', '파일 크기', '용량 너무 큼'],
     jpg2pdf:          ['이미지를 pdf로', '사진을 pdf로', 'png를 pdf로', '이미지 변환'],
-    pdf2jpg:          ['pdf를 이미지로', '페이지 내보내기', 'jpg로 변환', '이미지 추출'],
+    pdf2jpg:          ['pdf를 이미지로', '페이지 내보내기', 'jpg로 변환', '이미지 추출', 'pdf cbz 변환'],
     redact:           ['가리기', '숨기기', '검열', '검게 칠하기', '마스킹', '블러', '텍스트 삭제'],
     rotate:           ['회전', '돌리기', '방향', '가로', '세로', '회전하기'],
     organize:         ['정리', '순서 변경', '페이지 삭제', '페이지 정렬', '페이지 순서'],
@@ -42,7 +42,7 @@ window.PDFREE_LOCALE = {
     glossary:         ['용어집', '정의', 'PDF 용어집', '용어 강조', '정의 추가'],
     docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', '아카이브', '장기보존', 'pdf/a 확인', '보존용 pdf'],
-    read:             ['읽기', '읽기 모드', '모바일로 읽기', '휴대폰에서 pdf 읽기', '읽기 화면', '텍스트 재배열'],
+    read:             ['읽기', '읽기 모드', '모바일로 읽기', '휴대폰에서 pdf 읽기', '읽기 화면', '텍스트 재배열', '다크 모드 pdf', '색상 반전'],
   },
 
   // app
@@ -180,6 +180,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate_many: '{n}개 파일로 분할됨 · {size}',
   desc_pdf2jpg_one:         '1페이지 · {ext} · {size}',
   desc_pdf2jpg_many:        '{n}/{total}개 {ext} 이미지 · {size}',
+  desc_pdf2jpg_cbz: "만화책(CBZ) · {n}페이지 · {size}",
 
   // word units
   word_page:   '페이지',
@@ -884,6 +885,7 @@ window.PDFREE_LOCALE = {
   p2j_step_output_format: '출력 형식',
   p2j_fmt_jpg_desc:       '사진 및 일반 용도에 최적',
   p2j_fmt_png_desc:       '스크린샷 및 그래픽에 최적',
+  p2j_fmt_cbz_desc: "만화·망가 리더용 만화책 아카이브",
   p2j_step_image_quality: '이미지 품질 (해상도)',
   p2j_dpi_72_lbl:         '더 작은 파일 크기',
   p2j_dpi_72_sub:         '웹 / 이메일',

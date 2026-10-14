@@ -10,7 +10,7 @@ window.PDFREE_LOCALE = {
     split:            ['pisahkan', 'pisah', 'potong', 'bagi pdf', 'pecah pdf'],
     compress:         ['kompres', 'perkecil', 'kecilkan ukuran', 'mampatkan', 'ukuran file besar', 'terlalu besar', 'perkecil ukuran'],
     jpg2pdf:          ['gambar ke pdf', 'foto ke pdf', 'jpg ke pdf', 'png ke pdf', 'ubah foto jadi pdf'],
-    pdf2jpg:          ['pdf ke gambar', 'pdf ke jpg', 'ekspor halaman', 'konversi ke jpg', 'ambil gambar'],
+    pdf2jpg:          ['pdf ke gambar', 'pdf ke jpg', 'ekspor halaman', 'konversi ke jpg', 'ambil gambar', 'pdf ke cbz'],
     redact:           ['sensor', 'hitamkan', 'sembunyikan', 'tutupi teks', 'coret', 'hapus teks', 'blokir informasi'],
     rotate:           ['putar', 'rotasi', 'balik halaman', 'orientasi', 'lanskap', 'potret'],
     organize:         ['atur halaman', 'urutkan ulang', 'hapus halaman', 'susun halaman', 'urutan halaman'],
@@ -41,7 +41,7 @@ window.PDFREE_LOCALE = {
     glossary:         ['glosarium', 'definisi', 'glosarium pdf', 'sorot istilah', 'tambah definisi'],
     docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'arsip', 'pengarsipan', 'periksa pdf/a', 'iso 19005', 'arsip jangka panjang'],
-    read:             ['baca', 'mode baca', 'baca di ponsel', 'baca pdf di hp', 'tampilan baca', 'susun ulang teks'],
+    read:             ['baca', 'mode baca', 'baca di ponsel', 'baca pdf di hp', 'tampilan baca', 'susun ulang teks', 'mode gelap pdf', 'balik warna'],
   },
 
   // app
@@ -179,6 +179,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate_many: 'Dibagi menjadi {n} file · {size}',
   desc_pdf2jpg_one:         '1 halaman · {ext} · {size}',
   desc_pdf2jpg_many:        '{n} dari {total} gambar {ext} · {size}',
+  desc_pdf2jpg_cbz: "Komik (CBZ) · {n} halaman · {size}",
 
   // word units
   word_page:   'halaman',
@@ -883,6 +884,7 @@ window.PDFREE_LOCALE = {
   p2j_step_output_format: 'Format output',
   p2j_fmt_jpg_desc:       'Terbaik untuk foto dan penggunaan umum',
   p2j_fmt_png_desc:       'Terbaik untuk tangkapan layar dan grafik',
+  p2j_fmt_cbz_desc: "Arsip komik untuk pembaca komik dan manga",
   p2j_step_image_quality: 'Kualitas gambar (resolusi)',
   p2j_dpi_72_lbl:         'Ukuran file lebih kecil',
   p2j_dpi_72_sub:         'Web / Email',

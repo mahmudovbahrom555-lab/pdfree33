@@ -9,7 +9,7 @@ window.PDFREE_LOCALE = {
     split:            ['podziel', 'podzielić', 'rozdziel', 'wytnij', 'usuwanie stron'],
     compress:         ['kompresuj', 'kompresja', 'zmniejsz', 'mniejszy', 'optymalizuj', 'rozmiar pliku', 'za duży plik'],
     jpg2pdf:          ['obraz do pdf', 'zdjęcie do pdf', 'png do pdf', 'zdjęcie na pdf'],
-    pdf2jpg:          ['pdf do obrazu', 'eksportuj strony', 'konwertuj do jpg', 'wyodrębnij obrazy'],
+    pdf2jpg:          ['pdf do obrazu', 'eksportuj strony', 'konwertuj do jpg', 'wyodrębnij obrazy', 'pdf do cbz'],
     redact:           ['ukryj', 'zaczernij', 'cenzura', 'zamaskuj', 'ukryj tekst', 'usuń tekst', 'zamalowanie'],
     rotate:           ['obróć', 'obracanie', 'odwróć', 'pozioma', 'pionowa', 'orientacja'],
     organize:         ['organizuj', 'zmień kolejność', 'usuń strony', 'sortuj strony', 'kolejność stron'],
@@ -40,7 +40,7 @@ window.PDFREE_LOCALE = {
     glossary:         ['słownik', 'definicje', 'słownik pdf', 'podświetl terminy', 'dodaj definicje'],
     docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'archiwizacja', 'archiwalny', 'sprawdź pdf/a', 'iso 19005', 'archiwizacja długoterminowa'],
-    read:             ['czytać', 'tryb czytania', 'czytać na telefonie', 'czytać pdf na komórce', 'widok czytania', 'przepływ tekstu'],
+    read:             ['czytać', 'tryb czytania', 'czytać na telefonie', 'czytać pdf na komórce', 'widok czytania', 'przepływ tekstu', 'tryb ciemny pdf', 'odwróć kolory'],
   },
 
   // app
@@ -178,6 +178,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate_many: 'Podzielono na {n} pliki · {size}',
   desc_pdf2jpg_one:         '1 strona · {ext} · {size}',
   desc_pdf2jpg_many:        '{n} z {total} obrazów {ext} · {size}',
+  desc_pdf2jpg_cbz: "Komiks (CBZ) · stron: {n} · {size}",
 
   // word units
   word_page:   'strona',
@@ -882,6 +883,7 @@ window.PDFREE_LOCALE = {
   p2j_step_output_format: 'Format wyjściowy',
   p2j_fmt_jpg_desc:       'Najlepszy do zdjęć i ogólnego użytku',
   p2j_fmt_png_desc:       'Najlepszy do zrzutów ekranu i grafiki',
+  p2j_fmt_cbz_desc: "Archiwum komiksu dla czytników komiksów i mangi",
   p2j_step_image_quality: 'Jakość obrazu (rozdzielczość)',
   p2j_dpi_72_lbl:         'Mniejszy rozmiar pliku',
   p2j_dpi_72_sub:         'Web / E-mail',

@@ -12,7 +12,7 @@ window.PDFREE_LOCALE = {
     split:            ['分割', '分ける', 'ページを削除', '切り分ける', 'スプリット'],
     compress:         ['圧縮', '圧縮する', '小さくする', 'ファイルサイズを小さく', '最適化', '容量が大きい'],
     jpg2pdf:          ['画像をPDFに', '写真をPDFに', 'JPGをPDFに', 'PNGをPDFに', '画像変換'],
-    pdf2jpg:          ['PDFを画像に', 'PDFをJPGに', 'ページを書き出す', '画像に変換', '画像抽出'],
+    pdf2jpg:          ['PDFを画像に', 'PDFをJPGに', 'ページを書き出す', '画像に変換', '画像抽出', 'pdf cbz 変換'],
     redact:           ['黒塗り', '隠す', 'マスク', '塗りつぶす', '個人情報を隠す', 'レダクト'],
     rotate:           ['回転', '回す', '向きを変える', '横向き', '縦向き', '回転する'],
     organize:         ['整理', '並べ替え', 'ページ削除', 'ページ整理', 'ページ順序'],
@@ -43,7 +43,7 @@ window.PDFREE_LOCALE = {
     glossary:         ['用語集', '定義', 'PDF用語集', '用語をハイライト', '定義を追加'],
     docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'アーカイブ', '長期保存', 'pdf/a確認', 'アーカイブ用pdf'],
-    read:             ['読む', '読書モード', 'スマホで読む', 'pdfをスマホで読む', '読みやすい表示', 'リフロー'],
+    read:             ['読む', '読書モード', 'スマホで読む', 'pdfをスマホで読む', '読みやすい表示', 'リフロー', 'ダークモード pdf', '色を反転'],
   },
 
   // app
@@ -181,6 +181,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate_many: '{n}個のファイルに分割しました · {size}',
   desc_pdf2jpg_one:         '1ページ · {ext} · {size}',
   desc_pdf2jpg_many:        '{ext}画像{n}/{total}枚 · {size}',
+  desc_pdf2jpg_cbz: "コミック（CBZ）· {n}ページ · {size}",
 
   // word units
   word_page:   'ページ',
@@ -885,6 +886,7 @@ window.PDFREE_LOCALE = {
   p2j_step_output_format: '出力形式',
   p2j_fmt_jpg_desc:       '写真や一般用途に最適',
   p2j_fmt_png_desc:       'スクリーンショットやグラフィックに最適',
+  p2j_fmt_cbz_desc: "コミック・マンガ用リーダー向けのコミックアーカイブ",
   p2j_step_image_quality: '画質（解像度）',
   p2j_dpi_72_lbl:         'ファイルサイズが小さい',
   p2j_dpi_72_sub:         'Web / メール',

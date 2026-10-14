@@ -1958,9 +1958,13 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi }) {
   const file   = filesSnapshot[0];
   if (!_checkSize(file, maxFileMb('pdf2jpg'))) { _abortUI(); return; }
   const scale  = dpi / 72;
+  // CBZ — a comic-book archive (CDisplay, YACReader, Calibre, KOReader):
+  // the pages as JPGs in a ZIP, always a ZIP (even one page), named so a
+  // plain name sort is the page order (page10 would sort before page2).
+  const cbz    = format === 'cbz';
   const mime   = format === 'png' ? 'image/png' : 'image/jpeg';
   const ext    = format === 'png' ? 'png' : 'jpg';
-  const quality = format === 'jpg' ? 0.92 : undefined;
+  const quality = format === 'png' ? undefined : 0.92;
 
   // pdf.js должен быть загружен к этому моменту через pdf2jpgUI.initPdf2JpgOptions
   if (!window.pdfjsLib) {
@@ -2015,7 +2019,7 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi }) {
   //              `zip` checkbox — see the page-loop comment below for why
   //              packaging can't be skipped just because zip=false)
   //   1 page   → buffer only that page (already bounded), no ZIP needed
-  if (validPages.length > 1) await loadJSZip();
+  if (validPages.length > 1 || cbz) await loadJSZip();
   let streamZip   = null;
   let streamCount = 0;
   let singleResult = null;
@@ -2042,7 +2046,7 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi }) {
 
         const blob = await new Promise(res => {
           // Pass quality only for jpg — avoids undefined/NaN for png
-          if (format === 'jpg' && quality !== undefined) {
+          if (quality !== undefined) {
             canvas.toBlob(res, mime, quality);
           } else {
             canvas.toBlob(res, mime);
@@ -2052,7 +2056,9 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi }) {
         if (typeof page.cleanup === 'function') page.cleanup();
         const buf  = await blob.arrayBuffer();
         const baseName = file.name.replace(/\.pdf$/i, '');
-        const name     = `${baseName}-page${pageNum}.${ext}`;
+        const name     = cbz
+          ? `${String(i + 1).padStart(Math.max(3, String(validPages.length).length), '0')}.${ext}`
+          : `${baseName}-page${pageNum}.${ext}`;
 
         // Real bug fixed here: this used to key off `!zip` alone, so
         // unchecking "pack into ZIP" (js/pdf2jpgUI.js's p2jZipCheck — its
@@ -2065,7 +2071,7 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi }) {
         // so for >1 page the only currently-safe delivery mechanism is a
         // ZIP regardless of the checkbox; `zip` alone (without the page-
         // count check) must never gate which pages get kept.
-        if (validPages.length === 1) {
+        if (validPages.length === 1 && !cbz) {
           if (!singleResult) singleResult = { name, buffer: buf };
         } else {
           if (!streamZip) streamZip = new (window.JSZip)();
@@ -2127,7 +2133,7 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi }) {
   setProgress(93, t('prog_packaging'));
 
   let blob, filename, desc;
-  if (validPages.length === 1) {
+  if (validPages.length === 1 && !cbz) {
     blob     = new Blob([singleResult.buffer], { type: mime });
     filename = singleResult.name;
     desc     = t('desc_pdf2jpg_one', { ext: ext.toUpperCase(), size: fmtSize(blob.size) });
@@ -2137,8 +2143,11 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi }) {
       meta => setProgress(93 + Math.round(meta.percent / 100 * 5), t('prog_packaging'))
     );
     const baseName = file.name.replace(/\.pdf$/i, '');
-    filename = `${baseName}-images.zip`;
-    desc     = t('desc_pdf2jpg_many', { n: streamCount, total: validPages.length, ext: ext.toUpperCase(), size: fmtSize(blob.size) });
+    if (cbz) blob = new Blob([blob], { type: 'application/vnd.comicbook+zip' });
+    filename = cbz ? `${baseName}.cbz` : `${baseName}-images.zip`;
+    desc     = cbz
+      ? t('desc_pdf2jpg_cbz', { n: streamCount, size: fmtSize(blob.size) })
+      : t('desc_pdf2jpg_many', { n: streamCount, total: validPages.length, ext: ext.toUpperCase(), size: fmtSize(blob.size) });
   }
 
   isProcessing = false;

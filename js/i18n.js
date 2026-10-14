@@ -159,6 +159,7 @@ export const EN = {
   desc_split_separate_many: 'Split into {n} files · {size}',
   desc_pdf2jpg_one:         '1 page · {ext} · {size}',
   desc_pdf2jpg_many:        '{n} of {total} {ext} images · {size}',
+  desc_pdf2jpg_cbz: "Comic book (CBZ) · {n} pages · {size}",
 
   // word units for composing double-plural strings
   word_page:   'page',
@@ -901,6 +902,7 @@ export const EN = {
   p2j_step_output_format: 'Output format',
   p2j_fmt_jpg_desc:       'Best for photos and general use',
   p2j_fmt_png_desc:       'Best for screenshots and graphics',
+  p2j_fmt_cbz_desc: "Comic-book archive for comic and manga readers",
   p2j_step_image_quality: 'Image quality (resolution)',
   p2j_dpi_72_lbl:         'Smaller file size',
   p2j_dpi_72_sub:         'Web / Email',

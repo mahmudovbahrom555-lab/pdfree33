@@ -9,7 +9,7 @@ window.PDFREE_LOCALE = {
     split:            ['dividir', 'separar', 'cortar', 'quitar páginas', 'división'],
     compress:         ['comprimir', 'reducir', 'más pequeño', 'achicar', 'optimizar', 'tamaño de archivo', 'muy pesado'],
     jpg2pdf:          ['imagen a pdf', 'foto a pdf', 'png a pdf', 'convertir imagen a pdf', 'jpg a pdf'],
-    pdf2jpg:          ['pdf a imagen', 'exportar páginas', 'convertir a jpg', 'extraer imágenes'],
+    pdf2jpg:          ['pdf a imagen', 'exportar páginas', 'convertir a jpg', 'extraer imágenes', 'pdf a cbz'],
     redact:           ['tachar', 'ocultar', 'cubrir', 'censurar', 'tapar texto', 'difuminar', 'borrar texto'],
     rotate:           ['rotar', 'girar', 'orientación', 'voltear', 'horizontal', 'vertical'],
     organize:         ['organizar', 'reordenar', 'eliminar páginas', 'ordenar páginas', 'orden de páginas'],
@@ -40,7 +40,7 @@ window.PDFREE_LOCALE = {
     glossary:         ['glosario', 'definiciones', 'glosario pdf', 'resaltar términos', 'añadir definiciones'],
     docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'archivo', 'archivado', 'comprobar pdf/a', 'iso 19005', 'archivo a largo plazo'],
-    read:             ['leer', 'modo lectura', 'leer en el móvil', 'leer pdf en el celular', 'vista de lectura', 'reorganizar texto'],
+    read:             ['leer', 'modo lectura', 'leer en el móvil', 'leer pdf en el celular', 'vista de lectura', 'reorganizar texto', 'modo oscuro pdf', 'invertir colores'],
   },
 
   // app
@@ -178,6 +178,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate_many: 'Dividido en {n} archivos · {size}',
   desc_pdf2jpg_one:         '1 página · {ext} · {size}',
   desc_pdf2jpg_many:        '{n} de {total} imágenes {ext} · {size}',
+  desc_pdf2jpg_cbz: "Cómic (CBZ) · {n} páginas · {size}",
 
   // word units
   word_page:   'página',
@@ -884,6 +885,7 @@ window.PDFREE_LOCALE = {
   p2j_step_output_format: 'Formato de salida',
   p2j_fmt_jpg_desc:       'Ideal para fotos y uso general',
   p2j_fmt_png_desc:       'Ideal para capturas de pantalla y gráficos',
+  p2j_fmt_cbz_desc: "Archivo de cómic para lectores de cómics y manga",
   p2j_step_image_quality: 'Calidad de imagen (resolución)',
   p2j_dpi_72_lbl:         'Archivo más pequeño',
   p2j_dpi_72_sub:         'Web / Correo',

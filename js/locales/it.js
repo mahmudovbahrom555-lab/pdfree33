@@ -9,7 +9,7 @@ window.PDFREE_LOCALE = {
     split:            ['dividi', 'dividere', 'separare', 'tagliare', 'rimuovi pagine', 'elimina pagine'],
     compress:         ['comprimi', 'comprimere', 'ridurre', 'più piccolo', 'ottimizzare', 'dimensione file', 'file troppo grande'],
     jpg2pdf:          ['immagine in pdf', 'foto in pdf', 'png in pdf', 'convertire foto'],
-    pdf2jpg:          ['pdf in immagine', 'esporta pagine', 'convertire in jpg', 'estrai immagini'],
+    pdf2jpg:          ['pdf in immagine', 'esporta pagine', 'convertire in jpg', 'estrai immagini', 'pdf in cbz'],
     redact:           ['redigere', 'nascondere', 'coprire', 'oscurare', 'censurare', 'sfocare', 'cancellare testo'],
     rotate:           ['ruotare', 'capovolgere', 'orientamento', 'girare', 'orizzontale', 'verticale'],
     organize:         ['organizza', 'riordina', 'ordina pagine', 'ordine delle pagine'],
@@ -40,7 +40,7 @@ window.PDFREE_LOCALE = {
     glossary:         ['glossario', 'definizioni', 'glossario pdf', 'evidenzia termini', 'aggiungi definizioni'],
     docx2pdf:         ['word to pdf', 'docx to pdf', 'convert word to pdf', 'doc to pdf', 'docx converter', 'word converter'],
     pdf2pdfa:         ['pdf/a', 'pdfa', 'archiviazione', 'archiviabile', 'verifica pdf/a', 'iso 19005', 'archiviazione a lungo termine'],
-    read:             ['leggere', 'modalità lettura', 'leggere su mobile', 'leggere pdf sul telefono', 'vista di lettura', 'reflow del testo'],
+    read:             ['leggere', 'modalità lettura', 'leggere su mobile', 'leggere pdf sul telefono', 'vista di lettura', 'reflow del testo', 'modalità scura pdf', 'invertire colori'],
   },
 
   // app
@@ -178,6 +178,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate_many: 'Diviso in {n} file · {size}',
   desc_pdf2jpg_one:         '1 pagina · {ext} · {size}',
   desc_pdf2jpg_many:        '{n} di {total} immagini {ext} · {size}',
+  desc_pdf2jpg_cbz: "Fumetto (CBZ) · {n} pagine · {size}",
 
   // word units
   word_page:   'pagina',
@@ -882,6 +883,7 @@ window.PDFREE_LOCALE = {
   p2j_step_output_format: 'Formato di output',
   p2j_fmt_jpg_desc:       'Ideale per foto e uso generale',
   p2j_fmt_png_desc:       'Ideale per screenshot e grafica',
+  p2j_fmt_cbz_desc: "Archivio fumetto per lettori di fumetti e manga",
   p2j_step_image_quality: 'Qualità immagine (risoluzione)',
   p2j_dpi_72_lbl:         'File più piccolo',
   p2j_dpi_72_sub:         'Web / Email',

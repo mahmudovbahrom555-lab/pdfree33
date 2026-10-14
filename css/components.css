@@ -5174,6 +5174,9 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   grid-template-columns: 1fr 1fr;
   gap: 8px;
 }
+/* the third format (CBZ) under the two image formats, full width — not
+   alone in half a row */
+.p2j-fmt-card[data-fmt="cbz"] { grid-column: 1 / -1; }
 
 .p2j-fmt-card {
   display: flex;

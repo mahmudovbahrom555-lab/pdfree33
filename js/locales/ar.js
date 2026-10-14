@@ -16,7 +16,7 @@ window.PDFREE_LOCALE = {
     compress:     ['ضغط pdf', 'تصغير حجم pdf', 'تقليل حجم الملف'],
     jpg2pdf:      ['jpg الى pdf', 'تحويل الصور الى pdf', 'صور الى pdf'],
     scanDocument: ['مسح مستند', 'مسح ضوئي بالهاتف'],
-    pdf2jpg:      ['pdf الى jpg', 'pdf الى صور'],
+    pdf2jpg:      ['pdf الى jpg', 'pdf الى صور', 'pdf إلى cbz'],
     watermark:    ['اضافة علامة مائية', 'علامة مائية pdf'],
     pagenum:      ['ترقيم صفحات pdf', 'اضافة ارقام الصفحات'],
     meta:         ['بيانات pdf الوصفية', 'تعديل البيانات الوصفية'],
@@ -43,7 +43,7 @@ window.PDFREE_LOCALE = {
     docx2pdf:     ['word الى pdf', 'وورد الى pdf'],
     unlock:       ['فتح قفل pdf', 'ازالة كلمة المرور'],
     compare:      ['مقارنة pdf', 'مقارنة الاختلافات'],
-    read:         ['وضع قراءة pdf', 'اعادة تنسيق للقراءة'],
+    read:         ['وضع قراءة pdf', 'اعادة تنسيق للقراءة', 'الوضع الداكن pdf', 'عكس الألوان'],
     pdf2pdfa:     ['pdf الى pdfa', 'فحص توافق pdfa'],
     'compress-email': ['ضغط pdf للبريد', 'ضغط مرفقات البريد'],
   },
@@ -187,6 +187,7 @@ window.PDFREE_LOCALE = {
   desc_split_separate_many: 'تم التقسيم إلى {n} ملفات · {size}',
   desc_pdf2jpg_one:         'صفحة واحدة · {ext} · {size}',
   desc_pdf2jpg_many:        '{n} من {total} صورة {ext} · {size}',
+  desc_pdf2jpg_cbz: "قصة مصوّرة (CBZ) · الصفحات: {n} · {size}",
 
   // word units for composing double-plural strings
   word_page:   'صفحة',
@@ -929,6 +930,7 @@ window.PDFREE_LOCALE = {
   p2j_step_output_format: 'صيغة المخرجات',
   p2j_fmt_jpg_desc:       'الأفضل للصور الفوتوغرافية والاستخدام العام',
   p2j_fmt_png_desc:       'الأفضل للقطات الشاشة والرسومات',
+  p2j_fmt_cbz_desc: "أرشيف قصص مصوّرة لقارئات القصص المصورة والمانغا",
   p2j_step_image_quality: 'جودة الصورة (الدقة)',
   p2j_dpi_72_lbl:         'حجم ملف أصغر',
   p2j_dpi_72_sub:         'الويب / البريد الإلكتروني',

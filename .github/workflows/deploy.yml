@@ -372,6 +372,11 @@ jobs:
         # tests/e2e/clean-scan-straighten.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:clean-scan-straighten
 
+      - name: E2E — PDF to JPG, CBZ comic-book archive
+        # 001.jpg… in name-sort page order, a .cbz with the comic-book type.
+        # See tests/e2e/pdf2jpg-cbz.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:pdf2jpg-cbz
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do
