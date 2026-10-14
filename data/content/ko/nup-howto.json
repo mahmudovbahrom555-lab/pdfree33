@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDF 여러 페이지를 한 장에 배치하는 방법",
+  "description": "PDF를 한 장에 2·4·6·9·16페이지 또는 소책자로 인쇄 — 모두 브라우저에서.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF 파일 추가",
+      "text": "파일 선택을 클릭하거나 PDF를 하나 이상 끌어다 놓습니다."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "한 장당 페이지 수 선택",
+      "text": "2·4·6·9·16, 인쇄해서 접는 소책자, 또는 실제 크기 영수증용 A4에 영수증을 고릅니다."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "새 PDF 다운로드",
+      "text": "페이지 배치를 클릭하면 PDF가 바로 다운로드되어 인쇄할 수 있습니다."
+    }
+  ]
+}

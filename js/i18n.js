@@ -368,6 +368,10 @@ export const EN = {
   nup_binding_sub: "Leaves 30 mm on the left for punching or gluing",
   nup_preview_alt: "Preview of the first sheet",
   nup_summary: "Pages: {pages} → sheets: {sheets}",
+  nup_mode_booklet: "Booklet",
+  nup_booklet_hint: "Print double-sided, flip on the short edge, then fold the stack in the middle — the pages come out in order.",
+  nup_booklet_rtl_sub: "Binding on the right — for Arabic, Persian or Hebrew books",
+  nup_booklet_summary: "Pages: {pages} → a booklet of {sheets} sheets, printed on both sides",
   desc_nup: "Pages: {pages} → sheets: {sheets} · {size}",
   prog_nup: "Arranging pages…",
 

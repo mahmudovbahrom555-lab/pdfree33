@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Mon PDF est-il envoyé quelque part ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Les pages sont disposées entièrement dans votre navigateur ; le fichier ne quitte jamais votre appareil."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Le texte reste-t-il sélectionnable ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Chaque page est placée en contenu vectoriel, pas en image — le texte reste net et peut être sélectionné et recherché comme dans l’original."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Combien de pages peut-on mettre par feuille ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "2, 4, 6, 9 ou 16. L’outil choisit l’orientation et la grille qui donnent les plus grandes pages ; vous pouvez aussi imposer portrait ou paysage."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je mettre deux factures par A4 en taille réelle ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui — choisissez Factures sur A4. Chaque facture garde sa taille (elle n’est jamais agrandie), deux ou quatre vont sur une feuille, et une marge de reliure facultative de 30 mm laisse la place pour perforer ou coller."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je faire un livret à partir d’un PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui — choisissez Livret. Les pages sont mises dans l’ordre d’un cahier, deux sur chaque face. Imprimez en recto verso avec retournement sur le bord court, pliez la pile au milieu et agrafez : les pages sont dans l’ordre. Pour les livres en arabe, persan ou hébreu, De droite à gauche met la reliure à droite."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je combiner plusieurs fichiers PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Ajoutez plusieurs PDF — leurs pages se suivent dans l’ordre de la liste, puis sont disposées sur les feuilles."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Les liens et les champs de formulaire remplis sont-ils conservés ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tout ce qui est visible est conservé : texte, images, valeurs de formulaire remplies, tampons et commentaires sont dessinés sur la feuille à leur place. Mais le résultat est figé : les liens ne sont plus cliquables et les champs ne sont plus modifiables — remplissez donc le formulaire avant."
+    }
+  }
+]

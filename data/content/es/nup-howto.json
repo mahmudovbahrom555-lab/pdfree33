@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cómo poner varias páginas PDF en una hoja",
+  "description": "Imprime 2, 4, 6, 9 o 16 páginas PDF por hoja o como folleto, 100 % en tu navegador.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Añade tus archivos PDF",
+      "text": "Haz clic en Elegir archivos o arrastra uno o varios PDF."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Elige cuántas páginas por hoja",
+      "text": "Elige 2, 4, 6, 9 o 16, Folleto para imprimir y doblar, o Facturas en A4 para facturas a tamaño real."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Descarga el nuevo PDF",
+      "text": "Haz clic en Organizar en hojas: el PDF se descarga al instante, listo para imprimir."
+    }
+  ]
+}

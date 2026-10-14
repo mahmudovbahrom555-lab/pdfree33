@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come mettere più pagine PDF su un foglio",
+  "description": "Stampa 2, 4, 6, 9 o 16 pagine PDF per foglio o come libretto — tutto nel browser.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Aggiungi i file PDF",
+      "text": "Fai clic su Scegli file o trascina uno o più PDF."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Scegli quante pagine per foglio",
+      "text": "Scegli 2, 4, 6, 9 o 16, Libretto per stampare e piegare, o Fatture su A4 per fatture a grandezza reale."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Scarica il nuovo PDF",
+      "text": "Fai clic su Disponi le pagine: il PDF si scarica subito, pronto da stampare."
+    }
+  ]
+}

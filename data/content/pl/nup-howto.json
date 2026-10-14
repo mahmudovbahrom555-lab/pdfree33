@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Jak umieścić kilka stron PDF na jednym arkuszu",
+  "description": "Drukuj 2, 4, 6, 9 lub 16 stron PDF na arkuszu albo jako broszurę — w całości w przeglądarce.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Dodaj pliki PDF",
+      "text": "Kliknij Wybierz pliki lub przeciągnij jeden lub kilka plików PDF."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Wybierz liczbę stron na arkusz",
+      "text": "Wybierz 2, 4, 6, 9 lub 16, Broszura do druku i składania albo Faktury na A4 dla faktur w rzeczywistym rozmiarze."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Pobierz nowy PDF",
+      "text": "Kliknij Rozmieść strony — PDF pobierze się od razu, gotowy do druku."
+    }
+  ]
+}

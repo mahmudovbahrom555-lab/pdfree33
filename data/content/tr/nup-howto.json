@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Tek Kağıda Birden Fazla PDF Sayfası Nasıl Yerleştirilir",
+  "description": "Kağıt başına 2, 4, 6, 9 veya 16 PDF sayfası ya da kitapçık yazdırın — tamamen tarayıcınızda.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF dosyalarınızı ekleyin",
+      "text": "Dosya Seç'e tıklayın veya bir ya da daha fazla PDF sürükleyin."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Kağıt başına sayfa sayısını seçin",
+      "text": "2, 4, 6, 9 veya 16, yazdırıp katlamak için Kitapçık ya da gerçek boyutta faturalar için A4'te faturalar seçin."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Yeni PDF'i indirin",
+      "text": "Sayfaları Yerleştir'e tıklayın — PDF hemen iner, yazdırmaya hazırdır."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Comment mettre plusieurs pages PDF sur une feuille",
+  "description": "Imprimez 2, 4, 6, 9 ou 16 pages PDF par feuille ou en livret — entièrement dans votre navigateur.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Ajoutez vos fichiers PDF",
+      "text": "Cliquez sur Choisir des fichiers ou déposez un ou plusieurs PDF."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Choisissez le nombre de pages par feuille",
+      "text": "Choisissez 2, 4, 6, 9 ou 16, Livret pour imprimer et plier, ou Factures sur A4 pour des factures en taille réelle."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Téléchargez le nouveau PDF",
+      "text": "Cliquez sur Disposer les pages — le PDF se télécharge aussitôt, prêt à imprimer."
+    }
+  ]
+}

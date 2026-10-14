@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "PDF'im bir yere yükleniyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Sayfalar tamamen tarayıcınızda yerleştirilir; dosya cihazınızdan hiç çıkmaz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Metin seçilebilir kalıyor mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Her sayfa resim olarak değil, vektör içerik olarak yerleştirilir — metin net kalır, orijinaldeki gibi seçilip aranabilir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bir kağıda kaç sayfa sığar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "2, 4, 6, 9 veya 16. Araç sayfaları en büyük yapan yönü ve ızgarayı seçer; dikey veya yatayı kendiniz de belirleyebilirsiniz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "İki faturayı gerçek boyutta bir A4'e koyabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet — A4'te faturalar'ı seçin. Her fatura kendi boyutunu korur (asla büyütülmez), bir kağıda iki ya da dört tane gelir ve isteğe bağlı 30 mm cilt payı delmek veya yapıştırmak için yer bırakır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "PDF'ten kitapçık yapabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet — Kitapçık'ı seçin. Sayfalar kitapçık sırasına, kağıdın her yüzüne ikişer yerleştirilir. Çift taraflı ve kısa kenardan çevirerek yazdırın, desteyi ortadan katlayıp zımbalayın: sayfalar sırayla dizilir. Arapça, Farsça veya İbranice kitaplar için Sağdan sola cildi sağa alır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Birden fazla PDF dosyasını birleştirebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Birden fazla PDF ekleyin — sayfaları dosya listesindeki sırayla birbirini izler, ardından kağıtlara yerleştirilir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bağlantılar ve doldurulmuş form alanları korunur mu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Görünen her şey korunur: metin, görseller, doldurulmuş form değerleri, kaşeler ve yorumlar kağıda tam yerlerinde çizilir. Ancak sonuç düzdür: bağlantılar artık tıklanamaz ve alanlar düzenlenemez — bu yüzden formu önceden doldurun."
+    }
+  }
+]

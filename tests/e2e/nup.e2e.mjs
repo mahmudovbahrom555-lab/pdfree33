@@ -6,6 +6,7 @@
 //  multiple pages on one page", "combine every two pages in one") and the
 //  Chinese chore of printing invoices two to an A4 sheet. This checks the
 //  golden path (file + one click), the invoices mode with several files,
+//  the booklet imposition,
 //  the Chinese page, and that the homepage search now finds the tool.
 //  Output checked through pdf.js: page count, page size, text kept.
 //
@@ -53,7 +54,12 @@ async function result(page) {
     for (let i = 1; i <= doc.numPages; i++) {
       const p = await doc.getPage(i);
       const vp = p.getViewport({ scale: 1 });
-      sheets.push({ w: Math.round(vp.width), h: Math.round(vp.height), text: (await p.getTextContent()).items.map(t => t.str).join(' ') });
+      const items = (await p.getTextContent()).items;
+      sheets.push({
+        w: Math.round(vp.width), h: Math.round(vp.height), text: items.map(t => t.str).join(' '),
+        // "Page N TOP" lines and which half of the sheet they sit on
+        halves: items.filter(t => /Page \d+ TOP/.test(t.str)).map(t => `${t.str.match(/\d+/)[0]}${t.transform[4] < vp.width / 2 ? 'L' : 'R'}`).join(' '),
+      });
     }
     return sheets;
   });
@@ -101,11 +107,54 @@ try {
     if (text.includes('HIDDEN NOTE')) throw new Error(`hidden note shown: ${text}`);
   });
 
+  // Search Miss "Booklet", "Make into a book". 5 pages → 2 sheets of paper,
+  // 3 blank pages at the end; folded, the stack reads 1–5.
+  await test('booklet: 5 pages → 2 sheets of paper (4 sides), pages where the fold needs them', async () => {
+    const { page } = await openTool('/pages-per-sheet/', ['five-pages.pdf']);
+    await page.click('label[data-name="nupMode"][data-value="booklet"]');
+    await page.waitForFunction(() => document.querySelectorAll('#nupPreview svg').length === 2);
+    await page.click('#mergeBtn');
+    const sides = await result(page);
+    const got = sides.map(s => s.halves).join(' | ');
+    if (got !== '1R | 2L | 3R | 4L 5R') throw new Error(got);
+    if (!(sides[0].w === 842 && sides[0].h === 595)) throw new Error(`sheet ${sides[0].w}×${sides[0].h}`);
+    // the result names sheets of paper, not PDF pages
+    const card = await page.evaluate(() => document.querySelector('#successCard')?.innerText || '');
+    if (!/sheets: 2\b/.test(card)) throw new Error(card);
+  });
+
   await test('the Chinese page (发票合并打印) runs the same tool', async () => {
     const { page } = await openTool('/zh/fapiao-hebing-dayin/', ['invoice-1.pdf', 'invoice-2.pdf']);
     await page.click('#mergeBtn');
     const sheets = await result(page);
     if (!/发票/.test(sheets[0].text)) throw new Error(sheets[0].text);
+  });
+
+  await test('the tool card on a localized homepage (ru) opens the tool inline and runs it', async () => {
+    const page = await (await browser.newContext({ serviceWorkers: 'block' })).newPage();
+    await page.addInitScript(() => {
+      const orig = URL.createObjectURL.bind(URL);
+      URL.createObjectURL = b => { if (b instanceof Blob && /pdf/.test(b.type)) window.__pdf = b; return orig(b); };
+    });
+    await page.goto(BASE_URL + '/ru/', { waitUntil: 'load' });
+    await page.click('.tools-grid a[data-tool="nup"]');
+    await page.setInputFiles('#fileInput', path.join(FIX, 'five-pages.pdf'));
+    await page.waitForSelector('#nupPreview svg', { timeout: 30000 });
+    await page.click('#mergeBtn');
+    const sheets = await result(page);
+    if (sheets.length !== 3) throw new Error(`${sheets.length} sheets`);
+  });
+
+  // right to left is on by itself on the Arabic page; a booklet there is
+  // bound on the right — the cover (page 1) on the left half of the front
+  await test('the Arabic page: right to left on by default, booklet bound on the right', async () => {
+    const { page } = await openTool('/ar/adat-safahat-fi-waraqa/', ['five-pages.pdf']);
+    if (!(await page.isChecked('#nupRtl'))) throw new Error('RTL off on /ar/');
+    await page.click('label[data-name="nupMode"][data-value="booklet"]');
+    await page.waitForFunction(() => document.querySelectorAll('#nupPreview svg').length === 2);
+    await page.click('#mergeBtn');
+    const got = (await result(page)).map(s => s.halves).join(' | ');
+    if (got !== '1L | 2R | 3L | 4R 5L') throw new Error(got);
   });
 
   await test('homepage search finds it: "multiple pages on one page", and 发票合并打印 on /zh/', async () => {

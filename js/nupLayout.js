@@ -8,7 +8,7 @@
 //
 //  Why the tool exists: on-site searches that found nothing — "Put
 //  multiple pages on one page", "combine every two pages in one",
-//  "QUATRO" — and the Chinese office chore of printing e-invoices two
+//  "QUATRO", "Booklet", "Make into a book" — and the Chinese office chore of printing e-invoices two
 //  or four to an A4 sheet (发票合并打印) (Analytics Engine, 2026-10-13).
 //
 //  A plain script, like pdfEncrypt.js: importScripts() in the worker,
@@ -43,13 +43,14 @@
   // landscape page among portrait ones tied both ways on the smallest and
   // stacked them all.
   function chooseSheet(pages, opts) {
-    const [a, b] = GRID[opts.perSheet];
+    const [a, b] = opts.booklet ? [1, 2] : GRID[opts.perSheet];
     const [shortSide, longSide] = [...PAPER[opts.paper]].sort((x, y) => x - y);
     const orientations = opts.orientation === 'auto' ? ['portrait', 'landscape'] : [opts.orientation];
     let best = null;
     for (const orientation of orientations) {
       const [sheetW, sheetH] = orientation === 'portrait' ? [shortSide, longSide] : [longSide, shortSide];
-      for (const [rows, cols] of a === b ? [[a, b]] : [[a, b], [b, a]]) {
+      // a booklet folds down the middle: always two pages side by side
+      for (const [rows, cols] of a === b || opts.booklet ? [[a, b]] : [[a, b], [b, a]]) {
         const cellW = (sheetW - opts.marginLeft - opts.margin - (cols - 1) * opts.gutter) / cols;
         const cellH = (sheetH - 2 * opts.margin - (rows - 1) * opts.gutter) / rows;
         if (cellW <= 0 || cellH <= 0) continue;
@@ -74,6 +75,24 @@
     return [row, rtl ? cols - 1 - col : col];
   }
 
+  // Booklet (saddle stitch): pages padded with blanks to a multiple of 4;
+  // each sheet of paper holds 4 pages, two on each side, so that the
+  // printed stack — double-sided, flipped on the short edge — folded in
+  // the middle reads 1, 2, 3… Side by side, [left, right] for a left-bound
+  // book: sheet s front [n−1−2s, 2s], back [2s+1, n−2−2s]. A right-bound
+  // book (Arabic, Persian, Hebrew) is the same mirrored — slotCell's rtl.
+  // null = a blank page.
+  function bookletSides(count) {
+    const n = Math.ceil(count / 4) * 4;
+    const page = i => (i < count ? i : null);
+    const sides = [];
+    for (let s = 0; s < n / 4; s++) {
+      sides.push([page(n - 1 - 2 * s), page(2 * s)]);
+      sides.push([page(2 * s + 1), page(n - 2 - 2 * s)]);
+    }
+    return sides;
+  }
+
   // pdf-lib's drawPage() draws the page's own (unrotated) content and
   // rotates it counter-clockwise about its bottom-left corner. For a page
   // shown at /Rotate r (clockwise), the content turns by −r, and that
@@ -93,8 +112,10 @@
    * opts: perSheet 2|4|6|9|16, paper 'a4'|'a3'|'letter', orientation
    *   'auto'|'portrait'|'landscape', order 'row'|'column', rtl, margin and
    *   gutter in pt, marginLeft (pt; a binding edge — defaults to margin),
-   *   maxScale (1 = never enlarge; Infinity = fill the cell).
-   * → { width, height, rows, cols, sheets: [[{ page, box, draw }]] }:
+   *   maxScale (1 = never enlarge; Infinity = fill the cell), booklet
+   *   (true: perSheet and order are ignored, see bookletSides()).
+   * → { width, height, rows, cols, sheets: [[{ page, box, draw }]] }
+   *   (a booklet's blank pages are simply absent from their side):
    *   box — where the page shows (bottom-left origin, pt); draw — what to
    *   pass to pdf-lib's drawPage() for it.
    */
@@ -103,29 +124,36 @@
       orientation: 'auto', order: 'row', rtl: false, margin: 18, gutter: 8, maxScale: Infinity,
       ...options,
     };
-    if (!GRID[opts.perSheet]) throw new Error('NUP_BAD_GRID');
+    if (!opts.booklet && !GRID[opts.perSheet]) throw new Error('NUP_BAD_GRID');
     if (!PAPER[opts.paper]) throw new Error('NUP_BAD_PAPER');
     if (!pages.length) throw new Error('NUP_NO_PAGES');
     if (opts.marginLeft == null) opts.marginLeft = opts.margin;
 
     const sheet = chooseSheet(pages, opts);
     const { rows, cols, cellW, cellH, sheetH } = sheet;
-    const sheets = [];
-    for (let first = 0; first < pages.length; first += opts.perSheet) {
+    // the page indexes on each sheet (side), slot by slot
+    const order = [];
+    if (opts.booklet) order.push(...bookletSides(pages.length));
+    else for (let first = 0; first < pages.length; first += opts.perSheet) {
+      order.push([...pages.keys()].slice(first, first + opts.perSheet));
+    }
+    const sheets = order.map(indexes => {
       const placed = [];
-      for (let slot = 0; slot < opts.perSheet && first + slot < pages.length; slot++) {
-        const index = first + slot;
+      indexes.forEach((index, slot) => {
+        if (index == null) return;
         const page = pages[index];
         const [row, col] = slotCell(slot, rows, cols, opts.order, opts.rtl);
         const scale = pageScale(page, cellW, cellH, opts.maxScale);
         const [shownW, shownH] = shownSize(page).map(v => v * scale);
         const cellX = opts.marginLeft + col * (cellW + opts.gutter);
         const cellY = sheetH - opts.margin - (row + 1) * cellH - row * opts.gutter;
-        const box = { x: cellX + (cellW - shownW) / 2, y: cellY + (cellH - shownH) / 2, w: shownW, h: shownH };
+        // a booklet's pages meet at the fold; elsewhere centered in the cell
+        const x = !opts.booklet ? cellX + (cellW - shownW) / 2 : col === 0 ? cellX + cellW - shownW : cellX;
+        const box = { x, y: cellY + (cellH - shownH) / 2, w: shownW, h: shownH };
         placed.push({ page: index, box, draw: drawSpec(box, page, scale) });
-      }
-      sheets.push(placed);
-    }
+      });
+      return placed;
+    });
     return { width: sheet.sheetW, height: sheet.sheetH, rows, cols, sheets };
   }
 

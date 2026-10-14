@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Mehrere PDF-Seiten auf ein Blatt bringen",
+  "description": "2, 4, 6, 9 oder 16 PDF-Seiten pro Blatt oder als Broschüre drucken – komplett im Browser.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDF-Dateien hinzufügen",
+      "text": "Klicken Sie auf Dateien auswählen oder ziehen Sie ein oder mehrere PDFs hinein."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Seiten pro Blatt wählen",
+      "text": "Wählen Sie 2, 4, 6, 9 oder 16, Broschüre zum Drucken und Falten oder Rechnungen auf A4 für Rechnungen in Originalgröße."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Neues PDF herunterladen",
+      "text": "Klicken Sie auf Seiten anordnen – das PDF wird sofort heruntergeladen, druckfertig."
+    }
+  ]
+}

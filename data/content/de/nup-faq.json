@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wird mein PDF irgendwohin hochgeladen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Die Seiten werden vollständig in Ihrem Browser angeordnet; die Datei verlässt Ihr Gerät nie."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bleibt der Text markierbar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Jede Seite wird als Vektorinhalt eingefügt, nicht als Bild – der Text bleibt scharf und lässt sich wie im Original markieren und durchsuchen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wie viele Seiten passen auf ein Blatt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "2, 4, 6, 9 oder 16. Das Tool wählt Ausrichtung und Raster so, dass die Seiten am größten werden; Hoch- oder Querformat können Sie auch selbst festlegen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich zwei Rechnungen in Originalgröße auf ein A4 legen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja – wählen Sie Rechnungen auf A4. Jede Rechnung behält ihre Größe (sie wird nie vergrößert), zwei oder vier kommen auf ein Blatt, und ein optionaler Heftrand von 30 mm lässt Platz zum Lochen oder Kleben."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich aus einem PDF eine Broschüre machen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja – wählen Sie Broschüre. Die Seiten kommen in Heftreihenfolge, zwei auf jede Blattseite. Beidseitig drucken, an der kurzen Kante wenden, den Stapel in der Mitte falten und heften: Die Seiten liegen in der richtigen Reihenfolge. Für arabische, persische oder hebräische Bücher legt Von rechts nach links die Bindung nach rechts."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich mehrere PDF-Dateien kombinieren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Fügen Sie mehrere PDFs hinzu – ihre Seiten folgen in der Reihenfolge der Dateiliste aufeinander und werden dann auf Blätter verteilt."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bleiben Links und ausgefüllte Formularfelder erhalten?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Alles Sichtbare bleibt erhalten: Text, Bilder, ausgefüllte Formularwerte, Stempel und Kommentare werden genau an ihrer Stelle auf das Blatt gezeichnet. Das Ergebnis ist jedoch flach: Links sind nicht mehr anklickbar und Felder nicht mehr bearbeitbar – füllen Sie ein Formular also vorher aus."
+    }
+  }
+]

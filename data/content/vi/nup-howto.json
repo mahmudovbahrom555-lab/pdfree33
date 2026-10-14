@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách đặt nhiều trang PDF trên một tờ",
+  "description": "In 2, 4, 6, 9 hoặc 16 trang PDF trên mỗi tờ hoặc thành sổ gập — hoàn toàn trong trình duyệt.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Thêm tệp PDF",
+      "text": "Nhấn Chọn file hoặc kéo thả một hay nhiều PDF."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Chọn số trang mỗi tờ",
+      "text": "Chọn 2, 4, 6, 9 hoặc 16, Sổ tay gập để in và gấp, hoặc Hóa đơn trên A4 cho hóa đơn đúng kích thước thật."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Tải PDF mới",
+      "text": "Nhấn Sắp xếp trang — PDF được tải xuống ngay, sẵn sàng để in."
+    }
+  ]
+}

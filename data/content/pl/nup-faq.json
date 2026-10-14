@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy mój PDF jest gdzieś wysyłany?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Strony są rozmieszczane w całości w przeglądarce; plik nigdy nie opuszcza urządzenia."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy tekst nadal da się zaznaczać?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Każda strona jest wstawiana jako treść wektorowa, a nie obrazek — tekst pozostaje ostry i można go zaznaczać i przeszukiwać jak w oryginale."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ile stron zmieści się na arkuszu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "2, 4, 6, 9 lub 16. Narzędzie dobiera orientację i siatkę, przy których strony są największe; orientację pionową lub poziomą można też ustawić samemu."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę położyć dwie faktury na A4 w rzeczywistym rozmiarze?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak — wybierz Faktury na A4. Każda faktura zachowuje swój rozmiar (nigdy nie jest powiększana), na arkusz trafiają dwie lub cztery, a opcjonalny margines na oprawę 30 mm zostawia miejsce na dziurkowanie lub klejenie."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę zrobić broszurę z PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak — wybierz Broszura. Strony są ustawiane w kolejności zeszytowej, po dwie na każdej stronie arkusza. Drukuj dwustronnie z obracaniem wzdłuż krótszej krawędzi, złóż plik na pół i zszyj: strony ułożą się po kolei. Dla książek po arabsku, persku lub hebrajsku opcja Od prawej do lewej przenosi grzbiet na prawo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę połączyć kilka plików PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Dodaj kilka plików PDF — ich strony następują po sobie w kolejności listy, a potem są rozmieszczane na arkuszach."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy linki i wypełnione pola formularza zostaną zachowane?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Zachowane jest wszystko, co widać: tekst, obrazy, wypełnione wartości, pieczątki i komentarze są rysowane na arkuszu tam, gdzie były. Wynik jest jednak płaski: linki przestają być klikalne, a pól nie da się już edytować — wypełnij więc formularz wcześniej."
+    }
+  }
+]

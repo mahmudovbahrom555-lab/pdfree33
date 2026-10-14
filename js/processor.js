@@ -971,8 +971,10 @@ async function _runNup(filesSnapshot, options = {}) {
       setProgress(100, t('prog_done'));
       const blob = new Blob([data.result], { type: 'application/pdf' });
       const base = filesSnapshot[0].name.replace(/\.pdf$/i, '');
-      const filename = `${base}-${options.mode === 'invoices' ? 'invoices' : 'n-up'}.pdf`;
-      const desc = t('desc_nup', { pages: data.pageCount, sheets: data.sheetCount, size: fmtSize(blob.size) });
+      const filename = `${base}-${{ invoices: 'invoices', booklet: 'booklet' }[options.mode] || 'n-up'}.pdf`;
+      // a booklet's PDF pages are the two sides of each sheet of paper
+      const sheets = options.booklet ? data.sheetCount / 2 : data.sheetCount;
+      const desc = t('desc_nup', { pages: data.pageCount, sheets, size: fmtSize(blob.size) });
       document.dispatchEvent(new CustomEvent('pdfree:success', { detail: { tool: 'nup', blob, desc, filename } }));
     } else if (data.type === 'error') {
       done();

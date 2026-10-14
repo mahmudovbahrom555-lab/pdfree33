@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Meerdere PDF-pagina's op één vel zetten",
+  "description": "Druk 2, 4, 6, 9 of 16 PDF-pagina's per vel af of als boekje — volledig in je browser.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Voeg je PDF-bestanden toe",
+      "text": "Klik op Bestanden kiezen of sleep een of meer PDF's hierheen."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Kies het aantal pagina's per vel",
+      "text": "Kies 2, 4, 6, 9 of 16, Boekje om af te drukken en te vouwen, of Facturen op A4 voor facturen op ware grootte."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Download de nieuwe PDF",
+      "text": "Klik op Pagina's schikken — de PDF wordt meteen gedownload, klaar om af te drukken."
+    }
+  ]
+}

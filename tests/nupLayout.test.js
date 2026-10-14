@@ -115,6 +115,47 @@ test('a binding margin moves the pages right by its width', () => {
   assert.ok(bound.box.x >= 99 - 1e-6, 'clear of the binding strip');
 });
 
+// The reading order of a printed booklet, by folding it, not by the
+// formula: sheets stacked (sheet 0 outside), printed double-sided flipped
+// on the short edge (a side's right half backs the other side's left half),
+// folded in the middle. Left-bound: the cover is sheet 0's front right half;
+// reading goes in through each sheet's front-right then back-left, and out
+// through back-right then front-left. Right-bound mirrors left and right.
+function readBooklet(l, rtl) {
+  const half = (side, wantRight) => {
+    const p = l.sheets[side].find(({ box }) => (box.x + box.w / 2 > l.width / 2) === wantRight);
+    return p ? p.page : null;
+  };
+  const [outer, inner] = rtl ? [false, true] : [true, false];
+  const m = l.sheets.length / 2, seq = [];
+  for (let k = 0; k < m; k++) seq.push(half(2 * k, outer), half(2 * k + 1, inner));
+  for (let k = m - 1; k >= 0; k--) seq.push(half(2 * k + 1, outer), half(2 * k, inner));
+  return seq;
+}
+
+test('booklet: folded, the printed sheets read 1, 2, 3… — blanks only at the end', () => {
+  for (const n of [1, 2, 3, 4, 5, 8, 10, 13, 16]) {
+    for (const rtl of [false, true]) {
+      const l = layout(Array(n).fill(A4), { booklet: true, paper: 'a4', rtl, margin: 18, gutter: 0 });
+      const padded = Math.ceil(n / 4) * 4;
+      assert.equal(l.sheets.length, padded / 2, `${n} pages: ${padded / 4} sheets of paper, two sides each`);
+      const expected = [...Array(padded).keys()].map(i => (i < n ? i : null));
+      assert.deepEqual(readBooklet(l, rtl), expected, `${n} pages, rtl ${rtl}`);
+    }
+  }
+});
+
+test('booklet: two pages side by side on a landscape sheet, meeting at the fold', () => {
+  const l = layout(Array(4).fill(A4), { booklet: true, paper: 'a4', margin: 18, gutter: 0 });
+  assert.ok(l.width > l.height);
+  assert.deepEqual([l.rows, l.cols], [1, 2]);
+  const [left, right] = [...l.sheets[0]].sort((a, b) => a.box.x - b.box.x);
+  assert.ok(near(left.box.x + left.box.w, l.width / 2) && near(right.box.x, l.width / 2), 'both touch the fold');
+  // landscape pages too: still side by side (a booklet can't fold the other way)
+  const wide = layout(Array(4).fill(A4L), { booklet: true, paper: 'a4', margin: 18, gutter: 0 });
+  assert.deepEqual([wide.rows, wide.cols], [1, 2]);
+});
+
 test('unknown grid, paper or no pages is an error, not a broken PDF', () => {
   assert.throws(() => layout([A4], { perSheet: 3, paper: 'a4' }), /NUP_BAD_GRID/);
   assert.throws(() => layout([A4], { perSheet: 2, paper: 'b5' }), /NUP_BAD_PAPER/);

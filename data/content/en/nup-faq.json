@@ -33,6 +33,14 @@
   },
   {
     "@type": "Question",
+    "name": "Can I make a booklet from a PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes — choose Booklet. The pages are put in booklet order, two on each side of the sheet. Print double-sided with flip on the short edge, fold the stack in the middle and staple it: the pages read in order. For Arabic, Persian or Hebrew books, Right to left puts the binding on the right."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Can I combine several PDF files?",
     "acceptedAnswer": {
       "@type": "Answer",

@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Meu PDF é enviado para algum lugar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. As páginas são organizadas inteiramente no seu navegador; o arquivo nunca sai do seu dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "O texto continua selecionável?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Cada página é colocada como conteúdo vetorial, não como imagem — o texto continua nítido e pode ser selecionado e pesquisado como no original."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Quantas páginas cabem em uma folha?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "2, 4, 6, 9 ou 16 (por exemplo, quatro páginas por folha). A ferramenta escolhe a orientação e a grade que deixam as páginas maiores; você também pode definir retrato ou paisagem."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso colocar duas notas fiscais por A4 em tamanho real?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim — escolha Faturas em A4. Cada nota mantém seu tamanho (nunca é ampliada), vão duas ou quatro por folha, e uma margem de encadernação opcional de 30 mm deixa espaço para furar ou colar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso fazer um livreto a partir de um PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim — escolha Livreto. As páginas ficam na ordem de um caderno, duas em cada lado da folha. Imprima frente e verso virando pela borda curta, dobre a pilha ao meio e grampeie: as páginas ficam em ordem. Para livros em árabe, persa ou hebraico, Da direita para a esquerda põe a lombada à direita."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso juntar vários arquivos PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Adicione vários PDFs — as páginas seguem a ordem da lista de arquivos e depois são organizadas nas folhas."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Links e campos de formulário preenchidos são mantidos?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tudo o que se vê é mantido: texto, imagens, valores preenchidos, carimbos e comentários são desenhados na folha onde estavam. Mas o resultado é plano: links deixam de ser clicáveis e campos não podem mais ser editados — preencha o formulário antes."
+    }
+  }
+]

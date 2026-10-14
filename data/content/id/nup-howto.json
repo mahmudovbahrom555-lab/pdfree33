@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara Menaruh Beberapa Halaman PDF dalam Satu Lembar",
+  "description": "Cetak 2, 4, 6, 9 atau 16 halaman PDF per lembar atau sebagai buklet — sepenuhnya di browser.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Tambahkan file PDF",
+      "text": "Klik Pilih file atau seret satu atau beberapa PDF."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Pilih jumlah halaman per lembar",
+      "text": "Pilih 2, 4, 6, 9 atau 16, Buklet untuk dicetak dan dilipat, atau Faktur di A4 untuk faktur ukuran asli."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Unduh PDF baru",
+      "text": "Klik Atur Halaman — PDF langsung terunduh, siap dicetak."
+    }
+  ]
+}

@@ -4,11 +4,13 @@
 // ============================================================
 //  nupUI.js — Pages per Sheet (N-up): options and a live preview
 //
-//  Two modes over one engine (js/nupLayout.js):
+//  Three modes over one engine (js/nupLayout.js):
 //    pages    — 2/4/6/9/16 pages per sheet, filling the cell
 //    invoices — 2 or 4 documents to an A4 sheet at their real size, an
 //               optional binding margin (发票合并打印: e-invoices printed
 //               for expense reports)
+//    booklet  — pages imposed for printing double-sided and folding in the
+//               middle (Search Miss: "Booklet", "Make into a book")
 //  Several PDFs make one stack, in list order (multiFile).
 //
 //  The preview draws the first sheet with the same layout() the worker
@@ -28,6 +30,8 @@ const PRESETS = {
   pages:    { margin: 18, gutter: 8,  maxScale: Infinity, counts: [2, 4, 6, 9, 16] },
   // real size (never enlarged), as an expense report wants them
   invoices: { margin: 14, gutter: 10, maxScale: 1,        counts: [2, 4] },
+  // pages meet at the fold, no gutter; per sheet is always 2 + 2
+  booklet:  { margin: 18, gutter: 0,  maxScale: Infinity, counts: [] },
 };
 const BINDING_PT = 30 * MM;   // the usual 30 mm left strip for punching/gluing
 
@@ -42,7 +46,7 @@ export function getNupParams() {
     perSheet: _perSheet, paper: _paper, orientation: _orientation, order: _order, rtl: _rtl,
     margin: p.margin, gutter: p.gutter, maxScale: p.maxScale, border: _border,
     marginLeft: _mode === 'invoices' && _binding ? p.margin + BINDING_PT : p.margin,
-    mode: _mode,
+    booklet: _mode === 'booklet', mode: _mode,
   };
 }
 
@@ -90,27 +94,30 @@ export function hideNupOptions() {
 
 function _render(container) {
   const counts = PRESETS[_mode].counts;
-  if (!counts.includes(_perSheet)) _perSheet = counts[0];
+  const booklet = _mode === 'booklet';
+  if (counts.length && !counts.includes(_perSheet)) _perSheet = counts[0];
   container.innerHTML = `
     ${group(t('nup_mode'), chipGroup('nupMode', [
       { value: 'pages', label: t('nup_mode_pages') },
       { value: 'invoices', label: t('nup_mode_invoices') },
+      { value: 'booklet', label: t('nup_mode_booklet') },
     ], _mode, t('nup_mode')))}
     ${_mode === 'invoices' ? infoBanner(t('nup_invoice_hint')) : ''}
-    ${group(t('nup_per_sheet'), chipGroup('nupPerSheet', counts.map(n => ({ value: String(n), label: String(n) })), String(_perSheet), t('nup_per_sheet')))}
+    ${booklet ? infoBanner(t('nup_booklet_hint')) : ''}
+    ${counts.length ? group(t('nup_per_sheet'), chipGroup('nupPerSheet', counts.map(n => ({ value: String(n), label: String(n) })), String(_perSheet), t('nup_per_sheet'))) : ''}
     ${group(t('rsz_paper_size'), chipGroup('nupPaper', [
       { value: 'a4', label: 'A4' }, { value: 'a3', label: 'A3' }, { value: 'letter', label: 'Letter' },
     ], _paper, t('rsz_paper_size')))}
-    ${group(t('rsz_orientation'), chipGroup('nupOrientation', [
+    ${booklet ? '' : group(t('rsz_orientation'), chipGroup('nupOrientation', [
       { value: 'auto', label: t('j2p_orient_auto') },
       { value: 'portrait', label: t('j2p_orient_portrait') },
       { value: 'landscape', label: t('j2p_orient_landscape') },
     ], _orientation, t('rsz_orientation')))}
-    ${group(t('nup_order'), chipGroup('nupOrder', [
+    ${booklet ? '' : group(t('nup_order'), chipGroup('nupOrder', [
       { value: 'row', label: t('nup_order_row') },
       { value: 'column', label: t('nup_order_column') },
     ], _order, t('nup_order')))}
-    ${checkbox({ id: 'nupRtl', checked: _rtl, title: t('nup_rtl'), subtitle: t('nup_rtl_sub') })}
+    ${checkbox({ id: 'nupRtl', checked: _rtl, title: t('nup_rtl'), subtitle: t(booklet ? 'nup_booklet_rtl_sub' : 'nup_rtl_sub') })}
     ${checkbox({ id: 'nupBorder', checked: _border, title: t('nup_border') })}
     ${_mode === 'invoices' ? checkbox({ id: 'nupBinding', checked: _binding, title: t('nup_binding'), subtitle: t('nup_binding_sub') }) : ''}
     <div id="nupPreview" style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:14px;"></div>
@@ -120,7 +127,9 @@ function _render(container) {
     const v = input.value;
     if (input.name === 'nupMode') {
       _mode = v;
-      _perSheet = PRESETS[v].counts[0];
+      _perSheet = PRESETS[v].counts[0] ?? _perSheet;
+      // a booklet is always side by side on its sheet
+      if (v === 'booklet') _orientation = 'auto';
       _border = false;
       _render(container);
       return;
@@ -141,25 +150,39 @@ function _render(container) {
   _renderPreview();
 }
 
-// The first sheet as the worker will lay it out: page numbers in their cells.
+// The first sheet as the worker will lay it out: page numbers in their
+// cells — for a booklet both sides of the first sheet of paper (the cover
+// spread and its back), since that is what the fold depends on.
 function _renderPreview() {
   const el = id('nupPreview');
   if (!el || !_pages.length) return;
   let l;
   try { l = self.NupLayout.layout(_pages, getNupParams()); } catch { el.innerHTML = ''; return; }
-  const W = 200, s = W / Math.max(l.width, l.height);
+  const booklet = _mode === 'booklet';
+  const W = booklet ? 160 : 200, s = W / Math.max(l.width, l.height);
   const w = l.width * s, h = l.height * s;
-  const boxes = l.sheets[0].map(({ page, box }) => {
+  const sides = l.sheets.slice(0, booklet ? 2 : 1).map(sheet => _sheetSvg(sheet, w, h, s)).join('');
+  const summary = booklet
+    ? t('nup_booklet_summary', { pages: _pages.length, sheets: l.sheets.length / 2 })
+    : t('nup_summary', { pages: _pages.length, sheets: l.sheets.length });
+  el.innerHTML = `
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">${sides}</div>
+    <div style="font-size:13px;color:var(--text2);">${summary}</div>`;
+}
+
+function _sheetSvg(sheet, w, h, s) {
+  const boxes = sheet.map(({ page, box }) => {
     const x = box.x * s, y = h - (box.y + box.h) * s, bw = box.w * s, bh = box.h * s;
     return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" fill="var(--surface)" stroke="var(--border)"/>
       <text x="${(x + bw / 2).toFixed(1)}" y="${(y + bh / 2 + 5).toFixed(1)}" text-anchor="middle" font-size="14" fill="var(--text2)">${page + 1}</text>`;
   }).join('');
   const strip = _mode === 'invoices' && _binding
-    ? `<line x1="${(BINDING_PT * s).toFixed(1)}" y1="4" x2="${(BINDING_PT * s).toFixed(1)}" y2="${(h - 4).toFixed(1)}" stroke="var(--border)" stroke-dasharray="3 3"/>` : '';
-  el.innerHTML = `
+    ? `<line x1="${(BINDING_PT * s).toFixed(1)}" y1="4" x2="${(BINDING_PT * s).toFixed(1)}" y2="${(h - 4).toFixed(1)}" stroke="var(--border)" stroke-dasharray="3 3"/>`
+    : _mode === 'booklet'   // the fold
+      ? `<line x1="${(w / 2).toFixed(1)}" y1="2" x2="${(w / 2).toFixed(1)}" y2="${(h - 2).toFixed(1)}" stroke="var(--text3)" stroke-dasharray="3 3"/>` : '';
+  return `
     <svg width="${w.toFixed(0)}" height="${h.toFixed(0)}" viewBox="0 0 ${w.toFixed(1)} ${h.toFixed(1)}" role="img" aria-label="${t('nup_preview_alt')}">
       <rect x="0.5" y="0.5" width="${(w - 1).toFixed(1)}" height="${(h - 1).toFixed(1)}" fill="var(--bg)" stroke="var(--text3)"/>
       ${strip}${boxes}
-    </svg>
-    <div style="font-size:13px;color:var(--text2);">${t('nup_summary', { pages: _pages.length, sheets: l.sheets.length })}</div>`;
+    </svg>`;
 }

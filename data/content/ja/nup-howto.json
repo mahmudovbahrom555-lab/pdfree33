@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "PDFの複数ページを1枚に配置する方法",
+  "description": "PDFを1枚に2・4・6・9・16ページ、または冊子として印刷 — すべてブラウザ内で。",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "PDFファイルを追加",
+      "text": "ファイルを選択をクリックするか、PDFを1つ以上ドロップします。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "1枚あたりのページ数を選ぶ",
+      "text": "2・4・6・9・16、印刷して折る冊子、または請求書を実寸で並べるA4に請求書を選びます。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "新しいPDFをダウンロード",
+      "text": "ページを配置をクリック — PDFがすぐにダウンロードされ、印刷できます。"
+    }
+  ]
+}

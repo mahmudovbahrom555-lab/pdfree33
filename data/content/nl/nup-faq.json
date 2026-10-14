@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wordt mijn PDF ergens geüpload?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. De pagina's worden volledig in je browser geschikt; het bestand verlaat je apparaat nooit."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Blijft de tekst selecteerbaar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Elke pagina wordt als vectorinhoud geplaatst, niet als afbeelding — tekst blijft scherp en kan net als in het origineel worden geselecteerd en doorzocht."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Hoeveel pagina's passen er op één vel?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "2, 4, 6, 9 of 16. De tool kiest de richting en het raster waarbij de pagina's het grootst zijn; staand of liggend kun je ook zelf instellen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik twee facturen op ware grootte op een A4 zetten?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja — kies Facturen op A4. Elke factuur houdt haar formaat (wordt nooit vergroot), er gaan er twee of vier op een vel, en een optionele bindmarge van 30 mm laat ruimte om te perforeren of te plakken."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik van een PDF een boekje maken?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja — kies Boekje. De pagina's komen in katernvolgorde, twee op elke kant van het vel. Druk dubbelzijdig af met omslaan langs de korte zijde, vouw de stapel in het midden en niet hem: de pagina's liggen op volgorde. Voor Arabische, Perzische of Hebreeuwse boeken legt Van rechts naar links de rug rechts."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik meerdere PDF-bestanden combineren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Voeg meerdere PDF's toe — hun pagina's volgen elkaar op in de volgorde van de bestandenlijst en worden daarna over de vellen verdeeld."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Blijven links en ingevulde formuliervelden behouden?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Alles wat je ziet blijft behouden: tekst, afbeeldingen, ingevulde waarden, stempels en opmerkingen worden op hun plek op het vel getekend. Het resultaat is wel plat: links zijn niet meer klikbaar en velden niet meer bewerkbaar — vul een formulier dus eerst in."
+    }
+  }
+]

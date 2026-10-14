@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah PDF saya diunggah ke mana pun?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Halaman ditata sepenuhnya di browser Anda; file tidak pernah meninggalkan perangkat."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah teks tetap bisa dipilih?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. Setiap halaman ditempatkan sebagai konten vektor, bukan gambar — teks tetap tajam dan bisa dipilih serta dicari seperti aslinya."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Berapa halaman yang muat dalam satu lembar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "2, 4, 6, 9 atau 16. Alat ini memilih orientasi dan kisi yang membuat halaman paling besar; Anda juga bisa memilih potret atau lanskap sendiri."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya menaruh dua faktur ukuran asli di satu A4?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa — pilih Faktur di A4. Setiap faktur mempertahankan ukurannya (tidak pernah diperbesar), dua atau empat per lembar, dan margin jilid opsional 30 mm memberi ruang untuk dilubangi atau dilem."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya membuat buklet dari PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa — pilih Buklet. Halaman disusun dalam urutan buklet, dua di setiap sisi lembar. Cetak bolak-balik dengan balik di sisi pendek, lipat tumpukan di tengah, lalu jepret: halaman akan berurutan. Untuk buku berbahasa Arab, Persia, atau Ibrani, Kanan ke kiri memindahkan jilid ke kanan."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya menggabungkan beberapa file PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa. Tambahkan beberapa PDF — halamannya berurutan sesuai daftar file, lalu ditata ke lembar-lembar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah tautan dan isian formulir tetap ada?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Semua yang terlihat tetap ada: teks, gambar, isian formulir, stempel, dan komentar digambar di lembar persis di tempatnya. Namun hasilnya datar: tautan tidak bisa diklik lagi dan kolom tidak bisa diedit — jadi isi formulir terlebih dahulu."
+    }
+  }
+]

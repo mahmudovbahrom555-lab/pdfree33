@@ -25,6 +25,14 @@
   },
   {
     "@type": "Question",
+    "name": "发票上的印章会保留吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "会。发票专用章、电子签章、已填写的表单内容和批注都会原样画到纸面上，位置不变。生成的 PDF 是平面的：链接不能再点击，表单也不能再编辑。"
+    }
+  },
+  {
+    "@type": "Question",
     "name": "可以一次合并多个发票文件吗？",
     "acceptedAnswer": {
       "@type": "Answer",
@@ -45,6 +53,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "可以。页面以矢量方式放置，不会变成图片，文字和原文件一样清晰、可选取。"
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "可以把 PDF 做成小册子打印吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以，选择「小册子」。页面按骑马钉顺序排列，每张纸每面两页。双面打印（短边翻转），把整叠纸从中间对折再装订，页码就是连续的。"
     }
   }
 ]

@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "¿Se sube mi PDF a algún sitio?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Las páginas se organizan por completo en tu navegador; el archivo nunca sale de tu dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿El texto sigue siendo seleccionable?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Cada página se coloca como contenido vectorial, no como imagen: el texto sigue nítido y se puede seleccionar y buscar como en el original."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Cuántas páginas caben en una hoja?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "2, 4, 6, 9 o 16. La herramienta elige la orientación y la cuadrícula que hacen las páginas más grandes; también puedes fijar vertical u horizontal."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo poner dos facturas por A4 a tamaño real?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí: elige Facturas en A4. Cada factura conserva su tamaño (nunca se amplía), van dos o cuatro por hoja y un margen de encuadernación opcional de 30 mm deja sitio para perforar o pegar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo hacer un folleto con un PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí: elige Folleto. Las páginas se ordenan como en un cuadernillo, dos en cada cara de la hoja. Imprime a doble cara volteando por el borde corto, dobla el montón por la mitad y grápalo: las páginas quedan en orden. Para libros en árabe, persa o hebreo, De derecha a izquierda pone el lomo a la derecha."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo combinar varios archivos PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Añade varios PDF: sus páginas se suceden en el orden de la lista y luego se organizan en hojas."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Se conservan los enlaces y los campos de formulario rellenados?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Se conserva todo lo que se ve: texto, imágenes, valores de formulario rellenados, sellos y comentarios se dibujan en la hoja donde estaban. Pero el resultado es plano: los enlaces ya no se pueden pulsar y los campos ya no se pueden editar, así que rellena el formulario antes."
+    }
+  }
+]
