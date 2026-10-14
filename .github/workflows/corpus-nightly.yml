@@ -1,4 +1,4 @@
-name: Corpus nightly — robustness
+name: Corpus nightly — robustness and quality
 
 # The owner's main idea (2026-10-14): a large corpus, converted, measured,
 # fixed — pains first. Each night a tenth of tests/corpus/cloud/sample-v1.json
@@ -85,12 +85,25 @@ jobs:
           python3 -m http.server 8934 --directory dist >/dev/null 2>&1 &
           sleep 2
           node scripts/corpus-cloud/robust.mjs --docs corpus-cloud-docs \
-            --sample tests/corpus/cloud/sample-v1.json --out corpus-cloud-out --jobs 2
+            --sample tests/corpus/cloud/sample-v1.json --out corpus-cloud-out --jobs 2 --save
+      - name: Quality detectors — ours and an open engine on the same documents
+        # Reference-free detectors (scripts/quality/props.py), validated by
+        # hand on a blind sample before being trusted. pdf2docx is the open
+        # engine to compare with; signals are pointers to check, not verdicts.
+        if: always()
+        run: |
+          pip3 install pymupdf==1.26.5
+          python3 -m venv p2d && p2d/bin/pip install -q "pymupdf<1.25" pdf2docx
+          PDF2DOCX_PYTHON=p2d/bin/python python3 scripts/quality/other_engines.py corpus-cloud-docs corpus-cloud-out/files
+          python3 scripts/quality/props.py --batch corpus-cloud-docs corpus-cloud-out/files corpus-cloud-out/quality-pdfree.jsonl pdf2word
+          python3 scripts/quality/props.py --batch corpus-cloud-docs corpus-cloud-out/files corpus-cloud-out/quality-pdf2docx.jsonl pdf2docx
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
           name: corpus-results-${{ matrix.shard }}
-          path: corpus-cloud-out/results.jsonl
+          path: |
+            corpus-cloud-out/results.jsonl
+            corpus-cloud-out/quality-*.jsonl
 
   report:
     needs: run
@@ -105,6 +118,7 @@ jobs:
       - name: Cluster
         run: |
           python3 scripts/corpus-cloud/report.py results/*/results.jsonl > report.md
+          python3 scripts/quality/compare_engines.py results/*/quality-*.jsonl >> report.md || true
           cat report.md >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:

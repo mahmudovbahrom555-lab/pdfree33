@@ -209,23 +209,23 @@ def compare(pdf, dx):
     return findings
 
 
-def batch(docs_dir, files_dir, out_path):
-    """Every <doc>.pdf with a <doc>.pdf.pdf2word.docx next to it in files_dir:
-    one JSON line per document with its findings (empty list = clean)."""
+def batch(docs_dir, files_dir, out_path, engine='pdf2word'):
+    """Every <doc>.pdf with a <doc>.pdf.<engine>.docx in files_dir: one JSON
+    line per document with its findings (empty list = clean)."""
     import os
     with open(out_path, 'w') as out:
         for name in sorted(os.listdir(docs_dir)):
-            docx = os.path.join(files_dir, f'{name}.pdf2word.docx')
+            docx = os.path.join(files_dir, f'{name}.{engine}.docx')
             if not name.endswith('.pdf') or not os.path.exists(docx): continue
             try:
                 f = compare(pdf_props(os.path.join(docs_dir, name)), docx_props(docx))
             except Exception as e:
                 f = [{'signal': 'detector.error', 'severity': 'info', 'detail': str(e)[:120]}]
-            out.write(json.dumps({'doc': name, 'findings': f}, ensure_ascii=False) + '\n')
+            out.write(json.dumps({'doc': name, 'engine': engine, 'findings': f}, ensure_ascii=False) + '\n')
 
 
 if __name__ == '__main__' and sys.argv[1] == '--batch':
-    batch(sys.argv[2], sys.argv[3], sys.argv[4])
+    batch(*sys.argv[2:6])
 elif __name__ == '__main__':
     pdf = pdf_props(sys.argv[1])
     print(f"PDF: {pdf['pages']} pages, {len(pdf['spans'])} body spans, {len(pdf['tables'])} ruled tables")
