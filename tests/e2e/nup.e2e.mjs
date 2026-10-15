@@ -138,6 +138,10 @@ try {
     });
     await page.goto(BASE_URL + '/ru/', { waitUntil: 'load' });
     await page.click('.tools-grid a[data-tool="nup"]');
+    // the inline tool sets itself up on the next animation frame (showTool's
+    // rAF, which resets the file list) — a file added before that is wiped.
+    // A person can't pick a file that fast; a slow CI runner made this flaky.
+    await page.evaluate(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
     await page.setInputFiles('#fileInput', path.join(FIX, 'five-pages.pdf'));
     await page.waitForSelector('#nupPreview svg', { timeout: 30000 });
     await page.click('#mergeBtn');
