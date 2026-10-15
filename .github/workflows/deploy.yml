@@ -372,6 +372,12 @@ jobs:
         # tests/e2e/clean-scan-straighten.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:clean-scan-straighten
 
+      - name: E2E — PDF to Word keeps filled-in form values
+        # Typed answers live in widget annotations, never in pdf.js's text
+        # content — they were all missing (found by the nightly corpus
+        # detectors on a real form). See tests/e2e/pdf2word-forms.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:pdf2word-forms
+
       - name: E2E — PDF to JPG, CBZ comic-book archive
         # 001.jpg… in name-sort page order, a .cbz with the comic-book type.
         # See tests/e2e/pdf2jpg-cbz.e2e.mjs.

@@ -501,6 +501,31 @@ export function _rpBuildPageBlocks(page, median, repeatTextSet, repeatPatternSet
 // fontSize } in PDF user space, in reading order, each word carrying its
 // trailing space) or to null to leave the page as it is. The caller brings the
 // OCR engine — this core stays environment-agnostic.
+// Text items for a page's filled-in text / choice fields (see the call in
+// _p2wBuildPageData). A value is drawn from the top of its box down, one item
+// per line at a line pitch of 1.2 × its font size; the font size is the
+// field's own (its /DA), else what fits the box.
+const _ANNOT_HIDDEN = 2, _ANNOT_NOVIEW = 32;
+async function _formFieldItems(page) {
+  const out = [];
+  for (const a of await page.getAnnotations({ intent: 'display' })) {
+    if (a.subtype !== 'Widget' || !a.rect || (a.annotationFlags & (_ANNOT_HIDDEN | _ANNOT_NOVIEW))) continue;
+    if (a.fieldType !== 'Tx' && a.fieldType !== 'Ch') continue;
+    const raw = Array.isArray(a.fieldValue) ? a.fieldValue.join(', ') : a.fieldValue;
+    if (typeof raw !== 'string' || !raw.trim()) continue;
+    const [x0, y0, x1, y1] = [Math.min(a.rect[0], a.rect[2]), Math.min(a.rect[1], a.rect[3]), Math.max(a.rect[0], a.rect[2]), Math.max(a.rect[1], a.rect[3])];
+    const lines = raw.replace(_XML_ILLEGAL_CONTROL_RE, '').split(/\r\n|\r|\n/).filter(l => l.trim());
+    const da = a.defaultAppearanceData?.fontSize;
+    const fontSize = da > 0 ? da : Math.max(6, Math.min(12, ((y1 - y0) / Math.max(1, lines.length)) * 0.7));
+    lines.forEach((line, i) => out.push({
+      str: toUnifiedIdeographs(line), x: x0 + 2, y: y1 - fontSize * (1 + 1.2 * i),
+      width: Math.min(x1 - x0 - 4, line.length * fontSize * 0.5), fontSize,
+      rotated: false, bold: false, italic: false, fontFamily: undefined,
+    }));
+  }
+  return out;
+}
+
 export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCancelled = () => false, ocrPage = null } = {}) {
   const YTOL = 6;   // px — items within 6px on Y → same line (was 4; increased to group
                    //  characters with slight baseline variation, e.g. Cyrillic in some PDFs)
@@ -624,6 +649,14 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
           fontFamily: _pptxSafeFontFace(_rawFontName(item.fontName), fam),
         };
       });
+
+    // Filled-in form fields. Their values live in widget annotations, which
+    // getTextContent() never returns — a filled form came out with every
+    // answer missing (a Dutch application form: 3.7k of its 6.4k characters,
+    // found by the nightly corpus detectors, 2026-10-15). Text and choice
+    // fields' values join the page's text at their own place, one item per
+    // line of a multi-line value; hidden or empty fields add nothing.
+    allMapped.push(...(await _formFieldItems(page).catch(() => [])).map((it, i) => ({ seq: allMapped.length + i, ...it })));
 
     // A page with no text layer (a scan), or a broken one: its words from the
     // caller's OCR, if any. A broken layer whose page OCR can't read (language
