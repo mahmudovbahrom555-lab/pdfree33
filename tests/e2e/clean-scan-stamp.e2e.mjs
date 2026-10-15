@@ -85,6 +85,17 @@ try {
     });
   }
 
+  // A real document: a 1949 certificate on yellowed paper with a faint
+  // violet round stamp and violet signatures (public domain, Wikimedia
+  // Commons: "Справка о съёмке боксёрского матча Градополов -Никитин.jpg").
+  // Judged against white, its paper counted as colour and stayed yellow.
+  await test('a real 1949 certificate: yellowed paper turns white, the violet stamp and signatures stay', async () => {
+    const r = await clean('spravka-1949.pdf');
+    if (r.err) throw new Error(r.err);
+    if (r.white < 0.85) throw new Error(`paper not whitened: ${JSON.stringify(r)}`);
+    if (r.colored < 0.003) throw new Error(`stamp / signatures lost: ${JSON.stringify(r)}`);
+  });
+
   await test('option off: grey only, as before', async () => {
     const r = await clean('stamp.pdf', false);
     if (r.err) throw new Error(r.err);

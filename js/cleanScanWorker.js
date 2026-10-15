@@ -97,23 +97,58 @@ function _enhancePipeline(gray, strength) {
 // "Keep coloured stamps and signatures" — a user's own words: "leave the
 // blue round stamp, whiten everything else" (2026-10-15). Both modes work in
 // grey, so a stamp came out grey (Enhance) or broken into black specks
-// (Clean). Pixels of saturated, not pale colour — stamp ink, a ballpoint
-// signature — are put back in their original colour on the cleaned page,
-// whatever the colour (blue, red, green, violet). Tinted paper (yellowish,
-// pinkish: under ~45 levels between channels) stays below the limit and is
-// whitened like the rest. A brightness cap was dropped: a faded stamp
-// (235,140,140) is bright but clearly coloured, and it was lost.
-const _INK_CHROMA = 60;
+// (Clean). Colour is judged against the page's OWN paper, not against
+// white: each pixel is divided by the paper colour around it (estimated per
+// block of a 32-block grid, blown back up smoothly), which leaves black or
+// grey ink neutral and paper ≈ 1. Ink whose
+// channels then differ by more than _INK_SPREAD is coloured ink — a stamp,
+// a signature, of any colour, faded or not — and goes back in that colour,
+// on white. Judged against white first, a 1949 certificate's yellowed
+// paper (226,200,141) counted as "coloured" and the whole page stayed
+// yellow; a faded pink stamp, judged by a brightness cap, was lost.
+const _INK_SPREAD = 0.16, _INK_MIN_DARK = 0.93, _PAPER_BLOCKS = 32;
 function _restoreColorInk(srcCanvas, grayCanvas) {
   const w = srcCanvas.width, h = srcCanvas.height;
   const src = srcCanvas.getContext('2d').getImageData(0, 0, w, h).data;
+  // paper colour per block: the brightest fifth of its pixels, averaged —
+  // a plain average took in the stamp itself and the stamp then matched its
+  // own "paper" (a 1949 certificate's violet stamp vanished)
+  const cols = Math.max(1, Math.round(w / Math.max(w, h) * _PAPER_BLOCKS));
+  const rows = Math.max(1, Math.round(h / Math.max(w, h) * _PAPER_BLOCKS));
+  const small = new OffscreenCanvas(cols, rows);
+  const sctx = small.getContext('2d');
+  const sImg = sctx.createImageData(cols, rows);
+  for (let by = 0; by < rows; by++) {
+    for (let bx = 0; bx < cols; bx++) {
+      const x0 = Math.floor(bx * w / cols), x1 = Math.floor((bx + 1) * w / cols);
+      const y0 = Math.floor(by * h / rows), y1 = Math.floor((by + 1) * h / rows);
+      const lum = [];
+      for (let y = y0; y < y1; y += 2) for (let x = x0; x < x1; x += 2) {
+        const i = (y * w + x) * 4;
+        lum.push([src[i] + src[i + 1] + src[i + 2], i]);
+      }
+      lum.sort((p, q) => q[0] - p[0]);
+      const top = lum.slice(0, Math.max(1, Math.ceil(lum.length / 5)));
+      const o = (by * cols + bx) * 4;
+      for (let c = 0; c < 3; c++) sImg.data[o + c] = top.reduce((sum, [, i]) => sum + src[i + c], 0) / top.length;
+      sImg.data[o + 3] = 255;
+    }
+  }
+  sctx.putImageData(sImg, 0, 0);
+  const paperCanvas = new OffscreenCanvas(w, h);
+  const pctx = paperCanvas.getContext('2d');
+  pctx.imageSmoothingEnabled = true;
+  pctx.drawImage(small, 0, 0, w, h);
+  const paper = pctx.getImageData(0, 0, w, h).data;
   const gctx = grayCanvas.getContext('2d');
   const out = gctx.getImageData(0, 0, w, h);
   const d = out.data;
   for (let i = 0; i < d.length; i += 4) {
-    const r = src[i], g = src[i + 1], b = src[i + 2];
-    const hi = Math.max(r, g, b);
-    if (hi - Math.min(r, g, b) > _INK_CHROMA) { d[i] = r; d[i + 1] = g; d[i + 2] = b; }
+    const r = src[i] / Math.max(paper[i], 1), g = src[i + 1] / Math.max(paper[i + 1], 1), b = src[i + 2] / Math.max(paper[i + 2], 1);
+    const hi = Math.max(r, g, b), lo = Math.min(r, g, b);
+    if (hi - lo > _INK_SPREAD && lo < _INK_MIN_DARK) {
+      d[i] = Math.min(255, r * 255); d[i + 1] = Math.min(255, g * 255); d[i + 2] = Math.min(255, b * 255);
+    }
   }
   gctx.putImageData(out, 0, 0);
 }
