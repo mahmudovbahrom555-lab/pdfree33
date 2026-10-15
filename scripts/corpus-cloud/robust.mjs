@@ -72,7 +72,8 @@ async function drive(page, tool, file, isCrashed, saveAs) {
     window.__armed = false; window.__blob = null; window.__err = null;
     const orig = URL.createObjectURL.bind(URL);
     URL.createObjectURL = b => {
-      if (window.__armed && !window.__blob && b instanceof Blob && b.size > 0) window.__blob = b;
+      // not a script: the OCR engine starts its worker from a blob URL too
+      if (window.__armed && !window.__blob && b instanceof Blob && b.size > 0 && !/javascript/.test(b.type)) window.__blob = b;
       return orig(b);
     };
     document.addEventListener('pdfree:error', e => { window.__err = e.detail; });
