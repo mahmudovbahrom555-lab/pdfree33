@@ -73,7 +73,7 @@ global.document = {
 global.window    = globalThis;
 global.Worker    = class { postMessage() {} terminate() {} addEventListener() {} };
 
-const { detectTableGrids, lineInGrid } = await import('../js/pdf2wordBorders.js');
+const { detectTableGrids, lineInGrid, gridHoldsTable } = await import('../js/pdf2wordBorders.js');
 const { _assignLineToGridCols, _activeDividersForY, _groupGridCellsWithSpans, _p2wImageCrops } = await import('../js/processor.js');
 
 let passed = 0, failed = 0;
@@ -401,6 +401,24 @@ await test('a line inside the grid is the grid\'s', async () => {
 });
 await test('a line in the grid\'s x-range but above it is not the grid\'s', async () => {
   expect(lineInGrid({ y: 760, items: [glyph(60, 760)] }, infobox)).toBe(false);
+});
+
+// ── gridHoldsTable: a ruled box is a table only with text in 2+ cells ─────
+// Cloud corpus (2026-10-15): a text box became a 14×1 table, a page border
+// put a whole Persian newsletter in one, slide decorations empty 3×4 tables.
+const box = { x: 40, y: 100, w: 400, h: 200, colCount: 2, rowCount: 2, colXs: [40, 240, 440], rowYs: [300, 200, 100] };
+const word = (x, y, str = 'text') => ({ x, y, width: 20, str });
+await test('a one-column frame around prose is not a table', () => {
+  const frame = { ...box, colCount: 1, colXs: [40, 440] };
+  expect(gridHoldsTable(frame, [{ y: 280, items: [word(50, 280)] }, { y: 120, items: [word(50, 120)] }])).toBe(false);
+});
+await test('a box with text in one cell only, or none, is not a table', () => {
+  expect(gridHoldsTable(box, [{ y: 280, items: [word(50, 280), word(80, 280)] }, { y: 260, items: [word(50, 260)] }])).toBe(false);
+  expect(gridHoldsTable(box, [])).toBe(false);
+});
+await test('text in two cells — a filled header row of an empty form — is a table', () => {
+  expect(gridHoldsTable(box, [{ y: 280, items: [word(50, 280, 'Name'), word(250, 280, 'Date')] }])).toBe(true);
+  expect(gridHoldsTable(box, [{ y: 280, items: [word(50, 280)] }, { y: 120, items: [word(50, 120)] }])).toBe(true);
 });
 
 // ── _p2wImageCrops: raster images become pictures by their own box ───────

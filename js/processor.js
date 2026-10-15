@@ -34,7 +34,7 @@ import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { _p2wBuildPageData } from './pdf2readCore.js';
 import { createOcrLayer } from './pdf2wordOcr.js';
-import { detectTableGrids, lineInGrid, gridRowsOfLines } from './pdf2wordBorders.js';
+import { detectTableGrids, lineInGrid, gridRowsOfLines, gridHoldsTable } from './pdf2wordBorders.js';
 import { cjkJoin } from './cjkText.js';
 import { recognizeFormula } from './formulaOcr.js';
 import { docxToPdf, walkDomToPdfContent, pdfContentToBlob } from './docxToPdfCore.js';
@@ -3542,7 +3542,7 @@ function _p2pBuildRegionShapes(lines, borderGrids, xBounds, median, repeatTextSe
       const ln = lines[li];
       if (lineInGrid(ln, grid)) gridLines.push({ li, ln });
     }
-    if (!gridLines.length) continue;
+    if (!gridHoldsTable(grid, gridLines.map(g => g.ln))) continue;
     gridLines.sort((a, b) => b.ln.y - a.ln.y); // top first
 
     const rows = gridLines.map(({ ln }, idx) => {
@@ -4867,7 +4867,8 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
       const textYRanges = tables.map(t => ({
         minY: lines[t.endIdx].y, maxY: lines[t.startIdx].y,
       }));
-      for (const grid of borderGrids) {
+      // a box around prose, or around one cell's text, stays paragraphs
+      for (const grid of borderGrids.filter(g => gridHoldsTable(g, lines.filter(ln => lineInGrid(ln, g))))) {
         const covered = textYRanges.some(r =>
           (grid.y + grid.h) >= r.minY - 20 && grid.y <= r.maxY + 20
         );

@@ -34,7 +34,7 @@
 
 import { detectTables, looksLikeProseNotData, looksLikeEnumeratedList } from './pdf2wordTables.js';
 import { detectColumnRegions, pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
-import { detectTableGrids, lineInGrid, gridRowsOfLines } from './pdf2wordBorders.js';
+import { detectTableGrids, lineInGrid, gridRowsOfLines, gridHoldsTable } from './pdf2wordBorders.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken, joinSpacedItems } from './textLayoutUtils.js';
 
@@ -275,7 +275,7 @@ function _rpBuildRegionBlocks(lines, borderGrids, xBounds, median, repeatTextSet
       const ln = lines[li];
       if (lineInGrid(ln, grid)) gridLines.push({ li, ln });
     }
-    if (!gridLines.length) continue;
+    if (!gridHoldsTable(grid, gridLines.map(g => g.ln))) continue;
     gridLines.sort((a, b) => b.ln.y - a.ln.y);
 
     // one row per ruled row, not per text line — gridRowsOfLines (PDF→Word's own fix)

@@ -89,6 +89,30 @@ export function lineInGrid(ln, grid) {
   return inside.length * 2 >= ln.items.length;
 }
 
+// Whether a ruled grid is a table at all, judged by the text in it. A frame
+// around prose — one column, a line per row — or a decorative box with text in
+// at most one of its cells is a box, not a table: a Croatian leaflet's text
+// box came out as a 14×1 table, a Persian newsletter's page border put the
+// whole page in one, slide decorations became empty 3×4 tables (cloud corpus,
+// 2026-10-15). An empty ruled form still has its header row filled.
+// lines: the grid's own text lines (lineInGrid).
+export function gridHoldsTable(grid, lines) {
+  if (grid.colCount < 2) return false;
+  const { colXs, rowYs } = grid;
+  const filled = new Set();
+  for (const it of lines.flatMap(ln => ln.items)) {
+    if (!it.str.trim()) continue;
+    const cx = it.x + (it.width || 0) / 2;
+    if (cx < grid.x - _GRID_SLACK || cx > grid.x + grid.w + _GRID_SLACK ||
+        it.y < grid.y - _GRID_SLACK || it.y > grid.y + grid.h + _GRID_SLACK) continue;
+    const col = colXs.findIndex((x, c) => c < colXs.length - 1 && cx < colXs[c + 1]);
+    const row = rowYs.findIndex((y, r) => r < rowYs.length - 1 && it.y >= rowYs[r + 1]);
+    filled.add(`${row}:${col}`);
+    if (filled.size > 1) return true;
+  }
+  return false;
+}
+
 // The grid's text lines grouped into its real rows: the lines between two
 // ruled row lines are one table row. One table row per TEXT line split every
 // cell that wraps — "Объём / хранения / данных" became three rows, a 5-row
