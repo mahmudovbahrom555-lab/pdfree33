@@ -106,7 +106,7 @@ function _enhancePipeline(gray, strength) {
 // on white. Judged against white first, a 1949 certificate's yellowed
 // paper (226,200,141) counted as "coloured" and the whole page stayed
 // yellow; a faded pink stamp, judged by a brightness cap, was lost.
-const _INK_SPREAD = 0.16, _INK_MIN_DARK = 0.93, _PAPER_BLOCKS = 32;
+const _INK_SPREAD = 0.16, _INK_MIN_DARK = 0.93, _PAPER_BLOCKS = 32, _INK_SPREAD_WEAK = 0.07, _INK_SAME_HUE = 0.9;
 function _restoreColorInk(srcCanvas, grayCanvas) {
   const w = srcCanvas.width, h = srcCanvas.height;
   const src = srcCanvas.getContext('2d').getImageData(0, 0, w, h).data;
@@ -143,12 +143,51 @@ function _restoreColorInk(srcCanvas, grayCanvas) {
   const gctx = grayCanvas.getContext('2d');
   const out = gctx.getImageData(0, 0, w, h);
   const d = out.data;
-  for (let i = 0; i < d.length; i += 4) {
+  const n = w * h;
+  const ratio = new Float32Array(n * 3);
+  const strong = new Uint8Array(n);
+  for (let p = 0, i = 0; p < n; p++, i += 4) {
     const r = src[i] / Math.max(paper[i], 1), g = src[i + 1] / Math.max(paper[i + 1], 1), b = src[i + 2] / Math.max(paper[i + 2], 1);
+    ratio[p * 3] = r; ratio[p * 3 + 1] = g; ratio[p * 3 + 2] = b;
     const hi = Math.max(r, g, b), lo = Math.min(r, g, b);
-    if (hi - lo > _INK_SPREAD && lo < _INK_MIN_DARK) {
-      d[i] = Math.min(255, r * 255); d[i + 1] = Math.min(255, g * 255); d[i + 2] = Math.min(255, b * 255);
+    if (hi - lo > _INK_SPREAD && lo < _INK_MIN_DARK) strong[p] = 1;
+  }
+  // Faint ink (hysteresis): a faded stamp is strong only in places — its
+  // ring half gone on a 1949 certificate. A weaker pixel (spread >
+  // _INK_SPREAD_WEAK) counts too when strong ink of the SAME hue lies within
+  // a few cells around it: the direction of (1−r, 1−g, 1−b), i.e. which
+  // channels the ink takes away, averaged per cell of the strong pixels.
+  const cell = Math.max(8, Math.round(Math.max(w, h) / 80));
+  const cw = Math.ceil(w / cell), ch = Math.ceil(h / cell);
+  const dir = new Float32Array(cw * ch * 3), cnt = new Uint32Array(cw * ch);
+  for (let p = 0; p < n; p++) {
+    if (!strong[p]) continue;
+    const c = Math.floor((p / w | 0) / cell) * cw + Math.floor((p % w) / cell);
+    dir[c * 3] += 1 - ratio[p * 3]; dir[c * 3 + 1] += 1 - ratio[p * 3 + 1]; dir[c * 3 + 2] += 1 - ratio[p * 3 + 2];
+    cnt[c]++;
+  }
+  const nearHue = (p, r, g, b) => {
+    const cy = Math.floor((p / w | 0) / cell), cx = Math.floor((p % w) / cell);
+    const vx = 1 - r, vy = 1 - g, vz = 1 - b, vl = Math.hypot(vx, vy, vz);
+    if (vl < 1e-3) return false;
+    for (let y = Math.max(0, cy - 2); y <= Math.min(ch - 1, cy + 2); y++) {
+      for (let x = Math.max(0, cx - 2); x <= Math.min(cw - 1, cx + 2); x++) {
+        const c = y * cw + x;
+        if (!cnt[c]) continue;
+        const ax = dir[c * 3], ay = dir[c * 3 + 1], az = dir[c * 3 + 2], al = Math.hypot(ax, ay, az);
+        if ((ax * vx + ay * vy + az * vz) / (al * vl) > _INK_SAME_HUE) return true;
+      }
     }
+    return false;
+  };
+  for (let p = 0, i = 0; p < n; p++, i += 4) {
+    const r = ratio[p * 3], g = ratio[p * 3 + 1], b = ratio[p * 3 + 2];
+    let keep = strong[p] === 1;
+    if (!keep) {
+      const hi = Math.max(r, g, b), lo = Math.min(r, g, b);
+      keep = hi - lo > _INK_SPREAD_WEAK && lo < 1 && nearHue(p, r, g, b);
+    }
+    if (keep) { d[i] = Math.min(255, r * 255); d[i + 1] = Math.min(255, g * 255); d[i + 2] = Math.min(255, b * 255); }
   }
   gctx.putImageData(out, 0, 0);
 }
