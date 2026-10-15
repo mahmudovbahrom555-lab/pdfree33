@@ -4116,7 +4116,7 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'image' } = {}) {
   setProgress(100, t('prog_done'));
 
   document.dispatchEvent(new CustomEvent('pdfree:success', {
-    detail: { tool: 'pdf2ppt', blob, desc, filename }
+    detail: { tool: 'pdf2ppt', blob, desc, filename, mode }
   }));
 }
 

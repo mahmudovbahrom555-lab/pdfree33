@@ -349,9 +349,10 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
   // same convention as pageCounts/confidence/atlasEri above) — lets a partial
   // render failure (some pages exported, some didn't) show up distinctly from
   // a real full success in Analytics Engine instead of both looking identical.
-  // mode is only ever set by pdf2word ('text'/'image') — measures whether the
-  // Text/Image mode-label relabel (js/pdf2wordUI.js) actually shifted usage
-  // toward Image mode, since that toggle previously had no analytics at all.
+  // mode is set by pdf2word and pdf2ppt ('text'/'image') — for pdf2word it
+  // measures whether the Text/Image relabel (js/pdf2wordUI.js) shifted usage;
+  // for pdf2ppt, how many use "Editable text" (a Chinese user's report on it,
+  // 2026-10-15, couldn't be told apart from Image mode).
   trackToolSuccess(tool, { outputSize: blob.size, requestedCount, successCount, mode });
 
   const card = id('successCard');

@@ -120,7 +120,7 @@ export function trackToolSuccess(tool, { inputSize = 0, outputSize = 0, requeste
     props.requested_count = requestedCount;
     props.success_count   = successCount;
   }
-  // Only set by pdf2word today ('text'/'image') — absent for every other
+  // Only set by pdf2word and pdf2ppt ('text'/'image') — absent for every other
   // tool, same shape-stability convention as requested_count/success_count.
   if (mode !== undefined) {
     props.mode = mode;
