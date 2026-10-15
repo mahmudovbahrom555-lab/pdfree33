@@ -36,7 +36,7 @@ import { detectTables, looksLikeProseNotData, looksLikeEnumeratedList } from './
 import { detectColumnRegions, pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
 import { detectTableGrids, lineInGrid, gridRowsOfLines } from './pdf2wordBorders.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken } from './textLayoutUtils.js';
+         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken, joinSpacedItems } from './textLayoutUtils.js';
 
 // XML 1.0's Char production disallows most C0 control characters (only
 // tab/LF/CR are valid: #x9 | #xA | #xD | [#x20-...]) — pdf.js text
@@ -175,9 +175,10 @@ export function _assignLineToGridCols(items, colXs) {
     for (let c = colCount - 1; c >= 0; c--) {
       if (item.x >= colXs[c] - GRID_SLACK) { col = c; break; }
     }
-    cells[col].push(item.str);
+    cells[col].push(item);
   }
-  return cells.map(parts => parts.join(' '));
+  // touching pieces of one word ("A" "c" "t" "i" "v" "i" "da" "d") stay one word
+  return cells.map(joinSpacedItems);
 }
 
 export function _assignLineToGridColsFonts(items, colXs) {

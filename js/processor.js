@@ -28,7 +28,7 @@ import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PR
          detectColumnGutter, reconcileColumnSplit, ereaderSampleIndices } from './ereaderCrop.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, toArabicBaseLetters, toUnifiedIdeographs, joinTouchingItems, _splitCrossColumnLines, _isCjk,
-         lineRuns,
+         lineRuns, joinSpacedItems,
          lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
          lineEndsParagraph, continuesWrappedHeading } from './textLayoutUtils.js';
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
@@ -5367,11 +5367,13 @@ export function _assignLineToGridCols(items, colXs) {
     for (let c = colCount - 1; c >= 0; c--) {
       if (item.x >= colXs[c] - GRID_SLACK) { col = c; break; }
     }
-    cells[col].push(item.str);
+    cells[col].push(item);
   }
-  // one space between a cell's pieces, none around them: a space item and an
-  // item's own trailing space left "18.50  " in every bordered cell in Word
-  return cells.map(parts => parts.map(t => t.trim()).filter(Boolean).join(' '));
+  // A space only where the pieces stand apart — pdf.js gave a Spanish tender's
+  // header cell as touching pieces, "A c t i v i da d" in Word (corpus 3147696)
+  // — and one space at most, none around them: a space item and an item's own
+  // trailing space left "18.50  " in every bordered cell in Word.
+  return cells.map(parts => joinSpacedItems(parts).replace(/ {2,}/g, ' ').trim());
 }
 
 // Sibling of _assignLineToGridCols() above — identical column-bucketing (same

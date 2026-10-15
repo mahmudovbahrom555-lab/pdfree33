@@ -378,6 +378,16 @@ await test('text starting just past a divider snapped RIGHT of its true position
   expect(cells[1]).toBe('Parkent tuman ixtisoslashtirilgan');
 });
 
+await test('touching pieces of one word stay one word, a real gap stays a space', () => {
+  // Real Spanish tender (corpus 3147696): pdf.js gave the header cell as
+  // touching pieces; joined with spaces it read "A c t i v i da d".
+  const piece = (x, width, str) => ({ x, width, str, fontSize: 9.96 });
+  const items = [piece(167.9, 6.04, 'A'), piece(173.9, 4.16, 'c'), piece(178.22, 3.46, 't'), piece(181.58, 2.45, 'i'),
+    piece(183.98, 4.71, 'v'), piece(188.78, 2.45, 'i'), piece(191.18, 10.32, 'da'), piece(201.53, 5.35, 'd'),
+    piece(210, 10, 'de'), piece(222.5, 20, 'obra')];
+  expect(_assignLineToGridCols(items, [160, 300])[0]).toBe('Actividad de obra');
+});
+
 // ── lineInGrid: a line belongs to a grid in its y-range AND x-range ─────
 // Arabic Wikipedia print (2026-10-09): an infobox grid down the left half of
 // page 1 took the article text beside it, matched by y alone, as table rows.

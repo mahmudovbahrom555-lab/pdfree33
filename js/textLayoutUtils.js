@@ -258,6 +258,20 @@ export function reorderVisualRtlLine(items) {
 // either side already has one (reorderVisualRtlLine adds them on visual text).
 const _CUT_SLACK = 2; // pt — a rule drawn against a cell's text still separates
 const _right = item => item.x + (item.width || 0);
+
+// Items of one line, in reading order, as text: a space only where the gap
+// between two of them is over 0.2 em and neither side already has one.
+export function joinSpacedItems(items) {
+  let str = items[0]?.str ?? '';
+  for (let k = 1; k < items.length; k++) {
+    const a = items[k - 1], b = items[k];
+    const gap = Math.max(b.x - _right(a), a.x - _right(b));
+    const em = Math.max(a.fontSize || 0, b.fontSize || 0) || 10;
+    str += (gap > 0.2 * em && !a.str.endsWith(' ') && !b.str.startsWith(' ') ? ' ' : '') + b.str;
+  }
+  return str;
+}
+
 export function lineRuns(items, cuts = []) {
   const segments = [];
   let segRight = -Infinity;
@@ -270,13 +284,7 @@ export function lineRuns(items, cuts = []) {
   }
   return segments.map(seg => {
     if (seg.some(item => _RTL_CHAR_RE.test(item.str))) reorderVisualRtlLine(seg);
-    let str = seg[0].str;
-    for (let k = 1; k < seg.length; k++) {
-      const a = seg[k - 1], b = seg[k];
-      const gap = Math.max(b.x - _right(a), a.x - _right(b));
-      const em = Math.max(a.fontSize || 0, b.fontSize || 0) || 10;
-      str += (gap > 0.2 * em && !a.str.endsWith(' ') && !b.str.startsWith(' ') ? ' ' : '') + b.str;
-    }
+    const str = joinSpacedItems(seg);
     const x = Math.min(...seg.map(item => item.x));
     return {
       ...seg[0], str, x, width: Math.max(...seg.map(_right)) - x,
