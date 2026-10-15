@@ -98,10 +98,12 @@ function _enhancePipeline(gray, strength) {
 // blue round stamp, whiten everything else" (2026-10-15). Both modes work in
 // grey, so a stamp came out grey (Enhance) or broken into black specks
 // (Clean). Pixels of saturated, not pale colour — stamp ink, a ballpoint
-// signature — are put back in their original colour on the cleaned page.
-// Tinted paper (yellowish, ~45 levels apart, near white) stays below both
-// limits and is whitened like the rest.
-const _INK_CHROMA = 60, _INK_MAX_BRIGHT = 230;
+// signature — are put back in their original colour on the cleaned page,
+// whatever the colour (blue, red, green, violet). Tinted paper (yellowish,
+// pinkish: under ~45 levels between channels) stays below the limit and is
+// whitened like the rest. A brightness cap was dropped: a faded stamp
+// (235,140,140) is bright but clearly coloured, and it was lost.
+const _INK_CHROMA = 60;
 function _restoreColorInk(srcCanvas, grayCanvas) {
   const w = srcCanvas.width, h = srcCanvas.height;
   const src = srcCanvas.getContext('2d').getImageData(0, 0, w, h).data;
@@ -111,7 +113,7 @@ function _restoreColorInk(srcCanvas, grayCanvas) {
   for (let i = 0; i < d.length; i += 4) {
     const r = src[i], g = src[i + 1], b = src[i + 2];
     const hi = Math.max(r, g, b);
-    if (hi - Math.min(r, g, b) > _INK_CHROMA && hi < _INK_MAX_BRIGHT) { d[i] = r; d[i + 1] = g; d[i + 2] = b; }
+    if (hi - Math.min(r, g, b) > _INK_CHROMA) { d[i] = r; d[i + 1] = g; d[i + 2] = b; }
   }
   gctx.putImageData(out, 0, 0);
 }

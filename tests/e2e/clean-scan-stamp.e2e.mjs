@@ -5,7 +5,8 @@
 //  "leave the blue round stamp, whiten everything else" + "The ImageBitmap
 //  could not be allocated").
 //
-//  stamp.pdf: grey scanned paper, dark text, a blue round stamp. With the
+//  stamp.pdf: grey scanned paper, dark text, a blue round stamp; stamp-red,
+//  stamp-faded: the same in red and in faded pink. With the
 //  option on (default) the output keeps blue pixels and a white background;
 //  off, the page is grey only (as before). a0.pdf: an A0 page — 32 MP at the
 //  default scale — must come out, rendered at ≤ 12 MP.
@@ -52,9 +53,10 @@ async function clean(file, keepColor = true) {
     const ctx = c.getContext('2d', { willReadFrequently: true });
     await p.render({ canvasContext: ctx, viewport: vp }).promise;
     const d = ctx.getImageData(0, 0, c.width, c.height).data;
-    let blue = 0, white = 0;
+    let blue = 0, white = 0, colored = 0;
     for (let i = 0; i < d.length; i += 4) {
       if (d[i + 2] - d[i] > 60) blue++;
+      if (Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]) > 50) colored++;
       if (d[i] > 235 && d[i + 1] > 235 && d[i + 2] > 235) white++;
     }
     const ops = await p.getOperatorList();
@@ -62,7 +64,7 @@ async function clean(file, keepColor = true) {
     for (let k = 0; k < ops.fnArray.length; k++) if (ops.fnArray[k] === window.pdfjsLib.OPS.paintImageXObject) img = ops.argsArray[k][0];
     const obj = img ? await new Promise(r => p.objs.get(img, r)) : null;
     const n = d.length / 4;
-    return { blue: blue / n, white: white / n, px: obj ? obj.width * obj.height : null };
+    return { blue: blue / n, white: white / n, colored: colored / n, px: obj ? obj.width * obj.height : null };
   });
 }
 
@@ -74,6 +76,15 @@ try {
     if (r.blue < 0.003) throw new Error(`stamp lost: ${JSON.stringify(r)}`);
     if (r.white < 0.8) throw new Error(`background not whitened: ${JSON.stringify(r)}`);
   });
+  // any colour, faded too (a red stamp fades to pink — first version lost it)
+  for (const f of ['stamp-red.pdf', 'stamp-faded.pdf']) {
+    await test(`${f}: the stamp keeps its colour`, async () => {
+      const r = await clean(f);
+      if (r.err) throw new Error(r.err);
+      if (r.colored < 0.003) throw new Error(`stamp lost: ${JSON.stringify(r)}`);
+    });
+  }
+
   await test('option off: grey only, as before', async () => {
     const r = await clean('stamp.pdf', false);
     if (r.err) throw new Error(r.err);
