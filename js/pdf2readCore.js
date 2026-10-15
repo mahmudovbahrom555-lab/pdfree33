@@ -34,7 +34,7 @@
 
 import { detectTables, looksLikeProseNotData, looksLikeEnumeratedList } from './pdf2wordTables.js';
 import { detectColumnRegions, pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
-import { detectTableGrids, lineInGrid } from './pdf2wordBorders.js';
+import { detectTableGrids, lineInGrid, gridRowsOfLines } from './pdf2wordBorders.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken } from './textLayoutUtils.js';
 
@@ -277,10 +277,13 @@ function _rpBuildRegionBlocks(lines, borderGrids, xBounds, median, repeatTextSet
     if (!gridLines.length) continue;
     gridLines.sort((a, b) => b.ln.y - a.ln.y);
 
-    const rows = gridLines.map(({ ln }, idx) => {
-      const rawCells      = _assignLineToGridCols(ln.items, grid.colXs);
-      const rawFonts      = _assignLineToGridColsFonts(ln.items, grid.colXs);
-      const activeDivider = _activeDividersForY(grid, ln.y);
+    // one row per ruled row, not per text line — gridRowsOfLines (PDF→Word's own fix)
+    const rows = gridRowsOfLines(gridLines.map(g => g.ln), grid).map((band, idx) => {
+      const perLine  = band.map(ln => _assignLineToGridCols(ln.items, grid.colXs));
+      const rawCells = perLine[0].map((_, c) => perLine.map(cells => cells[c]).filter(t => t && t.trim()).join(' '));
+      const rawFonts = band.map(ln => _assignLineToGridColsFonts(ln.items, grid.colXs))
+        .reduce((acc, f) => acc.map((v, c) => v ?? f[c]));
+      const activeDivider = _activeDividersForY(grid, band[0].y);
       const cellGroups    = _groupGridCellsWithSpans(rawCells, activeDivider);
       const fontGroups    = _groupGridCellsWithSpans(rawFonts, activeDivider, (a, b) => a ?? b, undefined);
       return cellGroups.map(({ text, span }, ci) => ({ text, span, bold: idx === 0, fontFace: fontGroups[ci]?.text }));
