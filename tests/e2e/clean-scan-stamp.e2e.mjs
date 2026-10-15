@@ -92,8 +92,10 @@ try {
   await test('a real 1949 certificate: yellowed paper turns white, the violet stamp and signatures stay', async () => {
     const r = await clean('spravka-1949.pdf');
     if (r.err) throw new Error(r.err);
-    if (r.white < 0.85) throw new Error(`paper not whitened: ${JSON.stringify(r)}`);
-    if (r.colored < 0.003) throw new Error(`stamp / signatures lost: ${JSON.stringify(r)}`);
+    // 0.84 white with the whole faded stamp kept (it covers ~4 % of the
+    // page); the regression this guards against left 0.37
+    if (r.white < 0.78) throw new Error(`paper not whitened: ${JSON.stringify(r)}`);
+    if (r.colored < 0.02) throw new Error(`stamp / signatures lost: ${JSON.stringify(r)}`);
   });
 
   await test('option off: grey only, as before', async () => {
