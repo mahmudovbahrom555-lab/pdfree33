@@ -34,7 +34,7 @@ import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { _p2wBuildPageData } from './pdf2readCore.js';
 import { createOcrLayer } from './pdf2wordOcr.js';
-import { detectTableGrids, lineInGrid } from './pdf2wordBorders.js';
+import { detectTableGrids, lineInGrid, gridRowsOfLines } from './pdf2wordBorders.js';
 import { cjkJoin } from './cjkText.js';
 import { recognizeFormula } from './formulaOcr.js';
 import { docxToPdf, walkDomToPdfContent, pdfContentToBlob } from './docxToPdfCore.js';
@@ -5071,26 +5071,31 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
         // _activeDividersForY) are merged into a real docx columnSpan
         // instead of silently becoming an empty neighboring cell.
         const rtlGrid = hdrLines.filter(ln => ln.rtl).length * 2 > hdrLines.length;
-        const gridRows = hdrLines.map((ln, idx) => {
-          const rawCells      = _assignLineToGridCols(ln.rtl ? cellRuns(ln, grid.colXs) : joinTouchingItems(ln.items, grid.colXs), grid.colXs);
-          const activeDivider = _activeDividersForY(grid, ln.y);
+        // One table row per ruled row, its text lines stacked inside each
+        // cell (gridRowsOfLines) — not one row per text line.
+        const bands = gridRowsOfLines(hdrLines, grid);
+        const gridRows = bands.map((band, idx) => {
+          const perLine = band.map(ln =>
+            _assignLineToGridCols(ln.rtl ? cellRuns(ln, grid.colXs) : joinTouchingItems(ln.items, grid.colXs), grid.colXs));
+          const rawCells = perLine[0].map((_, c) => perLine.map(cells => cells[c]).filter(t => t && t.trim()).join('\n'));
+          const activeDivider = _activeDividersForY(grid, band[0].y);
           const cellGroups    = _groupGridCellsWithSpans(rawCells, activeDivider);
           return new TableRow({
             children: (rtlGrid ? [...cellGroups].reverse() : cellGroups).map(({ text, span }) =>
               new TableCell({
                 ...(span > 1 ? { columnSpan: span } : {}),
-                children: [new Paragraph({
-                  ..._rtlPara(text),
-                  children: [new TextRun({ text, bold: idx === 0, ..._rtlRun(text) })],
+                children: text.split('\n').map(part => new Paragraph({
+                  ..._rtlPara(part),
+                  children: [new TextRun({ text: part, bold: idx === 0, ..._rtlRun(part) })],
                   spacing: { after: 0 },
-                })],
+                })),
               })
             ),
           });
         });
 
         // Empty body rows
-        const emptyCount = Math.max(0, grid.rowCount - hdrLines.length);
+        const emptyCount = Math.max(0, grid.rowCount - bands.length);
         for (let r = 0; r < emptyCount; r++) {
           gridRows.push(new TableRow({
             children: Array.from({ length: grid.colCount }, () =>

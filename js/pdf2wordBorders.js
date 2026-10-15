@@ -89,6 +89,51 @@ export function lineInGrid(ln, grid) {
   return inside.length * 2 >= ln.items.length;
 }
 
+// The grid's text lines grouped into its real rows: the lines between two
+// ruled row lines are one table row. One table row per TEXT line split every
+// cell that wraps — "Объём / хранения / данных" became three rows, a 5-row
+// table came out with 11 (an owner's school test, then Japanese, Arabic and
+// Spanish tables in the cloud corpus, 2026-10-15). Only where the grid has
+// its own row rules (3+ rows): a frame, or a frame with one rule under the
+// header, holds a whole table whose rows are told apart by text alone —
+// there the body stays one row per line, as before, and only a short header
+// band (≤ 3 lines) is joined. A line count cap was tried first and split a
+// ruled criteria table whose cells hold 7–8 lines. Lines outside every band
+// (slack at the frame) stay alone.
+// gridLines: [{ y, … }] top first → [[line, …], …] top first.
+const MAX_HEADER_LINES = 3;
+export function gridRowsOfLines(gridLines, grid) {
+  const { rowYs } = grid;
+  const bandOf = y => {
+    for (let r = 0; r < rowYs.length - 1; r++) {
+      if (y <= rowYs[r] + _GRID_SLACK && y >= rowYs[r + 1] - _GRID_SLACK) return r;
+    }
+    return -1;
+  };
+  // Banded by each ITEM's own baseline, not the line's: line grouping joins
+  // items up to 6 pt apart, so a value sitting just under a rule rode into
+  // the row above with a label beside it (an Arabic lab table, 2026-10-15).
+  const pieces = [];
+  for (const ln of gridLines) {
+    const byBand = new Map();
+    for (const it of ln.items) {
+      const b = bandOf(it.y);
+      if (!byBand.has(b)) byBand.set(b, []);
+      byBand.get(b).push(it);
+    }
+    for (const [b, items] of byBand) pieces.push({ band: b, ln: byBand.size === 1 ? ln : { ...ln, y: items[0].y, items } });
+  }
+  pieces.sort((p, q) => (p.band === q.band ? q.ln.y - p.ln.y : (p.band === -1 ? 1 : q.band === -1 ? -1 : p.band - q.band)));
+  const rows = [];
+  let band = null, current = null;
+  for (const { band: b, ln } of pieces) {
+    if (b === -1 || b !== band) { current = [ln]; rows.push(current); band = b; }
+    else current.push(ln);
+  }
+  if (grid.rowCount >= 3) return rows;
+  return rows.flatMap((r, i) => (i === 0 && r.length <= MAX_HEADER_LINES ? [r] : r.map(ln => [ln])));
+}
+
 // ── Segment extraction ────────────────────────────────────────────────────────
 
 function _extractSegments(opList, paintedOnly) {
