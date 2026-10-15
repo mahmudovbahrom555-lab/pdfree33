@@ -124,12 +124,9 @@ function _render(file) {
 
 // Unlike pdf2word's own image/text toggle (js/pdf2wordUI.js), the DPI/
 // quality picker here stays visible in BOTH modes, not hidden in text mode:
-// Stage 1's "Editable text" reconstruction is a HYBRID — tables, multi-
-// column pages, and diagrams still embed a cropped raster image alongside
-// the real text shapes (see _p2pBuildSlideShapes's own comment in
-// js/processor.js), so image quality still matters in text mode too. Don't
-// "fix" this to match pdf2word's pattern exactly — the two tools' text
-// modes have genuinely different content mixes.
+// "Editable text" lays its text boxes over a picture of the page drawn
+// without its text (js/pdf2pptLayered.js), so image quality still matters in
+// text mode too. Don't "fix" this to match pdf2word's pattern.
 function _modeHintText() {
   return _mode === 'text' ? t('p2p_mode_text_hint') : t('p2p_mode_hint');
 }

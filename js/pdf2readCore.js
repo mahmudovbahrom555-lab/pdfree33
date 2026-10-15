@@ -156,9 +156,13 @@ const _FRAME_BUDGET_MS = 16; // ≈ one 60 FPS frame
 // (serif/mono only) — no attempt to preserve an exact embedded font name.
 // Only caller is _p2wBuildPageData below — moved here in full, not copied
 // (processor.js has no other use of it).
+// Fixed-pitch by the embedded name when there is one: pdf.js reports
+// "monospace" for any font flagged fixed-pitch, and presentation fonts often
+// are by mistake — AvenirNext came out as Courier New in a deck's bullet lists
+// (presentations corpus, 2026-10-16). The CSS family only for a nameless font.
 function _pptxSafeFontFace(rawName, cssFamily) {
   const s = `${rawName} ${cssFamily}`.toLowerCase();
-  if (/mono|courier|consolas/.test(s)) return 'Courier New';
+  if (/mono|courier|consolas/.test((rawName || cssFamily || '').toLowerCase())) return 'Courier New';
   if (!/sans/.test(s) && /serif|times|georgia|garamond|cambria|minion/.test(s)) return 'Times New Roman';
   return undefined;
 }
@@ -243,10 +247,11 @@ function _isMostlyPUA(str) {
   return (nonSpace.match(_PUA_RE) || []).length / nonSpace.length > 0.4;
 }
 
-// Read-mode's per-region block builder — same dispatch shape as
-// _p2pBuildRegionShapes (mirrors its table/list/heading/footer-suppression
-// heuristics exactly, reusing the same detectors), but emits a flat, ordered
-// array of plain reading blocks instead of PPTX shapes with absolute x/y.
+// Read-mode's per-region block builder — the table/list/heading/footer-
+// suppression heuristics of PDF→Word's own body builder, reusing the same
+// detectors, emitting a flat, ordered array of plain reading blocks.
+// (Shaped after pdf2ppt's former slide-shape builder, since replaced by
+// js/pdf2pptLayered.js.)
 // Paragraph text is joined across all of a buffered block's ORIGINAL lines
 // into one continuous string (not one block per original line) — a PDF's own
 // line breaks are just where the fixed-width source column happened to wrap,
@@ -314,7 +319,7 @@ function _rpBuildRegionBlocks(lines, borderGrids, xBounds, median, repeatTextSet
     return len > 3 && len <= 100;
   };
 
-  // Deliberately NOT porting _p2pBuildRegionShapes's gap-based visual-region
+  // Deliberately NOT porting a slide builder's gap-based visual-region
   // detection here. That heuristic fits an absolute-positioned slide/page —
   // an image crop and any nearby caption text can coexist as two separate
   // overlaid shapes without looking wrong. In a flowing reading view the
@@ -466,8 +471,8 @@ function _rpBuildRegionBlocks(lines, borderGrids, xBounds, median, repeatTextSet
   return blocks;
 }
 
-// Read-mode's outer dispatcher — same column/straddle-guard shape as
-// _p2pBuildSlideShapes, but concatenates each region's blocks in region
+// Read-mode's outer dispatcher — column regions with a guard for grids that
+// straddle them; concatenates each region's blocks in region
 // order (not absolute-position shapes) since a reading view has no
 // "canvas" to place shapes on, only a reading sequence.
 export function _rpBuildPageBlocks(page, median, repeatTextSet, repeatPatternSet) {
@@ -673,6 +678,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
       ocrItems.forEach((item, seq) => allMapped.push({
         seq, str: item.str, x: item.x, y: item.y, width: item.width, fontSize: item.fontSize,
         rotated: false, bold: !!item.bold, italic: false, fontFamily: undefined, ocr: true,
+        ...(item.partial ? { partial: true } : {}),
       }));
       _cs.ocrPages++;
     }

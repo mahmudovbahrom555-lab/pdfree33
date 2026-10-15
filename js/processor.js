@@ -19,6 +19,7 @@ import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer, decryptWithPassword } from './decryptPdf.js';
 import { detectTables, groupItemsIntoLines, looksLikeProseNotData, looksLikeEnumeratedList } from './pdf2wordTables.js';
 import { detectColumnRegions, pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
+import { captureText, lineRunsForSlide, cutsForLine, groupRuns, fittedFontSize, eraseUnpaintedRuns } from './pdf2pptLayered.js';
 import { openFeedback } from './feedback.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
 import { evaluateStructural } from './eriScore.js';
@@ -3448,344 +3449,6 @@ async function _p2pExtractTextBlocks(page) {
   return blocks.length > _P2P_MAX_TEXT_BLOCKS ? [] : blocks;
 }
 
-// ── Stage 1 "Editable text" mode: real, positioned, formatted PPTX text
-// shapes instead of an invisible search layer over a raster image ─────────
-//
-// Reuses pdf2word's already-proven detectors (detectTables, detectColumnRegions,
-// BULLET_RE/NUMBERED_RE/LETTERED_RE, the same heading font-ratio threshold and
-// same-size-bold heading detection, the same repeatTextSet/repeatPatternSet
-// footer suppression shipped earlier today) rather than re-deriving any of
-// them. Deliberately simpler than _p2wBuildParagraphs in a few disclosed
-// ways (Stage 1 scope, not an oversight — see this feature's own plan file):
-//   - A multi-column page (detectColumnRegions() returns non-null) becomes
-//     ONE whole-page image region — real per-column text reconstruction is
-//     a Stage 2 candidate, not attempted here.
-//   - A detected table becomes ONE image region spanning its own lines — no
-//     native PPTX table (addTable) this round.
-//   - RTL/CJK-specific paragraph-merge threshold tuning is not replicated
-//     (plain LTR/Cyrillic 2.0x threshold used for every language) — a
-//     disclosed simplification, not a correctness requirement for Stage 1.
-//
-// Unlike a flowing Word document, a PPTX slide has no reading-order
-// constraint — every shape carries its own absolute x/y — so text shapes
-// and image regions are returned as two independent, unordered lists; the
-// caller (_runPdf2Ppt) places each at its own position without needing them
-// pre-interleaved.
-//
-// Returns { textShapes, imageRegions, scanned } for ONE page:
-//   textShapes:   [{ y0, y1, runs:[{text,bold,italic,fontSize}], heading, bullet }]
-//                 y0/y1 in PDF points, origin bottom-left (y0 = top edge,
-//                 y1 = bottom edge — y0 > y1, same convention as the rest of
-//                 this codebase).
-//   imageRegions: [{ y0, y1 }] — a Y-band to crop from the page's already-
-//                 rendered canvas and place as one picture shape. Covers
-//                 detected tables, multi-column pages (whole page), and
-//                 ordinary whitespace gaps between text (diagrams/charts) —
-//                 without this last case, any diagram/chart with no table
-//                 border and no accompanying text would be silently
-//                 dropped instead of merely left unreconstructed, which
-//                 would be a real regression against today's always-safe
-//                 raster fallback, not just a missed enhancement.
-//   scanned:      true when the page has no extractable text at all — the
-//                 caller renders the whole page as one image slide, same as
-//                 today's existing scanned-page handling.
-// Stage 3: builds shapes for ONE region's worth of lines — either the whole
-// page (xBounds = {x0:0, x1:pageW}, the common single-column case) or one
-// detected column region (xBounds = {x0:region.left, x1:region.right}).
-// Extracted from _p2pBuildSlideShapes so the outer dispatcher below can call
-// it once per page OR once per column, mirroring exactly how pdf2word's own
-// _p2wBuildParagraphs dispatches its per-page body (_processLines) once per
-// detected column region — see that function's outer loop for the pattern
-// this mirrors.
-function _p2pBuildRegionShapes(lines, borderGrids, xBounds, median, repeatTextSet, repeatPatternSet) {
-  // Text-detected tables that Y-overlap a border grid are dropped in favor
-  // of the grid — same precedence pdf2word's own _processLines uses, and
-  // for the identical reason: border grids carry real merge/span line data
-  // (colDividers) that pure X-position clustering can never recover (a
-  // merged cell just looks like "an item missing from this column" to
-  // detectTables(), indistinguishable from ordinary sparse/optional data).
-  // Verified directly — without this filter, this file's own gridSpan test
-  // (mirrors tests/pdf2wordParagraphs.test.js's real regression case)
-  // failed: the text-detected path won the overlap and produced an empty
-  // cell instead of a real colspan.
-  const tables = detectTables(lines)
-    .filter(t => !looksLikeProseNotData(t.rows) && !looksLikeEnumeratedList(t.rows))
-    .filter(t => {
-      const tMinY = Math.min(lines[t.startIdx].y, lines[t.endIdx].y);
-      const tMaxY = Math.max(lines[t.startIdx].y, lines[t.endIdx].y);
-      return !borderGrids.some(g => tMinY <= g.y + g.h && g.y <= tMaxY);
-    });
-  const lineToTable = new Map();
-  for (const t of tables) {
-    for (let li = t.startIdx; li <= t.endIdx; li++) lineToTable.set(li, t);
-  }
-
-  const tableShapes = [];
-
-  // ── Border-grid tables (visually-bordered, may have merged cells) ───────
-  // Stage 2: same dual-path table handling pdf2word's _processLines already
-  // uses — text-detected tables above catch tables with no visible border
-  // lines; border grids (detectTableGrids, js/pdf2wordBorders.js) catch the
-  // reverse: a bordered table whose cells may be sparse or empty (no text
-  // content at all). Reuses _assignLineToGridCols/_activeDividersForY/
-  // _groupGridCellsWithSpans exactly as pdf2word does for its own real
-  // docx gridSpan tables — pure, output-format-agnostic helpers. No
-  // "covered by a text table" skip needed here (unlike an earlier version
-  // of this code) — the filter above already removes any text-table that
-  // would have overlapped, so every grid below is always the winning path
-  // for its own Y-range.
-  const gridConsumedLines = new Set();
-  for (const grid of borderGrids) {
-    const gridLines = [];
-    for (let li = 0; li < lines.length; li++) {
-      if (lineToTable.has(li)) continue;
-      const ln = lines[li];
-      if (lineInGrid(ln, grid)) gridLines.push({ li, ln });
-    }
-    if (!gridHoldsTable(grid, gridLines.map(g => g.ln))) continue;
-    gridLines.sort((a, b) => b.ln.y - a.ln.y); // top first
-
-    const rows = gridLines.map(({ ln }, idx) => {
-      const rawCells      = _assignLineToGridCols(ln.items, grid.colXs);
-      const rawFonts      = _assignLineToGridColsFonts(ln.items, grid.colXs);
-      const activeDivider = _activeDividersForY(grid, ln.y);
-      const cellGroups    = _groupGridCellsWithSpans(rawCells, activeDivider);
-      const fontGroups    = _groupGridCellsWithSpans(rawFonts, activeDivider, (a, b) => a ?? b, undefined);
-      return cellGroups.map(({ text, span }, ci) => ({ text, span, bold: idx === 0, fontFace: fontGroups[ci]?.text }));
-    });
-    for (const { li } of gridLines) gridConsumedLines.add(li);
-    tableShapes.push({ x0: grid.x, x1: grid.x + grid.w, y0: grid.y + grid.h, y1: grid.y, rows });
-  }
-
-  // Baseline left margin — same concept _processLines (pdf2word) already
-  // uses for LETTERED_RE's indent gate (a genuine sub-item is indented past
-  // this; a false positive like "A. Smith wrote..." sits flush with it).
-  let pageBaselineX = 0;
-  {
-    const xFreq = new Map();
-    for (const ln of lines) {
-      const x = ln.items[0]?.x;
-      if (x === undefined) continue;
-      const rounded = Math.round(x);
-      xFreq.set(rounded, (xFreq.get(rounded) || 0) + 1);
-    }
-    let bestCount = 0;
-    for (const [x, count] of xFreq) if (count > bestCount) { bestCount = count; pageBaselineX = x; }
-  }
-
-  // Same adaptive gap heuristic _p2wBuildParagraphs uses for visual-region
-  // detection (js/processor.js's own _GAP_FACTOR/_MIN_GAP_PT), simplified
-  // here to a single Y-band per gap rather than that function's full
-  // render+ink-tightening refinement — a disclosed Stage 1 simplification
-  // (see block comment above), not a correctness gap: the region still gets
-  // captured as an image, just with a slightly looser crop box.
-  const gapFactor = (() => {
-    const t = Math.min(1, Math.max(0, (median - 8) / (14 - 8)));
-    return 1.6 + t * (2.5 - 1.6);
-  })();
-  const gapThreshold = Math.max(20, median * gapFactor);
-
-  const _isBoldHeadingLine = (items) => {
-    if (!items.every(i => i.bold)) return false;
-    const text = items.map(i => i.str).join('');
-    if (MONEY_TOKEN_RE.test(text)) return false; // tabular/financial data, not a real heading
-    const len = text.replace(/\s+/g, '').length;
-    return len > 3 && len <= 100;
-  };
-
-  const textShapes   = [];
-  const imageRegions = [];
-  let buffer = []; // accumulates lines for the current text shape
-
-  const flush = () => {
-    if (!buffer.length) return;
-    if (buffer.length === 1) {
-      const raw = buffer[0].items.map(i => i.str).join('').trim();
-      const t   = _normWatermark(raw);
-      if (t === '' || repeatTextSet.has(t) || repeatPatternSet.has(_normDigits(t))) { buffer = []; return; }
-    }
-    const allItems = buffer.flatMap(ln => ln.items);
-    const allText  = allItems.map(i => i.str).join(' ').replace(/\s+/g, ' ').trim();
-    if (!allText) { buffer = []; return; }
-    const maxSize = Math.max(...allItems.map(i => i.fontSize));
-
-    let heading = false;
-    if (allText.length > 3) {
-      if (maxSize >= median * 1.3) heading = true;
-      else if (allText.length <= 100 && buffer.every(ln => _isBoldHeadingLine(ln.items))) heading = true;
-    }
-
-    const runs = buffer
-      .map(ln => ({
-        // a space only where the items stand apart: joined with spaces, a
-        // Chinese slide read "從業 評價 職 位人 員" (a user's report, 2026-10-15)
-        text:     joinSpacedItems(ln.items).replace(/\s+/g, ' ').trim(),
-        bold:     ln.items.every(i => i.bold),
-        italic:   ln.items.every(i => i.italic),
-        fontSize: Math.max(...ln.items.map(i => i.fontSize)),
-        fontFace: ln.items.find(i => i.fontFamily)?.fontFamily,
-      }))
-      .filter(r => r.text);
-    if (!runs.length) { buffer = []; return; }
-
-    textShapes.push({
-      x0: Math.min(...allItems.map(i => i.x)),
-      x1: Math.max(...allItems.map(i => i.x + (i.width > 0 ? i.width : i.fontSize * i.str.length * 0.5))),
-      y0: Math.max(...buffer.map(ln => ln.y)) + maxSize,
-      y1: Math.min(...buffer.map(ln => ln.y)),
-      runs, heading,
-    });
-    buffer = [];
-  };
-
-  // Gap scan BETWEEN consecutive text lines only — deliberately NOT
-  // sentinel-padded from the page's top/bottom edge the way
-  // _p2wBuildParagraphs's visualGaps is. That padding makes sense for a
-  // flowing Word document (margins are just margins, never rendered as
-  // literal blank page space), but a PPTX slide IS a literal fixed canvas —
-  // ordinary, generous top/bottom margin whitespace (routine on real
-  // slide-style source PDFs, not just report pages) would otherwise get
-  // flagged as an "image region" and cropped into a pointless blank
-  // picture. A genuine diagram sitting above the first line or below the
-  // last line of a page with no other content is a real but rarer case,
-  // deliberately left uncaptured here — a disclosed Stage 1 simplification.
-  const _isHeadingSized = (ln) => Math.max(...ln.items.map(i => i.fontSize)) >= median * 1.3;
-  for (let li = 0; li < lines.length - 1; li++) {
-    if (lineToTable.has(li) || lineToTable.has(li + 1) || gridConsumedLines.has(li) || gridConsumedLines.has(li + 1)) continue;
-    // A heading naturally carries extra leading space before/after it —
-    // real, ordinary document structure, not evidence of a hidden diagram.
-    // Without this, a normal heading-to-body gap (a large-font heading
-    // directly followed by body text well below it) can exceed
-    // gapThreshold on its own and get wrongly cropped as an image region.
-    if (_isHeadingSized(lines[li]) || _isHeadingSized(lines[li + 1])) continue;
-    const yAbove = lines[li].y, yBelow = lines[li + 1].y;
-    if (yAbove - yBelow >= gapThreshold) imageRegions.push({ x0: xBounds.x0, x1: xBounds.x1, y0: yAbove, y1: yBelow });
-  }
-
-  for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
-    const ln  = lines[lineIdx];
-    if (gridConsumedLines.has(lineIdx)) continue; // already emitted as a tableShape above
-    const tbl = lineToTable.get(lineIdx);
-    if (tbl) {
-      flush();
-      if (lineIdx === tbl.startIdx) {
-        const tblLines = lines.slice(tbl.startIdx, tbl.endIdx + 1);
-        // Per-cell font preservation, sourced from detectTables()'s own
-        // parallel cellFonts[r][c] (matches competitor iLovePDF, whose real
-        // TABLE shapes preserve font at the individual-cell-run level).
-        tableShapes.push({
-          x0: xBounds.x0, x1: xBounds.x1,
-          y0: Math.max(...tblLines.map(l => l.y)) + median,
-          y1: Math.min(...tblLines.map(l => l.y)) - median * 0.3,
-          rows: tbl.rows.map((row, ri) => row.map((text, ci) => ({
-            text: text || '', span: 1, bold: false, fontFace: tbl.cellFonts?.[ri]?.[ci],
-          }))),
-        });
-      }
-      continue;
-    }
-
-    // Page-number footer/header skip — same near-edge position proxy
-    // (first/last 3 lines) _processLines already uses for this.
-    const nearEdge = lineIdx < 3 || lineIdx >= lines.length - 3;
-    if (nearEdge) {
-      const raw = ln.items.map(i => i.str).join('').trim();
-      if (/^\d+$/.test(raw) || repeatPatternSet.has(_normDigits(_normWatermark(raw)))) continue;
-    }
-
-    const lnRawText     = ln.items.map(i => i.str).join('').trim();
-    const bulletMatch    = BULLET_RE.test(lnRawText);
-    const numberedMatch  = !bulletMatch && NUMBERED_RE.test(lnRawText);
-    const letteredMatch  = !bulletMatch && !numberedMatch && LETTERED_RE.test(lnRawText) &&
-      (ln.items[0]?.x ?? 0) > pageBaselineX + 10;
-
-    if (bulletMatch || letteredMatch || numberedMatch) {
-      flush();
-      const markerRe = bulletMatch ? BULLET_RE : letteredMatch ? LETTERED_RE : NUMBERED_RE;
-      const text = lnRawText.replace(markerRe, '').trim();
-      if (text) {
-        const fontSize = Math.max(...ln.items.map(i => i.fontSize));
-        textShapes.push({
-          x0: Math.min(...ln.items.map(i => i.x)),
-          x1: Math.max(...ln.items.map(i => i.x + (i.width > 0 ? i.width : i.fontSize * i.str.length * 0.5))),
-          y0: ln.y + fontSize, y1: ln.y,
-          runs: [{ text, bold: ln.items.every(i => i.bold), italic: ln.items.every(i => i.italic), fontSize,
-                   fontFace: ln.items.find(i => i.fontFamily)?.fontFamily }],
-          heading: false,
-          // Lettered sub-items ("a."/"b.") render as bullet-style, not
-          // pptxgenjs auto-numbering — they read as a nested list under a
-          // numbered parent item, not their own independent 1/2/3 sequence.
-          bullet: numberedMatch ? 'number' : 'bullet',
-        });
-      }
-      continue;
-    }
-
-    if (buffer.length > 0) {
-      const lastLn      = buffer[buffer.length - 1];
-      const lastMaxFont = Math.max(...lastLn.items.map(i => i.fontSize));
-      const curMaxFont  = Math.max(...ln.items.map(i => i.fontSize));
-      const gap         = lastLn.y - ln.y;
-      const lastIsHead  = lastMaxFont >= median * 1.3 || _isBoldHeadingLine(lastLn.items);
-      const isHead      = curMaxFont  >= median * 1.3 || _isBoldHeadingLine(ln.items);
-      if (isHead || lastIsHead || gap > lastMaxFont * 2.0) flush();
-    }
-    buffer.push(ln);
-  }
-  flush();
-
-  return { textShapes, tableShapes, imageRegions };
-}
-
-// ── Stage 1-3 outer dispatcher: whole page, or once per detected column ────
-// region — mirrors _p2wBuildParagraphs's own outer per-page loop (see that
-// function's "Column-aware split" block) exactly: a straddling grid/table
-// (spans across a column boundary) makes the page un-splittable, in which
-// case it falls back to a single whole-page image region — never worse
-// than pre-Stage-3 behavior. Otherwise each region gets its own
-// _p2pBuildRegionShapes() call with region-scoped lines/grids/bounds, RTL-
-// reversed via pageIsRtl() when the page reads right-to-left. A PPTX slide
-// has no reading-order constraint (every shape carries its own absolute x/y
-// — unlike a flowing Word document), so concatenating each region's shapes
-// is correct with no interleaving step needed.
-export function _p2pBuildSlideShapes(page, median, repeatTextSet, repeatPatternSet) {
-  const { lines, pageW, pageH, borderGrids = [] } = page;
-  if (!lines.length) return { textShapes: [], tableShapes: [], imageRegions: [], scanned: true };
-
-  const regions = pageW ? detectColumnRegions(lines, pageW) : null;
-  const splittable = regions && !borderGrids.some(g =>
-    regions.filter(r => g.x < r.right && (g.x + g.w) > r.left).length > 1
-  );
-
-  if (!splittable) {
-    if (regions) {
-      // Column layout detected but a grid/table straddles a boundary — the
-      // page can't be cleanly split. Whole page becomes one image region,
-      // same fallback Stage 1/2 always used for every column page.
-      return { textShapes: [], tableShapes: [], imageRegions: [{ x0: 0, x1: pageW, y0: pageH, y1: 0 }], scanned: false };
-    }
-    const result = _p2pBuildRegionShapes(lines, borderGrids, { x0: 0, x1: pageW }, median, repeatTextSet, repeatPatternSet);
-    return { ...result, scanned: false };
-  }
-
-  const ordered = pageIsRtl(lines) ? [...regions].reverse() : regions;
-  const textShapes = [], tableShapes = [], imageRegions = [];
-  for (const region of ordered) {
-    // Items within each line, not whole lines by their first item (a merged
-    // line's leftmost item is always the left column's — commit 0cac6bda);
-    // full-width lines stay whole (linesInRegion, pdf2wordColumns.js).
-    const regionLines = linesInRegion(lines, regions, regions.indexOf(region));
-    const regionGrids = borderGrids.filter(g => g.x >= region.left && (g.x + g.w) <= region.right);
-    const result = _p2pBuildRegionShapes(
-      regionLines, regionGrids, { x0: region.left, x1: region.right }, median, repeatTextSet, repeatPatternSet
-    );
-    textShapes.push(...result.textShapes);
-    tableShapes.push(...result.tableShapes);
-    imageRegions.push(...result.imageRegions);
-  }
-  return { textShapes, tableShapes, imageRegions, scanned: false };
-}
-
 // Crops a Y-band (full page width) out of an already-rendered page canvas
 // and returns a PNG data URL. PNG (not the JPEG tiering the full-page image
 // uses) — these crops are typically small (a table or diagram region, not a
@@ -3809,6 +3472,15 @@ export function _p2pCropCanvasRegion(sourceCanvas, xPx, yPx, wPx, hPx) {
 // js/pdf2readCore.js (imported above) — Read PDF's reflow block-builder,
 // reused by packages/pdf2read-core/. _p2pCropCanvasRegion above stays here
 // (real document.createElement('canvas') use — browser-only).
+
+// Editable-text slides: a text box's top sits _P2P_ASCENT em above its first
+// baseline, plus _P2P_LEAD of whatever an exact line pitch adds over the
+// _P2P_LINE em one line takes — measured in PowerPoint's own renders of
+// converted decks over the original pages (2026-10-15: 0.9 em put text 2–3 pt
+// low, a paragraph at a 2 em pitch 6 pt low; LibreOffice differs again).
+const _P2P_ASCENT = 1.05;
+const _P2P_LINE   = 1.2;
+const _P2P_LEAD   = 0.44;
 
 async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'image' } = {}) {
   const file = filesSnapshot[0];
@@ -3869,26 +3541,34 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'image' } = {}) {
   const quality = pageCount > 300 ? 0.60 : pageCount > 150 ? 0.72 : 0.85;
   const scale   = dpi / 72;
 
-  // "Editable text (beta)" mode: extract real structure ONCE for the whole
-  // document up front, reusing pdf2word's own page-data pass (headings,
-  // flat lists, tables, columns, footer suppression — see
-  // _p2pBuildSlideShapes's own comment for exactly what's reused and what's
-  // deliberately simplified for this first pass). This is a separate
-  // pdf.js call (getTextContent+getOperatorList) from the per-page render
-  // loop below (page.render, for the visual canvas) — not a redundant
-  // re-parse of the same data, a genuinely different extraction.
-  let textPageData = null, textMedian = 10, textRepeatSet = new Set(), textPatternSet = new Set();
+  // "Editable text": every page's text lines, read once up front by
+  // pdf2word's own page-data pass (right-to-left order, CJK fixes, form field
+  // values, table grids) — laid back over each slide as text boxes below.
+  let textPageData = null;
   if (mode === 'text') {
     setProgress(8, 'Analyzing document structure…');
-    ({ pageData: textPageData, median: textMedian, repeatTextSet: textRepeatSet,
-       repeatPatternSet: textPatternSet } = await _p2wBuildPageData(pdfDoc, {
-      onProgress:  (pct, label) => setProgress(pct, label),
-      isCancelled: () => !isProcessing,
-    }));
+    // Scanned slides: their text read with the shared OCR engine (pdf2wordOcr.js),
+    // as in PDF→Word — 88 of the 97 picture-only slides of the presentations
+    // corpus were scans. Where it lands is eraseUnpaintedRuns' call.
+    const ocr = createOcrLayer(pdfDoc, {
+      onPage: (p, lang) => setProgress(8 + Math.round((p / pdfDoc.numPages) * 40),
+        `Recognizing text (${lang}) on page ${p}/${pdfDoc.numPages}…`),
+    });
+    try {
+      ({ pageData: textPageData } = await _p2wBuildPageData(pdfDoc, {
+        onProgress:  (pct, label) => setProgress(pct, label),
+        isCancelled: () => !isProcessing,
+        ocrPage:     ocr.ocrPage,
+      }));
+    } finally {
+      await ocr.close();
+    }
   }
 
   let canvas = document.createElement('canvas');
   const ctx  = canvas.getContext('2d', { willReadFrequently: true });
+  // text widths in the font PowerPoint will use, to fit sizes (fittedFontSize)
+  const measureCtx = document.createElement('canvas').getContext('2d');
 
   try {
     let frameStart = performance.now();
@@ -3901,7 +3581,22 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'image' } = {}) {
       const viewport = page.getViewport({ scale });
       canvas.width   = Math.round(viewport.width);
       canvas.height  = Math.round(viewport.height);
-      await page.render({ canvasContext: ctx, viewport }).promise;
+      // "Editable text": the page is drawn without the text that comes back
+      // as text boxes (js/pdf2pptLayered.js) — a rotated page stays a picture
+      const pd = mode === 'text' && textPageData && viewport.rotation === 0 ? textPageData[p - 1] : null;
+      const runs = pd ? pd.lines.flatMap(ln => lineRunsForSlide(ln, cutsForLine(ln, pd.borderGrids || []))) : [];
+      const capture = runs.length ? captureText(ctx, (x, y) => viewport.convertToPdfPoint(x, y), runs) : null;
+      try {
+        await page.render({ canvasContext: ctx, viewport }).promise;
+      } finally {
+        capture?.restore();
+      }
+      // text in the picture but not drawn as text (a scan read by OCR, a hidden
+      // text layer): out of the picture where the background is flat
+      if (runs.some(r => r.color === null)) {
+        const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        if (eraseUnpaintedRuns(img, runs, (x, y) => viewport.convertToViewportPoint(x, y))) ctx.putImageData(img, 0, 0);
+      }
 
       const pageHeightPt = viewport.height / scale; // undo the dpi/72 render scale, points
 
@@ -3914,14 +3609,9 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'image' } = {}) {
 
       const slide = pptx.addSlide();
 
-      const shapes = (mode === 'text' && textPageData)
-        ? _p2pBuildSlideShapes(textPageData[p - 1], textMedian, textRepeatSet, textPatternSet)
-        : null;
-
-      if (!shapes || shapes.scanned) {
-        // Whole-page raster fallback — Image mode's own path (unchanged),
-        // and Text mode's per-page fallback for a scanned/no-text page or a
-        // multi-column page (Stage 1 scope, see _p2pBuildSlideShapes).
+      if (!capture) {
+        // Whole-page raster — Image mode's own path, and Text mode's for a
+        // page with no text layer (a scan) or a rotated one.
         // Must run before cleanup() — pulls from the same page object the
         // render just used. Always extracted here regardless of mode: a
         // scanned/multi-column page falling back to a raster slide in Text
@@ -3970,122 +3660,40 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'image' } = {}) {
           });
         }
       } else {
-        // Real, positioned, formatted text shapes + cropped image regions
-        // (tables/diagrams) — no whole-page background image at all here,
-        // since the real text shapes already cover that same content;
-        // adding the raster too would duplicate it underneath.
         page.cleanup?.();
-
-        for (const shape of shapes.textShapes) {
-          const xIn = shape.x0 / 72;
-          const yTopIn = (pageHeightPt - shape.y0) / 72;
-          const wIn = Math.max(0.1, (shape.x1 - shape.x0) / 72);
-          const hIn = Math.max(0.1, (shape.y0 - shape.y1) / 72);
-
-          const textRuns = shape.runs.map((r, i) => ({
-            text: r.text + (i < shape.runs.length - 1 ? '\n' : ''),
-            options: {
-              bold:     r.bold,
-              italic:   r.italic,
-              fontSize: Math.max(1, Math.round(r.fontSize * fit.scale)),
-              ...(r.fontFace ? { fontFace: r.fontFace } : {}),
-            },
-          }));
-
-          const opts = {
-            x: fit.x + xIn * fit.scale,
-            y: fit.y + yTopIn * fit.scale,
-            w: wIn * fit.scale,
-            h: hIn * fit.scale,
-            fontSize: Math.max(1, Math.round((shape.runs[0]?.fontSize ?? 12) * fit.scale)),
-            color:    '000000',
-            align:    'left',
-            valign:   'top',
-            margin:   0,
-            wrap:     true,
-          };
-          // Preserve a genuinely serif/monospace source font (mapped to a
-          // universally-installed PowerPoint equivalent by _pptxSafeFontFace,
-          // js/processor.js) — real, competitor-verified gap: iLovePDF's own
-          // editable-text output does this, pdfree previously emitted no
-          // typeface at all, always falling back to PptxGenJS's own default.
-          // Set at the paragraph level too (not just per-run) since a
-          // single-run shape's own run-level fontFace can be overridden by
-          // paragraph defaults in some pptxgenjs code paths.
-          if (shape.runs[0]?.fontFace) opts.fontFace = shape.runs[0].fontFace;
-          // pptxgenjs 3.12.0's own XML generator has a real bug: passing
-          // `bullet: { type: 'bullet' }` silently produces NO bullet
-          // character at all — its internal branch only fills in real XML
-          // for `type: 'number'`; any other `.type` value falls through
-          // every remaining branch as a no-op (verified directly against
-          // the library's own bundled source, not assumed). `bullet: true`
-          // (no `type` key) hits a DIFFERENT, working branch that emits the
-          // library's own default bullet character correctly — used here
-          // for bullet/lettered items; `{ type: 'number', ... }` is the one
-          // shape.bullet value that genuinely needs the object form, and
-          // does work as documented.
-          if (shape.bullet === 'number') opts.bullet = { type: 'number' };
-          else if (shape.bullet)         opts.bullet = true;
-          slide.addText(textRuns, opts);
-        }
-
-        for (const tableShape of shapes.tableShapes) {
-          const xIn = tableShape.x0 / 72;
-          const yTopIn = (pageHeightPt - tableShape.y0) / 72;
-          const wIn = Math.max(0.1, (tableShape.x1 - tableShape.x0) / 72);
-          const hIn = Math.max(0.1, (tableShape.y0 - tableShape.y1) / 72);
-          const fontSize = Math.max(1, Math.round(11 * fit.scale));
-
-          const rows = tableShape.rows.map(row => row.map(cell => ({
-            text: cell.text,
-            options: {
-              bold:     cell.bold,
-              fontSize,
-              colspan:  cell.span > 1 ? cell.span : undefined,
-              ...(cell.fontFace ? { fontFace: cell.fontFace } : {}),
-            },
-          })));
-
-          // pptxgenjs tables render with NO border by default (unlike
-          // docx.js's own implicit table grid lines) — an explicit light
-          // border keeps the reconstructed table visually usable rather
-          // than looking like unaligned floating text. Confirmed directly
-          // against the real generated OOXML before relying on it (see this
-          // feature's own plan file).
-          slide.addTable(rows, {
-            x: fit.x + xIn * fit.scale,
-            y: fit.y + yTopIn * fit.scale,
-            w: wIn * fit.scale,
-            h: hIn * fit.scale,
-            fontSize,
-            color:  '000000',
-            border: { type: 'solid', color: 'D0D0D0', pt: 0.75 },
-            autoPage: false,
+        const fmt = _p2wDetectFormat(canvas);
+        slide.addImage({ data: canvas.toDataURL(`image/${fmt}`, fmt === 'jpeg' ? quality : undefined),
+          x: fit.x, y: fit.y, w: fit.w, h: fit.h });
+        const toIn = pt => pt / 72 * fit.scale;
+        for (const b of groupRuns(runs, pd.borderGrids || [])) {
+          // pptxgenjs writes one typeface for Latin, East Asian and complex
+          // script text alike: "Courier New" (a Chinese fixed-width font's
+          // stand-in) turned a Chinese slide into empty boxes — text in another
+          // script keeps the theme's own font for its language (b.lang)
+          const face = b.lang ? undefined : b.fontFace;
+          // a Latin box with no typeface of its own is set in the theme's
+          // Calibri, which the browser seldom has: measured in Arial, ~10 %
+          // wider, titles came out shrunk for nothing
+          const themeFont = !face && !b.lang ? 0.9 : 1;
+          const fs = fittedFontSize(b, (text, size) => {
+            measureCtx.font = `${b.italic ? 'italic ' : ''}${b.bold ? 'bold ' : ''}${size}px "${face || 'Arial'}", sans-serif`;
+            return measureCtx.measureText(text).width * themeFont;
           });
-        }
-
-        for (const region of shapes.imageRegions) {
-          // x0/x1 are always real PDF-point bounds set by
-          // _p2pBuildSlideShapes (full page width for a non-column page,
-          // one column's own width for a Stage-3 column region) — a
-          // diagram inside one column crops only that column's width, not
-          // the whole page (which would otherwise pull in blank space or
-          // the other column's content).
-          const { x0, x1 } = region;
-          const xLeftPx  = Math.round(x0 * scale);
-          const xRightPx = Math.round(x1 * scale);
-          const yTopPx = Math.round((pageHeightPt - region.y0) * scale);
-          const yBotPx = Math.round((pageHeightPt - region.y1) * scale);
-          const cropUrl = _p2pCropCanvasRegion(canvas, xLeftPx, yTopPx, xRightPx - xLeftPx, yBotPx - yTopPx);
-          if (!cropUrl) continue;
-          const xLeftIn = x0 / 72;
-          const yTopIn  = (pageHeightPt - region.y0) / 72;
-          const wIn     = Math.max(0.05, (x1 - x0) / 72);
-          const hIn     = Math.max(0.05, (region.y0 - region.y1) / 72);
-          slide.addImage({
-            data: cropUrl,
-            x: fit.x + xLeftIn * fit.scale, y: fit.y + yTopIn * fit.scale,
-            w: wIn * fit.scale, h: hIn * fit.scale,
+          const lineH = b.pitch ?? fs * _P2P_LINE;
+          // a little wider than the text: another font's glyphs may run longer
+          const wPt = (b.x1 - b.x0) * 1.06 + fs * 0.3;
+          const leftPt = b.align === 'right' ? b.x1 + fs * 0.15 - wPt
+            : b.align === 'center' ? (b.x0 + b.x1 - wPt) / 2 : b.x0;
+          const above = _P2P_ASCENT * fs + (b.lines.length > 1 ? _P2P_LEAD * (lineH - _P2P_LINE * fs) : 0);
+          const [vx, vy] = viewport.convertToViewportPoint(leftPt, b.y + above);
+          slide.addText(b.lines.join('\n'), {
+            x: fit.x + vx / dpi * fit.scale, y: fit.y + vy / dpi * fit.scale,
+            w: toIn(wPt), h: toIn((b.lines.length - 1) * lineH + fs * _P2P_LINE),
+            fontSize: Math.max(1, fs * fit.scale),
+            bold: b.bold, italic: b.italic, ...(face ? { fontFace: face } : {}),
+            color: b.color ?? '000000', ...(b.color === null ? { transparency: 100 } : {}),
+            align: b.align, valign: 'top', margin: 0, wrap: false, rtlMode: b.rtl, ...(b.lang ? { lang: b.lang } : {}),
+            ...(b.lines.length > 1 ? { lineSpacing: lineH * fit.scale } : {}),
           });
         }
       }

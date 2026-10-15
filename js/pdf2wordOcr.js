@@ -98,6 +98,7 @@ export function ocrItemsFromPage(rec) {
       return Math.max(1, (row / a) * ROW_TO_FONT);
     };
     const fontSize = sizeOf(height, false);
+    const partial = line.words.some(w => !w.kept);
     const runs = [];
     const newPiece = () => ({ bottoms: [], top: Infinity, dark: 0, edge: 0 });   // shared by the piece's runs
     const pieces = [newPiece()];
@@ -129,6 +130,9 @@ export function ocrItemsFromPage(rec) {
         str: joinOcrWords(run.words) + (i < kept.length - 1 ? ' ' : ''),
         x: run.x0, y: toY(ownLevel ? base + median(bottoms) - lineBottom : base),
         width: run.x1 - run.x0, fontSize: sizeOf(Math.max(...bottoms) - top, bold), bold,
+        // some of its line's words were too unsure to keep: what is left is a
+        // guess (PDF→PowerPoint keeps such a run invisible over the picture)
+        ...(partial ? { partial: true } : {}),
       });
     });
   }

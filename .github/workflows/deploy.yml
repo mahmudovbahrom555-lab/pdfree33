@@ -384,6 +384,13 @@ jobs:
         # detectors on a real form). See tests/e2e/pdf2word-forms.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:pdf2word-forms
 
+      - name: E2E — PDF to PowerPoint, editable text over the page picture
+        # The slide keeps the page's look (chart, photo, table rules) with the
+        # text laid back as boxes: colour, bold, one box per table cell, Chinese
+        # unspaced and not in a Latin typeface. See
+        # tests/e2e/pdf2ppt-layered.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:pdf2ppt-layered
+
       - name: E2E — PDF to JPG, CBZ comic-book archive
         # 001.jpg… in name-sort page order, a .cbz with the comic-book type.
         # See tests/e2e/pdf2jpg-cbz.e2e.mjs.

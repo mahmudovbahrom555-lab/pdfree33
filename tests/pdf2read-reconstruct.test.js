@@ -3,12 +3,11 @@
 //  tests/pdf2read-reconstruct.test.js — regression tests for
 //  _rpBuildPageBlocks() (js/pdf2readCore.js — moved out of processor.js so
 //  packages/pdf2read-core/ can reuse it in Node), the block-builder behind
-//  the "Read PDF" reflow reading view: a THIRD consumer of the exact same
-//  detectors pdf2word (_p2wBuildParagraphs) and pdf2ppt
-//  (_p2pBuildSlideShapes) already reuse (detectTables, detectColumnRegions,
+//  the "Read PDF" reflow reading view: a second consumer of the exact same
+//  detectors pdf2word (_p2wBuildParagraphs) already uses (detectTables, detectColumnRegions,
 //  BULLET_RE/NUMBERED_RE/LETTERED_RE, heading font-ratio/bold-heading
 //  detection, repeatTextSet/repeatPatternSet footer suppression), emitting
-//  plain reading blocks instead of docx.js objects or PPTX shapes.
+//  plain reading blocks instead of docx.js objects.
 //
 // Run: node tests/pdf2read-reconstruct.test.js
 

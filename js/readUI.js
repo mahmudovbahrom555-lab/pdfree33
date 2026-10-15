@@ -9,11 +9,10 @@
 // auto-runs the instant a file loads (mirrors pdf2pdfaUI's own precedent —
 // #mergeBtn is hidden entirely, not bound).
 //
-// Reuses pdf2word's own page-data extraction (_p2wBuildPageData) and a new
-// sibling of pdf2ppt's _p2pBuildSlideShapes — _rpBuildPageBlocks — which
-// applies the exact same heading/list/table/column detectors already proven
-// twice (pdf2word, pdf2ppt) but emits plain reading blocks instead of
-// PPTX shapes or docx.js objects. Both now live in js/pdf2readCore.js (moved
+// Reuses pdf2word's own page-data extraction (_p2wBuildPageData) and
+// _rpBuildPageBlocks, which applies the same heading/list/table/column
+// detectors pdf2word uses but emits plain reading blocks instead of
+// docx.js objects. Both now live in js/pdf2readCore.js (moved
 // out of processor.js so packages/pdf2read-core/ can reuse them in Node) —
 // see that file's own comments for the detection heuristics themselves.
 
