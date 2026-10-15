@@ -432,6 +432,8 @@ window.PDFREE_LOCALE = {
   cs_mode_clean: 'Pulisci',
   cs_mode_enhance: 'Migliora',
   cs_strength: 'Intensità',
+  cs_keep_color: "Mantieni timbri e firme a colori",
+  cs_keep_color_sub: "Un timbro blu o una firma a penna mantengono il colore; il resto viene ripulito",
   cs_straighten: "Raddrizza le pagine inclinate",
   cs_straighten_sub: "Rimette dritta ogni pagina scansionata o fotografata leggermente storta (fino a 5°)",
   cs_quality: 'Qualità',

@@ -434,6 +434,8 @@ window.PDFREE_LOCALE = {
   cs_mode_clean: '정리',
   cs_mode_enhance: '보정',
   cs_strength: '강도',
+  cs_keep_color: "컬러 도장과 서명 유지",
+  cs_keep_color_sub: "파란 도장이나 펜 서명은 색을 유지하고 나머지는 깨끗하게 합니다",
   cs_straighten: "기울어진 페이지 바로잡기",
   cs_straighten_sub: "약간 기울게 스캔하거나 촬영한 페이지를 수평으로 맞춥니다(최대 5°)",
   cs_quality: '품질',

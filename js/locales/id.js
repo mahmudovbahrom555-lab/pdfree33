@@ -433,6 +433,8 @@ window.PDFREE_LOCALE = {
   cs_mode_clean: 'Bersihkan',
   cs_mode_enhance: 'Tingkatkan',
   cs_strength: 'Kekuatan',
+  cs_keep_color: "Pertahankan stempel dan tanda tangan berwarna",
+  cs_keep_color_sub: "Stempel biru atau tanda tangan pena tetap berwarna; selebihnya dibersihkan",
   cs_straighten: "Luruskan halaman yang miring",
   cs_straighten_sub: "Meluruskan setiap halaman yang dipindai atau difoto sedikit miring (hingga 5°)",
   cs_quality: 'Kualitas',

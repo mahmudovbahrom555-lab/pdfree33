@@ -433,6 +433,8 @@ window.PDFREE_LOCALE = {
   cs_mode_clean: 'Sauber',
   cs_mode_enhance: 'Verbessern',
   cs_strength: 'Stärke',
+  cs_keep_color: "Farbige Stempel und Unterschriften behalten",
+  cs_keep_color_sub: "Ein blauer Stempel oder eine Unterschrift mit Kuli behält seine Farbe; alles andere wird bereinigt",
   cs_straighten: "Schiefe Seiten begradigen",
   cs_straighten_sub: "Richtet jede Seite gerade aus, die leicht schräg gescannt oder fotografiert wurde (bis 5°)",
   cs_quality: 'Qualität',

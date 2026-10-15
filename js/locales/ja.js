@@ -435,6 +435,8 @@ window.PDFREE_LOCALE = {
   cs_mode_clean: 'クリーン',
   cs_mode_enhance: '補正',
   cs_strength: '強さ',
+  cs_keep_color: "カラーの印鑑・署名を残す",
+  cs_keep_color_sub: "青い印や手書きの署名は色を残し、それ以外をきれいにします",
   cs_straighten: "傾いたページをまっすぐに",
   cs_straighten_sub: "少し傾いてスキャン・撮影されたページを水平に直します（最大5°）",
   cs_quality: '品質',

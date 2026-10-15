@@ -433,6 +433,8 @@ window.PDFREE_LOCALE = {
   cs_mode_clean: 'Làm sạch',
   cs_mode_enhance: 'Cải thiện',
   cs_strength: 'Cường độ',
+  cs_keep_color: "Giữ màu con dấu và chữ ký",
+  cs_keep_color_sub: "Con dấu xanh hay chữ ký bút giữ nguyên màu; phần còn lại được làm sạch",
   cs_straighten: "Làm thẳng trang bị nghiêng",
   cs_straighten_sub: "Xoay thẳng lại mỗi trang được quét hoặc chụp hơi nghiêng (tối đa 5°)",
   cs_quality: 'Chất lượng',

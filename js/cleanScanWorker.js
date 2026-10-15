@@ -16,7 +16,7 @@
 //  the final assembly step needs pdf-lib.
 //
 //  Message contract:
-//    in  → { type: 'processPage', index, bitmap: ImageBitmap, mode: 'clean'|'enhance', strength: 0..1, straighten }
+//    in  → { type: 'processPage', index, bitmap: ImageBitmap, mode: 'clean'|'enhance', strength: 0..1, straighten, keepColor }
 //    out → { type: 'pageDone', index, bytes: ArrayBuffer, format: 'png'|'jpeg', width, height }
 //
 //    in  → { type: 'assemble', pages: [{index, bytes, format, width, height}], pageSizes: [{width, height}] }
@@ -33,7 +33,7 @@ self.onmessage = async (e) => {
   try {
     const { type } = e.data;
     if (type === 'processPage') {
-      await handleProcessPage(e.data.index, e.data.bitmap, e.data.mode, e.data.strength, e.data.straighten);
+      await handleProcessPage(e.data.index, e.data.bitmap, e.data.mode, e.data.strength, e.data.straighten, e.data.keepColor);
     } else if (type === 'enhanceForOcr') {
       handleEnhanceForOcr(e.data.bitmap);
     } else if (type === 'assemble') {
@@ -50,7 +50,7 @@ function progress(value, label) {
 
 // ── Per-page pixel pipeline ─────────────────────────────────────
 
-async function handleProcessPage(index, bitmap, mode, strength, straighten = false) {
+async function handleProcessPage(index, bitmap, mode, strength, straighten = false, keepColor = false) {
   const w = bitmap.width, h = bitmap.height;
   const src = new OffscreenCanvas(w, h);
   src.getContext('2d').drawImage(bitmap, 0, 0);
@@ -65,6 +65,7 @@ async function handleProcessPage(index, bitmap, mode, strength, straighten = fal
     _unsharpMask(gray, 2, 2.0);
     _applyClean(gray, strength);
   }
+  if (keepColor) _restoreColorInk(src, gray);
   // "Straighten tilted pages" — the OCR preprocessing's own deskew (same
   // angle search, same ±5° range), measured on the cleaned page, whose
   // text lines are what the angle is read from.
@@ -91,6 +92,28 @@ function _enhancePipeline(gray, strength) {
   _applyMedianFilter(gray);
   _unsharpMask(gray, 2, 2.0);
   _applyEnhance(gray, strength);
+}
+
+// "Keep coloured stamps and signatures" — a user's own words: "leave the
+// blue round stamp, whiten everything else" (2026-10-15). Both modes work in
+// grey, so a stamp came out grey (Enhance) or broken into black specks
+// (Clean). Pixels of saturated, not pale colour — stamp ink, a ballpoint
+// signature — are put back in their original colour on the cleaned page.
+// Tinted paper (yellowish, ~45 levels apart, near white) stays below both
+// limits and is whitened like the rest.
+const _INK_CHROMA = 60, _INK_MAX_BRIGHT = 230;
+function _restoreColorInk(srcCanvas, grayCanvas) {
+  const w = srcCanvas.width, h = srcCanvas.height;
+  const src = srcCanvas.getContext('2d').getImageData(0, 0, w, h).data;
+  const gctx = grayCanvas.getContext('2d');
+  const out = gctx.getImageData(0, 0, w, h);
+  const d = out.data;
+  for (let i = 0; i < d.length; i += 4) {
+    const r = src[i], g = src[i + 1], b = src[i + 2];
+    const hi = Math.max(r, g, b);
+    if (hi - Math.min(r, g, b) > _INK_CHROMA && hi < _INK_MAX_BRIGHT) { d[i] = r; d[i + 1] = g; d[i + 2] = b; }
+  }
+  gctx.putImageData(out, 0, 0);
 }
 
 // OCR preprocessing: Enhance at its default strength. Measured on Arabic and

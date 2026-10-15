@@ -443,6 +443,8 @@ window.PDFREE_LOCALE = {
   cs_mode_clean:         'تنظيف',
   cs_mode_enhance:       'تحسين',
   cs_strength:           'القوة',
+  cs_keep_color: "الإبقاء على الأختام والتواقيع الملوّنة",
+  cs_keep_color_sub: "يبقى الختم الأزرق أو التوقيع بالقلم بلونه، ويُنظَّف كل ما عداه",
   cs_straighten: "تقويم الصفحات المائلة",
   cs_straighten_sub: "يعيد كل صفحة إلى وضع مستقيم إذا مُسحت أو صُوِّرت بميل خفيف (حتى 5°)",
   cs_quality:            'الجودة',

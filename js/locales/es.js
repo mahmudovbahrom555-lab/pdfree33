@@ -432,6 +432,8 @@ window.PDFREE_LOCALE = {
   cs_mode_clean: 'Limpiar',
   cs_mode_enhance: 'Mejorar',
   cs_strength: 'Intensidad',
+  cs_keep_color: "Conservar sellos y firmas en color",
+  cs_keep_color_sub: "Un sello azul o una firma a bolígrafo conservan su color; todo lo demás se limpia",
   cs_straighten: "Enderezar páginas inclinadas",
   cs_straighten_sub: "Pone recta cada página escaneada o fotografiada con una ligera inclinación (hasta 5°)",
   cs_quality: 'Calidad',

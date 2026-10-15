@@ -432,6 +432,8 @@ window.PDFREE_LOCALE = {
   cs_mode_clean: 'Limpar',
   cs_mode_enhance: 'Melhorar',
   cs_strength: 'Intensidade',
+  cs_keep_color: "Manter carimbos e assinaturas coloridos",
+  cs_keep_color_sub: "Um carimbo azul ou uma assinatura a caneta mantêm a cor; o resto é limpo",
   cs_straighten: "Endireitar páginas inclinadas",
   cs_straighten_sub: "Deixa reta cada página digitalizada ou fotografada com uma leve inclinação (até 5°)",
   cs_quality: 'Qualidade',

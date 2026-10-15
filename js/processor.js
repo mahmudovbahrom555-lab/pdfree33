@@ -1301,7 +1301,8 @@ function _cleanScanWorkerRequest(worker, message, transfer, onProgress) {
   });
 }
 
-async function _runCleanScan(filesSnapshot, { mode = 'clean', strength = 0.5, scale = 2, straighten = false } = {}) {
+const _CS_MAX_PIXELS = 12_000_000;
+async function _runCleanScan(filesSnapshot, { mode = 'clean', strength = 0.5, scale = 2, straighten = false, keepColor = true } = {}) {
   if (!_checkSize(filesSnapshot[0], maxFileMb('cleanScan'))) { _abortUI(); return; }
   const file = filesSnapshot[0];
 
@@ -1324,17 +1325,34 @@ async function _runCleanScan(filesSnapshot, { mode = 'clean', strength = 0.5, sc
       const vp1  = page.getViewport({ scale: 1 }); // unscaled viewport = page size in points
       pageSizes.push({ width: vp1.width, height: vp1.height });
 
-      const vp     = page.getViewport({ scale });
-      const canvas = document.createElement('canvas');
-      canvas.width  = Math.round(vp.width);
-      canvas.height = Math.round(vp.height);
-      await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+      // "The ImageBitmap could not be allocated" (a real report, CLEANSCAN-
+      // B536): a large page at scale 2–3 is a canvas of tens of megapixels,
+      // and each page's canvas stayed allocated until garbage collection. The
+      // render is capped at _CS_MAX_PIXELS (a scanned A4 at 300 dpi is 8.7 MP —
+      // nothing a scan holds is lost below that), the canvas is released as
+      // soon as its bitmap exists, and a failed allocation is retried once at
+      // half the size instead of failing the whole document.
+      const renderPage = async s => {
+        const vp     = page.getViewport({ scale: s });
+        const canvas = document.createElement('canvas');
+        canvas.width  = Math.round(vp.width);
+        canvas.height = Math.round(vp.height);
+        try {
+          await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+          return await createImageBitmap(canvas);
+        } finally {
+          canvas.width = 0; canvas.height = 0;
+        }
+      };
+      const fit = Math.min(scale, Math.sqrt(_CS_MAX_PIXELS / (vp1.width * vp1.height)));
+      let bitmap;
+      try { bitmap = await renderPage(fit); }
+      catch { bitmap = await renderPage(fit / 2); }
       page.cleanup?.();
 
-      const bitmap = await createImageBitmap(canvas);
       const result = await _cleanScanWorkerRequest(
         worker,
-        { type: 'processPage', index: i - 1, bitmap, mode, strength, straighten },
+        { type: 'processPage', index: i - 1, bitmap, mode, strength, straighten, keepColor },
         [bitmap]
       );
       pages.push(result);

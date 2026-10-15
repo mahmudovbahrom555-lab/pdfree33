@@ -432,6 +432,8 @@ window.PDFREE_LOCALE = {
   cs_mode_clean: 'Nettoyer',
   cs_mode_enhance: 'Améliorer',
   cs_strength: 'Intensité',
+  cs_keep_color: "Garder les tampons et signatures en couleur",
+  cs_keep_color_sub: "Un tampon bleu ou une signature au stylo garde sa couleur ; le reste est nettoyé",
   cs_straighten: "Redresser les pages inclinées",
   cs_straighten_sub: "Remet droite chaque page numérisée ou photographiée légèrement de travers (jusqu’à 5°)",
   cs_quality: 'Qualité',

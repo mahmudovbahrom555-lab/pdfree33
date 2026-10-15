@@ -432,6 +432,8 @@ window.PDFREE_LOCALE = {
   cs_mode_clean: 'Temizle',
   cs_mode_enhance: 'İyileştir',
   cs_strength: 'Güç',
+  cs_keep_color: "Renkli mühür ve imzaları koru",
+  cs_keep_color_sub: "Mavi bir mühür ya da kalemle atılmış imza rengini korur; geri kalan temizlenir",
   cs_straighten: "Eğik sayfaları düzelt",
   cs_straighten_sub: "Hafif eğik taranmış veya çekilmiş her sayfayı düzeltir (5°'ye kadar)",
   cs_quality: 'Kalite',

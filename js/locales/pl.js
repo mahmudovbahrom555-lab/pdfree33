@@ -432,6 +432,8 @@ window.PDFREE_LOCALE = {
   cs_mode_clean: 'Wyczyść',
   cs_mode_enhance: 'Popraw',
   cs_strength: 'Siła',
+  cs_keep_color: "Zachowaj kolorowe pieczątki i podpisy",
+  cs_keep_color_sub: "Niebieska pieczątka lub podpis długopisem zachowują kolor; reszta jest oczyszczana",
   cs_straighten: "Wyprostuj przekrzywione strony",
   cs_straighten_sub: "Prostuje każdą stronę zeskanowaną lub sfotografowaną lekko krzywo (do 5°)",
   cs_quality: 'Jakość',

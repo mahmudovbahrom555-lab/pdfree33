@@ -432,6 +432,8 @@ window.PDFREE_LOCALE = {
   cs_mode_clean: 'Opschonen',
   cs_mode_enhance: 'Verbeteren',
   cs_strength: 'Sterkte',
+  cs_keep_color: "Gekleurde stempels en handtekeningen behouden",
+  cs_keep_color_sub: "Een blauwe stempel of een handtekening met pen houdt zijn kleur; de rest wordt opgeschoond",
   cs_straighten: "Scheve pagina's rechtzetten",
   cs_straighten_sub: "Zet elke pagina recht die licht scheef is gescand of gefotografeerd (tot 5°)",
   cs_quality: 'Kwaliteit',

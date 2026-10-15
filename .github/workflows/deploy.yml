@@ -372,6 +372,12 @@ jobs:
         # tests/e2e/clean-scan-straighten.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:clean-scan-straighten
 
+      - name: E2E — Clean Scan keeps a coloured stamp; a very large page comes out
+        # A user report (CLEANSCAN-B536): "leave the blue round stamp, whiten
+        # everything else" + "The ImageBitmap could not be allocated". See
+        # tests/e2e/clean-scan-stamp.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:clean-scan-stamp
+
       - name: E2E — PDF to Word keeps filled-in form values
         # Typed answers live in widget annotations, never in pdf.js's text
         # content — they were all missing (found by the nightly corpus

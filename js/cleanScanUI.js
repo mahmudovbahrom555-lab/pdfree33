@@ -42,6 +42,7 @@ let _mode        = 'clean';    // 'clean' | 'enhance'
 let _strength     = 0.5;        // 0..1, nudges the auto (Otsu) baseline
 let _quality      = 'standard'; // 'standard' | 'high' — export render scale
 let _straighten   = false;      // deskew each page (off by default: no change for current users)
+let _keepColor    = true;       // coloured stamps and signatures keep their colour
 let _pageCount    = 0;
 let _pdfJsDoc     = null;
 let _previewPage  = 1;
@@ -70,6 +71,7 @@ export function getCleanScanParams() {
     mode:     _mode,
     strength: _strength,
     straighten: _straighten,
+    keepColor:  _keepColor,
     scale:    _quality === 'high' ? 3 : 2,
     hasFile:  !!_pdfJsDoc,
     pageCount: _pageCount,
@@ -132,7 +134,7 @@ export function hideCleanScanOptions() {
   _cleanup();
   const container = id('cleanScanOptions');
   if (container) { container.style.display = 'none'; container.innerHTML = ''; }
-  _mode = 'clean'; _strength = 0.5; _quality = 'standard'; _straighten = false;
+  _mode = 'clean'; _strength = 0.5; _quality = 'standard'; _straighten = false; _keepColor = true;
   _pageCount = 0; _pdfJsDoc = null; _previewPage = 1;
   _hasColor = false; _looksDigital = false;
 }
@@ -232,7 +234,7 @@ async function _updatePreview() {
     const worker = _ensurePreviewWorker();
     const result = await _previewWorkerRequest(
       worker,
-      { type: 'processPage', index: 0, bitmap, mode: _mode, strength: _strength, straighten: _straighten },
+      { type: 'processPage', index: 0, bitmap, mode: _mode, strength: _strength, straighten: _straighten, keepColor: _keepColor },
       [bitmap]
     );
     if (myGen !== _previewGen) return;
@@ -282,6 +284,7 @@ function _render(file) {
       <input type="range" id="csStrength" class="cs-slider" min="0" max="1" step="0.05" value="${_strength}" aria-label="${t('cs_strength')}">
     </div>
 
+    ${checkbox({ id: 'csKeepColor', checked: _keepColor, title: t('cs_keep_color'), subtitle: t('cs_keep_color_sub') })}
     ${checkbox({ id: 'csStraighten', checked: _straighten, title: t('cs_straighten'), subtitle: t('cs_straighten_sub') })}
 
     ${_chipGroup('cs_quality', 'csQuality', _quality, [
@@ -339,7 +342,8 @@ function _chipGroup(labelKey, name, current, options) {
 
 function _syncWarnings() {
   const el = id('csColorWarning');
-  if (el) el.style.display = (_hasColor && _mode === 'clean') ? 'flex' : 'none';
+  // colour is lost only when it isn't kept
+  if (el) el.style.display = (_hasColor && _mode === 'clean' && !_keepColor) ? 'flex' : 'none';
 }
 
 function _syncChips(name, value) {
@@ -367,6 +371,11 @@ function _bindEvents() {
       _syncChips('csQuality', _quality);
       // Quality only affects the final export scale, not the fixed-width
       // preview — no preview refresh needed.
+    }
+    if (e.target.id === 'csKeepColor') {
+      _keepColor = e.target.checked;
+      _syncWarnings();
+      _schedulePreview();
     }
     if (e.target.id === 'csStraighten') {
       _straighten = e.target.checked;

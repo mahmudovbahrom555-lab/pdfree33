@@ -441,6 +441,8 @@ window.PDFREE_LOCALE = {
   cs_mode_clean:         '清理',
   cs_mode_enhance:       '增强',
   cs_strength:           '强度',
+  cs_keep_color: "保留彩色印章和签名",
+  cs_keep_color_sub: "蓝色印章或钢笔签名保留原色，其余部分清理干净",
   cs_straighten: "校正倾斜页面",
   cs_straighten_sub: "将扫描或拍摄时略有倾斜的页面摆正（最多 5°）",
   cs_quality:            '质量',
