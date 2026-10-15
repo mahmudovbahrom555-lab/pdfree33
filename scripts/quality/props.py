@@ -104,7 +104,10 @@ def docx_props(path):
     try: styles = zipfile.ZipFile(path).read('word/styles.xml').decode('utf-8')
     except KeyError: pass
     default_fonts = re.findall(r'w:ascii="([^"]+)"', styles)
-    text = ' '.join(re.findall(r'<w:t[^>]*>([^<]*)', x))
+    # runs of one paragraph touch: a word split across runs (bold from its
+    # third letter) is one word in Word — joined with spaces, every such
+    # split counted as text.spaced (3147696: 2020 "single letters", ~5 real)
+    text = ' '.join(''.join(re.findall(r'<w:t[^>]*>([^<]*)', p)) for p in re.findall(r'<w:p[ >].*?</w:p>', x, re.S))
     return {'tables': tables, 'paras': paras, 'runs': runs, 'default_fonts': default_fonts, 'text': text}
 
 
