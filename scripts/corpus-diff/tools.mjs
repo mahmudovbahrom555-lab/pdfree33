@@ -34,6 +34,13 @@ export const TOOLS = {
   resize:    { path: '/resize-pdf-for-printing/', files: f => [f] },
   nup:       { path: '/pages-per-sheet/', files: f => [f],
                ready: () => !!document.querySelector('#nupPreview svg') },
+  // "Editable text" mode — prepare() runs in the page before the click
+  pdf2pptText: { path: '/pdf-to-powerpoint/', files: f => [f],
+                 ready: () => !!document.querySelector('input[name="p2pMode"][value="text"]'),
+                 prepare: () => {
+                   const i = document.querySelector('input[name="p2pMode"][value="text"]');
+                   i.checked = true; i.dispatchEvent(new Event('change', { bubbles: true }));
+                 } },
 };
 
 export const EXT = {
@@ -41,4 +48,5 @@ export const EXT = {
   'image/jpeg': 'jpg', 'image/png': 'png',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'pptx',
 };

@@ -18,10 +18,10 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'run — a night of the robustness run; sample — (re)build the sample list'
+        description: 'run — a night of the robustness run; sample — (re)build the sample list; sample-slides — the presentations list (PDF→PowerPoint)'
         default: run
         type: choice
-        options: [run, sample]
+        options: [run, sample, sample-slides]
       night:
         description: 'which tenth of the sample (0–9); empty = day of the year'
         required: false
@@ -32,13 +32,15 @@ permissions:
 
 jobs:
   sample:
-    if: github.event_name == 'workflow_dispatch' && inputs.mode == 'sample'
+    if: github.event_name == 'workflow_dispatch' && startsWith(inputs.mode, 'sample')
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Pick the stratified sample (Tika metadata streamed from S3)
-        run: python3 scripts/corpus-cloud/pick_sample.py > sample-v1.json
+        env:
+          MODE: ${{ inputs.mode }}
+        run: python3 scripts/corpus-cloud/pick_sample.py $([ "$MODE" = sample-slides ] && echo --slides) > sample-v1.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: corpus-sample

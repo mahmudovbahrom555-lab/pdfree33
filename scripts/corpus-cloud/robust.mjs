@@ -81,6 +81,7 @@ async function drive(page, tool, file, isCrashed, saveAs) {
   await page.setInputFiles('#fileInput', TOOLS[tool].files(file));
   await page.waitForTimeout(2500);
   if (TOOLS[tool].ready) await page.waitForFunction(TOOLS[tool].ready, null, { timeout: 30_000 }).catch(() => {});
+  if (TOOLS[tool].prepare) await page.evaluate(TOOLS[tool].prepare);
   const disabled = await page.evaluate(() => !!document.querySelector('#mergeBtn')?.disabled);
   if (disabled) {
     const toast = await page.evaluate(() => (document.querySelector('#toast')?.innerText || '').trim().slice(0, 200));

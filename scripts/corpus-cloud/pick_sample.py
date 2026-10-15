@@ -10,7 +10,12 @@ the other languages we serve, encrypted and very long files, and a random
 control group. Each file's language is Tika's own detection (tika_eval_lang,
 ISO 639-3); a file with pages but no tokens is taken as a scan.
 
-  python3 scripts/corpus-cloud/pick_sample.py [metadata.csv(.gz) | URL] > sample.json
+  python3 scripts/corpus-cloud/pick_sample.py [--slides] [metadata.csv(.gz) | URL] > sample.json
+
+--slides: only presentations saved as PDF (made by PowerPoint, Keynote,
+Impress, WPS, Google Slides — Tika's creator tool / producer), by language:
+what PDF→PowerPoint is for. A Chinese user's report on its editable-text mode
+(2026-10-15) showed documents measure the wrong thing there.
 
 Default source: the full Tika table on S3, streamed (≈450 MB gzip, never
 stored). Same seed → same sample, so nights are comparable.
@@ -53,6 +58,17 @@ def stratum(r):
     return 'random'
 
 
+SLIDES_QUOTA = {'zh': 150, 'ja': 60, 'ko': 40, 'ar': 40, 'fa': 20, 'ru': 30, 'other': 160}
+_SLIDES_TOOL = ('powerpoint', 'keynote', 'impress', 'wps', 'google slides', 'presentation')
+
+
+def slides_stratum(r):
+    tool = f"{r.get('xmp_creator_tool') or ''} {r.get('pdf_producer') or ''}".lower()
+    if not any(k in tool for k in _SLIDES_TOOL): return None
+    lang = LANG.get(r.get('tika_eval_lang', ''))
+    return lang if lang in SLIDES_QUOTA else 'other'
+
+
 def rows(src):
     raw = urllib.request.urlopen(src, timeout=600) if src.startswith('http') else open(src, 'rb')
     stream = gzip.GzipFile(fileobj=raw) if src.endswith('.gz') else raw
@@ -62,16 +78,21 @@ def rows(src):
 
 
 def main():
-    src = sys.argv[1] if len(sys.argv) > 1 else SRC
+    args = sys.argv[1:]
+    slides = '--slides' in args
+    args = [a for a in args if a != '--slides']
+    src = args[0] if args else SRC
+    quota, pick = (SLIDES_QUOTA, slides_stratum) if slides else (QUOTA, stratum)
     rng = random.Random(SEED)
-    pools, seen = {k: [] for k in QUOTA}, {k: 0 for k in QUOTA}
+    pools, seen = {k: [] for k in quota}, {k: 0 for k in quota}
     for r in rows(src):
         name = r.get('file_name', '')
         if not name.endswith('.pdf'): continue
-        s = stratum(r)
+        s = pick(r)
+        if s is None: continue
         seen[s] += 1
         item = {'file': name, 'stratum': s, 'lang': r.get('tika_eval_lang', ''), 'pages': int(r.get('num_pages') or 0)}
-        pool, q = pools[s], QUOTA[s]
+        pool, q = pools[s], quota[s]
         # reservoir sampling: every file of the stratum equally likely
         if len(pool) < q: pool.append(item)
         else:
