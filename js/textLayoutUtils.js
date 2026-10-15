@@ -323,6 +323,17 @@ export function joinTouchingItems(items, cuts = []) {
   return out;
 }
 
+// Spaces pdf.js puts between Chinese or Japanese characters inside one item:
+// a justified line is drawn with wider character spacing, and pdf.js reads each
+// widened gap as a space — "用 户 管 理 ： 身 份 证" in a Chinese white paper
+// (presentations corpus, 2026-10-15; MuPDF reads the line without any). Neither
+// language puts spaces between its characters; a space next to Latin letters,
+// digits or Hangul (Korean is written with spaces) stays.
+const _CJK_SPACED_RE = /([\u3000-\u303F\u3040-\u30FF\u3400-\u9FFF\uF900-\uFAFF\uFF01-\uFF60]) +(?=[\u3000-\u303F\u3040-\u30FF\u3400-\u9FFF\uF900-\uFAFF\uFF01-\uFF60])/g;
+export function dropCjkGapSpaces(str) {
+  return str.replace(_CJK_SPACED_RE, '$1');
+}
+
 // CJK radicals → the ideographs they stand for. A CJK font draws 目 and the
 // Kangxi radical ⽬ with one glyph, and pdf.js gives that glyph the radical's
 // code point: 1082 of the ~10 300 characters of a Chrome-printed Chinese

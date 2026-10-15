@@ -10,7 +10,7 @@
 import { strict as assert } from 'assert';
 import { joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
   lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
-  continuesWrappedHeading, lineRuns , textLayerLooksBroken, toUnifiedIdeographs, joinTouchingItems } from '../js/textLayoutUtils.js';
+  continuesWrappedHeading, lineRuns , textLayerLooksBroken, toUnifiedIdeographs, joinTouchingItems, dropCjkGapSpaces } from '../js/textLayoutUtils.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -437,6 +437,15 @@ test('touching Latin pieces, a real gap, and a table rule between stay apart', (
   assert.equal(joinTouchingItems([piece('cell', 10, 20), piece('b2', 30, 10)]).length, 2);
   assert.equal(joinTouchingItems([piece('数量', 10, 22), piece('单价', 40, 22)]).length, 2);
   assert.equal(joinTouchingItems([piece('项', 10, 11), piece('目', 21, 11)], [21]).length, 2);
+});
+
+test('dropCjkGapSpaces: a justified Chinese line loses the spaces pdf.js read into it', () => {
+  // a white paper's justified line (presentations corpus, 2026-10-15)
+  assert.equal(dropCjkGapSpaces('用 户 管 理 ： 身 份 证 由 个 人 拥 有 ， 而 不 是'), '用户管理：身份证由个人拥有，而不是');
+  assert.equal(dropCjkGapSpaces('様式１業 務 委 託'), '様式１業務委託');
+  // next to Latin, digits or Hangul a space stays
+  assert.equal(dropCjkGapSpaces('在 2000 年 提出 Augmented Social'), '在 2000 年提出 Augmented Social');
+  assert.equal(dropCjkGapSpaces('한국어 문장 입니다'), '한국어 문장 입니다');
 });
 
 const total = passed + failed;
