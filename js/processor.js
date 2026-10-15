@@ -4659,10 +4659,16 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
           if (!lastStr.endsWith(' ') && !text0.startsWith(' ') && !cjkJoin(lastStr, text0)) {
             text = ' ' + text;
           }
-        } else if (prev && !ln.rtl && !prev.str.endsWith(' ') && !text0.startsWith(' ')) {
-          // LTR only: gap-based space insertion within the same line
+        } else if (prev && !prev.str.endsWith(' ') && !text0.startsWith(' ')) {
+          // gap-based space insertion within the same line. Right-to-left lines
+          // too, measured either way (logical order runs right to left, a Latin
+          // name inside it left to right): a Persian newsletter's words, one
+          // item each and no space items, came out glued (corpus 0828977).
           const prevW = (prev.width > 0) ? prev.width : prev.fontSize * prev.str.length * 0.5;
-          const gap   = item.x - (prev.x + prevW);
+          const itemW = (item.width > 0) ? item.width : item.fontSize * text0.length * 0.5;
+          const gap   = ln.rtl
+            ? Math.max(prev.x - (item.x + itemW), item.x - (prev.x + prevW))
+            : item.x - (prev.x + prevW);
           // Devanagari (Hindi) spaces are narrower — use 10% of fontSize instead of 20%
           const thr   = (_isDevanagari(prev.str) || _isDevanagari(text0))
             ? item.fontSize * 0.1 : item.fontSize * 0.2;
