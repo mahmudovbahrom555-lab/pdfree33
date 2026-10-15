@@ -1,0 +1,3015 @@
+{
+ "source": "https://digitalcorpora.s3.amazonaws.com/corpora/files/CC-MAIN-2021-31-PDF-UNTRUNCATED/metadata/tika-20230714.csv.gz",
+ "seed": 2026,
+ "population": {
+  "zh": 378,
+  "ja": 18093,
+  "ko": 1058,
+  "ar": 247,
+  "fa": 250,
+  "ru": 3476,
+  "other": 200707
+ },
+ "sample": [
+  {
+   "file": "0009368.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 2
+  },
+  {
+   "file": "0020412.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 51
+  },
+  {
+   "file": "0024062.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 2
+  },
+  {
+   "file": "0046982.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 11
+  },
+  {
+   "file": "0051997.pdf",
+   "stratum": "other",
+   "lang": "nld",
+   "pages": 2
+  },
+  {
+   "file": "0056074.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 4
+  },
+  {
+   "file": "0095998.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 1
+  },
+  {
+   "file": "0119504.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 17
+  },
+  {
+   "file": "0130835.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 6
+  },
+  {
+   "file": "0146589.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 35
+  },
+  {
+   "file": "0148508.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "0151465.pdf",
+   "stratum": "other",
+   "lang": "ita",
+   "pages": 36
+  },
+  {
+   "file": "0182224.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "0188444.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 1
+  },
+  {
+   "file": "0200767.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 2
+  },
+  {
+   "file": "0236708.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 4
+  },
+  {
+   "file": "0243330.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "0245761.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 24
+  },
+  {
+   "file": "0259160.pdf",
+   "stratum": "other",
+   "lang": "pol",
+   "pages": 2
+  },
+  {
+   "file": "0275487.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 65
+  },
+  {
+   "file": "0281854.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 4
+  },
+  {
+   "file": "0286467.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 14
+  },
+  {
+   "file": "0291788.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 23
+  },
+  {
+   "file": "0330596.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 2
+  },
+  {
+   "file": "0388372.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 5
+  },
+  {
+   "file": "0417250.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 20
+  },
+  {
+   "file": "0419312.pdf",
+   "stratum": "fa",
+   "lang": "pes",
+   "pages": 8
+  },
+  {
+   "file": "0439057.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 16
+  },
+  {
+   "file": "0440119.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 8
+  },
+  {
+   "file": "0447286.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 2
+  },
+  {
+   "file": "0481059.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "0483598.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 1
+  },
+  {
+   "file": "0497236.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 4
+  },
+  {
+   "file": "0527914.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "0550671.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 1
+  },
+  {
+   "file": "0565685.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 14
+  },
+  {
+   "file": "0569607.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 24
+  },
+  {
+   "file": "0569915.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 2
+  },
+  {
+   "file": "0582703.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 3
+  },
+  {
+   "file": "0588234.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "0627474.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 23
+  },
+  {
+   "file": "0627725.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 1
+  },
+  {
+   "file": "0644125.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "0677833.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 1
+  },
+  {
+   "file": "0686647.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 22
+  },
+  {
+   "file": "0705672.pdf",
+   "stratum": "fa",
+   "lang": "pes",
+   "pages": 22
+  },
+  {
+   "file": "0716278.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 2
+  },
+  {
+   "file": "0729978.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 5
+  },
+  {
+   "file": "0753296.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 4
+  },
+  {
+   "file": "0785617.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 158
+  },
+  {
+   "file": "0846940.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 22
+  },
+  {
+   "file": "0893666.pdf",
+   "stratum": "other",
+   "lang": "slv",
+   "pages": 14
+  },
+  {
+   "file": "0915200.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "0927150.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 27
+  },
+  {
+   "file": "0942799.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 12
+  },
+  {
+   "file": "0946679.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "0951704.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 31
+  },
+  {
+   "file": "0971203.pdf",
+   "stratum": "other",
+   "lang": "ces",
+   "pages": 24
+  },
+  {
+   "file": "0981043.pdf",
+   "stratum": "other",
+   "lang": "",
+   "pages": 34
+  },
+  {
+   "file": "1006600.pdf",
+   "stratum": "fa",
+   "lang": "pes",
+   "pages": 34
+  },
+  {
+   "file": "1073573.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 115
+  },
+  {
+   "file": "1074839.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 2
+  },
+  {
+   "file": "1075054.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 18
+  },
+  {
+   "file": "1100722.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 21
+  },
+  {
+   "file": "1120924.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "1138328.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "1144798.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 9
+  },
+  {
+   "file": "1214283.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 25
+  },
+  {
+   "file": "1247354.pdf",
+   "stratum": "other",
+   "lang": "fra",
+   "pages": 14
+  },
+  {
+   "file": "1247811.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 24
+  },
+  {
+   "file": "1270122.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "1336176.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 11
+  },
+  {
+   "file": "1353700.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "1358726.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 4
+  },
+  {
+   "file": "1380800.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 4
+  },
+  {
+   "file": "1428228.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 13
+  },
+  {
+   "file": "1436091.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 34
+  },
+  {
+   "file": "1444010.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 22
+  },
+  {
+   "file": "1445626.pdf",
+   "stratum": "other",
+   "lang": "zho-trad",
+   "pages": 6
+  },
+  {
+   "file": "1448989.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 12
+  },
+  {
+   "file": "1459523.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 9
+  },
+  {
+   "file": "1461446.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 4
+  },
+  {
+   "file": "1471852.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "1482359.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 26
+  },
+  {
+   "file": "1486427.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 6
+  },
+  {
+   "file": "1510905.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 24
+  },
+  {
+   "file": "1517909.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 3
+  },
+  {
+   "file": "1519162.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 46
+  },
+  {
+   "file": "1527951.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 57
+  },
+  {
+   "file": "1533346.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 13
+  },
+  {
+   "file": "1584784.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "1610944.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 2
+  },
+  {
+   "file": "1656537.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 22
+  },
+  {
+   "file": "1659427.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 1
+  },
+  {
+   "file": "1660250.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 26
+  },
+  {
+   "file": "1667987.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 30
+  },
+  {
+   "file": "1676083.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 2
+  },
+  {
+   "file": "1678138.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 11
+  },
+  {
+   "file": "1713082.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 4
+  },
+  {
+   "file": "1724052.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 1
+  },
+  {
+   "file": "1730172.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "1752431.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "1762922.pdf",
+   "stratum": "other",
+   "lang": "hun",
+   "pages": 22
+  },
+  {
+   "file": "1767665.pdf",
+   "stratum": "other",
+   "lang": "spa",
+   "pages": 1
+  },
+  {
+   "file": "1767684.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 11
+  },
+  {
+   "file": "1780420.pdf",
+   "stratum": "other",
+   "lang": "fra",
+   "pages": 21
+  },
+  {
+   "file": "1794032.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 3
+  },
+  {
+   "file": "1818331.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 36
+  },
+  {
+   "file": "1826009.pdf",
+   "stratum": "other",
+   "lang": "lav",
+   "pages": 14
+  },
+  {
+   "file": "1862634.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 19
+  },
+  {
+   "file": "1901814.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 35
+  },
+  {
+   "file": "1910984.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 2
+  },
+  {
+   "file": "1913754.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 61
+  },
+  {
+   "file": "1922642.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 25
+  },
+  {
+   "file": "1926601.pdf",
+   "stratum": "fa",
+   "lang": "pes",
+   "pages": 8
+  },
+  {
+   "file": "1929614.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 27
+  },
+  {
+   "file": "1929847.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 3
+  },
+  {
+   "file": "1936730.pdf",
+   "stratum": "other",
+   "lang": "ita",
+   "pages": 1
+  },
+  {
+   "file": "1943977.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 4
+  },
+  {
+   "file": "1950407.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 88
+  },
+  {
+   "file": "1957815.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 60
+  },
+  {
+   "file": "1960896.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 2
+  },
+  {
+   "file": "1960896.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 2
+  },
+  {
+   "file": "1960896.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 2
+  },
+  {
+   "file": "1964602.pdf",
+   "stratum": "other",
+   "lang": "fra",
+   "pages": 8
+  },
+  {
+   "file": "1967270.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 2
+  },
+  {
+   "file": "1983024.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 40
+  },
+  {
+   "file": "1986242.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 2
+  },
+  {
+   "file": "2001037.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 1
+  },
+  {
+   "file": "2034734.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "2050461.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "2066654.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 3
+  },
+  {
+   "file": "2076703.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 38
+  },
+  {
+   "file": "2083979.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 16
+  },
+  {
+   "file": "2084927.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 6
+  },
+  {
+   "file": "2085172.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 5
+  },
+  {
+   "file": "2085352.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 5
+  },
+  {
+   "file": "2102056.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "2106141.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "2140541.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 19
+  },
+  {
+   "file": "2149745.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 69
+  },
+  {
+   "file": "2161978.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 2
+  },
+  {
+   "file": "2167546.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 1
+  },
+  {
+   "file": "2169141.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 109
+  },
+  {
+   "file": "2171757.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 4
+  },
+  {
+   "file": "2186853.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "2261715.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 2
+  },
+  {
+   "file": "2272724.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 1
+  },
+  {
+   "file": "2333157.pdf",
+   "stratum": "fa",
+   "lang": "pes",
+   "pages": 2
+  },
+  {
+   "file": "2342844.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 20
+  },
+  {
+   "file": "2356879.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "2358076.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 9
+  },
+  {
+   "file": "2373126.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 8
+  },
+  {
+   "file": "2378054.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "2408204.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 4
+  },
+  {
+   "file": "2408256.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "2412021.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 5
+  },
+  {
+   "file": "2439365.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 1
+  },
+  {
+   "file": "2456895.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 6
+  },
+  {
+   "file": "2458115.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 3
+  },
+  {
+   "file": "2462995.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "2476354.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "2489531.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 5
+  },
+  {
+   "file": "2505773.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "2514447.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 3
+  },
+  {
+   "file": "2516305.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 2
+  },
+  {
+   "file": "2517948.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "2523427.pdf",
+   "stratum": "other",
+   "lang": "spa",
+   "pages": 47
+  },
+  {
+   "file": "2541658.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 45
+  },
+  {
+   "file": "2592348.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 2
+  },
+  {
+   "file": "2622985.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 1
+  },
+  {
+   "file": "2719273.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 30
+  },
+  {
+   "file": "2756778.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 25
+  },
+  {
+   "file": "2765701.pdf",
+   "stratum": "other",
+   "lang": "spa",
+   "pages": 10
+  },
+  {
+   "file": "2803566.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 2
+  },
+  {
+   "file": "2865963.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 4
+  },
+  {
+   "file": "2911608.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 39
+  },
+  {
+   "file": "2911699.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 46
+  },
+  {
+   "file": "2917278.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 6
+  },
+  {
+   "file": "2930150.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 13
+  },
+  {
+   "file": "2959281.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 31
+  },
+  {
+   "file": "2979535.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 3
+  },
+  {
+   "file": "2991126.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 5
+  },
+  {
+   "file": "3003058.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 37
+  },
+  {
+   "file": "3007883.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 46
+  },
+  {
+   "file": "3062980.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "3063093.pdf",
+   "stratum": "other",
+   "lang": "spa",
+   "pages": 17
+  },
+  {
+   "file": "3064113.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 2
+  },
+  {
+   "file": "3074365.pdf",
+   "stratum": "other",
+   "lang": "por",
+   "pages": 8
+  },
+  {
+   "file": "3106552.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 2
+  },
+  {
+   "file": "3147670.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 8
+  },
+  {
+   "file": "3155957.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "3158317.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "3170617.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "3189511.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "3225243.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 10
+  },
+  {
+   "file": "3227672.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 14
+  },
+  {
+   "file": "3237061.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 3
+  },
+  {
+   "file": "3239125.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 20
+  },
+  {
+   "file": "3296210.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 5
+  },
+  {
+   "file": "3306667.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 2
+  },
+  {
+   "file": "3382982.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 32
+  },
+  {
+   "file": "3392501.pdf",
+   "stratum": "other",
+   "lang": "ita",
+   "pages": 8
+  },
+  {
+   "file": "3399965.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 21
+  },
+  {
+   "file": "3406459.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 3
+  },
+  {
+   "file": "3460150.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "3462443.pdf",
+   "stratum": "other",
+   "lang": "fra",
+   "pages": 33
+  },
+  {
+   "file": "3471592.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 41
+  },
+  {
+   "file": "3481784.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 2
+  },
+  {
+   "file": "3493874.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 18
+  },
+  {
+   "file": "3495043.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 3
+  },
+  {
+   "file": "3520403.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 41
+  },
+  {
+   "file": "3525618.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 7
+  },
+  {
+   "file": "3526913.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 12
+  },
+  {
+   "file": "3535704.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 3
+  },
+  {
+   "file": "3557538.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 30
+  },
+  {
+   "file": "3574265.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 7
+  },
+  {
+   "file": "3577652.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 11
+  },
+  {
+   "file": "3588366.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 56
+  },
+  {
+   "file": "3591938.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "3594518.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 61
+  },
+  {
+   "file": "3611194.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 64
+  },
+  {
+   "file": "3632592.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 100
+  },
+  {
+   "file": "3659736.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 10
+  },
+  {
+   "file": "3668865.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 2
+  },
+  {
+   "file": "3704102.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 40
+  },
+  {
+   "file": "3729582.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 6
+  },
+  {
+   "file": "3801860.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 2
+  },
+  {
+   "file": "3829491.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 26
+  },
+  {
+   "file": "3856602.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 19
+  },
+  {
+   "file": "3891874.pdf",
+   "stratum": "other",
+   "lang": "",
+   "pages": 36
+  },
+  {
+   "file": "3902245.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 52
+  },
+  {
+   "file": "3918986.pdf",
+   "stratum": "other",
+   "lang": "tur",
+   "pages": 2
+  },
+  {
+   "file": "3985537.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "4026565.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 1
+  },
+  {
+   "file": "4062226.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 12
+  },
+  {
+   "file": "4086463.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "4089777.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 14
+  },
+  {
+   "file": "4116060.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 6
+  },
+  {
+   "file": "4123219.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 8
+  },
+  {
+   "file": "4132152.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 14
+  },
+  {
+   "file": "4157366.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "4163674.pdf",
+   "stratum": "fa",
+   "lang": "pes",
+   "pages": 12
+  },
+  {
+   "file": "4219831.pdf",
+   "stratum": "other",
+   "lang": "fra",
+   "pages": 1
+  },
+  {
+   "file": "4237561.pdf",
+   "stratum": "other",
+   "lang": "fin",
+   "pages": 29
+  },
+  {
+   "file": "4244663.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 18
+  },
+  {
+   "file": "4255578.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "4273403.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 1
+  },
+  {
+   "file": "4291885.pdf",
+   "stratum": "fa",
+   "lang": "pes",
+   "pages": 36
+  },
+  {
+   "file": "4293480.pdf",
+   "stratum": "other",
+   "lang": "",
+   "pages": 18
+  },
+  {
+   "file": "4306962.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 1
+  },
+  {
+   "file": "4308529.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "4329793.pdf",
+   "stratum": "other",
+   "lang": "spa",
+   "pages": 4
+  },
+  {
+   "file": "4338964.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "4340106.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 52
+  },
+  {
+   "file": "4345763.pdf",
+   "stratum": "other",
+   "lang": "ita",
+   "pages": 1
+  },
+  {
+   "file": "4373993.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 6
+  },
+  {
+   "file": "4388871.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 5
+  },
+  {
+   "file": "4397310.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "4418763.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 1
+  },
+  {
+   "file": "4436286.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 2
+  },
+  {
+   "file": "4437839.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 14
+  },
+  {
+   "file": "4457177.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 8
+  },
+  {
+   "file": "4460327.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 14
+  },
+  {
+   "file": "4472931.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "4481322.pdf",
+   "stratum": "other",
+   "lang": "spa",
+   "pages": 18
+  },
+  {
+   "file": "4482708.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 20
+  },
+  {
+   "file": "4484894.pdf",
+   "stratum": "fa",
+   "lang": "fas",
+   "pages": 5
+  },
+  {
+   "file": "4527133.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "4531006.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 1
+  },
+  {
+   "file": "4545712.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 1
+  },
+  {
+   "file": "4574909.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 45
+  },
+  {
+   "file": "4576434.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 2
+  },
+  {
+   "file": "4601931.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 35
+  },
+  {
+   "file": "4610269.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 9
+  },
+  {
+   "file": "4615418.pdf",
+   "stratum": "other",
+   "lang": "fra",
+   "pages": 1
+  },
+  {
+   "file": "4627186.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 4
+  },
+  {
+   "file": "4694504.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 48
+  },
+  {
+   "file": "4711658.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 5
+  },
+  {
+   "file": "4730966.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 1
+  },
+  {
+   "file": "4753163.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 3
+  },
+  {
+   "file": "4756449.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 4
+  },
+  {
+   "file": "4756832.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 38
+  },
+  {
+   "file": "4774056.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "4780337.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 2
+  },
+  {
+   "file": "4796968.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 3
+  },
+  {
+   "file": "4825884.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 1
+  },
+  {
+   "file": "4829074.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "4842618.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "4850710.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 66
+  },
+  {
+   "file": "4859442.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 9
+  },
+  {
+   "file": "4900350.pdf",
+   "stratum": "fa",
+   "lang": "fas",
+   "pages": 1
+  },
+  {
+   "file": "4903669.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 10
+  },
+  {
+   "file": "4914970.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "4936032.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 6
+  },
+  {
+   "file": "4940604.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 4
+  },
+  {
+   "file": "4947770.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 11
+  },
+  {
+   "file": "4984034.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 20
+  },
+  {
+   "file": "4996305.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "5002536.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 30
+  },
+  {
+   "file": "5020482.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 17
+  },
+  {
+   "file": "5023901.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 10
+  },
+  {
+   "file": "5043382.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 48
+  },
+  {
+   "file": "5062409.pdf",
+   "stratum": "fa",
+   "lang": "pes",
+   "pages": 33
+  },
+  {
+   "file": "5065765.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "5078223.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "5101864.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 6
+  },
+  {
+   "file": "5113750.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 61
+  },
+  {
+   "file": "5213793.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "5228366.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 25
+  },
+  {
+   "file": "5236391.pdf",
+   "stratum": "fa",
+   "lang": "pes",
+   "pages": 9
+  },
+  {
+   "file": "5249944.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 13
+  },
+  {
+   "file": "5272332.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 433
+  },
+  {
+   "file": "5272522.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 3
+  },
+  {
+   "file": "5292552.pdf",
+   "stratum": "other",
+   "lang": "fra",
+   "pages": 1
+  },
+  {
+   "file": "5293262.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 7
+  },
+  {
+   "file": "5396635.pdf",
+   "stratum": "fa",
+   "lang": "pes",
+   "pages": 9
+  },
+  {
+   "file": "5398450.pdf",
+   "stratum": "fa",
+   "lang": "pes",
+   "pages": 4
+  },
+  {
+   "file": "5406369.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 2
+  },
+  {
+   "file": "5408128.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "5418191.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 21
+  },
+  {
+   "file": "5473076.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 1
+  },
+  {
+   "file": "5476518.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 13
+  },
+  {
+   "file": "5493415.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 12
+  },
+  {
+   "file": "5501262.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 12
+  },
+  {
+   "file": "5510521.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "5539651.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 8
+  },
+  {
+   "file": "5543285.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "5551996.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 16
+  },
+  {
+   "file": "5596880.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "5612584.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "5616803.pdf",
+   "stratum": "other",
+   "lang": "ces",
+   "pages": 14
+  },
+  {
+   "file": "5622959.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 19
+  },
+  {
+   "file": "5625276.pdf",
+   "stratum": "fa",
+   "lang": "pes",
+   "pages": 3
+  },
+  {
+   "file": "5632529.pdf",
+   "stratum": "other",
+   "lang": "fra",
+   "pages": 2
+  },
+  {
+   "file": "5640662.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 7
+  },
+  {
+   "file": "5651334.pdf",
+   "stratum": "other",
+   "lang": "",
+   "pages": 4
+  },
+  {
+   "file": "5654517.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 25
+  },
+  {
+   "file": "5677278.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 23
+  },
+  {
+   "file": "5679729.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 44
+  },
+  {
+   "file": "5690230.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 21
+  },
+  {
+   "file": "5710128.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 27
+  },
+  {
+   "file": "5727475.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 61
+  },
+  {
+   "file": "5741941.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 2
+  },
+  {
+   "file": "5754259.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 2
+  },
+  {
+   "file": "5775450.pdf",
+   "stratum": "other",
+   "lang": "ita",
+   "pages": 12
+  },
+  {
+   "file": "5779032.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 2
+  },
+  {
+   "file": "5814533.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 29
+  },
+  {
+   "file": "5818065.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 10
+  },
+  {
+   "file": "5860477.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 19
+  },
+  {
+   "file": "5885350.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 16
+  },
+  {
+   "file": "5885783.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 8
+  },
+  {
+   "file": "5895382.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 4
+  },
+  {
+   "file": "5921112.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "5931181.pdf",
+   "stratum": "other",
+   "lang": "war",
+   "pages": 1
+  },
+  {
+   "file": "5932193.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 24
+  },
+  {
+   "file": "5948287.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 6
+  },
+  {
+   "file": "5953658.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 73
+  },
+  {
+   "file": "5954315.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 30
+  },
+  {
+   "file": "5955498.pdf",
+   "stratum": "other",
+   "lang": "por",
+   "pages": 2
+  },
+  {
+   "file": "5963580.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 24
+  },
+  {
+   "file": "5986099.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 29
+  },
+  {
+   "file": "5993567.pdf",
+   "stratum": "other",
+   "lang": "ita",
+   "pages": 1
+  },
+  {
+   "file": "6012122.pdf",
+   "stratum": "other",
+   "lang": "fra",
+   "pages": 77
+  },
+  {
+   "file": "6017785.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 7
+  },
+  {
+   "file": "6018671.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "6023705.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 22
+  },
+  {
+   "file": "6028219.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 7
+  },
+  {
+   "file": "6034577.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 8
+  },
+  {
+   "file": "6034653.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 18
+  },
+  {
+   "file": "6046110.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "6076190.pdf",
+   "stratum": "fa",
+   "lang": "pes",
+   "pages": 7
+  },
+  {
+   "file": "6080008.pdf",
+   "stratum": "fa",
+   "lang": "pes",
+   "pages": 21
+  },
+  {
+   "file": "6091742.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 35
+  },
+  {
+   "file": "6100435.pdf",
+   "stratum": "other",
+   "lang": "lit",
+   "pages": 17
+  },
+  {
+   "file": "6104185.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 8
+  },
+  {
+   "file": "6111181.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "6140126.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 137
+  },
+  {
+   "file": "6142011.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 7
+  },
+  {
+   "file": "6163174.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 24
+  },
+  {
+   "file": "6163404.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 5
+  },
+  {
+   "file": "6164649.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 11
+  },
+  {
+   "file": "6173657.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 140
+  },
+  {
+   "file": "6179609.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "6201166.pdf",
+   "stratum": "other",
+   "lang": "fra",
+   "pages": 1
+  },
+  {
+   "file": "6201762.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 10
+  },
+  {
+   "file": "6207036.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "6230621.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 5
+  },
+  {
+   "file": "6252499.pdf",
+   "stratum": "other",
+   "lang": "por",
+   "pages": 5
+  },
+  {
+   "file": "6260816.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 9
+  },
+  {
+   "file": "6275627.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 28
+  },
+  {
+   "file": "6280351.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 42
+  },
+  {
+   "file": "6314911.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "6320916.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 44
+  },
+  {
+   "file": "6324592.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 3
+  },
+  {
+   "file": "6350141.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 32
+  },
+  {
+   "file": "6381410.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 246
+  },
+  {
+   "file": "6399236.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 12
+  },
+  {
+   "file": "6418424.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 3
+  },
+  {
+   "file": "6459780.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "6462079.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 9
+  },
+  {
+   "file": "6473237.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 2
+  },
+  {
+   "file": "6494920.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 2
+  },
+  {
+   "file": "6513058.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 1
+  },
+  {
+   "file": "6515680.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 3
+  },
+  {
+   "file": "6536950.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 4
+  },
+  {
+   "file": "6588613.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 1
+  },
+  {
+   "file": "6597596.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 21
+  },
+  {
+   "file": "6619481.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 22
+  },
+  {
+   "file": "6631848.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "6644211.pdf",
+   "stratum": "other",
+   "lang": "ron",
+   "pages": 1
+  },
+  {
+   "file": "6646886.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 3
+  },
+  {
+   "file": "6659501.pdf",
+   "stratum": "other",
+   "lang": "fra",
+   "pages": 10
+  },
+  {
+   "file": "6680857.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 20
+  },
+  {
+   "file": "6704993.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 1
+  },
+  {
+   "file": "6707033.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 20
+  },
+  {
+   "file": "6709101.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 24
+  },
+  {
+   "file": "6715354.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 2
+  },
+  {
+   "file": "6719643.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 28
+  },
+  {
+   "file": "6727102.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 3
+  },
+  {
+   "file": "6733059.pdf",
+   "stratum": "other",
+   "lang": "spa",
+   "pages": 15
+  },
+  {
+   "file": "6749196.pdf",
+   "stratum": "other",
+   "lang": "por",
+   "pages": 18
+  },
+  {
+   "file": "6785920.pdf",
+   "stratum": "other",
+   "lang": "spa",
+   "pages": 1
+  },
+  {
+   "file": "6786627.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 2
+  },
+  {
+   "file": "6807611.pdf",
+   "stratum": "fa",
+   "lang": "pes",
+   "pages": 8
+  },
+  {
+   "file": "6837673.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 153
+  },
+  {
+   "file": "6837869.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 24
+  },
+  {
+   "file": "6843305.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 12
+  },
+  {
+   "file": "6890005.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 27
+  },
+  {
+   "file": "6898299.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 2
+  },
+  {
+   "file": "6900710.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 67
+  },
+  {
+   "file": "6903284.pdf",
+   "stratum": "other",
+   "lang": "fra",
+   "pages": 5
+  },
+  {
+   "file": "6906770.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 143
+  },
+  {
+   "file": "6919787.pdf",
+   "stratum": "other",
+   "lang": "",
+   "pages": 2
+  },
+  {
+   "file": "6924751.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 8
+  },
+  {
+   "file": "6935664.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 18
+  },
+  {
+   "file": "6986775.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 9
+  },
+  {
+   "file": "6996802.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 2
+  },
+  {
+   "file": "7014941.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 42
+  },
+  {
+   "file": "7074257.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 1
+  },
+  {
+   "file": "7087469.pdf",
+   "stratum": "other",
+   "lang": "por",
+   "pages": 3
+  },
+  {
+   "file": "7091361.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 1
+  },
+  {
+   "file": "7103082.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "7141475.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 1
+  },
+  {
+   "file": "7151311.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 23
+  },
+  {
+   "file": "7151612.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 1
+  },
+  {
+   "file": "7154876.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 18
+  },
+  {
+   "file": "7162551.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "7163447.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "7180640.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 1
+  },
+  {
+   "file": "7183254.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 63
+  },
+  {
+   "file": "7199706.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "7222205.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 5
+  },
+  {
+   "file": "7237698.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 34
+  },
+  {
+   "file": "7262149.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 3
+  },
+  {
+   "file": "7282785.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 17
+  },
+  {
+   "file": "7289346.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "7306912.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "7309927.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 27
+  },
+  {
+   "file": "7311269.pdf",
+   "stratum": "other",
+   "lang": "spa",
+   "pages": 25
+  },
+  {
+   "file": "7359839.pdf",
+   "stratum": "other",
+   "lang": "deu",
+   "pages": 15
+  },
+  {
+   "file": "7375540.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 11
+  },
+  {
+   "file": "7379878.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 7
+  },
+  {
+   "file": "7389460.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 11
+  },
+  {
+   "file": "7396011.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 10
+  },
+  {
+   "file": "7401337.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 26
+  },
+  {
+   "file": "7413491.pdf",
+   "stratum": "other",
+   "lang": "",
+   "pages": 2
+  },
+  {
+   "file": "7422772.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 20
+  },
+  {
+   "file": "7429910.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 14
+  },
+  {
+   "file": "7430511.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 4
+  },
+  {
+   "file": "7451332.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 4
+  },
+  {
+   "file": "7457231.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 26
+  },
+  {
+   "file": "7474008.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 2
+  },
+  {
+   "file": "7483092.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 26
+  },
+  {
+   "file": "7485051.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 12
+  },
+  {
+   "file": "7487680.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 15
+  },
+  {
+   "file": "7508845.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 1
+  },
+  {
+   "file": "7540152.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 32
+  },
+  {
+   "file": "7542414.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 2
+  },
+  {
+   "file": "7545534.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "7566259.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 8
+  },
+  {
+   "file": "7575709.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 43
+  },
+  {
+   "file": "7582765.pdf",
+   "stratum": "ko",
+   "lang": "kor",
+   "pages": 32
+  },
+  {
+   "file": "7598389.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 3
+  },
+  {
+   "file": "7606428.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "7617805.pdf",
+   "stratum": "ru",
+   "lang": "rus",
+   "pages": 8
+  },
+  {
+   "file": "7651596.pdf",
+   "stratum": "ja",
+   "lang": "jpn",
+   "pages": 15
+  },
+  {
+   "file": "7672365.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "7707567.pdf",
+   "stratum": "fa",
+   "lang": "pes",
+   "pages": 3
+  },
+  {
+   "file": "7709326.pdf",
+   "stratum": "zh",
+   "lang": "cmn",
+   "pages": 1
+  },
+  {
+   "file": "7715574.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 3
+  },
+  {
+   "file": "7731435.pdf",
+   "stratum": "fa",
+   "lang": "pes",
+   "pages": 26
+  },
+  {
+   "file": "7748518.pdf",
+   "stratum": "other",
+   "lang": "spa",
+   "pages": 8
+  },
+  {
+   "file": "7772179.pdf",
+   "stratum": "fa",
+   "lang": "pes",
+   "pages": 25
+  },
+  {
+   "file": "7782668.pdf",
+   "stratum": "ar",
+   "lang": "ara",
+   "pages": 20
+  },
+  {
+   "file": "7795530.pdf",
+   "stratum": "other",
+   "lang": "ben-rom",
+   "pages": 2
+  },
+  {
+   "file": "7824972.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 9
+  },
+  {
+   "file": "7825173.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 1
+  },
+  {
+   "file": "7868122.pdf",
+   "stratum": "other",
+   "lang": "eng",
+   "pages": 2
+  },
+  {
+   "file": "7931265.pdf",
+   "stratum": "other",
+   "lang": "spa",
+   "pages": 19
+  }
+ ]
+}
