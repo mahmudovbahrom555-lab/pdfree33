@@ -21,7 +21,7 @@
 //
 //  node scripts/corpus-cloud/robust.mjs --docs <dir> --sample <sample.json>
 //       [--tools compress,merge,…] [--base http://localhost:8934]
-//       [--out <dir>] [--jobs 2] [--save]
+//       [--out <dir>] [--jobs 2] [--save] [--timeout 120]
 //  --save keeps each result as <out>/files/<doc>.<tool>.<ext>, for the
 //  quality detectors (scripts/quality/props.py) to read
 // ============================================================
@@ -38,7 +38,7 @@ const BASE   = arg('base', 'http://localhost:8934');
 const OUT    = path.resolve(arg('out', 'corpus-cloud-out'));
 const JOBS   = Math.max(1, Number(arg('jobs', 2)));
 const TOOL_LIST = arg('tools', 'compress,merge,split,pdf2jpg,pdf2word,pdf2excel,resize,nup').split(',');
-const RUN_TIMEOUT_MS = 120_000;
+const RUN_TIMEOUT_MS = +(arg('timeout', 120)) * 1000;   // --timeout seconds (OCR of a long scanned deck needs more)
 const SAVE = process.argv.includes('--save');
 
 for (const t of TOOL_LIST) if (!TOOLS[t]) { console.error(`unknown tool: ${t}`); process.exit(2); }
