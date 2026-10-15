@@ -43,6 +43,18 @@ const mkItem = (str, x, fontSize = 12, extra = {}) => ({
 const mkLine = (items, y) => ({ y, rtl: false, items: Array.isArray(items) ? items : [items] });
 const mkPage = (lines, pageH = 792, pageW = 612, borderGrids = []) => ({ lines, pageH, pageW, borderGrids });
 
+console.log('\n_p2pBuildSlideShapes — a line\'s pieces are spaced by their gaps:');
+
+await test('touching Chinese pieces stay together, a real gap stays a space', () => {
+  // A Chinese user's report (2026-10-15): pieces joined with spaces read
+  // "從業 評價 職 位人 員" in the editable-text slides.
+  const piece = (str, x) => ({ str, x, width: str.length * 12, fontSize: 12, bold: false, italic: false });
+  const lines = [mkLine([piece('從業', 50), piece('評價', 74), piece('職', 98), piece('位人', 110), piece('員', 134),
+    piece('資訊', 160)], 700)];
+  const { textShapes } = _p2pBuildSlideShapes(mkPage(lines), 12, new Set(), new Set());
+  expect(textShapes[0].runs[0].text).toBe('從業評價職位人員 資訊');
+});
+
 console.log('\n_p2pBuildSlideShapes — heading + body paragraph become separate text shapes:');
 
 await test('a large-font heading and a normal-size paragraph become 2 distinct text shapes', () => {

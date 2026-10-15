@@ -3617,7 +3617,9 @@ function _p2pBuildRegionShapes(lines, borderGrids, xBounds, median, repeatTextSe
 
     const runs = buffer
       .map(ln => ({
-        text:     ln.items.map(i => i.str).join(' ').replace(/\s+/g, ' ').trim(),
+        // a space only where the items stand apart: joined with spaces, a
+        // Chinese slide read "從業 評價 職 位人 員" (a user's report, 2026-10-15)
+        text:     joinSpacedItems(ln.items).replace(/\s+/g, ' ').trim(),
         bold:     ln.items.every(i => i.bold),
         italic:   ln.items.every(i => i.italic),
         fontSize: Math.max(...ln.items.map(i => i.fontSize)),
