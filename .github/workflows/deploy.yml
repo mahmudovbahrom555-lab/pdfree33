@@ -183,6 +183,12 @@ jobs:
         # tests/e2e/file-unreadable.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:file-unreadable
 
+      - name: E2E — a tool still starts when the connection drops after it opened
+        # Each tool's worker scripts are fetched into the cache when it opens
+        # (warmToolScripts); a worker that still can't load says so
+        # (worker_load_failed). See tests/e2e/worker-offline.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:worker-offline
+
       - name: E2E — the empty tool button opens the file picker, not a dead click
         # It sat disabled until a file was added and a click did nothing (UX
         # rule 5). See tests/e2e/empty-button.e2e.mjs.

@@ -27,7 +27,7 @@ import { initFileListeners, setCurrentTool,
 import { doProcess, isProcessing,
          cancelProcess, cancelCompressScan, cancelMergeScan,
          startCompressScan, startMergeBatchScan,
-         getProcessStartMs }                      from './processor.js';
+         getProcessStartMs, warmToolScripts }     from './processor.js';
 import { hideAllToolOptions, initToolOptions,
          collectToolParams, notifyToolSuccess,
          getPresetFilter, getToolDescriptor }      from './toolRegistry.js';
@@ -262,6 +262,8 @@ function showTool(tool, pushHistory = true, preFiles = null) {
   currentTool = tool;
   const lt = getLocalizedTool(TOOLS[tool]);
   trackToolOpen(tool);
+  // its worker's scripts into the cache while the page is idle (warmToolScripts)
+  (window.requestIdleCallback ?? (f => setTimeout(f, 1500)))(() => warmToolScripts(tool));
 
   // Visual feedback — immediate so browser paints before heavy DOM work
   showToolPage();
@@ -1889,7 +1891,10 @@ function _retrieveSharedFile(uuid) {
 // what it was (2026-10-09).
 const _trackedErrors = new Set();
 function _trackUncaught(kind, message) {
-  const type = `${kind}: ${String(message || '').slice(0, 80)}`;
+  // which script a worker couldn't load — past the 80 characters Chrome's
+  // own words take ("…importScripts' on 'WorkerGlobalScope': The script at …")
+  const script = String(message || '').match(/importScripts'.*?script at '(?:https?:\/\/[^/]+)?([^']+)'/);
+  const type = script ? `${kind}: importScripts failed: ${script[1].slice(0, 80)}` : `${kind}: ${String(message || '').slice(0, 80)}`;
   if (_trackedErrors.has(type)) return;
   _trackedErrors.add(type);
   trackToolError(currentTool, type);

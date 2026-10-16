@@ -120,6 +120,33 @@ function _createWorker() {
   return new Worker(new URL('./worker.js?v=__WORKER_HASH__', import.meta.url));
 }
 
+// The scripts a tool's worker loads, by runner (toolRegistry getRunner): its
+// own worker, pdf-lib, worker.js's own imports. The service worker keeps a
+// site file once it has been fetched, but a worker is only made when the
+// button is pressed — a connection lost meanwhile left Merge, Compress,
+// Organize … unable to start ("NetworkError: Failed to execute
+// 'importScripts'", 10 people in 3 days, 2026-10-16). Fetched in the
+// background when the tool opens, they're in the cache by then.
+const _SHARED_WORKER = ['worker.js?v=__WORKER_HASH__', 'pdfEncrypt.js', 'watermarkImage.js'];
+const _RUNNER_SCRIPTS = {
+  merge: ['mergeWorker.js'], split: ['splitWorker.js'], organize: ['organizeWorker.js'],
+  compress: [..._SHARED_WORKER, 'compressPrepWorker.js'], jpg2pdf: _SHARED_WORKER, worker: _SHARED_WORKER,
+  resize: ['resizeWorker.js'], nup: ['nupWorker.js', 'nupLayout.js'], mangaSplit: ['mangaSplitWorker.js'],
+  fillOrder: ['fillOrderWorker.js'], cleanScan: ['cleanScanWorker.js'], ereader: ['ereaderWorker.js'],
+  glossary: ['glossaryWorker.js'],
+};
+const _warmed = new Set();
+export function warmToolScripts(tool) {
+  const own = _RUNNER_SCRIPTS[getRunner(tool)];
+  if (!own) return;
+  for (const path of ['vendor/pdf-lib.min.js', ...own]) {
+    const url = new URL('./' + path, import.meta.url).href;
+    if (_warmed.has(url)) continue;
+    _warmed.add(url);
+    fetch(url).catch(() => _warmed.delete(url));
+  }
+}
+
 // ── Background compress pre-scan ─────────────────────────────
 // Runs when the user drops a file — scans PDF structure in the worker
 // before they click Compress, so recommendations appear immediately.
@@ -5905,6 +5932,12 @@ function _handleError(tool, message, errorType = null) {
   ) {
     friendly   = t('err_file_unreadable_any');
     errorType  = 'file_unreadable';
+  } else if (message === 'Worker error' || /Failed to execute 'importScripts'/.test(message ?? '')) {
+    // A worker whose script didn't load — the connection dropped before the
+    // tool's code was in the cache (see warmToolScripts): "Worker error" from
+    // its onerror, Chrome's "NetworkError: Failed to execute 'importScripts'".
+    friendly   = t('err_worker_load');
+    errorType  = 'worker_load_failed';
   } else if (message?.includes('ENCRYPTOR_UNAVAILABLE')) {
     friendly   = t('err_enc_unavailable');
     errorType  = 'enc_lib_failed';
