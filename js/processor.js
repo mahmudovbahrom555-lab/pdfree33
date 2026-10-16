@@ -2508,7 +2508,10 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
       if (err instanceof _BatchCancelled) return; // cancelProcess() already cleaned up the UI
       file._batchStatus = 'error';
       failedNames.push(file.name);
-      trackToolError(tool, 'batch_item_failed');
+      // with why: a bare 'batch_item_failed' (13 people a month) said nothing
+      // to fix; never the file's name (the unreadable-file message holds it)
+      const why = String(err?.message ?? err ?? '');
+      trackToolError(tool, `batch_item_failed: ${why.startsWith(_UNREADABLE) ? 'file_unreadable' : why.slice(0, 60)}`);
     }
     renderList(true);
   }
