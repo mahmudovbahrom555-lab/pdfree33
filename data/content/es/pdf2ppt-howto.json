@@ -13,8 +13,8 @@
     {
       "@type": "HowToStep",
       "position": 2,
-      "name": "Elegir calidad",
-      "text": "Selecciona entre Compacto (72 dpi, archivo más pequeño), Equilibrado (150 dpi, bueno para la mayoría de usos) o Alta calidad (220 dpi, para texto denso o impresión fina)."
+      "name": "Elegir modo y calidad",
+      "text": "Elige Imagen (predeterminado) o Texto editable (beta) y luego Compacto (72 dpi, archivo más pequeño), Equilibrado (150 dpi, bueno para la mayoría de usos) o Alta calidad (220 dpi, para texto denso o impresión fina)."
     },
     {
       "@type": "HowToStep",

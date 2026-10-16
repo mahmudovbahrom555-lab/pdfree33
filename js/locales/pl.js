@@ -1126,7 +1126,7 @@ window.PDFREE_LOCALE = {
   p2p_conversion_mode_aria: 'Tryb konwersji do PowerPoint',
   p2p_mode_image:           '🖼️ Obraz',
   p2p_mode_text:            '📝 Edytowalny tekst (beta)',
-  p2p_mode_text_hint:       '📝 Headings, paragraphs and lists become real, editable PowerPoint text. Tables, multi-column pages and diagrams still appear as an embedded picture within the slide.',
+  p2p_mode_text_hint:       '📝 Slajd zachowuje wygląd strony — zdjęcia, wykresy i linie tabel zostają na miejscu — a cały tekst staje się prawdziwymi, edytowalnymi polami tekstowymi w tym samym miejscu, rozmiarze i kolorze. Tekst na zeskanowanych stronach jest rozpoznawany (OCR).',
   p2p_quality_aria:      'Jakość obrazu slajdu',
   p2p_mode_hint:         '📽️ Każda strona staje się jednym obrazem slajdu na pełny ekran — obrazem, a nie edytowalnym tekstem, ponieważ jest to jedyny sposób na wierne odwzorowanie układu dowolnej strony PDF jako slajdu.',
   p2p_size_danger:       '⚠️ Szacowany rozmiar .pptx: <strong>~{mb} MB</strong> — bardzo duży. Przeglądarce może zabraknąć pamięci. Wypróbuj jakość <strong>Kompaktowa</strong>.',

@@ -1129,7 +1129,7 @@ window.PDFREE_LOCALE = {
   p2p_conversion_mode_aria: 'PowerPoint-Konvertierungsmodus',
   p2p_mode_image:           '🖼️ Bild',
   p2p_mode_text:            '📝 Bearbeitbarer Text (Beta)',
-  p2p_mode_text_hint:       '📝 Headings, paragraphs and lists become real, editable PowerPoint text. Tables, multi-column pages and diagrams still appear as an embedded picture within the slide.',
+  p2p_mode_text_hint:       '📝 Jede Folie behält das Aussehen der Seite — Fotos, Diagramme und Tabellenlinien bleiben, wie sie sind — und der gesamte Text wird zu echten, bearbeitbaren Textfeldern an derselben Stelle, in derselben Größe und Farbe. Text auf gescannten Seiten wird per OCR erkannt.',
   p2p_quality_aria:      'Bildqualität der Folien',
   p2p_mode_hint:         '📽️ Jede Seite wird zu einem vollflächigen Folienbild — ein Bild, kein bearbeitbarer Text, da dies die einzige layoutgetreue Möglichkeit ist, eine beliebige PDF-Seite in eine Folie umzuwandeln.',
   p2p_size_danger:       '⚠️ Geschätzte .pptx-Größe: <strong>~{mb} MB</strong> — sehr groß. Der Browser könnte nicht genug Speicher haben. Versuche die Qualität <strong>Kompakt</strong>.',

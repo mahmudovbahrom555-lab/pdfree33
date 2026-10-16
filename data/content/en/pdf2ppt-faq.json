@@ -20,7 +20,7 @@
     "name": "Can I edit the text on the slides after converting?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "With the default Image mode, not directly — each slide is a picture of the original PDF page, which preserves the exact layout but means text isn't a separate, editable PowerPoint object. Switch to Editable text (beta) before converting: the slide keeps the page's look — photos, charts and table lines included — and all of its text becomes real, editable text boxes in the same place, size and colour. Scanned pages stay pictures. If you need a fully editable document, use PDF to Word instead."
+      "text": "With the default Image mode, not directly — each slide is a picture of the original PDF page, which preserves the exact layout but means text isn't a separate, editable PowerPoint object. Switch to Editable text (beta) before converting: the slide keeps the page's look — photos, charts and table lines included — and all of its text becomes real, editable text boxes in the same place, size and colour. Text on scanned pages is read with OCR. If you need a fully editable document, use PDF to Word instead."
     }
   },
   {

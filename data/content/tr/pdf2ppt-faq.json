@@ -20,7 +20,7 @@
     "name": "Dönüştürdükten sonra slaytlardaki metni düzenleyebilir miyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Doğrudan değil — her slayt, orijinal PDF sayfasının bir görselidir; bu, düzeni birebir korur ancak metnin ayrı, düzenlenebilir bir PowerPoint nesnesi olmadığı anlamına gelir. Bu, hemen hemen tüm PDF-PowerPoint araçlarının kullandığı yaklaşımdır. Düzenlenebilir metne ihtiyacınız varsa, bunun yerine PDF'den Word'e aracını kullanın."
+      "text": "Varsayılan Görüntü modunda doğrudan değil — her slayt orijinal sayfanın bir görselidir. Dönüştürmeden önce Düzenlenebilir metin (beta) seçin: slayt sayfanın görünümünü korur — fotoğraflar, grafikler ve tablo çizgileri dahil — ve tüm metin aynı yerde, aynı boyutta ve renkte düzenlenebilir metin kutularına dönüşür; taranmış sayfalardaki metin OCR ile tanınır. Tamamen düzenlenebilir bir belge için PDF'den Word'e aracını kullanın."
     }
   },
   {

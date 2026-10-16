@@ -1128,7 +1128,7 @@ window.PDFREE_LOCALE = {
   p2p_conversion_mode_aria: 'Modo de conversão do PowerPoint',
   p2p_mode_image:           '🖼️ Imagem',
   p2p_mode_text:            '📝 Texto editável (beta)',
-  p2p_mode_text_hint:       '📝 Headings, paragraphs and lists become real, editable PowerPoint text. Tables, multi-column pages and diagrams still appear as an embedded picture within the slide.',
+  p2p_mode_text_hint:       '📝 Cada slide mantém a aparência da página — fotos, gráficos e linhas de tabelas ficam como estão — e todo o texto vira caixas de texto reais e editáveis, no mesmo lugar, tamanho e cor. O texto de páginas digitalizadas é reconhecido por OCR.',
   p2p_quality_aria:      'Qualidade de imagem do slide',
   p2p_mode_hint:         '📽️ Cada página se torna uma imagem de slide completa — uma imagem, não texto editável, já que essa é a única forma fiel ao layout de transformar uma página de PDF em um slide.',
   p2p_size_danger:       '⚠️ Tamanho estimado do .pptx: <strong>~{mb} MB</strong> — muito grande. O navegador pode ficar sem memória. Experimente a qualidade <strong>Compacta</strong>.',

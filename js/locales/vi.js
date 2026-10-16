@@ -1127,7 +1127,7 @@ window.PDFREE_LOCALE = {
   p2p_conversion_mode_aria: 'Chế độ chuyển đổi PowerPoint',
   p2p_mode_image:           '🖼️ Hình ảnh',
   p2p_mode_text:            '📝 Văn bản có thể chỉnh sửa (beta)',
-  p2p_mode_text_hint:       '📝 Headings, paragraphs and lists become real, editable PowerPoint text. Tables, multi-column pages and diagrams still appear as an embedded picture within the slide.',
+  p2p_mode_text_hint:       '📝 Mỗi slide giữ nguyên giao diện trang — ảnh, biểu đồ và đường kẻ bảng vẫn như cũ — và toàn bộ văn bản trở thành hộp văn bản thật có thể chỉnh sửa, đúng vị trí, cỡ chữ và màu. Văn bản trên trang scan được nhận dạng bằng OCR.',
   p2p_quality_aria:      'Chất lượng hình ảnh trang chiếu',
   p2p_mode_hint:         '📽️ Mỗi trang trở thành một hình ảnh trang chiếu toàn màn hình — một hình ảnh, không phải văn bản có thể chỉnh sửa, vì đây là cách duy nhất giữ đúng bố cục khi chuyển một trang PDF bất kỳ thành trang chiếu.',
   p2p_size_danger:       '⚠️ Kích thước .pptx ước tính: <strong>~{mb} MB</strong> — rất lớn. Trình duyệt có thể hết bộ nhớ. Hãy thử chất lượng <strong>Gọn nhẹ</strong>.',

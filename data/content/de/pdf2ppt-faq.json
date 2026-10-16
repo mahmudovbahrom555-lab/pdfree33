@@ -20,7 +20,7 @@
     "name": "Kann ich den Text auf den Folien bearbeiten?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nicht direkt — jede Folie ist ein Bild der ursprünglichen PDF-Seite, das das exakte Layout beibehält, aber den Text nicht als separates PowerPoint-Objekt enthält. Dasselbe Verfahren verwenden praktisch alle PDF-zu-PowerPoint-Tools. Falls du bearbeitbaren Text benötigst, verwende stattdessen PDF zu Word."
+      "text": "Im Standardmodus Bild nicht direkt — jede Folie ist ein Bild der ursprünglichen Seite. Wähle vor dem Konvertieren Bearbeitbarer Text (Beta): Die Folie behält das Aussehen der Seite — samt Fotos, Diagrammen und Tabellenlinien — und der gesamte Text wird zu bearbeitbaren Textfeldern an derselben Stelle, in derselben Größe und Farbe; Text auf gescannten Seiten wird per OCR erkannt. Für ein vollständig bearbeitbares Dokument verwende PDF zu Word."
     }
   },
   {

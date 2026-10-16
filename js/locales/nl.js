@@ -1126,7 +1126,7 @@ window.PDFREE_LOCALE = {
   p2p_conversion_mode_aria: 'PowerPoint-conversiemodus',
   p2p_mode_image:           '🖼️ Afbeelding',
   p2p_mode_text:            '📝 Bewerkbare tekst (bèta)',
-  p2p_mode_text_hint:       '📝 Headings, paragraphs and lists become real, editable PowerPoint text. Tables, multi-column pages and diagrams still appear as an embedded picture within the slide.',
+  p2p_mode_text_hint:       '📝 Elke dia behoudt het uiterlijk van de pagina — foto\'s, grafieken en tabellijnen blijven zoals ze zijn — en alle tekst wordt echte, bewerkbare tekstvakken op dezelfde plek, in dezelfde grootte en kleur. Tekst op gescande pagina\'s wordt herkend met OCR.',
   p2p_quality_aria:      'Afbeeldingskwaliteit van de dia',
   p2p_mode_hint:         '📽️ Elke pagina wordt één full-slide afbeelding — een afbeelding, geen bewerkbare tekst, aangezien dit de enige lay-outgetrouwe manier is om een willekeurige PDF-pagina in een dia om te zetten.',
   p2p_size_danger:       '⚠️ Geschatte .pptx-grootte: <strong>~{mb} MB</strong> — erg groot. De browser heeft mogelijk onvoldoende geheugen. Probeer de kwaliteit <strong>Compact</strong>.',

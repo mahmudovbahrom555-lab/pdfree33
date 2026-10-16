@@ -1127,7 +1127,7 @@ window.PDFREE_LOCALE = {
   p2p_conversion_mode_aria: 'Режим конвертации в PowerPoint',
   p2p_mode_image:           '🖼️ Изображение',
   p2p_mode_text:            '📝 Редактируемый текст (бета)',
-  p2p_mode_text_hint:       '📝 Headings, paragraphs and lists become real, editable PowerPoint text. Tables, multi-column pages and diagrams still appear as an embedded picture within the slide.',
+  p2p_mode_text_hint:       '📝 Слайд сохраняет вид страницы — фото, диаграммы и линии таблиц остаются на месте, — а весь текст становится настоящими редактируемыми текстовыми блоками в том же месте, того же размера и цвета. Текст на сканах распознаётся (OCR).',
   p2p_quality_aria:      'Качество изображения слайда',
   p2p_mode_hint:         '📽️ Каждая страница становится одним изображением слайда на весь экран — изображением, а не редактируемым текстом, поскольку это единственный способ точно сохранить макет при превращении произвольной страницы PDF в слайд.',
   p2p_size_danger:       '⚠️ Примерный размер .pptx: <strong>~{mb} МБ</strong> — очень большой. Браузеру может не хватить памяти. Попробуйте качество <strong>Компактное</strong>.',

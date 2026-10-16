@@ -20,7 +20,7 @@
     "name": "Puis-je modifier le texte sur les diapositives ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Pas directement — chaque diapositive est une image de la page PDF originale, ce qui préserve la mise en page exacte mais signifie que le texte n'est pas un objet PowerPoint modifiable séparé. C'est la même approche qu'utilisent pratiquement tous les outils PDF en PowerPoint. Si vous avez besoin de texte éditable, utilisez plutôt PDF en Word."
+      "text": "En mode Image (par défaut), pas directement : chaque diapositive est une image de la page originale. Avant de convertir, passez en Texte modifiable (bêta) : la diapositive garde l'aspect de la page — photos, graphiques et traits de tableaux compris — et tout le texte devient des zones de texte modifiables au même endroit, de la même taille et de la même couleur ; le texte des pages numérisées est reconnu par OCR. Pour un document entièrement modifiable, utilisez plutôt PDF en Word."
     }
   },
   {

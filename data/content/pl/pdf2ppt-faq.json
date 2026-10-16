@@ -20,7 +20,7 @@
     "name": "Czy mogę edytować tekst na slajdach po konwersji?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie bezpośrednio — każdy slajd to obraz oryginalnej strony PDF, co zachowuje dokładny układ, ale oznacza, że tekst nie jest osobnym, edytowalnym obiektem PowerPoint. To podejście stosuje niemal każde narzędzie do konwersji PDF na PowerPoint. Jeśli potrzebujesz edytowalnego tekstu, użyj zamiast tego PDF na Word."
+      "text": "W domyślnym trybie Obraz — nie bezpośrednio: każdy slajd jest obrazem oryginalnej strony. Przed konwersją przełącz na Edytowalny tekst (beta): slajd zachowa wygląd strony — razem ze zdjęciami, wykresami i liniami tabel — a cały tekst stanie się edytowalnymi polami tekstowymi w tym samym miejscu, rozmiarze i kolorze; tekst na zeskanowanych stronach jest rozpoznawany (OCR). Dla w pełni edytowalnego dokumentu użyj PDF na Word."
     }
   },
   {

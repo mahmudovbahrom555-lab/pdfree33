@@ -20,7 +20,7 @@
     "name": "Posso modificare il testo nelle slide dopo la conversione?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non direttamente — ogni slide è un'immagine della pagina PDF originale, il che preserva esattamente il layout ma significa che il testo non è un oggetto PowerPoint separato e modificabile. Questo è l'approccio usato praticamente da tutti gli strumenti di conversione da PDF a PowerPoint. Se ti serve testo modificabile, usa invece PDF in Word."
+      "text": "Nella modalità Immagine predefinita, non direttamente: ogni slide è un'immagine della pagina originale. Prima di convertire passa a Testo modificabile (beta): la slide mantiene l'aspetto della pagina — foto, grafici e linee delle tabelle compresi — e tutto il testo diventa vere caselle di testo modificabili nella stessa posizione, dimensione e colore; il testo delle pagine scansionate viene riconosciuto con l'OCR. Per un documento completamente modificabile usa PDF in Word."
     }
   },
   {

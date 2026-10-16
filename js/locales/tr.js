@@ -1126,7 +1126,7 @@ window.PDFREE_LOCALE = {
   p2p_conversion_mode_aria: 'PowerPoint dönüştürme modu',
   p2p_mode_image:           '🖼️ Görüntü',
   p2p_mode_text:            '📝 Düzenlenebilir metin (beta)',
-  p2p_mode_text_hint:       '📝 Headings, paragraphs and lists become real, editable PowerPoint text. Tables, multi-column pages and diagrams still appear as an embedded picture within the slide.',
+  p2p_mode_text_hint:       '📝 Slayt sayfanın görünümünü korur — fotoğraflar, grafikler ve tablo çizgileri olduğu gibi kalır — ve tüm metin aynı yerde, aynı boyutta ve renkte gerçek, düzenlenebilir metin kutularına dönüşür. Taranmış sayfalardaki metin OCR ile tanınır.',
   p2p_quality_aria:      'Slayt görüntü kalitesi',
   p2p_mode_hint:         '📽️ Her sayfa tam slayt görüntüsü haline gelir — düzenlenebilir metin değil, bir görüntüdür, çünkü herhangi bir PDF sayfasını slayda dönüştürmenin düzene sadık kalan tek yolu budur.',
   p2p_size_danger:       '⚠️ Tahmini .pptx boyutu: <strong>~{mb} MB</strong> — çok büyük. Tarayıcının belleği yetersiz kalabilir. <strong>Kompakt</strong> kaliteyi deneyin.',

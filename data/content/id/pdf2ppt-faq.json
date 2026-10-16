@@ -20,7 +20,7 @@
     "name": "Bisakah saya mengedit teks di slide setelah konversi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak secara langsung — setiap slide adalah gambar dari halaman PDF asli, yang mempertahankan tata letak persis tetapi berarti teks bukan objek PowerPoint terpisah yang bisa diedit. Ini adalah pendekatan yang digunakan hampir semua alat konversi PDF ke PowerPoint. Jika Anda memerlukan teks yang bisa diedit, gunakan PDF ke Word."
+      "text": "Di mode Gambar (default), tidak secara langsung — setiap slide adalah gambar halaman asli. Sebelum mengonversi, beralihlah ke Teks yang dapat diedit (beta): slide mempertahankan tampilan halaman — termasuk foto, grafik, dan garis tabel — dan semua teks menjadi kotak teks yang bisa diedit di posisi, ukuran, dan warna yang sama; teks pada halaman hasil pindaian dikenali dengan OCR. Untuk dokumen yang sepenuhnya bisa diedit, gunakan PDF ke Word."
     }
   },
   {
