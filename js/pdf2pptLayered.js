@@ -145,6 +145,7 @@ export function lineRunsForSlide(line, cuts = []) {
       fontFace: inside.find(it => it.fontFamily)?.fontFamily,
       rtl: _RTL_RE.test(text),
       partial: inside.some(it => it.partial),   // OCR left words out (pdf2wordOcr)
+      ...(inside.some(it => it.conf !== undefined) ? { ocrConf: Math.min(...inside.map(it => it.conf ?? 100)) } : {}),
       pieces,
     };
   }).filter(Boolean);
@@ -290,7 +291,7 @@ export function eraseUnpaintedRuns(img, runs, toPx) {
     // a run of a line whose OCR dropped unsure words is a guess: it doesn't
     // replace what the picture shows ("place Cen rg for Arts?" for a caption
     // of 8 words)
-    if (run.color !== null || run.partial) continue;
+    if (run.color !== null || run.partial || !_sureEnough(run)) continue;
     const fs = run.fontSize;
     const [ax, ay] = toPx(run.x0 - 0.1 * fs, run.y + 0.95 * fs);
     const [bx, by] = toPx(run.x1 + 0.1 * fs, run.y - 0.3 * fs);
@@ -320,6 +321,17 @@ export function eraseUnpaintedRuns(img, runs, toPx) {
     erased++;
   }
   return erased;
+}
+
+// Only text clearly read takes the picture's place: OCR at 90 and over, and
+// enough of it — a scanned deck's logos came out as "市", "环", "一一一" and
+// replaced themselves, and misreads like "sysfem" sat at 80-odd. A page
+// number stays allowed.
+function _sureEnough(run) {
+  if (run.ocrConf !== undefined && run.ocrConf < 90) return false;
+  const chars = run.text.match(/[\p{L}\p{N}]/gu) || [];
+  if (/^\d{1,3}$/.test(run.text.trim())) return true;
+  return chars.length >= 3 && new Set(chars).size >= 2;
 }
 
 function _median(values) {

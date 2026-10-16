@@ -99,6 +99,7 @@ export function ocrItemsFromPage(rec) {
     };
     const fontSize = sizeOf(height, false);
     const partial = line.words.some(w => !w.kept);
+    const conf = Math.min(...line.words.filter(w => w.kept).map(w => w.confidence ?? 0));
     const runs = [];
     const newPiece = () => ({ bottoms: [], top: Infinity, dark: 0, edge: 0 });   // shared by the piece's runs
     const pieces = [newPiece()];
@@ -133,6 +134,7 @@ export function ocrItemsFromPage(rec) {
         // some of its line's words were too unsure to keep: what is left is a
         // guess (PDF→PowerPoint keeps such a run invisible over the picture)
         ...(partial ? { partial: true } : {}),
+        conf,   // the least sure kept word of its line (Tesseract, 0–100)
       });
     });
   }

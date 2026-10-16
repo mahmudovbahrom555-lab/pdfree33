@@ -235,6 +235,16 @@ test('an OCR run with unsure words left out is not taken out of the picture', ()
   assert.equal(r.color, null);
 });
 
+test('an unsure OCR read, or a mark read as one character, is not taken out of the picture', () => {
+  for (const r of [{ text: 'Sustainable sysfem', ocrConf: 82 }, { text: '市' }, { text: '一一一' }, { text: '-----' }]) {
+    const img = picture((x, y) => ink(x, y) ? [20, 40, 160, 255] : [250, 250, 245, 255]);
+    const run = { x0: 12, x1: 40, y: 12, fontSize: 8, color: null, ...r };
+    assert.equal(eraseUnpaintedRuns(img, [run], toPx), 0, r.text);
+  }
+  const img = picture((x, y) => ink(x, y) ? [20, 40, 160, 255] : [250, 250, 245, 255]);
+  assert.equal(eraseUnpaintedRuns(img, [{ text: '14', x0: 12, x1: 40, y: 12, fontSize: 8, color: null, ocrConf: 95 }], toPx), 1);
+});
+
 test('a run already drawn as text (it has a colour) is not touched', () => {
   const img = picture(() => [255, 255, 255, 255]);
   const r = { text: 'x', x0: 12, x1: 40, y: 12, fontSize: 8, color: '000000' };

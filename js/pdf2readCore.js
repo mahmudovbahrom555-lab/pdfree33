@@ -679,6 +679,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
         seq, str: item.str, x: item.x, y: item.y, width: item.width, fontSize: item.fontSize,
         rotated: false, bold: !!item.bold, italic: false, fontFamily: undefined, ocr: true,
         ...(item.partial ? { partial: true } : {}),
+        ...(item.conf !== undefined ? { conf: item.conf } : {}),
       }));
       _cs.ocrPages++;
     }
