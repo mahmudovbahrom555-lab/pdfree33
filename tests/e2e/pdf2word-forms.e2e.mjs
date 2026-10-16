@@ -7,7 +7,9 @@
 //  getTextContent() never returns: every answer was missing from the .docx
 //  (found by the nightly corpus detectors on a real Dutch form — 3.7k of
 //  its 6.4k characters). tests/fixtures/pdf2word/filled-form.pdf: a
-//  one-line answer, a two-line answer, a hidden field, an empty field.
+//  one-line answer, a two-line answer, a hidden field, an empty field;
+//  freetext.pdf (make-freetext.mjs): a FreeText annotation's typed text
+//  (2026-10-16).
 //  Run: node tests/e2e/pdf2word-forms.e2e.mjs   (dist/ served on :8934)
 // ============================================================
 
@@ -50,6 +52,28 @@ try {
     if (all.includes('SECRET HIDDEN VALUE')) throw new Error('hidden field shown');
     if (!paras.some(p => p.includes('Name of the organisation') && p.includes('Stichting De Brug'))) throw new Error(`answer not next to its label: ${all}`);
     if (all.indexOf('Line one') > all.indexOf('Line two')) throw new Error('multi-line answer out of order');
+  });
+
+  await test('a FreeText annotation (typewriter text) is in the .docx, after the text above it', async () => {
+    // a Japanese slide's typed note was in no output (presentations corpus, 2026-10-16)
+    const page = await (await browser.newContext({ serviceWorkers: 'block' })).newPage();
+    await page.addInitScript(() => {
+      const orig = URL.createObjectURL.bind(URL);
+      URL.createObjectURL = b => { if (b instanceof Blob && /officedocument/.test(b.type)) window.__docx = b; return orig(b); };
+    });
+    await page.goto(BASE_URL + '/pdf-to-word/', { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', path.join(__dirname, '..', 'fixtures', 'pdf2word', 'freetext.pdf'));
+    await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 30000 });
+    await page.waitForTimeout(1500);
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__docx, null, { timeout: 90000 });
+    const all = await page.evaluate(async () => {
+      await (await import('/js/lazyLibs.js')).loadJSZip();
+      const zip = await window.JSZip.loadAsync(await window.__docx.arrayBuffer());
+      return [...(await zip.file('word/document.xml').async('string')).matchAll(/<w:t[^>]*>([^<]*)/g)].map(t => t[1]).join(' ');
+    });
+    if (!all.includes('Leave the parcel at the back door')) throw new Error(`missing the note: ${all}`);
+    if (all.indexOf('Delivery instructions') > all.indexOf('Leave the parcel')) throw new Error('note before the heading');
   });
 } finally {
   await browser.close();

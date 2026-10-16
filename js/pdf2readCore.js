@@ -515,12 +515,17 @@ export function _rpBuildPageBlocks(page, median, repeatTextSet, repeatPatternSet
 // per line at a line pitch of 1.2 × its font size; the font size is the
 // field's own (its /DA), else what fits the box.
 const _ANNOT_HIDDEN = 2, _ANNOT_NOVIEW = 32;
-async function _formFieldItems(page) {
+// Typewriter text too: a FreeText annotation (the text box a reader types onto
+// the page) shows on the page but is no part of its text layer — a Japanese
+// slide's "オレンジ色の3か所に止めて頂くようになります" was in no output.
+async function _annotationTextItems(page) {
   const out = [];
   for (const a of await page.getAnnotations({ intent: 'display' })) {
-    if (a.subtype !== 'Widget' || !a.rect || (a.annotationFlags & (_ANNOT_HIDDEN | _ANNOT_NOVIEW))) continue;
-    if (a.fieldType !== 'Tx' && a.fieldType !== 'Ch') continue;
-    const raw = Array.isArray(a.fieldValue) ? a.fieldValue.join(', ') : a.fieldValue;
+    if (!a.rect || (a.annotationFlags & (_ANNOT_HIDDEN | _ANNOT_NOVIEW))) continue;
+    const field = a.subtype === 'Widget' && (a.fieldType === 'Tx' || a.fieldType === 'Ch');
+    if (!field && a.subtype !== 'FreeText') continue;
+    const raw = !field ? a.contentsObj?.str
+      : Array.isArray(a.fieldValue) ? a.fieldValue.join(', ') : a.fieldValue;
     if (typeof raw !== 'string' || !raw.trim()) continue;
     const [x0, y0, x1, y1] = [Math.min(a.rect[0], a.rect[2]), Math.min(a.rect[1], a.rect[3]), Math.max(a.rect[0], a.rect[2]), Math.max(a.rect[1], a.rect[3])];
     const lines = raw.replace(_XML_ILLEGAL_CONTROL_RE, '').split(/\r\n|\r|\n/).filter(l => l.trim());
@@ -664,8 +669,9 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
     // answer missing (a Dutch application form: 3.7k of its 6.4k characters,
     // found by the nightly corpus detectors, 2026-10-15). Text and choice
     // fields' values join the page's text at their own place, one item per
-    // line of a multi-line value; hidden or empty fields add nothing.
-    allMapped.push(...(await _formFieldItems(page).catch(() => [])).map((it, i) => ({ seq: allMapped.length + i, ...it })));
+    // line of a multi-line value; hidden or empty fields add nothing. So does
+    // a FreeText annotation's text (see _annotationTextItems).
+    allMapped.push(...(await _annotationTextItems(page).catch(() => [])).map((it, i) => ({ seq: allMapped.length + i, ...it })));
 
     // A page with no text layer (a scan), or a broken one: its words from the
     // caller's OCR, if any. A broken layer whose page OCR can't read (language
