@@ -44,14 +44,26 @@ export function captureText(ctx, toPdf, runs) {
   // invisible
   const votes = new Map(runs.filter(r => !r.partial).map(r => [r, new Map()]));
   const live = [...votes.keys()];
+  // glyphs filled and glyphs outlined per run: a font with no bold face is
+  // made bold by drawing it filled AND stroked (Word, WPS) — a Chinese
+  // report's FangSong headings came out regular
+  const painted = new Map();   // item → { fill, stroke }
   const fill = ctx.fillText, stroke = ctx.strokeText;
-  const take = (draw, colour) => function (text, x, y, ...rest) {
+  const take = (draw, colour, kind) => function (text, x, y, ...rest) {
     const m = ctx.getTransform();
     if (Math.abs(m.b) <= Math.abs(m.a) * 0.1 && Math.abs(m.c) <= Math.abs(m.d) * 0.1) {
       const [px, py] = toPdf(m.a * x + m.c * y + m.e, m.b * x + m.d * y + m.f);
       const run = live.find(r => px >= r.x0 - 0.3 * r.fontSize && px <= r.x1 + 0.3 * r.fontSize &&
         Math.abs(py - r.y) <= 0.35 * r.fontSize);
       if (run) {
+        const fs = run.fontSize;
+        const item = run.pieces?.filter(p => p.item.str.trim())
+          .find(p => px >= p.item.x - 0.1 * fs && px <= _right(p.item) + 0.1 * fs)?.item;
+        if (item) {
+          if (!painted.has(item)) painted.set(item, { fill: 0, stroke: 0 });
+          painted.get(item)[kind]++;
+        }
+        if (kind === 'stroke' && votes.get(run).size) return;   // the outline of a filled glyph: colour already counted
         const c = colour() || '000000', v = votes.get(run);
         v.set(c, (v.get(c) || 0) + 1);
         return;
@@ -59,14 +71,22 @@ export function captureText(ctx, toPdf, runs) {
     }
     return draw.call(ctx, text, x, y, ...rest);
   };
-  ctx.fillText   = take(fill,   () => _hex(ctx.fillStyle));
-  ctx.strokeText = take(stroke, () => _hex(ctx.strokeStyle));
+  ctx.fillText   = take(fill,   () => _hex(ctx.fillStyle), 'fill');
+  ctx.strokeText = take(stroke, () => _hex(ctx.strokeStyle), 'stroke');
   return {
     restore: () => {
       ctx.fillText = fill; ctx.strokeText = stroke;
       for (const run of runs) {
         const v = votes.get(run);
         run.color = v?.size ? [...v].sort((a, b) => b[1] - a[1])[0][0] : null;
+        // an item drawn filled and outlined is bold; the run is when all of its
+        // words are (mixed lines keep their bold words: styledParts)
+        for (const { item } of run.pieces || []) {
+          const p = painted.get(item);
+          if (p && p.fill > 0 && p.stroke >= 0.5 * p.fill) item.bold = true;
+        }
+        const words = (run.pieces || []).filter(p => p.item.str.trim());
+        if (words.length) run.bold = words.every(p => p.item.bold);
       }
     },
   };
@@ -111,6 +131,9 @@ export function lineRunsForSlide(line, cuts = []) {
     // pieces stand apart, measured either way — a Persian title's words, one
     // item each with no space items, came out as one glued word
     const items = line.items.filter(it => set.has(it) || (it.str.trim() === '' && it.x >= gx0 && _right(it) <= gx1 + 1));
+    // each item's text with the space before it (joinSpacedItems' rule): the
+    // pieces a box's text is made of, styled one by one (styledParts)
+    const pieces = items.map((it, k) => ({ item: it, text: joinSpacedItems(items.slice(Math.max(0, k - 1), k + 1)).slice(k ? items[k - 1].str.length : 0) }));
     const text = _symbolBullets(joinSpacedItems(items).replace(/\s+/g, ' ').trim());
     if (!text) return null;
     const sizes = inside.map(it => it.fontSize || 10).sort((a, b) => a - b);
@@ -122,6 +145,7 @@ export function lineRunsForSlide(line, cuts = []) {
       fontFace: inside.find(it => it.fontFamily)?.fontFamily,
       rtl: _RTL_RE.test(text),
       partial: inside.some(it => it.partial),   // OCR left words out (pdf2wordOcr)
+      pieces,
     };
   }).filter(Boolean);
 }
@@ -167,7 +191,7 @@ export function groupRuns(runs, grids = []) {
   const used = new Set();
   for (const r of sorted) {
     if (used.has(r)) continue;
-    const block = { ...r, lines: [r.text], pitch: null };
+    const block = { ...r, lines: [r.text], runs: [r], pitch: null };
     used.add(r);
     // how the lines line up — fixed by the first pair, held by every next
     // line: by "left or centre" each time, a hanging "a)" made a left-aligned
@@ -185,6 +209,7 @@ export function groupRuns(runs, grids = []) {
       align = align ?? _alignOf(r, next, fs);
       block.pitch = block.pitch ?? pitch;
       block.lines.push(next.text);
+      block.runs.push(next);
       block.x0 = Math.min(block.x0, next.x0); block.x1 = Math.max(block.x1, next.x1);
       used.add(next); last = next;
     }
@@ -300,5 +325,26 @@ export function eraseUnpaintedRuns(img, runs, toPx) {
 function _median(values) {
   const v = [...values].sort((a, b) => a - b);
   return v[v.length >> 1];
+}
+
+/**
+ * A run's text as parts of one weight each — consecutive pieces with the same
+ * bold joined: a line "更值得一提的是，《自然》刊文称…" bold from its second
+ * half was all bold or all regular as one run. Spacing and bullets as the
+ * run's text has them.
+ */
+export function styledParts(run) {
+  const parts = [];
+  for (const { item, text } of run.pieces || [{ item: run, text: run.text }]) {
+    const bold = !!item.bold, last = parts[parts.length - 1];
+    if (last && last.bold === bold) last.text += text;
+    else parts.push({ text, bold });
+  }
+  parts.forEach(p => { p.text = _symbolBullets(p.text.replace(/\s+/g, ' ')); });
+  if (parts.length) {
+    parts[0].text = parts[0].text.trimStart();
+    parts[parts.length - 1].text = parts[parts.length - 1].text.trimEnd();
+  }
+  return parts.filter(p => p.text);
 }
 

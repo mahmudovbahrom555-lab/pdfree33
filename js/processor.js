@@ -19,7 +19,7 @@ import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer, decryptWithPassword } from './decryptPdf.js';
 import { detectTables, groupItemsIntoLines, looksLikeProseNotData, looksLikeEnumeratedList } from './pdf2wordTables.js';
 import { detectColumnRegions, pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
-import { captureText, lineRunsForSlide, cutsForLine, groupRuns, fittedFontSize, eraseUnpaintedRuns } from './pdf2pptLayered.js';
+import { captureText, lineRunsForSlide, cutsForLine, groupRuns, fittedFontSize, eraseUnpaintedRuns, styledParts } from './pdf2pptLayered.js';
 import { openFeedback } from './feedback.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
 import { evaluateStructural } from './eriScore.js';
@@ -3686,14 +3686,22 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'image' } = {}) {
             : b.align === 'center' ? (b.x0 + b.x1 - wPt) / 2 : b.x0;
           const above = _P2P_ASCENT * fs + (b.lines.length > 1 ? _P2P_LEAD * (lineH - _P2P_LINE * fs) : 0);
           const [vx, vy] = viewport.convertToViewportPoint(leftPt, b.y + above);
-          slide.addText(b.lines.join('\n'), {
+          // one run of text per part of one weight (styledParts), each line
+          // its own paragraph; every part carries the box's own settings
+          const runOpts = {
+            fontSize: Math.max(1, fs * fit.scale), italic: b.italic, ...(face ? { fontFace: face } : {}),
+            color: b.color ?? '000000', ...(b.color === null ? { transparency: 100 } : {}),
+            align: b.align, rtlMode: b.rtl, ...(b.lang ? { lang: b.lang } : {}),
+            ...(b.lines.length > 1 ? { lineSpacing: lineH * fit.scale } : {}),
+          };
+          const textRuns = b.runs.flatMap((r, li) => styledParts(r).map((part, k, parts) => ({
+            text: part.text,
+            options: { ...runOpts, bold: part.bold, ...(k === parts.length - 1 && li < b.runs.length - 1 ? { breakLine: true } : {}) },
+          })));
+          slide.addText(textRuns, {
             x: fit.x + vx / dpi * fit.scale, y: fit.y + vy / dpi * fit.scale,
             w: toIn(wPt), h: toIn((b.lines.length - 1) * lineH + fs * _P2P_LINE),
-            fontSize: Math.max(1, fs * fit.scale),
-            bold: b.bold, italic: b.italic, ...(face ? { fontFace: face } : {}),
-            color: b.color ?? '000000', ...(b.color === null ? { transparency: 100 } : {}),
-            align: b.align, valign: 'top', margin: 0, wrap: false, rtlMode: b.rtl, ...(b.lang ? { lang: b.lang } : {}),
-            ...(b.lines.length > 1 ? { lineSpacing: lineH * fit.scale } : {}),
+            ...runOpts, valign: 'top', margin: 0, wrap: false,
           });
         }
       }

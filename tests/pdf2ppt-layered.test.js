@@ -6,7 +6,7 @@
 // ============================================================
 
 import { strict as assert } from 'assert';
-import { captureText, lineRunsForSlide, cutsForLine, groupRuns, fittedFontSize, eraseUnpaintedRuns } from '../js/pdf2pptLayered.js';
+import { captureText, lineRunsForSlide, cutsForLine, groupRuns, fittedFontSize, eraseUnpaintedRuns, styledParts } from '../js/pdf2pptLayered.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -168,6 +168,25 @@ test('rotated text is drawn; a run none of whose glyphs is painted stays invisib
   restore();
   assert.deepEqual(drawn, ['R']);
   assert.equal(r.color, null);
+});
+
+test('glyphs drawn filled and outlined (a faux bold) make their words bold; a line can mix both', () => {
+  const { ctx } = fakeCtx();
+  // "更值得一提的是，" regular, "《自然》刊文称" bold (FangSong drawn filled + stroked)
+  const ln = line([item('更值得一提的是，', 100, 96, { fontSize: 12, y: 500 }), item('《自然》刊文称', 196, 84, { fontSize: 12, y: 500 })]);
+  const [r] = lineRunsForSlide(ln);
+  const { restore } = captureText(ctx, (x, y) => [x, y], [r]);
+  for (const x of [110, 150]) ctx.fillText('字', x, 500);
+  for (const x of [200, 240]) { ctx.fillText('字', x, 500); ctx.strokeText('字', x, 500); }
+  restore();
+  assert.equal(r.bold, false);
+  assert.deepEqual(styledParts(r), [{ text: '更值得一提的是，', bold: false }, { text: '《自然》刊文称', bold: true }]);
+  assert.equal(r.color, 'FF0000');                     // the fill's colour, not the outline's
+});
+
+test('styled parts keep the spaces between words and drop them at the ends', () => {
+  const ln = line([item('Plain', 50, 30, { fontSize: 12 }), item('bold', 85, 24, { fontSize: 12, bold: true }), item('end', 113, 18, { fontSize: 12 })]);
+  assert.deepEqual(styledParts(lineRunsForSlide(ln)[0]), [{ text: 'Plain', bold: false }, { text: ' bold', bold: true }, { text: ' end', bold: false }]);
 });
 
 test('an OCR guess leaves the glyphs under it drawn and stays invisible', () => {
