@@ -232,6 +232,7 @@ window.PDFREE_LOCALE = {
   err_out_of_memory:    '处理此文件时设备内存不足 — 这是真实的硬件限制，并非程序错误。请尝试缩小页面范围、关闭其他浏览器标签页，或（多文件输出时）改用单一合并文件而非分开输出。感谢您使用 PDFree — 很抱歉这次没能顺利处理。',
   err_file_unreadable: "无法读取“{name}”。选择该文件后，它已被更改或无法访问：在其他应用中重新保存、被移动或删除，或者是不在本设备上的云端文件（OneDrive、iCloud、Google 云端硬盘）。请将其从列表中移除后重新添加。其他文件不受影响。",
   err_file_unreadable_any: "无法读取其中一个文件。选择后它已被更改或无法访问：重新保存、被移动或删除，或者是不在本设备上的云端文件。请将文件从列表中移除后重新添加。",
+  err_file_unreadable_added: "无法读取“{name}”——该文件尚未完整保存在此设备上（OneDrive、iCloud 或 Google Drive 云端文件），或刚刚被移动或更改。请在其文件夹或应用中打开一次以完成下载，然后重新添加。您的其他文件不受影响。",
   err_unlock_wrong_password: '密码不正确，请重试。',
   err_docx_legacy_or_encrypted: '此文件似乎已设置密码保护，或者是旧版 .doc 格式而非 .docx。Word→PDF 需要未加密的现代 .docx 文件——请在 Word 中移除密码（文件 → 信息 → 保护文档），或使用“文件 → 另存为 → Word 文档 (.docx)”重新保存后再试。',
   err_docx_parse_failed: '无法读取此 Word 文档——它可能已损坏、不完整，或以此工具无法识别的方式保存。请尝试在 Word（或您使用的文字处理软件）中另存为新的 .docx 文件后重试。',

@@ -140,8 +140,10 @@ export function startCompressScan(file) {
         resolve(e.data.report);
       }
     };
-    // File is sent by structured clone (not Transferable) — stays accessible in main thread
-    _worker.postMessage({ tool: 'compress-scan', file });
+    // File is sent by structured clone (not Transferable) — stays accessible in main thread.
+    // Its private copy when there is one (files.js _keepCopy): a clone drops the
+    // File's redirected reads, and the worker would read the file on disk again.
+    _worker.postMessage({ tool: 'compress-scan', file: file._copy ?? file });
   });
 }
 
@@ -180,10 +182,11 @@ export function startMergeBatchScan(files) {
         resolve(e.data.results);
       }
     };
-    // Files are sent as structured clone (not Transferable) — originals stay accessible
+    // Files are sent as structured clone (not Transferable) — originals stay accessible;
+    // each one's private copy when there is one (see the compress scan above)
     _worker.postMessage({
       tool:  'merge-scan-batch',
-      items: files.map((f, i) => ({ file: f, index: i })),
+      items: files.map((f, i) => ({ file: f._copy ?? f, index: i })),
     });
   });
 }

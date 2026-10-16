@@ -231,6 +231,8 @@ export function addFiles(files) {
 
   renderList();
 
+  for (const f of added) _keepCopy(f);
+
   // Run preflight on newly added PDFs — async, non-blocking.
   // Annotates file._pdfMeta. For AES- or RC4-encrypted files, tries QPDF
   // silent decryption (owner-only / empty user password) before showing badge.
@@ -278,6 +280,43 @@ export function addFiles(files) {
         renderList();
       }
     });
+  }
+}
+
+// A private copy of each added file, read once when it is added. A browser
+// File is only a reference to a file on disk: saved again in another app,
+// moved, deleted, a cloud-drive file swapped by its sync, an Android pick
+// whose permission lapsed while the tab sat in the background — and reading it
+// again when the user presses the button fails ("Couldn't read …", ORGANIZE-
+// 1455, 2026-10-16: a merged PDF opened in Organize, pages arranged, then
+// unreadable). Every read of the file — arrayBuffer, slice, stream, text, by
+// any tool, at any time — is served from the copy once it is made. Copies
+// share a budget (big merges must not double the tab's memory); a file past
+// it stays a reference, as before. A file that can't be read even now is
+// taken off the list at once, with what to do — not after minutes of work.
+const _COPY_BUDGET = (navigator.deviceMemory ?? 8) < 4 || /Android|iPhone|iPad/i.test(navigator.userAgent)
+  ? 150 * 1048576 : 600 * 1048576;
+async function _keepCopy(f) {
+  const copied = selectedFiles.reduce((sum, x) => sum + (x !== f && x._copy ? x.size : 0), 0);
+  if (copied + f.size > _COPY_BUDGET) return;
+  let copy;
+  try {
+    // streamed: the copy is the browser's (paged to disk for big files), not a JS buffer
+    copy = f.stream ? await new Response(f.stream()).blob() : new Blob([await f.arrayBuffer()]);
+  } catch (err) {
+    if (err?.name !== 'NotReadableError' && err?.name !== 'NotFoundError') return;
+    const i = selectedFiles.indexOf(f);
+    if (i === -1) return;
+    selectedFiles.splice(i, 1);
+    renderList();
+    if (selectedFiles.length > 0) document.dispatchEvent(new CustomEvent('pdfree:file-removed'));
+    showToast(t('err_file_unreadable_added', { name: f.name }), 9000);
+    return;
+  }
+  if (copy.size !== f.size || !selectedFiles.includes(f)) return;
+  f._copy = copy;
+  for (const m of ['arrayBuffer', 'slice', 'stream', 'text']) {
+    Object.defineProperty(f, m, { value: copy[m].bind(copy), configurable: true });
   }
 }
 
