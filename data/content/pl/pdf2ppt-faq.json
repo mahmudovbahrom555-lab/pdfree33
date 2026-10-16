@@ -20,7 +20,7 @@
     "name": "Czy mogę edytować tekst na slajdach po konwersji?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "W domyślnym trybie Obraz — nie bezpośrednio: każdy slajd jest obrazem oryginalnej strony. Przed konwersją przełącz na Edytowalny tekst (beta): slajd zachowa wygląd strony — razem ze zdjęciami, wykresami i liniami tabel — a cały tekst stanie się edytowalnymi polami tekstowymi w tym samym miejscu, rozmiarze i kolorze; tekst na zeskanowanych stronach jest rozpoznawany (OCR). Dla w pełni edytowalnego dokumentu użyj PDF na Word."
+      "text": "Tak — w trybie Edytowalny tekst, który jest domyślny, slajd zachowuje wygląd strony — razem ze zdjęciami, wykresami i liniami tabel — a cały tekst staje się edytowalnymi polami tekstowymi w tym samym miejscu, rozmiarze i kolorze; tekst na zeskanowanych stronach jest rozpoznawany (OCR). W trybie Obraz każdy slajd to jeden obraz strony, a jego tekstu nie da się edytować. Dla w pełni edytowalnego dokumentu użyj PDF do Word."
     }
   },
   {

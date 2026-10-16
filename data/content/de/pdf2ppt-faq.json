@@ -20,7 +20,7 @@
     "name": "Kann ich den Text auf den Folien bearbeiten?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Im Standardmodus Bild nicht direkt — jede Folie ist ein Bild der ursprünglichen Seite. Wähle vor dem Konvertieren Bearbeitbarer Text (Beta): Die Folie behält das Aussehen der Seite — samt Fotos, Diagrammen und Tabellenlinien — und der gesamte Text wird zu bearbeitbaren Textfeldern an derselben Stelle, in derselben Größe und Farbe; Text auf gescannten Seiten wird per OCR erkannt. Für ein vollständig bearbeitbares Dokument verwende PDF zu Word."
+      "text": "Ja — im Modus Bearbeitbarer Text, der Standardeinstellung, behält die Folie das Aussehen der Seite — samt Fotos, Diagrammen und Tabellenlinien — und der gesamte Text wird zu bearbeitbaren Textfeldern an derselben Stelle, in derselben Größe und Farbe; Text auf gescannten Seiten wird per OCR erkannt. Im Modus Bild ist jede Folie ein einziges Bild der Seite, ihr Text ist nicht bearbeitbar. Für ein vollständig bearbeitbares Dokument verwende PDF zu Word."
     }
   },
   {

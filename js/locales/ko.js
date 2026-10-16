@@ -1127,7 +1127,7 @@ window.PDFREE_LOCALE = {
   p2p_output_mode:          '출력',
   p2p_conversion_mode_aria: 'PowerPoint 변환 모드',
   p2p_mode_image:           '🖼️ 이미지',
-  p2p_mode_text:            '📝 편집 가능한 텍스트(베타)',
+  p2p_mode_text:            '📝 편집 가능한 텍스트',
   p2p_mode_text_hint:       '📝 슬라이드는 페이지의 모양을 그대로 유지하고(사진·차트·표 선도 그대로), 모든 텍스트는 같은 위치·크기·색상의 편집 가능한 텍스트 상자가 됩니다. 스캔한 페이지의 글자는 OCR로 인식합니다.',
   p2p_quality_aria:      '슬라이드 이미지 품질',
   p2p_mode_hint:         '📽️ 각 페이지는 하나의 전체 슬라이드 이미지가 됩니다 — 편집 가능한 텍스트가 아닌 이미지입니다. 이는 PDF 페이지를 레이아웃 그대로 슬라이드로 변환하는 유일한 방법이기 때문입니다.',

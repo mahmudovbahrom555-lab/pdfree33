@@ -1127,7 +1127,7 @@ window.PDFREE_LOCALE = {
   p2p_output_mode:          'Salida',
   p2p_conversion_mode_aria: 'Modo de conversión a PowerPoint',
   p2p_mode_image:           '🖼️ Imagen',
-  p2p_mode_text:            '📝 Texto editable (beta)',
+  p2p_mode_text:            '📝 Texto editable',
   p2p_mode_text_hint:       '📝 Cada diapositiva conserva el aspecto de la página — fotos, gráficos y líneas de tablas quedan como están — y todo el texto se convierte en cuadros de texto reales y editables en el mismo lugar, tamaño y color. El texto de las páginas escaneadas se reconoce con OCR.',
   p2p_quality_aria:      'Calidad de imagen de la diapositiva',
   p2p_mode_hint:         '📽️ Cada página se convierte en una imagen de diapositiva completa — una imagen, no texto editable, ya que es la única forma fiel al diseño de convertir una página de PDF en una diapositiva.',

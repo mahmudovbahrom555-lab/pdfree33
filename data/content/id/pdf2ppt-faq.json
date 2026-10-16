@@ -20,7 +20,7 @@
     "name": "Bisakah saya mengedit teks di slide setelah konversi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Di mode Gambar (default), tidak secara langsung — setiap slide adalah gambar halaman asli. Sebelum mengonversi, beralihlah ke Teks yang dapat diedit (beta): slide mempertahankan tampilan halaman — termasuk foto, grafik, dan garis tabel — dan semua teks menjadi kotak teks yang bisa diedit di posisi, ukuran, dan warna yang sama; teks pada halaman hasil pindaian dikenali dengan OCR. Untuk dokumen yang sepenuhnya bisa diedit, gunakan PDF ke Word."
+      "text": "Ya — dengan Teks yang dapat diedit, mode default, slide mempertahankan tampilan halaman — termasuk foto, grafik, dan garis tabel — dan semua teks menjadi kotak teks yang bisa diedit di posisi, ukuran, dan warna yang sama; teks pada halaman hasil pindaian dikenali dengan OCR. Di mode Gambar setiap slide adalah satu gambar halaman dan teksnya tidak bisa diedit. Untuk dokumen yang sepenuhnya bisa diedit, gunakan PDF ke Word."
     }
   },
   {

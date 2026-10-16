@@ -1149,7 +1149,7 @@ export const EN = {
   p2p_output_mode:         'Output',
   p2p_conversion_mode_aria: 'PowerPoint conversion mode',
   p2p_mode_image:          '🖼️ Image',
-  p2p_mode_text:           '📝 Editable text (beta)',
+  p2p_mode_text:           '📝 Editable text',
   p2p_mode_hint:      '📽️ Each page becomes one full-slide image — always looks exactly like the source, but text is not editable (only searchable/copyable).',
   p2p_mode_text_hint: '📝 Each slide keeps its look — photos, charts and table lines stay as they are — and all of its text becomes real, editable text boxes in the same place, size and colour. Text on scanned pages is read with OCR.',
   p2p_size_danger:    '⚠️ Estimated .pptx: <strong>~{mb} MB</strong> — very large. Your browser may run out of memory. Try <strong>Compact</strong> quality.',

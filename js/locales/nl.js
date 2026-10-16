@@ -1125,7 +1125,7 @@ window.PDFREE_LOCALE = {
   p2p_output_mode:          'Uitvoer',
   p2p_conversion_mode_aria: 'PowerPoint-conversiemodus',
   p2p_mode_image:           '🖼️ Afbeelding',
-  p2p_mode_text:            '📝 Bewerkbare tekst (bèta)',
+  p2p_mode_text:            '📝 Bewerkbare tekst',
   p2p_mode_text_hint:       '📝 Elke dia behoudt het uiterlijk van de pagina — foto\'s, grafieken en tabellijnen blijven zoals ze zijn — en alle tekst wordt echte, bewerkbare tekstvakken op dezelfde plek, in dezelfde grootte en kleur. Tekst op gescande pagina\'s wordt herkend met OCR.',
   p2p_quality_aria:      'Afbeeldingskwaliteit van de dia',
   p2p_mode_hint:         '📽️ Elke pagina wordt één full-slide afbeelding — een afbeelding, geen bewerkbare tekst, aangezien dit de enige lay-outgetrouwe manier is om een willekeurige PDF-pagina in een dia om te zetten.',

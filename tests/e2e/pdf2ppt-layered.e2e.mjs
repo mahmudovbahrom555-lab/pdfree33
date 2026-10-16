@@ -38,6 +38,10 @@ try {
   await page.goto(BASE_URL + '/pdf-to-powerpoint/', { waitUntil: 'load' });
   await page.setInputFiles('#fileInput', path.join(__dirname, '..', 'fixtures', 'pdf2ppt', 'slide.pdf'));
   await page.waitForSelector('input[name="p2pMode"][value="text"]', { state: 'attached', timeout: 30000 });
+  const defaults = await page.evaluate(() => ({
+    checked: document.querySelector('input[name="p2pMode"]:checked')?.value,
+    first: document.querySelector('input[name="p2pMode"]')?.value,
+  }));
   await page.evaluate(() => {
     const i = document.querySelector('input[name="p2pMode"][value="text"]');
     i.checked = true; i.dispatchEvent(new Event('change', { bubbles: true }));
@@ -66,6 +70,10 @@ try {
     const t = ctx.getImageData(Math.round(40 * k), Math.round((540 - 500) * k), Math.round(240 * k), Math.round(28 * k)).data;
     for (let i = 0; i < t.length; i += 4) if (t[i] > 200 && t[i + 1] > 200 && t[i + 2] > 200) whiteInTitle++;
     return { pics, disc: px(600, 360), whiteInTitle, boxes };
+  });
+
+  await test('Editable text is the default mode and the first choice (owner, 2026-10-16)', async () => {
+    if (defaults.checked !== 'text' || defaults.first !== 'text') throw new Error(JSON.stringify(defaults));
   });
 
   await test('one picture of the page under the text, the vector disc in it, the title text not', async () => {

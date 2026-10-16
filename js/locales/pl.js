@@ -1125,7 +1125,7 @@ window.PDFREE_LOCALE = {
   p2p_output_mode:          'Wynik',
   p2p_conversion_mode_aria: 'Tryb konwersji do PowerPoint',
   p2p_mode_image:           '🖼️ Obraz',
-  p2p_mode_text:            '📝 Edytowalny tekst (beta)',
+  p2p_mode_text:            '📝 Edytowalny tekst',
   p2p_mode_text_hint:       '📝 Slajd zachowuje wygląd strony — zdjęcia, wykresy i linie tabel zostają na miejscu — a cały tekst staje się prawdziwymi, edytowalnymi polami tekstowymi w tym samym miejscu, rozmiarze i kolorze. Tekst na zeskanowanych stronach jest rozpoznawany (OCR).',
   p2p_quality_aria:      'Jakość obrazu slajdu',
   p2p_mode_hint:         '📽️ Każda strona staje się jednym obrazem slajdu na pełny ekran — obrazem, a nie edytowalnym tekstem, ponieważ jest to jedyny sposób na wierne odwzorowanie układu dowolnej strony PDF jako slajdu.',

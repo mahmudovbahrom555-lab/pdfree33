@@ -1127,7 +1127,7 @@ window.PDFREE_LOCALE = {
   p2p_output_mode:          'Sortie',
   p2p_conversion_mode_aria: 'Mode de conversion PowerPoint',
   p2p_mode_image:           '🖼️ Image',
-  p2p_mode_text:            '📝 Texte modifiable (bêta)',
+  p2p_mode_text:            '📝 Texte modifiable',
   p2p_mode_text_hint:       '📝 Chaque diapositive garde l\'aspect de la page — photos, graphiques et traits de tableaux restent tels quels — et tout le texte devient de vraies zones de texte modifiables, au même endroit, de la même taille et de la même couleur. Le texte des pages numérisées est reconnu par OCR.',
   p2p_quality_aria:      'Qualité d\'image des diapositives',
   p2p_mode_hint:         '📽️ Chaque page devient une image de diapositive pleine page — une image, pas du texte modifiable, car c\'est la seule façon fidèle à la mise en page de transformer une page PDF en diapositive.',

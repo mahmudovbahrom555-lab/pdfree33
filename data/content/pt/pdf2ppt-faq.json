@@ -20,7 +20,7 @@
     "name": "Posso editar o texto nos slides?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No modo Imagem (padrão), não diretamente: cada slide é uma imagem da página original. Antes de converter, mude para Texto editável (beta): o slide mantém a aparência da página — incluindo fotos, gráficos e linhas de tabelas — e todo o texto vira caixas de texto editáveis no mesmo lugar, tamanho e cor; o texto de páginas digitalizadas é reconhecido por OCR. Para um documento totalmente editável, use PDF para Word."
+      "text": "Sim — com Texto editável, o modo padrão, o slide mantém a aparência da página — incluindo fotos, gráficos e linhas de tabelas — e todo o texto vira caixas de texto editáveis no mesmo lugar, tamanho e cor; o texto de páginas digitalizadas é reconhecido por OCR. No modo Imagem cada slide é uma única imagem da página e o texto não é editável. Para um documento totalmente editável, use PDF para Word."
     }
   },
   {

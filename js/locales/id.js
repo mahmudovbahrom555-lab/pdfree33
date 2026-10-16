@@ -1126,7 +1126,7 @@ window.PDFREE_LOCALE = {
   p2p_output_mode:          'Keluaran',
   p2p_conversion_mode_aria: 'Mode konversi PowerPoint',
   p2p_mode_image:           '🖼️ Gambar',
-  p2p_mode_text:            '📝 Teks yang dapat diedit (beta)',
+  p2p_mode_text:            '📝 Teks yang dapat diedit',
   p2p_mode_text_hint:       '📝 Setiap slide mempertahankan tampilan halaman — foto, grafik, dan garis tabel tetap seperti aslinya — dan semua teks menjadi kotak teks sungguhan yang bisa diedit, di posisi, ukuran, dan warna yang sama. Teks pada halaman hasil pindaian dikenali dengan OCR.',
   p2p_quality_aria:      'Kualitas gambar slide',
   p2p_mode_hint:         '📽️ Setiap halaman menjadi satu gambar slide penuh — gambar, bukan teks yang dapat diedit, karena ini satu-satunya cara yang setia pada tata letak untuk mengubah halaman PDF apa pun menjadi slide.',

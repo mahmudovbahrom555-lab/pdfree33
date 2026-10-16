@@ -1128,7 +1128,7 @@ window.PDFREE_LOCALE = {
   p2p_output_mode:          '出力',
   p2p_conversion_mode_aria: 'PowerPoint変換モード',
   p2p_mode_image:           '🖼️ 画像',
-  p2p_mode_text:            '📝 編集可能なテキスト（ベータ）',
+  p2p_mode_text:            '📝 編集可能なテキスト',
   p2p_mode_text_hint:       '📝 スライドはページの見た目をそのまま保ち（写真・グラフ・表の罫線もそのまま）、すべてのテキストが同じ位置・サイズ・色の編集可能なテキストボックスになります。スキャンしたページの文字はOCRで認識します。',
   p2p_quality_aria:      'スライド画像の品質',
   p2p_mode_hint:         '📽️ 各ページは1枚のフルサイズのスライド画像になります — 編集可能なテキストではなく画像です。これは、任意のPDFページをレイアウトを保ったままスライドに変換する唯一の方法です。',

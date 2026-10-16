@@ -16,7 +16,7 @@ const DANGER_MB  = 200;
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let _file      = null;
-let _mode      = 'image';
+let _mode      = 'text';   // editable text by default (owner, 2026-10-16): same speed, smaller files
 let _dpi       = 150;
 let _pageCount = 0;
 let _vpW       = 0;
@@ -72,7 +72,7 @@ export async function initPdf2PptOptions(file) {
 export function hidePdf2PptOptions() {
   const el = id('pdf2pptOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
-  _file = null; _mode = 'image'; _dpi = 150; _pageCount = 0; _vpW = 0; _vpH = 0; _loading = false;
+  _file = null; _mode = 'text'; _dpi = 150; _pageCount = 0; _vpW = 0; _vpH = 0; _loading = false;
 }
 
 // ── Size estimation ───────────────────────────────────────────────────────────
@@ -100,8 +100,8 @@ function _render(file) {
     </div>
 
     ${group(t('p2p_output_mode'), chipGroup('p2pMode', [
-      { value: 'image', label: t('p2p_mode_image') },
       { value: 'text',  label: t('p2p_mode_text') },
+      { value: 'image', label: t('p2p_mode_image') },
     ], _mode, t('p2p_conversion_mode_aria')))}
 
     ${group(t('p2p_quality_label'), `

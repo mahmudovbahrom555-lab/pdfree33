@@ -1125,7 +1125,7 @@ window.PDFREE_LOCALE = {
   p2p_output_mode:          'Çıktı',
   p2p_conversion_mode_aria: 'PowerPoint dönüştürme modu',
   p2p_mode_image:           '🖼️ Görüntü',
-  p2p_mode_text:            '📝 Düzenlenebilir metin (beta)',
+  p2p_mode_text:            '📝 Düzenlenebilir metin',
   p2p_mode_text_hint:       '📝 Slayt sayfanın görünümünü korur — fotoğraflar, grafikler ve tablo çizgileri olduğu gibi kalır — ve tüm metin aynı yerde, aynı boyutta ve renkte gerçek, düzenlenebilir metin kutularına dönüşür. Taranmış sayfalardaki metin OCR ile tanınır.',
   p2p_quality_aria:      'Slayt görüntü kalitesi',
   p2p_mode_hint:         '📽️ Her sayfa tam slayt görüntüsü haline gelir — düzenlenebilir metin değil, bir görüntüdür, çünkü herhangi bir PDF sayfasını slayda dönüştürmenin düzene sadık kalan tek yolu budur.',

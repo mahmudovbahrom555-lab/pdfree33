@@ -20,7 +20,7 @@
     "name": "Tôi có thể chỉnh sửa văn bản trên slide sau khi chuyển đổi không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ở chế độ Hình ảnh mặc định thì không trực tiếp — mỗi slide là hình ảnh của trang gốc. Trước khi chuyển đổi, hãy chọn Văn bản có thể chỉnh sửa (beta): slide giữ nguyên giao diện trang — gồm cả ảnh, biểu đồ và đường kẻ bảng — và toàn bộ văn bản trở thành hộp văn bản có thể chỉnh sửa, đúng vị trí, cỡ chữ và màu; văn bản trên trang scan được nhận dạng bằng OCR. Nếu cần tài liệu chỉnh sửa hoàn toàn, hãy dùng PDF sang Word."
+      "text": "Có — với Văn bản có thể chỉnh sửa, chế độ mặc định, slide giữ nguyên giao diện trang — gồm cả ảnh, biểu đồ và đường kẻ bảng — và toàn bộ văn bản trở thành hộp văn bản có thể chỉnh sửa, đúng vị trí, cỡ chữ và màu; văn bản trên trang scan được nhận dạng bằng OCR. Ở chế độ Hình ảnh, mỗi slide là một hình ảnh của trang và văn bản không chỉnh sửa được. Nếu cần tài liệu chỉnh sửa hoàn toàn, hãy dùng PDF sang Word."
     }
   },
   {

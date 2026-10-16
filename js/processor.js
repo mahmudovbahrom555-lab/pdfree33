@@ -3482,7 +3482,7 @@ const _P2P_ASCENT = 1.05;
 const _P2P_LINE   = 1.2;
 const _P2P_LEAD   = 0.44;
 
-async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'image' } = {}) {
+async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'text' } = {}) {
   const file = filesSnapshot[0];
   if (!_checkSize(file, maxFileMb('pdf2ppt'))) { _abortUI(); return; }
 

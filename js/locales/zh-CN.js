@@ -1171,7 +1171,7 @@ window.PDFREE_LOCALE = {
   p2p_output_mode:         '输出',
   p2p_conversion_mode_aria: 'PowerPoint 转换模式',
   p2p_mode_image:          '🖼️ 图片',
-  p2p_mode_text:           '📝 可编辑文本（测试版）',
+  p2p_mode_text:           '📝 可编辑文本',
   p2p_mode_hint:      '📽️ 每页将生成一张全幻灯片图片 — 与原文档完全一致，但文本不可编辑（仅可搜索/复制）。',
   p2p_mode_text_hint: '📝 每张幻灯片保留页面原貌——照片、图表和表格线条保持不变——所有文字都变成位置、大小和颜色都相同的真正可编辑文本框。扫描页面上的文字会通过 OCR 识别。',
   p2p_size_danger:    '⚠️ 预估 .pptx 大小：<strong>约 {mb} MB</strong> — 非常大。您的浏览器可能会内存不足。请尝试<strong>紧凑</strong>质量。',

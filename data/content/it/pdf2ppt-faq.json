@@ -20,7 +20,7 @@
     "name": "Posso modificare il testo nelle slide dopo la conversione?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nella modalità Immagine predefinita, non direttamente: ogni slide è un'immagine della pagina originale. Prima di convertire passa a Testo modificabile (beta): la slide mantiene l'aspetto della pagina — foto, grafici e linee delle tabelle compresi — e tutto il testo diventa vere caselle di testo modificabili nella stessa posizione, dimensione e colore; il testo delle pagine scansionate viene riconosciuto con l'OCR. Per un documento completamente modificabile usa PDF in Word."
+      "text": "Sì: con Testo modificabile, la modalità predefinita, la slide mantiene l'aspetto della pagina — foto, grafici e linee delle tabelle compresi — e tutto il testo diventa vere caselle di testo modificabili nella stessa posizione, dimensione e colore; il testo delle pagine scansionate viene riconosciuto con l'OCR. In modalità Immagine ogni slide è un'unica immagine della pagina e il testo non è modificabile. Per un documento completamente modificabile usa PDF in Word."
     }
   },
   {

@@ -20,7 +20,7 @@
     "name": "Dönüştürdükten sonra slaytlardaki metni düzenleyebilir miyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Varsayılan Görüntü modunda doğrudan değil — her slayt orijinal sayfanın bir görselidir. Dönüştürmeden önce Düzenlenebilir metin (beta) seçin: slayt sayfanın görünümünü korur — fotoğraflar, grafikler ve tablo çizgileri dahil — ve tüm metin aynı yerde, aynı boyutta ve renkte düzenlenebilir metin kutularına dönüşür; taranmış sayfalardaki metin OCR ile tanınır. Tamamen düzenlenebilir bir belge için PDF'den Word'e aracını kullanın."
+      "text": "Evet — varsayılan mod olan Düzenlenebilir metin ile slayt sayfanın görünümünü korur — fotoğraflar, grafikler ve tablo çizgileri dahil — ve tüm metin aynı yerde, aynı boyutta ve renkte düzenlenebilir metin kutularına dönüşür; taranmış sayfalardaki metin OCR ile tanınır. Görüntü modunda her slayt sayfanın tek bir görselidir ve metni düzenlenemez. Tamamen düzenlenebilir bir belge için PDF'den Word'e aracını kullanın."
     }
   },
   {

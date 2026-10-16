@@ -20,7 +20,7 @@
     "name": "Kan ik de tekst op de dia's bewerken na conversie?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "In de standaardmodus Afbeelding niet rechtstreeks: elke dia is een afbeelding van de originele pagina. Schakel vóór het converteren over naar Bewerkbare tekst (bèta): de dia behoudt het uiterlijk van de pagina — foto's, grafieken en tabellijnen inbegrepen — en alle tekst wordt echte, bewerkbare tekstvakken op dezelfde plek, in dezelfde grootte en kleur; tekst op gescande pagina's wordt herkend met OCR. Voor een volledig bewerkbaar document gebruik je PDF naar Word."
+      "text": "Ja — met Bewerkbare tekst, de standaardmodus, behoudt de dia het uiterlijk van de pagina — foto's, grafieken en tabellijnen inbegrepen — en alle tekst wordt echte, bewerkbare tekstvakken op dezelfde plek, in dezelfde grootte en kleur; tekst op gescande pagina's wordt herkend met OCR. In de modus Afbeelding is elke dia één afbeelding van de pagina en is de tekst niet bewerkbaar. Voor een volledig bewerkbaar document gebruik je PDF naar Word."
     }
   },
   {
