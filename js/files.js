@@ -294,11 +294,13 @@ export function addFiles(files) {
 // share a budget (big merges must not double the tab's memory); a file past
 // it stays a reference, as before. A file that can't be read even now is
 // taken off the list at once, with what to do — not after minutes of work.
-const _COPY_BUDGET = (navigator.deviceMemory ?? 8) < 4 || /Android|iPhone|iPad/i.test(navigator.userAgent)
+// (read when a file is added, not at import: the Node test runner has no navigator)
+const _copyBudget = () => (navigator.deviceMemory ?? 8) < 4 || /Android|iPhone|iPad/i.test(navigator.userAgent)
   ? 150 * 1048576 : 600 * 1048576;
 async function _keepCopy(f) {
+  if (typeof navigator === 'undefined' || typeof f.stream !== 'function' && typeof f.arrayBuffer !== 'function') return;
   const copied = selectedFiles.reduce((sum, x) => sum + (x !== f && x._copy ? x.size : 0), 0);
-  if (copied + f.size > _COPY_BUDGET) return;
+  if (copied + f.size > _copyBudget()) return;
   let copy;
   try {
     // streamed: the copy is the browser's (paged to disk for big files), not a JS buffer
