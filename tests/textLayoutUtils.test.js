@@ -448,6 +448,14 @@ test('dropCjkGapSpaces: a justified Chinese line loses the spaces pdf.js read in
   assert.equal(dropCjkGapSpaces('한국어 문장 입니다'), '한국어 문장 입니다');
 });
 
+test('textLayerLooksBroken: Japanese with Latin letters beside kana and kanji is not broken', () => {
+  // a Japanese tournament sheet (presentations corpus): Ａブロック, Ｂ面 … read as script changes
+  const line = 'グランド案内 Ａブロック Ｂブロック Ｃブロック Ｄブロック 主管 東北信ブロック Ａ面 Ｂ面 チーム名 順位 リーグ戦 ';
+  assert.equal(textLayerLooksBroken(line.repeat(6)), false);
+  // a broken layer still is: unrelated scripts side by side
+  assert.equal(textLayerLooksBroken('മലയാളംಕನ್ನಡעבריתعربي '.repeat(20)), true);
+});
+
 const total = passed + failed;
 console.log(`\n${'─'.repeat(50)}`);
 console.log(`Tests: ${total} | ✓ ${passed} | ${failed} failed`);

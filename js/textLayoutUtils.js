@@ -616,7 +616,8 @@ export function continuesWrappedHeading(prevLn, ln, margins) {
 // (good pages ≤ 0.9 %), script changes between adjacent letters 9.7–46 %
 // broken (good ≤ 2.3 %, Japanese with Latin words). Broken when either is
 // clearly over the good range. Han, kana and bopomofo count as one script
-// (Japanese mixes them by nature). Pages under 200 characters aren't judged.
+// (Japanese mixes them by nature), and Latin next to them is no change either
+// (_latinBesideCjk). Pages under 200 characters aren't judged.
 const _SCRIPT_RES = ['Latin', 'Arabic', 'Hebrew', 'Cyrillic', 'Greek', 'Han', 'Hiragana', 'Katakana', 'Bopomofo',
   'Hangul', 'Devanagari', 'Thai', 'Malayalam', 'Kannada', 'Tamil', 'Telugu', 'Bengali', 'Gujarati', 'Gurmukhi',
   'Oriya', 'Armenian', 'Georgian', 'Ethiopic', 'Sinhala', 'Myanmar', 'Khmer', 'Lao', 'Tibetan', 'Syriac', 'Thaana',
@@ -626,6 +627,11 @@ const _SCRIPT_RES = ['Latin', 'Arabic', 'Hebrew', 'Cyrillic', 'Greek', 'Han', 'H
 // eslint-disable-next-line no-control-regex -- intentional: counting control chars
 const _CONTROL_RE = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFD]/;
 const _scriptOf = ch => { for (const [s, re] of _SCRIPT_RES) if (re.test(ch)) return s; return null; };
+// Latin beside Chinese or Japanese is how both are written ("Ａブロック",
+// "Ｂ面", "PDF文件"): a Japanese slide's 10 of them in 600 characters made a
+// good text layer "broken", and OCR read it in its place with less of it
+// (presentations corpus, 2026-10-16) — PDF→Word did the same.
+const _latinBesideCjk = (a, b) => (a === 'Latin' && b === 'CJK') || (a === 'CJK' && b === 'Latin');
 export function textLayerLooksBroken(text) {
   let chars = 0, control = 0, pairs = 0, switches = 0, prev = null;
   for (const ch of text) {
@@ -633,7 +639,7 @@ export function textLayerLooksBroken(text) {
     chars++;
     if (_CONTROL_RE.test(ch)) control++;
     const script = /\p{L}/u.test(ch) ? _scriptOf(ch) : null;
-    if (script && prev) { pairs++; if (script !== prev) switches++; }
+    if (script && prev) { pairs++; if (script !== prev && !_latinBesideCjk(script, prev)) switches++; }
     prev = script;
   }
   if (chars < 200) return false;
