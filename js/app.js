@@ -627,7 +627,7 @@ function _onMergeBtnClick() {
     if (error) { showToast(error); return; }
     _maybeSavePreset(currentTool, params);
     checkAndRecordConversion(currentTool, selectedFiles[0]);  // fire-and-forget
-    trackToolStart(currentTool);
+    trackToolStart(currentTool, selectedFiles.reduce((sum, f) => sum + (f.size || 0), 0));
     doProcess(currentTool, params);
   });
 }

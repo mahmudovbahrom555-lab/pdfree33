@@ -82,6 +82,7 @@ function _track(eventName, props = {}) {
 
 // ── Per-tool timing ───────────────────────────────────────────
 const _timers = {};
+const _inputs = {};   // tool → bytes in, from trackToolStart (no caller passed a size: every success said "unknown")
 
 /**
  * Call when a tool becomes visible to the user (step 1 of the funnel).
@@ -91,9 +92,10 @@ export function trackToolOpen(tool) {
   _track('Tool Open', { tool });
 }
 
-/** Call when a tool starts processing */
-export function trackToolStart(tool) {
+/** Call when a tool starts processing — inputSize: bytes of the files it was given */
+export function trackToolStart(tool, inputSize = 0) {
   _timers[tool] = performance.now();
+  _inputs[tool] = inputSize;
 }
 
 /**
@@ -104,6 +106,8 @@ export function trackToolStart(tool) {
 export function trackToolSuccess(tool, { inputSize = 0, outputSize = 0, requestedCount, successCount, mode } = {}) {
   const durationMs = _timers[tool] ? performance.now() - _timers[tool] : null;
   delete _timers[tool];
+  inputSize ||= _inputs[tool] || 0;
+  delete _inputs[tool];
 
   const props = {
     tool,
@@ -132,6 +136,7 @@ export function trackToolSuccess(tool, { inputSize = 0, outputSize = 0, requeste
 /** Track tool cancellations — useful for UX insight */
 export function trackToolCancel(tool) {
   delete _timers[tool];
+  delete _inputs[tool];
   _track('Tool Cancel', { tool });
 }
 
@@ -157,6 +162,7 @@ export function trackFileAdded(tool, fileSize = 0) {
  */
 export function trackToolError(tool, errorType = 'unknown') {
   delete _timers[tool];
+  delete _inputs[tool];
   _track('Tool Error', { tool, error_type: errorType });
 }
 
