@@ -51,7 +51,6 @@ let _generation      = 0;        // incremented on each new file; stale _analyse
 let _selectedLang      = 'auto';  // 'auto' or specific lang code
 let _detectedLang      = null;    // set after auto-detection; null when user chose manually
 let _requiresManualLang = false;  // true when auto-detection was inconclusive — blocks OCR
-let _langPickerShown    = false;  // true once the picker was opened for the current inconclusive gate
 let _downloadAsTxt      = false;
 let _includeTxtHeader   = false;
 const _langCache       = new Map(); // "filename:size" → detected lang — avoids re-detection
@@ -381,8 +380,11 @@ function _syncBtnLabel() {
   const btn = document.getElementById('mergeBtn');
   if (!btn || !btn._ocrBound) return;
   if (_requiresManualLang) {
-    btn.disabled = false; // keep clickable — click will open the language picker
-    btn.textContent = t('ocr_select_lang_first');
+    // one click runs it in the language shown (picked or suggested): a click
+    // that only opened the picker, then a second one, lost a third of the
+    // people who got here (Analytics: 3 of 9 never got a result, 2026-10-16)
+    btn.disabled = false;
+    btn.textContent = t('ocr_run_in_lang', { lang: _getLangName(_selectedLang) });
     return;
   }
   btn.disabled = false;
@@ -439,10 +441,9 @@ function _showLangRequired(detectedLang) {
   sel.focus();
   sel.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-  // Block OCR until user explicitly picks from the dropdown (or confirms the
-  // pre-selected guess — see _langPickerShown handling in _bindMergeBtn).
+  // The button now names the language it will run in (_syncBtnLabel); a click
+  // confirms it, a different pick in the dropdown changes it.
   _requiresManualLang = true;
-  _langPickerShown    = false;
   _syncBtnLabel();
 }
 
@@ -468,30 +469,11 @@ function _bindMergeBtn() {
 
     e.stopImmediatePropagation();
 
-    // If previous detection was inconclusive, open the language picker here —
-    // we're still in the synchronous user-gesture stack so showPicker() is allowed.
+    // After an inconclusive detection the click confirms the language the
+    // button names (_syncBtnLabel) — whatever the dropdown shows.
     if (_requiresManualLang) {
-      if (!_langPickerShown) {
-        _langPickerShown = true;
-        const selEl = document.getElementById('ocrLangSelect');
-        if (selEl) {
-          try { selEl.showPicker(); } catch { /* unsupported / sandbox — visual fallback stays */ }
-          selEl.focus();
-          selEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-        return;
-      }
-      // Picker was already opened once. A native <select> fires no "change"
-      // event when the user reopens it and re-confirms the SAME option — which
-      // is exactly what happens when the pre-selected guess already looks
-      // correct to them. Without this, the button stays stuck on "Select a
-      // language first" forever with no further action available. Clicking
-      // Process again after having seen the picker counts as confirmation of
-      // whatever language is currently shown.
       _requiresManualLang = false;
-      const selEl = document.getElementById('ocrLangSelect');
-      if (selEl) { selEl.style.borderColor = ''; selEl.style.boxShadow = ''; }
-      document.querySelectorAll('.detect-hint').forEach(el => el.remove());
+      _selectedLang = document.getElementById('ocrLangSelect')?.value || _selectedLang;
     }
 
     // Clear any "suggest language" visual state — user is actually running OCR now

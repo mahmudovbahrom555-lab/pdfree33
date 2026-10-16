@@ -80,6 +80,32 @@ await test('an Arabic scan made searchable carries its Arabic words in the text 
   }
 });
 
+// When detection is inconclusive the button names the language it will run in
+// and one click runs it: a first click that only opened the picker lost 3 of
+// the 9 people who got here (Analytics, 2026-10-16).
+await test('an inconclusive detection: the button names the language, one click runs it', async () => {
+  const ctx = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    const page = await ctx.newPage();
+    await page.addInitScript(() => {
+      const o = URL.createObjectURL.bind(URL);
+      URL.createObjectURL = x => { if (x instanceof Blob && x.type === 'application/pdf') window.__pdf = x; return o(x); };
+    });
+    await page.goto(`${BASE_URL}/ocr-pdf/`, { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', path.join(__dirname, '..', 'fixtures', 'clean-scan', 'a0.pdf'));
+    await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 60000 });
+    await page.waitForTimeout(3000);
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => document.querySelector('.detect-hint'), null, { timeout: 300000 });
+    const label = await page.evaluate(() => document.querySelector('#mergeBtn').textContent);
+    if (!/Recognize as \w/.test(label)) throw new Error(`button: ${label}`);
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__pdf, null, { timeout: 300000 });
+  } finally {
+    await ctx.close();
+  }
+});
+
 await browser.close();
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);
