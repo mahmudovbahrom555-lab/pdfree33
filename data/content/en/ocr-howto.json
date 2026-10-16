@@ -17,7 +17,7 @@
       "@type": "HowToStep",
       "position": 2,
       "name": "Let PDFree detect the language, or choose it yourself",
-      "text": "For scanned PDFs, PDFree samples the page and suggests the document's language automatically — no guessing required. Override it from the dropdown if needed. Text-layer PDFs skip this step.",
+      "text": "For scanned PDFs, PDFree detects the document's language automatically — no guessing required, and mixed English-and-other-script pages get both models. Pick it from the dropdown instead if you prefer. Text-layer PDFs skip this step.",
       "url": "https://pdfree.io/ocr-pdf/#step2"
     },
     {

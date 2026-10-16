@@ -50,7 +50,7 @@ let _loading         = false;
 let _generation      = 0;        // incremented on each new file; stale _analyse calls bail early
 let _selectedLang      = 'auto';  // 'auto' or specific lang code
 let _detectedLang      = null;    // set after auto-detection; null when user chose manually
-let _requiresManualLang = false;  // true when auto-detection was inconclusive — blocks OCR
+let _altLangs          = [];      // other languages the document may be in — offered after the result
 let _downloadAsTxt      = false;
 let _includeTxtHeader   = false;
 const _langCache       = new Map(); // "filename:size" → detected lang — avoids re-detection
@@ -69,22 +69,28 @@ const LANGUAGES = {
     { code: 'ita', name: 'Italian',    size: '5 MB'  },
     { code: 'por', name: 'Portuguese', size: '5 MB'  },
     { code: 'rus', name: 'Russian',    size: '5 MB'  },
+    { code: 'rus+eng', name: 'Russian + English (bilingual)', size: '6 MB' },
     { code: 'uzb', name: 'Uzbek',      size: '3 MB'  },
     { code: 'nld', name: 'Dutch',      size: '5 MB'  },
     { code: 'pol', name: 'Polish',     size: '5 MB'  },
     { code: 'tur', name: 'Turkish',    size: '4 MB'  },
+    { code: 'vie', name: 'Vietnamese', size: '1.5 MB' },
+    { code: 'ind', name: 'Indonesian', size: '1.2 MB' },
   ],
   complex: [
     { code: 'ara',         name: 'Arabic',                        size: '1.5 MB', rtl: true },
     { code: 'fas',         name: 'Persian',                       size: '0.4 MB', rtl: true },
     { code: 'ara+eng',     name: 'Arabic + English (bilingual)',   size: '5.5 MB', rtl: true },
     { code: 'fas+eng',     name: 'Persian + English (bilingual)',  size: '4.4 MB', rtl: true },
+    { code: 'heb',         name: 'Hebrew',                        size: '0.6 MB', rtl: true },
+    { code: 'heb+eng',     name: 'Hebrew + English (bilingual)',   size: '3.6 MB', rtl: true },
     { code: 'jpn',         name: 'Japanese',                      size: '10 MB'  },
     { code: 'jpn+eng',     name: 'Japanese + English (bilingual)', size: '14 MB'  },
     { code: 'chi_sim',     name: 'Chinese (Simplified)',           size: '15 MB'  },
     { code: 'chi_sim+eng', name: 'Chinese + English (bilingual)',  size: '19 MB'  },
     { code: 'chi_tra',     name: 'Chinese (Traditional)',          size: '15 MB'  },
     { code: 'kor',         name: 'Korean',                        size: '5 MB'   },
+    { code: 'kor+eng',     name: 'Korean + English (bilingual)',   size: '8 MB'   },
     { code: 'hin',         name: 'Hindi',                         size: '5 MB'   },
     { code: 'tha',         name: 'Thai',                          size: '4 MB'   },
   ],
@@ -100,7 +106,7 @@ export function initOcrOptions(file) {
   _loading           = true;
   _selectedLang      = 'auto';
   _detectedLang      = null;
-  _requiresManualLang = false;
+  _altLangs          = [];
   el.innerHTML = _spinnerHTML(t('val_analysing_pdf'));
   _bindMergeBtn();   // register listener immediately so loading-state clicks are handled
   _analyse(file, el);
@@ -131,7 +137,7 @@ export function hideOcrOptions() {
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
   _file = null; _isTextPdf = false; _loading = false;
   _lastResultBlob = null; _lastResultName = null;
-  _includeTxtHeader = false; _detectedLang = null; _requiresManualLang = false;
+  _includeTxtHeader = false; _detectedLang = null; _altLangs = [];
   _selectedLang = 'auto';
 }
 
@@ -379,72 +385,8 @@ function _hideLangInfo() {
 function _syncBtnLabel() {
   const btn = document.getElementById('mergeBtn');
   if (!btn || !btn._ocrBound) return;
-  if (_requiresManualLang) {
-    // one click runs it in the language shown (picked or suggested): a click
-    // that only opened the picker, then a second one, lost a third of the
-    // people who got here (Analytics: 3 of 9 never got a result, 2026-10-16)
-    btn.disabled = false;
-    btn.textContent = t('ocr_run_in_lang', { lang: _getLangName(_selectedLang) });
-    return;
-  }
   btn.disabled = false;
   btn.textContent = _isTextPdf ? '✓ Download PDF' : '🔍 Make PDF Searchable';
-}
-
-// Called when auto-detection was inconclusive. The select becomes the dominant
-// visual element (yellow validation border + action placeholder). Everything
-// else recedes — the button itself explains what to do next via its label.
-function _showLangRequired(detectedLang) {
-  const langBlock = document.getElementById('ocrLangBlock');
-  if (!langBlock) return;
-
-  const sel = document.getElementById('ocrLangSelect');
-  if (!sel) return;
-
-  // Pre-select the best candidate so user can confirm with one click instead of
-  // hunting through 18 options. Also set _selectedLang so OCR uses it directly —
-  // user leaving the pre-selection unchanged counts as implicit confirmation.
-  const finalCandidate = detectedLang || 'eng';
-  _selectedLang = finalCandidate;
-  sel.value     = finalCandidate;
-
-  // Amber border signals "please verify this" (not an error — just needs confirmation)
-  sel.style.borderColor = 'rgba(202,138,4,0.85)';
-  sel.style.boxShadow   = '0 0 0 3px rgba(202,138,4,0.15)';
-
-  const complexLang = LANGUAGES.complex.find(l => l.code === finalCandidate);
-  if (complexLang) _showLangInfo(complexLang);
-
-  // Hint explains the situation without blocking — user sees what was detected and
-  // can either confirm by clicking Run OCR or switch to the correct language.
-  langBlock.querySelectorAll('.detect-hint').forEach(el => el.remove());
-  const hint = document.createElement('p');
-  hint.className = 'detect-hint';
-  hint.style.cssText = 'margin:8px 0 0;font-size:12px;color:var(--text2);';
-  const langName = _getLangName(finalCandidate);
-  const note = finalCandidate !== 'eng' ? t('ocr_detection_script_note', { lang: langName }) : '';
-  hint.textContent = t('ocr_detection_inconclusive', { note });
-  langBlock.appendChild(hint);
-
-  // When user picks a language, clear suggestion state and unblock OCR
-  sel.addEventListener('change', function onLangChange() {
-    sel.style.borderColor = '';
-    sel.style.boxShadow   = '';
-    hint.remove();
-    _requiresManualLang = false;
-    _syncBtnLabel();
-    sel.removeEventListener('change', onLangChange);
-  });
-
-  // Move focus to the select and scroll it into view — user's attention lands
-  // immediately on the pre-selected candidate without any extra click needed.
-  sel.focus();
-  sel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-  // The button now names the language it will run in (_syncBtnLabel); a click
-  // confirms it, a different pick in the dropdown changes it.
-  _requiresManualLang = true;
-  _syncBtnLabel();
 }
 
 function _bindMergeBtn() {
@@ -468,18 +410,6 @@ function _bindMergeBtn() {
     }
 
     e.stopImmediatePropagation();
-
-    // After an inconclusive detection the click confirms the language the
-    // button names (_syncBtnLabel) — whatever the dropdown shows.
-    if (_requiresManualLang) {
-      _requiresManualLang = false;
-      _selectedLang = document.getElementById('ocrLangSelect')?.value || _selectedLang;
-    }
-
-    // Clear any "suggest language" visual state — user is actually running OCR now
-    const _selEl = document.getElementById('ocrLangSelect');
-    if (_selEl) { _selEl.style.borderColor = ''; _selEl.style.boxShadow = ''; }
-    document.querySelectorAll('.detect-hint').forEach(el => el.remove());
 
     btn.disabled = true;
     btn.textContent = t('ocr_processing');
@@ -541,20 +471,12 @@ function _bindMergeBtn() {
         const qualityLabel = _ocrQualityLabel(avgConfidence, usedLang);
         trackToolSuccess('ocr', { outputSize: _lastResultBlob.size });
         _showSuccess(t('ocr_searchable_saved', { quality: qualityLabel }));
+        if (_selectedLang === 'auto') _showLangRetry(usedLang);
       }
     } catch (err) {
-      if (err.message === '__LANG_REQUIRED__') {
-        // Auto-detection was inconclusive — ask user to select language manually.
-        // _showLangRequired() disables the button via _requiresManualLang flag;
-        // the finally block calls _syncBtnLabel() which respects that flag.
-        _showLangRequired(_detectedLang);
-        trackToolError('ocr', 'lang_required');
-      } else {
-        _showToast(t('ocr_error_prefix', { msg: err.message }));
-        trackToolError('ocr', `unknown: ${String(err.message).slice(0, 60)}`);
-      }
+      _showToast(t('ocr_error_prefix', { msg: err.message }));
+      trackToolError('ocr', `unknown: ${String(err.message).slice(0, 60)}`);
     } finally {
-      // _syncBtnLabel() checks _requiresManualLang — if set, keeps button disabled
       btn.classList.remove('ocr-btn--busy');
       if (bar) bar.hidden = true;
       hideCancelBtn();
@@ -667,6 +589,42 @@ function _showSuccess(desc) {
   }
 
   sc.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// After an auto-detected run: the language it was read in, and one-click
+// re-runs in the other languages the document may be in — detection's runners-up,
+// the site's language, English.
+function _showLangRetry(usedLang) {
+  const sc = document.getElementById('successCard');
+  if (!sc) return;
+  sc.querySelector('.ocr-lang-retry')?.remove();
+  const known = new Set([...LANGUAGES.european, ...LANGUAGES.complex].map(l => l.code));
+  const alts = [...new Set([..._altLangs, ocrLangForLocale(getLang()), 'eng'])]
+    .filter(code => code && code !== usedLang && known.has(code)).slice(0, 3);
+  if (!alts.length) return;
+  const box = document.createElement('div');
+  box.className = 'ocr-lang-retry';
+  box.style.cssText = 'padding:12px 28px;border-top:1px solid var(--border);background:var(--surface);font-size:13px;color:var(--text2);';
+  box.textContent = t('ocr_wrong_lang', { lang: _getLangName(usedLang) });
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;';
+  for (const code of alts) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.style.cssText = 'min-height:44px;padding:8px 14px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font:inherit;font-size:14px;cursor:pointer;';
+    b.textContent = _getLangName(code);
+    b.addEventListener('click', () => {
+      _selectedLang = code;
+      const sel = document.getElementById('ocrLangSelect');
+      if (sel) sel.value = code;
+      sc.style.display = 'none';
+      box.remove();
+      document.getElementById('mergeBtn')?.click();
+    });
+    row.appendChild(b);
+  }
+  box.appendChild(row);
+  sc.querySelector('.success-top')?.after(box);
 }
 
 // ── TXT header ───────────────────────────────────────────────────────────────
@@ -788,12 +746,11 @@ async function _runOcr(file, gen) {
       const uncertain = !detection.confident ? t('ocr_uncertain_suffix') : '';
       sel.options[0].textContent = t('ocr_auto_detected', { lang: _getLangName(detection.lang) }) + uncertain;
     }
-    // Low confidence → abort OCR and ask user to select language manually.
-    // Throwing here exits _runOcr(); the caller's catch block calls
-    // _showLangRequired() which disables the button and shows the prompt.
-    if (!detection.confident) {
-      throw new Error('__LANG_REQUIRED__');
-    }
+    // Unsure or not, OCR runs in the best guess: stopping to ask lost a third
+    // of the people asked (Analytics, 2026-10-16), and the guess was right on
+    // most of them. The result offers the other likely languages for one-click
+    // re-runs (_showLangRetry).
+    _altLangs = detection.alternatives ?? [];
     // A new worker for a detected non-English model (see detectOcrLanguage)
     if (detection.lang !== 'eng') {
       _updateProgress(15, t('ocr_loading_lang_model', { lang: _getLangName(detection.lang) }));
@@ -956,9 +913,10 @@ async function _extractTextDirect(file) {
 
 // ── Searchable PDF builder ────────────────────────────────────────────────────
 
-// Languages whose scripts fall outside Latin-1 (Windows-1252).
-// Helvetica only covers codepoints 0-255; everything here starts at U+0400+.
-const NON_LATIN_LANGS = new Set(['ara', 'fas', 'jpn', 'chi_sim', 'chi_tra', 'kor', 'hin', 'tha', 'rus', 'pol']);
+// Languages with letters outside Windows-1252, which Helvetica can't write:
+// other scripts, and Latin ones with their own letters (Polish ł, Turkish ş,
+// Vietnamese ơ, Uzbek ʻ).
+const NON_LATIN_LANGS = new Set(['ara', 'fas', 'heb', 'jpn', 'chi_sim', 'chi_tra', 'kor', 'hin', 'tha', 'rus', 'pol', 'tur', 'vie', 'uzb']);
 
 // TTF URLs from Google Fonts CDN (variable fonts; verified 2026-05).
 // pdf-lib requires TTF or OTF — WOFF/WOFF2 cannot be embedded.
@@ -971,9 +929,13 @@ const NOTO_FONT_URLS = {
   kor:     'https://fonts.gstatic.com/s/notosanskr/v39/PbykFmXiEBPT4ITbgNA5Cgm21nTs4JMMuA.ttf',
   hin:     'https://fonts.gstatic.com/s/notosansdevanagari/v30/TuGOUUFzXI5FBtUq5a8bjKYTZjtRU6Sgv2lRdRhtCC4d.ttf',
   tha:     'https://fonts.gstatic.com/s/notosansthai/v29/iJWdBXeUZi_OHPqn4wq6hQ2_hah-5c-dUX0x.ttf',
-  // Cyrillic (Russian, Polish use extended Latin too — Noto Sans covers both)
+  heb:     'https://fonts.gstatic.com/s/notosanshebrew/v50/or3HQ7v33eiDljA1IufXTtVf7V6RvEEdhQlk0LlGxCyaeNKYZC0sqk3xXGiXd4qtog.ttf',
+  // Cyrillic and extended Latin — Noto Sans covers both
   rus:     'https://fonts.gstatic.com/s/notosans/v42/o-0IIpQlx3QUlC5A4PNb4j5Ba_2c7A.ttf',
   pol:     'https://fonts.gstatic.com/s/notosans/v42/o-0IIpQlx3QUlC5A4PNb4j5Ba_2c7A.ttf',
+  tur:     'https://fonts.gstatic.com/s/notosans/v42/o-0IIpQlx3QUlC5A4PNb4j5Ba_2c7A.ttf',
+  vie:     'https://fonts.gstatic.com/s/notosans/v42/o-0IIpQlx3QUlC5A4PNb4j5Ba_2c7A.ttf',
+  uzb:     'https://fonts.gstatic.com/s/notosans/v42/o-0IIpQlx3QUlC5A4PNb4j5Ba_2c7A.ttf',
 };
 
 // In-memory cache of fetched Noto TTF bytes — avoids re-downloading on
@@ -1032,19 +994,12 @@ const _NO_SHAPING = Object.fromEntries(['ccmp', 'locl', 'isol', 'init', 'medi', 
   'rlig', 'rclt', 'calt', 'liga', 'clig', 'dlig', 'mark', 'mkmk', 'kern', 'curs', 'ljmo', 'vjmo', 'tjmo']
   .map(tag => [tag, false]));
 
-// Returns an embedded font suitable for the selected OCR language.
-// Latin languages: Helvetica (no network request).
-// Non-Latin: fetch the appropriate Noto Sans TTF from Google Fonts CDN,
-// register fontkit, and embed with subset:true so only the glyphs that
-// actually appear in the document are included — prevents CJK fonts from
-// inflating the output PDF by 10–18 MB.
+// Returns an embedded font for a NON_LATIN_LANGS language, null if it can't
+// be had: the Noto Sans TTF from Google Fonts CDN, fontkit registered, and
+// embedded with subset:true so only the glyphs that actually appear in the
+// document are included — prevents CJK fonts from inflating the output PDF by
+// 10–18 MB.
 async function _getFontForLang(pdfDoc, lang) {
-  const { StandardFonts } = window.PDFLib;
-
-  if (!NON_LATIN_LANGS.has(lang)) {
-    return pdfDoc.embedFont(StandardFonts.Helvetica);
-  }
-
   const url = NOTO_FONT_URLS[lang];
   try {
     let bytes = _notoFontCache.get(lang);
@@ -1072,12 +1027,12 @@ async function _getFontForLang(pdfDoc, lang) {
     // the glyph → character map back is ambiguous — ت, ي and ن share one base
     // and "التنظيف" was extracted as "الينظيف" (2026-10-08). Each character
     // as its own nominal glyph maps back one to one.
-    return pdfDoc.embedFont(bytes, { subset: true, features: _NO_SHAPING });
+    return await pdfDoc.embedFont(bytes, { subset: true, features: _NO_SHAPING });
   } catch {
-    // CDN unreachable or embed failed — fall back to Helvetica.
-    // The invisible text layer will not contain non-Latin glyphs,
-    // but the PDF itself will not be corrupted.
-    return pdfDoc.embedFont(StandardFonts.Helvetica);
+    // CDN unreachable or embed failed: Helvetica writes the words it can.
+    // The invisible text layer will not contain non-Latin glyphs, but the
+    // PDF itself will not be corrupted.
+    return null;
   }
 }
 
@@ -1111,7 +1066,16 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
 
   const buf    = await file.arrayBuffer();
   const pdfDoc = await PDFDocument.load(new Uint8Array(buf), { ignoreEncryption: true });
-  const font   = await _getFontForLang(pdfDoc, lang ?? 'eng');
+  // A two-language model ('ara+eng'): its script's font, and Helvetica for
+  // the words it can write — by the whole code no font was found, and every
+  // Arabic or Chinese word of the bilingual models was left out of the layer.
+  const script     = primaryScript(lang ?? 'eng');
+  const scriptFont = NON_LATIN_LANGS.has(script) ? await _getFontForLang(pdfDoc, script) : null;
+  const helvetica  = await pdfDoc.embedFont(window.PDFLib.StandardFonts.Helvetica);
+  const fontFor = text => {
+    if (!scriptFont) return helvetica;
+    try { helvetica.encodeText(text); return helvetica; } catch { return scriptFont; }
+  };
   const pages  = pdfDoc.getPages();
 
   for (const { pageNum, lines, vpTransform } of ocrPages) {
@@ -1142,7 +1106,7 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
     // median, a line's far end stood half a line off its text. The slope is the
     // page's: the median slope between two words of one line, 50pt or more
     // apart (word bottoms jump with descenders; a median doesn't).
-    const squeezeTo = (text, size, width) => {
+    const squeezeTo = (font, text, size, width) => {
       const natural = font.widthOfTextAtSize(text, size);
       return natural > 0 ? Math.max(10, Math.min(1000, (width / natural) * 100)) : 100;
     };
@@ -1179,14 +1143,15 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
       const fontSize = Math.max(4, Math.min(median(boxes.map(b => b.y1 - b.y0)) * 0.85, 72));
       boxes.forEach((b, i) => {
         try {
-          page.pushOperators(setCharacterSqueeze(squeezeTo(b.text, fontSize, b.x1 - b.x0)));
+          const font = fontFor(b.text);
+          page.pushOperators(setCharacterSqueeze(squeezeTo(font, b.text, fontSize, b.x1 - b.x0)));
           page.drawText(b.text, { x: b.x0, y: yAt((b.x0 + b.x1) / 2), size: fontSize, font });
           const next = boxes[i + 1];
           if (next) {
             // The gap between this word and the next, whichever side it is on.
             const [gapX, gapEnd] = next.x0 >= b.x1 ? [b.x1, next.x0] : [next.x1, b.x0];
             if (gapEnd > gapX) {
-              page.pushOperators(setCharacterSqueeze(squeezeTo(' ', fontSize, gapEnd - gapX)));
+              page.pushOperators(setCharacterSqueeze(squeezeTo(font, ' ', fontSize, gapEnd - gapX)));
               page.drawText(' ', { x: gapX, y: yAt((gapX + gapEnd) / 2), size: fontSize, font });
             }
           }

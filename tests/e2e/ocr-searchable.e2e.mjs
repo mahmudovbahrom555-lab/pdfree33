@@ -80,27 +80,38 @@ await test('an Arabic scan made searchable carries its Arabic words in the text 
   }
 });
 
-// When detection is inconclusive the button names the language it will run in
-// and one click runs it: a first click that only opened the picker lost 3 of
-// the 9 people who got here (Analytics, 2026-10-16).
-await test('an inconclusive detection: the button names the language, one click runs it', async () => {
+// Arabic and English paragraphs in turn, language left on Auto: one click
+// runs it — no stop to ask (a third of the people asked left, 2026-10-16) —
+// in ara+eng, and the layer holds both scripts: a two-language model's words
+// were written with Helvetica alone, every Arabic one dropped. The result
+// offers other languages; one click re-runs in one of them.
+// Fixture: tests/fixtures/ocr_scan_ar_en.pdf, a synthetic scan of the
+// ar-en-web ground truth.
+await test('a mixed Arabic and English scan on Auto: one click, both scripts searchable, a re-run in another language', async () => {
   const ctx = await browser.newContext({ serviceWorkers: 'block' });
   try {
     const page = await ctx.newPage();
     await page.addInitScript(() => {
       const o = URL.createObjectURL.bind(URL);
-      URL.createObjectURL = x => { if (x instanceof Blob && x.type === 'application/pdf') window.__pdf = x; return o(x); };
+      URL.createObjectURL = x => { if (x instanceof Blob && x.type === 'application/pdf') { window.__pdf = x; window.__runs = (window.__runs ?? 0) + 1; } return o(x); };
     });
     await page.goto(`${BASE_URL}/ocr-pdf/`, { waitUntil: 'load' });
-    await page.setInputFiles('#fileInput', path.join(__dirname, '..', 'fixtures', 'clean-scan', 'a0.pdf'));
+    await page.setInputFiles('#fileInput', path.join(__dirname, '..', 'fixtures', 'ocr_scan_ar_en.pdf'));
     await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 60000 });
-    await page.waitForTimeout(3000);
-    await page.click('#mergeBtn');
-    await page.waitForFunction(() => document.querySelector('.detect-hint'), null, { timeout: 300000 });
-    const label = await page.evaluate(() => document.querySelector('#mergeBtn').textContent);
-    if (!/Recognize as \w/.test(label)) throw new Error(`button: ${label}`);
     await page.click('#mergeBtn');
     await page.waitForFunction(() => window.__pdf, null, { timeout: 300000 });
+    const text = await page.evaluate(async () => {
+      const doc = await window.pdfjsLib.getDocument({ data: new Uint8Array(await window.__pdf.arrayBuffer()) }).promise;
+      return (await (await doc.getPage(1)).getTextContent()).items.map(i => i.str).join(' ');
+    });
+    const arabic = (text.match(/[؀-ۿ]+/g) ?? []).length, latin = (text.match(/[A-Za-z]{3,}/g) ?? []).length;
+    if (arabic < 50 || latin < 50) throw new Error(`text layer: ${arabic} Arabic words, ${latin} Latin`);
+    const r = recall(text, 'ar-en-web');
+    if (r < 0.7) throw new Error(`expected at least 70% of the words in the text layer, got ${(r * 100).toFixed(0)}%`);
+    const retry = await page.$$eval('.ocr-lang-retry button', bs => bs.map(b => b.textContent));
+    if (!retry.length) throw new Error('no other languages offered');
+    await page.click('.ocr-lang-retry button');
+    await page.waitForFunction(() => window.__runs === 2, null, { timeout: 300000 });
   } finally {
     await ctx.close();
   }

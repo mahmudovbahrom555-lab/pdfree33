@@ -28,7 +28,7 @@
     "name": "How does the automatic language detection work?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree samples text from your scanned pages and suggests the most likely document language before you run OCR — you don't need to know it in advance. This works independently of the site's interface language, so a Spanish-language scan is detected correctly even if you're browsing PDFree in English. You can always override the suggestion from the dropdown."
+      "text": "PDFree reads a sample of your scanned pages with each script's model and picks the document's language before running OCR — you don't need to know it in advance, and you're never stopped to choose. A page that mixes English with another script gets both languages' models. This works independently of the site's interface language, so a Spanish-language scan is detected correctly even if you're browsing PDFree in English. If the result is in the wrong language, one click re-runs it in another; you can also pick the language from the dropdown before you start."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "What languages are supported?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "19 languages: English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish, Arabic, Persian, Japanese, Chinese (Simplified), Chinese (Traditional), Korean, Hindi, and Thai."
+      "text": "22 languages: English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish, Vietnamese, Indonesian, Arabic, Persian, Hebrew, Japanese, Chinese (Simplified), Chinese (Traditional), Korean, Hindi, and Thai. Documents that mix English with Russian, Arabic, Persian, Hebrew, Korean or Chinese are read with both languages' models at once."
     }
   },
   {

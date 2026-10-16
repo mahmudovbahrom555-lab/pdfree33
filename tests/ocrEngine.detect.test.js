@@ -1,7 +1,8 @@
 // tests/ocrEngine.detect.test.js — detectOcrLanguage()'s choice of model,
-// against a stub Tesseract worker that answers with the confidences each
-// model really scored on synthetic scans (2026-10-09). The OCR itself is
-// covered end to end by tests/e2e/pdf2word-ocr.e2e.mjs (network, not in CI).
+// against a stub Tesseract worker that answers, per model, with the words it
+// really read on synthetic scans: how many confident ones in each script
+// (2026-10-16). The OCR itself is covered end to end by
+// tests/e2e/pdf2word-ocr.e2e.mjs and ocr-searchable.e2e.mjs (network, not in CI).
 //
 // Run: node tests/ocrEngine.detect.test.js
 
@@ -9,7 +10,7 @@ import { strict as assert } from 'assert';
 
 // detectOcrLanguage renders the sample page onto a canvas; nothing is drawn.
 globalThis.document = { createElement: () => ({ width: 0, height: 0, getContext: () => ({}) }) };
-const { detectOcrLanguage } = await import('../js/ocrEngine.js');
+const { detectOcrLanguage, latinLanguage } = await import('../js/ocrEngine.js');
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -24,169 +25,188 @@ const pdfDoc = {
     render: () => ({ promise: Promise.resolve() }),
   }),
 };
-// A worker reading a page with `conf[model]` confidence; English output that
-// looks like garbage, so the probes run.
-let englishText = '1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 x';
-// `texts[model]`: what that model reads (default: text in its own script).
-const OWN_TEXT = {
-  chi_sim: '压缩后的文件看起来一样体积却变小了', jpn: 'クリーンモードと補正モードの違い',
-  ara: 'ما الفرق بين الوضعين', fas: 'تفاوت بین دو حالت چیست', rus: 'в чем разница между режимами',
+
+const SAMPLE = {
+  lat: 'document', cyr: 'документ', arb: 'كتاب', heb: 'מסמך', hang: '문서', kana: 'ファイル', han: '文件',
+  low: 'ae', digit: '12',
 };
-// `words`: what `eng` reads word by word, or { model: words } for any model.
-function stubWorker(conf, texts = {}, words = []) {
-  let model = 'eng';
-  const w = {
-    loaded: [],
-    terminated: false,
-    reinitialize: async lang => { model = lang; w.loaded.push(lang); },
-    recognize: async () => ({ data: {
-      text: texts[model] ?? (model === 'eng' ? englishText : OWN_TEXT[model] ?? 'text text text text'),
-      confidence: conf[model] ?? 10, words: Array.isArray(words) ? (model === 'eng' ? words : []) : words[model] ?? [],
-    } }),
-    terminate: async () => { w.terminated = true; },
+// A model's reading: `n` words of each kind ({ cyr: 120, lat: 190 }), sure
+// ones (90) but `low` (unreadable, 20) and `digit`; `text`: its text, by
+// default its words joined.
+function reading(conf, counts, text) {
+  const words = Object.entries(counts).flatMap(([kind, n]) => Array.from({ length: n }, () =>
+    ({ text: SAMPLE[kind], confidence: kind === 'low' ? 20 : kind === 'digit' ? 70 : 90 })));
+  return { confidence: conf, words, text: text ?? words.map(w => w.text).join(' ') };
+}
+// detectOcrLanguage(pdfDoc, `eng` worker, opts) given each model's reading;
+// a model missing from `page` reads garbage (conf 30, Latin junk).
+async function detect(page, opts = {}) {
+  const probed = [];
+  const workers = [];
+  const make = lang => {
+    const w = {
+      terminated: false,
+      reinitialize: async () => { throw new Error('a worker is not taken to another model'); },
+      recognize: async () => ({ data: page[lang] ?? reading(30, { low: 100 }) }),
+      terminate: async () => { w.terminated = true; },
+    };
+    workers.push(w);
+    return w;
   };
-  return w;
-}
-// detectOcrLanguage(pdfDoc, main worker, opts) with the probe workers it made
-async function detect(conf, opts = {}, texts = {}, words = []) {
-  const w = stubWorker(conf, texts, words);
-  const probes = [];
-  const newWorker = async () => { const p = stubWorker(conf, texts, words); probes.push(p); return p; };
-  const d = await detectOcrLanguage(pdfDoc, w, { ignoreTextLayer: true, ...opts, newWorker });
-  return { d, w, probes, probed: probes.flatMap(p => p.loaded) };
+  const main = make('eng');
+  const newWorker = async lang => { probed.push(lang); return make(lang); };
+  const d = await detectOcrLanguage(pdfDoc, main, { ignoreTextLayer: true, ...opts, newWorker });
+  return { d, probed, main, probesClosed: workers.slice(1).every(w => w.terminated) };
 }
 
-await test('Chinese is read with the Chinese model, not the Japanese one that gained first', async () => {
-  // zh-CN office scan: jpn 63 beat eng 32 by 15+, and the old loop stopped there
-  const { d, w, probes } = await detect({ eng: 32, rus: 20, ara: 25, fas: 20, jpn: 63, chi_sim: 91 });
-  assert.equal(d.lang, 'chi_sim');
-  assert.equal(d.confident, true);
-  // `worker` is not taken to the model: a new one reads the document
-  assert.deepEqual(w.loaded, []);
-  assert.ok(probes.length === 1 && probes[0].terminated, 'one probe worker, closed');
-});
+const EN = 'Clean flattens the background to pure white and darkens the text for maximum contrast. It is best for plain text pages and for the scans you can read';
+// `eng` on a page of another script, or of two: unsure, much of it unreadable
+const engOn = (latin, low = 120) => reading(45, { lat: latin, low });
 
-await test('a Japanese scan an unsure Arabic probe "won" goes on to the Japanese model', async () => {
-  // ja clean scan: ara 38 beat eng 17 by 15+ — not sure, so probing goes on
-  const { d } = await detect({ eng: 17, rus: 15, ara: 38, fas: 30, jpn: 92, chi_sim: 49 });
-  assert.equal(d.lang, 'jpn');
-  assert.equal(d.confident, true);
-});
-
-await test('an Arabic photo stops at Arabic: no 10–15 MB CJK model is downloaded', async () => {
-  // ar photo: ara 55, a 20-point lead over English — sure by the RTL rule
-  const { d, probed } = await detect({ eng: 35, rus: 20, ara: 55, fas: 40, jpn: 30, chi_sim: 30 });
-  assert.equal(d.lang, 'ara');
-  assert.equal(d.confident, true);
-  assert.ok(!probed.includes('jpn') && !probed.includes('chi_sim'), `probed ${probed}`);
-});
-
-// The site locale's model (`hint`) is tried even when English looks sure.
-await test('a Chinese invoice English reads at 67 goes to the Chinese hint (80)', async () => {
-  englishText = 'Invoice No 1042 Item Qty Unit price Total Date paper ink folders stapler pens';  // not suspicious
-  const { d, w, probed } = await detect({ eng: 67, chi_sim: 80, jpn: 60 }, { hint: 'chi_sim' });
-  assert.equal(d.lang, 'chi_sim');
-  assert.equal(d.confident, true);
-  assert.ok(!probed.includes('jpn'), 'the hint winning needs no Japanese download');
-  assert.deepEqual(w.loaded, []);
-});
-
-await test('an English invoice on the Chinese site stays English, its worker untouched by the probe', async () => {
-  englishText = 'Invoice No 1042 Item Qty Unit price Total Date paper ink folders stapler pens';
-  const { d, w, probes, probed } = await detect({ eng: 84, chi_sim: 40 }, { hint: 'chi_sim' });
+await test('a clean English page is read in English, with no probe', async () => {
+  const { d, probed } = await detect({ eng: reading(95, { lat: 270 }, EN) });
   assert.equal(d.lang, 'eng');
-  assert.deepEqual(probed, ['chi_sim']);
-  // eng read after chi_sim on the same worker lost a third of its words (70 → 47)
-  assert.deepEqual(w.loaded, []);
-  assert.ok(probes[0].terminated);
-});
-
-const ZH_INVOICE = '发票编号 1042 项目 数量 单价 金额 日期 A4打印纸 12 18.50 222.00 2026-09-14 黑色打印机墨水 10 145.00 1,450.00';
-await test('a ruled Chinese scan both models read at 61 goes to the Chinese hint: it reads Chinese', async () => {
-  englishText = 'ATRS 1042 b=] nE| ef 2H am AGYTENSR 12] 18.50 222.00 2026-09-14 FT ETELHUEK 10';
-  const { d } = await detect({ eng: 61, chi_sim: 61 }, { hint: 'chi_sim' }, { chi_sim: ZH_INVOICE });
-  assert.equal(d.lang, 'chi_sim');
   assert.equal(d.confident, true);
-});
-
-await test('an English scan chi_sim reads 3 below English stays English: chi_sim read it in Latin', async () => {
-  englishText = 'Invoice No. 1042 Item Qty Unit price Total Date A4 printing paper 12 18.50 222.00';
-  const { d } = await detect({ eng: 66, chi_sim: 63 }, { hint: 'chi_sim' },
-    { chi_sim: 'Invoice No. 1042 一 一 一 一 一 一 一 一 一 一 一 一 | rem 1 gj um price | Total pate 公 rintingpaper' });
-  assert.equal(d.lang, 'eng');
-});
-
-// English and Chinese paragraphs in turn, on the English site: `eng` reads the
-// English well and the Chinese as garbage — 71 overall, 22 % of words under 40.
-const MIXED_ENG = 'Clean flattens the background to pure white and darkens the text for maximum contrast';
-const MIXED_ZH = '清理会将背景统一为纯白 Clean flattens the background to pure white and darkens the text for maximum contrast 并加深文字以获得最大对比度';
-const engWords = (n, low) => Array.from({ length: n }, (_, i) => ({ text: 'w', confidence: i < low ? 20 : 90 }));
-await test('English and Chinese paragraphs in turn on the English site: chi_sim+eng', async () => {
-  englishText = MIXED_ENG;
-  const { d } = await detect({ eng: 71, chi_sim: 86, jpn: 72 }, {}, { chi_sim: MIXED_ZH }, engWords(100, 22));
-  assert.equal(d.lang, 'chi_sim+eng');
-  assert.equal(d.confident, true);
-});
-
-await test('an English photo with a few unsure words is not probed', async () => {
-  englishText = MIXED_ENG;
-  const { d, probed } = await detect({ eng: 80, chi_sim: 72 }, {}, {}, engWords(100, 12));
-  assert.equal(d.lang, 'eng');
   assert.deepEqual(probed, []);
 });
 
-await test('a Chinese page full of product names stays chi_sim alone', async () => {
-  const { d } = await detect({ eng: 30, chi_sim: 88 }, { hint: 'chi_sim' },
-    { chi_sim: '使用 Adobe Reader 或 Chrome 打开压缩后的文件，看起来一样，体积却变小了，邮件服务商附件上限' });
-  assert.equal(d.lang, 'chi_sim');
+await test('Russian and English paragraphs in turn: rus+eng, not English (the Russian half lost)', async () => {
+  // ru-mx scan: `eng` 69 — rus alone read less, and the old rule went English
+  const { d, probesClosed } = await detect({
+    eng: reading(69, { lat: 210, low: 80 }, EN), 'rus+eng': reading(94, { lat: 189, cyr: 123 }),
+  });
+  assert.equal(d.lang, 'rus+eng');
+  assert.equal(d.confident, true);
+  assert.ok(probesClosed, 'every probe worker closed');
 });
 
-// `eng`'s words on a page: `latin` confident Latin words, `low` unreadable ones
-const pageWords = (n, latin, low) => Array.from({ length: n }, (_, i) =>
-  i < latin ? { text: 'document', confidence: 92 } : i < latin + low ? { text: 'ae', confidence: 20 } : { text: '12', confidence: 70 });
-
-// ara+eng's Arabic-script words: Arabic/Persian pages read them sure, Hebrew ones not
-const arabicWords = (n, confidence) => Array.from({ length: n }, () => ({ text: 'كتاب', confidence }));
-
-await test('Arabic and English paragraphs in turn: ara+eng, not English (Arabic lost)', async () => {
-  englishText = MIXED_ENG;
-  const { d } = await detect({ eng: 67, ara: 50, fas: 40, 'ara+eng': 85 }, {}, {},
-    { eng: pageWords(280, 115, 90), 'ara+eng': arabicWords(107, 81) });
-  assert.equal(d.lang, 'ara+eng');
+await test('a Russian page is read with rus+eng too: its Latin terms with it', async () => {
+  const { d } = await detect({ eng: engOn(64), 'rus+eng': reading(94, { lat: 13, cyr: 238 }) });
+  assert.equal(d.lang, 'rus+eng');
 });
 
-await test('Hebrew and English paragraphs in turn: not ara+eng — its "Arabic" is unsure garbage', async () => {
-  englishText = MIXED_ENG;
-  const { d } = await detect({ eng: 67, ara: 45, fas: 43, 'ara+eng': 77 }, {}, {},
-    { eng: pageWords(280, 120, 80), 'ara+eng': arabicWords(15, 35) });
-  assert.equal(d.lang, 'eng');
-});
-
-await test('Persian and English paragraphs in turn: fas+eng (fas within 6 of ara)', async () => {
-  englishText = MIXED_ENG;
-  const { d } = await detect({ eng: 66, ara: 67, fas: 64, 'ara+eng': 90 }, {}, {},
-    { eng: pageWords(300, 125, 90), 'ara+eng': arabicWords(116, 88) });
-  assert.equal(d.lang, 'fas+eng');
-});
-
-await test('Persian and English on the Arabic site: fas+eng, sure though fas read 64', async () => {
-  englishText = MIXED_ENG;
-  const { d } = await detect({ eng: 66, ara: 64, fas: 64 }, { hint: 'ara' }, { ara: 'كتاب كتاب كتاب كتاب' }, pageWords(300, 125, 90));
-  assert.equal(d.lang, 'fas+eng');
+await test('Korean is found — no Korean probe before, every Korean scan stopped unsure', async () => {
+  const { d } = await detect({ eng: engOn(12), 'kor+eng': reading(89, { lat: 8, hang: 488 }) });
+  assert.equal(d.lang, 'kor');
   assert.equal(d.confident, true);
 });
 
-await test('an English page with unsure words stays English: ara+eng reads it no better', async () => {
-  englishText = MIXED_ENG;
-  const { d } = await detect({ eng: 77, ara: 42, fas: 39, 'ara+eng': 77 }, {}, {}, pageWords(290, 140, 60));
-  assert.equal(d.lang, 'eng');
+await test('Korean and English paragraphs in turn: kor+eng', async () => {
+  const { d } = await detect({ eng: engOn(201), 'kor+eng': reading(90, { lat: 195, hang: 305 }) });
+  assert.equal(d.lang, 'kor+eng');
 });
 
-await test('an Arabic page with two Latin words stays ara alone', async () => {
-  englishText = '1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 x';
-  const { d, probed } = await detect({ eng: 32, rus: 20, ara: 77, fas: 52 }, {}, {}, pageWords(230, 2, 150));
+await test('Hebrew has its model: heb, and heb+eng with English paragraphs', async () => {
+  assert.equal((await detect({ eng: engOn(25), 'heb+eng': reading(90, { lat: 12, heb: 174 }) })).d.lang, 'heb');
+  assert.equal((await detect({ eng: engOn(169), 'heb+eng': reading(92, { lat: 163, heb: 103 }) })).d.lang, 'heb+eng');
+});
+
+await test('Chinese: chi_sim, though jpn+eng reads its characters too', async () => {
+  const { d, probed } = await detect({
+    eng: engOn(37), 'chi_sim+eng': reading(91, { lat: 26, han: 483 }), 'jpn+eng': reading(64, { lat: 37, han: 190 }),
+  });
+  assert.equal(d.lang, 'chi_sim');
+  assert.ok(probed.includes('jpn+eng'), 'Japanese asked too');
+});
+
+await test('Japanese: jpn — its kana and kanji outnumber chi_sim+eng\'s characters', async () => {
+  const { d } = await detect({
+    eng: engOn(5), 'chi_sim+eng': reading(40, { lat: 5, han: 61 }), 'jpn+eng': reading(92, { lat: 8, kana: 457, han: 144 }),
+  });
+  assert.equal(d.lang, 'jpn');
+});
+
+await test('English and Chinese paragraphs in turn: chi_sim+eng', async () => {
+  const { d } = await detect({ eng: engOn(170), 'chi_sim+eng': reading(90, { lat: 164, han: 220 }) });
+  assert.equal(d.lang, 'chi_sim+eng');
+});
+
+await test('an Arabic page stops at Arabic: no 10–15 MB CJK model is downloaded', async () => {
+  const { d, probed } = await detect({
+    eng: engOn(4), 'ara+eng': reading(80, { lat: 3, arb: 195 }), ara: reading(78, { arb: 195 }), fas: reading(60, { arb: 150 }),
+  });
   assert.equal(d.lang, 'ara');
-  assert.ok(!probed.includes('ara+eng'));
+  assert.ok(!probed.some(l => /chi_sim|jpn/.test(l)), `probed ${probed}`);
+});
+
+await test('Persian: fas — the models are told apart by confidence (fas within 6 of ara)', async () => {
+  const { d } = await detect({
+    eng: engOn(17), 'ara+eng': reading(84, { lat: 10, arb: 194 }), ara: reading(84, { arb: 194 }), fas: reading(82, { arb: 194 }),
+  });
+  assert.equal(d.lang, 'fas');
+});
+
+await test('Arabic and English paragraphs in turn: ara+eng', async () => {
+  const { d } = await detect({
+    eng: engOn(156), 'ara+eng': reading(84, { lat: 156, arb: 90 }), ara: reading(49, { arb: 102 }), fas: reading(35, { arb: 80 }),
+  });
+  assert.equal(d.lang, 'ara+eng');
+});
+
+await test('an English photo with unsure words: probed, every model reads it in Latin — English', async () => {
+  // en-web photo: rus+eng found 6 Cyrillic words, heb+eng 2
+  const { d, probed } = await detect({
+    eng: reading(74, { lat: 147, low: 50 }, EN), 'rus+eng': reading(76, { lat: 143, cyr: 6 }), 'heb+eng': reading(74, { lat: 146, heb: 2 }),
+  });
+  assert.equal(d.lang, 'eng');
+  assert.ok(probed.length > 0);
+});
+
+await test('a German page is read with the German model: deu', async () => {
+  const de = 'Mit PDFree werden die Dateien nicht hochgeladen und es ist auch kein Konto für die Nutzung nötig, sie bleiben auf dem Gerät und werden dort zusammengefügt';
+  const { d, probed } = await detect({ eng: reading(91, { lat: 300 }, de) });
+  assert.equal(d.lang, 'deu');
+  assert.deepEqual(probed, []);
+});
+
+await test('German and English paragraphs in turn: deu, which reads both (94–100 % of words, eng 86–95)', async () => {
+  const mixed = `${EN} Mit PDFree werden die Dateien nicht hochgeladen und es ist auch kein Konto für die Nutzung nötig`;
+  assert.equal(latinLanguage(mixed).lang, 'deu');
+});
+
+await test('Arabic and English on a photo: ara+eng though fas read 4 below ara (Persian: within 2)', async () => {
+  const { d } = await detect({
+    eng: engOn(133), 'ara+eng': reading(79, { lat: 135, arb: 99 }), ara: reading(51, { arb: 109 }), fas: reading(47, { arb: 100 }),
+  });
+  assert.equal(d.lang, 'ara+eng');
+});
+
+await test('the site\'s script is probed even when English looks sure: a Chinese invoice', async () => {
+  // eng read the Chinese invoice at 67 — garbage, but not "suspicious"
+  const { d, probed } = await detect({ eng: reading(67, { lat: 150 }, EN), 'chi_sim+eng': reading(80, { lat: 20, han: 140 }) }, { hint: 'chi_sim' });
+  assert.equal(d.lang, 'chi_sim');
+  assert.deepEqual(probed, ['chi_sim+eng']);
+});
+
+await test('an English invoice on the Chinese site stays English, its worker never switched', async () => {
+  const { d, probed, main } = await detect({ eng: reading(84, { lat: 200 }, EN), 'chi_sim+eng': reading(84, { lat: 200, han: 3 }) }, { hint: 'chi_sim' });
+  assert.equal(d.lang, 'eng');
+  assert.deepEqual(probed, ['chi_sim+eng']);
+  assert.equal(main.terminated, false);
+});
+
+await test('alternatives: the runner-up languages, for a re-run in one click', async () => {
+  const { d } = await detect({ eng: engOn(170), 'chi_sim+eng': reading(90, { lat: 164, han: 220 }), 'jpn+eng': reading(79, { lat: 168, han: 63 }) });
+  assert.deepEqual(d.alternatives.slice(0, 1), ['jpn']);
+  assert.ok(d.alternatives.includes('eng'));
+});
+
+// Latin languages by their commonest words, as `eng` reads them (letters lost)
+await test('latinLanguage: each language by its own words, eng read', async () => {
+  const cases = {
+    fra: 'Fusionner des PDF est une des taches les plus courantes pour vous et votre equipe dans le travail',
+    spa: 'Unir archivos PDF es una de las tareas mas comunes para los usuarios y su equipo en el trabajo',
+    por: 'Juntar arquivos PDF e uma das tarefas mais comuns para os usuarios e sua equipe no trabalho com voce',
+    ita: 'Unire file PDF è una delle attività più comuni per gli utenti della azienda nel lavoro di ogni giorno',
+    nld: 'PDF bestanden samenvoegen is een van de meest voorkomende taken voor het werk en ook voor thuis',
+    pol: 'Laczenie plikow PDF jest jednym z najczestszych zadan i nie wymaga konta przez caly czas dla nas',
+    tur: 'PDF dosyalarini birlestirmek en yaygin islerden biri ve bu islem icin hesap gerekmez daha hizli',
+    vie: 'Ghep nhieu file PDF lai la mot trong nhung tac vu khong can tai len cua cac nguoi dung',
+    ind: 'Menggabungkan file PDF adalah salah satu tugas yang paling umum dan tidak perlu akun untuk anda',
+    eng: EN,
+  };
+  for (const [lang, text] of Object.entries(cases)) assert.equal(latinLanguage(text).lang, lang, text);
+  assert.equal(latinLanguage('PDF 12 34 ok').lang, 'eng', 'too few words: English');
 });
 
 console.log(`\n${'─'.repeat(50)}`);

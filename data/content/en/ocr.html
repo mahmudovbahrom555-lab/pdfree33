@@ -19,7 +19,7 @@
 <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:20px;">
   <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
   <div><strong style="color:var(--text);font-size:15px;">Let PDFree detect the language, or pick it yourself</strong>
-  <p style="margin:6px 0 0;font-size:14px;">For scanned PDFs: click <strong>Install OCR Engine</strong> to load Tesseract.js (~17 MB, one-time download). PDFree samples the page and suggests the document's language automatically; you can override it from the dropdown if needed. Text-layer PDFs skip this step entirely.</p></div>
+  <p style="margin:6px 0 0;font-size:14px;">For scanned PDFs: click <strong>Make PDF Searchable</strong> — the recognition engine (Tesseract.js) downloads on first use. PDFree detects the document's language automatically; you can pick it from the dropdown instead if you prefer. Text-layer PDFs skip this step entirely.</p></div>
 </div>
 <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:20px;">
   <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
@@ -75,10 +75,10 @@
 <p style="font-size:15px;margin:0 0 24px;">PDFree automatically detects which type of PDF you have. <strong>Text-layer PDFs</strong> (most PDFs created digitally — from Word, Google Docs, or any modern application) already contain machine-readable text embedded in the file — extraction is instant and no OCR engine is needed. <strong>Scanned PDFs</strong> (photos of pages, fax documents, older archive scans, phone-scanner exports) contain only images and require OCR to convert pixels into selectable, searchable text.</p>
 
 <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Automatic language detection — no guessing required</h2>
-<p style="font-size:15px;margin:0 0 24px;">Most OCR tools make you pick the document's language up front, and picking wrong quietly wrecks accuracy. PDFree instead samples the page content and suggests the correct language automatically — a genuinely distinctive feature, since the underlying recognition engine works independently of whichever of PDFree's 6 site languages you're browsing in. Reading a scan in Russian, Japanese, or Turkish while using the English interface? Detection still finds the document's real language. You can always override the suggestion manually if a page mixes scripts or the sample was inconclusive.</p>
+<p style="font-size:15px;margin:0 0 24px;">Most OCR tools make you pick the document's language up front, and picking wrong quietly wrecks accuracy. PDFree instead samples the page content and suggests the correct language automatically — a genuinely distinctive feature, since the underlying recognition engine works independently of whichever of PDFree's 14 site languages you're browsing in. Reading a scan in Russian, Japanese, or Turkish while using the English interface? Detection still finds the document's real language. A page that mixes English with another script is read with both models at once, and if the result still comes out in the wrong language, one click re-runs it in another.</p>
 
-<h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">19 languages supported</h2>
-<p style="font-size:15px;margin:0 0 24px;">PDFree uses Tesseract.js, a leading open-source text recognition engine, and supports 19 languages: <strong>English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish</strong> (European scripts) and <strong>Arabic, Persian, Japanese, Chinese Simplified, Chinese Traditional, Korean, Hindi, Thai</strong> (complex scripts).</p>
+<h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">22 languages supported</h2>
+<p style="font-size:15px;margin:0 0 24px;">PDFree uses Tesseract.js, a leading open-source text recognition engine, and supports 22 languages: <strong>English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish, Vietnamese, Indonesian</strong> (European and Latin scripts) and <strong>Arabic, Persian, Hebrew, Japanese, Chinese Simplified, Chinese Traditional, Korean, Hindi, Thai</strong> (complex scripts).</p>
 
 <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">What affects OCR quality?</h2>
 <p style="font-size:15px;margin:0 0 16px;">After OCR, PDFree shows a quality score (Excellent / Good / Fair / Poor) based on Tesseract's word confidence. The main factors:</p>
@@ -87,7 +87,7 @@
   <li style="margin-bottom:8px;"><strong>Page alignment</strong> — skewed or rotated pages reduce accuracy. PDFree auto-corrects PDF rotation (90°/180°/270°), but physical page tilt in the scan cannot be corrected.</li>
   <li style="margin-bottom:8px;"><strong>Print vs handwriting</strong> — printed text recognizes well; cursive handwriting is not supported by Tesseract.</li>
   <li style="margin-bottom:8px;"><strong>Background noise</strong> — colored backgrounds, shadows, or watermarks reduce contrast. PDFree converts pages to grayscale before OCR to improve results.</li>
-  <li><strong>Language match</strong> — auto-detection picks the right model for you in most cases; for mixed-language documents, select the dominant language manually for best results.</li>
+  <li><strong>Language match</strong> — auto-detection picks the right model for you, and for a document that mixes English with another script it uses both models together.</li>
 </ul>
 
 <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Searchable PDF vs plain text — which to download?</h2>
@@ -168,12 +168,12 @@
 
   <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
     <h3 style="margin:0 0 6px">How does the automatic language detection work?</h3>
-    <p style="margin:0">PDFree samples text from your scanned pages and suggests the most likely document language before you run OCR — you don't need to know it in advance. This works independently of the site's interface language, so a Spanish-language scan is detected correctly even if you're browsing PDFree in English. You can always override the suggestion from the dropdown.</p>
+    <p style="margin:0">PDFree reads a sample of your scanned pages with each script's model and picks the document's language before running OCR — you don't need to know it in advance, and you're never stopped to choose. A page that mixes English with another script gets both languages' models. This works independently of the site's interface language, so a Spanish-language scan is detected correctly even if you're browsing PDFree in English. If the result is in the wrong language, one click re-runs it in another; you can also pick the language from the dropdown before you start.</p>
   </div>
 
   <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
     <h3 style="margin:0 0 6px">What languages are supported?</h3>
-    <p style="margin:0">19 languages: English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish, Arabic, Persian, Japanese, Chinese (Simplified), Chinese (Traditional), Korean, Hindi, and Thai.</p>
+    <p style="margin:0">22 languages: English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish, Vietnamese, Indonesian, Arabic, Persian, Hebrew, Japanese, Chinese (Simplified), Chinese (Traditional), Korean, Hindi, and Thai. Documents that mix English with Russian, Arabic, Persian, Hebrew, Korean or Chinese are read with both languages' models at once.</p>
   </div>
 
   <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
