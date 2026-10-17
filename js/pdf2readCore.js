@@ -39,7 +39,7 @@ import { detectTables, looksLikeProseNotData, looksLikeEnumeratedList } from './
 import { detectColumnRegions, pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
 import { detectTableGrids, lineInGrid, gridRowsOfLines, gridHoldsTable } from './pdf2wordBorders.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken, joinSpacedItems, dropCjkGapSpaces, applyActualText } from './textLayoutUtils.js';
+         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken, joinSpacedItems, dropCjkGapSpaces, applyActualText, restoreDroppedSpaces } from './textLayoutUtils.js';
 
 // XML 1.0's Char production disallows most C0 control characters (only
 // tab/LF/CR are valid: #x9 | #xA | #xD | [#x20-...]) — pdf.js text
@@ -49,6 +49,22 @@ import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
 // produces a literally invalid Office file.
 // eslint-disable-next-line no-control-regex -- intentional: stripping control chars
 const _XML_ILLEGAL_CONTROL_RE = /[\x00-\x08\x0B\x0C\x0E-\x1F]/g;
+
+// The text of each text-showing operator in pdf.js's operator list, space
+// glyphs included (see restoreDroppedSpaces). 44: OPS.showText — pdf.js 3.x
+// folds TJ (showSpacedText) into it, numbers between the glyphs.
+const _OPS_SHOW_TEXT = 44;
+function _glyphRuns(opList) {
+  if (!opList?.fnArray) return null;
+  const runs = [];
+  opList.fnArray.forEach((fn, k) => {
+    if (fn !== _OPS_SHOW_TEXT) return;
+    const glyphs = opList.argsArray[k]?.[0];
+    if (!Array.isArray(glyphs)) return;
+    runs.push(glyphs.map(g => (g && typeof g === 'object' ? (g.isSpace ? ' ' : g.unicode ?? '') : '')).join(''));
+  });
+  return runs;
+}
 
 // ── Small private helpers ────────────────────────────────────────────────
 // Local copies, not imports — the originals in js/processor.js are still
@@ -586,7 +602,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
     // BOTH the bold title and regular body text — indistinguishable — while
     // page.commonObjs.get(fontName).name correctly gave
     // "CAAAAA+NotoSans-Bold" vs "DAAAAA+NotoSans-Regular").
-    const [content, borderGrids] = await Promise.all([
+    const [content, borderGrids, opList] = await Promise.all([
       page.getTextContent({ normalizeWhitespace: false, includeMarkedContent: !!actualText }),
       detectTableGrids(page, { paintedOnly: true }).catch(() => []),
       page.getOperatorList().catch(() => {}),
@@ -599,6 +615,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
       const needs = content.items.some(i => /[\0\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/.test(i.str ?? ''));
       content.items = applyActualText(content.items, needs ? await actualText(p).catch(() => null) : null);
     }
+    content.items = restoreDroppedSpaces(content.items, _glyphRuns(opList));
     const _boldFontCache = new Map(); // fontName -> boolean, one commonObjs lookup per unique font per page
     const _isFontBold = fontName => {
       if (_boldFontCache.has(fontName)) return _boldFontCache.get(fontName);

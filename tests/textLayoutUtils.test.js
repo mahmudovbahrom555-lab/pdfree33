@@ -8,7 +8,7 @@
 // Run: node tests/textLayoutUtils.test.js
 
 import { strict as assert } from 'assert';
-import { joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
+import { restoreDroppedSpaces, joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
   lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
   continuesWrappedHeading, lineRuns , textLayerLooksBroken, toUnifiedIdeographs, joinTouchingItems, dropCjkGapSpaces } from '../js/textLayoutUtils.js';
 
@@ -150,6 +150,34 @@ test('undecided pages (one glyph per item, no RTL, LTR items) keep pdf.js order'
   assert.equal(rtlItemsAreVisual(rtl([...'ﻞﻤﺣ'])), false);
   assert.equal(rtlItemsAreVisual([{ str: 'שלום', dir: 'ltr' }, { str: 'Hello', dir: 'ltr' }]), false);
   assert.equal(rtlItemsAreVisual([]), false);
+});
+
+// ── restoreDroppedSpaces: pdf.js drops a space glyph drawn overlapping its
+// neighbours; the operator list keeps it (Persian InDesign, corpus 7629204).
+test('a word space pdf.js dropped is put back from the glyphs, drawn in either order', () => {
+  const items = rtl(['فصلسوم', 'نهادهایفناوریهمکار', 'گزارش']);
+  const runs = ['موس لصف', 'راکمه یروانف یاهداهن', 'شرازگ'];      // visual order, spaces kept
+  assert.deepEqual(restoreDroppedSpaces(items, runs).map(i => i.str), ['فصل سوم', 'نهادهای فناوری همکار', 'گزارش']);
+});
+
+test('two items drawn touching get the space the glyphs have between them, on the first word', () => {
+  // "شرکت" at x 480.9 (w 25.2) and "نام" at 506.9 — 0.8pt apart, the run "تکرش مان"
+  const at = (str, x, w) => ({ str, dir: 'rtl', width: w, transform: [13, 0, 0, 13, x, 457.7] });
+  const out = restoreDroppedSpaces([at('شرکت', 480.9, 25.2), at('نام', 506.9, 12.2)], ['تکرش مان']);
+  assert.deepEqual(out.map(i => i.str), ['شرکت', 'نام ']);
+});
+
+test('pieces of words at the ends of runs are no evidence: "من" is not split into "م ن"', () => {
+  // InDesign breaks runs inside words (corpus 0525394): "عأ م", "م ار" hold pieces, not words
+  assert.equal(restoreDroppedSpaces(rtl(['من']), ['ن م', 'م ار'])[0].str, 'من');
+  assert.equal(restoreDroppedSpaces(rtl(['أعمال']), ['لا معأ'])[0].str, 'أعمال');
+});
+
+test('a word the glyphs also show whole is left whole; no runs, no change', () => {
+  const items = rtl(['کتابخانه']);
+  assert.equal(restoreDroppedSpaces(items, ['کتاب خانه', 'کتابخانه'])[0].str, 'کتابخانه');
+  assert.equal(restoreDroppedSpaces(items, null), items);
+  assert.equal(restoreDroppedSpaces(rtl(['abcdef']), ['abc def'])[0].str, 'abcdef');   // Arabic script only
 });
 
 // ── reorderVisualRtlLine: Chromium-printed Arabic/Farsi arrives one presentation-

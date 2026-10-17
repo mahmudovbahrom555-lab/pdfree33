@@ -909,3 +909,63 @@ function _sameFormOf(form, letter) {
   if (!own || !target || own.length !== target.length) return null;
   return target[own.indexOf(form)] ?? null;
 }
+
+// The word spaces pdf.js drops from Arabic-script text, put back from the
+// page's own glyphs. pdf.js remembers a space glyph and forgets it when the
+// next glyph is drawn overlapping it — Persian InDesign and Word fonts draw
+// their narrow spaces so — and joined "فصل سوم" into "فصلسوم" (the space is
+// in the content stream: MuPDF and poppler keep it). `runs`: the text of each
+// text-showing operator, its space glyphs as " " (from the operator list,
+// where pdf.js keeps them), in drawing order — visual for some producers, so
+// read both ways. A word of the items is split only where the glyphs show
+// those letters with spaces between and never as one word.
+export function restoreDroppedSpaces(items, runs) {
+  if (!runs?.length) return items;
+  const ARABIC = /[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]/;
+  const split = new Map();      // joined words → the words with their spaces
+  const whole = new Set();      // words the glyphs show whole
+  const pairs = new Set();      // two words the glyphs show side by side, a space between
+  // InDesign breaks its runs inside words, so a run's first or last "word" can
+  // be a piece ("م", "ع", "ال"): a word to split into must be one — two letters
+  // or more and not the bare article, or the conjunction و
+  const isWord = w => w === '\u0648' || (w.length >= 2 && w !== '\u0627\u0644');
+  for (const run of runs) {
+    if (!ARABIC.test(run)) continue;
+    for (const text of [run, [...run].reverse().join('')]) {
+      const words = text.split(/\s+/).filter(Boolean);
+      for (const w of words) whole.add(w);
+      for (let i = 0; i < words.length; i++) {
+        if (i + 1 < words.length && isWord(words[i]) && isWord(words[i + 1])) pairs.add(words[i] + '\u0001' + words[i + 1]);
+        for (let n = 2; n <= 4 && i + n <= words.length; n++) {
+          const part = words.slice(i, i + n);
+          if (!part.every(isWord)) break;
+          if (!split.has(part.join(''))) split.set(part.join(''), part.join(' '));
+        }
+      }
+    }
+  }
+  if (!split.size) return items;
+  // inside an item: "فصلسوم" → "فصل سوم"
+  const out = items.map(item => {
+    if (!item.str || !ARABIC.test(item.str)) return item;
+    const str = item.str.replace(/\S+/g, w => (!whole.has(w) && split.has(w) ? split.get(w) : w));
+    return str === item.str ? item : { ...item, str };
+  });
+  // between two items drawn touching, on one line: "نام" | "شرکت" → "نام " — the
+  // first word, in reading order, takes the space, whatever order the line is
+  // put together in
+  const text = out.filter(i => i.str?.trim() && ARABIC.test(i.str) && i.transform);
+  for (const a of text) {
+    if (/\s$/.test(a.str)) continue;
+    const wa = a.str.trim().split(/\s+/).pop();
+    const fs = Math.abs(a.transform[3]) || 10;
+    for (const b of text) {
+      if (b === a || /^\s/.test(b.str) || Math.abs(b.transform[5] - a.transform[5]) > 0.3 * fs) continue;
+      const gap = Math.max(a.transform[4] - (b.transform[4] + (b.width || 0)), b.transform[4] - (a.transform[4] + (a.width || 0)));
+      if (gap > 0.5 * fs || gap < -0.5 * fs) continue;
+      const wb = b.str.trim().split(/\s+/)[0];
+      if (pairs.has(wa + '\u0001' + wb) && !whole.has(wa + wb)) { a.str += ' '; break; }
+    }
+  }
+  return out;
+}
