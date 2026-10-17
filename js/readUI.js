@@ -20,6 +20,7 @@ import { loadPdfJs } from './pdf2jpgUI.js';
 import { id, esc } from './utils.js';
 import { _p2pCropCanvasRegion, _setProcessingFlag } from './processor.js';
 import { _p2wBuildPageData, _rpBuildPageBlocks } from './pdf2readCore.js';
+import { createActualTextReader } from './pdfActualText.js';
 import { t } from './i18n.js';
 import { setProgress, hideProgress, showCancelBtn, hideCancelBtn, showToast } from './ui.js';
 
@@ -159,6 +160,7 @@ async function _runRead(container, myGen) {
   ({ pageData, median, repeatTextSet, repeatPatternSet } = await _p2wBuildPageData(pdfDoc, {
     onProgress:  (pct, label) => { if (myGen === _generation) setProgress(pct, label); },
     isCancelled: () => myGen !== _generation,
+    actualText:  createActualTextReader(pdfDoc),
   }));
   if (myGen !== _generation) { pdfDoc.destroy(); return; }
 

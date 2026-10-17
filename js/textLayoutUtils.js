@@ -100,18 +100,87 @@ export const MONEY_TOKEN_RE = /\d{1,3}(?:,\d{3})+\.\d{2}\b/;
 // ways. Reverses only on clear evidence; undecided (e.g. pdf.js giving one glyph
 // per item) keeps pdf.js's order, since a wrong reversal garbles every word.
 const _HE_AR_WORD_FINAL_RE = /[\u05DA\u05DD\u05DF\u05E3\u05E5\u0629\u0649]/;
+// A word in presentation forms says its own order: an initial form starts a
+// word, a final form ends one. A word drawn starting with a final (or medial)
+// form, or ending with an initial one, is in visual order. Where pdf.js gives
+// them they decide alone: a Persian page in logical order, word after word
+// drawn left to right (mPDF), was voted visual by "کالا" and "بالا" ending in
+// لا — its every letter reversed, "تسا" for "است" (2026-10-17).
 export function rtlItemsAreVisual(items) {
+  const { logical, visual } = rtlOrderVotes(items);
+  return visual >= 3 && visual > 2 * logical;
+}
+// rtlItemsAreVisual's votes: words read as stored (logical) and backwards (visual).
+export function rtlOrderVotes(items) {
   let logical = 0, visual = 0;
   for (const item of items) {
     if (item.dir !== 'rtl' || !item.str) continue;
-    for (const w of item.str.normalize('NFKC').split(/[^\u0590-\u05FF\u0600-\u06FF]+/)) {
-      if (w.length < 3) continue;
-      if (_HE_AR_WORD_FINAL_RE.test(w[w.length - 1]) || w.startsWith('\u0627\u0644')) logical++;
-      if (_HE_AR_WORD_FINAL_RE.test(w[0]) || w.endsWith('\u0644\u0627')) visual++;
+    for (const token of item.str.split(/\s+/)) {
+      // whole words only: a word cut at a glyph with no Unicode (a broken
+      // font's Private Use codes) ends in an initial form and looked backwards
+      const word = token.replace(/^[^\p{L}]+|[^\p{L}]+$/gu, '');
+      if (/^[\u0600-\u06FF\uFB50-\uFDFF\uFE70-\uFEFC]{2,}$/.test(word)) {
+        const order = _formsOrder(word);
+        if (order) {
+          if (order === 'visual') visual++; else logical++;
+          continue;
+        }
+      }
+      for (const w of token.normalize('NFKC').split(/[^\u0590-\u05FF\u0600-\u06FF]+/)) {
+        if (w.length < 3) continue;
+        if (_HE_AR_WORD_FINAL_RE.test(w[w.length - 1]) || w.startsWith('\u0627\u0644')) logical++;
+        // ال reversed ends a word in لا — so do إلا, كلا, مثلا, بالا, کالا: short
+        // words; an article and its noun make five letters or more
+        if (_HE_AR_WORD_FINAL_RE.test(w[0]) || (w.length >= 5 && w.endsWith('\u0644\u0627'))) visual++;
+      }
     }
   }
-  return visual >= 3 && visual > 2 * logical;
+  return { logical, visual };
 }
+// Which way a word's presentation forms join: 'logical' when every two
+// neighbouring forms join left to right as stored (an initial or medial form
+// followed by a medial or final one, a final or isolated one by an initial or
+// isolated one), 'visual' when only reversed, null when neither or both — a
+// font with a broken encoding gives forms at random ("ﻇﻌربرتﻆﻐ").
+const _JOINS_ON = { initial: true, medial: true, final: false, isolated: false };
+const _JOINED = { initial: false, medial: true, final: true, isolated: false };
+function _formsOrder(word) {
+  let fwd = true, back = true, pairs = 0;
+  for (let k = 1; k < word.length; k++) {
+    const a = _PF_POSITION.get(word[k - 1]), b = _PF_POSITION.get(word[k]);
+    if (!a || !b) continue;
+    pairs++;
+    if (_JOINS_ON[a] !== _JOINED[b]) fwd = false;
+    if (_JOINS_ON[b] !== _JOINED[a]) back = false;
+  }
+  if (pairs) return fwd === back ? null : fwd ? 'logical' : 'visual';
+  // no two forms side by side: Word writes nominal letters and only the
+  // lam-alef ligature as a form ("ابتﻼ"); a final one ends the word as stored.
+  // Lone forms of other letters are left out — a broken encoding's are random.
+  const lastLamAlef = /[\uFEF6\uFEF8\uFEFA\uFEFC]$/.test(word), firstLamAlef = /^[\uFEF6\uFEF8\uFEFA\uFEFC]/.test(word);
+  return lastLamAlef === firstLamAlef ? null : lastLamAlef ? 'logical' : 'visual';
+}
+// Each Arabic presentation form's position — isolated, final, initial or
+// medial — from its place in its letter's run of forms (Unicode orders them
+// so; a two-form letter has isolated and final only).
+const _PF_POSITION = (() => {
+  const m = new Map();
+  const NAMES = ['isolated', 'final', 'initial', 'medial'];
+  for (const [lo, hi] of [[0xFB50, 0xFBFF], [0xFE70, 0xFEFC]]) {
+    let cp = lo;
+    while (cp <= hi) {
+      const base = String.fromCodePoint(cp).normalize('NFKC');
+      if (base.length !== 1 || base.codePointAt(0) === cp || !/[\u0600-\u06FF]/.test(base)) { cp++; continue; }
+      let n = 1;
+      while (n < 4 && cp + n <= hi && String.fromCodePoint(cp + n).normalize('NFKC') === base) n++;
+      if (n === 2 || n === 4) for (let k = 0; k < n; k++) m.set(String.fromCodePoint(cp + k), NAMES[k]);
+      cp += n;
+    }
+  }
+  // the lam-alef ligatures, two letters each: isolated and final
+  for (let cp = 0xFEF5; cp <= 0xFEFC; cp += 2) { m.set(String.fromCodePoint(cp), 'isolated'); m.set(String.fromCodePoint(cp + 1), 'final'); }
+  return m;
+})();
 
 // Puts one RTL line's items (in pdf.js content-stream order) into logical order, IN
 // PLACE — only when the stream itself runs left-to-right across the line's text.
@@ -744,4 +813,99 @@ export function joinHyphenatedLineEnd(prevText, nextText) {
     text: restOfPrev + (keepHyphen ? withHyphen : withoutHyphen) + restOfNext,
     hyphenKept: keepHyphen,
   };
+}
+
+// pdf.js text items (getTextContent with includeMarkedContent) with each
+// marked-content span that carries /ActualText read as that text, and the
+// marker items dropped. `spans`: one entry per BDC/BMC on the page, in
+// content order — its /ActualText or null (js/pdfActualText.js). The text
+// items inside such a span become one item: the span's text, over the span's
+// extent, where its first item was. Spans that cover no text, or text on more
+// than one line, keep their items. When `spans` doesn't match pdf.js's
+// markers one for one, the items are returned as they are — the pairing is
+// by order alone. Chrome's and LibreOffice's Arabic carries its real letters
+// there (see pdfActualText.js).
+export function applyActualText(items, spans) {
+  const isBegin = i => i.type === 'beginMarkedContent' || i.type === 'beginMarkedContentProps';
+  const text = items.filter(i => 'str' in i);
+  if (!spans || items.filter(isBegin).length !== spans.length) return text;
+  const out = [];
+  const stack = [];       // per open span: { actual, items } or null
+  let k = 0;
+  let owner = null;       // the outermost open span with ActualText
+  const close = frame => {
+    // word spaces drawn inside the span stay items of their own: their x is
+    // what puts a space between two words
+    const core = frame.items.filter(i => i.str.trim());
+    const isSpace = i => !i.str.trim();
+    const lead = [], trail = [];
+    for (const i of frame.items) { if (!isSpace(i)) break; lead.push(i); }
+    for (const i of [...frame.items].reverse()) { if (!isSpace(i) || lead.includes(i)) break; trail.unshift(i); }
+    const middle = frame.items.slice(lead.length, frame.items.length - trail.length);
+    const actual = frame.actual.trim();
+    const drawn = core.map(i => i.str.trim()).join('');
+    // vowel marks and unmapped glyphs (a superscript alef) may sit well above
+    // the line: only the letters' glyphs count
+    const letters = core.filter(i => /\p{L}/u.test(i.str));
+    const glyphs = letters.length ? letters : core;
+    const sameLine = glyphs.every(i => Math.abs(i.transform[5] - glyphs[0].transform[5]) <= 0.5 * (Math.abs(glyphs[0].transform[3]) || 1));
+    out.push(...lead);
+    if (!core.length || !actual || !sameLine || drawn.normalize('NFKC') === actual.normalize('NFKC')) {
+      out.push(...middle);           // nothing to gain, or nothing safe to do
+    } else if (core.length === 1 && middle.length === 1 && [...drawn].length === 1 && [...actual].length === 1 && _sameFormOf(drawn, actual)) {
+      // one shaped glyph, one letter: the letter's own form in the same
+      // position (initial, medial…) — later steps read the join from it
+      out.push({ ...core[0], str: core[0].str.replace(drawn, _sameFormOf(drawn, actual)) });
+    } else {
+      const x0 = Math.min(...core.map(i => i.transform[4]));
+      const x1 = Math.max(...core.map(i => i.transform[4] + (i.width || 0)));
+      // the letter's own glyph, not a vowel mark's: a font may draw the mark
+      // raised, and the text took the mark's baseline into the line above
+      const first = glyphs.reduce((a, i) => ((i.width || 0) > (a.width || 0) ? i : a));
+      const merged = { ...first, str: actual, width: x1 - x0, transform: [...first.transform.slice(0, 4), x0, first.transform[5]],
+        dir: /[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/.test(actual) ? 'rtl' : first.dir, hasEOL: core.at(-1).hasEOL };
+      // the span's text where its first glyph was, its spaces where they were
+      out.push(...middle.filter(i => isSpace(i) || i === first).map(i => (i === first ? merged : i)));
+    }
+    out.push(...trail);
+  };
+  for (const it of items) {
+    if (isBegin(it)) {
+      const actual = spans[k++];
+      const frame = actual != null && !owner ? { actual, items: [] } : null;
+      if (frame) owner = frame;
+      stack.push(frame);
+    } else if (it.type === 'endMarkedContent') {
+      const frame = stack.pop();
+      if (frame && frame === owner) { close(frame); owner = null; }
+    } else if ('str' in it) {
+      (owner ? owner.items : out).push(it);
+    }
+  }
+  if (owner) out.push(...owner.items);   // an unclosed span: as it was
+  return out;
+}
+
+// Arabic presentation forms by letter and position: [letter] → forms in their
+// Unicode order (isolated, final[, initial, medial]), from NFKC itself.
+const _FORMS_OF = (() => {
+  const m = new Map();
+  for (const [lo, hi] of [[0xFB50, 0xFBFF], [0xFE70, 0xFEFC]]) {
+    for (let cp = lo; cp <= hi; cp++) {
+      const base = String.fromCodePoint(cp).normalize('NFKC');
+      if (base.length !== 1 || base.codePointAt(0) === cp) continue;
+      if (!m.has(base)) m.set(base, []);
+      m.get(base).push(String.fromCodePoint(cp));
+    }
+  }
+  return m;
+})();
+// `form` (a presentation form) of one letter as the same position's form of
+// `letter`, or null when either has no such form: "ﯾ" (Persian yeh, initial)
+// and "ي" → "ﻳ".
+function _sameFormOf(form, letter) {
+  const own = _FORMS_OF.get(form.normalize('NFKC'));
+  const target = _FORMS_OF.get(letter);
+  if (!own || !target || own.length !== target.length) return null;
+  return target[own.indexOf(form)] ?? null;
 }

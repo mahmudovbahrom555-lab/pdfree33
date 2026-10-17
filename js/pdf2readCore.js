@@ -14,13 +14,16 @@
 //  packages/pdf2read-core/src/index.js in Node) owns loading the PDF and
 //  producing that object.
 //
-//  Browser-coupling is limited to 3 injectable seams on _p2wBuildPageData,
+//  Browser-coupling is limited to 4 injectable seams on _p2wBuildPageData,
 //  all optional, same no-op-by-default pattern pdf2mdCore.js's
 //  _p2mdExtractText already established:
 //    onProgress(pct, label)   — UI progress callback; no-op by default.
 //    isCancelled()            — mid-run cancellation check; never-cancel default.
 //    ocrPage(page, pageNum)   — text items for a page with no text layer (the
 //                               browser passes its OCR engine); none by default.
+//    actualText(pageNum)      — the page's marked-content /ActualText, one
+//                               entry per BDC/BMC (js/pdfActualText.js in the
+//                               browser); none by default.
 //  No canvasFactory seam is needed here (unlike pdf2mdCore.js) — this module
 //  never renders a canvas itself. An `image`-type block from
 //  _rpBuildRegionBlocks/_rpBuildPageBlocks carries only a bounding-box
@@ -36,7 +39,7 @@ import { detectTables, looksLikeProseNotData, looksLikeEnumeratedList } from './
 import { detectColumnRegions, pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
 import { detectTableGrids, lineInGrid, gridRowsOfLines, gridHoldsTable } from './pdf2wordBorders.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken, joinSpacedItems, dropCjkGapSpaces } from './textLayoutUtils.js';
+         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken, joinSpacedItems, dropCjkGapSpaces, applyActualText } from './textLayoutUtils.js';
 
 // XML 1.0's Char production disallows most C0 control characters (only
 // tab/LF/CR are valid: #x9 | #xA | #xD | [#x20-...]) — pdf.js text
@@ -540,7 +543,7 @@ async function _annotationTextItems(page) {
   return out;
 }
 
-export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCancelled = () => false, ocrPage = null } = {}) {
+export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCancelled = () => false, ocrPage = null, actualText = null } = {}) {
   const YTOL = 6;   // px — items within 6px on Y → same line (was 4; increased to group
                    //  characters with slight baseline variation, e.g. Cyrillic in some PDFs)
 
@@ -584,10 +587,18 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
     // page.commonObjs.get(fontName).name correctly gave
     // "CAAAAA+NotoSans-Bold" vs "DAAAAA+NotoSans-Regular").
     const [content, borderGrids] = await Promise.all([
-      page.getTextContent({ normalizeWhitespace: false }),
+      page.getTextContent({ normalizeWhitespace: false, includeMarkedContent: !!actualText }),
       detectTableGrids(page, { paintedOnly: true }).catch(() => []),
       page.getOperatorList().catch(() => {}),
     ]);
+    // Right-to-left scripts, presentation forms, unmapped glyphs (\0) and
+    // vowel marks: where Chrome and LibreOffice put the real letters in
+    // /ActualText, which pdf.js drops (see js/pdfActualText.js). Other pages
+    // don't pay for reading it.
+    if (actualText) {
+      const needs = content.items.some(i => /[\0\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/.test(i.str ?? ''));
+      content.items = applyActualText(content.items, needs ? await actualText(p).catch(() => null) : null);
+    }
     const _boldFontCache = new Map(); // fontName -> boolean, one commonObjs lookup per unique font per page
     const _isFontBold = fontName => {
       if (_boldFontCache.has(fontName)) return _boldFontCache.get(fontName);

@@ -113,6 +113,39 @@ test('standalone لا does not count as visual evidence (it is ال reversed aft
   assert.equal(rtlItemsAreVisual(rtl(['لا', 'بالا', 'لا لا لا'])), false);
 });
 
+test('presentation forms decide the order: logical words drawn left to right stay as they are', () => {
+  // mPDF, a Persian customs page (corpus 1841524): every word logical, "کالا" on every line —
+  // the لا rule voted it visual and every letter came out reversed ("تسا" for "است")
+  const page = ['ﻗﻄﻌﺎ', 'ﺑﺎﺷﺪ', 'دﻟﺨﻮاه', 'ﺑﻪ', 'ﻛﻨﺪ', 'ﻛﺎﻻﯾی', 'ﻗﯿﻤﺖ', 'اﻇﻬﺎر'];
+  assert.equal(rtlItemsAreVisual(rtl(page)), false);
+  assert.equal(rtlItemsAreVisual(rtl(reversed(page))), true);   // a final form first: visual
+});
+
+test('a word with a presentation form at one end only still votes, or leaves the vote to its letters', () => {
+  // mPDF with a broken font: Private Use glyphs at word ends ("اﻟﻬﺎد" with its ج missing); the
+  // words led by ال outvote a few visual items — a version that let them abstain reversed the page
+  const page = ['اﻟﻬﺎد', 'اﻹﺳﻼﻣﻲ', 'اﻟﺎﻟﺔ', 'اﻟﻠﻲ', 'اﻟﺎﻣﻞ', 'ﺔﺎاﻟ', 'ﺦﺗﺎر', 'ﺔﺎاﻟ', 'ﺦﺗﺎر'];
+  assert.equal(rtlItemsAreVisual(rtl(page)), false);
+  // and a word cut short at such a glyph ("اﻷﻣ\uE0B9…", an initial form last) is no vote
+  assert.equal(rtlItemsAreVisual(rtl(['اﻷﻣ\uE0B9ﻦ اﻟﺎم', 'ﻟ\uE0C2ﺎﻣﻞ اﻟﻬﺎد', 'اﻷﻣ\uE0B9ﺔ'])), false);
+});
+
+test('a final lam-alef ends a word read as stored: ابتلا, مبتلا (Persian) are no visual vote', () => {
+  // Microsoft Print to PDF, a Persian article (corpus 5103754): "ابتﻼ" on every line ended in لا
+  const page = ['مبتﻼ', 'موارد ابتﻼ', 'بر اثر ابتﻼ به', 'نرخ ابتﻼ در', 'کامﻼ ً شن'];
+  assert.equal(rtlItemsAreVisual(rtl(page)), false);
+});
+
+test('forms from a broken encoding, joined at random, are no vote', () => {
+  // Illustrator, wrong glyph mapping (corpus 0519513): MuPDF reads the same garbage
+  assert.equal(rtlItemsAreVisual(rtl(['رﻏﺤﺋ ﻇﻌربرتﻆﻐ', 'وﺻﻂــﻃ ﻄابﻐــﻀ', 'ﻄﻈاظر وﺖﺿاﻏات ﻎﺸ السﻌق'])), false);
+});
+
+test('short words ending in لا (کالا, بالا, إلا) are not ال reversed', () => {
+  assert.equal(rtlItemsAreVisual(rtl(['کالا', 'بالا', 'کالا', 'است', 'إلا', 'حالا'])), false);
+  assert.equal(rtlItemsAreVisual(rtl(reversed(['الكتاب', 'المدرسة', 'الطالب', 'الحديقة']))), true);
+});
+
 test('undecided pages (one glyph per item, no RTL, LTR items) keep pdf.js order', () => {
   assert.equal(rtlItemsAreVisual(rtl([...'ﻞﻤﺣ'])), false);
   assert.equal(rtlItemsAreVisual([{ str: 'שלום', dir: 'ltr' }, { str: 'Hello', dir: 'ltr' }]), false);

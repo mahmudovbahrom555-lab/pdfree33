@@ -35,6 +35,7 @@ import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { _p2wBuildPageData } from './pdf2readCore.js';
 import { createOcrLayer } from './pdf2wordOcr.js';
+import { createActualTextReader } from './pdfActualText.js';
 import { detectTableGrids, lineInGrid, gridRowsOfLines, gridHoldsTable } from './pdf2wordBorders.js';
 import { cjkJoin } from './cjkText.js';
 import { recognizeFormula } from './formulaOcr.js';
@@ -2675,6 +2676,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
         onProgress:  (pct, label) => onProgress?.(pct, label),
         isCancelled,
         ocrPage:     ocr.ocrPage,
+        actualText:  createActualTextReader(pdfDoc),
       }));
     } finally {
       await ocr.close();
@@ -4320,8 +4322,12 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
           const gap   = ln.rtl
             ? Math.max(prev.x - (item.x + itemW), item.x - (prev.x + prevW))
             : item.x - (prev.x + prevW);
-          // Devanagari (Hindi) spaces are narrower — use 10% of fontSize instead of 20%
-          const thr   = (_isDevanagari(prev.str) || _isDevanagari(text0))
+          // Devanagari (Hindi) spaces are narrower — use 10% of fontSize instead of 20%.
+          // So are the Arabic fonts Word uses (Lotus, Traditional Arabic): a word
+          // gap of 0.1–0.2 em was a space at 128 seams of 111 real Arabic and
+          // Persian documents and inside a word at 1 (2026-10-17) — glued
+          // "الطربيبسنده" for "الطربي بسنده".
+          const thr   = (_isDevanagari(prev.str) || _isDevanagari(text0) || (_ARABIC_END_RE.test(prev.str) && _ARABIC_START_RE.test(text0)))
             ? item.fontSize * 0.1 : item.fontSize * 0.2;
           if (gap > thr) text = ' ' + text;
         }
@@ -5854,6 +5860,8 @@ function _rtlPara(text) { return _isRtl(text) ? { bidirectional: true } : {}; }
 // _isCjk moved to textLayoutUtils.js (shared with pdf2md's core).
 
 // Devanagari: U+0900–097F (used for Hindi, Marathi, Sanskrit, Nepali …)
+const _ARABIC_END_RE = /[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF][\u064B-\u0652\u0670]*$/;
+const _ARABIC_START_RE = /^[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]/;
 function _isDevanagari(str) {
   return /[\u0900-\u097F]/.test(str);
 }

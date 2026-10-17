@@ -390,6 +390,13 @@ jobs:
         # detectors on a real form). See tests/e2e/pdf2word-forms.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:pdf2word-forms
 
+      - name: E2E — PDF to Word reads Arabic from /ActualText
+        # Chromium-printed Arabic: Arial's yeh/heh glyphs map to the Persian ی
+        # and Urdu ھ, Tahoma's vowelled letters to nothing — the real letters
+        # are in /ActualText, which pdf.js drops (2026-10-17). See
+        # tests/e2e/pdf2word-arabic.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:pdf2word-arabic
+
       - name: E2E — PDF to PowerPoint, editable text over the page picture
         # The slide keeps the page's look (chart, photo, table rules) with the
         # text laid back as boxes: colour, bold, one box per table cell, Chinese

@@ -1,0 +1,89 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// ============================================================
+//  tests/e2e/pdf2word-arabic.e2e.mjs — PDF to Word reads Arabic from the
+//  letters a PDF says it holds (/ActualText), not from its shaped glyphs
+//  (2026-10-17).
+//
+//  Chromium (a browser's "Save as PDF", Google Docs) maps Arial's initial
+//  and medial yeh and heh glyphs to the Persian ی and Urdu ھ, and the
+//  letters under Tahoma's vowel marks to nothing; the real letters are in
+//  /ActualText, which pdf.js drops. The .docx read "یقدم ھذا التقریر" for
+//  "يقدم هذا التقرير" — a dot wrong in every other word, so Word's search
+//  and spell-check failed on them — 60 % of the words right; vowelled text
+//  15 %. Now 100 % and 100 % (js/pdfActualText.js).
+//  Fixtures: tests/fixtures/pdf2word/ar-chrome-{arial,harakat}.pdf, made by
+//  make-arabic-actualtext.mjs from arabic-actualtext.json (the truth here).
+//  Run: node tests/e2e/pdf2word-arabic.e2e.mjs   (dist/ served on :8934)
+// ============================================================
+
+import { chromium } from 'playwright';
+import path from 'path';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const BASE_URL = process.env.PDFREE_BASE_URL || 'http://localhost:8934';
+const FIX = path.join(__dirname, '..', 'fixtures', 'pdf2word');
+const TRUTH = JSON.parse(readFileSync(path.join(FIX, 'arabic-actualtext.json'), 'utf8'));
+
+let passed = 0, failed = 0;
+async function test(name, fn) {
+  try { await fn(); console.log(`  ✓ ${name}`); passed++; }
+  catch (e) { console.error(`  ✗ ${name}\n    ${e.message}`); failed++; }
+}
+
+// Arabic words, letters exact (ي ≠ ی, ه ≠ ھ, ة ≠ ه); with or without their vowel marks
+const words = (t, marks) => (t.normalize('NFKC').replace(/[ـ‌-‏]/g, '')
+  .replace(marks ? /(?!)/g : /[ً-ْٰ]/g, '')
+  .match(/[؀-ۿ]+/g) ?? []);
+function recall(truth, out, marks) {
+  const got = new Map();
+  for (const w of words(out, marks)) got.set(w, (got.get(w) ?? 0) + 1);
+  const want = words(truth, marks);
+  let hit = 0;
+  for (const w of want) if (got.get(w) > 0) { hit++; got.set(w, got.get(w) - 1); }
+  return hit / want.length;
+}
+
+async function docxText(browser, file) {
+  const page = await (await browser.newContext({ serviceWorkers: 'block' })).newPage();
+  await page.addInitScript(() => {
+    const orig = URL.createObjectURL.bind(URL);
+    URL.createObjectURL = b => { if (b instanceof Blob && /officedocument/.test(b.type)) window.__docx = b; return orig(b); };
+  });
+  await page.goto(BASE_URL + '/pdf-to-word/', { waitUntil: 'load' });
+  await page.setInputFiles('#fileInput', path.join(FIX, file));
+  await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 30000 });
+  await page.waitForTimeout(1500);
+  await page.click('#mergeBtn');
+  await page.waitForFunction(() => window.__docx, null, { timeout: 90000 });
+  return page.evaluate(async () => {
+    await (await import('/js/lazyLibs.js')).loadJSZip();
+    const zip = await window.JSZip.loadAsync(await window.__docx.arrayBuffer());
+    const xml = await zip.file('word/document.xml').async('string');
+    return [...xml.matchAll(/<w:p[ >][\s\S]*?<\/w:p>/g)].map(m => [...m[0].matchAll(/<w:t[^>]*>([^<]*)/g)].map(t => t[1]).join('')).join('\n');
+  });
+}
+
+const browser = await chromium.launch();
+console.log(`\npdf2word — Arabic /ActualText E2E (${BASE_URL}):`);
+try {
+  await test('Chrome + Arial: Arabic yeh and heh, not Persian ی / Urdu ھ — every word right', async () => {
+    const out = await docxText(browser, 'ar-chrome-arial.pdf');
+    const wrong = (out.match(/[یھ]/g) ?? []).length;
+    if (wrong) throw new Error(`${wrong} Persian/Urdu letters in Arabic text: ${out.slice(0, 200)}`);
+    const r = recall(TRUTH.prose.join('\n'), out, false);
+    if (r < 0.97) throw new Error(`${(r * 100).toFixed(0)} % of the words right (≥ 97 % expected): ${out.slice(0, 200)}`);
+  });
+
+  await test('Chrome + Tahoma, fully vowelled: letters under the marks kept, words whole with their marks', async () => {
+    const out = await docxText(browser, 'ar-chrome-harakat.pdf');
+    const plain = recall(TRUTH.harakat.join('\n'), out, false), vowelled = recall(TRUTH.harakat.join('\n'), out, true);
+    if (plain < 0.95 || vowelled < 0.9) throw new Error(`words ${(plain * 100).toFixed(0)} %, with their marks ${(vowelled * 100).toFixed(0)} %: ${out.slice(0, 200)}`);
+  });
+} finally {
+  await browser.close();
+}
+console.log(`\n${'─'.repeat(40)}`);
+console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed} failed`);
+if (failed > 0) process.exit(1);
