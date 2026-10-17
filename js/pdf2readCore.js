@@ -66,6 +66,34 @@ function _glyphRuns(opList) {
   return runs;
 }
 
+// The share of the page that raster images cover (their bounding boxes, in
+// the page's own view box, overlaps not subtracted, capped at 1), from pdf.js's
+// operator list: save/restore/transform and Form XObject matrices tracked.
+const _OPS = { save: 10, restore: 11, transform: 12, formBegin: 74, formEnd: 75, imageMask: 83, image: 85, inlineImage: 86 };
+export function _rasterCover(opList, view) {
+  if (!opList?.fnArray || !view) return 0;
+  const [vx0, vy0, vx1, vy1] = view;
+  const pageArea = (vx1 - vx0) * (vy1 - vy0);
+  if (!(pageArea > 0)) return 0;
+  const mul = (m, [a, b, c, d, e, f]) => [m[0] * a + m[2] * b, m[1] * a + m[3] * b, m[0] * c + m[2] * d, m[1] * c + m[3] * d,
+    m[0] * e + m[2] * f + m[4], m[1] * e + m[3] * f + m[5]];
+  const stack = [[1, 0, 0, 1, 0, 0]];
+  let area = 0;
+  opList.fnArray.forEach((fn, k) => {
+    const m = stack[stack.length - 1], args = opList.argsArray[k];
+    if (fn === _OPS.save || (fn === _OPS.formBegin)) stack.push(fn === _OPS.formBegin && Array.isArray(args?.[0]) && args[0].length === 6 ? mul(m, args[0]) : m);
+    else if ((fn === _OPS.restore || fn === _OPS.formEnd) && stack.length > 1) stack.pop();
+    else if (fn === _OPS.transform && Array.isArray(args) && args.length === 6) stack[stack.length - 1] = mul(m, args);
+    else if (fn === _OPS.image || fn === _OPS.inlineImage || fn === _OPS.imageMask) {
+      const xs = [m[4], m[0] + m[4], m[2] + m[4], m[0] + m[2] + m[4]], ys = [m[5], m[1] + m[5], m[3] + m[5], m[1] + m[3] + m[5]];
+      const w = Math.min(vx1, Math.max(...xs)) - Math.max(vx0, Math.min(...xs));
+      const h = Math.min(vy1, Math.max(...ys)) - Math.max(vy0, Math.min(...ys));
+      if (w > 0 && h > 0) area += w * h;
+    }
+  });
+  return Math.min(1, area / pageArea);
+}
+
 // ── Small private helpers ────────────────────────────────────────────────
 // Local copies, not imports — the originals in js/processor.js are still
 // used by other, unrelated call sites there (pdf2word's own paragraph
@@ -705,7 +733,19 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
     // caller's OCR, if any. A broken layer whose page OCR can't read (language
     // not detected) is kept as it is.
     const hasText = allMapped.some(i => i.str.trim());
-    const broken  = hasText && textLayerLooksBroken(content.items.map(i => i.str ?? '').join(' '));
+    const layerText = content.items.map(i => i.str ?? '').join(' ');
+    // A scan with a few words over it is a scan: a site's watermark ("موقع
+    // الاوائل", 10 letters on each of 11 pages), a page number, or a strip of
+    // glyph codes kept the page from OCR, and PDF→Word gave pictures with no
+    // text at all (11 of 34 short Arabic documents, cloud corpus 2026-10-17).
+    // Half the page or more under raster images, and at most 20 letters of
+    // text, or glyph codes. Not more: a magazine page's photo with its 38–111
+    // letters of headline and caption was OCRed in their place, and its exact
+    // text came out with dots wrong.
+    const letters = (layerText.match(/\p{L}/gu) ?? []).length;
+    const codes = (layerText.match(_XML_ILLEGAL_CONTROL_RE) ?? []).length;
+    const thinOverScan = hasText && (letters <= 20 || codes >= letters) && _rasterCover(opList, page.view) >= 0.5;
+    const broken  = hasText && (textLayerLooksBroken(layerText) || thinOverScan);
     const ocrItems = (!hasText || broken) && ocrPage ? await ocrPage(page, p) : null;
     if (ocrItems?.length) {
       if (broken) { allMapped.length = 0; _cs.brokenLayerPages++; }

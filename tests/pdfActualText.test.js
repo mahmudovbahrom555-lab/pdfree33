@@ -91,8 +91,8 @@ await test('LibreOffice: a letter with its vowel mark from a glyph with no Unico
 });
 
 await test('an outer ActualText covers inner spans; text outside spans passes', async () => {
-  const out = applyActualText([it('a', 1, 1), B, B, it('b', 5, 1), E, it('c', 7, 1), E], ['XY', 'inner']);
-  assert.deepEqual(out.map(i => i.str), ['a', 'XY']);
+  const out = applyActualText([it('a', 1, 1), B, B, it('b', 5, 1), E, it('c', 7, 1), E], ['b-c', 'inner']);
+  assert.deepEqual(out.map(i => i.str), ['a', 'b-c']);
 });
 
 await test('markers and spans that don\'t pair one for one: items unchanged, markers dropped', async () => {
@@ -104,6 +104,24 @@ await test('a raised vowel mark or unmapped glyph: the letter\'s baseline', asyn
   // DecoType Naskh: "مَٰ" — fatha and a glyph with no Unicode (superscript alef) drawn 6pt up
   const out = applyActualText([B, it('\u0000\u064E', 494.5, 7, 706), it('\u0645', 496.7, 2.5), E], ['مَٰ']);
   assert.deepEqual(out.map(i => [i.str, i.transform[5]]), [['مَٰ', 700]]);
+});
+
+await test('a file\'s ActualText that doesn\'t fit its glyphs is not taken: footnote "34", ActualText "(3"', async () => {
+  // Adobe PDF Library, corpus 3836300: PDF→Word wrote "(3)" for (34)
+  // a page where it misses this often is off as a whole — its brackets were shifted too
+  const out = applyActualText([B, it(')', 332.2, 3), E, B, it('34', 335.2, 7.5), E], ['(', '(3']);
+  assert.deepEqual(out.map(i => i.str), [')', '34']);
+  // and one that only adds what the glyphs lost still is: a lam-kaf ligature read as its kaf
+  assert.equal(applyActualText([B, it('ك', 10, 6), E], ['كل'])[0].str, 'كل');
+});
+
+await test('ActualText with no letters (a kashida InDesign draws as lam), or another script\'s digits, is taken', async () => {
+  assert.equal(applyActualText([B, it('لللل', 10, 12), E], ['ــــ'])[0].str, 'ــــ');
+  assert.equal(applyActualText([B, it('\u0661', 10, 4), E], ['\u06F1'])[0].str, '\u06F1');   // Chrome: ١ glyph, ۱ text
+  assert.equal(applyActualText([B, it('لني', 10, 9), E], ['ني'])[0].str, 'ني');                  // a kashida drawn as lam
+  assert.equal(applyActualText([B, it('حت', 10, 9), E], ['تح'])[0].str, 'تح');                    // a ligature mapped backwards
+  assert.equal(applyActualText([B, it('ه', 10, 5), E], ['ہ'])[0].str, 'ہ');                       // Urdu heh goal
+  assert.equal(applyActualText([B, it('\uFED1', 10, 6), E], ['\uFEBD'])[0].str, '\uFEBD');   // Adobe: ض mapped as ف
 });
 
 await test('a span over two lines keeps its items', async () => {

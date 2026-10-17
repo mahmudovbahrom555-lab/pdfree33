@@ -833,6 +833,7 @@ export function applyActualText(items, spans) {
   const stack = [];       // per open span: { actual, items } or null
   let k = 0;
   let owner = null;       // the outermost open span with ActualText
+  let checked = 0, unfit = 0;
   const close = frame => {
     // word spaces drawn inside the span stay items of their own: their x is
     // what puts a space between two words
@@ -850,7 +851,9 @@ export function applyActualText(items, spans) {
     const glyphs = letters.length ? letters : core;
     const sameLine = glyphs.every(i => Math.abs(i.transform[5] - glyphs[0].transform[5]) <= 0.5 * (Math.abs(glyphs[0].transform[3]) || 1));
     out.push(...lead);
-    if (!core.length || !actual || !sameLine || drawn.normalize('NFKC') === actual.normalize('NFKC')) {
+    const fits = !drawn || _actualFitsDrawn(drawn, actual);
+    if (drawn && actual) { checked++; if (!fits) unfit++; }
+    if (!core.length || !actual || !sameLine || drawn.normalize('NFKC') === actual.normalize('NFKC') || !fits) {
       out.push(...middle);           // nothing to gain, or nothing safe to do
     } else if (core.length === 1 && middle.length === 1 && [...drawn].length === 1 && [...actual].length === 1 && _sameFormOf(drawn, actual)) {
       // one shaped glyph, one letter: the letter's own form in the same
@@ -883,7 +886,29 @@ export function applyActualText(items, spans) {
     }
   }
   if (owner) out.push(...owner.items);   // an unclosed span: as it was
-  return out;
+  // a page whose ActualText misses its glyphs this often is off as a whole —
+  // Adobe's was shifted by one character, its brackets too: none of it is used
+  return unfit > checked / 3 ? text : out;
+}
+
+// Whether `actual` can be the text of glyphs read as `drawn`: the digits the
+// glyphs show are in it, in order (either way). A file's ActualText corrects
+// letters its glyphs map wrongly — Chrome's yeh (ی → ي), InDesign's kashida
+// drawn as lam ("لني" → "ني"), Adobe's ض mapped as ف, a ligature mapped
+// backwards ("حت" → "تح"): on every such case the corpus held, MuPDF and
+// poppler read the ActualText's letter too. Where it was wrong, it was
+// shifted, and the digits showed it: "(3" over the footnote number "34", and
+// PDF→Word wrote "(3)" (corpus 3836300, 2026-10-17). Digits in any script are
+// the same digit (Chrome: ١ glyph, ۱ text).
+const _digitOf = c => {
+  const cp = c.codePointAt(0);
+  return cp >= 0x0660 && cp <= 0x0669 ? String(cp - 0x0660) : cp >= 0x06F0 && cp <= 0x06F9 ? String(cp - 0x06F0) : c;
+};
+function _actualFitsDrawn(drawn, actual) {
+  const digits = t => [...t.normalize('NFKC')].map(_digitOf).filter(c => c >= '0' && c <= '9');
+  const d = digits(drawn), a = digits(actual);
+  const within = seq => { let k = 0; for (const c of a) if (c === seq[k]) k++; return k === seq.length; };
+  return within(d) || within([...d].reverse());
 }
 
 // Arabic presentation forms by letter and position: [letter] → forms in their

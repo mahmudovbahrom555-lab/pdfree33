@@ -104,6 +104,16 @@ await test('an Arabic scan with no text layer comes out as Arabic text, not a pi
   if (out.pageErrors.length) throw new Error(`${out.pageErrors.length} uncaught errors, e.g. ${out.pageErrors[0]}`);
 });
 
+// A scan with a site's watermark over it (pdf2word_scan_ar_watermark.pdf: the
+// Arabic scan above with "www.example-site.com" as its only text layer): the
+// watermark kept it from OCR, and PDF→Word gave a picture with no text — 11 of
+// 34 short Arabic web documents (cloud corpus, 2026-10-17).
+await test('a scan whose only text is a watermark is read like a scan', async () => {
+  const out = await convert(path.join(__dirname, '..', 'fixtures', 'pdf2word_scan_ar_watermark.pdf'));
+  const r = recall(out.text, 'ar-web');
+  if (r < 0.6) throw new Error(`expected at least 60% of the words, got ${(r * 100).toFixed(0)}%`);
+});
+
 await test('a language model that doesn\'t download: the page stays a picture, the conversion still ends', async () => {
   // tesseract.js never settles createWorker when a model fails to load — PDF→Word
   // hung for good (2026-10-09; likely in mainland China, where the CDN is flaky).

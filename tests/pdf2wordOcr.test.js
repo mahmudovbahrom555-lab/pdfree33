@@ -7,6 +7,7 @@
 import { strict as assert } from 'assert';
 import { ocrItemsFromPage } from '../js/pdf2wordOcr.js';
 import { _duplicateWords, _wordKey } from '../js/ocrEngine.js';
+import { _rasterCover } from '../js/pdf2readCore.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -116,6 +117,18 @@ test('the same word on the next line is not a repeat', () => {
   const a1 = { words: [tw('صفحة', 932, 1011, 960, 1030)] };
   const a2 = { words: [tw('لصفحة', 925, 1015, 990, 1075)] };
   assert.equal(_duplicateWords([a1, a2]).size, 0);
+});
+
+// _rasterCover: how much of a page raster images cover — a scan with a site's
+// watermark over it is OCRed like a scan (cloud corpus, 2026-10-17)
+test('a page-size scan covers the page; a photo inside a Form XObject is scaled by its matrix', () => {
+  const view = [0, 0, 595, 842];
+  const scan = { fnArray: [10, 12, 85, 11], argsArray: [[], [595, 0, 0, 842, 0, 0], ['img'], []] };
+  assert.ok(Math.abs(_rasterCover(scan, view) - 1) < 1e-9);
+  const small = { fnArray: [74, 10, 12, 85, 11, 75], argsArray: [[[0.5, 0, 0, 0.5, 0, 0], null], [], [595, 0, 0, 421, 0, 0], ['img'], [], []] };
+  assert.ok(Math.abs(_rasterCover(small, view) - 0.125) < 1e-9, String(_rasterCover(small, view)));
+  assert.equal(_rasterCover({ fnArray: [91], argsArray: [[]] }, view), 0);
+  assert.equal(_rasterCover(null, view), 0);
 });
 
 const total = passed + failed;
