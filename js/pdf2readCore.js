@@ -39,7 +39,7 @@ import { detectTables, looksLikeProseNotData, looksLikeEnumeratedList } from './
 import { detectColumnRegions, pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
 import { detectTableGrids, lineInGrid, gridRowsOfLines, gridHoldsTable } from './pdf2wordBorders.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken, joinSpacedItems, dropCjkGapSpaces, applyActualText, restoreDroppedSpaces } from './textLayoutUtils.js';
+         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken, joinSpacedItems, dropCjkGapSpaces, applyActualText, restoreDroppedSpaces, joinSplitNumbers } from './textLayoutUtils.js';
 
 // XML 1.0's Char production disallows most C0 control characters (only
 // tab/LF/CR are valid: #x9 | #xA | #xD | [#x20-...]) — pdf.js text
@@ -713,6 +713,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
           y:        item.transform[5],
           width:    item.width || 0,
           fontSize,
+          rtl:      item.dir === 'rtl',   // which end its first and last characters sit at (joinSplitNumbers)
           rotated:  isRotated,
           bold:     _isFontBold(item.fontName) || BOLD_FONT_NAME_RE.test(fam),
           italic:   /italic|oblique/.test(fam),
@@ -784,6 +785,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
       if (rtlCnt === 0) ln.items.sort((a, b) => a.x - b.x);
       else {
         reorderVisualRtlLine(ln.items);
+        joinSplitNumbers(ln.items);
         for (const item of ln.items) item.str = toArabicBaseLetters(item.str);
       }
     });

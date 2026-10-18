@@ -8,7 +8,7 @@
 // Run: node tests/textLayoutUtils.test.js
 
 import { strict as assert } from 'assert';
-import { restoreDroppedSpaces, joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
+import { joinSplitNumbers, restoreDroppedSpaces, joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
   lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
   continuesWrappedHeading, lineRuns , textLayerLooksBroken, toUnifiedIdeographs, joinTouchingItems, dropCjkGapSpaces } from '../js/textLayoutUtils.js';
 
@@ -150,6 +150,75 @@ test('undecided pages (one glyph per item, no RTL, LTR items) keep pdf.js order'
   assert.equal(rtlItemsAreVisual(rtl([...'ﻞﻤﺣ'])), false);
   assert.equal(rtlItemsAreVisual([{ str: 'שלום', dir: 'ltr' }, { str: 'Hello', dir: 'ltr' }]), false);
   assert.equal(rtlItemsAreVisual([]), false);
+});
+
+// ── joinSplitNumbers: a year drawn in three pieces in a right-to-left line
+// (Adobe, corpus 3836300) read "1502" for 2015.
+test('a number in pieces across RTL items is put back in its own order', () => {
+  const at = (str, x, width) => ({ str, x, width, fontSize: 12, rtl: true });
+  const line = [at('العامة لألمم املتحدة عام 15', 313.3, 111.8), at('0', 306.9, 6.4), at('2، ومن احملدد بلوغ', 200, 106.9)];
+  joinSplitNumbers(line);
+  assert.deepEqual(line.map(i => i.str), ['العامة لألمم املتحدة عام 2015', '', '، ومن احملدد بلوغ']);
+});
+
+test('a left-to-right item\'s last digit is at its right end: a contents line\'s section and page numbers stay apart', () => {
+  // corpus 3836300, page 8: "…… خلفية تارخيية 1" (ltr, its "1" at x 390.7) and the page number "39" at 73.8
+  const line = [{ str: '.......... خلفية تارخيية 1', x: 87.8, width: 308.5, fontSize: 11.2, rtl: false }, { str: '39', x: 73.8, width: 11.2, fontSize: 11.2, rtl: false }];
+  joinSplitNumbers(line);
+  assert.deepEqual(line.map(i => i.str), ['.......... خلفية تارخيية 1', '39']);
+});
+
+test('a leader of dots between a contents line\'s numbers is no part of a number', () => {
+  const at = (str, x, width) => ({ str, x, width, fontSize: 12, rtl: true });
+  const line = [at('1-2- تعریف کاال', 300, 100), at('................', 30, 270), at('9', 22, 8)];
+  joinSplitNumbers(line);
+  assert.deepEqual(line.map(i => i.str), ['1-2- تعریف کاال', '................', '9']);
+});
+
+test('two numbers side by side, a few points apart, stay two numbers', () => {
+  const at = (str, x, width) => ({ str, x, width, fontSize: 12, rtl: true });
+  const line = [at('حرر يف 9/6/', 300, 60), at('1422هـ', 270, 28)];   // 2pt apart
+  joinSplitNumbers(line);
+  assert.deepEqual(line.map(i => i.str), ['حرر يف 9/6/', '1422هـ']);
+});
+
+test('a colon next to a year stays outside the number: "2018:" not ":2018"', () => {
+  const at = (str, x, width) => ({ str, x, width, fontSize: 12, rtl: true });
+  const line = [at('2018', 399, 34), at(':', 393, 5), at('ندوة علمية', 200, 190)];
+  joinSplitNumbers(line);
+  assert.deepEqual(line.map(i => i.str), ['2018', ':', 'ندوة علمية']);
+});
+
+test('a decimal number in three pieces, comma between: whole and in order; left as is when already in order', () => {
+  // corpus 3836300, page 11: "1" at 126, "," at 132.4, "25" at 136 — it reads 1,25
+  const at = (str, x, width) => ({ str, x, width, fontSize: 12.8, rtl: true });
+  const rtl = [at('تعوق', 153.4, 271.7), at(' ', 149.1, 0.3), at('25', 136, 13.1), at(',', 132.4, 3.65), at('1', 126, 6.4), at(' ', 121.6, 0.3), at('مليار', 56.7, 64.9)];
+  joinSplitNumbers(rtl);
+  assert.deepEqual(rtl.map(i => i.str).join('|'), 'تعوق| |||1,25| |مليار');
+  const ltr = [at('مليار', 56.7, 64.9), at(' ', 121.6, 0.3), at('1', 126, 6.4), at(',', 132.4, 3.65), at('25', 136, 13.1)];
+  joinSplitNumbers(ltr);           // already left to right in the line: kept
+  assert.deepEqual(ltr.map(i => i.str).join('|'), 'مليار| |1|,|25');
+});
+
+test('a number at the start of an RTL line, in pieces in another order: "٠٠" | "8" | "2. هذا"', () => {
+  const at = (str, x, width) => ({ str, x, width, fontSize: 12.8, rtl: true });
+  const line = [at('٠٠', 406, 12.8), at('8', 418.8, 6.4), at('2. هذا باإلضافة', 300, 106)];
+  joinSplitNumbers(line);
+  assert.deepEqual(line.map(i => i.str), ['', '', '2٠٠8. هذا باإلضافة']);
+  // as the line really came: two pieces already one item, a space before the "2"
+  const real = [at('٠٠8', 406, 12.8), at(' 2. هذا باإلضافة', 56.7, 349.3)];
+  joinSplitNumbers(real);
+  assert.deepEqual(real.map(i => i.str), ['', ' 2٠٠8. هذا باإلضافة']);
+});
+
+test('numbers whole in their item, or items apart, are left alone', () => {
+  const at = (str, x, width) => ({ str, x, width, fontSize: 12, rtl: true });
+  const whole = [at('عام 2015', 300, 50), at('، ومن', 250, 40)];
+  joinSplitNumbers(whole);
+  assert.deepEqual(whole.map(i => i.str), ['عام 2015', '، ومن']);
+  const apart = [at('صفحة 12', 300, 40), at('3 بنود', 200, 40)];     // 60pt apart: two numbers
+  joinSplitNumbers(apart);
+  assert.deepEqual(apart.map(i => i.str), ['صفحة 12', '3 بنود']);
 });
 
 // ── restoreDroppedSpaces: pdf.js drops a space glyph drawn overlapping its

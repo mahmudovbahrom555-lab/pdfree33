@@ -994,3 +994,76 @@ export function restoreDroppedSpaces(items, runs) {
   }
   return out;
 }
+
+// A number drawn in pieces across a right-to-left line's items, put back in
+// its own order. Adobe drew "…عام 2015، ومن" as "…عام 15" | "٠" | "2، ومن…" and
+// "2008. هذا" as "٠٠" | "8" | "2. هذا…": kept in the line's reading order, the
+// digits came out "1502" and "008 2" (corpus 3836300, on production before
+// 2026-10: 6 of its years). A number reads left to right, whatever the line.
+// The pieces: items of digits only, and the digits a right-to-left item
+// starts with (at its right end) or ends with (at its left end); pieces whose
+// edges touch make one number, left to right. It goes where the text puts it —
+// in place of the digits an item ends with ("…عام 2015"), else of those an
+// item starts with ("2008. هذا") — and the other pieces leave their items
+// (an item that was a piece only is left empty).
+// `items`: one RTL line, { str, x, width, fontSize, rtl }, in reading order. In place.
+const _DIGIT = '0-9\u0660-\u0669\u06F0-\u06F9';
+const _TRAILING_DIGITS = new RegExp(`[${_DIGIT}][${_DIGIT}.,/:\u066B\u066C]*$`);
+const _LEADING_DIGITS = new RegExp(`^[${_DIGIT}](?:[${_DIGIT}.,/:\u066B\u066C]*[${_DIGIT}])?`);
+const _ONLY_DIGITS = new RegExp(`^[${_DIGIT}.,/:\u066B\u066C]+$`);   // separators alone too: "1" | "," | "25"
+export function joinSplitNumbers(items) {
+  const pieces = [];
+  for (const it of items) {
+    const right = it.x + (it.width || 0);
+    // digits, or one separator between them ("1" | "," | "25") — not a leader
+    // of dots ("……….", a contents line's), which held page numbers together
+    if (_ONLY_DIGITS.test(it.str) && (/\d|[\u0660-\u0669\u06F0-\u06F9]/.test(it.str) || it.str.length === 1)) { pieces.push({ it, kind: 'all', text: it.str, xL: it.x, xR: right }); continue; }
+    // a text item's first and last characters sit at its right and left ends
+    // only when it runs right to left: in a left-to-right item ("…… خلفية
+    // تارخيية 1", a contents line) its last character is at its right end
+    if (!it.rtl) continue;
+    // spaces at an item's ends stay where they are ("٠٠8" | " 2. هذا")
+    const lead = it.str.match(/^\s*/)[0], trail = it.str.match(/\s*$/)[0];
+    const core = it.str.slice(lead.length, it.str.length - trail.length);
+    const head = core.match(_LEADING_DIGITS)?.[0];
+    const tail = core.match(_TRAILING_DIGITS)?.[0];
+    if (head) pieces.push({ it, kind: 'head', text: head, lead, trail, xL: null, xR: right });
+    if (tail && !(head && head.length === core.length)) pieces.push({ it, kind: 'tail', text: tail, lead, trail, xL: it.x, xR: null });
+  }
+  if (pieces.length < 2) return;
+  // pieces of one number meet exactly — 0.0–0.05 pt apart on every split
+  // number found; two numbers side by side ("9/6/1422", a contents line's
+  // page numbers, "90/0 ± 32") stand a few points apart and stay apart
+  const em = () => 0.5;
+  const rightOf = p => pieces.find(q => q !== p && q.it !== p.it && p.xR != null && q.xL != null && Math.abs(q.xL - p.xR) < em(p));
+  const hasLeft = q => pieces.some(p => p !== q && p.it !== q.it && p.xR != null && q.xL != null && Math.abs(q.xL - p.xR) < em(p));
+  for (const start of pieces.filter(p => !hasLeft(p))) {
+    const chain = [start];
+    for (let next = rightOf(start); next && !chain.includes(next) && chain.length < 12; next = rightOf(next)) chain.push(next);
+    // a separator belongs between digits, not at a number's end: "2018:" is
+    // the year and its colon, not ":2018"
+    const isSep = p => !/\d|[\u0660-\u0669\u06F0-\u06F9]/.test(p.text);
+    while (chain.length && isSep(chain[0])) chain.shift();
+    while (chain.length && isSep(chain[chain.length - 1])) chain.pop();
+    if (chain.length < 2) continue;
+    // only a number read backwards: its left piece after its right one in the
+    // line — one already in its own order ("١" | "," | "٢٥" read "١,٢٥") stays
+    const at = chain.map(p => items.indexOf(p.it));
+    if (!at.some((k, n) => n > 0 && k < at[n - 1])) continue;
+    const number = chain.map(p => p.text).join('');
+    const home = chain.find(p => p.kind === 'tail') ?? chain.find(p => p.kind === 'head') ?? chain[0];
+    // the digits replaced at their own end of the item, its spaces kept
+    const put = (p, digits) => {
+      const s = p.it.str;
+      p.it.str = p.kind === 'head' ? p.lead + digits + s.slice(p.lead.length + p.text.length)
+        : s.slice(0, s.length - p.trail.length - p.text.length) + digits + p.trail;
+    };
+    for (const p of chain) {
+      if (p === home) continue;
+      if (p.kind === 'all') p.it.str = '';    // emptied, not removed: the page's item list still holds it
+      else put(p, '');
+    }
+    if (home.kind === 'all') home.it.str = number;
+    else put(home, number);
+  }
+}

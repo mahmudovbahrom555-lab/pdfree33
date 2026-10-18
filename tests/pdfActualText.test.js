@@ -124,6 +124,19 @@ await test('ActualText with no letters (a kashida InDesign draws as lam), or ano
   assert.equal(applyActualText([B, it('\uFED1', 10, 6), E], ['\uFEBD'])[0].str, '\uFEBD');   // Adobe: ض mapped as ف
 });
 
+await test('digits in ActualText: scripts, signs and separators are no difference; other digits are', async () => {
+  const take = (drawn, actual) => applyActualText([B, it(drawn, 10, 9), E], [actual])[0].str;
+  assert.equal(take('١٢٫٥', '12.5'), '12.5');            // Arabic-Indic with ٫ ↔ western with .
+  assert.equal(take('۱۴۰۳', '١٤٠٣'), '١٤٠٣');            // Persian ↔ Arabic-Indic digits
+  assert.equal(take('-15', '15-'), '15-');                // a minus bidi put on the other side
+  assert.equal(take('12,500', '١٢٬٥٠٠'), '١٢٬٥٠٠');      // thousands separators
+  assert.equal(take('PDF ٣', 'PDF ٣'), 'PDF ٣');          // mixed Latin and Arabic-Indic: nothing to correct
+  assert.equal(take('٧١', '17'), '17');                    // digits in reading order the other way round
+  // the glyphs show digits the ActualText hasn't: kept as drawn, as before ActualText was read
+  assert.equal(take('2026/10/17', '17/10/2026'), '2026/10/17');
+  assert.equal(take('345', '35'), '345');
+});
+
 await test('a span over two lines keeps its items', async () => {
   const out = applyActualText([B, it('a', 1, 1, 700), it('b', 1, 1, 680), E], ['ab']);
   assert.deepEqual(out.map(i => i.str), ['a', 'b']);
