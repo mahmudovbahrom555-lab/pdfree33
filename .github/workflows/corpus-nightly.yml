@@ -18,10 +18,10 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'run — a night of the robustness run; sample — (re)build the sample list; sample-slides — the presentations list (PDF→PowerPoint)'
+        description: 'run — a night of the robustness run (and the Arabic quality run); arabic — the Arabic quality run alone; sample — (re)build the sample list; sample-slides — the presentations list (PDF→PowerPoint)'
         default: run
         type: choice
-        options: [run, sample, sample-slides]
+        options: [run, arabic, sample, sample-slides]
       night:
         description: 'which tenth of the sample (0–9); empty = day of the year'
         required: false
@@ -106,6 +106,102 @@ jobs:
           path: |
             corpus-cloud-out/results.jsonl
             corpus-cloud-out/quality-*.jsonl
+
+  arabic:
+    # Arabic-script PDF→Word quality, every night on the SAME documents (all of
+    # the sample's ar/fa/ur stratum, not a tenth), so nights compare: strict
+    # per-pain metrics against the PDF's own text as MuPDF and poppler both
+    # read it (scripts/quality/arabic.py), versus the frozen baseline
+    # tests/corpus/cloud/arabic-baseline.jsonl. A report, not a gate. The
+    # runner image is pinned: poppler comes from it, and a new poppler is a
+    # new reader — never a silent baseline change.
+    if: github.event_name == 'schedule' || inputs.mode == 'run' || inputs.mode == 'arabic'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      - run: pip3 install jinja2 pymupdf==1.26.5 && sudo apt-get install -y -q poppler-utils
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Build site
+        run: python3 scripts/build.py
+      - run: npx playwright install --with-deps chromium
+      - name: This shard's Arabic-script documents
+        run: |
+          python3 - <<'EOF2'
+          import json
+          sample = json.load(open('tests/corpus/cloud/sample-v1.json'))['sample']
+          mine = [s['file'] for s in sample if s['stratum'] in ('ar', 'fa', 'ur')][${{ matrix.shard }}::6]
+          open('names.txt', 'w').write('\n'.join(mine))
+          print(f'shard ${{ matrix.shard }}: {len(mine)} documents')
+          EOF2
+      - name: Fetch them (HTTP Range out of the remote zips)
+        run: python3 scripts/corpus-cloud/fetch.py arabic-docs $(cat names.txt)
+      - name: PDF→Word
+        run: |
+          python3 -m http.server 8934 --directory dist >/dev/null 2>&1 &
+          sleep 2
+          node scripts/corpus-cloud/robust.mjs --docs arabic-docs --tools pdf2word --out arabic-out --jobs 2 --save --timeout 180
+      - name: Strict Arabic metrics
+        if: always()
+        run: python3 scripts/quality/arabic.py arabic-docs arabic-out/files arabic-out/arabic.jsonl
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: arabic-results-${{ matrix.shard }}
+          path: |
+            arabic-out/results.jsonl
+            arabic-out/arabic.jsonl
+
+  arabic-report:
+    needs: arabic
+    if: always() && needs.arabic.result != 'skipped'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: arabic-results-*
+          path: results
+      - name: Against the baseline
+        run: |
+          pip3 install pymupdf==1.26.5
+          python3 - <<'EOF2'
+          import glob, json
+          rows, head = [], None
+          for p in sorted(glob.glob('results/*/arabic.jsonl')):
+              for line in open(p):
+                  r = json.loads(line)
+                  if 'oracle' in r: head = head or line
+                  else: rows.append(line)
+          open('arabic-night.jsonl', 'w').write((head or '{"oracle": null}\n') + ''.join(sorted(rows)))
+          EOF2
+          status=0
+          if [ -f tests/corpus/cloud/arabic-baseline.jsonl ]; then
+            # red when a document got worse or the results can't be compared:
+            # a signal for a human, never a deploy gate, never a new baseline
+            python3 scripts/quality/arabic.py --compare tests/corpus/cloud/arabic-baseline.jsonl arabic-night.jsonl --fail-on-worse > arabic-report.md || status=1
+          else
+            echo "No baseline yet. This run's arabic-night.jsonl is a candidate only: a baseline needs two CI runs that agree and the owner's approval (tests/corpus/GOLD_CHANGELOG.md)." > arabic-report.md
+          fi
+          cat arabic-report.md >> "$GITHUB_STEP_SUMMARY"
+          exit $status
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: arabic-report
+          path: |
+            arabic-report.md
+            arabic-night.jsonl
 
   report:
     needs: run
