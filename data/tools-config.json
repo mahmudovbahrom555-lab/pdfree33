@@ -169,7 +169,7 @@
         "pl": "Połącz PDF — Darmowy, Bez Przesyłania Plików | PDFree",
         "tr": "PDF Birleştir — Ücretsiz, Yükleme Yapmadan | PDFree",
         "zh-CN": "免费合并 PDF 文件 — 无每日次数限制，无需上传 | PDFree",
-        "ar": "دمج ملفات PDF مجانًا — بدون حد للحجم، بدون رفع | PDFree",
+        "ar": "دمج ملفات PDF مجانًا في ملف واحد — بدون حد يومي، بدون رفع | PDFree",
         "fa": "ادغام PDF رایگان — بدون محدودیت روزانه، بدون آپلود | PDFree",
         "he": "מיזוג קבצי PDF בחינם — ללא הגבלה יומית, ללא העלאה | PDFree",
         "ur": "مفت PDF فائلیں ضم کریں — بغیر روزانہ حد، بغیر اپلوڈ | PDFree",
@@ -301,7 +301,7 @@
         "pl": "Połącz PDF za darmo online — bez przesyłania, bez rejestracji. Połącz 2, 50 lub 100+ plików jednym kliknięciem. 100% prywatne, w przeglądarce.",
         "tr": "PDF birleştir ücretsiz online — yükleme yok, kayıt yok. 2, 50 veya 100+ PDF'yi tek tıkla birleştirin. %100 gizli, tarayıcıda işlenir. Günlük limit yok.",
         "zh-CN": "免费合并 PDF 文件 — 无每日次数限制，无需上传。一次合并 100+ 个文件，电脑上每次最大 500 MB（手机 300 MB）。支持离线使用，无需注册。",
-        "ar": "دمج ملفات PDF مجانًا — بدون حد للحجم، بدون حد للاستخدام اليومي، بدون رفع. ادمج ملفات كبيرة أو أكثر من 100 ملف دفعة واحدة في متصفحك. يعمل دون اتصال، بدون تسجيل.",
+        "ar": "دمج ملفات PDF مجانًا في ملف واحد: أي عدد من الملفات، بالترتيب الذي تريده. لا يُرفع ملفك إلى أي خادم — يعمل داخل متصفحك. بدون تسجيل، بدون حد يومي.",
         "fa": "ادغام رایگان PDF — بدون محدودیت روزانه، بدون آپلود. بیش از 100 فایل را یکجا ادغام کنید، تا 500 مگابایت روی کامپیوتر. آفلاین کار می‌کند، بدون ثبت‌نام.",
         "he": "מיזוג קבצי PDF בחינם — ללא הגבלה יומית, ללא העלאה. מזגו יותר מ-100 קבצים בבת אחת, עד 500 מגה-בייט במחשב. עובד גם לא מקוון, ללא הרשמה.",
         "ur": "مفت PDF فائلیں ضم کریں — کوئی روزانہ حد نہیں، اپلوڈ کی ضرورت نہیں۔ کمپیوٹر پر 500 میگا بائٹ تک۔ اپنے براؤزر میں کام کرتا ہے، رجسٹریشن کی ضرورت نہیں۔",
@@ -323,7 +323,7 @@
         "pl": "Połącz PDF Za Darmo — Bez Przesyłania, Bez Rejestracji | PDFree",
         "tr": "PDF Birleştir Ücretsiz — Yükleme Yok, Kayıt Yok | PDFree",
         "zh-CN": "免费合并 PDF — 无每日次数限制，合并大文件，无需上传",
-        "ar": "دمج PDF مجانًا — بدون حد للحجم، ادمج ملفات كبيرة بدون رفع",
+        "ar": "دمج ملفات PDF مجانًا — أي عدد من الملفات في ملف واحد، بدون رفع",
         "fa": "ادغام رایگان PDF — بدون محدودیت روزانه، ادغام فایل‌های بزرگ بدون آپلود",
         "he": "מיזוג PDF בחינם — ללא הגבלה יומית, מיזוג קבצים גדולים ללא העלאה",
         "ur": "مفت PDF ضم کریں — کوئی روزانہ حد نہیں، بغیر اپلوڈ کے بڑی فائلیں ضم کریں",
@@ -345,7 +345,7 @@
         "pl": "Połącz nieograniczone pliki PDF bezpośrednio. 100% prywatne — pliki nigdy nie opuszczają przeglądarki. Bez konta, bez limitów.",
         "tr": "Sınırsız PDF'yi doğrudan birleştirin. %100 gizli — dosyalar tarayıcıyı asla terk etmez. Hesap yok, günlük limit yok.",
         "zh-CN": "即时合并任意数量的 PDF。100% 隐私 — 文件永不离开您的浏览器。无需注册，无限制。",
-        "ar": "ادمج أي عدد من ملفات PDF فورًا. خصوصية 100% — ملفاتك لا تغادر متصفحك أبدًا. بدون تسجيل، بدون قيود.",
+        "ar": "ادمج أي عدد من ملفات PDF فورًا. خصوصية 100% — ملفاتك لا تغادر متصفحك أبدًا. بدون تسجيل، بدون حد يومي.",
         "fa": "هر تعداد فایل PDF را فوراً ادغام کنید. حریم خصوصی 100٪ — فایل‌های شما هرگز از مرورگرتان خارج نمی‌شوند. بدون ثبت‌نام، بدون محدودیت روزانه.",
         "he": "מזגו כל כמות של קבצי PDF באופן מיידי. פרטיות של 100% — הקבצים שלכם לעולם לא יוצאים מהדפדפן. ללא הרשמה, ללא הגבלה יומית.",
         "ur": "کسی بھی تعداد میں PDF فائلوں کو فوری طور پر ضم کریں۔ 100% رازداری — آپ کی فائلیں کبھی بھی آپ کے براؤزر سے باہر نہیں جاتیں۔ رجسٹریشن کی ضرورت نہیں، کوئی روزانہ حد نہیں۔",
@@ -412,7 +412,7 @@
         "pl": "Podziel PDF — Darmowy, Bez Przesyłania | PDFree",
         "tr": "PDF Böl — Ücretsiz, Yükleme Yapmadan | PDFree",
         "zh-CN": "免费拆分 PDF 文件 — 在线提取页面，无需上传 | PDFree",
-        "ar": "تقسيم ملفات PDF مجانًا — استخراج الصفحات، بدون رفع | PDFree"
+        "ar": "تقسيم ملف PDF مجانًا — فصل الصفحات واستخراجها، بدون رفع | PDFree"
       },
       "descs": {
         "en": "Extract pages or split PDF into separate files. 100% private, no uploads, no limits.",
@@ -430,7 +430,7 @@
         "pl": "Podziel PDF na wiele plików lub wyodrębnij konkretne strony. Przetwarzane w przeglądarce, bez przesyłania.",
         "tr": "PDF'i birden fazla dosyaya bölün veya belirli sayfaları çıkarın. Tarayıcıda işlenir, yükleme yok.",
         "zh-CN": "提取页面或将 PDF 拆分为多个独立文件。100% 隐私保护，无需上传，无限制。",
-        "ar": "استخرج صفحات أو قسّم ملف PDF إلى ملفات منفصلة. خصوصية كاملة 100%، بدون رفع، بدون قيود."
+        "ar": "استخرج صفحات أو قسّم ملف PDF إلى ملفات منفصلة. خصوصية كاملة 100%، بدون رفع، بدون حد يومي."
       },
       "navLabels": {
         "en": "Split",
@@ -520,7 +520,7 @@
         "pl": "Podziel PDF za darmo — oddziel strony lub wyodrębnij konkretne sekcje. Przetwarzane w przeglądarce, bez przesyłania. 100% prywatne.",
         "tr": "PDF böl ücretsiz — sayfaları ayır veya belirli bölümleri çıkar. Tarayıcıda işlenir, yükleme yok. %100 gizli.",
         "zh-CN": "免费 PDF 拆分工具 — 在线精确提取页面或页面范围，无需上传，无需注册。所有处理均在您的浏览器中完成。",
-        "ar": "أداة تقسيم PDF مجانية — استخرج صفحات محددة أو نطاقات صفحات عبر الإنترنت، بدون رفع، بدون تسجيل. تتم كل المعالجة داخل متصفحك."
+        "ar": "تقسيم ملف PDF مجانًا: افصل الصفحات إلى ملفات منفصلة أو استخرج الصفحات التي تحتاجها. لا يُرفع ملفك إلى أي خادم — يعمل داخل متصفحك. بدون تسجيل، بدون حد يومي."
       },
       "ogTitles": {
         "en": "Split PDF Free — Separate, Divide, or Extract Pages, No Upload",
@@ -538,7 +538,7 @@
         "pl": "Podziel PDF Za Darmo — Bez Przesyłania | PDFree",
         "tr": "PDF Böl Ücretsiz — Yükleme Yok | PDFree",
         "zh-CN": "免费拆分 PDF — 分离、拆分或提取页面，无需上传",
-        "ar": "تقسيم PDF مجانًا — افصل أو قسّم أو استخرج الصفحات بدون رفع"
+        "ar": "تقسيم ملف PDF مجانًا — افصل أو استخرج الصفحات بدون رفع"
       },
       "ogDescs": {
         "en": "Split PDFs into separate pages or extract a page range. 100% private — files never uploaded. Free.",
@@ -3461,7 +3461,7 @@
         "pl": "PDF do JPG — Darmowy, PDF do Obrazu Online | PDFree",
         "tr": "PDF'den JPG'ye — Ücretsiz, PDF'den Resme Online | PDFree",
         "zh-CN": "免费在线将 PDF 转换为 JPG —— 最高 300 DPI，无需上传 | PDFree",
-        "ar": "تحويل PDF إلى JPG مجانًا — حتى 300 DPI، بدون رفع | PDFree"
+        "ar": "تحويل PDF إلى JPG مجانًا — صور بجودة عالية، بدون رفع | PDFree"
       },
       "descs": {
         "en": "Extract PDF pages as high-quality JPG or PNG images. 100% private — processed locally, no uploads.",
@@ -3569,7 +3569,7 @@
         "pl": "PDF do JPG za darmo — wyodrębnij obrazy wysokiej jakości. Przetwarzane w przeglądarce, bez przesyłania. 100% prywatne.",
         "tr": "PDF'den JPG'ye ücretsiz — yüksek kaliteli resimler çıkar. Tarayıcıda işlenir, yükleme yok. %100 gizli.",
         "zh-CN": "在浏览器中将 PDF 页面转换为 JPG 或 PNG —— 从不上传。可选 72、150 或 300 DPI。多页导出为 ZIP。支持离线使用，无需账号。",
-        "ar": "حوّل صفحات PDF إلى JPG أو PNG في متصفحك — بدون رفع مطلقًا. اختر 72 أو 150 أو 300 DPI. تُصدَّر الصفحات المتعددة كملف ZIP. يعمل دون اتصال، بدون حساب."
+        "ar": "تحويل PDF إلى JPG مجانًا: كل صفحة صورة JPG أو PNG بجودة عالية حتى 300 DPI. لا يُرفع ملفك إلى أي خادم — يعمل داخل متصفحك. بدون تسجيل، بدون علامات مائية."
       },
       "ogTitles": {
         "en": "Convert PDF to JPG Free — No Upload, 300 DPI Quality",
@@ -3587,7 +3587,7 @@
         "pl": "PDF do JPG Za Darmo — Bez Przesyłania | PDFree",
         "tr": "PDF'den JPG'ye Ücretsiz — Yükleme Yok | PDFree",
         "zh-CN": "免费将 PDF 转换为 JPG —— 无需上传，300 DPI 高质量",
-        "ar": "تحويل PDF إلى JPG مجانًا — بدون رفع، بجودة 300 DPI"
+        "ar": "تحويل PDF إلى JPG مجانًا — صور بجودة عالية حتى 300 DPI، بدون رفع"
       },
       "ogDescs": {
         "en": "Turn any PDF page into a sharp JPG or PNG. Runs in your browser — nothing uploaded. Choose 72, 150, or 300 DPI. Download all pages as ZIP. No account.",
