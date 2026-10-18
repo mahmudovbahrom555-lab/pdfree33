@@ -46,24 +46,33 @@ committed.
 
 ---
 
-## C1 — scanned pages with /Rotate are never OCRed → an empty or picture-only DOCX
+## C1 — pages with /Rotate lose their text → an empty or picture-only DOCX
 
-- **Status:** `found` (2026-10-18)
-- **Harm:** high — the user gets an empty Word file, nothing tells them why.
-- **Cause:** `createOcrLayer().ocrPage` in `js/pdf2wordOcr.js` returns null for
-  any page with `/Rotate` ≠ 0 ("left as they are for now"). On a scan whose
-  only text layer is a site watermark, the watermark is then dropped as a
-  running header and nothing is left.
+- **Status:** `confirmed` (2026-10-18) — competitors next
+- **Harm:** high — the user gets a Word file with no text, nothing tells them why.
+- **Cause, one in two forms:**
+  - text layers: `_p2wBuildPageData` (`js/pdf2readCore.js`) calls an item
+    rotated when its matrix's b dominates a — in the page's unrotated space.
+    On a /Rotate 90/270 page, upright text has exactly that matrix, so every
+    item goes to the rotated-labels path and the page's text is lost;
+  - scans: `createOcrLayer().ocrPage` (`js/pdf2wordOcr.js`) returns null for
+    any page with /Rotate ≠ 0; a scan whose only text layer is a site
+    watermark comes out empty (the watermark goes as a running header).
 - **Discovery set:** 1161722, 2026350, 2815708, 2952792, 3812118, 4145235,
-  4820963, 5615468 (ur stratum) — every page rotated, output empty; the same
-  site's unrotated scans (0261098, 4111221) are OCRed and give text. **All
-  eight are one source** (an exam-papers site, iLovePDF-made): the class is
-  not confirmed until independent rotated scans show it.
-- **Next:** find rotated scans from other sources in the whole sample (all
-  strata, not only Arabic); control set from them; competitors on 2–5.
-- **Measurement note:** the Arabic metric scores these documents against the
-  watermark only ("short", recall 0) — it sees that output is missing, not
-  how much content was lost.
+  4820963, 5615468 — one source (an exam-papers site, iLovePDF-made): every
+  page rotated, output empty; the site's unrotated scans (0261098, 4111221)
+  are OCRed and give text.
+- **Independent sources (confirm the class):** 0152391 (Canon scanner,
+  Japanese newspaper, /Rotate 270), 0228973 (/Rotate 90), 1687201
+  (/Rotate 270) — pictures only, 0 characters; 2022469 (Acrobat Distiller,
+  Persian book, 62 pages /Rotate 90, a good text layer) — 0 characters. 2867656
+  (bizhub, page 2 /Rotate 180) to check per page.
+- **Control set:** to be drawn from the rest of the sample (all strata), not
+  looked at while fixing.
+- **Competitors:** 2022469 (text layer) and 4820963 (scan) — by hand, owner.
+- **Measurement note:** the Arabic metric scores the watermark-only scans
+  against the watermark ("short", recall 0) — it sees that output is
+  missing, not how much content was lost.
 
 ## C2 — OCR language detection costs most of a short scan's time
 
