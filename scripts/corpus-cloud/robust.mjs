@@ -77,6 +77,8 @@ async function drive(page, tool, file, isCrashed, saveAs) {
       return orig(b);
     };
     document.addEventListener('pdfree:error', e => { window.__err = e.detail; });
+    // PDF→Word: how many pages its text came from OCR (judged apart)
+    document.addEventListener('pdfree:success', e => { window.__ocrPages = e.detail?.confidence?.ocrPages ?? null; });
   });
   await page.goto(`${BASE}${TOOLS[tool].path}`, { waitUntil: 'load', timeout: 45_000 });
   await page.setInputFiles('#fileInput', TOOLS[tool].files(file));
@@ -142,7 +144,9 @@ async function drive(page, tool, file, isCrashed, saveAs) {
     if (/zip|officedocument|comicbook/.test(b.type)) return { type: b.type, size, ok: head.startsWith('PK'), why: head.startsWith('PK') ? '' : 'not a ZIP' };
     return { type: b.type, size, ok: size > 0 };
   });
-  return { outcome: check.ok ? 'ok' : 'broken', reason: check.why, out: { type: EXT[check.type] || check.type, size: check.size, pages: check.pages } };
+  const ocrPages = await page.evaluate(() => window.__ocrPages ?? null);
+  return { outcome: check.ok ? 'ok' : 'broken', reason: check.why, out: { type: EXT[check.type] || check.type, size: check.size, pages: check.pages },
+    ...(ocrPages !== null ? { ocrPages } : {}) };
 }
 
 fs.mkdirSync(OUT, { recursive: true });
