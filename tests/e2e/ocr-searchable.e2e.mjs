@@ -117,6 +117,43 @@ await test('a mixed Arabic and English scan on Auto: one click, both scripts sea
   }
 });
 
+// A scan on a page with /Rotate 270, upright on screen (corpus class C1,
+// 2026-10-18): its words were read sideways (Tesseract got the page turned
+// back) and, once read, laid out in the page's own space — each word a line
+// of its own across the picture. Now the layer lies along the text as shown.
+// Fixture: tests/fixtures/ocr_scan_ar_rot270.pdf (make-ocr-rotated.mjs).
+await test('a scan on a rotated page: its words read, and the layer lies along the text as shown', async () => {
+  const ctx = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    const page = await ctx.newPage();
+    await page.addInitScript(() => {
+      const orig = URL.createObjectURL.bind(URL);
+      URL.createObjectURL = blob => { if (blob instanceof Blob && /pdf/.test(blob.type)) window.__pdf = blob; return orig(blob); };
+    });
+    await page.goto(`${BASE_URL}/ocr-pdf/`, { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', path.join(__dirname, '..', 'fixtures', 'ocr_scan_ar_rot270.pdf'));
+    await page.waitForSelector('#ocrLangSelect', { timeout: 60000 });
+    await page.selectOption('#ocrLangSelect', 'ara');
+    await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 60000 });
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__pdf, null, { timeout: 300000 });
+    const { text, level } = await page.evaluate(async () => {
+      const doc = await window.pdfjsLib.getDocument({ data: new Uint8Array(await window.__pdf.arrayBuffer()) }).promise;
+      const pg = await doc.getPage(1);
+      const vp = pg.getViewport({ scale: 1 });
+      const items = (await pg.getTextContent()).items.filter(i => /[\u0600-\u06FF]/.test(i.str));
+      // on screen: the viewport's matrix after the item's — level when b ≈ 0
+      const onScreen = i => window.pdfjsLib.Util.transform(vp.transform, i.transform);
+      return { text: items.map(i => i.str).join(' '), level: items.filter(i => Math.abs(onScreen(i)[1]) < 0.1 * Math.abs(onScreen(i)[0])).length / (items.length || 1) };
+    });
+    const r = recall(text, 'ar-web');
+    if (r < 0.6) throw new Error(`expected at least 60% of the words in the text layer, got ${(r * 100).toFixed(0)}%`);
+    if (level < 0.95) throw new Error(`${(level * 100).toFixed(0)}% of the layer's Arabic items lie level on the page as shown`);
+  } finally {
+    await ctx.close();
+  }
+});
+
 await browser.close();
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);

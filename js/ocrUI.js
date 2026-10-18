@@ -814,7 +814,7 @@ async function _runOcr(file, gen) {
       ocrPages.push({
         pageNum: p, lines: rec.lines,
         canvasW: rec.canvasW, canvasH: rec.canvasH,
-        vpTransform: rec.vpTransform,
+        vpTransform: rec.vpTransform, rotation: rec.rotation,
       });
       txtPages.push(`--- Page ${p} ---\n${rec.text}`);
 
@@ -1056,7 +1056,7 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
   const {
     PDFDocument,
     pushGraphicsState, popGraphicsState, setTextRenderingMode, setCharacterSqueeze,
-    TextRenderingMode,
+    TextRenderingMode, degrees,
   } = window.PDFLib;
 
   // Tr=3 (ISO 32000-1 §9.3.6): "neither fill nor stroke" — text goes into content
@@ -1078,7 +1078,7 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
   };
   const pages  = pdfDoc.getPages();
 
-  for (const { pageNum, lines, vpTransform } of ocrPages) {
+  for (const { pageNum, lines, vpTransform, canvasH, rotation = 0 } of ocrPages) {
     const page = pages[pageNum - 1];
     if (!page) continue;
 
@@ -1111,8 +1111,16 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
       return natural > 0 ? Math.max(10, Math.min(1000, (width / natural) * 100)) : 100;
     };
     const median = vals => [...vals].sort((a, b) => a - b)[Math.floor(vals.length / 2)];
+    // A page with /Rotate: lines laid out in the page as shown (y up, in pt)
+    // and drawn turned with the page — laid out in its own space, each word
+    // of a turned scan became a line of its own, sideways to the picture
+    // (corpus class C1, 2026-10-18).
+    const turned = rotation % 360 !== 0;
+    const scale  = Math.hypot(vpTransform[0], vpTransform[1]);
+    const toPage = (x, y) => (turned ? _applyTransform(inv, x * scale, canvasH - y * scale) : { x, y });
     const lineBoxes = lines.map(line => line.words.filter(w => w.kept && w.confidence >= 20).map(w => {
         const { x0, y0, x1, y1 } = w.bbox;
+        if (turned) return { text: w.text, x0: x0 / scale, x1: x1 / scale, y0: (canvasH - y1) / scale, y1: (canvasH - y0) / scale };
         // Transform all four bbox corners to PDF user-space, then derive the
         // axis-aligned bounding box. This is rotation-agnostic: for 0°/180°
         // pages the canvas x-axis is the PDF x-axis; for 90°/270° they are
@@ -1145,14 +1153,16 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
         try {
           const font = fontFor(b.text);
           page.pushOperators(setCharacterSqueeze(squeezeTo(font, b.text, fontSize, b.x1 - b.x0)));
-          page.drawText(b.text, { x: b.x0, y: yAt((b.x0 + b.x1) / 2), size: fontSize, font });
+          const at = toPage(b.x0, yAt((b.x0 + b.x1) / 2));
+          page.drawText(b.text, { x: at.x, y: at.y, size: fontSize, font, ...(turned ? { rotate: degrees(rotation) } : {}) });
           const next = boxes[i + 1];
           if (next) {
             // The gap between this word and the next, whichever side it is on.
             const [gapX, gapEnd] = next.x0 >= b.x1 ? [b.x1, next.x0] : [next.x1, b.x0];
             if (gapEnd > gapX) {
               page.pushOperators(setCharacterSqueeze(squeezeTo(font, ' ', fontSize, gapEnd - gapX)));
-              page.drawText(' ', { x: gapX, y: yAt((gapX + gapEnd) / 2), size: fontSize, font });
+              const gap = toPage(gapX, yAt((gapX + gapEnd) / 2));
+              page.drawText(' ', { x: gap.x, y: gap.y, size: fontSize, font, ...(turned ? { rotate: degrees(rotation) } : {}) });
             }
           }
         } catch {
