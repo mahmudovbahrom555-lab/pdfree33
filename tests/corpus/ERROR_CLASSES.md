@@ -74,11 +74,19 @@ committed.
   74.6 s of 125 s detecting (ara+eng, heb+eng, kor+eng, rus+eng, chi_sim+eng,
   jpn+eng, ara, fas → ara), 28 + 16 s reading the pages. Its text layer
   (thin text over a scan) is Arabic and is not used as a hint.
-- **Next:** profile the other slow documents the same way; a prototype that
-  takes the text layer's script as a *hint* (probed first, not obeyed), on
-  an experimental build only; compare on the 289 documents — detection time,
-  total time, text, numbers, mixed-language and watermark scans. Kept only if
-  better without regressions.
+- **The five CI-slow documents, profiled (2026-10-18, local, behaviour as
+  production):** detection is the cause on two only — 3508224 (74.6 s, 8
+  probes) and 7491997 (61.4 s, 8 probes; plus one page OCRed in 58 s). The
+  others are large: 3939389 ~120 OCR pages × 1.7 s; 5955337 35 OCR pages and
+  44 s capturing visuals; 6977632 ~263 pages at ~0.4 s each.
+- **A text-layer hint alone would not help:** `ara+eng` is already the first
+  probe on both; probing goes on because no model passes the clear-winner bar
+  (≥ 25 % and ≥ 15 confident own-script words on the small render).
+- **Next:** prototype — when the text layer's script agrees with the first
+  probe, accept it at a lower bar; experimental build only; the 289 documents
+  for detection time, total time, text, numbers, mixed-language and watermark
+  scans. Kept only if better without regressions. Separately, not yet
+  explained: 7491997's 58 s page, 5955337's 44 s of visuals.
 
 ## C3 — numbers in RTL lines (known debt)
 
