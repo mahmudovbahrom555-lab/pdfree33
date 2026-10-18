@@ -1007,6 +1007,19 @@ export function restoreDroppedSpaces(items, runs) {
 // item starts with ("2008. هذا") — and the other pieces leave their items
 // (an item that was a piece only is left empty).
 // `items`: one RTL line, { str, x, width, fontSize, rtl }, in reading order. In place.
+// Known debt (owner, 2026-10-18): numbers in right-to-left lines go through a
+// chain of local rules — this one, rtlItemsAreVisual's order vote, the
+// ActualText digit check, reorderVisualRtlLine — each found on corpus cases,
+// five regressions fixed on the way (TOC page numbers, dot leaders, ":2018",
+// dropped phrases, adjacent numbers). They interact and no single model of a
+// line's bidi runs stands behind them; a new rule here can break another's
+// case. What sees such a break: numbersMissing and numberCauses of
+// scripts/quality/arabic.py on the cloud corpus — run it with any change here.
+// Measured and rolled back: an ActualText check that also refuses digits the
+// glyphs don't show ("35" drawn, "345" ActualText) lost 96 more numbers and
+// added 99 dot errors on two Adobe PDF Library 15 documents, fixing none
+// (289 docs, 2026-10-18) — likely through the page-level fallback, which drops
+// a page's letter fixes with its digits; not verified.
 const _DIGIT = '0-9\u0660-\u0669\u06F0-\u06F9';
 const _TRAILING_DIGITS = new RegExp(`[${_DIGIT}][${_DIGIT}.,/:\u066B\u066C]*$`);
 const _LEADING_DIGITS = new RegExp(`^[${_DIGIT}](?:[${_DIGIT}.,/:\u066B\u066C]*[${_DIGIT}])?`);
