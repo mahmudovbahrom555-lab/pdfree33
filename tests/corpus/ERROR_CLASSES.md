@@ -152,6 +152,12 @@ committed.
   documents, fixing none.
 - **Left:** 2,421 lost numbers with no named cause in the 289-document run
   (811 of them in 4 documents with broken font encodings).
+- **Fixed (2026-10-19):** a digit piece with a space at its end — an
+  /ActualText "1" over a mirrored bracket glyph, the item " 1" — was no piece
+  of a number, and "2021" drawn as "202" | "1" came out "1202" (5494457, a
+  footnote "مايو 1202م"). It joins now, its space kept. 289 documents: 3
+  improve (1772036 lost numbers 34 → 9, 5494457 103 → 71, 5295408 3 → 1),
+  none worse; words unchanged.
 
 ## C4 — a font maps its Persian digits to other digits — both readers read the wrong number
 

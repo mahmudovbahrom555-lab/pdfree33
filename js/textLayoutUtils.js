@@ -1043,7 +1043,13 @@ export function joinSplitNumbers(items) {
     const right = it.x + (it.width || 0);
     // digits, or one separator between them ("1" | "," | "25") — not a leader
     // of dots ("……….", a contents line's), which held page numbers together
-    if (_ONLY_DIGITS.test(it.str) && (/\d|[\u0660-\u0669\u06F0-\u06F9]/.test(it.str) || it.str.length === 1)) { pieces.push({ it, kind: 'all', text: it.str, xL: it.x, xR: right }); continue; }
+    // — spaces at its ends allowed and kept (" 1": an /ActualText digit over a
+    // mirrored bracket glyph, corpus 5494457, read "1202م" for "2021م")
+    const bare = it.str.trim();
+    if (bare && _ONLY_DIGITS.test(bare) && (/\d|[\u0660-\u0669\u06F0-\u06F9]/.test(bare) || bare.length === 1)) {
+      pieces.push({ it, kind: 'all', text: bare, lead: it.str.match(/^\s*/)[0], trail: it.str.match(/\s*$/)[0], xL: it.x, xR: right });
+      continue;
+    }
     // a text item's first and last characters sit at its right and left ends
     // only when it runs right to left: in a left-to-right item ("…… خلفية
     // تارخيية 1", a contents line) its last character is at its right end
@@ -1086,10 +1092,10 @@ export function joinSplitNumbers(items) {
     };
     for (const p of chain) {
       if (p === home) continue;
-      if (p.kind === 'all') p.it.str = '';    // emptied, not removed: the page's item list still holds it
+      if (p.kind === 'all') p.it.str = p.lead + p.trail;    // emptied (its spaces kept), not removed: the page's item list still holds it
       else put(p, '');
     }
-    if (home.kind === 'all') home.it.str = number;
+    if (home.kind === 'all') home.it.str = home.lead + number + home.trail;
     else put(home, number);
   }
 }
