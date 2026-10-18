@@ -81,6 +81,15 @@ jobs:
           python3 scripts/check_i18n.py
           python3 scripts/check_sw.py
 
+      - name: Arabic metric — control cases
+        # scripts/quality/arabic.py must see each pain it claims to (one dot,
+        # one reversed word, one glued pair, one lost number) and say what it
+        # can't. See tests/quality/test_arabic_metric.py.
+        run: |
+          sudo apt-get install -y -q poppler-utils
+          pip3 install pymupdf==1.26.5
+          python3 tests/quality/test_arabic_metric.py
+
       - name: Validate js/vendor/pdf-lib.min.js matches the pinned devDependency
         # js/vendor/pdf-lib.min.js is a manually-copied file, not tracked by
         # package-lock.json — Dependabot/npm can bump node_modules/pdf-lib
