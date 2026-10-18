@@ -103,3 +103,21 @@ converter commit — never by both at once.
   only, no bypass for administrators.
 - **Moves:** nothing measured.
 - **Approved by:** this pull request's review.
+
+## 2026-10-18 — #28 merged without the owner's review (the bootstrap)
+
+- **What happened:** pull request #28 (the guard v2 above) was merged by the
+  owner's account before an approving review was given. CODEOWNERS arrived
+  with that same pull request, so GitHub did not yet require the review; a
+  merged pull request can't be approved afterwards.
+- **What caught it:** the guard itself — deploy run 39142347314 stopped at
+  `check_gold.py --ci`: "fb31a90d: pull request #28 has no approving review
+  by the owner". fb31a90d stays in the history with that failed check; it
+  changes nothing users see, and later pushes are checked on their own.
+- **Content:** main's tree at fb31a90d equals #28's last commit c60c1a38 —
+  exactly what was reviewed in the session; the owner confirmed the setup
+  there.
+- **From now on:** a pull request touching the measuring sticks or .github/
+  can't merge without the owner's review (CODEOWNERS on main, ruleset
+  main-guard); the owner approves, the bot merges.
+- **Approved by:** this pull request's review.
