@@ -31,7 +31,7 @@ import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, toArabicBaseLetters, toUnifiedIdeographs, joinTouchingItems, _splitCrossColumnLines, _isCjk,
          lineRuns, joinSpacedItems,
          lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
-         lineEndsParagraph, continuesWrappedHeading } from './textLayoutUtils.js';
+         lineEndsParagraph, continuesWrappedHeading, isContentsEntry } from './textLayoutUtils.js';
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { _p2wBuildPageData, uprightMatrix, uprightBox } from './pdf2readCore.js';
 import { createOcrLayer } from './pdf2wordOcr.js';
@@ -4713,7 +4713,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
             // a heading too long for its column wraps: its lines stay one heading
             const wrapsHeading = isHead && lastIsHead && continuesWrappedHeading(lastLn, ln, margins);
             if (!wrapsHeading && (isHead || lastIsHead || gap > breakGap || startsIndentedParagraph(lastLn, ln, margins)
-                || startsSpacedParagraph(lastLn, ln, pitch, margins))) _flushPara();
+                || startsSpacedParagraph(lastLn, ln, pitch, margins) || isContentsEntry(lastLn) || isContentsEntry(ln))) _flushPara();
           }
           _paraBuffer.push(ln);
         }

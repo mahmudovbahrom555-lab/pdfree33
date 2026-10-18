@@ -170,10 +170,33 @@ committed.
 
 ## C5 — a table of contents comes out as one paragraph
 
-- **Status:** `found` (2026-10-18)
+- **Status:** `fixing` (2026-10-18) — confirmed, partly fixed
 - **Harm:** medium — every entry and its page number run together; numbers
   survive, the list doesn't.
-- **Seen:** 5470407 page 6 (dot-leader entries, RTL); 4974198 (contents
-  entries and their numbers interleaved with the heading).
-- **Next:** independent documents; whether the line grouping or the
-  paragraph builder joins them.
+- **Confirmed:** 12 of the 15 documents with a contents page in the Arabic
+  corpus, from Word 2010/2016/Office, Acrobat Distiller, Adobe PDF Library,
+  pdfFactory (most of their entries in shared paragraphs).
+- **Cause:** a contents line is long and ends without punctuation — the
+  paragraph builder read it as a wrapped line of the paragraph above.
+- **Fix:** a line with a dot leader and a page number at either end is a
+  paragraph of its own (`isContentsEntry`, `js/textLayoutUtils.js`).
+- **Measured (local, 289 documents):** entries sharing a paragraph 598 → 408
+  of ~780 — 7407593 49/52 → 4/52, 7204460 37 → 2, 5494457 20 → 3, 7389718
+  16 → 2, 1152703 42 → 14, 5470407 36 → 14, 0997713 30 → 13. Word metric:
+  no document changed.
+- **Left:** 6977632 (351/367 → 339) and 7351637 (11/23, unchanged) — their
+  entries must be built otherwise (leaders as graphics or tab leaders);
+  competitors not compared yet.
+
+## C6 — columns of a two-page spread read across each other
+
+- **Status:** `found` (2026-10-18), one document checked by hand
+- **Harm:** high where it happens — sentences of different columns run
+  together; numbers stick to the other column's words.
+- **Seen:** 4974198 (Adobe PDF Library 15, an annual report, 97 landscape
+  spreads with 3–4 columns): "…أكثر من 116,539 خدمات وزارة التجارة…" joins
+  two columns; 159 of its 580 numbers unexplained.
+- **Why the metric misses it:** it counts words, not their order — 20 of
+  the corpus's 281 scored documents are landscape spreads and most score
+  ≥ 95 %. Needs an order check (phrase A before phrase B, as olmOCR-bench
+  does) before a fix can be judged.

@@ -630,6 +630,19 @@ export function startsSpacedParagraph(prevLn, ln, pitch, margins) {
   return prevLn.y - ln.y > pitch * 1.25 && lineEndsParagraph(prevLn, margins);
 }
 
+// A line of a table of contents: a dot leader (four dots or more, or "……")
+// with a page number at either end of the line. Long and without closing
+// punctuation, such a line read as a wrapped paragraph line, and a contents
+// page came out as one paragraph — 12 of the 15 documents with one in the
+// Arabic corpus, from Word, Distiller, Adobe PDF Library and pdfFactory
+// (class C5, 2026-10-18). It is a paragraph of its own.
+const _LEADER_RE = /(?:\.\s?){4,}|…{2,}|(?:·\s?){4,}/;
+const _EDGE_NUMBER_RE = /(?:^|[\s.…·])[0-9\u0660-\u0669\u06F0-\u06F9]{1,4}\s*$|^\s*[0-9\u0660-\u0669\u06F0-\u06F9]{1,4}(?=[\s.…·])/;
+export function isContentsEntry(ln) {
+  const text = ln?.items?.map(i => i.str).join('') ?? '';
+  return _LEADER_RE.test(text) && _EDGE_NUMBER_RE.test(text.trim());
+}
+
 // A heading too long for its column wraps, and every wrapped line used to become
 // a heading of its own ("What's the difference between" / "Clean and Enhance
 // mode?" — ground truth 2026-10-01: 0/2 headings found on two-column pages in
