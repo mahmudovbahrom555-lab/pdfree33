@@ -40,6 +40,16 @@
   --red-light:    #fdecea;
 
   /* Spacing */
+  /* Tool icons (homepage cards, 2026-10-18): green for an action on a PDF;
+     a converter in its result's format colour. Icon on its tint ≥ 3:1
+     (WCAG 1.4.11) in both themes. */
+  --ic-act:  #2D7A4F; --ic-act-tint:  #E5F2EA;
+  --ic-pdf:  #C62828; --ic-pdf-tint:  #FBE7E5;
+  --ic-word: #1E5BB8; --ic-word-tint: #E3ECFA;
+  --ic-xls:  #1D6F42; --ic-xls-tint:  #E1F1E7;
+  --ic-ppt:  #C2410C; --ic-ppt-tint:  #FCEBE1;
+  --ic-jpg:  #A15C07; --ic-jpg-tint:  #FBF0DC;
+  --ic-md:   #4B5563; --ic-md-tint:   #ECEEF1;
   --radius:    14px;
   --radius-sm: 8px;
 
@@ -78,6 +88,13 @@
   --red:          #E86A5C;
   --red-light:    #3A1712;
   --shadow-lg:   0 8px 40px rgba(0, 0, 0, 0.50);
+  --ic-act:  #6FCF97; --ic-act-tint:  #1C3326;
+  --ic-pdf:  #FF8A80; --ic-pdf-tint:  #3A2020;
+  --ic-word: #8AB4F8; --ic-word-tint: #1D2A40;
+  --ic-xls:  #6FCF97; --ic-xls-tint:  #1C3326;
+  --ic-ppt:  #FDBA74; --ic-ppt-tint:  #3A2618;
+  --ic-jpg:  #F6C46B; --ic-jpg-tint:  #3A2E16;
+  --ic-md:   #C4C9D1; --ic-md-tint:   #2A2D31;
 }
 
 
@@ -98,6 +115,13 @@
     --red:          #E86A5C;
     --red-light:    #3A1712;
     --shadow-lg:   0 8px 40px rgba(0, 0, 0, 0.50);
+    --ic-act:  #6FCF97; --ic-act-tint:  #1C3326;
+    --ic-pdf:  #FF8A80; --ic-pdf-tint:  #3A2020;
+    --ic-word: #8AB4F8; --ic-word-tint: #1D2A40;
+    --ic-xls:  #6FCF97; --ic-xls-tint:  #1C3326;
+    --ic-ppt:  #FDBA74; --ic-ppt-tint:  #3A2618;
+    --ic-jpg:  #F6C46B; --ic-jpg-tint:  #3A2E16;
+    --ic-md:   #C4C9D1; --ic-md-tint:   #2A2D31;
   }
 }
 
