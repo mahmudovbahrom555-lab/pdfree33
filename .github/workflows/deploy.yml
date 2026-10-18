@@ -83,11 +83,17 @@ jobs:
 
       - name: Measuring sticks change only on their own, with a written reason
         # Gold pages, baselines, the Arabic metric and its control cases: every
-        # pushed commit that touches them has no js/, a Gold-Change-Approved
-        # trailer and a tests/corpus/GOLD_CHANGELOG.md entry — checked here too,
-        # so --no-verify can't skip it. An audit trail, not authorization: see
-        # scripts/check_gold.py.
-        run: python3 scripts/check_gold.py --ci "${{ github.event.before }}" "${{ github.sha }}"
+        # pushed commit that touches them has no js/ and an entry appended to
+        # tests/corpus/GOLD_CHANGELOG.md — checked here too, so --no-verify
+        # can't skip it (scripts/check_gold.py).
+        # And that the owner approved it: an APPROVED review by an OWNER on the
+        # merged pull request's last commit, not by its author, holding exactly
+        # the tree on main — read from the GitHub API (GITHUB_TOKEN, read-only).
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python3 tests/quality/test_check_gold.py
+          python3 scripts/check_gold.py --ci "${{ github.event.before }}" "${{ github.sha }}"
 
       - name: Arabic metric — control cases
         # scripts/quality/arabic.py must see each pain it claims to (one dot,

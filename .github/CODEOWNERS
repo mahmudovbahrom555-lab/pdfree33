@@ -1,0 +1,14 @@
+# The measuring sticks (scripts/check_gold.py) and what runs them change only
+# with the owner's review. With branch protection's "Require review from Code
+# Owners", a pull request touching these paths can't merge without it; other
+# pull requests can.
+/tests/corpus/gold/                       @mahmudovbahrom555-lab
+/tests/corpus/cloud/arabic-baseline.jsonl @mahmudovbahrom555-lab
+/tests/corpus/cloud/arabic-known.json     @mahmudovbahrom555-lab
+/tests/corpus/GOLD_CHANGELOG.md           @mahmudovbahrom555-lab
+/scripts/quality/                         @mahmudovbahrom555-lab
+/tests/quality/                           @mahmudovbahrom555-lab
+/tests/fixtures/quality/                  @mahmudovbahrom555-lab
+/scripts/check_gold.py                    @mahmudovbahrom555-lab
+# the workflows run the guard: removing a step must not pass unreviewed
+/.github/                                 @mahmudovbahrom555-lab
