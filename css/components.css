@@ -48,25 +48,38 @@ button,
 
 /* Icon wrapper: rounded square that reacts on card hover */
 .tool-icon-wrapper {
+  /* A soft tile in the tool's own colour, one glyph (2026-10-18): green for an
+     action on a PDF, a converter in its result's format colour — tokens in
+     variables.css. The colour means something, so hover no longer repaints it. */
+  --ic: var(--ic-act); --ic-tint: var(--ic-act-tint);
   width: 52px;
   height: 52px;
   border-radius: 14px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
+  background: var(--ic-tint);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 16px;
-  color: var(--text2);
-  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1),
-              background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  color: var(--ic);
+  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
 }
+.tool-card[data-tool="pdf2word"]  .tool-icon-wrapper { --ic: var(--ic-word); --ic-tint: var(--ic-word-tint); }
+.tool-card[data-tool="pdf2excel"] .tool-icon-wrapper { --ic: var(--ic-xls);  --ic-tint: var(--ic-xls-tint); }
+.tool-card[data-tool="pdf2ppt"]   .tool-icon-wrapper { --ic: var(--ic-ppt);  --ic-tint: var(--ic-ppt-tint); }
+.tool-card[data-tool="pdf2jpg"]   .tool-icon-wrapper { --ic: var(--ic-jpg);  --ic-tint: var(--ic-jpg-tint); }
+.tool-card[data-tool="pdf2md"]    .tool-icon-wrapper { --ic: var(--ic-md);   --ic-tint: var(--ic-md-tint); }
+.tool-card[data-tool="jpg2pdf"]   .tool-icon-wrapper,
+.tool-card[data-tool="docx2pdf"]  .tool-icon-wrapper { --ic: var(--ic-pdf);  --ic-tint: var(--ic-pdf-tint); }
+.tool-icon-wrapper svg { width: 30px; height: 30px; }
+.tool-icon-wrapper text { font-family: var(--font-sans); font-weight: 700; }
+
 .tool-card:hover .tool-icon-wrapper,
 .tool-card:focus .tool-icon-wrapper {
   transform: scale(1.08) rotate(-4deg);
-  background: var(--green-light);
-  border-color: rgba(45,122,79,0.2);
-  color:var(--green-text);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tool-card:hover .tool-icon-wrapper,
+  .tool-card:focus .tool-icon-wrapper { transform: none; }
 }
 /* Route clicks to the card element, not SVG internals — reduces INP bubbling */
 .tool-icon-wrapper svg,
