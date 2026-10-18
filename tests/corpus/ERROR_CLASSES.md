@@ -48,7 +48,7 @@ committed.
 
 ## C1 — pages with /Rotate lose their text → an empty or picture-only DOCX
 
-- **Status:** `confirmed` (2026-10-18) — competitors next
+- **Status:** `fixing` (2026-10-18; confirmed, compared)
 - **Harm:** high — the user gets a Word file with no text, nothing tells them why.
 - **Cause, one in two forms:**
   - text layers: `_p2wBuildPageData` (`js/pdf2readCore.js`) calls an item
@@ -69,7 +69,21 @@ committed.
   (bizhub, page 2 /Rotate 180) to check per page.
 - **Control set:** to be drawn from the rest of the sample (all strata), not
   looked at while fixing.
-- **Competitors:** 2022469 (text layer) and 4820963 (scan) — by hand, owner.
+- **Competitors (2026-10-18, by hand by the owner, free tiers — OCR is paid
+  on both; scored with `scripts/quality/arabic.py`):**
+  - 2022469 (text layer, 4,700 words and 157 numbers both readers agree on):
+    **Smallpdf** recall 90.5 %, numbers 99.4 % (1 lost), 319 split words,
+    41 dot errors, 24 glued; keeps presentation forms (59,860 of its
+    letters — reads right, but Word's search and spell-check see other
+    letters) and 2,313 unmapped glyphs (boxes); pages landscape.
+    **PDFree** 0 % — 62 page pictures, 17 MB for a 473 KB PDF.
+  - 4820963 (scan): **iLovePDF Basic** — the page pictures plus the
+    watermark text only, no OCR (paid); **PDFree** — the pictures, nothing
+    else. A tie at zero.
+  - **The bar for the fix:** on 2022469 at least Smallpdf's recall and
+    numbers, in plain letters; on 4820963 the exam's text — which neither
+    free competitor gives.
+- **Status after comparison:** `compared` → `fixing`.
 - **Measurement note:** the Arabic metric scores the watermark-only scans
   against the watermark ("short", recall 0) — it sees that output is
   missing, not how much content was lost.
