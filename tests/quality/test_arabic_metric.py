@@ -430,5 +430,35 @@ def migrate():
 test('--migrate: the same outputs under two metric versions — what the new one moves', migrate)
 
 
+
+
+# ── metric v3 (2026-10-19): reading order
+
+def order_right_and_swapped():
+    assert_true(right['order'] is not None and right['order'] >= 0.95, right)
+    swapped = score('ar-prose', prose[::-1])       # the two paragraphs read the other way round
+    assert_true(swapped['order'] is not None and swapped['order'] <= 0.7, swapped)
+    assert_eq(swapped['recall'], right['recall'])  # every word still there: what v2 couldn't see
+
+
+test('order: the right text keeps its anchors in order; two paragraphs swapped lose order, not words', order_right_and_swapped)
+
+
+def order_ignores_glue():
+    glued = score('ar-prose', changed('المنطقة الشرقية', 'المنطقةالشرقية'))
+    assert_true(abs(glued['order'] - right['order']) <= 0.05, glued)
+
+
+test('order is not fooled by a glued word (word trigrams were)', order_ignores_glue)
+
+
+def order_worse():
+    row = {'doc': 'a.pdf', 'sha': '1', 'producer': 'p', **right}
+    text, n = arabic.compare(shard([row]), shard([{**row, 'order': row['order'] - 0.2}]), known_path=None)
+    assert_eq(n, 1)
+    assert_true('order' in text, text)
+
+
+test('a drop in order alone is worse', order_worse)
 print(f"\n{'─' * 50}\nTests: {passed + failed} | ✓ {passed} | {failed} failed")
 sys.exit(1 if failed else 0)
