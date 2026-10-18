@@ -206,3 +206,47 @@ committed.
   the corpus's 281 scored documents are landscape spreads and most score
   ≥ 95 %. Needs an order check (phrase A before phrase B, as olmOCR-bench
   does) before a fix can be judged.
+
+## C7 — a one-column RTL page cut into "two columns" at a midpoint
+
+- **Status:** `found` (2026-10-19), measured, not fixed — needs the owner's
+  order metric first
+- **Harm:** high, and hidden — words all there, their order scrambled: a
+  justified one-column Arabic page (1373210, Acrobat Distiller 11) read
+  "حينما أراد في أعقاب العالمية الحرب الأولى…" for "في أعقاب الحرب العالمية
+  الأولى … وذلك حينما أراد"; a bag-of-words metric scores it 94 %.
+- **Cause:** `detectColumnRegions` (`js/pdf2wordColumns.js`) — when the
+  direction-aware detection finds no gutter it falls back to clustering the
+  lines' LEFT edges, meaningless on right-to-left text; wide justification
+  spaces at about the same x made a second "column", cut at a midpoint, and
+  every line was torn in two and read column by column. The gutter search
+  itself fails both ways: it found a false gutter on 1373210 (x ≈ 237, where
+  the wide spaces line up) and none on a real two-column Arabic page
+  (4197540, Adobe PDF Library 15).
+- **Measured, 289 documents, order = the share of unique anchor words (both
+  readers, once each) in the output's order (longest increasing run):**
+  turning the fallback off for RTL-majority pages changed 149 documents —
+  order better on 100 (1373210 0.74 → 0.99, 1752892 0.70 → 1.0, 2278552
+  0.71 → 1.0), worse on 11, the real two-column pages among them (4197540
+  0.905 → 0.62, 6997456 0.73 → 0.51); ground-truth pages (ar/fa/en-cols2)
+  unchanged. Not shipped: it trades real columns for false ones.
+- **Next:** a gutter test that a justified line's wide spaces can't pass (a
+  real gutter is empty on most lines of both columns, at one x; aligned
+  spaces are not); the order metric in `scripts/quality/arabic.py` (owner's
+  review) so the change can be judged in CI.
+
+## C8 — a right-to-left line in stream order lost its word spaces
+
+- **Status:** `fixing` — fixed locally 2026-10-19 (found while measuring C7)
+- **Cause:** word gaps became spaces only on lines `reorderVisualRtlLine`
+  found drawn in visual order; a logical line with no space items — a PDF
+  drawing each letter alone (macOS Quartz) — kept none:
+  "الأردن–مركزالحیاة–راصد" (6199289).
+- **Fix:** logical lines get spaces at gaps of a fifth of an em too — spaces
+  only: the ZWNJ for a final form meeting the next letter (a Persian
+  half-space) stays a visual-line rule; on logical lines it marked word
+  boundaries that had lost their space ("تربیت‌و", 3201970: ZWNJ 415 → 879,
+  glued +53 — measured, then dropped).
+- **Measured, 289 documents:** 37 documents' recall up (1574594 90.2 →
+  99.2 %, 7000003 93.7 → 100 %, 3836451 96.8 → 100 %, 6240805 91.4 → 94.2 %),
+  2 down by 0.0001; glued words 4,246 → 4,128.

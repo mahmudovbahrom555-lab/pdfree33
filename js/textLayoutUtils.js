@@ -241,7 +241,12 @@ export function reorderVisualRtlLine(items) {
     }
     prev = item;
   }
-  if (ltrSteps <= rtlSteps) return;
+  // a logical line still gets its word gaps: a PDF drawing each letter alone
+  // (macOS Quartz) has no space items, and a list on such a page came out
+  // "الأردن–مركزالحیاة–راصد" (corpus 6199289, 2026-10-19)
+  // — spaces only: a final form meeting the next letter is no half-space sign
+  // there, the word boundary just lost its space ("تربیت‌و", 3201970)
+  if (ltrSteps <= rtlSteps) { _spaceGaps(items, false); return; }
 
   // Arabic harakat (fatha, damma, shadda, tanween...) arrive as their own zero-width
   // items. Sorted on their own they landed on the neighbouring word ("مئةً صفحة" for
@@ -303,16 +308,24 @@ export function reorderVisualRtlLine(items) {
       item.mirrored = true;
     }
   }
+  _spaceGaps(ordered);
+  items.splice(0, items.length, ...ordered);
+}
+
+// Between two neighbours in reading order: a space where a gap of a fifth of an
+// em or more separates them and neither has one, and (`zwnj`, a visual line) a
+// ZWNJ where a letter's isolated or final form meets the next letter with no
+// gap (a Persian half-space).
+function _spaceGaps(ordered, zwnj = true) {
   for (let i = 1; i < ordered.length; i++) {
     const a = ordered[i - 1], b = ordered[i];
     if (a.str.endsWith(' ') || b.str.startsWith(' ')) continue;
     const gap = Math.max(b.x - (a.x + (a.width || 0)), a.x - (b.x + (b.width || 0)));
     if (gap > b.fontSize * 0.2) b.str = ' ' + b.str;
-    else if (_JOIN_BROKEN_FORMS.has(a.str.codePointAt(a.str.length - 1)) && _RTL_CHAR_RE.test(b.str[0])) {
+    else if (zwnj && _JOIN_BROKEN_FORMS.has(a.str.codePointAt(a.str.length - 1)) && _RTL_CHAR_RE.test(b.str[0])) {
       b.str = '\u200C' + b.str;
     }
   }
-  items.splice(0, items.length, ...ordered);
 }
 
 // One line's items as runs: neighbours less than 0.6 em apart — a word, or the
