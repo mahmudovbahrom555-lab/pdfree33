@@ -33,7 +33,7 @@ import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
          lineEndsParagraph, continuesWrappedHeading } from './textLayoutUtils.js';
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
-import { _p2wBuildPageData } from './pdf2readCore.js';
+import { _p2wBuildPageData, uprightMatrix, uprightBox } from './pdf2readCore.js';
 import { createOcrLayer } from './pdf2wordOcr.js';
 import { createActualTextReader } from './pdfActualText.js';
 import { detectTableGrids, lineInGrid, gridRowsOfLines, gridHoldsTable } from './pdf2wordBorders.js';
@@ -3588,6 +3588,7 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'text' } = {}) {
     const ocr = createOcrLayer(pdfDoc, {
       onPage: (p, lang) => setProgress(8 + Math.round((p / pdfDoc.numPages) * 40),
         `Recognizing text (${lang}) on page ${p}/${pdfDoc.numPages}…`),
+      rotated: false,   // a rotated slide stays a picture (below)
     });
     try {
       ({ pageData: textPageData } = await _p2wBuildPageData(pdfDoc, {
@@ -4810,7 +4811,12 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     if (!_placementsByPage.has(pi)) {
       _placementsByPage.set(pi, Promise.resolve()
         .then(() => pdfDoc.getPage(pi + 1))
-        .then(async page => _detectPageImages(await page.getOperatorList()))
+        .then(async page => {
+          // in the coordinates the page's text is read in (a page with /Rotate)
+          const placed = _detectPageImages(await page.getOperatorList());
+          const m = uprightMatrix(page);
+          return m ? placed.map(im => uprightBox(m, im)) : placed;
+        })
         .catch(() => []));   // no placements → the gap and strip scans alone, as before
     }
     return _placementsByPage.get(pi);

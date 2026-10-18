@@ -66,6 +66,31 @@ function _glyphRuns(opList) {
   return runs;
 }
 
+// A page with /Rotate is shown turned, its content stream is not: text drawn
+// to read upright on screen is turned in the page's own space, and read there
+// it was taken for rotated labels — a scanned or "rotate and save" page came
+// out of PDF→Word with no text at all (corpus class C1, 2026-10-18). The
+// matrix from the page's own space to the page as shown, y up, origin at its
+// lower left — everything measured on a page (text, rules, images) goes
+// through it. null for an unrotated page: its own coordinates, as always.
+export function uprightMatrix(page) {
+  if (!((page.rotate || 0) % 360)) return null;
+  const vp = page.getViewport({ scale: 1 });
+  return mulMatrix([1, 0, 0, -1, 0, vp.height], vp.transform);
+}
+// m after n: the point n maps, mapped by m (pdf.js's Util.transform order)
+function mulMatrix(m, n) {
+  return [m[0] * n[0] + m[2] * n[1], m[1] * n[0] + m[3] * n[1], m[0] * n[2] + m[2] * n[3], m[1] * n[2] + m[3] * n[3],
+    m[0] * n[4] + m[2] * n[5] + m[4], m[1] * n[4] + m[3] * n[5] + m[5]];
+}
+// A box { x, yTop, width, height } (y up) through `m`: the box around its corners
+export function uprightBox(m, { x, yTop, width, height, ...rest }) {
+  const pts = [[x, yTop], [x + width, yTop], [x, yTop - height], [x + width, yTop - height]]
+    .map(([px, py]) => [m[0] * px + m[2] * py + m[4], m[1] * px + m[3] * py + m[5]]);
+  const xs = pts.map(q => q[0]), ys = pts.map(q => q[1]);
+  return { ...rest, x: Math.min(...xs), yTop: Math.max(...ys), width: Math.max(...xs) - Math.min(...xs), height: Math.max(...ys) - Math.min(...ys) };
+}
+
 // The share of the page that raster images cover (their bounding boxes, in
 // the page's own view box, overlaps not subtracted, capped at 1), from pdf.js's
 // operator list: save/restore/transform and Form XObject matrices tracked.
@@ -630,11 +655,13 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
     // BOTH the bold title and regular body text — indistinguishable — while
     // page.commonObjs.get(fontName).name correctly gave
     // "CAAAAA+NotoSans-Bold" vs "DAAAAA+NotoSans-Regular").
+    const upright = uprightMatrix(page);
     const [content, borderGrids, opList] = await Promise.all([
       page.getTextContent({ normalizeWhitespace: false, includeMarkedContent: !!actualText }),
-      detectTableGrids(page, { paintedOnly: true }).catch(() => []),
+      detectTableGrids(page, { paintedOnly: true, matrix: upright }).catch(() => []),
       page.getOperatorList().catch(() => {}),
     ]);
+    if (upright) for (const it of content.items) if (it.transform) it.transform = mulMatrix(upright, it.transform);
     // Right-to-left scripts, presentation forms, unmapped glyphs (\0) and
     // vowel marks: where Chrome and LibreOffice put the real letters in
     // /ActualText, which pdf.js drops (see js/pdfActualText.js). Other pages

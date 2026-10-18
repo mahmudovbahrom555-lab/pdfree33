@@ -66,13 +66,32 @@ const MAX_H_CANDIDATES      = 300;        // safety cap: bail out of the O(n²) 
  *   each page to its printable area, and read as drawn lines that clip made a
  *   page-sized grid: PDF→Word turned whole Wikipedia prints into one-column
  *   tables (Arabic: the article as glyphs joined by spaces, 31% of its words).
+ * @param {number[]|null} [opts.matrix=null] — the page's own space to the
+ *   page as shown (pdf2readCore's uprightMatrix, for a page with /Rotate):
+ *   grids in the coordinates its text is read in. A quarter turn makes
+ *   horizontal rules vertical.
  * @returns {Promise<TableGrid[]>}
  */
-export async function detectTableGrids(page, { paintedOnly = false } = {}) {
+export async function detectTableGrids(page, { paintedOnly = false, matrix = null } = {}) {
   const opList = await page.getOperatorList();
-  const { hLines, vLines } = _extractSegments(opList, paintedOnly);
+  let { hLines, vLines } = _extractSegments(opList, paintedOnly);
+  if (matrix) ({ hLines, vLines } = _turnSegments(hLines, vLines, matrix));
   const viewport = page.getViewport({ scale: 1 });
   return _buildGrids(hLines, vLines, viewport.width, viewport.height);
+}
+
+// Segments through `m` (a multiple of a quarter turn), sorted again into
+// horizontal and vertical ones.
+function _turnSegments(hLines, vLines, m) {
+  const at = (x, y) => [m[0] * x + m[2] * y + m[4], m[1] * x + m[3] * y + m[5]];
+  const out = { hLines: [], vLines: [] };
+  const put = (seg, [ax, ay], [bx, by]) => {
+    if (Math.abs(bx - ax) >= Math.abs(by - ay)) out.hLines.push({ ...seg, x1: Math.min(ax, bx), x2: Math.max(ax, bx), y: (ay + by) / 2 });
+    else out.vLines.push({ ...seg, y1: Math.min(ay, by), y2: Math.max(ay, by), x: (ax + bx) / 2 });
+  };
+  for (const { x1, x2, y, ...seg } of hLines) put(seg, at(x1, y), at(x2, y));
+  for (const { y1, y2, x, ...seg } of vLines) put(seg, at(x, y1), at(x, y2));
+  return out;
 }
 
 // A text line (pdf2readCore's {y, items}) belongs to a grid when it lies in the

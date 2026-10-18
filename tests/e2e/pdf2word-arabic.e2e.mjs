@@ -13,6 +13,11 @@
 //  15 %. Now 100 % and 100 % (js/pdfActualText.js).
 //  Fixtures: tests/fixtures/pdf2word/ar-chrome-{arial,harakat}.pdf, made by
 //  make-arabic-actualtext.mjs from arabic-actualtext.json (the truth here).
+//  And pages with /Rotate (corpus class C1, 2026-10-18): a page a scanner or
+//  "rotate and save" left turned showed upright, but its text — drawn turned
+//  in the page's own space — was taken for rotated labels: an empty Word file
+//  (a Persian book of 62 such pages: 0 words, Smallpdf 90 %).
+//  Fixture: rotated-pages.pdf (make-rotated.mjs, rotated-pages.json).
 //  Run: node tests/e2e/pdf2word-arabic.e2e.mjs   (dist/ served on :8934)
 // ============================================================
 
@@ -25,6 +30,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE_URL = process.env.PDFREE_BASE_URL || 'http://localhost:8934';
 const FIX = path.join(__dirname, '..', 'fixtures', 'pdf2word');
 const TRUTH = JSON.parse(readFileSync(path.join(FIX, 'arabic-actualtext.json'), 'utf8'));
+const ROTATED = JSON.parse(readFileSync(path.join(FIX, 'rotated-pages.json'), 'utf8'));
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -80,6 +86,19 @@ try {
     const out = await docxText(browser, 'ar-chrome-harakat.pdf');
     const plain = recall(TRUTH.harakat.join('\n'), out, false), vowelled = recall(TRUTH.harakat.join('\n'), out, true);
     if (plain < 0.95 || vowelled < 0.9) throw new Error(`words ${(plain * 100).toFixed(0)} %, with their marks ${(vowelled * 100).toFixed(0)} %: ${out.slice(0, 200)}`);
+  });
+
+  await test('pages with /Rotate 90, 180, 270: their text, numbers and order kept, as on the unrotated page', async () => {
+    const out = await docxText(browser, 'rotated-pages.pdf');
+    let at = -1;
+    ROTATED.pages.forEach(([ar, en], i) => {
+      const r = recall(ar, out, false);
+      if (r < 0.9) throw new Error(`page ${i + 1} (/Rotate ${ROTATED.rotate[i]}): ${(r * 100).toFixed(0)} % of its Arabic words: ${out.slice(0, 300)}`);
+      for (const n of en.match(/\d[\d:/]*\d|\d/g)) if (!out.includes(n)) throw new Error(`page ${i + 1}: number ${n} lost`);
+      const k = out.indexOf(en.split(':')[0]);
+      if (k < 0 || k < at) throw new Error(`page ${i + 1}: "${en.split(':')[0]}" ${k < 0 ? 'missing' : 'out of order'}`);
+      at = k;
+    });
   });
 } finally {
   await browser.close();

@@ -119,6 +119,16 @@ test('the same word on the next line is not a repeat', () => {
   assert.equal(_duplicateWords([a1, a2]).size, 0);
 });
 
+test('a page with /Rotate: OCR boxes in the page as shown, y up — where its text layer is read too', () => {
+  // pdf.js's viewport of an A4 scan stored landscape, /Rotate 270, scale 2:
+  // the canvas is the upright page, 1190 × 1684 px
+  const rec = { vpTransform: [0, -2, -2, 0, 1190, 1684], rotation: 270, canvasW: 1190, canvasH: 1684,
+    lines: [line([word('a', 200, 300, 104)])] };
+  rec.lines[0].baseline = { x0: 0, y0: 100, x1: 600, y1: 100, has_baseline: true };
+  const [it] = ocrItemsFromPage(rec);
+  assert.ok(Math.abs(it.x - 100) < 1e-9 && Math.abs(it.y - (1684 - 100) / 2) < 1e-9, `${it.x}, ${it.y}`);
+});
+
 // _rasterCover: how much of a page raster images cover — a scan with a site's
 // watermark over it is OCRed like a scan (cloud corpus, 2026-10-17)
 test('a page-size scan covers the page; a photo inside a Form XObject is scaled by its matrix', () => {

@@ -559,33 +559,6 @@ async function _toGrayscaleAsync(src) {
   return dst;
 }
 
-// Rotate canvas by -R degrees so upside-down/sideways scans become upright
-// before being passed to Tesseract. A separate canvas is returned; caller must
-// release it (set width=0, height=0) after recognize() completes.
-function _counterRotateCanvas(src, R) {
-  const swap = R === 90 || R === 270;
-  const dst  = document.createElement('canvas');
-  dst.width  = swap ? src.height : src.width;
-  dst.height = swap ? src.width  : src.height;
-  const ctx  = dst.getContext('2d');
-  ctx.translate(dst.width / 2, dst.height / 2);
-  ctx.rotate(-R * Math.PI / 180);
-  ctx.drawImage(src, -src.width / 2, -src.height / 2);
-  return dst;
-}
-
-// Map a Tesseract bbox from counter-rotated (ocrCanvas) space back to the
-// original display canvas space so callers can apply vpTransform without
-// modification. Derivation: invert the affine applied by _counterRotateCanvas
-// for each of the four standard PDF rotation values. W, H are the display
-// canvas (pre-rotation) dimensions.
-function _rotateBackBbox({ x0, y0, x1, y1 }, R, W, H) {
-  if (R === 90)  return { x0: W - y1, y0: x0,     x1: W - y0, y1: x1     };
-  if (R === 180) return { x0: W - x1, y0: H - y1, x1: W - x0, y1: H - y0 };
-  if (R === 270) return { x0: y0,     y0: H - x1, x1: y1,     y1: H - x0 };
-  return { x0, y0, x1, y1 };
-}
-
 // ── Page recognition ─────────────────────────────────────────────────────────
 
 // Renders one pdf.js page and recognizes it with `worker` (set to `lang`).
@@ -627,24 +600,25 @@ export async function recognizePage(worker, page, lang, { level = false } = {}) 
   const scale = Math.min(maxPx / vp0.width, maxPx / vp0.height);
   const vp = page.getViewport({ scale });
 
-  let canvas, ocrCanvas;
+  let canvas;
   try {
     canvas        = document.createElement('canvas');
     canvas.width  = Math.round(vp.width);
     canvas.height = Math.round(vp.height);
     await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
 
-    // Counter-rotate so Tesseract always receives an upright image.
-    // PDFs with /Rotate 180 or 270 would otherwise produce garbage confidence.
+    // The page as shown: pdf.js renders /Rotate in. It used to be turned back
+    // by /Rotate here as well — a scan stored sideways and shown upright went
+    // to Tesseract sideways again, and came out as noise (corpus class C1,
+    // 2026-10-18: an exam scan with /Rotate 270, 27 "lines" of loose letters).
     const rotation = page.rotate || 0;
-    ocrCanvas = rotation !== 0 ? _counterRotateCanvas(canvas, rotation) : canvas;
 
     // Enhance (and its deskew) for every script. CJK had its own grayscale +
     // Otsu path, never measured against it: on tilted Chinese and Japanese
     // phone photos its reading order was 41–69%, Enhanced 96–99%, paragraphs
     // and headings with it (2026-10-09, synthetic scans).
-    const { canvas: gray, skewDeg } = await _enhanceForOcrAsync(ocrCanvas)
-      .catch(async () => ({ canvas: await _toGrayscaleAsync(ocrCanvas), skewDeg: 0 }));
+    const { canvas: gray, skewDeg } = await _enhanceForOcrAsync(canvas)
+      .catch(async () => ({ canvas: await _toGrayscaleAsync(canvas), skewDeg: 0 }));
     const result = await worker.recognize(gray);
     const W = gray.width, H = gray.height;
     const px = gray.getContext('2d').getImageData(0, 0, W, H).data;
@@ -666,11 +640,8 @@ export async function recognizePage(worker, page, lang, { level = false } = {}) 
     };
 
     const minConf = minConfidence(lang);
-    // Deskewed image → image before deskew (unless `level`) → display canvas (page /Rotate).
-    const back = bbox => {
-      const unskewed = level ? bbox : _unskewBbox(bbox, skewDeg, gray.width, gray.height);
-      return rotation !== 0 ? _rotateBackBbox(unskewed, rotation, canvas.width, canvas.height) : unskewed;
-    };
+    // Deskewed image → image before deskew (unless `level`): the display canvas.
+    const back = bbox => (level ? bbox : _unskewBbox(bbox, skewDeg, gray.width, gray.height));
     const dup = _duplicateWords(result.data.lines || []);
     const keep = w => w.text.normalize('NFC').trim() && w.confidence >= minConf && !dup.has(_wordKey(w));
     const toWord = w => ({ text: w.text.normalize('NFC').trim(), confidence: w.confidence, bbox: back(w.bbox) });
@@ -704,7 +675,6 @@ export async function recognizePage(worker, page, lang, { level = false } = {}) 
     };
   } finally {
     // Always release canvas memory regardless of success or error
-    if (ocrCanvas && ocrCanvas !== canvas) { ocrCanvas.width = 0; ocrCanvas.height = 0; }
     if (canvas) { canvas.width = 0; canvas.height = 0; }
   }
 }

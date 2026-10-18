@@ -69,9 +69,13 @@ const RUN_GAP_EM = 0.8;
 const CJK_RUN_GAP_EM = 1.25;
 const ROW_TO_FONT = 1 / 1.2;
 export function ocrItemsFromPage(rec) {
-  const [a, , , d, e, f] = rec.vpTransform;      // rotation 0: x' = a·x + e, y' = d·y + f
-  const toX = cx => (cx - e) / a;
-  const toY = cy => (cy - f) / d;
+  // rotation 0: the page's own space, x' = a·x + e, y' = d·y + f; a page with
+  // /Rotate: the page as shown, y up (pdf2readCore's uprightMatrix) — where
+  // its text layer's items are read too
+  const [a, b, , d, e, f] = rec.vpTransform;
+  const scale = Math.hypot(a, b);
+  const toX = rec.rotation ? cx => cx / scale : cx => (cx - e) / a;
+  const toY = rec.rotation ? cy => (rec.canvasH - cy) / scale : cy => (cy - f) / d;
   const items = [];
   const rows = rec.lines.map(line => line.bbox.y1 - line.bbox.y0).sort((p, q) => p - q);
   const medianRow = rows[Math.floor(rows.length / 2)] || 0;
@@ -95,7 +99,7 @@ export function ocrItemsFromPage(rec) {
     const sizeOf = (h, bold) => {
       const row = bold ? (Math.abs(h / boldRow - 1) < BOLD_SNAP ? boldRow : h)
         : h / medianRow >= ROW_SNAP ? h : medianRow;
-      return Math.max(1, (row / a) * ROW_TO_FONT);
+      return Math.max(1, (row / scale) * ROW_TO_FONT);
     };
     const fontSize = sizeOf(height, false);
     const partial = line.words.some(w => !w.kept);
@@ -147,8 +151,9 @@ export function ocrItemsFromPage(rec) {
 // absent, says nothing). When it isn't detected with
 // confidence — a script with no model, such as Hebrew — every page keeps
 // today's behaviour (a picture of the page) instead of risking garbage text.
-// Rotated pages (/Rotate 90/180/270) are left as they are for now.
-export function createOcrLayer(pdfDoc, { onPage = () => {} } = {}) {
+// `rotated`: whether pages with /Rotate are read too — PDF→PowerPoint leaves
+// such a slide a picture, and has no use for its text.
+export function createOcrLayer(pdfDoc, { onPage = () => {}, rotated = true } = {}) {
   let engine = null;   // Promise<{ worker, lang } | null>
   const start = async () => {
     try {
@@ -168,7 +173,7 @@ export function createOcrLayer(pdfDoc, { onPage = () => {} } = {}) {
   };
   return {
     async ocrPage(page, pageNum) {
-      if ((page.rotate || 0) !== 0) return null;
+      if (!rotated && (page.rotate || 0) % 360) return null;
       engine ??= start();
       const ready = await engine;
       if (!ready) return null;
