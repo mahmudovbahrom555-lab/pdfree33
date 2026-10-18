@@ -152,3 +152,28 @@ committed.
   documents, fixing none.
 - **Left:** 2,421 lost numbers with no named cause in the 289-document run
   (811 of them in 4 documents with broken font encodings).
+
+## C4 — a font maps its Persian digits to other digits — both readers read the wrong number
+
+- **Status:** `found` (2026-10-18), one document
+- **Harm:** high — wrong numbers that look right: a table of contents' page
+  numbers, and the same font anywhere else in the document.
+- **Seen:** 5470407 (Microsoft Word 2010, Persian manual), page 6: on the page
+  ۱۰۱, ۱۰۳, ۱۰۶, ۱۱۷, ۱۲۳; in the text layer — MuPDF, poppler and PDF→Word
+  alike — 131, 133, 133, 112, 214. The font's ToUnicode gives ۰ → 3, ۶ → 3,
+  ۷ → 2…; PDF→Word carries the text layer faithfully.
+- **Why no metric sees it:** both readers agree on the wrong digits. Only the
+  page as drawn does — a third oracle (render + OCR of the digits).
+- **Next:** find more such fonts (documents where OCR of the rendered digits
+  disagrees with the text layer); then a fix can only read digits from the
+  glyphs (shape or OCR), not from ToUnicode.
+
+## C5 — a table of contents comes out as one paragraph
+
+- **Status:** `found` (2026-10-18)
+- **Harm:** medium — every entry and its page number run together; numbers
+  survive, the list doesn't.
+- **Seen:** 5470407 page 6 (dot-leader entries, RTL); 4974198 (contents
+  entries and their numbers interleaved with the heading).
+- **Next:** independent documents; whether the line grouping or the
+  paragraph builder joins them.
