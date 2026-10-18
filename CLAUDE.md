@@ -169,6 +169,18 @@ owner's, outside the repo. A metric bug found while fixing is reported to the
 owner, not quietly corrected in the same change. A baseline is never accepted
 automatically: it comes from CI runs and the owner approves it.
 
+## Quality loop — one error class at a time (owner, 2026-10-18)
+
+Conversion quality improves by closing **classes of error**, not single bugs
+or an average score: find a class by its cause after a corpus run → confirm
+it by hand on documents from independent sources (one site or one generator
+is one source), with a discovery set and a control set → rank by harm to a
+user (a real user's report first) → compare 2–5 of its documents with
+competitors by hand → fix the cause test-first, judge on the control set and
+the whole corpus → compare again, verify on pdfree.io, close. The ledger,
+statuses and rules: `tests/corpus/ERROR_CLASSES.md`. Claims stay the size of
+the evidence ("on the documents checked").
+
 ## Homepage UX — CRITICAL CONSTRAINT
 **The hero section (`#hero`) must always be the first thing a user sees.**
 
