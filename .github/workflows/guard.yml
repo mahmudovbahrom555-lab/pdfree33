@@ -1,0 +1,23 @@
+name: Measuring-stick guard
+
+# On every pull request: a change to the measuring sticks comes alone (no js/),
+# with an entry appended to tests/corpus/GOLD_CHANGELOG.md. The owner's review
+# itself is branch protection's (CODEOWNERS); after the merge, deploy.yml
+# checks that it was given on exactly what landed (scripts/check_gold.py --ci).
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+      - run: python3 tests/quality/test_check_gold.py
+      - run: python3 scripts/check_gold.py --pr "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}"

@@ -79,3 +79,27 @@ converter commit — never by both at once.
   хэша — одобряю без оговорок", with the conditions above). No approval link:
   the link rule is the next guard change, which itself waits for the owner's
   comment.
+
+## 2026-10-18 — the guard, v2: the owner's review of a pull request
+
+- **What:** `scripts/check_gold.py` no longer reads a `Gold-Change-Approved:`
+  trailer. A guarded change comes through a pull request: `.github/CODEOWNERS`
+  names the owner on the measuring sticks and `.github/`; `guard.yml` checks
+  the rules on the pull request (no `js/`, a changelog entry, nothing removed
+  from it); after the merge, `--ci` in deploy.yml requires an APPROVED review
+  by an OWNER on the pull request's last commit, by an account other than its
+  author's and the commit's, and main's tree equal to that commit's. Pre-commit
+  refuses a guarded change on main. `arabic-known.json` added to the guarded
+  paths. Tests: `tests/quality/test_check_gold.py` (a faked GitHub API).
+- **Why:** owner's review of v1 (issue #27, 2026-10-18): separate the agent's
+  identity from the owner's, bind the approval to a specific change, protect
+  it from reuse and editing — "otherwise owner-only stays on paper". A review
+  is tied to one commit, a new push dismisses it, and the agent's own account
+  can't give an OWNER's approval. It replaces v1 (a trailer linking an issue
+  comment), which was never merged.
+- **Needs (owner):** a bot account for the agent (Write), its token in the
+  agent's session; branch protection on main: pull request required, review
+  from code owners, dismiss stale approvals, up-to-date branches, squash merge
+  only, no bypass for administrators.
+- **Moves:** nothing measured.
+- **Approved by:** this pull request's review.

@@ -159,15 +159,23 @@ The gold pages (`tests/corpus/gold/`), the frozen Arabic baseline
 (`scripts/quality/arabic.py`), its control cases (`tests/quality/`,
 `tests/fixtures/quality/`) and their guard decide whether a change is an
 improvement. Never edit them to make a fix pass, and never loosen a test's
-criteria for it. They change only in a commit of their own (no `js/` in it),
-after the owner approved that specific change, with a
-`Gold-Change-Approved: <who, why>` trailer and an entry in
-`tests/corpus/GOLD_CHANGELOG.md`. `scripts/check_gold.py` checks this in
-pre-commit (`GOLD_CHANGE_APPROVED=1` once approved) and in CI on every pushed
-commit — an audit trail, not authorization: the approval itself is the
-owner's, outside the repo. A metric bug found while fixing is reported to the
-owner, not quietly corrected in the same change. A baseline is never accepted
-automatically: it comes from CI runs and the owner approves it.
+criteria for it. They change only in a commit of their own (no `js/` in it), with an entry
+appended to `tests/corpus/GOLD_CHANGELOG.md` (append-only: never reword or
+remove an entry), on a branch, through a pull request the owner approves:
+an APPROVED review by the repo OWNER on the pull request's last commit, from
+a different account than the one that opened it — the agent works under an
+account of its own (owner, 2026-10-18); squash-merged up to date, so main holds
+exactly what was approved. CODEOWNERS and branch protection enforce it; the
+workflow `guard.yml` checks the rules on the pull request, and
+`scripts/check_gold.py --ci` in deploy.yml checks the approval after the merge
+and blocks the deploy if anything got past. Never approve, or ask to approve,
+from the agent's own account. The set-aside list
+`tests/corpus/cloud/arabic-known.json` (documents both readers read wrong, or
+unverifiable) is a measuring stick too. A metric bug found while fixing is
+reported to the owner, not quietly corrected in the same change. A new metric
+version comes with a `--migrate` report (old vs new metric on the same
+outputs) for the owner. A baseline is never accepted automatically: it comes
+from CI runs and the owner approves it.
 
 ## Quality loop — one error class at a time (owner, 2026-10-18)
 
