@@ -48,7 +48,7 @@ committed.
 
 ## C1 — pages with /Rotate lose their text → an empty or picture-only DOCX
 
-- **Status:** `fixing` (2026-10-18; confirmed, compared)
+- **Status:** `fixing` — fix shipped and verified on pdfree.io 2026-10-18; open: OCR tool layout, competitor re-check
 - **Harm:** high — the user gets a Word file with no text, nothing tells them why.
 - **Cause, one in two forms:**
   - text layers: `_p2wBuildPageData` (`js/pdf2readCore.js`) calls an item
@@ -84,6 +84,38 @@ committed.
     numbers, in plain letters; on 4820963 the exam's text — which neither
     free competitor gives.
 - **Status after comparison:** `compared` → `fixing`.
+- **Fix (4293ea1b, 2026-10-18):** one matrix to the page as shown
+  (`uprightMatrix`, `js/pdf2readCore.js`) for text items, table rules,
+  image placements and OCR boxes; OCR on rotated pages; `recognizePage` no
+  longer turns the upright render back by /Rotate (rotated scans went to
+  Tesseract sideways — the OCR tool read them as noise too). Test first:
+  `rotated-pages.pdf` (/Rotate 0/90/180/270) in `pdf2word-arabic.e2e.mjs`,
+  failing before (page 2: 18 % of its words).
+- **Measured (local, against v8 = production before the fix):** only the 12
+  documents with rotated pages changed, all for the better; unrotated
+  documents unchanged. 2022469 0 → 96.1 %, 157/157 numbers (Smallpdf 90.5 %,
+  99.4 %); 0997713 (5 of 82 pages rotated) 68.5 → 72.7 %, lost numbers
+  203 → 103; 3122010 95.9 → 96.6 %; long documents' lost numbers −259.
+  *Correction:* the commit message's "5,056 → 4,701" compared with the
+  rolled-back strict-ActualText build and mixes that rollback in — the C1
+  effect alone is −259. The exam scans now give their text (800–1,600 OCR
+  words each, e.g. 4820963 "المملكة الأردنية … وزارة التربية والتعليم"),
+  which the metric cannot score (its reference is the watermark). Control
+  set outside Arabic: 0810920 (Chinese, 100 % of characters), 1943977
+  (Japanese, right text; MuPDF itself reads it as garbage), 1687201,
+  2867656 — all from no text to text.
+- **Cost:** OCR now runs on those pages — 5 → 47–95 s on the exam scans;
+  0152391 (4 dense newspaper pages) now times out at 300 s (C2).
+- **Left:** the OCR tool's searchable PDF draws the words of a rotated page
+  unrotated in its own space (searchable, but each word its own sideways
+  line); vertical CJK writing order (0810920); a competitor re-check.
+- **Verified on pdfree.io (4293ea1b, 2026-10-18):** 2022469 96.1 %, 157/157
+  numbers; 4820963 7 pages OCRed, 4,768 characters; 1687201 and 2867656 the
+  same text as locally; the unrotated control 0046581 unchanged (0.8387).
+- **Metric limitation found (reported, not changed):** `--compare` called
+  2022469 "worse" — its dot errors went 0 → 5 because it went from no text
+  to 96 % of it. The worse-rule compares error counts without the words
+  they are out of.
 - **Measurement note:** the Arabic metric scores the watermark-only scans
   against the watermark ("short", recall 0) — it sees that output is
   missing, not how much content was lost.
