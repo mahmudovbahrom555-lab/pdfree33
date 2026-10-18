@@ -121,3 +121,31 @@ converter commit — never by both at once.
   can't merge without the owner's review (CODEOWNERS on main, ruleset
   main-guard); the owner approves, the bot merges.
 - **Approved by:** this pull request's review.
+
+## 2026-10-18 — Arabic metric v2 (schema 3) and the set-aside registry
+
+- **What:** `scripts/quality/arabic.py` metric 1 → 2, schema 2 → 3. The
+  header lists `timedOut` and `notEvaluated` (each with why) — in a run and in
+  a merge of shards. "Worse than baseline" judges dot errors, reversed and
+  glued words per word found (`worse_on`), not as totals. The set-aside
+  registry `tests/corpus/cloud/arabic-known.json` takes the owner's fields:
+  sha, kind (bothWrong / unverifiable), scope (all / numbers / words — what
+  is not judged on it), issue, check, status (unreviewed / known_issue /
+  fixed / excluded), dated history; only an entry not `fixed` sets anything
+  aside, and only within its scope. The page-furniture cause also takes a
+  line repeated word for word on many pages, numbers only or not (a running
+  header's date: 4364566, 63 "unexplained" lost numbers) — a cause's name,
+  not a score: unexplained 1,034 → 924, furniture 1,835 → 1,945. Control
+  cases 20 → 23.
+- **Why:** v1 called 2022469 "worse" when it went from no text to 96 % of it
+  (its dot errors 0 → 5) — found while fixing C1, reported, not changed then.
+  The owner's conditions for a baseline: timeouts and the not-evaluated in
+  the schema; known limits as a registry, not a free list.
+- **Registry, first entries (known_issue):** 7853393 (font encoding broken —
+  846 of the corpus's unexplained lost numbers), 6965328 (Arabic as Latin-1
+  lookalikes, both readers agree on it), 1000122 (Urdu, unmapped glyphs),
+  3508224 (byte noise) — all scope `all`; evidence in each entry.
+- **Moves (--migrate, the same 289 outputs, v1 → v2):** no score changes;
+  nothing moved by the new rule on those outputs. v8 → v10 (the C1 fix)
+  under v2: 0 worse (v1: 1, 2022469, wrongly).
+- **Approved by:** this pull request's review.

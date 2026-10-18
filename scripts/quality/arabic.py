@@ -49,6 +49,12 @@ number Word now numbers itself); and, from
 robust.mjs's results.jsonl, `outcome` (ok / timeout / error …), `ms` and
 `ocrPages`. tests/corpus/cloud/arabic-known.json lists documents a human found
 both readers wrong on, or unverifiable: reported, never judged.
+
+Metric v2, schema 3 (2026-10-18): the header lists `timedOut` and
+`notEvaluated` (each with why); a set-aside entry says what is not judged on
+its document — numbers, words or all (`scope`) — with a status and a dated
+history; dot errors, reversed and glued words judge "worse" per word found
+(see worse_on). No score changes.
 """
 import collections, hashlib, json, os, re, subprocess, sys, unicodedata, zipfile
 
@@ -57,8 +63,8 @@ import fitz
 AR = re.compile(r'[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]')
 MARKS = re.compile(r'[ً-ْٰ]')
 SHORT = 50
-METRIC_VERSION = 1
-SCHEMA = 2
+METRIC_VERSION = 2
+SCHEMA = 3
 KNOWN = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'tests', 'corpus', 'cloud', 'arabic-known.json')
 FOLD = str.maketrans('٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹', '01234567890123456789')
 RASM = {}
@@ -153,7 +159,8 @@ def score(pdf, docx):
 def furniture(pp):
     """Numbers of page furniture in poppler's text (pages split by form feed):
     running headers and footers — a line with words on at least 3 pages and a
-    third of them, its digits masked (its own page number changes) — and page
+    third of them, its digits masked (its own page number changes), or the
+    same line word for word — and page
     numbers: a number in one of a page's first or last two short lines that
     runs with the page, at the document's own offset (page 64 printed "67").
     PDF→Word leaves those out on purpose (Word numbers its own pages); a lost
@@ -161,12 +168,17 @@ def furniture(pp):
     pages = [[l for l in (clean(x).strip() for x in pg.split('\n')) if l] for pg in pp.split('\f')]
     mask = lambda l: re.sub(r'[0-9٠-٩۰-۹]+', '#', l)
     seen = collections.Counter(m for pg in pages for m in {mask(l) for l in pg})
+    # the same line word for word on many pages — a running header's date
+    # ("۱۴۰۰/۰۴/۲۲" on 10 of 11 pages, 4364566) — is furniture even without
+    # words; a table's column of bare numbers repeats only once masked
+    same = collections.Counter(l for pg in pages for l in set(pg))
     out = collections.Counter()
     edge = []   # (page index, number) on a page's first or last two short lines
     for p, pg in enumerate(pages):
         for i, l in enumerate(pg):
             words = len(re.findall(r'\w', mask(l).replace('#', '')))
-            if len(pages) >= 3 and words >= 3 and seen[mask(l)] >= max(3, len(pages) / 3):
+            many = max(3, len(pages) / 3)
+            if len(pages) >= 3 and ((words >= 3 and seen[mask(l)] >= many) or same[l] >= many):
                 out.update(numbers(l))
             elif (i < 2 or i >= len(pg) - 2) and len(l) <= 40:
                 edge += [(p, n) for n in numbers(l)]
@@ -269,29 +281,38 @@ def robust_results(path):
     return {r['doc']: r for r in rows if r.get('tool') == 'pdf2word'}
 
 
+def night_summary(rows):
+    """What a result's header says of its documents beyond the scores: the
+    ones that ran out of time, and every one not evaluated, with why."""
+    rows = list(rows)
+    return {'timedOut': sorted(r['doc'] for r in rows if r.get('skip') == 'timeout'),
+            'notEvaluated': {r['doc']: r['skip'] for r in sorted(rows, key=lambda r: r['doc']) if 'recall' not in r and 'skip' in r}}
+
+
 def run(docs, files, out_path, results=None):
     runs = robust_results(results) if results else {}
     names = sorted(n for n in os.listdir(docs) if n.lower().endswith('.pdf'))
     rows = [{'doc': name, 'sha': file_sha(os.path.join(docs, name))} for name in names]
+    for row in rows:
+        name = row['doc']
+        r = runs.get(name)
+        if r:
+            row.update({'outcome': r.get('outcome'), 'ms': r.get('ms')})
+            if r.get('ocrPages') is not None:
+                row['ocrPages'] = r['ocrPages']
+        docx = os.path.join(files, name + '.pdf2word.docx')
+        if not os.path.exists(docx):
+            # a timeout is its own status, not "no output"
+            row['skip'] = r['outcome'] if r and r.get('outcome') != 'ok' else 'no output'
+        else:
+            try:
+                row.update(score(os.path.join(docs, name), docx))
+            except Exception as e:  # one unreadable file must not end the night
+                row['skip'] = f'error: {str(e)[:120]}'
     with open(out_path, 'w') as out:
         out.write(json.dumps({'schema': SCHEMA, 'metric': METRIC_VERSION, 'oracle': versions(), 'corpus': corpus_hash(rows),
-                              'docs': len(rows)}) + '\n')
+                              'docs': len(rows), **night_summary(rows)}, ensure_ascii=False) + '\n')
         for row in rows:
-            name = row['doc']
-            r = runs.get(name)
-            if r:
-                row.update({'outcome': r.get('outcome'), 'ms': r.get('ms')})
-                if r.get('ocrPages') is not None:
-                    row['ocrPages'] = r['ocrPages']
-            docx = os.path.join(files, name + '.pdf2word.docx')
-            if not os.path.exists(docx):
-                # a timeout is its own status, not "no output"
-                row['skip'] = r['outcome'] if r and r.get('outcome') != 'ok' else 'no output'
-            else:
-                try:
-                    row.update(score(os.path.join(docs, name), docx))
-                except Exception as e:  # one unreadable file must not end the night
-                    row['skip'] = f'error: {str(e)[:120]}'
             out.write(json.dumps(row, ensure_ascii=False) + '\n')
 
 
@@ -312,7 +333,7 @@ def merge(out_path, paths):
         raise SystemExit('shards scored by different metric versions or readers: ' + '; '.join(json.dumps({k: h.get(k) for k in keys}) for h in heads))
     with open(out_path, 'w') as out:
         out.write(json.dumps({**{k: heads[0][k] for k in keys}, 'corpus': corpus_hash(rows.values()),
-                              'docs': len(rows), 'shards': len(paths)}) + '\n')
+                              'docs': len(rows), 'shards': len(paths), **night_summary(rows.values())}, ensure_ascii=False) + '\n')
         for d in sorted(rows):
             out.write(json.dumps(rows[d], ensure_ascii=False) + '\n')
 
@@ -329,15 +350,48 @@ def serious(r):
     return r['missing'] >= 3 or r['numbersMissing'] >= 1 or r['dots'] >= 1 or r['reversed'] >= 1 or r['recall'] < 0.9
 
 
+KNOWN_STATUS = ('unreviewed', 'known_issue', 'fixed', 'excluded')
+KNOWN_SCOPE = ('all', 'numbers', 'words')
+
+
 def load_known(path=KNOWN):
-    """{doc: reason} of documents a human set aside: `bothWrong` — both readers
-    read it the same wrong way, so agreement scores the wrong text;
-    `unverifiable` — no reference this metric can trust (see the file)."""
+    """{doc: entry} of documents a human set aside (tests/corpus/cloud/
+    arabic-known.json): `kind` bothWrong (both readers read it the same wrong
+    way — agreement scores the wrong text) or unverifiable (no reference this
+    metric can trust); `scope` what is not judged on it — its numbers, its
+    words, or all of it; `issue`, `check` (how a human verifies it), `status`
+    (unreviewed, known_issue, fixed — judged again, excluded), `sha` and a
+    dated `history` of its status. Only an entry not `fixed` sets anything
+    aside, and only within its scope."""
     if not path or not os.path.exists(path):
         return {}
-    k = json.load(open(path))
-    return {**{d: 'both readers wrong: ' + why for d, why in k.get('bothWrong', {}).items()},
-            **{d: 'unverifiable: ' + why for d, why in k.get('unverifiable', {}).items()}}
+    docs = json.load(open(path)).get('docs', {})
+    for d, e in docs.items():
+        if e.get('status') not in KNOWN_STATUS or e.get('scope') not in KNOWN_SCOPE:
+            raise SystemExit(f'{path}: {d} — status must be one of {KNOWN_STATUS}, scope one of {KNOWN_SCOPE}')
+    return {d: e for d, e in docs.items() if e['status'] != 'fixed'}
+
+
+def hits(r):
+    return r['words'] * r['recall']
+
+
+def worse_on(base, new, tolerance, scope=None):
+    """What `new` lost against `base`, outside `scope`. Dot errors, reversed
+    and glued words count per word found, not as totals: a document that went
+    from no text to most of it gains errors with its words (2022469, metric
+    v1: "worse" at 0 → 96 %)."""
+    out = []
+    if scope != 'numbers' and new['numbersMissing'] > base['numbersMissing']:
+        out.append('numbers')
+    if scope != 'words':
+        if new['recall'] < base['recall'] - tolerance:
+            out.append('recall')
+        for k in ('dots', 'reversed', 'glued'):
+            more = new[k] > (base[k] * 1.1 + 2 if k == 'glued' else base[k])
+            if more and hits(base) >= 1 and new[k] / max(1, hits(new)) > base[k] / hits(base):
+                out.append(k)
+    return out
 
 
 def pct(values, q):
@@ -379,6 +433,7 @@ def compare(base_path, new_path, tolerance=0.005, known_path=KNOWN, migrate=Fals
     ocr = sorted(d for d in new if (new[d].get('ocrPages') or 0) > 0 or (base.get(d, {}).get('ocrPages') or 0) > 0)
     scored = [d for d in new if d in base and 'recall' in new[d] and 'recall' in base[d] and d not in changed]
     both = [d for d in scored if d not in known and d not in ocr]
+    partly = [d for d in scored if d in known and d not in ocr and known[d]['scope'] != 'all']
     for label, sel in (('long (≥ 50 words)', [d for d in both if not new[d]['short']]),
                        ('short (< 50 words)', [d for d in both if new[d]['short']])):
         if not sel:
@@ -399,9 +454,7 @@ def compare(base_path, new_path, tolerance=0.005, known_path=KNOWN, migrate=Fals
         causes.update(new[d].get('numberCauses') or {})
     if causes:
         lines.append('  lost numbers, by what the output has instead: ' + ', '.join(f'{k} {v}' for k, v in causes.most_common()))
-    worse = [d for d in both if new[d]['recall'] < base[d]['recall'] - tolerance
-             or any(new[d][k] > base[d][k] for k in ('dots', 'reversed', 'numbersMissing'))
-             or new[d]['glued'] > base[d]['glued'] * 1.1 + 2]
+    worse = [d for d in both + partly if worse_on(base[d], new[d], tolerance, known.get(d, {}).get('scope'))]
     lines += ['', f'**{"moved by the new metric" if migrate else "worse than baseline"}: {len(worse)}**']
     for d in sorted(worse, key=lambda d: new[d]['recall'] - base[d]['recall']):
         b, n = base[d], new[d]
@@ -422,8 +475,15 @@ def compare(base_path, new_path, tolerance=0.005, known_path=KNOWN, migrate=Fals
                   + ', '.join(f'{d} ({new[d].get("ocrPages")} p., recall {new[d]["recall"]:.2f})' if 'recall' in new[d] else d for d in ocr)]
     held = sorted(d for d in new if d in known)
     if held:
-        lines += ['', f'set aside by a human (tests/corpus/cloud/arabic-known.json), not judged: {len(held)}']
-        lines += [f'- {d}: {known[d]}' + (f' — recall {new[d]["recall"]:.2f}' if 'recall' in new[d] else '') for d in held]
+        lines += ['', f'set aside by a human (tests/corpus/cloud/arabic-known.json) — not in the totals; judged only outside its scope: {len(held)}']
+        for d in held:
+            e = known[d]
+            lines.append(f'- {d}: {e["kind"]}, scope {e["scope"]}, {e["status"]} — {e.get("issue", "")}'
+                         + (f' — recall {new[d]["recall"]:.2f}' if 'recall' in new[d] else '')
+                         + (' ⚠ content differs from the entry\'s sha' if e.get('sha') and new[d].get('sha') and e['sha'] != new[d]['sha'] else ''))
+    not_eval = {d: r['skip'] for d, r in sorted(new.items()) if 'recall' not in r and 'skip' in r}
+    if not_eval:
+        lines += ['', f'not evaluated: {len(not_eval)} — ' + ', '.join(f'{d} ({why})' for d, why in not_eval.items())]
     rt_b, rt_n = runtime(base), runtime(new)
     if rt_n:
         lines += ['', 'PDF→Word time per document p50 / p95 / max: '

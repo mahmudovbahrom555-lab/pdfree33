@@ -1,0 +1,65 @@
+{
+ "about": "Documents of the cloud Arabic corpus (tests/corpus/cloud/sample-v1.json) a human set aside — scripts/quality/arabic.py load_known. Only status != fixed sets anything aside, within its scope (all / numbers / words). Changes go through a pull request the owner reviews (scripts/check_gold.py).",
+ "docs": {
+  "7853393.pdf": {
+   "sha": "fd71462c2c24171a",
+   "kind": "unverifiable",
+   "scope": "all",
+   "issue": "font encoding broken: both readers return ~191,000 control and private-use characters (Investintech Sonic PDF); 846 of the corpus's unexplained lost numbers are its",
+   "check": "render a page and read it against MuPDF's and poppler's text: the readable text is not in either",
+   "status": "known_issue",
+   "history": [
+    {
+     "date": "2026-10-18",
+     "status": "known_issue",
+     "why": "proposed by the agent from the readers' output (control/PUA counts); confirmed by the owner's review of the pull request"
+    }
+   ]
+  },
+  "6965328.pdf": {
+   "sha": "e0cde323d8b1890d",
+   "kind": "bothWrong",
+   "scope": "all",
+   "issue": "Arabic encoded as Latin-1 lookalikes (\"ó«a◊G óÑY\"): both readers agree on the same garbage (agree 1.0)",
+   "check": "render a page: Arabic on screen, Latin letters in both readers' text",
+   "status": "known_issue",
+   "history": [
+    {
+     "date": "2026-10-18",
+     "status": "known_issue",
+     "why": "proposed by the agent from the readers' output; confirmed by the owner's review of the pull request"
+    }
+   ]
+  },
+  "1000122.pdf": {
+   "sha": "203f794420657c6e",
+   "kind": "unverifiable",
+   "scope": "all",
+   "issue": "Urdu with unmapped glyphs (U+FFFD and private-use) in both readers; PDF→Word reads 21 pages with OCR",
+   "check": "render a page against the readers' text: words broken by replacement characters",
+   "status": "known_issue",
+   "history": [
+    {
+     "date": "2026-10-18",
+     "status": "known_issue",
+     "why": "proposed by the agent from the readers' output; confirmed by the owner's review of the pull request"
+    }
+   ]
+  },
+  "3508224.pdf": {
+   "sha": "71361a22a9979cda",
+   "kind": "unverifiable",
+   "scope": "all",
+   "issue": "text layer is byte noise in both readers (\"bmJ(* \\x03\\x9cE…\"); PDF→Word OCRs 2 pages",
+   "check": "render a page against the readers' text",
+   "status": "known_issue",
+   "history": [
+    {
+     "date": "2026-10-18",
+     "status": "known_issue",
+     "why": "proposed by the agent from the readers' output; confirmed by the owner's review of the pull request"
+    }
+   ]
+  }
+ }
+}

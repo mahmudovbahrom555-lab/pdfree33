@@ -277,6 +277,11 @@ def page_furniture():
     pages = [[f'مجلة الأدب — العدد 19 — ص {p + 300}', *body(p)] for p in range(5)]
     f = arabic.furniture('\f'.join('\n'.join(pg) for pg in pages))
     assert_eq((f['19'], f['300'], f['304']), (5, 1, 1))
+    # a date alone on its line, the same on every page (a running header),
+    # but not a table column of bare numbers that differ page to page
+    pages = [[f'نص {"ا" * p} الصفحة', '۱۴۰۰/۰۴/۲۲', *body(p), str(1000 + p * 7)] for p in range(5)]
+    f2 = arabic.furniture('\f'.join('\n'.join(pg) for pg in pages))
+    assert_eq((f2['۱۴۰۰'], f2['1007']), (5, 0))
     lost = C({'19': 4, '304': 1, '2024': 1})
     trusted = C({'19': 5, '304': 1, '2024': 5, '350': 5})
     assert_eq(arabic.number_causes(lost, [], trusted, f & trusted), {'furniture': 5, 'unexplained': 1})
@@ -322,6 +327,17 @@ def run_statuses():
 test('run: a timeout is its own status; time and OCR pages come from robust.mjs\'s results', run_statuses)
 
 
+def entry(kind, scope, issue, status='known_issue'):
+    return {'kind': kind, 'scope': scope, 'issue': issue, 'check': 'by hand', 'status': status,
+            'history': [{'date': '2026-10-18', 'status': status, 'why': 'test'}]}
+
+
+def registry(docs):
+    path = tempfile.mktemp(suffix='.json')
+    json.dump({'docs': docs}, open(path, 'w'))
+    return path
+
+
 def compare_sets_aside():
     row = {'producer': 'p', 'sha': 's', 'ms': 4000, **right}
     worse = {**row, 'recall': row['recall'] - 0.1, 'dots': row['dots'] + 1}
@@ -329,11 +345,10 @@ def compare_sets_aside():
     new = [{'doc': 'known.pdf', **worse}, {'doc': 'ocr.pdf', **worse, 'ocrPages': 2},
            {'doc': 'slow.pdf', 'sha': 's', 'skip': 'timeout', 'outcome': 'timeout', 'ms': 300000},
            {'doc': 'broke.pdf', 'sha': 's', 'skip': 'error: x', 'outcome': 'error'}, {'doc': 'fine.pdf', **row, 'ms': 90000}]
-    known = tempfile.mktemp(suffix='.json')
-    json.dump({'bothWrong': {'known.pdf': 'both read the lam-alef backwards'}, 'unverifiable': {}}, open(known, 'w'))
+    known = registry({'known.pdf': entry('bothWrong', 'all', 'both read the lam-alef backwards')})
     text, n = arabic.compare(shard(base), shard(new), known_path=known)
     assert_eq(n, 1)                       # broke.pdf only: failed now
-    for s in ('known.pdf: both readers wrong', 'ocr.pdf (2 p.', 'timed out now: 1 — slow.pdf', 'failed now: 1',
+    for s in ('known.pdf: bothWrong, scope all', 'ocr.pdf (2 p.', 'timed out now: 1 — slow.pdf', 'failed now: 1',
               'timed out: 1 — slow.pdf', 'slower than the baseline', 'fine.pdf 4 → 90 s'):
         assert_true(s in text, f'{s!r} not in\n{text}')
     # without the known list the same document is judged worse
@@ -353,6 +368,52 @@ def compare_other_content():
 
 
 test('compare: a document whose content changed under the same name is not compared', compare_other_content)
+
+
+def worse_per_word():
+    row = {'doc': 'a.pdf', 'sha': '1', 'producer': 'p', **right}
+    empty = {**row, 'recall': 0.0, 'dots': 0, 'glued': 0, 'reversed': 0}
+    full = {**row, 'recall': 0.96, 'dots': 5, 'glued': 4}
+    _, n = arabic.compare(shard([empty]), shard([full]), known_path=None)
+    assert_eq(n, 0)      # from no text to most of it: its errors came with its words (2022469 in v1)
+    _, n = arabic.compare(shard([row]), shard([{**row, 'dots': row['dots'] + 3}]), known_path=None)
+    assert_eq(n, 1)      # the same words found, more of them with other dots: worse
+    _, n = arabic.compare(shard([row]), shard([{**row, 'numbersMissing': row['numbersMissing'] + 1}]), known_path=None)
+    assert_eq(n, 1)      # a number lost is worse whatever else
+
+
+test('worse: dot errors, reversed and glued words per word found — no text → text is not worse; more errors on the same words is', worse_per_word)
+
+
+def scoped_set_aside():
+    row = {'doc': 'a.pdf', 'sha': '1', 'producer': 'p', **right}
+    lost_number = {**row, 'numbersMissing': row['numbersMissing'] + 2}
+    lost_words = {**row, 'recall': row['recall'] - 0.2}
+    numbers_only = registry({'a.pdf': entry('bothWrong', 'numbers', 'both readers reverse its digits')})
+    assert_eq(arabic.compare(shard([row]), shard([lost_number]), known_path=numbers_only)[1], 0)
+    assert_eq(arabic.compare(shard([row]), shard([lost_words]), known_path=numbers_only)[1], 1)
+    fixed = registry({'a.pdf': entry('bothWrong', 'all', 'was', status='fixed')})
+    assert_eq(arabic.compare(shard([row]), shard([lost_words]), known_path=fixed)[1], 1)
+    bad = registry({'a.pdf': {**entry('bothWrong', 'all', 'x'), 'status': 'maybe'}})
+    try:
+        arabic.load_known(bad)
+        raise AssertionError('loaded')
+    except SystemExit:
+        pass
+
+
+test('set aside within its scope only: numbers-only still judged on words; a fixed entry judged again; a bad status refused', scoped_set_aside)
+
+
+def header_lists():
+    rows = [{'doc': 'a.pdf', 'sha': '1', 'skip': 'timeout'}, {'doc': 'b.pdf', 'sha': '2', 'skip': 'refused'},
+            {'doc': 'c.pdf', 'sha': '3', 'recall': 1}]
+    head, _ = merged([shard(rows[:2]), shard(rows[2:])])
+    assert_eq(head['timedOut'], ['a.pdf'])
+    assert_eq(head['notEvaluated'], {'a.pdf': 'timeout', 'b.pdf': 'refused'})
+
+
+test('the header lists the timed-out documents and every one not evaluated, with why', header_lists)
 
 
 def migrate():
