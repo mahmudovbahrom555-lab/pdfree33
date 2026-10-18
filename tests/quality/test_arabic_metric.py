@@ -175,5 +175,199 @@ def compare_versions():
 test('compare: a worse document is reported; two metric versions are not compared', compare_versions)
 
 
+
+
+# ── schema 2 (2026-10-18): corpus hash, shards, runtime, number causes, sets aside
+
+def jsonl(head, rows):
+    path = tempfile.mktemp(suffix='.jsonl')
+    with open(path, 'w') as f:
+        f.write(json.dumps(head) + '\n')
+        for r in rows:
+            f.write(json.dumps(r, ensure_ascii=False) + '\n')
+    return path
+
+
+HEAD = {'schema': arabic.SCHEMA, 'metric': arabic.METRIC_VERSION, 'oracle': {'pymupdf': 'x', 'poppler': 'y'}}
+
+
+def shard(rows):
+    return jsonl({**HEAD, 'corpus': arabic.corpus_hash(rows)}, rows)
+
+
+def merged(paths):
+    out = tempfile.mktemp(suffix='.jsonl')
+    arabic.merge(out, paths)
+    return arabic.load(out)
+
+
+def corpus_over_shards():
+    s1 = [{'doc': 'a.pdf', 'sha': '1'}, {'doc': 'b.pdf', 'sha': '2'}]
+    s2 = [{'doc': 'c.pdf', 'sha': '3'}, {'doc': 'd.pdf', 'sha': '4'}]
+    head, rows = merged([shard(s1), shard(s2)])
+    assert_eq(head['corpus'], arabic.corpus_hash(s1 + s2))
+    assert_true(head['corpus'] != arabic.corpus_hash(s1), 'the hash of shard 1 alone (the night\'s old bug)')
+    assert_eq((head['docs'], head['shards'], sorted(rows)), (4, 2, ['a.pdf', 'b.pdf', 'c.pdf', 'd.pdf']))
+    # one document of the SECOND shard changed: the night's hash changes
+    s2b = [s2[0], {'doc': 'd.pdf', 'sha': '5'}]
+    assert_true(merged([shard(s1), shard(s2b)])[0]['corpus'] != head['corpus'])
+    # shards in another order, rows in another order: the same hash
+    assert_eq(merged([shard(s2[::-1]), shard(s1[::-1])])[0]['corpus'], head['corpus'])
+    # a document dropped or added: another hash
+    assert_true(arabic.corpus_hash(s1 + s2[:1]) != head['corpus'])
+
+
+test('the corpus hash covers every shard\'s documents, by content, in any order', corpus_over_shards)
+
+
+def merge_refuses():
+    a = shard([{'doc': 'a.pdf', 'sha': '1'}])
+    for other in (jsonl({**HEAD, 'oracle': {'pymupdf': 'x', 'poppler': 'z'}}, [{'doc': 'b.pdf', 'sha': '2'}]),
+                  jsonl({**HEAD, 'metric': arabic.METRIC_VERSION + 1}, [{'doc': 'b.pdf', 'sha': '2'}]),
+                  shard([{'doc': 'a.pdf', 'sha': '1'}])):
+        try:
+            merged([a, other])
+            raise AssertionError('merged')
+        except SystemExit:
+            pass
+
+
+test('merge refuses shards from other readers or metric versions, and a document in two shards', merge_refuses)
+
+
+def file_sha_by_content():
+    pdf = os.path.join(FIX, 'ar-short.pdf')
+    copy = tempfile.mktemp(suffix='.pdf')
+    data = open(pdf, 'rb').read()
+    open(copy, 'wb').write(data[:-1] + bytes([data[-1] ^ 1]))
+    assert_true(arabic.file_sha(pdf) != arabic.file_sha(copy))
+    assert_eq(arabic.file_sha(pdf), arabic.file_sha(pdf))
+
+
+test('a document\'s sha is its content: one byte changed is another document', file_sha_by_content)
+
+
+def causes():
+    trusted = __import__('collections').Counter(['2018', '١٢٥', '345', '9876', '4410', '777'])
+    out = ['12', '8102', '125', '١٢٥', '34', '5', '19876', '4410']   # 2018 reversed, ١٢٥ kept, 125 is
+    lost = trusted - __import__('collections').Counter(out)
+    c = arabic.number_causes(lost, out, trusted)
+    assert_eq(c, {'reversed': 1, 'split': 1, 'inside': 1, 'unexplained': 1})
+    c = arabic.number_causes(__import__('collections').Counter(['٢٠١٨']), ['2018'], __import__('collections').Counter(['٢٠١٨']))
+    assert_eq(c, {'script': 1})
+    # one output number explains one loss: two lost 2018s, one 8102
+    two = __import__('collections').Counter({'2018': 2})
+    assert_eq(arabic.number_causes(two, ['8102'], two), {'reversed': 1, 'unexplained': 1})
+
+
+test('a lost number\'s cause: other digit script, reversed, split, inside a longer one, unexplained', causes)
+
+
+def page_furniture():
+    C = __import__('collections').Counter
+    def body(p):
+        return [f'نص الصفحة {"ا" * p} فيه 2024 و 350 دينارا', f'سطر {"ب" * p}', f'سطر {"ت" * p}', f'سطر {"ث" * p}']
+    # pages printed 12..16 (page index + 12) under a running header; page 3
+    # ends on a body number that doesn't run with the pages
+    pages = [['مجلة الأدب — العدد 19', *body(p), f'- {p + 12} -'] for p in range(5)]
+    pages[2].append('المجموع 4410')
+    f = arabic.furniture('\f'.join('\n'.join(pg) for pg in pages))
+    assert_eq((f['19'], f['12'], f['16'], f['2024'], f['350'], f['4410']), (5, 1, 1, 0, 0, 0))
+    # a running header whose own page number changes is still one header
+    pages = [[f'مجلة الأدب — العدد 19 — ص {p + 300}', *body(p)] for p in range(5)]
+    f = arabic.furniture('\f'.join('\n'.join(pg) for pg in pages))
+    assert_eq((f['19'], f['300'], f['304']), (5, 1, 1))
+    lost = C({'19': 4, '304': 1, '2024': 1})
+    trusted = C({'19': 5, '304': 1, '2024': 5, '350': 5})
+    assert_eq(arabic.number_causes(lost, [], trusted, f & trusted), {'furniture': 5, 'unexplained': 1})
+
+
+test('page furniture: a running header\'s numbers and page numbers running with the pages are named, a body number is not', page_furniture)
+
+
+def list_numbers():
+    pp = '\n'.join(['مقدمة الدليل للمستخدمين', ')11لعمل قص للشريحة اضغط بالزر', '12) لعمل لصق للشريحة اضغط',
+                    'في سنة 2019 كان العدد 350'])
+    plain = docx(['مقدمة'])
+    assert_eq(arabic.list_marks(pp, plain), {})            # no Word list in the output: nothing to name
+    listed = tempfile.mktemp(suffix='.docx')
+    with zipfile.ZipFile(listed, 'w') as z:
+        z.writestr('word/document.xml', '<w:document><w:body>' + '<w:p><w:pPr><w:numPr/></w:pPr></w:p>'.replace('<w:numPr/>', '<w:numPr></w:numPr>') * 2
+                   + '</w:body></w:document>')
+    assert_eq(arabic.list_marks(pp, listed), {'11': 1, '12': 1})   # not 2019, not 350
+
+
+test('a list item\'s number Word now numbers itself is named, as many as the output has list paragraphs', list_numbers)
+
+
+def run_statuses():
+    docs, files = tempfile.mkdtemp(), tempfile.mkdtemp()
+    for name in ('slow.pdf', 'ok.pdf'):
+        open(os.path.join(docs, name), 'wb').write(open(os.path.join(FIX, 'ar-short.pdf'), 'rb').read())
+    with zipfile.ZipFile(docx(short), 'r') as z, zipfile.ZipFile(os.path.join(files, 'ok.pdf.pdf2word.docx'), 'w') as o:
+        o.writestr('word/document.xml', z.read('word/document.xml'))
+    results = tempfile.mktemp(suffix='.jsonl')
+    with open(results, 'w') as f:
+        f.write(json.dumps({'doc': 'slow.pdf', 'tool': 'pdf2word', 'outcome': 'timeout', 'ms': 300000}) + '\n')
+        f.write(json.dumps({'doc': 'ok.pdf', 'tool': 'pdf2word', 'outcome': 'ok', 'ms': 4000, 'ocrPages': 0}) + '\n')
+    out = tempfile.mktemp(suffix='.jsonl')
+    arabic.run(docs, files, out, results)
+    head, rows = arabic.load(out)
+    assert_eq((rows['slow.pdf']['skip'], rows['slow.pdf']['ms']), ('timeout', 300000))
+    assert_eq((rows['ok.pdf']['outcome'], rows['ok.pdf']['ms'], rows['ok.pdf']['ocrPages']), ('ok', 4000, 0))
+    assert_true('recall' in rows['ok.pdf'] and rows['ok.pdf']['numbersAgreed'] >= 1, rows['ok.pdf'])
+    assert_eq(head['corpus'], arabic.corpus_hash(rows.values()))
+
+
+test('run: a timeout is its own status; time and OCR pages come from robust.mjs\'s results', run_statuses)
+
+
+def compare_sets_aside():
+    row = {'producer': 'p', 'sha': 's', 'ms': 4000, **right}
+    worse = {**row, 'recall': row['recall'] - 0.1, 'dots': row['dots'] + 1}
+    base = [{'doc': d, **row} for d in ('known.pdf', 'ocr.pdf', 'slow.pdf', 'broke.pdf', 'fine.pdf')]
+    new = [{'doc': 'known.pdf', **worse}, {'doc': 'ocr.pdf', **worse, 'ocrPages': 2},
+           {'doc': 'slow.pdf', 'sha': 's', 'skip': 'timeout', 'outcome': 'timeout', 'ms': 300000},
+           {'doc': 'broke.pdf', 'sha': 's', 'skip': 'error: x', 'outcome': 'error'}, {'doc': 'fine.pdf', **row, 'ms': 90000}]
+    known = tempfile.mktemp(suffix='.json')
+    json.dump({'bothWrong': {'known.pdf': 'both read the lam-alef backwards'}, 'unverifiable': {}}, open(known, 'w'))
+    text, n = arabic.compare(shard(base), shard(new), known_path=known)
+    assert_eq(n, 1)                       # broke.pdf only: failed now
+    for s in ('known.pdf: both readers wrong', 'ocr.pdf (2 p.', 'timed out now: 1 — slow.pdf', 'failed now: 1',
+              'timed out: 1 — slow.pdf', 'slower than the baseline', 'fine.pdf 4 → 90 s'):
+        assert_true(s in text, f'{s!r} not in\n{text}')
+    # without the known list the same document is judged worse
+    _, n = arabic.compare(shard(base), shard(new), known_path=None)
+    assert_eq(n, 2)
+
+
+test('compare: set-aside and OCR documents are reported, not judged; a timeout warns, a failure is red', compare_sets_aside)
+
+
+def compare_other_content():
+    row = {'producer': 'p', **right}
+    text, n = arabic.compare(shard([{'doc': 'a.pdf', 'sha': '1', **row}]),
+                             shard([{'doc': 'a.pdf', 'sha': '2', **row, 'recall': 0}]), known_path=None)
+    assert_eq(n, 0)
+    assert_true('other content' in text, text)
+
+
+test('compare: a document whose content changed under the same name is not compared', compare_other_content)
+
+
+def migrate():
+    row = {'doc': 'a.pdf', 'sha': '1', 'producer': 'p', **right}
+    old = jsonl({**HEAD, 'corpus': 'c'}, [row])
+    new = jsonl({**HEAD, 'metric': arabic.METRIC_VERSION + 1, 'corpus': 'c'}, [{**row, 'dots': row['dots'] + 1}])
+    text, n = arabic.compare(old, new, migrate=True, known_path=None)
+    assert_eq(n, 1)
+    assert_true('moved by the new metric: 1' in text, text)
+    other = jsonl({**HEAD, 'metric': arabic.METRIC_VERSION + 1, 'corpus': 'd'}, [row])
+    assert_eq(arabic.compare(old, other, migrate=True, known_path=None)[1], -1)
+
+
+test('--migrate: the same outputs under two metric versions — what the new one moves', migrate)
+
+
 print(f"\n{'─' * 50}\nTests: {passed + failed} | ✓ {passed} | {failed} failed")
 sys.exit(1 if failed else 0)

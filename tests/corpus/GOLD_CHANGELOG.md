@@ -42,3 +42,40 @@ converter commit — never by both at once.
   approval itself is the owner's, given outside the repository.
 - **Moves:** nothing measured.
 - **Approved by:** owner, 2026-10-18.
+
+## 2026-10-18 — Arabic metric schema 2: the whole corpus hashed, diagnostics
+
+- **What:** `scripts/quality/arabic.py`, schema 1 → 2, metric still v1 (no
+  score changes: all 281 scored documents of the local v8 run score the same
+  under both, field for field). Each row carries its document's content `sha`;
+  the corpus hash is computed over every row's (doc, sha), so it is the same
+  in any order and changes with any one document. `--merge` joins a night's
+  shards (refusing shards of other readers or metric versions, or a document
+  in two shards) and recomputes the hash over all of them — the nightly report
+  had shard 0's hash only. From robust.mjs's results.jsonl (`--results`):
+  `outcome` (a timeout is its own status, not "no output"), `ms`, `ocrPages`.
+  `numbersAgreed` (the denominator) and `numberCauses` per document: script /
+  reversed / split / inside a longer number / page furniture / Word list
+  number / unexplained. `--compare` reports, and does not judge: documents
+  read partly with OCR, documents set aside in
+  `tests/corpus/cloud/arabic-known.json` (both readers wrong, unverifiable —
+  file not created yet), documents whose content changed under the same name;
+  p50/p95/max runtime, the timed-out documents, a slower-than-baseline warning
+  (never red). A document scored in the baseline that fails now is red; one
+  that times out now is a warning. `--migrate` reports what a new metric
+  version moves on the same outputs. Control cases: 10 → 20.
+- **Why:** owner's conditions (2026-10-18) before a baseline candidate: the
+  hash over all shards with a second-shard and an order test; runtime and
+  timeouts visible; known limits in the schema; OCR not counted as text-layer
+  quality; the lost numbers broken down by cause.
+- **Known limits of the causes:** heuristics that name a cause, never excuse
+  a loss — `numbersMissing` counts every one. Page numbers are taken only
+  where they run with the pages at one offset; a manual sample still shows
+  some body numbers at a page's edge counted as furniture. A Word list number
+  is not read from numbering.xml: whether Word numbers the item the same is
+  not checked.
+- **Moves:** no score. No baseline exists yet.
+- **Approved by:** owner, 2026-10-18, in the working session ("исправление
+  хэша — одобряю без оговорок", with the conditions above). No approval link:
+  the link rule is the next guard change, which itself waits for the owner's
+  comment.
