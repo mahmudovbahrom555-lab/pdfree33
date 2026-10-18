@@ -67,6 +67,11 @@ test('singular page count uses "1 page" not "1 pages"', () => {
   expect(r.detected[0]).toBe('1 page');
 });
 
+test('the pages read with OCR are reported (0 when none)', () => {
+  expect(_p2wConfidence(baseCs(), 12).ocrPages).toBe(0);
+  expect(_p2wConfidence(baseCs({ ocrPages: 2 }), 12).ocrPages).toBe(2);
+});
+
 console.log('\n_p2wConfidence — individual penalties:');
 
 test('scanned pages: all pages are fallback images -> capped at -50', () => {

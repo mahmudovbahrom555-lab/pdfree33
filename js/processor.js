@@ -4945,7 +4945,9 @@ export function _p2wConfidence(cs, medianFontSize) {
 
   score = Math.max(0, Math.min(100, score));
   const level = score >= 80 ? 'high' : score >= 55 ? 'medium' : 'low';
-  return { score, level, detected, warnings };
+  // ocrPages: pages whose text is OCR's, not the text layer's — the corpus
+  // runs (scripts/corpus-cloud/robust.mjs) judge those documents apart
+  return { score, level, detected, warnings, ocrPages: cs.ocrPages || 0 };
 }
 
 // Groups rotated text items (vertical column headers) by X-coordinate proximity.
