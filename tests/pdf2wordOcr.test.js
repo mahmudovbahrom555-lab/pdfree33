@@ -5,7 +5,7 @@
 // Run: node tests/pdf2wordOcr.test.js
 
 import { strict as assert } from 'assert';
-import { ocrItemsFromPage } from '../js/pdf2wordOcr.js';
+import { ocrItemsFromPage, layerScript } from '../js/pdf2wordOcr.js';
 import { _duplicateWords, _wordKey } from '../js/ocrEngine.js';
 import { _rasterCover } from '../js/pdf2readCore.js';
 
@@ -140,6 +140,21 @@ test('a page-size scan covers the page; a photo inside a Form XObject is scaled 
   assert.equal(_rasterCover({ fnArray: [91], argsArray: [[]] }, view), 0);
   assert.equal(_rasterCover(null, view), 0);
 });
+
+// layerScript: the text layer's script, as OCR language detection's hint
+const docOf = pages => ({ numPages: pages.length, getPage: async n => ({ getTextContent: async () => ({ items: [{ str: pages[n - 1] }] }) }) });
+{
+  const ar = 'هذا نص عربي في طبقة النص المكسورة مع بعض الكلمات الإضافية';
+  for (const [name, pages, want] of [
+    ['an Arabic text layer, even broken: ara', [ar, ar, ar], 'ara'],
+    ['an English layer with an Arabic word or two: no hint', ['an English page with a short word ' + 'كتاب', 'more English text here', 'and here'], null],
+    ['a watermark of a few Arabic letters: no hint', ['موقع', '', ''], null],
+    ['no text layer: no hint', ['', '', ''], null],
+  ]) {
+    const got = await layerScript(docOf(pages));
+    test(`the layer's script — ${name}`, () => assert.equal(got, want));
+  }
+}
 
 const total = passed + failed;
 console.log(`\n${'─'.repeat(50)}`);

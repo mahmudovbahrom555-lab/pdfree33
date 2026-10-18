@@ -63,6 +63,26 @@ const EN = 'Clean flattens the background to pure white and darkens the text for
 // `eng` on a page of another script, or of two: unsure, much of it unreadable
 const engOn = (latin, low = 120) => reading(45, { lat: latin, low });
 
+// 7491997 / 3508224-like (corpus, 2026-10-18): `ara+eng` wins, but below the
+// clear-winner bar (a fifth of its words sure) — every other script model was
+// probed before it was taken. The page's own text layer is Arabic.
+const araWeakWin = { eng: engOn(20), 'ara+eng': reading(70, { arb: 20, low: 80 }), ara: reading(72, { arb: 22 }), fas: reading(60, { arb: 15 }) };
+await test('the text layer\'s script: an Arabic probe that wins below the clear bar ends the probing — same answer, three probes instead of eight', async () => {
+  const slow = await detect(araWeakWin);
+  const fast = await detect(araWeakWin, { layerLang: 'ara' });
+  assert.equal(slow.d.lang, 'ara');
+  assert.equal(fast.d.lang, 'ara');
+  assert.ok(slow.probed.includes('jpn+eng'), `without the layer's script every model is asked: ${slow.probed}`);
+  assert.deepEqual(fast.probed, ['ara+eng', 'ara', 'fas']);
+});
+
+await test('the text layer\'s script is a hint, not an order: a probe too weak to win goes on to the others', async () => {
+  const weak = { eng: engOn(20), 'ara+eng': reading(60, { arb: 6, low: 90 }), 'heb+eng': reading(88, { heb: 150 }) };
+  const { d, probed } = await detect(weak, { layerLang: 'ara' });
+  assert.equal(d.lang, 'heb');
+  assert.ok(probed.includes('heb+eng'), String(probed));
+});
+
 await test('a clean English page is read in English, with no probe', async () => {
   const { d, probed } = await detect({ eng: reading(95, { lat: 270 }, EN) });
   assert.equal(d.lang, 'eng');

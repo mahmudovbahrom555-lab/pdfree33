@@ -145,6 +145,20 @@ export function ocrItemsFromPage(rec) {
   return items;
 }
 
+// The script of a document's text layer, as a hint for OCR language
+// detection: 'ara' when the sampled pages hold 30+ Arabic-script letters and
+// they are 60 % of the letters — a layer too broken or thin to read still
+// says what it was written in. Only Arabic script was measured (2026-10-18).
+export async function layerScript(pdfDoc) {
+  let own = 0, all = 0;
+  for (const p of [...new Set([1, Math.ceil(pdfDoc.numPages / 2), pdfDoc.numPages])]) {
+    const text = (await (await pdfDoc.getPage(p)).getTextContent()).items.map(i => i.str).join(' ').normalize('NFKC');
+    own += (text.match(/[\u0600-\u06FF\u0750-\u077F]/g) ?? []).length;
+    all += (text.match(/\p{L}/gu) ?? []).length;
+  }
+  return own >= 30 && own >= 0.6 * all ? 'ara' : null;
+}
+
 // The `ocrPage` seam for one PDF→Word run, plus close() to free the engine.
 // The language is detected once, on first use, from the document's page
 // images (detectOcrLanguage samples its pages; their text layer, broken or
@@ -159,7 +173,7 @@ export function createOcrLayer(pdfDoc, { onPage = () => {}, rotated = true } = {
     try {
       await loadTesseract();
       let worker = await createOcrWorker('eng');
-      const detection = await detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer: true, hint: ocrLangForLocale(getLang()) });
+      const detection = await detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer: true, hint: ocrLangForLocale(getLang()), layerLang: await layerScript(pdfDoc) });
       if (!detection.confident) { await worker.terminate(); return null; }
       // a new worker for another language (see detectOcrLanguage)
       if (detection.lang !== 'eng') {
