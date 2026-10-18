@@ -406,11 +406,19 @@ test('a table rule between two close items keeps them in separate runs', () => {
   assert.equal(lineRuns([run('أ', 100, 5), run('ب', 109, 5)]).length, 1);
 });
 
-test('a stream already running right-to-left (logical) is left untouched', () => {
+test('a stream already running right-to-left (logical) keeps its order — its word gaps get their spaces', () => {
   const items = [glyph('שלום', 100, 30), glyph('עולם', 60, 30), glyph('זה', 20, 20)];
-  const before = items.map(i => i.str);
   reorderVisualRtlLine(items);
-  assert.deepEqual(items.map(i => i.str), before);
+  assert.deepEqual(items.map(i => i.str), ['שלום', ' עולם', ' זה']);
+});
+
+test('a logical line drawn letter by letter (macOS Quartz) gets its word spaces back', () => {
+  // corpus 6199289: "• تونس – منظمة" as one item per letter, words 3.3 pt apart
+  const g = (str, x, width) => ({ str, x, width, fontSize: 14 });
+  const items = [g('ت', 484.3, 2.9), g('و', 479.1, 5.2), g('ن', 476.2, 2.9), g('س', 466.3, 9.9), g('–', 456.3, 6.7),
+    g('م', 448.2, 4.7), g('ن', 445.3, 2.9), g('ظ', 438.3, 7), g('م', 433.6, 4.7), g('ة', 429.1, 4.5)];
+  reorderVisualRtlLine(items);
+  assert.equal(items.map(i => i.str).join(''), 'تونس – منظمة');
 });
 
 // ── First-line-indent paragraphs (book layout: no gap, first line indented).
