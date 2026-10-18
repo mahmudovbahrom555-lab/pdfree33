@@ -27,3 +27,18 @@ converter commit — never by both at once.
 - **Approved by:** owner, 2026-10-18 (conditions: control cases, versions and
   coverage in the results, a CI check, a baseline only after two CI runs and
   the owner's review).
+
+## 2026-10-18 — the guard
+
+- **What:** `scripts/check_gold.py` — in pre-commit, and in the deploy
+  workflow on every pushed commit: a change to the gold pages, a baseline, the
+  Arabic metric, its control cases or this guard is a commit of its own (no
+  `js/`), with a `Gold-Change-Approved:` trailer and an entry here. A section
+  in CLAUDE.md says the same to agents.
+- **Why:** the audit's rule: an agent must not move the target to pass.
+- **What it is not:** authorization. Anyone who can push — an agent working
+  under the owner's account included — can write the trailer and the entry;
+  the guard makes such a change impossible to make quietly or by accident. The
+  approval itself is the owner's, given outside the repository.
+- **Moves:** nothing measured.
+- **Approved by:** owner, 2026-10-18.

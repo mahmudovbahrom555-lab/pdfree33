@@ -152,6 +152,23 @@ concern) — because verifying the template against ONE real instance is what su
 instance-specific gaps (like the CDN/CSP dependency above) that a batch copy would otherwise bake
 into all N copies at once, each needing its own separate fix instead of one.
 
+## Measuring sticks — never move the target to pass (owner rule, 2026-10-17)
+
+The gold pages (`tests/corpus/gold/`), the frozen Arabic baseline
+(`tests/corpus/cloud/arabic-baseline.jsonl`), the metric that reads them
+(`scripts/quality/arabic.py`), its control cases (`tests/quality/`,
+`tests/fixtures/quality/`) and their guard decide whether a change is an
+improvement. Never edit them to make a fix pass, and never loosen a test's
+criteria for it. They change only in a commit of their own (no `js/` in it),
+after the owner approved that specific change, with a
+`Gold-Change-Approved: <who, why>` trailer and an entry in
+`tests/corpus/GOLD_CHANGELOG.md`. `scripts/check_gold.py` checks this in
+pre-commit (`GOLD_CHANGE_APPROVED=1` once approved) and in CI on every pushed
+commit — an audit trail, not authorization: the approval itself is the
+owner's, outside the repo. A metric bug found while fixing is reported to the
+owner, not quietly corrected in the same change. A baseline is never accepted
+automatically: it comes from CI runs and the owner approves it.
+
 ## Homepage UX — CRITICAL CONSTRAINT
 **The hero section (`#hero`) must always be the first thing a user sees.**
 

@@ -81,6 +81,14 @@ jobs:
           python3 scripts/check_i18n.py
           python3 scripts/check_sw.py
 
+      - name: Measuring sticks change only on their own, with a written reason
+        # Gold pages, baselines, the Arabic metric and its control cases: every
+        # pushed commit that touches them has no js/, a Gold-Change-Approved
+        # trailer and a tests/corpus/GOLD_CHANGELOG.md entry — checked here too,
+        # so --no-verify can't skip it. An audit trail, not authorization: see
+        # scripts/check_gold.py.
+        run: python3 scripts/check_gold.py --ci "${{ github.event.before }}" "${{ github.sha }}"
+
       - name: Arabic metric — control cases
         # scripts/quality/arabic.py must see each pain it claims to (one dot,
         # one reversed word, one glued pair, one lost number) and say what it
