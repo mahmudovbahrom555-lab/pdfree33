@@ -297,7 +297,7 @@ const _LATIN = /[A-Za-zÀ-ɏ]/;
 // model paired with English, on workers of their own. Returns detectOcrLanguage's
 // result, without switching `worker` (the caller does, once it has its
 // answer), or null when the image has too little text to judge.
-async function _judgeImage(cvs, worker, hint, newWorker) {
+async function _judgeImage(cvs, worker, hint, newWorker, layerLang = null) {
   const res  = await worker.recognize(cvs);
   const txt  = res?.data?.text ?? '';
   const conf = res?.data?.confidence ?? 0;
@@ -337,6 +337,12 @@ async function _judgeImage(cvs, worker, hint, newWorker) {
     const best = scored.reduce((a, b) => (b.own > a.own ? b : a));
     // a clear winner ends the probing; Chinese and Japanese each need the other's say
     if (best.share >= 0.25 && best.own >= 15 && (!_CJK_PROBES.includes(best.lang) || _CJK_PROBES.every(l => tried.includes(`${l}+eng`)))) break;
+    // The page's own text layer — broken or thin, so not read — is in this
+    // script: a lower bar. A two-page scan probed all six script models before
+    // `ara` won (3508224-like, 61–75 s of detection); with the layer's script,
+    // 4 of 8 such documents stop after the first, 20–43 s faster each, and all
+    // 36 OCRed documents of the Arabic corpus come out the same (2026-10-18).
+    if (layerLang && best.lang === layerLang && best.own >= 8 && best.share >= 0.15) break;
   }
   const ranked = scored.filter(s => s.own >= 15 && s.share >= 0.12).sort((a, b) => b.own - a.own);
   const metrics = { initial: primary.lang, suspicious, tried, confidenceInitial: conf };
@@ -387,7 +393,9 @@ async function _judgeImage(cvs, worker, hint, newWorker) {
 // `ignoreTextLayer`: judge from the page image only — for pages whose text
 // layer is garbage (PDF→Word's OCR layer reads only such pages and scans).
 // `newWorker`: how a probe worker is made (createOcrWorker; tests pass a stub).
-export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = false, hint = null, newWorker = createOcrWorker } = {}) {
+// `layerLang`: a script probe the page's own (unread) text layer is written
+// in — taken at a lower bar when it comes first (see _judgeImage).
+export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = false, hint = null, newWorker = createOcrWorker, layerLang = null } = {}) {
   const total = pdfDoc.numPages;
   const pages = [...new Set([1, Math.ceil(total / 2), total])];
 
@@ -418,11 +426,11 @@ export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = fals
     // probe on clean and office scans at this size (77 → 62, 75 → 54). A phone photo (shadow, tilt) reads at 14–33 with every model on
     // the plain render — never sure, so PDF→Word left it a picture, an English
     // invoice photo included — and at 46–72 Enhanced (2026-10-10).
-    let d = await _judgeImage(cvs, worker, hint, newWorker);
+    let d = await _judgeImage(cvs, worker, hint, newWorker, layerLang);
     if (!d?.confident) {
       const enh = await _enhanceForOcrAsync(cvs).catch(() => null);
       if (enh) {
-        const e = await _judgeImage(enh.canvas, worker, hint, newWorker);
+        const e = await _judgeImage(enh.canvas, worker, hint, newWorker, layerLang);
         enh.canvas.width = 0; enh.canvas.height = 0;
         if (e?.confident) d = { ...e, metrics: { ...e.metrics, enhanced: true } };
       }
