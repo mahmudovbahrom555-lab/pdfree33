@@ -10,7 +10,7 @@
 import { strict as assert } from 'assert';
 import { joinSplitNumbers, restoreDroppedSpaces, joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
   lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
-  continuesWrappedHeading, lineRuns , textLayerLooksBroken, toUnifiedIdeographs, joinTouchingItems, dropCjkGapSpaces } from '../js/textLayoutUtils.js';
+  continuesWrappedHeading, lineRuns , textLayerLooksBroken, toUnifiedIdeographs, joinTouchingItems, dropCjkGapSpaces, isContentsEntry } from '../js/textLayoutUtils.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -586,7 +586,18 @@ test('textLayerLooksBroken: Japanese with Latin letters beside kana and kanji is
   assert.equal(textLayerLooksBroken('മലയാളംಕನ್ನಡעבריתعربي '.repeat(20)), true);
 });
 
+test('a table of contents line — a dot leader and a page number at an end — is a paragraph of its own', () => {
+  const ln = str => ({ items: [{ str }] });
+  for (const t of ['1.1 الغرض من المدونة ................ 6', 'رضورت وہ وت فرآن یک واحض اہشدت یھب نس ےیجیل۔ ................47',
+    'Introduction .......................... 3', '12 ............. الملخص التنفيذي', 'الفصل الأول · · · · · · ١٧'])
+    assert.equal(isContentsEntry(ln(t)), true, t);
+  for (const t of ['وقال… ثم سكت', 'الاسم: ................................', 'In 2024 the total was 12... more or less',
+    'مجلة جامعة النجاح المجلد 35(7) 2021 ـــــــــــــــــ 1080'])
+    assert.equal(isContentsEntry(ln(t)), false, t);
+});
+
 const total = passed + failed;
+
 console.log(`\n${'─'.repeat(50)}`);
 console.log(`Tests: ${total} | ✓ ${passed} | ${failed} failed`);
 if (failed > 0) process.exit(1);
