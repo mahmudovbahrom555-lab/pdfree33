@@ -151,10 +151,13 @@ jobs:
         run: |
           python3 -m http.server 8934 --directory dist >/dev/null 2>&1 &
           sleep 2
-          node scripts/corpus-cloud/robust.mjs --docs arabic-docs --tools pdf2word --out arabic-out --jobs 2 --save --timeout 180
+          # 300 s, not 180: five documents ran out of time in CI at 180 (owner,
+          # 2026-10-18: a stop-gap — the report lists every timeout and the
+          # runtime p50/p95/max, so slow documents stay visible)
+          node scripts/corpus-cloud/robust.mjs --docs arabic-docs --tools pdf2word --out arabic-out --jobs 2 --save --timeout 300
       - name: Strict Arabic metrics
         if: always()
-        run: python3 scripts/quality/arabic.py arabic-docs arabic-out/files arabic-out/arabic.jsonl
+        run: python3 scripts/quality/arabic.py arabic-docs arabic-out/files arabic-out/arabic.jsonl --results arabic-out/results.jsonl
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
@@ -167,6 +170,9 @@ jobs:
     needs: arabic
     if: always() && needs.arabic.result != 'skipped'
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      issues: write      # a red night opens (or comments on) an issue: a human is told
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
@@ -174,28 +180,34 @@ jobs:
           pattern: arabic-results-*
           path: results
       - name: Against the baseline
+        id: compare
         run: |
           pip3 install pymupdf==1.26.5
-          python3 - <<'EOF2'
-          import glob, json
-          rows, head = [], None
-          for p in sorted(glob.glob('results/*/arabic.jsonl')):
-              for line in open(p):
-                  r = json.loads(line)
-                  if 'oracle' in r: head = head or line
-                  else: rows.append(line)
-          open('arabic-night.jsonl', 'w').write((head or '{"oracle": null}\n') + ''.join(sorted(rows)))
-          EOF2
+          # one night from its shards: the corpus hash over all of them
+          python3 scripts/quality/arabic.py --merge arabic-night.jsonl results/*/arabic.jsonl
           status=0
           if [ -f tests/corpus/cloud/arabic-baseline.jsonl ]; then
-            # red when a document got worse or the results can't be compared:
-            # a signal for a human, never a deploy gate, never a new baseline
+            # red when a document got worse or failed, or the results can't be
+            # compared: a signal for a human, never a deploy gate, never a new
+            # baseline
             python3 scripts/quality/arabic.py --compare tests/corpus/cloud/arabic-baseline.jsonl arabic-night.jsonl --fail-on-worse > arabic-report.md || status=1
           else
-            echo "No baseline yet. This run's arabic-night.jsonl is a candidate only: a baseline needs two CI runs that agree and the owner's approval (tests/corpus/GOLD_CHANGELOG.md)." > arabic-report.md
+            { echo "No baseline yet. This run's arabic-night.jsonl is a candidate only: a baseline needs two CI runs that agree and the owner's approval (tests/corpus/GOLD_CHANGELOG.md). The night against itself, for its totals, runtime and timeouts:"; echo;
+              python3 scripts/quality/arabic.py --compare arabic-night.jsonl arabic-night.jsonl; } > arabic-report.md
           fi
           cat arabic-report.md >> "$GITHUB_STEP_SUMMARY"
           exit $status
+      - name: A red night tells a human
+        if: failure() && steps.compare.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title='Arabic PDF→Word nightly is red'
+          { echo "$RUN"; echo; head -c 60000 arabic-report.md; } > body.md
+          n=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "\"$title\" in:title" --json number --jq '.[0].number // empty')
+          if [ -n "$n" ]; then gh issue comment "$n" --repo "$GITHUB_REPOSITORY" --body-file body.md
+          else gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body-file body.md; fi
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: arabic-report
