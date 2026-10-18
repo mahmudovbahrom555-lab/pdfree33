@@ -161,6 +161,15 @@ test('a number in pieces across RTL items is put back in its own order', () => {
   assert.deepEqual(line.map(i => i.str), ['العامة لألمم املتحدة عام 2015', '', '، ومن احملدد بلوغ']);
 });
 
+test('a number piece with a space at its end — an ActualText digit over a mirrored bracket glyph — still joins, its space kept', () => {
+  // corpus 5494457, a footnote: "1" drawn with a ")" glyph, its /ActualText "1",
+  // the item " 1"; read "مايو 1202م" for "مايو 2021م"
+  const line = [{ str: 'و', x: 342, width: 3.6, fontSize: 9, rtl: true }, { str: ' 1', x: 335.1, width: 4.4, fontSize: 9, rtl: false },
+    { str: '202م', x: 317.6, width: 17.5, fontSize: 9, rtl: true }, { str: '(', x: 314.6, width: 3, fontSize: 9, rtl: false }];
+  joinSplitNumbers(line);
+  assert.deepEqual(line.map(i => i.str), ['و', ' ', '2021م', '(']);
+});
+
 test('a left-to-right item\'s last digit is at its right end: a contents line\'s section and page numbers stay apart', () => {
   // corpus 3836300, page 8: "…… خلفية تارخيية 1" (ltr, its "1" at x 390.7) and the page number "39" at 73.8
   const line = [{ str: '.......... خلفية تارخيية 1', x: 87.8, width: 308.5, fontSize: 11.2, rtl: false }, { str: '39', x: 73.8, width: 11.2, fontSize: 11.2, rtl: false }];
