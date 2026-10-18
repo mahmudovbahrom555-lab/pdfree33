@@ -615,7 +615,7 @@
         "pl": "Kompresuj PDF — Darmowy, Bez Przesyłania | PDFree",
         "tr": "PDF Sıkıştır — Ücretsiz, Yükleme Yapmadan | PDFree",
         "zh-CN": "免费压缩 PDF — 缩小文件体积，不损失画质 | PDFree",
-        "ar": "ضغط PDF مجانًا — تقليل حجم الملف بدون فقدان الجودة | PDFree"
+        "ar": "ضغط ملف PDF مجانًا — تقليل الحجم بدون فقدان الجودة | PDFree"
       },
       "descs": {
         "en": "Reduce PDF file size without losing quality. Processed locally in your browser — files never uploaded.",
@@ -723,7 +723,7 @@
         "pl": "Zmniejsz rozmiar PDF o 20–80% bez utraty jakości — darmowy kompresor PDF w przeglądarce. Nic nie przesyłane ani przechowywane, bez rejestracji.",
         "tr": "PDF boyutunu %20–80 küçültün — tarayıcıda çalışan ücretsiz PDF sıkıştırıcı. Yükleme yok, depolama yok, kayıt yok.",
         "zh-CN": "将 PDF 文件体积缩小 20–80%，不损失画质 —— 免费的浏览器端 PDF 压缩工具。不上传、不存储、无需注册、无限制。",
-        "ar": "قلّل حجم ملف PDF بنسبة 20–80% بدون فقدان الجودة — أداة ضغط PDF مجانية تعمل في متصفحك. لا رفع، لا تخزين، بدون تسجيل، بدون قيود."
+        "ar": "ضغط ملف PDF مجانًا: قلّل حجمه بنسبة 20–80% بدون فقدان الجودة. لا يُرفع ملفك إلى أي خادم — يعمل داخل متصفحك. بدون تسجيل، بدون حد يومي."
       },
       "ogTitles": {
         "en": "Compress PDF Free — Smaller File, No Quality Loss, No Upload",
@@ -741,7 +741,7 @@
         "pl": "Kompresuj PDF Za Darmo — Bez Przesyłania | PDFree",
         "tr": "PDF Sıkıştır Ücretsiz — Yükleme Yok | PDFree",
         "zh-CN": "免费压缩 PDF —— 文件更小，画质不变，无需上传",
-        "ar": "ضغط PDF مجانًا — حجم أصغر، بدون فقدان الجودة، بدون رفع"
+        "ar": "ضغط ملف PDF مجانًا — حجم أصغر، بدون فقدان الجودة، بدون رفع"
       },
       "ogDescs": {
         "en": "Free PDF compressor — reduce file size for email, web forms, or storage. 20–80% smaller. Runs in your browser, files never uploaded. No signup.",
