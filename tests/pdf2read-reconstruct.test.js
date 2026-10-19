@@ -30,6 +30,7 @@ const docx = await import('docx');
 global.window.docx = docx;
 
 const { _rpBuildPageBlocks, _normWatermark, _fixCyrillicMojibake } = await import('../js/pdf2readCore.js');
+const { detectColumnRegions } = await import('../js/pdf2wordColumns.js');
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -47,7 +48,8 @@ const mkItem = (str, x, fontSize = 12, extra = {}) => ({
   str, x, width: str.length * fontSize * 0.5, fontSize, bold: false, italic: false, ...extra,
 });
 const mkLine = (items, y) => ({ y, rtl: false, items: Array.isArray(items) ? items : [items] });
-const mkPage = (lines, pageH = 792, pageW = 612, borderGrids = []) => ({ lines, pageH, pageW, borderGrids });
+// The page as _p2wBuildPageData hands it over: the column regions it found.
+const mkPage = (lines, pageH = 792, pageW = 612, borderGrids = []) => ({ lines, pageH, pageW, borderGrids, columnRegions: detectColumnRegions(lines, pageW) });
 
 console.log('\n_rpBuildPageBlocks — heading + body paragraph become separate blocks:');
 
