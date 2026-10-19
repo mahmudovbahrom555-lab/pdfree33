@@ -502,9 +502,13 @@ export function _visualRTLToLogical(s) {
 // specifically so it's unit-testable without a real pdf.js
 // PDFDocumentProxy — it only needs the `lines` shape _p2wBuildPageData
 // already produces at this point, not the parser itself.
+//
+// Returns the regions it split by (null: one column). The page's later passes
+// use these same regions instead of detecting again on the split lines, where
+// a line no longer shows the columns standing side by side in it.
 export function _splitCrossColumnLines(lines, pageW) {
   const columnRegions = detectColumnRegions(lines, pageW);
-  if (!columnRegions) return;
+  if (!columnRegions) return null;
   for (let li = lines.length - 1; li >= 0; li--) {
     const ln = lines[li];
     if (lineSpansRegions(ln, columnRegions)) continue; // a full-width line, not two columns' lines
@@ -525,6 +529,7 @@ export function _splitCrossColumnLines(lines, pageW) {
       .map(([, regionItems]) => ({ y: Math.max(...regionItems.map(i => i.y)), rtl: ln.rtl, items: regionItems }));
     lines.splice(li, 1, ...splitLines);
   }
+  return columnRegions;
 }
 
 // First-line-indent paragraphs (book/report style: no space between paragraphs,

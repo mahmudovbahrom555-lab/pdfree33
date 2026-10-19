@@ -36,7 +36,7 @@
 // ============================================================
 
 import { detectTables, looksLikeProseNotData, looksLikeEnumeratedList } from './pdf2wordTables.js';
-import { detectColumnRegions, pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
+import { pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
 import { detectTableGrids, lineInGrid, gridRowsOfLines, gridHoldsTable } from './pdf2wordBorders.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken, joinSpacedItems, dropCjkGapSpaces, applyActualText, restoreDroppedSpaces, joinSplitNumbers } from './textLayoutUtils.js';
@@ -548,10 +548,9 @@ function _rpBuildRegionBlocks(lines, borderGrids, xBounds, median, repeatTextSet
 // order (not absolute-position shapes) since a reading view has no
 // "canvas" to place shapes on, only a reading sequence.
 export function _rpBuildPageBlocks(page, median, repeatTextSet, repeatPatternSet) {
-  const { lines, pageW, pageH, borderGrids = [] } = page;
+  const { lines, pageW, pageH, borderGrids = [], columnRegions: regions } = page;
   if (!lines.length) return { blocks: [], scanned: true };
 
-  const regions = pageW ? detectColumnRegions(lines, pageW) : null;
   const splittable = regions && !borderGrids.some(g =>
     regions.filter(r => g.x < r.right && (g.x + g.w) > r.left).length > 1
   );
@@ -819,10 +818,10 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
 
     // Column-aware line re-splitting — see _splitCrossColumnLines() below
     // for why this has to happen here, before anything else touches `lines`.
-    _splitCrossColumnLines(lines, pageW);
+    const columnRegions = pageW ? _splitCrossColumnLines(lines, pageW) : null;
 
     allSizes.push(...items.map(i => i.fontSize).filter(s => s > 0));
-    pageData.push({ lines, rotatedItems, borderGrids, pageH, pageW, items });
+    pageData.push({ lines, rotatedItems, borderGrids, pageH, pageW, items, columnRegions });
 
     // Accumulate confidence stats from this page
     _cs.totalLines += lines.length;

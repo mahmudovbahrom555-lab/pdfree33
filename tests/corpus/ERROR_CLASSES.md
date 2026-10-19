@@ -209,31 +209,46 @@ committed.
 
 ## C7 — a one-column RTL page cut into "two columns" at a midpoint
 
-- **Status:** `found` (2026-10-19), measured, not fixed — needs the owner's
-  order metric first
+- **Status:** `fixing` (2026-10-19) — fix in a pull request, not yet on
+  pdfree.io
 - **Harm:** high, and hidden — words all there, their order scrambled: a
   justified one-column Arabic page (1373210, Acrobat Distiller 11) read
   "حينما أراد في أعقاب العالمية الحرب الأولى…" for "في أعقاب الحرب العالمية
   الأولى … وذلك حينما أراد"; a bag-of-words metric scores it 94 %.
-- **Cause:** `detectColumnRegions` (`js/pdf2wordColumns.js`) — when the
-  direction-aware detection finds no gutter it falls back to clustering the
-  lines' LEFT edges, meaningless on right-to-left text; wide justification
-  spaces at about the same x made a second "column", cut at a midpoint, and
-  every line was torn in two and read column by column. The gutter search
-  itself fails both ways: it found a false gutter on 1373210 (x ≈ 237, where
-  the wide spaces line up) and none on a real two-column Arabic page
-  (4197540, Adobe PDF Library 15).
-- **Measured, 289 documents, order = the share of unique anchor words (both
-  readers, once each) in the output's order (longest increasing run):**
-  turning the fallback off for RTL-majority pages changed 149 documents —
-  order better on 100 (1373210 0.74 → 0.99, 1752892 0.70 → 1.0, 2278552
-  0.71 → 1.0), worse on 11, the real two-column pages among them (4197540
-  0.905 → 0.62, 6997456 0.73 → 0.51); ground-truth pages (ar/fa/en-cols2)
-  unchanged. Not shipped: it trades real columns for false ones.
-- **Next:** a gutter test that a justified line's wide spaces can't pass (a
-  real gutter is empty on most lines of both columns, at one x; aligned
-  spaces are not); the order metric in `scripts/quality/arabic.py` (owner's
-  review) so the change can be judged in CI.
+- **Cause, three parts:**
+  1. `detectColumnRegions` (`js/pdf2wordColumns.js`) — when the
+     direction-aware detection finds no gutter it falls back to clustering
+     the lines' LEFT edges, meaningless on right-to-left text: the short,
+     right-aligned last lines of paragraphs made a second "column", cut at a
+     midpoint, and every line was read column by column.
+  2. The gutter search rejected real gutters crossed by more than 3 % of all
+     runs (headings, captions): 4197540, a real two-column magazine page.
+  3. Columns were detected twice per page — on the lines as drawn
+     (`_splitCrossColumnLines`, which cuts them) and again on the cut lines
+     (`processor.js`, `_rpBuildPageBlocks`), which read them. The two answers
+     differed on many pages (24 of 32 on 1373210): lines cut at one x, read
+     by regions at another.
+- **Fix:** an RTL page with no gutter is one column unless its lines hold two
+  columns side by side (≥ 25 % of lines with a gap wider than 2 em —
+  newspapers 0.22–0.77, justified one-column pages 0–0.2); a valley may hold
+  a tenth of the text's own cover, not only 3 % of runs; the regions found on
+  the lines as drawn travel with the page (`columnRegions`) and every later
+  pass uses them.
+- **Measured, 289 documents** (order = the share of unique anchor words — in
+  both readers once each — in the output's order; the metric of the owner's
+  PR #39, not yet merged): order 87.0 → 92.0 % over 205 documents, better on
+  76, worse on 3; recall unchanged (94.82 → 94.83 %); the +153 "lost numbers"
+  are repeated footers now dropped as page furniture, as on other one-column
+  pages (7762669: "1 وبالگ … mihanblog.com" on every page). Ground-truth pages
+  (40, all languages): identical.
+- **Left (worse on 3):** 4197540 (columns at different heights — its lines
+  never merge, so the side-by-side test can't see them; 0.905 → 0.83),
+  4442085 and 4904228 (a midpoint boundary in the wrong place, which the
+  second detection used to hide). All three need the same thing: a gutter
+  search that finds an RTL page's real gutter.
+- **Discovery set:** 1373210, 1752892, 2278552; control: the 11 real
+  two-column pages the first attempt broke (2315841, 3079058, 4904228,
+  0364023, 6997456, 4197540, …).
 
 ## C8 — a right-to-left line in stream order lost its word spaces
 
