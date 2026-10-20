@@ -506,5 +506,33 @@ def order_unverifiable():
 
 
 test('v4: readers that disagree on almost every anchor give no order score, listed as not checkable', order_unverifiable)
+
+
+# ── metric v5 (2026-10-21): digits as the page draws them (class C4)
+
+C4 = lambda f: os.path.join(FIX, f)
+read_as = lambda f, a, b: [arabic.readers(C4(f))[0].replace(a[0], b[0]).replace(a[1], b[1])]
+
+
+def c4_drawn_digits_count():
+    # both readers read "3122 … 5107"; the page draws "2011 … 4096"
+    drawn = arabic.score(C4('c4-ar-wrong-digits.pdf'), docx(read_as('c4-ar-wrong-digits.pdf', ('3122', '5107'), ('2011', '4096'))))
+    assert_eq(drawn['numbersMissing'], 0)
+    assert_eq(drawn['digitsRedrawn'], 2)
+    as_read = arabic.score(C4('c4-ar-wrong-digits.pdf'), docx(read_as('c4-ar-wrong-digits.pdf', ('3122', '5107'), ('3122', '5107'))))
+    assert_eq(as_read['numbersMissing'], 2)
+
+
+test('v5: the digits a page draws count, the ones both readers misread from ToUnicode don\'t (v4 had it backwards)', c4_drawn_digits_count)
+
+
+def c4_font_cmap_wrong():
+    # ToUnicode right, the font's own cmap swapping 2 and 3: the page backs ToUnicode
+    r = arabic.score(C4('c4-ar-font-cmap-wrong.pdf'), docx([arabic.readers(C4('c4-ar-font-cmap-wrong.pdf'))[0]]))
+    assert_eq(r['numbersMissing'], 0)
+    assert_true('digitsRedrawn' not in r, r)
+
+
+test('v5: a font whose own cmap is the wrong one redraws nothing', c4_font_cmap_wrong)
 print(f"\n{'─' * 50}\nTests: {passed + failed} | ✓ {passed} | {failed} failed")
 sys.exit(1 if failed else 0)

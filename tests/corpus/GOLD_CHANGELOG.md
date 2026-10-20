@@ -202,3 +202,40 @@ converter commit — never by both at once.
   (6): 0190904, 2189356, 3286074, 4542735, 5680731, 5986935. No comparison
   across metric versions: a new baseline is needed under v4.
 - **Approved by:** this pull request's review.
+
+## 2026-10-21 — Arabic metric v5 (schema 6): digits as the page draws them
+
+- **What:** `scripts/quality/arabic.py` metric 4 → 5, schema 5 → 6: before
+  anything is counted, both readers' words and numbers are corrected where
+  `scripts/quality/digits.py` finds a font whose ToUnicode names its digit
+  glyphs wrongly. Candidates: a digit glyph (MuPDF's text trace) whose
+  embedded font's own Unicode cmap calls it another digit; the RENDERED page
+  decides — each glyph cut from MuPDF's render and matched against 390
+  reference digits (`scripts/quality/digit_refs.npz`, open-licensed fonts,
+  `make_digit_refs.py`) between the two candidates, with its height; a
+  font's digits are redrawn only where the page backs its cmap on ≥ 2/3 of
+  its candidates. Digit runs inside words too (Urdu "دربمس0202ء"). New
+  per-document `digitsRedrawn`. Not PDFree's code: the product's fix reads
+  the glyph's outline, this reads the page. Control cases 29 → 31 on two
+  new fixtures (`tests/fixtures/quality/make-c4-digits.py`, Amiri — OFL):
+  an output with the drawn digits loses no number, one with ToUnicode's
+  loses both; a font whose own cmap is the wrong one redraws nothing. CI
+  installs numpy 2.2.6 and fontTools 4.60.2 where documents are scored.
+- **Why — the owner's request after PR #51 (C4), 2026-10-21:** v4 scored
+  against MuPDF and poppler, which both read the misnamed digits, so
+  PDFree's C4 fix (30 documents, each change checked on the page) showed as
+  3,441 → 4,444 lost numbers. The arbiter was calibrated on 120 glyphs
+  hand-labeled from page images: 54/54, and 57/57 on documents it was not
+  tuned on — with these open-font references as with the earlier ones.
+- **Moves (--migrate, the same 289 outputs of PR #51's build, v4 → v5):**
+  numbers redrawn in 28 documents (1,577 numbers); long documents' lost
+  numbers 4,444 → 3,569; words and order unchanged. Moved worse: 0045417
+  (5 → 13) and 7407593 (78 → 112) — digits PDFree still writes wrong (from
+  fonts its fix doesn't cover yet: simple TrueType), which v4 counted as
+  right. Judged
+  by v5, PR #51 (old → new outputs): lost numbers 4,416 → 3,569, worse on 3
+  by one number each (0399787, 2435450, 7733378) — a known limit: there
+  MuPDF itself doesn't follow the font's ToUnicode, so no candidate is
+  found; the product's change on 7733378 and 0399787 was checked correct on
+  the page. No comparison across metric versions: a new baseline under v5.
+- **Approved by:** this pull request's review.

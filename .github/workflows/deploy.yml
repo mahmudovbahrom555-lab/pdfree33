@@ -101,7 +101,7 @@ jobs:
         # can't. See tests/quality/test_arabic_metric.py.
         run: |
           sudo apt-get install -y -q poppler-utils
-          pip3 install pymupdf==1.26.5
+          pip3 install pymupdf==1.26.5 numpy==2.2.6 fonttools==4.60.2
           python3 tests/quality/test_arabic_metric.py
 
       - name: Validate js/vendor/pdf-lib.min.js matches the pinned devDependency
