@@ -18,6 +18,11 @@
 //  in the page's own space — was taken for rotated labels: an empty Word file
 //  (a Persian book of 62 such pages: 0 words, Smallpdf 90 %).
 //  Fixture: rotated-pages.pdf (make-rotated.mjs, rotated-pages.json).
+//  And digits a font's ToUnicode names wrongly (class C4, 2026-10-21): a
+//  page drawing "2011" read as "3122" by every text reader — 26 of 269
+//  Arabic-script corpus documents with digits (js/pdfDigitFix.js); and the
+//  control, a font whose own cmap is the wrong one, left alone.
+//  Fixtures: c4-wrong-digits.pdf, c4-font-cmap-wrong.pdf (make-c4-digits.py).
 //  Run: node tests/e2e/pdf2word-arabic.e2e.mjs   (dist/ served on :8934)
 // ============================================================
 
@@ -99,6 +104,16 @@ try {
       if (k < 0 || k < at) throw new Error(`page ${i + 1}: "${en.split(':')[0]}" ${k < 0 ? 'missing' : 'out of order'}`);
       at = k;
     });
+  });
+
+  await test('digits ToUnicode names wrongly come out as drawn: "2011, total 4096", not "3122, total 5107"', async () => {
+    const out = await docxText(browser, 'c4-wrong-digits.pdf');
+    if (!out.includes('2011') || !out.includes('4096') || out.includes('3122')) throw new Error(out.slice(0, 200));
+  });
+
+  await test('a font whose own cmap is wrong keeps the right digits ToUnicode gives', async () => {
+    const out = await docxText(browser, 'c4-font-cmap-wrong.pdf');
+    if (!out.includes('2011') || !out.includes('4096')) throw new Error(out.slice(0, 200));
   });
 } finally {
   await browser.close();

@@ -21,6 +21,7 @@ import { id, esc } from './utils.js';
 import { _p2pCropCanvasRegion, _setProcessingFlag } from './processor.js';
 import { _p2wBuildPageData, _rpBuildPageBlocks } from './pdf2readCore.js';
 import { createActualTextReader } from './pdfActualText.js';
+import { createDigitFixReader, loadDigitTemplates } from './pdfDigitFix.js';
 import { t } from './i18n.js';
 import { setProgress, hideProgress, showCancelBtn, hideCancelBtn, showToast } from './ui.js';
 
@@ -161,6 +162,7 @@ async function _runRead(container, myGen) {
     onProgress:  (pct, label) => { if (myGen === _generation) setProgress(pct, label); },
     isCancelled: () => myGen !== _generation,
     actualText:  createActualTextReader(pdfDoc),
+    digitFix:    createDigitFixReader(pdfDoc, loadDigitTemplates),
   }));
   if (myGen !== _generation) { pdfDoc.destroy(); return; }
 

@@ -36,6 +36,7 @@ import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory 
 import { _p2wBuildPageData, uprightMatrix, uprightBox } from './pdf2readCore.js';
 import { createOcrLayer } from './pdf2wordOcr.js';
 import { createActualTextReader } from './pdfActualText.js';
+import { createDigitFixReader, loadDigitTemplates } from './pdfDigitFix.js';
 import { detectTableGrids, lineInGrid, gridRowsOfLines, gridHoldsTable } from './pdf2wordBorders.js';
 import { cjkJoin } from './cjkText.js';
 import { recognizeFormula } from './formulaOcr.js';
@@ -2677,6 +2678,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
         isCancelled,
         ocrPage:     ocr.ocrPage,
         actualText:  createActualTextReader(pdfDoc),
+        digitFix:    createDigitFixReader(pdfDoc, loadDigitTemplates),
       }));
     } finally {
       await ocr.close();
@@ -3595,6 +3597,7 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'text' } = {}) {
         onProgress:  (pct, label) => setProgress(pct, label),
         isCancelled: () => !isProcessing,
         ocrPage:     ocr.ocrPage,
+        digitFix:    createDigitFixReader(pdfDoc, loadDigitTemplates),
       }));
     } finally {
       await ocr.close();
