@@ -61,7 +61,7 @@ const GAP_THRESHOLD = 12;
 
 // Every X position within `line` where a new "column run" starts: the
 // line's own first item, plus any item preceded by a gap bigger than
-// GAP_THRESHOLD. Necessary because _p2wBuildPageData's plain Y-proximity
+// the run join (GAP_THRESHOLD; see runJoin below). Necessary because _p2wBuildPageData's plain Y-proximity
 // line-grouping frequently merges BOTH columns' items into one line object
 // on a genuine 2-column page (same font/line-height page-wide → same Y per
 // row) — measured directly: 70-85% of lines on the 5 real papers above.
@@ -73,13 +73,13 @@ const GAP_THRESHOLD = 12;
 // edge on an RTL line. Arabic/Hebrew/Persian columns are right-aligned with a
 // ragged left edge, so clustering left edges split one column into several
 // (ground truth 2026-10-01: three "columns" on every RTL two-column page).
-function lineRunStarts(line, rtlAware) {
+function lineRunStarts(line, rtlAware, join) {
   if (!line.items || !line.items.length) return [];
   const sorted = [...line.items].sort((a, b) => a.x - b.x);
   const end = it => it.x + (it.width > 0 ? it.width : 0);
   const runs = [[sorted[0]]];
   for (let i = 1; i < sorted.length; i++) {
-    if (sorted[i].x - end(sorted[i - 1]) > GAP_THRESHOLD) runs.push([]);
+    if (sorted[i].x - end(sorted[i - 1]) > join) runs.push([]);
     runs[runs.length - 1].push(sorted[i]);
   }
   return runs.map(run => (rtlAware && line.rtl ? Math.max(...run.map(end)) : run[0].x));
@@ -92,7 +92,7 @@ function lineRunStarts(line, rtlAware) {
 // Bukhari/Shafait/Breuel's for Arabic script, builds column detection on; it
 // doesn't care which way the text runs. The old midpoint put an English page's
 // boundary at x≈183 inside a left column spanning 72–285 (gutter 285–310).
-// Runs (a line split at gaps > GAP_THRESHOLD) rather than lines, so two
+// Runs (a line split at gaps > the run join) rather than lines, so two
 // columns' lines merged on one baseline still leave the gutter empty; runs wider
 // than FULL_WIDTH_FRACTION of the text are full-width lines (title, abstract) and
 // stay out of the profile — they cross every gutter, and on arXiv page 1 they
@@ -110,14 +110,25 @@ const VALLEY_FRACTION = 0.03;      // runs that may still cross a gutter (a rule
 // the gutter at x≈242 was rejected), while the text itself stays ten times as
 // dense.
 const VALLEY_OF_MEDIAN = 0.1;
-function gutterCuts(lines, count) {
+// A narrower run join for a second look, when the usual GAP_THRESHOLD finds no
+// gutter: 0.6 em of the page's median text size. A newsletter set at 10 pt
+// has 8.5–11 pt gutters (6579225, C6 in tests/corpus/ERROR_CLASSES.md); 12 pt
+// joined its three columns into one run and the gutters never showed. Only a
+// second look: as the first, it found other "gutters" on newspapers whose
+// midpoint columns already read better (0364023, 2315841, 4904228 lost order).
+const RUN_JOIN_EM = 0.6;
+function runJoin(lines) {
+  const sizes = lines.flatMap(ln => (ln.items || []).map(i => i?.fontSize || 0)).filter(v => v > 0).sort((a, b) => a - b);
+  return Math.min(GAP_THRESHOLD, RUN_JOIN_EM * (sizes[sizes.length >> 1] || 20));
+}
+function gutterCuts(lines, count, join) {
   const end = it => it.x + (it.width > 0 ? it.width : 0);
   const runs = [];
   for (const ln of lines) {
     const items = (ln.items || []).filter(Boolean).sort((a, b) => a.x - b.x);
     let run = null;
     for (const it of items) {
-      if (run && it.x - run[1] <= GAP_THRESHOLD) run[1] = Math.max(run[1], end(it));
+      if (run && it.x - run[1] <= join) run[1] = Math.max(run[1], end(it));
       else { if (run) runs.push(run); run = [it.x, end(it)]; }
     }
     if (run) runs.push(run);
@@ -159,15 +170,18 @@ export function detectColumnRegions(lines, pageWidth) {
   // midpoint boundaries). Mixed RTL pages (an infobox beside full-width text)
   // were never split before, and a midpoint cut there tore letter-by-letter
   // Arabic words apart (holdout corpus 2026-10-01: Wikipedia ar/fa recall −3%).
-  const aware = _detectColumnRegions(lines, pageWidth, true);
+  const aware = _detectColumnRegions(lines, pageWidth, true, GAP_THRESHOLD);
   if (aware?.[0].gutter) return aware;
+  const join = runJoin(lines);
+  const narrow = join < GAP_THRESHOLD ? _detectColumnRegions(lines, pageWidth, true, join) : null;
+  if (narrow?.[0].gutter) return narrow;
   // A right-to-left page without a gutter is one column unless its lines show
   // columns side by side. The left-edge fallback below cut justified one-column
   // Arabic pages at a midpoint (C7 in tests/corpus/ERROR_CLASSES.md: 1373210,
   // 1752892 read their halves in the wrong order), while newspapers whose
   // gutter the search misses (2315841, 4904228) still need it.
   if (lines.filter(ln => ln.rtl).length * 2 > lines.length && gappedShare(lines) < SIDE_BY_SIDE_SHARE) return null;
-  return _detectColumnRegions(lines, pageWidth, false);
+  return _detectColumnRegions(lines, pageWidth, false, GAP_THRESHOLD);
 }
 
 // Share of lines with a gap wider than two em inside them — two columns'
@@ -189,10 +203,10 @@ function gappedShare(lines) {
   return gapped.length / lines.length;
 }
 
-function _detectColumnRegions(lines, pageWidth, rtlAware) {
+function _detectColumnRegions(lines, pageWidth, rtlAware, join) {
   if (lines.length < MIN_LINES_ABS * 2) return null; // too little content to judge at all
 
-  const candidates = lines.flatMap(ln => lineRunStarts(ln, rtlAware).map(x => ({ x, y: ln.y })));
+  const candidates = lines.flatMap(ln => lineRunStarts(ln, rtlAware, join).map(x => ({ x, y: ln.y })));
   if (candidates.length < MIN_LINES_ABS * 2) return null;
 
   // Mean-based clustering, same algorithm _clusterColumns (pdf2wordTables.js)
@@ -300,7 +314,7 @@ function _detectColumnRegions(lines, pageWidth, rtlAware) {
   // `gutter` marks a boundary that runs through real empty space — only those
   // may keep full-width lines whole (lineSpansRegions); midpoint boundaries keep
   // the per-item split they always had.
-  const gutters = rtlAware ? gutterCuts(lines, real.length - 1) : null;
+  const gutters = rtlAware ? gutterCuts(lines, real.length - 1, join) : null;
   const cuts = gutters ?? real.slice(1).map((c, idx) => (real[idx].center + c.center) / 2);
   return real.map((c, idx) => ({
     left:   idx === 0                ? 0          : cuts[idx - 1],

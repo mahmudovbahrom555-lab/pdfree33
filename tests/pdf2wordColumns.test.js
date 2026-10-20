@@ -414,6 +414,33 @@ test('_splitCrossColumnLines returns the regions it split by, for the page\'s la
   expect(_splitCrossColumnLines(justifiedRtl(), 595)).toBeNull();
 });
 
+// ── C6: narrow gutters (2026-10-20) ─────────────────────────────────────
+// tests/corpus/ERROR_CLASSES.md C6. A three-column right-to-left newsletter
+// set at 10 pt with 9 pt gutters (6579225 measured 8.5–11 pt): columns
+// 24–182, 191–349, 358–516; every line holds all three columns' full lines,
+// so at the usual 12 pt join each line is one page-wide run and no column
+// shows — the case the narrower second look is for.
+const narrowGutters = () => Array.from({ length: 36 }, (_, i) => {
+  const col = (l, r) => ({ str: 'كلمات السطر في العمود', x: l, width: r - l, fontSize: 10 });
+  return { y: 760 - i * 13, rtl: true, items: [col(358, 516), col(191, 349), col(24, 182)] };
+});
+
+console.log('\nC6 — narrow gutters:');
+
+test('a newsletter with 9 pt gutters at 10 pt text is three columns, cut in its gutters', () => {
+  const regions = detectColumnRegions(narrowGutters(), 595);
+  expect(regions?.length).toBe(3);
+  expect(regions.every((r, i) => i === 2 || r.gutter)).toBe(true);
+  expect(regions[0].right > 182 && regions[0].right < 191).toBe(true);
+  expect(regions[1].right > 349 && regions[1].right < 358).toBe(true);
+});
+
+test('word spaces of a one-column right-to-left page still don\'t make columns', () => {
+  // the same lines, words 3 pt apart (a 10 pt word space) — one column
+  const lines = narrowGutters().map(ln => ({ ...ln, items: [{ ...ln.items[0], x: 358 }, { ...ln.items[1], x: 191, width: 164 }, { ...ln.items[2], width: 164 }] }));
+  expect(detectColumnRegions(lines, 595)).toBeNull();
+});
+
 // ── Summary ──────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);

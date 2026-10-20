@@ -18,11 +18,13 @@ time, closed with evidence**.
    dates and IDs, unreadable Arabic order, broken tables, an empty result —
    high; OCR accuracy — by measurement; small visual differences — later.
    A real user's report outranks any corpus finding.
-4. **Compare with competitors** on 2–5 of its documents (iLovePDF, Smallpdf;
-   Adobe Acrobat where a licence is at hand) through their ordinary web UI,
-   by hand — never automated, never a user's document, only the public corpus
+4. **Compare with competitors** on 2–5 of its documents (popular online
+   converters; a desktop editor where a licence is at hand) through their
+   ordinary web UI, by hand — never automated, never a user's document, only the public corpus
    documents. Same criteria for all: text, numbers, reading order, structure,
-   a usable DOCX, time. Record the findings here as text; no competitor output
+   a usable DOCX, time. Competitors are letters here (A, B, …), never names:
+   their products change and a named number goes stale (owner, 2026-10-19).
+   Record the findings here as text; no competitor output
    is committed.
 5. **Fix the cause**, test first: a reproducible test of the error, then the
    code. Then the discovery set, the control set and the whole corpus run
@@ -72,15 +74,15 @@ committed.
 - **Competitors (2026-10-18, by hand by the owner, free tiers — OCR is paid
   on both; scored with `scripts/quality/arabic.py`):**
   - 2022469 (text layer, 4,700 words and 157 numbers both readers agree on):
-    **Smallpdf** recall 90.5 %, numbers 99.4 % (1 lost), 319 split words,
+    **Competitor A** recall 90.5 %, numbers 99.4 % (1 lost), 319 split words,
     41 dot errors, 24 glued; keeps presentation forms (59,860 of its
     letters — reads right, but Word's search and spell-check see other
     letters) and 2,313 unmapped glyphs (boxes); pages landscape.
     **PDFree** 0 % — 62 page pictures, 17 MB for a 473 KB PDF.
-  - 4820963 (scan): **iLovePDF Basic** — the page pictures plus the
+  - 4820963 (scan): **Competitor B** (free tier) — the page pictures plus the
     watermark text only, no OCR (paid); **PDFree** — the pictures, nothing
     else. A tie at zero.
-  - **The bar for the fix:** on 2022469 at least Smallpdf's recall and
+  - **The bar for the fix:** on 2022469 at least competitor A's recall and
     numbers, in plain letters; on 4820963 the exam's text — which neither
     free competitor gives.
 - **Status after comparison:** `compared` → `fixing`.
@@ -93,7 +95,7 @@ committed.
   failing before (page 2: 18 % of its words).
 - **Measured (local, against v8 = production before the fix):** only the 12
   documents with rotated pages changed, all for the better; unrotated
-  documents unchanged. 2022469 0 → 96.1 %, 157/157 numbers (Smallpdf 90.5 %,
+  documents unchanged. 2022469 0 → 96.1 %, 157/157 numbers (competitor A 90.5 %,
   99.4 %); 0997713 (5 of 82 pages rotated) 68.5 → 72.7 %, lost numbers
   203 → 103; 3122010 95.9 → 96.6 %; long documents' lost numbers −259.
   *Correction:* the commit message's "5,056 → 4,701" compared with the
@@ -194,23 +196,59 @@ committed.
   entries must be built otherwise (leaders as graphics or tab leaders);
   competitors not compared yet.
 
-## C6 — columns of a two-page spread read across each other
+## C6 — columns read across each other: narrow gutters, two-page spreads
 
-- **Status:** `found` (2026-10-18), one document checked by hand
+- **Status:** `fixing` (2026-10-20) — cause 1 fixed in a pull request, not
+  yet on pdfree.io; cause 2 found, one source only
 - **Harm:** high where it happens — sentences of different columns run
   together; numbers stick to the other column's words.
 - **Seen:** 4974198 (Adobe PDF Library 15, an annual report, 97 landscape
   spreads with 3–4 columns): "…أكثر من 116,539 خدمات وزارة التجارة…" joins
-  two columns; 159 of its 580 numbers unexplained.
-- **Why the metric misses it:** it counts words, not their order — 20 of
-  the corpus's 281 scored documents are landscape spreads and most score
-  ≥ 95 %. Needs an order check (phrase A before phrase B, as olmOCR-bench
-  does) before a fix can be judged.
+  two columns. 6579225 (a three-column student newsletter, Adobe PDF Library
+  15): every line of its three columns read across ("…در شرایطی که بسیاری از
+  انحصارطلبانه نشان میدهد. خودتان و خودتان…"); order 0.64 under metric v4.
+- **Measured with:** metric v4 (#42). v3 couldn't judge this class: poppler,
+  its only order reference, reads brochures and spreads across their panels
+  itself.
+- **Cause 1 — narrow gutters:** column detection joined two items of a line
+  into one run when the gap was ≤ 12 pt; 6579225's gutters are 8.5–11 pt at
+  10 pt text, so its three columns were one run and no gutter showed. Fix:
+  when the usual 12 pt join finds no gutter, a second look joins at 0.6 em
+  of the page's median text size (`runJoin`, `js/pdf2wordColumns.js`).
+  Tried first as the only join: order better on 7, worse on 8 — newspapers
+  whose midpoint columns read better (0364023 0.73 → 0.61, 2315841, 4904228,
+  3079058) got other "gutters"; as a second look, worse on none.
+- **Measured (289 documents vs main, metric v4):** order better on 5
+  (6579225 0.64 → 0.96, 4197540 0.83 → 0.94, 5857593 0.78 → 0.87, 0865218
+  0.78 → 0.83, 6866008 0.95 → 0.99), worse on 0; recall 94.83 → 94.83 %;
+  3 documents lost 1–3 numbers each with order and words unchanged;
+  5857593's recall 0.922 → 0.914. Ground-truth pages: 40 of 40 identical.
+- **Weakness found, not fixed:** the first look (12 pt) can take the empty
+  space beside paragraph-ending lines for gutters when every full line is
+  one page-wide run — the full lines drop out of the profile as "wide", and
+  only the short lines are left in it (a synthetic three-column page cut at
+  x ≈ 217 and 384, inside its columns). Not seen on a real document yet.
+- **Cause 2 — two-page spreads:** a landscape spread holds two pages of two
+  columns each — four columns, over MAX_COLUMNS (3), so detection gives up
+  (4974198 pages 5, 6: no regions though 92–94 % of their lines hold
+  columns side by side). Only one spread document in the corpus (one
+  source): needs a second source before it is a class.
+- **Also seen:** 6579225's headline comes out four times — the PDF draws it
+  at four heights (y 637, 613, 587, 561), three hidden (clipped, most
+  likely); MuPDF and poppler both read it four times too, so the metric
+  can't see it. Needs clip-path awareness; low harm, not started.
+- **Layout-model experiment (2026-10-20, not shipped):** PP-DocLayoutV3's
+  boxes, ordered right to left, read 4974198 0.60 → 0.95 and 6579225
+  0.64 → 1.0, but lost order on simple pages (1574594 1.0 → 0.87): only
+  for multi-column pages, if ever; 130 MB.
 
 ## C7 — a one-column RTL page cut into "two columns" at a midpoint
 
-- **Status:** `fixing` (2026-10-19) — fix in a pull request, not yet on
-  pdfree.io
+- **Status:** `fixed` — shipped in #41 (418d3ef4) and verified on pdfree.io
+  2026-10-19 (6 documents, production = local: 1373210 0.74 → 0.99, 1752892
+  0.70 → 1.0, 2278552 0.71 → 1.0; newspapers kept their columns). Order
+  figures above are metric v3; under v4 (#42) 4442085 and 6997456 read 0.92
+  and 0.93 — part of the "worse on 3" was poppler's order, not PDFree's.
 - **Harm:** high, and hidden — words all there, their order scrambled: a
   justified one-column Arabic page (1373210, Acrobat Distiller 11) read
   "حينما أراد في أعقاب العالمية الحرب الأولى…" for "في أعقاب الحرب العالمية
