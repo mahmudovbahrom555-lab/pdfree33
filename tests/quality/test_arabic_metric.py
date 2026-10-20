@@ -460,5 +460,51 @@ def order_worse():
 
 
 test('a drop in order alone is worse', order_worse)
+
+
+# ── metric v4 (2026-10-20): order only where both readers agree
+
+LETTERS = 'بتثجحخدذرزسشصضطظعغفقكلمنهوي'
+def words(n, start=0):
+    # n distinct 4-letter Arabic words
+    return [''.join(LETTERS[(k // len(LETTERS) ** j) % len(LETTERS)] for j in range(3)) + 'ا' for k in range(start, start + n)]
+
+# a three-panel brochure: 8 lines of 5 words in each panel
+PANELS = [[words(5, 100 * p + 5 * l) for l in range(8)] for p in range(3)]
+by_panel = [w for panel in PANELS for line in panel for w in line]                       # panel after panel
+across = [w for l in range(8) for panel in PANELS for w in panel[l]]                     # line l of every panel, then line l+1
+
+
+def order_brochure_right():
+    # MuPDF reads panel by panel, poppler across the panels: the right output must not be punished
+    r = arabic.order_of(by_panel, across, by_panel)
+    assert_true(r['order'] is not None and r['order'] >= 0.95, r)
+    assert_true(r['readersAgree'] < 0.9, r)
+
+
+test('v4: a brochure read panel by panel is right even where poppler reads across the panels (v3 scored it ~0.4)', order_brochure_right)
+
+
+def order_still_catches_interleaving():
+    # both readers panel by panel, the output across the panels: still wrong
+    r = arabic.order_of(by_panel, by_panel, across)
+    assert_true(r['order'] is not None and r['order'] <= 0.5, r)
+    assert_eq(r['readersAgree'], 1.0)
+
+
+test('v4: columns read across each other, where both readers agree, still lose order', order_still_catches_interleaving)
+
+
+def order_unverifiable():
+    # the readers share almost no order: no score, and said so
+    r = arabic.order_of(by_panel, by_panel[::-1], by_panel)
+    assert_eq(r['order'], None)
+    assert_true(r.get('orderUnverifiable'), r)
+    row = {'doc': 'a.pdf', 'sha': '1', 'producer': 'p', **right}
+    text, _ = arabic.compare(shard([row]), shard([{**row, **r}]), known_path=None)
+    assert_true('order not checkable' in text and 'a.pdf' in text, text)
+
+
+test('v4: readers that disagree on almost every anchor give no order score, listed as not checkable', order_unverifiable)
 print(f"\n{'─' * 50}\nTests: {passed + failed} | ✓ {passed} | {failed} failed")
 sys.exit(1 if failed else 0)

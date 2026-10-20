@@ -50,6 +50,15 @@ robust.mjs's results.jsonl, `outcome` (ok / timeout / error …), `ms` and
 `ocrPages`. tests/corpus/cloud/arabic-known.json lists documents a human found
 both readers wrong on, or unverifiable: reported, never judged.
 
+Metric v4, schema 5 (2026-10-20): `order` is judged only on the anchors
+both readers put in the same order. v3 took the order from poppler alone, and
+poppler reads the panels of a brochure or a spread across each other, line by
+line: a correct panel-by-panel output scored 0.58 (3537793), and the readers'
+orders differ (< 0.9 agreement) on 71 of 230 documents. `readersAgree` is the
+share of anchors in that common order; a document with fewer than
+MIN_ANCHORS of them gets no order score and is listed as unverifiable
+(`orderUnverifiable`), never silently dropped.
+
 Metric v3, schema 4 (2026-10-19): `order` — reading order, by anchor words
 (order_of); a drop of more than ORDER_TOLERANCE is "worse". Words were
 counted as a bag: two columns read across each other scored 94 %.
@@ -67,8 +76,8 @@ import fitz
 AR = re.compile(r'[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]')
 MARKS = re.compile(r'[ً-ْٰ]')
 SHORT = 50
-METRIC_VERSION = 3
-SCHEMA = 4
+METRIC_VERSION = 4
+SCHEMA = 5
 MIN_ANCHORS = 20
 ORDER_TOLERANCE = 0.03
 KNOWN = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'tests', 'corpus', 'cloud', 'arabic-known.json')
@@ -163,24 +172,45 @@ def score(pdf, docx):
             **order_of(M, P, seq)}
 
 
+def _longest_run(seq):
+    """Indices into seq of one longest strictly increasing run (LIS)."""
+    tails, tail_at, prev = [], [], [-1] * len(seq)
+    for i, x in enumerate(seq):
+        k = bisect.bisect_left(tails, x)
+        tails[k:k + 1] = [x]
+        tail_at[k:k + 1] = [i]
+        prev[i] = tail_at[k - 1] if k else -1
+    out, i = [], tail_at[-1] if tail_at else -1
+    while i >= 0:
+        out.append(i)
+        i = prev[i]
+    return out[::-1]
+
+
 def order_of(M, P, out):
     """Reading order, not just words: the anchors — words of 4+ letters found
-    exactly once in MuPDF's text, in poppler's and in the output — and the
-    share of them the output keeps in the readers' order (its longest run in
-    order, LIS). Two columns read across each other, a line torn in two and
-    read half by half, a paragraph moved: all lower it; a word glued or split
-    elsewhere does not (word trigrams did — letter-spaced text layers read
-    "ج رائم" where the output has "جرائم"). None under MIN_ANCHORS."""
+    exactly once in MuPDF's text, in poppler's and in the output — kept in the
+    order both readers agree on (the longest run of poppler's anchors that
+    MuPDF has in the same order), and the share of those the output keeps in
+    that order (its longest run in order, LIS). Two columns read across each
+    other, a line torn in two and read half by half, a paragraph moved: all
+    lower it; a word glued or split elsewhere does not (word trigrams did —
+    letter-spaced text layers read "ج رائم" where the output has "جرائم").
+    Where the readers disagree, neither is taken for the truth: poppler reads
+    a brochure's panels across each other. None under MIN_ANCHORS agreed
+    anchors; `orderUnverifiable` when there were enough anchors but the
+    readers' orders shared too few of them."""
     cm, cp, co = collections.Counter(M), collections.Counter(P), collections.Counter(out)
     anchors = [w for w in P if len(w) >= 4 and cp[w] == 1 and cm[w] == 1 and co[w] == 1]
-    if len(anchors) < MIN_ANCHORS:
-        return {'order': None, 'anchors': len(anchors)}
+    if not anchors:
+        return {'order': None, 'anchors': 0}
+    in_m = {w: i for i, w in enumerate(M) if cm[w] == 1}
+    agreed = [anchors[i] for i in _longest_run([in_m[w] for w in anchors])]
+    row = {'anchors': len(agreed), 'readersAgree': round(len(agreed) / len(anchors), 4)}
+    if len(agreed) < MIN_ANCHORS:
+        return {'order': None, **row, **({'orderUnverifiable': True} if len(anchors) >= MIN_ANCHORS else {})}
     pos = {w: i for i, w in enumerate(out) if co[w] == 1}
-    run = []
-    for x in (pos[w] for w in anchors):
-        i = bisect.bisect_left(run, x)
-        run[i:i + 1] = [x]
-    return {'order': round(len(run) / len(anchors), 4), 'anchors': len(anchors)}
+    return {'order': round(len(_longest_run([pos[w] for w in agreed])) / len(agreed), 4), **row}
 
 
 def furniture(pp):
@@ -513,6 +543,10 @@ def compare(base_path, new_path, tolerance=0.005, known_path=KNOWN, migrate=Fals
             lines.append(f'- {d}: {e["kind"]}, scope {e["scope"]}, {e["status"]} — {e.get("issue", "")}'
                          + (f' — recall {new[d]["recall"]:.2f}' if 'recall' in new[d] else '')
                          + (' ⚠ content differs from the entry\'s sha' if e.get('sha') and new[d].get('sha') and e['sha'] != new[d]['sha'] else ''))
+    unverifiable = sorted(d for d in new if new[d].get('orderUnverifiable'))
+    if unverifiable:
+        lines += ['', f'order not checkable — the two readers order too few anchors alike (brochures, spreads): {len(unverifiable)} — '
+                  + ', '.join(f'{d} (readers agree {new[d]["readersAgree"]:.2f})' for d in unverifiable)]
     not_eval = {d: r['skip'] for d, r in sorted(new.items()) if 'recall' not in r and 'skip' in r}
     if not_eval:
         lines += ['', f'not evaluated: {len(not_eval)} — ' + ', '.join(f'{d} ({why})' for d, why in not_eval.items())]
