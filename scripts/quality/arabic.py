@@ -50,6 +50,16 @@ robust.mjs's results.jsonl, `outcome` (ok / timeout / error …), `ms` and
 `ocrPages`. tests/corpus/cloud/arabic-known.json lists documents a human found
 both readers wrong on, or unverifiable: reported, never judged.
 
+Metric v5, schema 6 (2026-10-21): digits as the page DRAWS them. A font's
+ToUnicode can name its digit glyphs wrongly (class C4: "3122" for a drawn
+"2011"), and both readers then agree on the wrong number — v4 scored a
+converter that wrote the drawn digits as having lost them (0045417, and 3,441
+→ 4,444 lost numbers on the corpus for PDFree's C4 fix). digits.py finds
+those glyphs on its own — the embedded font's Unicode cmap disagreeing with
+ToUnicode, the RENDERED page deciding (not PDFree's code, which reads the
+outline) — and both readers' words and numbers are corrected before
+anything is counted. `digitsRedrawn`: how many of a document's numbers were.
+
 Metric v4, schema 5 (2026-10-20): `order` is judged only on the anchors
 both readers put in the same order. v3 took the order from poppler alone, and
 poppler reads the panels of a brochure or a spread across each other, line by
@@ -76,8 +86,8 @@ import fitz
 AR = re.compile(r'[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]')
 MARKS = re.compile(r'[ً-ْٰ]')
 SHORT = 50
-METRIC_VERSION = 4
-SCHEMA = 5
+METRIC_VERSION = 5
+SCHEMA = 6
 MIN_ANCHORS = 20
 ORDER_TOLERANCE = 0.03
 KNOWN = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'tests', 'corpus', 'cloud', 'arabic-known.json')
@@ -127,9 +137,45 @@ def versions():
     return {'pymupdf': fitz.VersionBind, 'poppler': (pop.stderr or pop.stdout).split('\n')[0].strip()}
 
 
+def redrawn(seq, pairs):
+    """seq with each token both readers misread replaced by the drawn one, as
+    many times as the page draws it (pairs: Counter((read, drawn)))."""
+    left = collections.Counter(pairs)
+    drawn = collections.defaultdict(list)
+    for a, b in left:
+        drawn[a].append(b)
+
+    def swap(t):
+        for b in drawn.get(t, ()):
+            if left[(t, b)] > 0:
+                left[(t, b)] -= 1
+                return b
+        return t
+    return [swap(w) for w in seq]
+
+
+def redrawn_inside(words, runs):
+    """words with their digit runs redrawn — a run can sit inside a word
+    (Urdu "دربمس0202ء"), where the reader's text never splits it out."""
+    left = collections.Counter(runs)
+    drawn = collections.defaultdict(list)
+    for a, b in left:
+        drawn[a].append(b)
+
+    def swap(m):
+        for b in drawn.get(m.group(0), ()):
+            if left[(m.group(0), b)] > 0:
+                left[(m.group(0), b)] -= 1
+                return b
+        return m.group(0)
+    return [re.sub(r'[0-9٠-٩۰-۹]+', swap, w) if drawn and re.search(r'[0-9٠-٩۰-۹]', w) else w for w in words]
+
+
 def score(pdf, docx):
     mu, pp, pages, producer, rotated = readers(pdf)
-    M, P = ar_words(mu), ar_words(pp)
+    import digits   # numpy, fontTools: only where documents are scored, not to compare results
+    fix = digits.corrections(pdf, numbers)
+    M, P = redrawn_inside(ar_words(mu), fix['runs']), redrawn_inside(ar_words(pp), fix['runs'])
     T = collections.Counter(M) & collections.Counter(P)
     n = sum(T.values())
     row = {'pages': pages, 'producer': producer[:60], 'rotated': rotated, 'words': n,
@@ -155,7 +201,8 @@ def score(pdf, docx):
     glued = sum(min(c, pairs_m[w], pairs_p[w]) for w, c in O.items() if w not in seen)
     seq = ar_words(out)
     split = sum(1 for a, b in zip(seq, seq[1:]) if missing[a + b] > 0)
-    nm, np_ = collections.Counter(numbers(mu)), collections.Counter(numbers(pp))
+    nm = collections.Counter(redrawn(numbers(mu), fix['numbers']))
+    np_ = collections.Counter(redrawn(numbers(pp), fix['numbers']))
     nt = nm & np_
     out_numbers = numbers(out)
     no = collections.Counter(out_numbers)
@@ -169,6 +216,7 @@ def score(pdf, docx):
             'numbersMissing': sum(lost.values()), 'numbersAgreed': sum(nt.values()),
             **({'numberCauses': causes} if causes else {}),
             'numbersAgree': round(sum(nt.values()) / (max(sum(nm.values()), sum(np_.values())) or 1), 3),
+            **({'digitsRedrawn': sum(fix['numbers'].values())} if fix['numbers'] else {}),
             **order_of(M, P, seq)}
 
 
