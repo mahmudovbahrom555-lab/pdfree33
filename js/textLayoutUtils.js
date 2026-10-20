@@ -231,6 +231,7 @@ export function reorderVisualRtlLine(items) {
   // truth ar-cols2 2026-10-02: the jump across the gutter outvoted the one real
   // left-to-right step, so "مئة صفحة كلما احتجت." stayed "كلما احتجت.مئة صفحة").
   items.sort((a, b) => (a.seq ?? 0) - (b.seq ?? 0));
+  const spaceWidth = _lineSpaceWidth(items);
   let ltrSteps = 0, rtlSteps = 0, prev = null;
   for (const item of items) {
     if (!_STRONG_CHAR_RE.test(item.str)) continue;
@@ -246,7 +247,7 @@ export function reorderVisualRtlLine(items) {
   // "الأردن–مركزالحیاة–راصد" (corpus 6199289, 2026-10-19)
   // — spaces only: a final form meeting the next letter is no half-space sign
   // there, the word boundary just lost its space ("تربیت‌و", 3201970)
-  if (ltrSteps <= rtlSteps) { _spaceGaps(items, false); return; }
+  if (ltrSteps <= rtlSteps) { _spaceGaps(items, false, spaceWidth); return; }
 
   // Arabic harakat (fatha, damma, shadda, tanween...) arrive as their own zero-width
   // items. Sorted on their own they landed on the neighbouring word ("مئةً صفحة" for
@@ -308,20 +309,32 @@ export function reorderVisualRtlLine(items) {
       item.mirrored = true;
     }
   }
-  _spaceGaps(ordered);
+  _spaceGaps(ordered, true, spaceWidth);
   items.splice(0, items.length, ...ordered);
 }
 
+// The width of the line's own space glyph — its narrowest whitespace item
+// (justification stretches the others), not counting the near-zero ones a
+// lam-alef split leaves — or 0 when it draws none.
+function _lineSpaceWidth(items) {
+  const w = items.filter(i => i.str && !i.str.trim() && i.width >= 0.1 * (i.fontSize || 10)).map(i => i.width);
+  return w.length ? Math.min(...w) : 0;
+}
+
 // Between two neighbours in reading order: a space where a gap of a fifth of an
-// em or more separates them and neither has one, and (`zwnj`, a visual line) a
-// ZWNJ where a letter's isolated or final form meets the next letter with no
-// gap (a Persian half-space).
-function _spaceGaps(ordered, zwnj = true) {
+// em or more separates them and neither has one — or of 0.8 of the line's own
+// space glyph, if that is narrower: a Persian book set its 13 pt words 2.5 pt
+// apart with a 2.6 pt space, and "در ايران" came out "درايران" (7389718: 909
+// glued words; the corpus 4,790 → 3,419). And (`zwnj`, a visual line) a ZWNJ
+// where a letter's isolated or final form meets the next letter with no gap (a
+// Persian half-space).
+function _spaceGaps(ordered, zwnj = true, spaceWidth = 0) {
   for (let i = 1; i < ordered.length; i++) {
     const a = ordered[i - 1], b = ordered[i];
     if (a.str.endsWith(' ') || b.str.startsWith(' ')) continue;
     const gap = Math.max(b.x - (a.x + (a.width || 0)), a.x - (b.x + (b.width || 0)));
-    if (gap > b.fontSize * 0.2) b.str = ' ' + b.str;
+    const wide = spaceWidth ? Math.min(b.fontSize * 0.2, 0.8 * spaceWidth) : b.fontSize * 0.2;
+    if (gap > wide) b.str = ' ' + b.str;
     else if (zwnj && _JOIN_BROKEN_FORMS.has(a.str.codePointAt(a.str.length - 1)) && _RTL_CHAR_RE.test(b.str[0])) {
       b.str = '\u200C' + b.str;
     }

@@ -613,6 +613,21 @@ test('a table of contents line — a dot leader and a page number at an end — 
     assert.equal(isContentsEntry(ln(t)), false, t);
 });
 
+test('words set closer than a fifth of an em but a space glyph apart get their space (7389718: "درايران")', () => {
+  // the line's own space is 2.6 pt; "در" and "ايران" stand 2.5 pt apart at 13 pt
+  const it = (str, x, width, seq) => ({ str, x, width, fontSize: 12.96, seq, y: 546 });
+  const items = [it('جنبش', 167.6, 24.3, 1), it(' ', 164.9, 2.6, 2), it('در', 127, 9.6, 3), it('ايران', 106, 18.5, 4)];
+  reorderVisualRtlLine(items);
+  if (!items.some(i => i.str === ' ايران')) throw new Error(JSON.stringify(items.map(i => i.str)));
+});
+
+test('a line without space glyphs keeps the fifth-of-an-em rule', () => {
+  const it = (str, x, width, seq) => ({ str, x, width, fontSize: 12.96, seq, y: 546 });
+  const items = [it('در', 127, 9.6, 1), it('ايران', 106, 18.5, 2)];
+  reorderVisualRtlLine(items);
+  if (items.some(i => i.str.startsWith(' '))) throw new Error(JSON.stringify(items.map(i => i.str)));
+});
+
 const total = passed + failed;
 
 console.log(`\n${'─'.repeat(50)}`);

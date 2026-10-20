@@ -352,3 +352,28 @@ committed.
 - **Measured, 289 documents:** 37 documents' recall up (1574594 90.2 →
   99.2 %, 7000003 93.7 → 100 %, 3836451 96.8 → 100 %, 6240805 91.4 → 94.2 %),
   2 down by 0.0001; glued words 4,246 → 4,128.
+
+## C9 — words glued where the gap is narrower than a fifth of an em
+
+- **Status:** `fixing` (2026-10-21) — fix in a pull request, not yet on
+  pdfree.io
+- **Harm:** medium–high — two words become one, search and spell-check fail
+  on both: a Persian book read "درايران", "ايراندر", "کهدر",
+  "امپرياليسمبريتانيا" (7389718: 909 glued words); a Persian admissions list
+  "محلخدمت", "عنوانرشته" (7351637: 477).
+- **Cause:** a space was inserted between two words only where the gap was
+  over 0.2 em; 7389718 sets its 13 pt words 2.5 pt apart with a 2.6 pt space
+  glyph (exactly 0.2 em), so every slightly tight gap was taken for none.
+- **Fix:** the threshold is 0.8 of the line's own space glyph where that is
+  narrower than 0.2 em (the narrowest whitespace item of the line —
+  justification stretches the others; near-zero lam-alef splits ignored);
+  a line without space glyphs keeps the 0.2 em rule (`js/textLayoutUtils.js`).
+- **Measured (289 documents vs main, metric v5):** glued words 4,790 →
+  3,419, missing words 58,474 → 52,555, recall 94.89 → 94.99 %, split words
+  12,167 → 12,072, worse on 1 (2262154, one dot error more, recall up).
+  Ground-truth pages: 40 of 40 identical. Side effect, checked by hand: about
+  4,170 Persian half-spaces (ZWNJ) became spaces — nearly all between two
+  separate words ("نوع توليد", "محل دريافت", "خدمت خرمشهر"); a few compounds
+  usually written with a half-space now carry a space ("ماشين آلات", "شاهين
+  شهر") — a style difference, not a broken word.
+
