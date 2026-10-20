@@ -161,20 +161,42 @@ committed.
   improve (1772036 lost numbers 34 → 9, 5494457 103 → 71, 5295408 3 → 1),
   none worse; words unchanged.
 
-## C4 — a font maps its Persian digits to other digits — both readers read the wrong number
+## C4 — the text layer gives other digits than the page draws
 
-- **Status:** `found` (2026-10-18), one document
-- **Harm:** high — wrong numbers that look right: a table of contents' page
-  numbers, and the same font anywhere else in the document.
-- **Seen:** 5470407 (Microsoft Word 2010, Persian manual), page 6: on the page
-  ۱۰۱, ۱۰۳, ۱۰۶, ۱۱۷, ۱۲۳; in the text layer — MuPDF, poppler and PDF→Word
-  alike — 131, 133, 133, 112, 214. The font's ToUnicode gives ۰ → 3, ۶ → 3,
-  ۷ → 2…; PDF→Word carries the text layer faithfully.
-- **Why no metric sees it:** both readers agree on the wrong digits. Only the
-  page as drawn does — a third oracle (render + OCR of the digits).
-- **Next:** find more such fonts (documents where OCR of the rendered digits
-  disagrees with the text layer); then a fix can only read digits from the
-  glyphs (shape or OCR), not from ToUnicode.
+- **Status:** `confirmed` (2026-10-21) — measured, not fixed
+- **Harm:** high — wrong numbers that look right, and they reach the DOCX:
+  on pdfree.io 4 of 4 checked documents carry them (0045417: "2011" on the
+  page, "3122" eight times in the Word file and "2011" never).
+- **Cause (confirmed on 5470407):** the font draws the right glyph, the PDF's
+  ToUnicode names it wrongly — B Nazanin's glyph 14 is "zero" in the
+  embedded font's own Unicode cmap (U+0030/0660/06F0), ToUnicode says "3";
+  glyph 20 (six) → "3", 21 (seven) → "2", 22 (eight) → "1". Elsewhere a
+  one-off shift (0045417, Arial: 2→3, 0→1, 1→2).
+- **How it is measured (independent of both text readers):**
+  1. candidates — a digit glyph whose ToUnicode digit differs from the
+     embedded font's own Unicode cmap (Mac/symbol cmaps map char codes,
+     not digits — left out);
+  2. arbiter — the glyph's drawn shape, matched against 606 reference
+     digits (Latin, Arabic-Indic, Persian; system fonts), deciding between
+     the two candidate digits, with the glyph's height (an Arabic-Indic
+     zero is a dot). Tesseract on the crops read ≤ 7 of 16 — not usable;
+  3. calibration — 120 crops hand-labeled from the page images (9 left
+     out as ambiguous): the arbiter picked the right digit on 54/54 and, on
+     documents it was not tuned on, 57/57. Errors are per document: in each,
+     either the text layer or the font's cmap is right throughout.
+- **Prevalence (289 Arabic-script documents, first 60 pages each):** text
+  layer wrong in 26 of the 269 with digits (≥ 3 digits, majority); 2,304
+  wrong digits of ~151,000 (1.5 %, concentrated in those 26). 20 more
+  flagged documents were the font's cmap being wrong, the text right.
+  Sources: B Nazanin, B Mitra, Arial, Times New Roman, Jameel Noori
+  Nastaleeq, Simplified/Traditional Arabic… — many generators.
+- **Not measured:** ~47,000 digits in fonts whose program couldn't be read
+  (recall unknown there); digit ORDER flips (٢٦ read "62") are a separate
+  class.
+- **Fix direction (not started):** per font, the digit mapping the embedded
+  font's own cmap gives, used only where the drawn shape confirms it — the
+  shape check is what keeps the 20 documents whose text was right from being
+  broken.
 
 ## C5 — a table of contents comes out as one paragraph
 
