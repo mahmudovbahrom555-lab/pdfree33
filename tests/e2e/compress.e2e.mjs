@@ -116,16 +116,27 @@ await test('a batch whose first file is plain text stays on Standard, not the sc
   const page = await context.newPage();
   try {
     await page.goto(`${BASE_URL}/compress-pdf/`, { waitUntil: 'load', timeout: 30000 });
-    // Baseline: the same text file ALONE is still auto-switched to Light —
-    // single-file behaviour must be unchanged.
+    // The same text file alone: the scan has run (its banner is up) and the
+    // pick is Standard too.
     await page.setInputFiles('#fileInput', textFile);
-    await page.waitForFunction(() => document.querySelector('input[name="compressPreset"]:checked')?.value === 'low', null, { timeout: 15000 });
+    await page.waitForFunction(() => /compress-scan--(clean|found)/.test(document.getElementById('compressScanBanner')?.className || ''), null, { timeout: 15000 });
+    expect(await page.evaluate(() => document.querySelector('input[name="compressPreset"]:checked')?.value)).toBe('medium');
     // Adding more files turns it into a batch → the scan's pick is reverted.
     await page.setInputFiles('#fileInput', path.join(tmp, 'raw-icc-by-ref.pdf'));
     await page.waitForFunction(() => document.querySelector('input[name="compressPreset"]:checked')?.value === 'medium', null, { timeout: 15000 });
   } finally {
     await context.close();
   }
+});
+
+await test('a clean text PDF compresses on the first click — the starred preset is never one validate() refuses', async () => {
+  // A text PDF with nothing for Light to strip: the scan used to star and
+  // pick Light, and validate() then refused Light with val_light_no_savings
+  // (owner's report 2026-10-21, a 4-page worksheet).
+  const textFile = path.join(tmp, 'clean-text.pdf');
+  fs.writeFileSync(textFile, await textPdf());
+  const out = await compressViaUi(browser, textFile);
+  expect(out.length > 0).toBe(true);
 });
 
 await browser.close();

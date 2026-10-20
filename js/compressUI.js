@@ -74,13 +74,15 @@ function _docType(scan) {
   return              { icon: '📄', label: 'Text document',     type: 'text' };
 }
 
-// Derive the recommended preset from doc type.
+// Derive the recommended preset from doc type. Never Light: Light only strips
+// what the scan finds, and a clean text PDF — the only case it used to be
+// picked for — is exactly the one validate() refuses Light on
+// (val_light_no_savings), so the starred default was a dead end: a 4-page
+// text PDF got the refusal on its first click, while Standard still saves
+// a little (83 → 79 KB, owner's report 2026-10-21).
 function _recommendedPreset(scan) {
   if (!scan) return 'medium';
-  const doc = _docType(scan);
-  if (doc.type === 'scan')  return 'high';
-  if (doc.type === 'text' && scan.opportunities === 0) return 'low';
-  return 'medium';
+  return _docType(scan).type === 'scan' ? 'high' : 'medium';
 }
 
 // Savings expectation string derived from doc type.
@@ -516,7 +518,7 @@ function _render(file, scan) {
     ${scan ? _buildScanBanner(scan, _targetDpi) : `<div class="compress-scan compress-scan--info" id="compressScanBanner" role="status">🔍 ${t('compress_placeholder')}</div>`}
 
     <div class="compress-presets">
-      ${_presetCard('low',    '🪶', t('cmp_preset_light_name'),    t('cmp_preset_light_desc'),    _lastScan && _recommendedPreset(_lastScan) === 'low')}
+      ${_presetCard('low',    '🪶', t('cmp_preset_light_name'),    t('cmp_preset_light_desc'))}
       ${_presetCard('medium', '⚡', t('cmp_preset_standard_name'), t('cmp_preset_standard_desc'), _lastScan && _recommendedPreset(_lastScan) === 'medium')}
       ${_presetCard('high',   '🔥', t('cmp_preset_maximum_name'),  t('cmp_preset_maximum_desc'),  _lastScan && _recommendedPreset(_lastScan) === 'high')}
     </div>
