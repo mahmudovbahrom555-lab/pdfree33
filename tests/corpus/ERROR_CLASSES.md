@@ -355,8 +355,8 @@ committed.
 
 ## C9 — words glued where the gap is narrower than a fifth of an em
 
-- **Status:** `fixing` (2026-10-21) — fix in a pull request, not yet on
-  pdfree.io
+- **Status:** `fixing` (2026-10-21) — part 1 (#53) verified on pdfree.io;
+  part 2 in a pull request
 - **Harm:** medium–high — two words become one, search and spell-check fail
   on both: a Persian book read "درايران", "ايراندر", "کهدر",
   "امپرياليسمبريتانيا" (7389718: 909 glued words); a Persian admissions list
@@ -376,4 +376,13 @@ committed.
   separate words ("نوع توليد", "محل دريافت", "خدمت خرمشهر"); a few compounds
   usually written with a half-space now carry a space ("ماشين آلات", "شاهين
   شهر") — a style difference, not a broken word.
-
+- **Part 2 — the threshold itself:** a Persian table at 6.4 pt had its words
+  0.19 em apart and no space glyph on its lines ("عنوانرشته", 7351637), so
+  part 1 couldn't reach it; the word-gap threshold is 0.15 em (glyphs of one
+  word sit 0–0.05 em apart), in running RTL text and in table cells.
+  Measured vs part 1 (289 documents, metric v5): glued 3,420 → 2,637,
+  missing words 52,602 → 49,109, recall 94.93 → 95.19 %; split words
+  12,108 → 12,318, all of the rise in the set-aside 7853393 (+269; without
+  it 7,907 → 7,848); worse on 5 by one dot or reversed word each. 72
+  non-Arabic corpus documents (zh, ja, ko, ru, tr, vi, id, forms, random):
+  text unchanged; ground-truth pages 40 of 40 identical.

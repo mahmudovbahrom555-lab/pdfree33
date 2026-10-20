@@ -8,7 +8,7 @@
 // Run: node tests/textLayoutUtils.test.js
 
 import { strict as assert } from 'assert';
-import { joinSplitNumbers, restoreDroppedSpaces, joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
+import { joinSpacedItems, joinSplitNumbers, restoreDroppedSpaces, joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
   lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
   continuesWrappedHeading, lineRuns , textLayerLooksBroken, toUnifiedIdeographs, joinTouchingItems, dropCjkGapSpaces, isContentsEntry } from '../js/textLayoutUtils.js';
 
@@ -621,11 +621,16 @@ test('words set closer than a fifth of an em but a space glyph apart get their s
   if (!items.some(i => i.str === ' ايران')) throw new Error(JSON.stringify(items.map(i => i.str)));
 });
 
-test('a line without space glyphs keeps the fifth-of-an-em rule', () => {
+test('glyphs closer than 0.15 em stay one word', () => {
   const it = (str, x, width, seq) => ({ str, x, width, fontSize: 12.96, seq, y: 546 });
-  const items = [it('در', 127, 9.6, 1), it('ايران', 106, 18.5, 2)];
+  const items = [it('در', 127, 9.6, 1), it('ايران', 106.6, 18.5, 2)];   // 1.9 pt = 0.147 em apart
   reorderVisualRtlLine(items);
   if (items.some(i => i.str.startsWith(' '))) throw new Error(JSON.stringify(items.map(i => i.str)));
+});
+
+test('a small Persian table\'s words 0.19 em apart get their space (7351637: "عنوانرشته")', () => {
+  const it = (str, x, width) => ({ str, x, width, fontSize: 6.399 });
+  if (joinSpacedItems([it('عنوان', 373.05, 12.36), it('رشته', 361.72, 10.12)]) !== 'عنوان رشته') throw new Error('glued');
 });
 
 const total = passed + failed;
