@@ -232,6 +232,8 @@ export function reorderVisualRtlLine(items) {
   // left-to-right step, so "مئة صفحة كلما احتجت." stayed "كلما احتجت.مئة صفحة").
   items.sort((a, b) => (a.seq ?? 0) - (b.seq ?? 0));
   const spaceWidth = _lineSpaceWidth(items);
+  // kept on the items: a table cell is joined from them later (joinSpacedItems)
+  if (spaceWidth) for (const item of items) item.spaceWidth = spaceWidth;
   let ltrSteps = 0, rtlSteps = 0, prev = null;
   for (const item of items) {
     if (!_STRONG_CHAR_RE.test(item.str)) continue;
@@ -316,16 +318,22 @@ export function reorderVisualRtlLine(items) {
 // The width of the line's own space glyph — its narrowest whitespace item
 // (justification stretches the others), not counting the near-zero ones a
 // lam-alef split leaves — or 0 when it draws none.
+// A word gap: over 0.15 em (right-to-left lines, and table cells of any
+// script — 72 non-Arabic corpus documents came out unchanged). 0.2 em, the old rule, cut
+// right through real spaces — a Persian table at 6.4 pt has its words 0.19 em
+// apart ("عنوانرشته", 7351637: 346 glued words → 28), a book at 13 pt 0.193 em
+// (7389718) — while glyphs of one word sit 0–0.05 em apart.
+const GAP_EM = 0.15;
 function _lineSpaceWidth(items) {
   const w = items.filter(i => i.str && !i.str.trim() && i.width >= 0.1 * (i.fontSize || 10)).map(i => i.width);
   return w.length ? Math.min(...w) : 0;
 }
 
-// Between two neighbours in reading order: a space where a gap of a fifth of an
-// em or more separates them and neither has one — or of 0.8 of the line's own
-// space glyph, if that is narrower: a Persian book set its 13 pt words 2.5 pt
-// apart with a 2.6 pt space, and "در ايران" came out "درايران" (7389718: 909
-// glued words; the corpus 4,790 → 3,419). And (`zwnj`, a visual line) a ZWNJ
+// Between two neighbours in reading order: a space where a gap over GAP_EM
+// separates them and neither has one — or over 0.8 of the line's own space
+// glyph, if that is narrower: a Persian book set its 13 pt words 2.5 pt apart
+// with a 2.6 pt space, and "در ايران" came out "درايران" (7389718: 909 glued
+// words). And (`zwnj`, a visual line) a ZWNJ
 // where a letter's isolated or final form meets the next letter with no gap (a
 // Persian half-space).
 function _spaceGaps(ordered, zwnj = true, spaceWidth = 0) {
@@ -333,7 +341,7 @@ function _spaceGaps(ordered, zwnj = true, spaceWidth = 0) {
     const a = ordered[i - 1], b = ordered[i];
     if (a.str.endsWith(' ') || b.str.startsWith(' ')) continue;
     const gap = Math.max(b.x - (a.x + (a.width || 0)), a.x - (b.x + (b.width || 0)));
-    const wide = spaceWidth ? Math.min(b.fontSize * 0.2, 0.8 * spaceWidth) : b.fontSize * 0.2;
+    const wide = spaceWidth ? Math.min(b.fontSize * GAP_EM, 0.8 * spaceWidth) : b.fontSize * GAP_EM;
     if (gap > wide) b.str = ' ' + b.str;
     else if (zwnj && _JOIN_BROKEN_FORMS.has(a.str.codePointAt(a.str.length - 1)) && _RTL_CHAR_RE.test(b.str[0])) {
       b.str = '\u200C' + b.str;
@@ -355,14 +363,18 @@ const _CUT_SLACK = 2; // pt — a rule drawn against a cell's text still separat
 const _right = item => item.x + (item.width || 0);
 
 // Items of one line, in reading order, as text: a space only where the gap
-// between two of them is over 0.2 em and neither side already has one.
+// between two of them is over GAP_EM — or 0.8 of the line's space glyph, if
+// narrower (C9) — and neither side already has one.
 export function joinSpacedItems(items) {
   let str = items[0]?.str ?? '';
   for (let k = 1; k < items.length; k++) {
     const a = items[k - 1], b = items[k];
     const gap = Math.max(b.x - _right(a), a.x - _right(b));
     const em = Math.max(a.fontSize || 0, b.fontSize || 0) || 10;
-    str += (gap > 0.2 * em && !a.str.endsWith(' ') && !b.str.startsWith(' ') ? ' ' : '') + b.str;
+    // the line's own space glyph, as for running text (_spaceGaps)
+    const space = a.spaceWidth || b.spaceWidth;
+    const wide = space ? Math.min(GAP_EM * em, 0.8 * space) : GAP_EM * em;
+    str += (gap > wide && !a.str.endsWith(' ') && !b.str.startsWith(' ') ? ' ' : '') + b.str;
   }
   return str;
 }
