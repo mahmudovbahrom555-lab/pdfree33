@@ -98,7 +98,10 @@ def main():
         else:
             j = rng.randrange(seen[s])
             if j < q: pool[j] = item
-    sample = sorted((i for p in pools.values() for i in p), key=lambda i: i['file'])
+    # the metadata lists some files on several rows (7054370.pdf seven times):
+    # each file once — the nightly shards would otherwise both run it, and
+    # arabic.py --merge refuses a night with a document in two shards
+    sample = sorted({i['file']: i for p in pools.values() for i in p}.values(), key=lambda i: i['file'])
     json.dump({'source': src, 'seed': SEED, 'population': seen, 'sample': sample}, sys.stdout, indent=1)
     print(file=sys.stderr)
     print('population:', seen, file=sys.stderr)
