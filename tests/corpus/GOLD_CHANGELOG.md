@@ -171,3 +171,34 @@ converter commit — never by both at once.
   candidates for reading-order classes (C6, C7), to be checked by hand
   before any is called an error.
 - **Approved by:** this pull request's review.
+
+## 2026-10-20 — Arabic metric v4 (schema 5): order only where both readers agree
+
+- **What:** `scripts/quality/arabic.py` metric 3 → 4, schema 4 → 5:
+  `order_of` keeps only the anchors both readers put in the same order (the
+  longest run of poppler's anchors that MuPDF has in that order) and scores
+  the output against those; new per-document `readersAgree` (the share
+  kept) and `orderUnverifiable` (enough anchors, too few in a common order —
+  no order score); the report lists every such document under "order not
+  checkable" instead of dropping it from the totals silently. Control cases
+  26 → 29: a three-panel brochure read panel by panel scores ≥ 0.95 where
+  poppler reads across the panels (v3: 0.42); columns read across each
+  other where both readers agree still score ≤ 0.5; readers that share
+  almost no order give no score and are listed.
+- **Why — a metric bug found while starting C6, reported to the owner
+  first:** v3 took the order from poppler alone (its docstring said "the
+  readers' order"). Poppler reads a brochure's or a spread's panels line by
+  line across each other: a correct output (3537793, read panel by panel
+  like MuPDF) scored 0.58. MuPDF's and poppler's orders agree below 0.9 on 71
+  of 230 documents. The owner weighed the risks (blind spots where readers
+  disagree, both readers wrong alike, scores rising without a product
+  change, moving a target before a fix) and asked for v4 with them managed.
+- **Moves (--migrate, the same 289 outputs of main after #41, v3 → v4):**
+  recall, words, numbers unchanged. Order: scored on 230 → 224 documents;
+  long documents 91.88 → 94.66 % on 203; median 0.986 → 0.998; below 0.9:
+  48 → 35; below 0.8: 37 → 21. Higher on 50, lower on 1 — 6579225, 0.741 →
+  0.636, a three-column newsletter whose output really interleaves its
+  columns (checked by hand: v3 underrated a real error). Not checkable now
+  (6): 0190904, 2189356, 3286074, 4542735, 5680731, 5986935. No comparison
+  across metric versions: a new baseline is needed under v4.
+- **Approved by:** this pull request's review.
