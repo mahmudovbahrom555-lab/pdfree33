@@ -163,7 +163,8 @@ committed.
 
 ## C4 — the text layer gives other digits than the page draws
 
-- **Status:** `confirmed` (2026-10-21) — measured, not fixed
+- **Status:** `fixing` (2026-10-21) — fix in a pull request, not yet on
+  pdfree.io
 - **Harm:** high — wrong numbers that look right, and they reach the DOCX:
   on pdfree.io 4 of 4 checked documents carry them (0045417: "2011" on the
   page, "3122" eight times in the Word file and "2011" never).
@@ -193,10 +194,36 @@ committed.
 - **Not measured:** ~47,000 digits in fonts whose program couldn't be read
   (recall unknown there); digit ORDER flips (٢٦ read "62") are a separate
   class.
-- **Fix direction (not started):** per font, the digit mapping the embedded
-  font's own cmap gives, used only where the drawn shape confirms it — the
-  shape check is what keeps the 20 documents whose text was right from being
-  broken.
+- **Fix (`js/pdfDigitFix.js`, `js/digitGlyphs.js`):** for a Type0 font over
+  an embedded TrueType program, the digit glyphs whose ToUnicode digit
+  differs from the font's own Unicode cmap; the glyph's OUTLINE (not the
+  page) rasterized and matched against 390 reference digits made the same
+  way from open-licensed fonts (`js/digitTemplates.js`,
+  `scripts/gen_digit_templates.mjs`); the font is corrected only where the
+  shape backs its cmap on ≥ 2/3 of them. pdf.js's items are corrected font
+  by font, in drawing order, only where every digit of an item is the one
+  ToUnicode names — pdf.js doesn't always take digits from ToUnicode (it
+  read the right "2018" on 6304362 where ToUnicode in drawing order says
+  "8102"); a reversed match there would have broken it. PDF→Word,
+  PDF→PowerPoint and Read.
+- **Measured (44 flagged documents, real pdf.js, vs pdfree.io):** the 26
+  confirmed documents all corrected (0045417 "3122" → "2011", 0247454
+  "0202" → "2021", 3608860 "۱۸۸۱" → "۱۸۴۳", 5470407's contents page now
+  ۱۰۱ ۱۰۳ ۱۰۶ ۱۱۷); of the 18 the page-render arbiter had called "text
+  right", 15 untouched and 3 changed — each checked by hand on the page,
+  each a real fix the coarser per-document label had missed (7733378 "03" →
+  "30", 6304362 "8102" → "2018", 3122010 "3122" → "2011"). Fixtures:
+  `c4-wrong-digits.pdf` (corrected) and `c4-font-cmap-wrong.pdf` (a font
+  whose own cmap is wrong — left alone).
+- **Whole corpus (289, real pdf.js, vs pdfree.io):** 30 documents' text
+  changed — the 29 above and 0399787 (under the 3-digit flag, "حزيران 51 …
+  آرت أون 15" → "15 … 56", as drawn); the other 253 identical. The
+  Arabic metric reports these as worse (numbers missing 3,441 → 4,444, and
+  0247454's recall 1.0 → 0.95, its words carrying digits): it scores
+  against MuPDF and poppler, which both read the wrong digits — the blind
+  spot this class was found in. Reported to the owner, not changed.
+- **Not covered yet:** simple TrueType fonts (0045417's second Arial,
+  4681141's B Mitra), CFF fonts, digit-order flips.
 
 ## C5 — a table of contents comes out as one paragraph
 

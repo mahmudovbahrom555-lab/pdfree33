@@ -24,6 +24,9 @@
 //    actualText(pageNum)      — the page's marked-content /ActualText, one
 //                               entry per BDC/BMC (js/pdfActualText.js in the
 //                               browser); none by default.
+//    digitFix(pageNum)        — the page's digits whose ToUnicode names them
+//                               wrongly, per font (js/pdfDigitFix.js in the
+//                               browser); none by default.
 //  No canvasFactory seam is needed here (unlike pdf2mdCore.js) — this module
 //  never renders a canvas itself. An `image`-type block from
 //  _rpBuildRegionBlocks/_rpBuildPageBlocks carries only a bounding-box
@@ -38,6 +41,7 @@
 import { detectTables, looksLikeProseNotData, looksLikeEnumeratedList } from './pdf2wordTables.js';
 import { pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
 import { detectTableGrids, lineInGrid, gridRowsOfLines, gridHoldsTable } from './pdf2wordBorders.js';
+import { applyDigitFix } from './pdfDigitFix.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken, joinSpacedItems, dropCjkGapSpaces, applyActualText, restoreDroppedSpaces, joinSplitNumbers } from './textLayoutUtils.js';
 
@@ -611,7 +615,7 @@ async function _annotationTextItems(page) {
   return out;
 }
 
-export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCancelled = () => false, ocrPage = null, actualText = null } = {}) {
+export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCancelled = () => false, ocrPage = null, actualText = null, digitFix = null } = {}) {
   const YTOL = 6;   // px — items within 6px on Y → same line (was 4; increased to group
                    //  characters with slight baseline variation, e.g. Cyrillic in some PDFs)
 
@@ -661,6 +665,12 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
       page.getOperatorList().catch(() => {}),
     ]);
     if (upright) for (const it of content.items) if (it.transform) it.transform = mulMatrix(upright, it.transform);
+    // Digits a font's ToUnicode names wrongly ("3122" for a drawn "2011"),
+    // before ActualText, which still has the last word where a PDF gives it.
+    if (digitFix) {
+      const baseFontOf = name => { try { return page.commonObjs.get(name)?.name; } catch { return null; } };
+      content.items = applyDigitFix(content.items, baseFontOf, await digitFix(p).catch(() => null));
+    }
     // Right-to-left scripts, presentation forms, unmapped glyphs (\0) and
     // vowel marks: where Chrome and LibreOffice put the real letters in
     // /ActualText, which pdf.js drops (see js/pdfActualText.js). Other pages

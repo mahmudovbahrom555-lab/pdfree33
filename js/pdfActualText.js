@@ -30,18 +30,26 @@ import { loadPdfLib } from './lazyLibs.js';
 // than a phone can spare for what it fixes
 const MAX_BYTES = 60 * 1024 * 1024;
 
-// A reader for one pdf.js document: pageNum → Promise<(string|null)[] | null>.
-// null: not to be had (pdf-lib unavailable, file too big or unreadable).
-export function createActualTextReader(pdfDoc) {
-  let doc = null;
-  return async pageNum => {
-    doc ??= (async () => {
+// The pdf-lib parse of one pdf.js document, made once for every reader that
+// needs the raw file (this one, js/pdfDigitFix.js). null: not to be had
+// (pdf-lib unavailable, file too big or unreadable).
+const _parsed = new WeakMap();
+export function pdfLibDocOf(pdfDoc) {
+  if (!_parsed.has(pdfDoc)) {
+    _parsed.set(pdfDoc, (async () => {
       const bytes = await pdfDoc.getData();
       if (bytes.length > MAX_BYTES) return null;
       await loadPdfLib();
       return window.PDFLib.PDFDocument.load(bytes, { ignoreEncryption: true, updateMetadata: false });
-    })().catch(() => null);
-    const d = await doc;
+    })().catch(() => null));
+  }
+  return _parsed.get(pdfDoc);
+}
+
+// A reader for one pdf.js document: pageNum → Promise<(string|null)[] | null>.
+export function createActualTextReader(pdfDoc) {
+  return async pageNum => {
+    const d = await pdfLibDocOf(pdfDoc);
     if (!d) return null;
     try {
       return actualTextSpans(window.PDFLib, d, pageNum - 1);
@@ -100,7 +108,7 @@ export function actualTextSpans(PDFLib, doc, pageIndex) {
 const WS = new Set([0, 9, 10, 12, 13, 32]);
 const DELIM = new Set([40, 41, 60, 62, 91, 93, 123, 125, 47, 37]);
 
-function* contentOps(b) {
+export function* contentOps(b) {
   let i = 0, args = [];
   const n = b.length;
   const skipWs = () => {
