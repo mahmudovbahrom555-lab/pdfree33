@@ -149,3 +149,25 @@ converter commit — never by both at once.
   nothing moved by the new rule on those outputs. v8 → v10 (the C1 fix)
   under v2: 0 worse (v1: 1, 2022469, wrongly).
 - **Approved by:** this pull request's review.
+
+## 2026-10-19 — Arabic metric v3 (schema 4): reading order
+
+- **What:** `scripts/quality/arabic.py` metric 2 → 3, schema 3 → 4: `order`
+  and `anchors` per document (`order_of`) — the anchors are words of 4+
+  letters found exactly once in MuPDF's text, in poppler's and in the
+  output; `order` is the share the output keeps in the readers' order (the
+  longest run in order). None under 20 anchors. A drop of more than 0.03 is
+  "worse". Control cases 23 → 26: the right text keeps order ≥ 0.95, two
+  paragraphs swapped fall to ≤ 0.7 with recall unchanged, a glued word moves
+  order by ≤ 0.05.
+- **Why:** words were counted as a bag — a one-column page cut into two
+  "columns" and read half by half (1373210) scored 94 % with its sentences
+  scrambled; spreads with interleaved columns (4974198) likewise. Word
+  trigrams were tried first and rejected: a letter-spaced text layer ("ج
+  رائم") broke them where the output was right.
+- **Moves (--migrate, the same 289 outputs, v2 → v3):** no score changes;
+  nothing moved (a first order has nothing to compare with). Order on the
+  289: 230 documents measured, median 0.914; 100 below 0.9, 60 below 0.8 —
+  candidates for reading-order classes (C6, C7), to be checked by hand
+  before any is called an error.
+- **Approved by:** this pull request's review.

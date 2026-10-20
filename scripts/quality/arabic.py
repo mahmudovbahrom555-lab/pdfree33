@@ -50,21 +50,27 @@ robust.mjs's results.jsonl, `outcome` (ok / timeout / error …), `ms` and
 `ocrPages`. tests/corpus/cloud/arabic-known.json lists documents a human found
 both readers wrong on, or unverifiable: reported, never judged.
 
+Metric v3, schema 4 (2026-10-19): `order` — reading order, by anchor words
+(order_of); a drop of more than ORDER_TOLERANCE is "worse". Words were
+counted as a bag: two columns read across each other scored 94 %.
+
 Metric v2, schema 3 (2026-10-18): the header lists `timedOut` and
 `notEvaluated` (each with why); a set-aside entry says what is not judged on
 its document — numbers, words or all (`scope`) — with a status and a dated
 history; dot errors, reversed and glued words judge "worse" per word found
 (see worse_on). No score changes.
 """
-import collections, hashlib, json, os, re, subprocess, sys, unicodedata, zipfile
+import bisect, collections, hashlib, json, os, re, subprocess, sys, unicodedata, zipfile
 
 import fitz
 
 AR = re.compile(r'[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]')
 MARKS = re.compile(r'[ً-ْٰ]')
 SHORT = 50
-METRIC_VERSION = 2
-SCHEMA = 3
+METRIC_VERSION = 3
+SCHEMA = 4
+MIN_ANCHORS = 20
+ORDER_TOLERANCE = 0.03
 KNOWN = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'tests', 'corpus', 'cloud', 'arabic-known.json')
 FOLD = str.maketrans('٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹', '01234567890123456789')
 RASM = {}
@@ -153,7 +159,28 @@ def score(pdf, docx):
             'numbers': round(sum((nt & no).values()) / sum(nt.values()), 4) if nt else None,
             'numbersMissing': sum(lost.values()), 'numbersAgreed': sum(nt.values()),
             **({'numberCauses': causes} if causes else {}),
-            'numbersAgree': round(sum(nt.values()) / (max(sum(nm.values()), sum(np_.values())) or 1), 3)}
+            'numbersAgree': round(sum(nt.values()) / (max(sum(nm.values()), sum(np_.values())) or 1), 3),
+            **order_of(M, P, seq)}
+
+
+def order_of(M, P, out):
+    """Reading order, not just words: the anchors — words of 4+ letters found
+    exactly once in MuPDF's text, in poppler's and in the output — and the
+    share of them the output keeps in the readers' order (its longest run in
+    order, LIS). Two columns read across each other, a line torn in two and
+    read half by half, a paragraph moved: all lower it; a word glued or split
+    elsewhere does not (word trigrams did — letter-spaced text layers read
+    "ج رائم" where the output has "جرائم"). None under MIN_ANCHORS."""
+    cm, cp, co = collections.Counter(M), collections.Counter(P), collections.Counter(out)
+    anchors = [w for w in P if len(w) >= 4 and cp[w] == 1 and cm[w] == 1 and co[w] == 1]
+    if len(anchors) < MIN_ANCHORS:
+        return {'order': None, 'anchors': len(anchors)}
+    pos = {w: i for i, w in enumerate(out) if co[w] == 1}
+    run = []
+    for x in (pos[w] for w in anchors):
+        i = bisect.bisect_left(run, x)
+        run[i:i + 1] = [x]
+    return {'order': round(len(run) / len(anchors), 4), 'anchors': len(anchors)}
 
 
 def furniture(pp):
@@ -387,6 +414,8 @@ def worse_on(base, new, tolerance, scope=None):
     if scope != 'words':
         if new['recall'] < base['recall'] - tolerance:
             out.append('recall')
+        if new.get('order') is not None and base.get('order') is not None and new['order'] < base['order'] - ORDER_TOLERANCE:
+            out.append('order')
         for k in ('dots', 'reversed', 'glued'):
             more = new[k] > (base[k] * 1.1 + 2 if k == 'glued' else base[k])
             if more and hits(base) >= 1 and new[k] / max(1, hits(new)) > base[k] / hits(base):
@@ -444,6 +473,8 @@ def compare(base_path, new_path, tolerance=0.005, known_path=KNOWN, migrate=Fals
                      f'missing words {agg(b, "missing")} → {agg(n, "missing")}, dots {agg(b, "dots")} → {agg(n, "dots")}, '
                      f'reversed {agg(b, "reversed")} → {agg(n, "reversed")}, glued {agg(b, "glued")} → {agg(n, "glued")}, '
                      f'numbers missing {agg(b, "numbersMissing")} → {agg(n, "numbersMissing")}'
+                     + (lambda o: f', order {sum(base[d]["order"] for d in o) / len(o) * 100:.2f} → {sum(new[d]["order"] for d in o) / len(o) * 100:.2f} % on {len(o)} docs'
+                        if o else '')([d for d in sel if base[d].get('order') is not None and new[d].get('order') is not None])
                      + (f' of {agg(n, "numbersAgreed")} agreed' if agg(n, 'numbersAgreed') else ''))
         if label.startswith('short'):
             lines.append(f'  short documents with a serious error (≥ 3 words or any number, dot or reversal lost; or < 90 %): '
@@ -459,7 +490,8 @@ def compare(base_path, new_path, tolerance=0.005, known_path=KNOWN, migrate=Fals
     for d in sorted(worse, key=lambda d: new[d]['recall'] - base[d]['recall']):
         b, n = base[d], new[d]
         lines.append(f'- {d} ({n["producer"]}) recall {b["recall"]:.3f} → {n["recall"]:.3f}, dots {b["dots"]} → {n["dots"]}, '
-                     f'reversed {b["reversed"]} → {n["reversed"]}, glued {b["glued"]} → {n["glued"]}, numbers missing {b["numbersMissing"]} → {n["numbersMissing"]}')
+                     f'reversed {b["reversed"]} → {n["reversed"]}, glued {b["glued"]} → {n["glued"]}, numbers missing {b["numbersMissing"]} → {n["numbersMissing"]}'
+                     + (f', order {b["order"]:.3f} → {n["order"]:.3f}' if b.get('order') is not None and n.get('order') is not None else ''))
     # a document scored in the baseline and not now: red when it failed, a
     # warning when it ran out of time (CI speed varies; slow stays visible)
     gone = [d for d in base if 'recall' in base[d] and d not in changed and (d not in new or 'recall' not in new[d])]
