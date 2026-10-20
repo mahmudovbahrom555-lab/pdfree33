@@ -367,6 +367,53 @@ test('a column cut from a merged line gets that column\'s own baseline', () => {
   expect(linesInRegion([merged], regions, 1)[0].y).toBe(613.4);
 });
 
+// ── C7: one-column Arabic pages, newspapers, crowded gutters (2026-10-19) ──
+// tests/corpus/ERROR_CLASSES.md C7. A justified right-to-left page: full-width
+// lines plus the short last lines of its paragraphs, right-aligned, so their
+// LEFT edges cluster in the middle of the page.
+const justifiedRtl = () => Array.from({ length: 36 }, (_, i) => {
+  const y = 760 - i * 14;
+  const short = i % 3 === 2;
+  return { y, rtl: true, items: [short ? run(300, 223, 'آخر سطر الفقرة') : run(72, 451, 'سطر كامل العرض')] };
+});
+
+console.log('\nC7 — right-to-left pages without a gutter:');
+
+test('a justified one-column right-to-left page is one column, not cut at a midpoint', () => {
+  expect(detectColumnRegions(justifiedRtl(), 595)).toBeNull();
+});
+
+test('a right-to-left page whose lines hold two columns side by side keeps its columns without a clean gutter', () => {
+  // a newspaper: column lines merged at one height (a wide gap inside the line),
+  // and headlines bridging the gutter often enough that no valley is empty
+  const lines = Array.from({ length: 30 }, (_, i) => {
+    const y = 760 - i * 14, w = 200 - (i % 4) * 30;
+    return i % 5 === 0
+      ? { y, rtl: true, items: [run(150, 260, 'عنوان يعبر الفاصل')] }
+      : { y, rtl: true, items: [run(285 - w, w, 'عمود أيسر'), run(523 - 200, 200, 'عمود أيمن')] };
+  });
+  expect(detectColumnRegions(lines, 595) !== null).toBe(true);
+});
+
+test('a gutter crossed by a few headings is still found on a tall two-column page', () => {
+  // 40 lines per column: 3 bridging runs are more than 3 % of the 83 runs, but
+  // a small fraction of the text's own cover (40 runs over each column point)
+  const lines = [...Array.from({ length: 40 }, (_, i) => ({ y: 790 - i * 15, rtl: true, items: [run(72, 213), run(310, 213)] })),
+    ...[0, 1, 2].map(k => ({ y: 180 - k * 15, rtl: true, items: [run(200, 240, 'عنوان')] }))];
+  const regions = detectColumnRegions(lines, 595);
+  expect(regions?.length).toBe(2);
+  expect(regions[0].gutter).toBe(true);
+  expect(regions[0].right > 285 && regions[0].right < 310).toBe(true);
+});
+
+test('_splitCrossColumnLines returns the regions it split by, for the page\'s later passes', () => {
+  const lines = twoCol(true);
+  const regions = _splitCrossColumnLines(lines, 595);
+  expect(regions?.length).toBe(2);
+  expect(lines.length).toBe(48); // each two-column line now one line per column
+  expect(_splitCrossColumnLines(justifiedRtl(), 595)).toBeNull();
+});
+
 // ── Summary ──────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);

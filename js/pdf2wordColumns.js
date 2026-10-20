@@ -104,6 +104,12 @@ function lineRunStarts(line, rtlAware) {
 const GUTTER_MIN = 4;              // pt
 const FULL_WIDTH_FRACTION = 0.6;
 const VALLEY_FRACTION = 0.03;      // runs that may still cross a gutter (a rule, a stray glyph)
+// ...or a tenth of how many runs cover a typical point of the text. A tall
+// two-column page has headings, captions and justification-stretched lines
+// that bridge its gutter in more than 3 % of all runs (real magazine 4197540:
+// the gutter at x≈242 was rejected), while the text itself stays ten times as
+// dense.
+const VALLEY_OF_MEDIAN = 0.1;
 function gutterCuts(lines, count) {
   const end = it => it.x + (it.width > 0 ? it.width : 0);
   const runs = [];
@@ -121,7 +127,8 @@ function gutterCuts(lines, count) {
   const narrow = runs.filter(r => r[1] - r[0] <= FULL_WIDTH_FRACTION * (hi - lo));
   const cover = new Uint16Array(hi - lo + 1);
   for (const [x0, x1] of narrow) for (let x = Math.floor(x0); x <= Math.ceil(x1); x++) cover[x - lo]++;
-  const allowed = Math.floor(narrow.length * VALLEY_FRACTION);
+  const covered = [...cover].filter(c => c > 0).sort((a, b) => a - b);
+  const allowed = Math.max(Math.floor(narrow.length * VALLEY_FRACTION), Math.floor(VALLEY_OF_MEDIAN * (covered[covered.length >> 1] || 0)));
   const valleys = [];
   for (let i = 0, start = -1; i <= cover.length; i++) {
     const empty = i < cover.length && cover[i] <= allowed;
@@ -153,7 +160,33 @@ export function detectColumnRegions(lines, pageWidth) {
   // were never split before, and a midpoint cut there tore letter-by-letter
   // Arabic words apart (holdout corpus 2026-10-01: Wikipedia ar/fa recall −3%).
   const aware = _detectColumnRegions(lines, pageWidth, true);
-  return aware?.[0].gutter ? aware : _detectColumnRegions(lines, pageWidth, false);
+  if (aware?.[0].gutter) return aware;
+  // A right-to-left page without a gutter is one column unless its lines show
+  // columns side by side. The left-edge fallback below cut justified one-column
+  // Arabic pages at a midpoint (C7 in tests/corpus/ERROR_CLASSES.md: 1373210,
+  // 1752892 read their halves in the wrong order), while newspapers whose
+  // gutter the search misses (2315841, 4904228) still need it.
+  if (lines.filter(ln => ln.rtl).length * 2 > lines.length && gappedShare(lines) < SIDE_BY_SIDE_SHARE) return null;
+  return _detectColumnRegions(lines, pageWidth, false);
+}
+
+// Share of lines with a gap wider than two em inside them — two columns'
+// lines merged at one height. Newspapers measured 0.22–0.77, justified
+// one-column pages 0–0.2 (Arabic corpus, 2026-10-19).
+const SIDE_BY_SIDE_SHARE = 0.25;
+function gappedShare(lines) {
+  const sizes = lines.flatMap(ln => ln.items.map(i => i.fontSize || 0)).filter(v => v > 0).sort((a, b) => a - b);
+  const em = sizes[sizes.length >> 1] || 10;
+  const gapped = lines.filter(ln => {
+    const items = [...ln.items].sort((a, b) => a.x - b.x);
+    let end = null;
+    for (const it of items) {
+      if (end !== null && it.x - end > 2 * em) return true;
+      end = Math.max(end ?? -Infinity, it.x + (it.width > 0 ? it.width : 0));
+    }
+    return false;
+  });
+  return gapped.length / lines.length;
 }
 
 function _detectColumnRegions(lines, pageWidth, rtlAware) {

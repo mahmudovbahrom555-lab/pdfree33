@@ -18,7 +18,7 @@ import { loadJSZip, loadDocx, loadExcelJs, loadPptxGenJs } from './lazyLibs.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer, decryptWithPassword } from './decryptPdf.js';
 import { detectTables, groupItemsIntoLines, looksLikeProseNotData, looksLikeEnumeratedList } from './pdf2wordTables.js';
-import { detectColumnRegions, pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
+import { pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
 import { captureText, lineRunsForSlide, cutsForLine, groupRuns, fittedFontSize, eraseUnpaintedRuns, styledParts } from './pdf2pptLayered.js';
 import { openFeedback } from './feedback.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
@@ -4832,7 +4832,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
       paragraphs.push(new Paragraph({ children: [], pageBreakBefore: true }));
     }
 
-    const { lines, rotatedItems, borderGrids, items: textItems, pageH, pageW } = pageData[pi];
+    const { lines, rotatedItems, borderGrids, items: textItems, pageH, columnRegions: regions } = pageData[pi];
 
     // Pages with no extractable text (diagram-only pages in scanned PDFs):
     // render the full page as a single ImageRun so content is not lost.
@@ -4850,7 +4850,10 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     }
 
     // ── Column-aware split ────────────────────────────────────────────────
-    // "Prefer false negatives": detectColumnRegions() already returns null
+    // `regions` are the ones _splitCrossColumnLines() detected and split by in
+    // _p2wBuildPageData, on the lines as the page drew them — detecting again
+    // on the split lines would judge a different page. "Prefer false
+    // negatives": detectColumnRegions() already returns null
     // for anything short of confident multi-column evidence. On top of
     // that, a table/grid whose own footprint spans ACROSS a detected column
     // boundary (a wide results table in an otherwise 2-column paper, e.g.)
@@ -4858,7 +4861,6 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     // single, unsplit pass rather than attempt to split a structure that
     // straddles the boundary. A page that can't be split cleanly should
     // stay exactly as accurate as it already is, not get worse.
-    const regions = pageW ? detectColumnRegions(lines, pageW) : null;
     const splittable = regions && !borderGrids.some(g =>
       regions.filter(r => g.x < r.right && (g.x + g.w) > r.left).length > 1
     );
@@ -4874,19 +4876,13 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
         if (isCancelled()) break;
         const inRegion = (it) => !!it && it.x >= region.left && it.x < region.right;
         // Filter ITEMS WITHIN each line, not whole lines by their first item.
-        // In the normal case _splitCrossColumnLines() (textLayoutUtils.js,
-        // called from _p2wBuildPageData before this pass ever runs) has
-        // already re-split every Y-merged line into clean single-region
-        // lines using this SAME detectColumnRegions() call, so by the time
-        // this loop runs, ln.items[0] alone is usually enough. But that
-        // pre-split is itself keyed to detectColumnRegions() returning the
-        // same regions both times — gating on just the first item here has
-        // no upside over filtering the line's own items and is one
-        // incorrect edge case away from silently routing a still-merged
-        // line's FULL content (both columns concatenated) into whichever
-        // region contains its leftmost item, and leaving the other region's
-        // pass empty for that row. Filtering items directly costs nothing
-        // and stays correct even if that invariant ever breaks.
+        // _splitCrossColumnLines() (textLayoutUtils.js, called from
+        // _p2wBuildPageData before this pass ever runs) has already re-split
+        // every Y-merged line into clean single-region lines by these same
+        // regions, so ln.items[0] alone is usually enough — but a full-width
+        // line it kept whole would route its FULL content into whichever
+        // region holds its leftmost item. Filtering items directly costs
+        // nothing.
         const colLines = linesInRegion(lines, regions, regions.indexOf(region)); // full-width lines whole
         const colRotatedItems = rotatedItems.filter(inRegion);
         const colBorderGrids  = borderGrids.filter(g => g.x >= region.left && (g.x + g.w) <= region.right);
