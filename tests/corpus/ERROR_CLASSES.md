@@ -386,3 +386,45 @@ committed.
   it 7,907 → 7,848); worse on 5 by one dot or reversed word each. 72
   non-Arabic corpus documents (zh, ja, ko, ru, tr, vi, id, forms, random):
   text unchanged; ground-truth pages 40 of 40 identical.
+
+## C10 — two-letter ligatures read with their letters swapped
+
+- **Status:** `fixing` (2026-10-21) — fix in a pull request
+- **Harm:** high — a misspelt word in nearly every line, which search and
+  spell-check fail on: "جملس" for "مجلس", "املتحدة" for "المتحدة",
+  "احلقوق" for "الحقوق", "يف" for "في" (0997713: 5,516 such words; prod
+  and main alike).
+- **Cause (confirmed on 1898617, glyph by glyph):** PDFs drawn in visual
+  order with ToUnicode naming each glyph as its presentation form — a
+  two-letter ligature as one (U+FCCE meem with jeem, U+FCCC lam with
+  meem, U+FCCA lam with hah). pdf.js normalizes the ligature into its two
+  letters in logical order and only then reverses the right-to-left item,
+  so the pair comes out backwards: the item reads "جمﻠﺲ" (U+062C U+0645
+  U+FEE0 U+FEB2). Read without that normalization the item is "ﳎﻠﺲ", whose
+  NFKC is "مجلس". Lam-alef ligatures are not affected.
+- **Found by:** words the output has and neither reader has, that become a
+  word both readers have when two adjacent letters are swapped — 8,057 such
+  words in 53 of 289 documents (main). Five independent generators among
+  the worst: Acrobat Distiller 6/8/9 (1898617, 0997713, 6698709), PDFMaker 9
+  (6889061), bioPDF (2563334); 2006–2017.
+- **Fix (`js/pdf2readCore.js`):** a page with a right-to-left item of
+  presentation forms that holds a run of 2–3 plain letters (the split
+  ligature) is read a second time without normalization; right-to-left
+  items take the raw string when both reads have the same items, and
+  `toArabicBaseLetters` decomposes the ligature in order. Rejected first: a
+  heuristic that reverses such runs back — both orders exist as ligatures
+  ("مج" and "جم"), and some documents have real plain-letter runs (2022469).
+- **Measured (289 documents vs main, metric v5):** recall 95.19 → 95.91 %,
+  missing words 49,109 → 41,840, dot errors 977 → 308, reversed words
+  1,599 → 1,566, numbers unchanged (3,565), order unchanged (94.92 %); the
+  swap count 8,057 → 1,325 words in 39 documents (747 of them in the
+  set-aside 7853393). Glued words 2,637 → 2,649 — checked by hand on the one
+  document flagged worse (6992356, Qur'anic text): both readers split its
+  words ("ر بى", "متكبر ي ن"); the output's "رىب", "متكربي" became "ربى",
+  "متكبري", right letters that the metric now sees as glued. 72 non-Arabic
+  corpus documents: text identical; ground-truth pages 40 of 40 identical.
+- **Left:** 1,325 swap-shaped words, other causes not yet looked at —
+  Urdu (2262154, 7407593: "سے" → "ےس"), Persian (0250420, 7629204), and
+  0525394 ("مشروع" → "مرشوع", 16), which the fix did not reach.
+- **Test:** `tests/e2e/pdf2word-arabic.e2e.mjs` — `ar-ligatures.pdf`
+  (`make-ligatures.py`, Amiri): fails on main (44 % of the words), passes.

@@ -615,6 +615,15 @@ async function _annotationTextItems(page) {
   return out;
 }
 
+// A right-to-left item that is mostly presentation forms yet holds a run of
+// two or three plain letters — what pdf.js leaves where it split a ligature.
+const _PRESENTATION_RE = /[\uFB50-\uFDFF\uFE70-\uFEFC]/g;
+function _hasSplitLigature(item) {
+  if (item.dir !== 'rtl' || !item.str) return false;
+  const forms = item.str.match(_PRESENTATION_RE)?.length ?? 0;
+  return forms >= 2 && /[\u0621-\u063F\u0641-\u064A]{2,3}/.test(item.str);
+}
+
 export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCancelled = () => false, ocrPage = null, actualText = null, digitFix = null } = {}) {
   const YTOL = 6;   // px — items within 6px on Y → same line (was 4; increased to group
                    //  characters with slight baseline variation, e.g. Cyrillic in some PDFs)
@@ -665,6 +674,20 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
       page.getOperatorList().catch(() => {}),
     ]);
     if (upright) for (const it of content.items) if (it.transform) it.transform = mulMatrix(upright, it.transform);
+    // Arabic ligature glyphs as the font names them. In a line drawn in visual
+    // order pdf.js expands a ligature ("ﳎ", meem with jeem) into its two
+    // letters and then reverses the item, so the pair comes out backwards:
+    // "مجلس" read "جملس", "المتحدة" "املتحدة" (class C10: 8,057 words in 53
+    // corpus documents, 2026-10-21).
+    // Read the page again without that normalization, on pages showing it —
+    // a run of plain Arabic letters among presentation forms — and keep the
+    // ligatures whole for toArabicBaseLetters, which decomposes them in order.
+    if (content.items.some(_hasSplitLigature)) {
+      const raw = await page.getTextContent({ normalizeWhitespace: false, includeMarkedContent: !!actualText, disableNormalization: true }).catch(() => null);
+      if (raw && raw.items.length === content.items.length) {
+        content.items.forEach((it, k) => { if (it.dir === 'rtl' && typeof raw.items[k].str === 'string') it.str = raw.items[k].str; });
+      }
+    }
     // Digits a font's ToUnicode names wrongly ("3122" for a drawn "2011"),
     // before ActualText, which still has the last word where a PDF gives it.
     if (digitFix) {
