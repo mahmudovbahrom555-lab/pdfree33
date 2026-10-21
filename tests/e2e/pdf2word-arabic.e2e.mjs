@@ -23,6 +23,10 @@
 //  Arabic-script corpus documents with digits (js/pdfDigitFix.js); and the
 //  control, a font whose own cmap is the wrong one, left alone.
 //  Fixtures: c4-wrong-digits.pdf, c4-font-cmap-wrong.pdf (make-c4-digits.py).
+//  And two-letter ligatures in visual-order Arabic (class C10, 2026-10-21):
+//  pdf.js split ﳎ into its letters and then reversed them with the item —
+//  "جملس" for "مجلس", "املتحدة" for "المتحدة": 8,057 words in 53 corpus
+//  documents. Fixture: ar-ligatures.pdf (make-ligatures.py).
 //  Run: node tests/e2e/pdf2word-arabic.e2e.mjs   (dist/ served on :8934)
 // ============================================================
 
@@ -114,6 +118,13 @@ try {
   await test('a font whose own cmap is wrong keeps the right digits ToUnicode gives', async () => {
     const out = await docxText(browser, 'c4-font-cmap-wrong.pdf');
     if (!out.includes('2011') || !out.includes('4096')) throw new Error(out.slice(0, 200));
+  });
+
+  await test('two-letter ligatures drawn in visual order keep their letters in order: "مجلس", not "جملس"', async () => {
+    const out = await docxText(browser, 'ar-ligatures.pdf');
+    const truth = 'مجلس الأمن في الأمم المتحدة الحقوق والحريات لجميع الناس';
+    const r = recall(truth, out, false);
+    if (r < 1) throw new Error(`${(r * 100).toFixed(0)} % of the words right: ${out.slice(0, 200)}`);
   });
 } finally {
   await browser.close();
