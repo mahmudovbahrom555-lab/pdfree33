@@ -27,6 +27,9 @@
 //  pdf.js split ﳎ into its letters and then reversed them with the item —
 //  "جملس" for "مجلس", "املتحدة" for "المتحدة": 8,057 words in 53 corpus
 //  documents. Fixture: ar-ligatures.pdf (make-ligatures.py).
+//  And a glyph ToUnicode names by several letters, read backwards with its
+//  line (class C11, Urdu Word files with Nastaleeq ligatures: "ےس" for
+//  "سے"). Fixture: ar-ligatures-letters.pdf (make-ligatures.py).
 //  Run: node tests/e2e/pdf2word-arabic.e2e.mjs   (dist/ served on :8934)
 // ============================================================
 
@@ -122,6 +125,13 @@ try {
 
   await test('two-letter ligatures drawn in visual order keep their letters in order: "مجلس", not "جملس"', async () => {
     const out = await docxText(browser, 'ar-ligatures.pdf');
+    const truth = 'مجلس الأمن في الأمم المتحدة الحقوق والحريات لجميع الناس';
+    const r = recall(truth, out, false);
+    if (r < 1) throw new Error(`${(r * 100).toFixed(0)} % of the words right: ${out.slice(0, 200)}`);
+  });
+
+  await test('a glyph ToUnicode names by two letters keeps them in order: "مجلس", not "جملس"', async () => {
+    const out = await docxText(browser, 'ar-ligatures-letters.pdf');
     const truth = 'مجلس الأمن في الأمم المتحدة الحقوق والحريات لجميع الناس';
     const r = recall(truth, out, false);
     if (r < 1) throw new Error(`${(r * 100).toFixed(0)} % of the words right: ${out.slice(0, 200)}`);

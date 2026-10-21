@@ -998,8 +998,10 @@ function _sameFormOf(form, letter) {
 // in the content stream: MuPDF and poppler keep it). `runs`: the text of each
 // text-showing operator, its space glyphs as " " (from the operator list,
 // where pdf.js keeps them), in drawing order — visual for some producers, so
-// read both ways. A word of the items is split only where the glyphs show
-// those letters with spaces between and never as one word.
+// read both ways — and, for a run given as its glyphs, in glyph order (a
+// glyph naming several letters keeps them: see restoreGlyphOrder). A word of
+// the items is split only where the glyphs show those letters with spaces
+// between and never as one word.
 export function restoreDroppedSpaces(items, runs) {
   if (!runs?.length) return items;
   const ARABIC = /[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]/;
@@ -1011,8 +1013,10 @@ export function restoreDroppedSpaces(items, runs) {
   // or more and not the bare article, or the conjunction و
   const isWord = w => w === '\u0648' || (w.length >= 2 && w !== '\u0627\u0644');
   for (const run of runs) {
-    if (!ARABIC.test(run)) continue;
-    for (const text of [run, [...run].reverse().join('')]) {
+    const glyphs = Array.isArray(run) ? run : [...run];
+    const joined = glyphs.join('');
+    if (!ARABIC.test(joined)) continue;
+    for (const text of new Set([joined, [...joined].reverse().join(''), [...glyphs].reverse().join('')])) {
       const words = text.split(/\s+/).filter(Boolean);
       for (const w of words) whole.add(w);
       for (let i = 0; i < words.length; i++) {
@@ -1141,4 +1145,52 @@ export function joinSplitNumbers(items) {
     if (home.kind === 'all') home.it.str = home.lead + number + home.trail;
     else put(home, number);
   }
+}
+
+// The letters of a glyph that names several (a Nastaleeq ligature: "سے",
+// "کی", "نو"), put back in their order. pdf.js reads a right-to-left line
+// drawn in visual order backwards letter by letter, a glyph's letters with
+// it: "ےس" for "سے", "ونر رعمتف" for "نور معرفت" (class C11, Urdu Word
+// files). `runs`: each text-showing operator's glyphs, in drawing order, a
+// space glyph as " " (pdf2readCore's _glyphRuns). The items and the glyphs
+// are paired one to one: an item takes the glyphs whose letters it holds,
+// whitespace aside (pdf.js adds and drops spaces), compared after NFKC as
+// pdf.js normalizes; a right-to-left item holds its glyphs from its end. A
+// glyph's letters are put in order only where the item has them reversed
+// at the glyph's own place — a digit run bidi kept left to right moves
+// nothing else. The first item that does not pair stops it: the rest of
+// the page is left as pdf.js gave it. Only for items pdf.js gives in
+// reading order (a page rtlItemsAreVisual finds backwards is reversed back
+// whole, its glyphs with it).
+export function restoreGlyphOrder(items, runs) {
+  const key = s => s.normalize('NFKC').replace(/\s+/g, '');
+  const glyphs = (runs ?? []).flat().map(key).filter(Boolean);
+  if (!glyphs.some(g => g.length > 1 && /[\u0600-\u06FF]/.test(g))) return items;
+  let at = 0;
+  const out = [];
+  for (let n = 0; n < items.length; n++) {
+    const item = items[n];
+    const k = typeof item.str === 'string' ? key(item.str) : '';
+    if (!k) { out.push(item); continue; }
+    const mine = [];
+    let len = 0;
+    while (len < k.length && at < glyphs.length) { mine.push(glyphs[at]); len += glyphs[at++].length; }
+    const sorted = s => [...s].sort().join('');
+    if (len !== k.length || sorted(mine.join('')) !== sorted(k)) return [...out, ...items.slice(n)];
+    const fix = [];      // [offset in k, letters] for each glyph read backwards
+    let pos = item.dir === 'rtl' ? k.length : 0;
+    for (const g of mine) {
+      const from = item.dir === 'rtl' ? pos - g.length : pos;
+      const rev = [...g].reverse().join('');
+      if (g.length > 1 && rev !== g && k.slice(from, from + g.length) === rev) fix.push([from, g]);
+      pos = item.dir === 'rtl' ? from : pos + g.length;
+    }
+    if (!fix.length || item.str !== item.str.normalize('NFKC')) { out.push(item); continue; }
+    // offsets in k are offsets among the item's non-space characters
+    const chars = [...item.str], where = [];
+    chars.forEach((c, i) => { if (!/\s/.test(c)) where.push(i); });
+    for (const [from, g] of fix) [...g].forEach((c, j) => { chars[where[from + j]] = c; });
+    out.push({ ...item, str: chars.join('') });
+  }
+  return out;
 }

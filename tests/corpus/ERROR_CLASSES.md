@@ -428,3 +428,53 @@ committed.
   0525394 ("مشروع" → "مرشوع", 16), which the fix did not reach.
 - **Test:** `tests/e2e/pdf2word-arabic.e2e.mjs` — `ar-ligatures.pdf`
   (`make-ligatures.py`, Amiri): fails on main (44 % of the words), passes.
+
+## C11 — a glyph named by several letters, read backwards with its line
+
+- **Status:** `fixing` (2026-10-21) — fix in a pull request, **not merged:
+  the metric scores it worse (both of its readers share this error) — the
+  owner decides**
+- **Harm:** high — a misspelt word in nearly every line, search and
+  spell-check fail: "اإلسالمية" for "الإسلامية", "املحكمة" for "المحكمة",
+  "خالل" for "خلال", "اطالعات" for "اطلاعات"; Urdu "ےک" for "کے", "یک" for
+  "کی", "رکےن" for "کرنے" (5021957: 15 % of the words a real word).
+- **Cause (confirmed glyph by glyph on 2262154, 7041235):** Word draws a
+  right-to-left line glyph by glyph in visual order and names a ligature
+  glyph by its letters in reading order — Urdu Nastaleeq "سے", "کی", "نو";
+  Arabic and Persian lam-alef "لا", "لم", "لح". pdf.js turns the line
+  around letter by letter, the glyph's letters with it: "ےس", "ال", "مل".
+  MuPDF and poppler do the same, so the metric's two readers agree on the
+  wrong word and an output carrying it scored as right. (Distinct from C10:
+  there the glyph is a presentation-form ligature, one character, which
+  pdf.js's own normalization splits.)
+- **Fix (`restoreGlyphOrder`, `js/textLayoutUtils.js`):** pdf.js's operator
+  list keeps each glyph's letters; the items are paired with the glyphs one
+  to one (letters compared after NFKC, whitespace aside; the first item that
+  does not pair stops the page), and a glyph whose letters an item holds
+  reversed at the glyph's own place gets them in order. Only on pages pdf.js
+  gives in reading order — a page `rtlItemsAreVisual` turns back whole has
+  its glyphs turned with it — and that verdict is kept after the mend (a
+  first version let the mended "ال" re-vote two Persian Word files visual:
+  every word reversed, caught by the arbiter below, fixed).
+- **How it is judged — not by the metric, which shares the error:** an
+  independent vocabulary — the words both readers agree on in the 154
+  corpus documents whose fonts name no glyph by several letters (55,052
+  words; "الإسلامية" 37, "اإلسالمية" 0; "في" 2,484, "يف" 18). The share
+  of output words found in it, on the other 130 documents: **68.04 →
+  72.33 %** (1.2 million words), **worse on none**; up most on 6240805
+  0.46 → 0.73, 3836300 0.58 → 0.78, 3096442 0.69 → 0.85, 5021957 0.15 →
+  0.36. By hand: the 16 vocabulary documents the fix still changed (pdf.js
+  takes some glyphs' letters from glyph names) — 15 now right, 1 a broken
+  font both ways (2320914); 5 random documents of those the metric calls
+  worse — all 5 now right.
+- **What the metric says (v5, 289 documents vs main):** recall 95.91 →
+  91.23 %, missing words 41,840 → 116,683, worse on 117 documents — its
+  references are the readers' reversed words. Not a regression: a blind
+  spot of the measuring stick, reported to the owner (a reader correction
+  from the glyphs, as v5 did for digits, would be a metric change of its
+  own). 72 non-Arabic documents: text identical; ground-truth pages 40 of
+  40 identical.
+- **Test:** `tests/e2e/pdf2word-arabic.e2e.mjs` — `ar-ligatures-letters.pdf`
+  (`make-ligatures.py`: every glyph named by its letters, as Word does):
+  fails on main ("جملس األمن"), passes; unit tests in
+  `tests/textLayoutUtils.test.js`.
