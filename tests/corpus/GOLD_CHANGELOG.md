@@ -239,3 +239,50 @@ converter commit — never by both at once.
   found; the product's change on 7733378 and 0399787 was checked correct on
   the page. No comparison across metric versions: a new baseline under v5.
 - **Approved by:** this pull request's review.
+
+## 2026-10-22 — Arabic metric v6 (schema 7): words as the page's glyphs spell them
+
+- **What:** `scripts/quality/arabic.py` metric 5 → 6, schema 6 → 7: before
+  anything is counted, both readers' words are corrected where
+  `scripts/quality/glyphs.py` finds a glyph whose letters both readers turn
+  around. Read from MuPDF's text trace on its own: in a span drawn left to
+  right (its glyphs' x rising) that holds Arabic-script letters, a glyph's
+  letters are its first character and those the trace marks as no glyph of
+  their own (id -1); the span read right to left by glyph against the same
+  span read by letter, as the readers read it — a word whose two readings
+  differ is a correction (read → spelled). New per-document
+  `glyphsRespelled`. No new dependency. Control cases 31 → 34 on two new
+  fixtures (`tests/fixtures/quality/make-glyph-letters.py`, Amiri — OFL):
+  the right words count and the readers' reversed ones don't; glyphs named
+  by one character each respell nothing; a page drawn in reading order
+  (Chromium) respells nothing.
+- **Why — the owner's decision after PR #56 (C11), 2026-10-22:** Word draws
+  a right-to-left line glyph by glyph in visual order and names a ligature
+  glyph by its letters in reading order; MuPDF and poppler both turn the
+  letters around ("اإلسالمية" for "الإسلامية", "ےک" for "کے"), so v5
+  scored PDFree's C11 fix as worse on 117 documents (recall 95.91 → 91.23 %)
+  where an independent vocabulary showed it better on 0 worse. Judged before
+  use by a vocabulary from the 140 corpus documents it corrects nothing on
+  (48,806 words): its 90,585 corrections in 145 documents are words there
+  68.5 % of the time, the readers' forms 15.8 %; per document (≥ 20
+  corrections) the spelled form is no better on 2 of 107 — 0828977 (equal,
+  0.26) and 6677618 (0 both: a Quartz file with every letter doubled).
+  Checked by hand: 6866008 (a legacy Persian font, garbage both ways, the
+  correction keeping the real word's structure: "اذتالف" → "اذتلاف" for
+  "اختلاف"), 7407593 (a Nastaleeq font whose glyphs split letters oddly —
+  neither reading is the word; v6 doesn't rescue it).
+- **Moves (--migrate, the same 289 outputs of main 782a05c1, v5 → v6):**
+  long documents' recall 91.23 → 94.36 %, missing words 116,683 → 75,195,
+  dots 2,321 → 1,081, reversed 2,356 → 1,373; numbers unchanged; order
+  94.87 → 94.80 %. Moved by it: 16 documents, recall up on 8 (5021957
+  0.103 → 0.256, 2262154 0.520 → 0.634, 3796638 0.799 → 0.971, 0247454 0.595
+  → 0.676 …), down on 8 — checked each: on 5 PDFree's output still has the
+  reversed words, which v5 counted as right (1373210 0.936 → 0.818, 0045417,
+  7733378, 6977632 "اسالم" ×12, 7407593 "ےک" ×93: C11's fix stopped early
+  there — a hamza pdf.js splits off, LRM and Arabic format characters the
+  glyphs name; fixed in its own PR); on 3 the font is broken and both
+  readings are garbage — 0519513 (4 corrections, 0.951 → 0.911), 6864345
+  ("حالهظزخ", 0.892 → 0.883), 6677618 (every letter doubled, 0.991 → 0.750)
+  — candidates for the set-aside list, the owner's call. No comparison
+  across metric versions: a new baseline is needed under v6.
+- **Approved by:** this pull request's review.

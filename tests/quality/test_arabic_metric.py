@@ -534,5 +534,43 @@ def c4_font_cmap_wrong():
 
 
 test('v5: a font whose own cmap is the wrong one redraws nothing', c4_font_cmap_wrong)
+
+
+# ── metric v6 (2026-10-22): words as the page's glyphs spell them (class C11)
+
+TRUTH_C11 = ['مجلس الأمن في الأمم المتحدة', 'الحقوق والحريات لجميع الناس']
+
+
+def c11_glyph_letters():
+    # both readers read "جملس … املتحدة"; the glyphs spell "مجلس … المتحدة"
+    f = C4('ar-glyph-letters.pdf')
+    assert_true('جملس' in arabic.readers(f)[0], 'the readers no longer share the error — this case proves nothing')
+    right = arabic.score(f, docx(TRUTH_C11))
+    assert_eq(right['recall'], 1.0)
+    assert_eq(right['glyphsRespelled'], 7)
+    as_read = arabic.score(f, docx([arabic.readers(f)[0]]))
+    assert_true(as_read['recall'] < 0.6, as_read)
+
+
+test('v6: the words a page\'s glyphs spell count, the ones both readers turn around don\'t (v5 had it backwards)', c11_glyph_letters)
+
+
+def c11_glyph_forms():
+    # the same page, each glyph named by one presentation form: read right, nothing respelled
+    r = arabic.score(C4('ar-glyph-forms.pdf'), docx(TRUTH_C11))
+    assert_eq(r['recall'], 1.0)
+    assert_true('glyphsRespelled' not in r, r)
+
+
+test('v6: glyphs named by one character each respell nothing', c11_glyph_forms)
+
+
+def c11_logical_order():
+    # a page drawn in reading order (Chromium) respells nothing
+    import glyphs
+    assert_eq(sum(glyphs.corrections(os.path.join(FIX, 'ar-prose.pdf'), arabic.ar_words).values()), 0)
+
+
+test('v6: a page drawn in reading order respells nothing', c11_logical_order)
 print(f"\n{'─' * 50}\nTests: {passed + failed} | ✓ {passed} | {failed} failed")
 sys.exit(1 if failed else 0)

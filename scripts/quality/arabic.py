@@ -50,6 +50,19 @@ robust.mjs's results.jsonl, `outcome` (ok / timeout / error …), `ms` and
 `ocrPages`. tests/corpus/cloud/arabic-known.json lists documents a human found
 both readers wrong on, or unverifiable: reported, never judged.
 
+Metric v6, schema 7 (2026-10-22): words as the page's GLYPHS spell them. Word
+draws a right-to-left line glyph by glyph in visual order and names a
+ligature glyph by its letters in reading order ("ير", "لا", Urdu "سے"); both
+readers turn the line around letter by letter, the glyph's letters with it,
+and agree on "سرية" for "سيرة", "اإلسالمية" for "الإسلامية" (class C11) —
+v5 scored a converter that kept the glyphs' letters as having lost the word
+(117 documents "worse" for PDFree's C11 fix). glyphs.py reads the glyphs from
+MuPDF's text trace on its own, and both readers' words are corrected before
+anything is counted. `glyphsRespelled`: how many of a document's words were.
+Judged before it was used by a vocabulary from the documents it corrects
+nothing on: its spellings are words there 68.5 % of the time, the readers'
+15.8 % (90,585 corrections, 145 documents).
+
 Metric v5, schema 6 (2026-10-21): digits as the page DRAWS them. A font's
 ToUnicode can name its digit glyphs wrongly (class C4: "3122" for a drawn
 "2011"), and both readers then agree on the wrong number — v4 scored a
@@ -86,8 +99,8 @@ import fitz
 AR = re.compile(r'[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]')
 MARKS = re.compile(r'[ً-ْٰ]')
 SHORT = 50
-METRIC_VERSION = 5
-SCHEMA = 6
+METRIC_VERSION = 6
+SCHEMA = 7
 MIN_ANCHORS = 20
 ORDER_TOLERANCE = 0.03
 KNOWN = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'tests', 'corpus', 'cloud', 'arabic-known.json')
@@ -173,9 +186,11 @@ def redrawn_inside(words, runs):
 
 def score(pdf, docx):
     mu, pp, pages, producer, rotated = readers(pdf)
-    import digits   # numpy, fontTools: only where documents are scored, not to compare results
+    import digits, glyphs   # numpy, fontTools: only where documents are scored, not to compare results
     fix = digits.corrections(pdf, numbers)
-    M, P = redrawn_inside(ar_words(mu), fix['runs']), redrawn_inside(ar_words(pp), fix['runs'])
+    spelled = glyphs.corrections(pdf, ar_words)
+    M = redrawn(redrawn_inside(ar_words(mu), fix['runs']), spelled)
+    P = redrawn(redrawn_inside(ar_words(pp), fix['runs']), spelled)
     T = collections.Counter(M) & collections.Counter(P)
     n = sum(T.values())
     row = {'pages': pages, 'producer': producer[:60], 'rotated': rotated, 'words': n,
@@ -217,6 +232,7 @@ def score(pdf, docx):
             **({'numberCauses': causes} if causes else {}),
             'numbersAgree': round(sum(nt.values()) / (max(sum(nm.values()), sum(np_.values())) or 1), 3),
             **({'digitsRedrawn': sum(fix['numbers'].values())} if fix['numbers'] else {}),
+            **({'glyphsRespelled': sum(spelled.values())} if spelled else {}),
             **order_of(M, P, seq)}
 
 
