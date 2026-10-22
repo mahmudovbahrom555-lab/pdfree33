@@ -124,7 +124,14 @@ const _P2W_IMAGE_CAP = 500;
 // shorthand needs no matching Document-level config.
 const _P2W_NUMBERED_LIST_REF = 'p2w-numbered-list';
 
-let _worker = _createWorker();
+// The shared worker (js/worker.js) is made when a tool first needs it, not
+// when the page loads: made on every page, it loaded pdf-lib, pdfEncrypt.js and
+// watermarkImage.js for tools that never use it (Merge's own work runs in
+// mergeWorker.js), and a connection lost meanwhile logged "importScripts
+// failed: /js/pdfEncrypt.js" as a Merge error — 8 of 17 such sessions went on
+// to merge their files (2026-10-22).
+let _worker = null;
+const _shared = () => (_worker ??= _createWorker());
 export let isProcessing = false;
 // _p2wBuildPageData/_p2wBuildParagraphs check isProcessing per-page to
 // support mid-run cancellation. It's normally only ever set true inside
@@ -187,17 +194,17 @@ export function startCompressScan(file) {
 
   return new Promise(resolve => {
     _scanResolve = resolve;
-    _worker.onmessage = (e) => {
+    _shared().onmessage = (e) => {
       if (e.data.type === 'scan-done') {
         _scanResolve = null;
-        _worker.onmessage = null;
+        _shared().onmessage = null;
         resolve(e.data.report);
       }
     };
     // File is sent by structured clone (not Transferable) — stays accessible in main thread.
     // Its private copy when there is one (files.js _keepCopy): a clone drops the
     // File's redirected reads, and the worker would read the file on disk again.
-    _worker.postMessage({ tool: 'compress-scan', file: file._copy ?? file });
+    _shared().postMessage({ tool: 'compress-scan', file: file._copy ?? file });
   });
 }
 
@@ -212,8 +219,8 @@ export function cancelCompressScan() {
   // triggered). On memory-constrained mobile devices that contention can
   // silently crash or stall the worker mid-job. Recreating it guarantees
   // a clean slate for the job about to start.
-  _worker.terminate();
-  _worker = _createWorker();
+  _worker?.terminate();
+  _worker = null;
 }
 
 // ── Background merge page-count scan ─────────────────────────
@@ -229,16 +236,16 @@ export function startMergeBatchScan(files) {
 
   return new Promise(resolve => {
     _mergeScanResolve = resolve;
-    _worker.onmessage = (e) => {
+    _shared().onmessage = (e) => {
       if (e.data.type === 'merge-scan-done') {
         _mergeScanResolve = null;
-        _worker.onmessage  = null;
+        _shared().onmessage  = null;
         resolve(e.data.results);
       }
     };
     // Files are sent as structured clone (not Transferable) — originals stay accessible;
     // each one's private copy when there is one (see the compress scan above)
-    _worker.postMessage({
+    _shared().postMessage({
       tool:  'merge-scan-batch',
       items: files.map((f, i) => ({ file: f._copy ?? f, index: i })),
     });
@@ -256,8 +263,8 @@ export function cancelMergeScan() {
   // memory/CPU load at the worst possible moment. This is the likely cause
   // of "sometimes it just doesn't merge" reports on lower-memory phones —
   // clicking Merge before the background page-count scan has finished.
-  _worker.terminate();
-  _worker = _createWorker();
+  _worker?.terminate();
+  _worker = null;
 }
 
 // ── Cancel ────────────────────────────────────────────────────
@@ -279,8 +286,8 @@ export function cancelProcess(currentTool) {
     _compressPrepWorker = null;
     _compressPrepSettle(null);
   }
-  _worker.terminate();
-  _worker      = _createWorker();
+  _worker?.terminate();
+  _worker = null;
   isProcessing = false;
   setFilesLocked(false);
   hideProgress();
@@ -1752,12 +1759,12 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
   };
 
   // ⚠️  TRANSFERABLE: buffer detached after this call — worker owns it until done.
-  _worker.postMessage(
+  _shared().postMessage(
     { tool: 'compress', file: buffer, options: { preset, preserveText, removeWatermarks, targetDpi, quality, targetSizeMb } },
     [buffer]
   );
 
-  _worker.onmessage = (e) => {
+  _shared().onmessage = (e) => {
     const data = e.data;
     if (data.type === 'progress') {
       _resetWatchdog();
@@ -1824,7 +1831,7 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
     }
   };
 
-  _worker.onerror = (e) => {
+  _shared().onerror = (e) => {
     clearTimeout(watchdog);
     isProcessing = false;
     setFilesLocked(false);
@@ -1866,12 +1873,12 @@ async function _runJpg2Pdf(filesSnapshot, params, toolKey = 'jpg2pdf') {
     return _runJpg2PdfSeparate(filesSnapshot, buffers, params, toolKey);
   }
 
-  _worker.postMessage(
+  _shared().postMessage(
     { tool: 'jpg2pdf', files: buffers, options: params },
     buffers   // All buffers as Transferables (zero-copy)
   );
 
-  _worker.onmessage = (e) => {
+  _shared().onmessage = (e) => {
     const data = e.data;
     if (data.type === 'progress') {
       setProgress(data.value, data.label);
@@ -1910,7 +1917,7 @@ async function _runJpg2Pdf(filesSnapshot, params, toolKey = 'jpg2pdf') {
       _handleError(toolKey, data.message);
     }
   };
-  _worker.onerror = (e) => {
+  _shared().onerror = (e) => {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
     _handleError(toolKey, e.message || 'Worker error');
   };
@@ -1936,14 +1943,14 @@ async function _runJpg2PdfSeparate(filesSnapshot, buffers, params, toolKey = 'jp
 
     const singleOptions = { ...params, exifAngles: [params.exifAngles?.[i] ?? 0] };
     const result = await new Promise((resolve) => {
-      _worker.postMessage({ tool: 'jpg2pdf', files: [buffers[i]], options: singleOptions }, [buffers[i]]);
-      _worker.onmessage = (e) => {
+      _shared().postMessage({ tool: 'jpg2pdf', files: [buffers[i]], options: singleOptions }, [buffers[i]]);
+      _shared().onmessage = (e) => {
         const data = e.data;
         if (data.type === 'done' || data.type === 'error') resolve(data);
         // 'progress'/'warn' from a single-image call aren't worth surfacing
         // individually — the outer per-image loop progress above covers it.
       };
-      _worker.onerror = (e) => resolve({ type: 'error', message: e.message || 'Worker error' });
+      _shared().onerror = (e) => resolve({ type: 'error', message: e.message || 'Worker error' });
     });
 
     if (result.type !== 'done' || !(result.result instanceof ArrayBuffer)) {
@@ -2302,12 +2309,12 @@ async function _runWorkerTool(tool, filesSnapshot, params, bufferOverride) {
   // _watermarkTextRequest's own cached-buffer comment) — it's a shared
   // cached buffer reused across calls; transferring it would detach and
   // corrupt it for every call after the first.
-  _worker.postMessage(
+  _shared().postMessage(
     { tool, file: buffer, options: params, fontBytes },
     [buffer]
   );
 
-  _worker.onmessage = (e) => {
+  _shared().onmessage = (e) => {
     const data = e.data;
     if (data.type === 'progress') {
       setProgress(data.value, data.label);
@@ -2358,7 +2365,7 @@ async function _runWorkerTool(tool, filesSnapshot, params, bufferOverride) {
     }
   };
 
-  _worker.onerror = (e) => {
+  _shared().onerror = (e) => {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
     _handleError(tool, e.message || 'Worker error');
   };
@@ -2427,17 +2434,17 @@ function _postToWorkerForBatch(msg, transfer, onProgress) {
       fn(val);
     };
 
-    _worker.onmessage = (e) => {
+    _shared().onmessage = (e) => {
       const data = e.data;
       if (data.type === 'progress') { arm(); onProgress?.(data.value, data.label); return; }
       if (data.type === 'done')     { settle(resolve, data); return; }
       if (data.type === 'error')    { settle(reject, new Error(data.message)); return; }
     };
-    _worker.onerror = (e) => settle(reject, new Error(e.message || 'Worker error'));
+    _shared().onerror = (e) => settle(reject, new Error(e.message || 'Worker error'));
 
     _batchCancelReject = reject;
     arm();
-    _worker.postMessage(msg, transfer);
+    _shared().postMessage(msg, transfer);
   });
 }
 
