@@ -20,15 +20,19 @@
 //       streams pdf-lib's own decoder rejects are touched; damage it
 //       tolerates is left alone (a stricter test would throw away text
 //       pdf-lib reads fine).
+//    3. a page tree whose /Count entries don't add up (SPLIT-37EA: "Failed
+//       to removeLeafNode … 'Count' entries are invalid") — recounted from
+//       the real /Kids (js/pageTreeCounts.js).
 //  Nothing to fix → null, and the caller keeps the original bytes.
 //
 //  Message contract:
 //    in  → { buffer: ArrayBuffer }
-//    out → { type: 'done', result: ArrayBuffer|null, fixes: { pageTree, streams } }
+//    out → { type: 'done', result: ArrayBuffer|null, fixes: { pageTree, pageCounts, streams } }
 //        | { type: 'error', message }
 // ============================================================
 
 importScripts('./vendor/pdf-lib.min.js');
+importScripts('./pageTreeCounts.js');
 
 self.onmessage = async (e) => {
   try {
@@ -113,7 +117,7 @@ async function repairPdf(buffer) {
   const { PDFDocument, PDFName, PDFRawStream } = self.PDFLib;
   const doc = await PDFDocument.load(buffer, { ignoreEncryption: true, throwOnInvalidObject: false, updateMetadata: false });
   const ctx = doc.context;
-  const fixes = { pageTree: fixPageTree(doc), streams: 0 };
+  const fixes = { pageTree: fixPageTree(doc), pageCounts: Math.max(0, self.fixPageTreeCounts(doc)), streams: 0 };
 
   // DecompressionStream: Safari 16.4+. Older ones still get the page-tree
   // fix; a damaged stream is then left as it was rather than emptied.
@@ -130,7 +134,7 @@ async function repairPdf(buffer) {
     fixes.streams++;
   }
 
-  if (!fixes.pageTree && !fixes.streams) return { result: null, fixes };
+  if (!fixes.pageTree && !fixes.pageCounts && !fixes.streams) return { result: null, fixes };
   const saved = await doc.save();
   return { result: saved.buffer, fixes };
 }

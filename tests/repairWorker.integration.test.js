@@ -21,6 +21,7 @@ const { fileURLToPath } = await import('url');
 const __dir = dirname(fileURLToPath(import.meta.url));
 
 global.self = { postMessage: () => {}, PDFLib };
+new Function(readFileSync(join(__dir, '../js/pageTreeCounts.js'), 'utf8'))();
 const src = readFileSync(join(__dir, '../js/repairWorker.js'), 'utf8')
   .replace(/importScripts\([^)]+\);?/g, '')
   .replace(/self\.onmessage\s*=[\s\S]*?^};/m, '');
@@ -107,6 +108,30 @@ await test('the catalog\'s /Pages pointing at the wrong object: the real page tr
   assert(result && fixes.pageTree, `fixes ${JSON.stringify(fixes)}`);
   const fixed = await embedsCleanly(result);
   assert(fixed.getPages().map(p => p.getWidth()).join() === '300,301,302', 'all three pages, in order');
+});
+
+await test('/Count entries that don\'t add up (SPLIT-37EA): recounted, every page removable, order kept', async () => {
+  const { PDFNumber, PDFPageTree } = PDFLib;
+  const doc = await PDFDocument.create();
+  for (let i = 0; i < 6; i++) doc.addPage([200 + i, 200]);
+  const ctx = doc.context, rootRef = doc.catalog.get(PDFName.of('Pages')), root = ctx.lookup(rootRef);
+  const kids = root.Kids().asArray();
+  const node = refs => {
+    const n = PDFPageTree.withContext(ctx), r = ctx.register(n);
+    n.set(PDFName.of('Parent'), rootRef);
+    for (const k of refs) { n.Kids().push(k); ctx.lookup(k).set(PDFName.of('Parent'), r); }
+    n.set(PDFName.of('Count'), PDFNumber.of(refs.length));
+    return [r, n];
+  };
+  const [ra, a] = node(kids.slice(0, 3)), [rb] = node(kids.slice(3));
+  root.set(PDFName.of('Kids'), ctx.obj([ra, rb]));
+  a.set(PDFName.of('Count'), PDFNumber.of(5));
+  const { result, fixes } = await repairPdf((await doc.save({ useObjectStreams: false })).buffer);
+  assert(result && fixes.pageCounts === 1, `expected one node recounted, got ${JSON.stringify(fixes)}`);
+  const fixed = await PDFDocument.load(result);
+  assert(fixed.getPages().map(p => p.getWidth()).join() === '200,201,202,203,204,205', 'page order changed');
+  fixed.removePage(4);
+  assert(fixed.getPageCount() === 5, 'removePage after the repair');
 });
 
 await test('a healthy file: nothing to fix → null, the original is kept', async () => {
