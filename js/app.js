@@ -1904,9 +1904,29 @@ window.addEventListener('unhandledrejection', event => {
   _trackUncaught('unhandled_rejection', event.reason?.message ?? event.reason);
 });
 
+// Where an uncaught error came from: our own files (/js/, a worker's blob:)
+// and the libraries we load from CDNs are ours; any other script — one a
+// browser or an extension puts into the page — is 'external_script'. A
+// browser's own script that calls eval, which the page's CSP refuses, was
+// the top tool error for a week (13 people, Chinese desktop "Chrome" on the
+// manga page) while the same people kept using the tool (2026-10-22).
+// No source given (a worker's failure, a cross-origin "Script error.") stays
+// ours, as before — except an eval the page's CSP refused: a script the
+// browser runs in the page has no source (tested: its EvalError reaches us
+// with filename ""), and nothing of ours calls eval (a library of ours would
+// come with its file).
+const _CDN_SCRIPT_RE = /^https:\/\/(cdnjs\.cloudflare\.com|cdn\.jsdelivr\.net|unpkg\.com|esm\.sh)\//;
+function _isOwnScript(file) {
+  if (!file) return true;
+  try {
+    const u = new URL(file, location.href);
+    return u.protocol === 'blob:' || (u.origin === location.origin && u.pathname.includes('/js/')) || _CDN_SCRIPT_RE.test(u.href);
+  } catch { return true; }
+}
 window.addEventListener('error', event => {
   if (!event.message) return;          // some browser events fire without message
   console.error('[PDFree] Uncaught error:', event.message);
-  _trackUncaught('js_error', event.message);
+  const external = !_isOwnScript(event.filename) || (!event.filename && /^Uncaught EvalError/.test(event.message));
+  _trackUncaught(external ? 'external_script' : 'js_error', event.message);
 });
 
