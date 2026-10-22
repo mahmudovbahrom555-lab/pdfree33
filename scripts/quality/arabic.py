@@ -60,8 +60,8 @@ v5 scored a converter that kept the glyphs' letters as having lost the word
 MuPDF's text trace on its own, and both readers' words are corrected before
 anything is counted. `glyphsRespelled`: how many of a document's words were.
 Judged before it was used by a vocabulary from the documents it corrects
-nothing on: its spellings are words there 68.5 % of the time, the readers'
-15.8 % (90,585 corrections, 145 documents).
+nothing on: its spellings are words there 70.8 % of the time, the readers'
+15.3 % (174,849 corrections, 148 documents).
 
 Metric v5, schema 6 (2026-10-21): digits as the page DRAWS them. A font's
 ToUnicode can name its digit glyphs wrongly (class C4: "3122" for a drawn

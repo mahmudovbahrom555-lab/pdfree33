@@ -10,7 +10,8 @@ letter by letter, the glyph's letters with it, and agree on "سرية" for
 letters scored as having lost the word. This reads the glyphs on its own,
 from MuPDF's text trace, without PDFree's code:
 
-1. a span drawn left to right (its glyphs' x rising) that holds Arabic-script
+1. a span drawn left to right (its glyphs' x rising, on 3 of 4 steps at
+   least: Nastaleeq stacks letters back) that holds Arabic-script
    letters is in visual order; a glyph's letters are its first character and
    the characters after it the trace marks as no glyph of their own (glyph
    id -1);
@@ -47,9 +48,12 @@ def _glyphs(chars):
 
 
 def _visual(glyphs):
-    """Drawn left to right: x rises along the span (ties allowed)."""
+    """Drawn left to right: x rises along the span — on 3 of 4 of its steps
+    at least, as Nastaleeq stacks a word's letters back over each other
+    ("ی" at 402.2, then "ٹ" at 393.2) — and ends right of where it starts."""
     xs = [g[1] for g in glyphs]
-    return len(xs) >= 2 and all(b >= a - 0.01 for a, b in zip(xs, xs[1:])) and xs[-1] > xs[0]
+    steps = [b - a for a, b in zip(xs, xs[1:]) if abs(b - a) > 0.01]
+    return len(xs) >= 2 and xs[-1] > xs[0] and bool(steps) and sum(d > 0 for d in steps) >= 0.75 * len(steps)
 
 
 def corrections(pdf, words, max_pages=None):
