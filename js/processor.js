@@ -4275,6 +4275,12 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
 
   const paragraphs  = [];
   const _paraBuffer = [];   // accumulates lines that should be merged into one Paragraph
+  // Word numbers a list itself, counting from 1: a numbered line becomes a
+  // list item only where Word shows the source's own number — a "1." starts a
+  // list of its own (a fresh instance), the next number continues it; any
+  // other keeps its number as text. One list for the whole document showed a
+  // form's fields "10.", "12.", "16." as "3.", "5.", "7." (1674614).
+  let _numInstance = -1, _numNext = 0;
 
   // Same-size-but-bold section headings are common in formal/legal PDFs —
   // found on a real 19-page contract where every heading (including the
@@ -4708,11 +4714,17 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
             (ln.items[0]?.x ?? 0) > pageBaselineX + 10;
           if (bulletMatch || letteredMatch || (numberedMatch && !isHead)) {
             _flushPara();
+            if (numberedMatch) {
+              const n = parseInt(lnRawText, 10);
+              if (n === 1) { _numInstance++; _numNext = 2; }
+              else if (_numInstance >= 0 && n === _numNext) _numNext++;
+              else { _paraBuffer.push(ln); _flushPara(); continue; }
+            }
             const p = bulletMatch
               ? _buildListParagraph(ln, BULLET_RE, { bullet: { level: 0 } })
               : letteredMatch
               ? _buildListParagraph(ln, LETTERED_RE, { bullet: { level: 0 } })
-              : _buildListParagraph(ln, NUMBERED_RE, { numbering: { reference: _P2W_NUMBERED_LIST_REF, level: 0 } });
+              : _buildListParagraph(ln, NUMBERED_RE, { numbering: { reference: _P2W_NUMBERED_LIST_REF, level: 0, instance: _numInstance } });
             if (p) paragraphs.push(p);
             continue;
           }

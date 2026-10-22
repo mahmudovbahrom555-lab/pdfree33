@@ -583,6 +583,38 @@ await test('a page-number-shaped line in the MIDDLE of the page (not near an edg
   if (!found) throw new Error('a mid-page line must never be suppressed by the edge-only page-number filter');
 });
 
+// ── Numbered lines: Word's own count must show the source's number ─────
+// One list for the whole document renumbered a form's fields "10.", "12."
+// as "3.", "5." (1674614): a "1." starts a list of its own, the next number
+// continues it, any other keeps its number as text.
+function numRef(paragraph) {
+  const np = pPr(paragraph)?.root.find(n => n && n.rootKey === 'w:numPr');
+  const id = np?.root.find(n => n && n.rootKey === 'w:numId');
+  return id?.root?.[0]?.root?.val;
+}
+console.log('\n_p2wBuildParagraphs — numbered lines keep their numbers:');
+await test('a form numbered from 10 keeps "10.", "11." as text; "1." "2." are a list, a later "1." a new one; "4." after "2." stays text', async () => {
+  const lines = [
+    mkLine(mkItem('10. Nationality', 72), 700),
+    mkLine(mkItem('11. Date of birth', 72), 680),
+    mkLine(mkItem('1. First step', 72), 640),
+    mkLine(mkItem('2. Second step', 72), 620),
+    mkLine(mkItem('4. Fourth step', 72), 600),
+    mkLine(mkItem('1. Again first', 72), 560),
+    mkLine(mkItem('2. Again second', 72), 540),
+  ];
+  const { paragraphs } = await build(lines);
+  const ps = paragraphs.filter(p => !isTable(p) && paragraphText(p).trim());
+  const got = ps.map(p => [paragraphText(p).trim(), isListItem(p) ? numRef(p) : null]);
+  const byText = t => got.find(([x]) => x.includes(t));
+  expect(byText('Nationality')[1] === null && byText('Nationality')[0].startsWith('10.')).toBe(true);
+  expect(byText('Date of birth')[1] === null && byText('Date of birth')[0].startsWith('11.')).toBe(true);
+  expect(byText('Fourth step')[1] === null && byText('Fourth step')[0].startsWith('4.')).toBe(true);
+  const first = byText('First step')[1], second = byText('Second step')[1], again = byText('Again first')[1];
+  expect(!!first && first === second).toBe(true);
+  expect(!!again && again !== first && again === byText('Again second')[1]).toBe(true);
+});
+
 // ── Summary ──────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);
