@@ -43,7 +43,7 @@ import { pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
 import { detectTableGrids, lineInGrid, gridRowsOfLines, gridHoldsTable } from './pdf2wordBorders.js';
 import { applyDigitFix } from './pdfDigitFix.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken, joinSpacedItems, dropCjkGapSpaces, applyActualText, restoreDroppedSpaces, joinSplitNumbers } from './textLayoutUtils.js';
+         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken, joinSpacedItems, dropCjkGapSpaces, applyActualText, restoreDroppedSpaces, restoreGlyphOrder, joinSplitNumbers } from './textLayoutUtils.js';
 
 // XML 1.0's Char production disallows most C0 control characters (only
 // tab/LF/CR are valid: #x9 | #xA | #xD | [#x20-...]) — pdf.js text
@@ -54,9 +54,10 @@ import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
 // eslint-disable-next-line no-control-regex -- intentional: stripping control chars
 const _XML_ILLEGAL_CONTROL_RE = /[\x00-\x08\x0B\x0C\x0E-\x1F]/g;
 
-// The text of each text-showing operator in pdf.js's operator list, space
-// glyphs included (see restoreDroppedSpaces). 44: OPS.showText — pdf.js 3.x
-// folds TJ (showSpacedText) into it, numbers between the glyphs.
+// The glyphs of each text-showing operator in pdf.js's operator list, as
+// their letters, a space glyph as " " (see restoreDroppedSpaces,
+// restoreGlyphOrder). 44: OPS.showText — pdf.js 3.x folds TJ
+// (showSpacedText) into it, numbers between the glyphs.
 const _OPS_SHOW_TEXT = 44;
 function _glyphRuns(opList) {
   if (!opList?.fnArray) return null;
@@ -65,7 +66,7 @@ function _glyphRuns(opList) {
     if (fn !== _OPS_SHOW_TEXT) return;
     const glyphs = opList.argsArray[k]?.[0];
     if (!Array.isArray(glyphs)) return;
-    runs.push(glyphs.map(g => (g && typeof g === 'object' ? (g.isSpace ? ' ' : g.unicode ?? '') : '')).join(''));
+    runs.push(glyphs.filter(g => g && typeof g === 'object').map(g => (g.isSpace ? ' ' : g.unicode ?? '')));
   });
   return runs;
 }
@@ -688,6 +689,15 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
         content.items.forEach((it, k) => { if (it.dir === 'rtl' && typeof raw.items[k].str === 'string') it.str = raw.items[k].str; });
       }
     }
+    // A glyph naming several letters, in a line pdf.js read backwards: its
+    // letters put back in order (class C11). Pages read backwards whole are
+    // turned back below, their glyphs with them.
+    const glyphRuns = _glyphRuns(opList);
+    const itemsAsRead = content.items;
+    if (!rtlItemsAreVisual(content.items)) content.items = restoreGlyphOrder(content.items, glyphRuns);
+    // a page so mended was judged in reading order before it: its letters put
+    // right ("لا" back to "ال") must not turn that verdict
+    const glyphsMended = content.items !== itemsAsRead && content.items.some((it, k) => it !== itemsAsRead[k]);
     // Digits a font's ToUnicode names wrongly ("3122" for a drawn "2011"),
     // before ActualText, which still has the last word where a PDF gives it.
     if (digitFix) {
@@ -702,7 +712,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
       const needs = content.items.some(i => /[\0\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/.test(i.str ?? ''));
       content.items = applyActualText(content.items, needs ? await actualText(p).catch(() => null) : null);
     }
-    content.items = restoreDroppedSpaces(content.items, _glyphRuns(opList));
+    content.items = restoreDroppedSpaces(content.items, glyphRuns);
     const _boldFontCache = new Map(); // fontName -> boolean, one commonObjs lookup per unique font per page
     const _isFontBold = fontName => {
       if (_boldFontCache.has(fontName)) return _boldFontCache.get(fontName);
@@ -740,7 +750,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
     // (confirmed: "list level0 second item" -> "listlevel0seconditem").
     // Only drop items that are genuinely EMPTY after control-char-stripping;
     // a non-empty whitespace-only item is real inter-word spacing, not noise.
-    const rtlVisual = rtlItemsAreVisual(content.items);
+    const rtlVisual = !glyphsMended && rtlItemsAreVisual(content.items);
     const allMapped = content.items
       .filter(item => 'str' in item && item.str.replace(_XML_ILLEGAL_CONTROL_RE, '') !== '')
       .map((item, seq) => {

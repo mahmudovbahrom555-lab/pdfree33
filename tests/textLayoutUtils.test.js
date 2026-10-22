@@ -8,7 +8,7 @@
 // Run: node tests/textLayoutUtils.test.js
 
 import { strict as assert } from 'assert';
-import { joinSpacedItems, joinSplitNumbers, restoreDroppedSpaces, joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
+import { joinSpacedItems, joinSplitNumbers, restoreDroppedSpaces, restoreGlyphOrder, joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
   lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
   continuesWrappedHeading, lineRuns , textLayerLooksBroken, toUnifiedIdeographs, joinTouchingItems, dropCjkGapSpaces, isContentsEntry } from '../js/textLayoutUtils.js';
 
@@ -228,6 +228,32 @@ test('numbers whole in their item, or items apart, are left alone', () => {
   const apart = [at('صفحة 12', 300, 40), at('3 بنود', 200, 40)];     // 60pt apart: two numbers
   joinSplitNumbers(apart);
   assert.deepEqual(apart.map(i => i.str), ['صفحة 12', '3 بنود']);
+});
+
+// ── restoreGlyphOrder: a glyph naming several letters, read backwards with
+// its line (class C11, Urdu Word files with Nastaleeq ligatures, 2262154).
+test('a ligature glyph read backwards gets its letters back in order: "ےس" → "سے", "ونر رعمتف" → "نور معرفت"', () => {
+  // visual order, as drawn: glyphs "فت" "معر" " " "ر" "نو"; then "سے" alone
+  const runs = [['فت', 'معر', ' ', 'ر', 'نو'], ['سے']];
+  const out = restoreGlyphOrder(rtl(['ونر رعمتف', ' ', 'ےس']), runs);
+  assert.deepEqual(out.map(i => i.str), ['نور معرفت', ' ', 'سے']);
+});
+
+test('glyphs already in order, Latin ligatures and a digit run kept left to right are left alone', () => {
+  assert.equal(restoreGlyphOrder(rtl(['سے']), [['سے']])[0].str, 'سے');
+  const ltr = [{ str: 'office', dir: 'ltr' }];
+  assert.equal(restoreGlyphOrder(ltr, [['o', 'ffi', 'ce']])[0].str, 'office');
+  // "کی 2011" drawn visually: "2011" stays left to right inside the item, "کی" is fixed
+  assert.equal(restoreGlyphOrder(rtl(['یک 2011']), [['2', '0', '1', '1', ' ', 'کی']])[0].str, 'کی 2011');
+});
+
+test('items that do not pair with the glyphs stop it: the rest of the page left as pdf.js gave it', () => {
+  // the second item's letters are not the next glyphs' (an ActualText-like change)
+  const out = restoreGlyphOrder(rtl(['ےس', 'abc', 'یک']), [['سے'], ['x', 'y', 'z'], ['کی']]);
+  assert.deepEqual(out.map(i => i.str), ['سے', 'abc', 'یک']);
+  // no multi-letter Arabic glyph on the page: nothing to do
+  const items = rtl(['من']);
+  assert.equal(restoreGlyphOrder(items, [['ن', 'م']]), items);
 });
 
 // ── restoreDroppedSpaces: pdf.js drops a space glyph drawn overlapping its
