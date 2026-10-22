@@ -59,6 +59,7 @@
 // ============================================================
 
 importScripts('./vendor/pdf-lib.min.js');
+importScripts('./pageTreeCounts.js');
 
 self.onmessage = async (e) => {
   try {
@@ -410,6 +411,8 @@ async function handleSplit(fileBuffer, options) {
     // removePage() operates within the same document context so all inherited
     // resources remain reachable by the kept pages.
     const srcDoc = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
+    // removePage() finds pages by /Count — a wrong one fails it (SPLIT-37EA)
+    self.fixPageTreeCounts(srcDoc);
     if (options.removeWatermarks) _removeWatermarks(srcDoc);
     const keepSet = new Set(pages.map(p => p - 1)); // convert to 0-indexed
     // Captured BEFORE removePage() — page object identity (and therefore a
@@ -470,6 +473,7 @@ async function handleSplit(fileBuffer, options) {
     for (let i = 0; i < pages.length; i++) {
       const pageNum = pages[i];
       const pageDoc = await PDFDocument.load(fileBuffer, { ignoreEncryption: true });
+      self.fixPageTreeCounts(pageDoc);     // as in 'single' (SPLIT-37EA)
       if (options.removeWatermarks) _removeWatermarks(pageDoc);
       // Captured BEFORE removePage() — pdf-lib's getPages() is backed by a
       // cache that removePage() never invalidates (only insert/add paths do,

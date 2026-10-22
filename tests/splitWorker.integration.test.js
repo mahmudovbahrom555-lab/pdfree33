@@ -115,6 +115,9 @@ function _collectOutlineEntries(doc) {
 }
 
 // ── Extract handleSplit from splitWorker.js ────────────────────
+// its importScripts'd helper, as the worker loads it
+global.self.PDFLib = PDFLib;
+new Function(readFileSync(join(__dir, '../js/pageTreeCounts.js'), 'utf8'))();
 const workerSrc = readFileSync(join(__dir, '../js/splitWorker.js'), 'utf8')
   .replace(/importScripts\([^)]+\);?/g, '')
   .replace(/self\.onmessage\s*=[\s\S]*?^};/m, '');
@@ -379,6 +382,84 @@ await test('single mode (extract): keeping every page keeps every image', async 
   const { images, pages } = await _imagesIn(lastDone().result);
   expect(pages).toBe(3);
   expect(images).toBe(3);
+});
+
+// ── SPLIT-37EA: a page tree whose /Count entries don't add up ─────
+// Six pages under two nodes: A holds pages 1–3 but says /Count 5; B holds
+// pages 4–6, which inherit Rotate 90 and a 300×400 MediaBox from it. Viewers
+// read it fine; pdf-lib's removePage() failed at page 5 ("Failed to
+// removeLeafNode at targetIndex=4 … 'Count' entries are invalid").
+async function _buildBadCount6() {
+  const { PDFDocument, PDFName, PDFNumber, PDFPageTree, StandardFonts } = PDFLib;
+  const doc = await PDFDocument.create();
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  for (let i = 1; i <= 6; i++) {
+    const page = doc.addPage([200, 200]);
+    page.drawText('page ' + i, { x: 40, y: 100, font, size: 20 });
+    page.node.set(PDFName.of('TestId'), PDFNumber.of(i));     // which page is which, after the split
+  }
+  const ctx = doc.context, rootRef = doc.catalog.get(PDFName.of('Pages')), root = ctx.lookup(rootRef);
+  const kids = root.Kids().asArray();
+  const node = refs => {
+    const n = PDFPageTree.withContext(ctx), r = ctx.register(n);
+    n.set(PDFName.of('Parent'), rootRef);
+    for (const k of refs) { n.Kids().push(k); ctx.lookup(k).set(PDFName.of('Parent'), r); }
+    n.set(PDFName.of('Count'), PDFNumber.of(refs.length));
+    return [r, n];
+  };
+  const [ra, a] = node(kids.slice(0, 3)), [rb, b] = node(kids.slice(3));
+  for (const k of kids.slice(3)) { ctx.lookup(k).delete(PDFName.of('MediaBox')); ctx.lookup(k).delete(PDFName.of('Rotate')); }
+  b.set(PDFName.of('Rotate'), PDFNumber.of(90));
+  b.set(PDFName.of('MediaBox'), ctx.obj([0, 0, 300, 400]));
+  root.set(PDFName.of('Kids'), ctx.obj([ra, rb]));
+  a.set(PDFName.of('Count'), PDFNumber.of(5));
+  return toArrayBuffer(Buffer.from(await doc.save({ useObjectStreams: false })));
+}
+const _badCount6 = await _buildBadCount6();
+const pageIds = async buf => (await PDFLib.PDFDocument.load(buf)).getPages().map(p => p.node.get(PDFLib.PDFName.of('TestId'))?.asNumber());
+
+await test('SPLIT-37EA: the test file reproduces the failure without the fix', async () => {
+  const doc = await PDFLib.PDFDocument.load(clone(_badCount6));
+  let message = '';
+  try { doc.removePage(4); } catch (e) { message = e.message; }
+  expect(/Count' entries are invalid/.test(message)).toBeTruthy();
+});
+
+await test('SPLIT-37EA: single mode with wrong /Count entries — the chosen pages, in order, inherited Rotate and MediaBox kept', async () => {
+  await handleSplit(clone(_badCount6), { pages: [2, 5, 6], mode: 'single' });
+  const out = await PDFLib.PDFDocument.load(lastDone().result);
+  expect(out.getPageCount()).toBe(3);
+  expect((await pageIds(lastDone().result)).join()).toBe('2,5,6');
+  const p5 = out.getPage(1);
+  expect(p5.getRotation().angle).toBe(90);
+  expect(p5.getSize().width).toBe(300);
+  expect(p5.getSize().height).toBe(400);
+  expect(out.getPage(0).getRotation().angle).toBe(0);
+});
+
+await test('SPLIT-37EA: separate mode with wrong /Count entries — one file a page, each its own page', async () => {
+  messages.length = 0;
+  await handleSplit(clone(_badCount6), { pages: [1, 4, 5, 6], mode: 'separate' });
+  const pms = pageMsgs();
+  expect(pms.length).toBe(4);
+  const got = [];
+  for (const m of pms) got.push((await pageIds(m.buffer)).join());
+  expect(got.join()).toBe('1,4,5,6');
+});
+
+await test('SPLIT-37EA: a tree that isn\'t one (a page listed twice) is left as it was', async () => {
+  const { PDFDocument, PDFName } = PDFLib;
+  const doc = await PDFDocument.load(clone(_normal3));
+  const root = doc.context.lookup(doc.catalog.get(PDFName.of('Pages')));
+  root.Kids().push(root.Kids().get(0));
+  const before = root.get(PDFName.of('Count')).asNumber();
+  expect(self.fixPageTreeCounts(doc)).toBe(-1);
+  expect(root.get(PDFName.of('Count')).asNumber()).toBe(before);
+});
+
+await test('SPLIT-37EA: a healthy tree has nothing to recount', async () => {
+  const doc = await PDFLib.PDFDocument.load(clone(_normal3));
+  expect(self.fixPageTreeCounts(doc)).toBe(0);
 });
 
 console.log(`\n${'─'.repeat(40)}`);
