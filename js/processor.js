@@ -81,6 +81,31 @@ const _normWatermark = t =>
 // _repeatTextSet's exact-string check.
 const _normDigits = t => t.replace(/\d+/g, '#');
 
+// Text a PDF repeats at the top or the bottom of its pages — a document
+// symbol, a running title, a footer line — is kept out of the body as page
+// furniture; it goes into the Word file's header and footer instead of being
+// lost (2563334: the UN symbol "NPT/CONF.2020/PC.I/WP.19", which other
+// converters kept, was nowhere in ours). Lines among a page's top or bottom
+// three that _repeatTextSet holds, as first drawn, in that order; a page
+// number that changes per page is left out, and so are a scanner's stamp and
+// a lone mark or letter (a vowel mark, "|", "ي" — seen on 6 corpus files).
+function _p2wRunningLines(pageData, repeatTextSet) {
+  const header = new Map(), footer = new Map();
+  for (const { lines } of pageData) {
+    const sorted = [...lines].sort((a, b) => b.y - a.y);
+    sorted.forEach((ln, i) => {
+      const raw = ln.items.map(it => it.str).join('').trim();
+      const t = _normWatermark(raw);
+      if (!t || t === 'CamScanner' || !repeatTextSet.has(t) || header.has(t) || footer.has(t)) return;
+      // a mark or a single letter repeated at a page's edge is no header
+      if ((raw.match(/\p{L}/gu) || []).length < 2) return;
+      if (i < 3) header.set(t, raw);
+      else if (i >= sorted.length - 3) footer.set(t, raw);
+    });
+  }
+  return { header: [...header.values()], footer: [...footer.values()] };
+}
+
 // _pptxSafeFontFace moved to js/pdf2readCore.js (imported above) — its only
 // caller, _p2wBuildPageData, moved there too.
 
@@ -2697,7 +2722,13 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
   // window.__pdfreeDocxBuilder, not window.docx — see lazyLibs.js's
   // loadDocx() header comment for the namespace-collision this avoids
   // (docx@8.5.0 and docx-preview@0.4.0 both export as window.docx).
-  const { Document, Packer, AlignmentType, LevelFormat } = window.__pdfreeDocxBuilder;
+  const { Document, Packer, AlignmentType, LevelFormat, Header, Footer, Paragraph, TextRun } = window.__pdfreeDocxBuilder;
+  const running = mode === 'text' ? _p2wRunningLines(pageData, repeatTextSet) : { header: [], footer: [] };
+  const runningPara = t => new Paragraph({ ..._rtlPara(t), children: [new TextRun({ text: t, size: 18, ..._rtlRun(t) })] });
+  const furniture = {
+    ...(running.header.length ? { headers: { default: new Header({ children: running.header.map(runningPara) }) } } : {}),
+    ...(running.footer.length ? { footers: { default: new Footer({ children: running.footer.map(runningPara) }) } } : {}),
+  };
   // srcMeta is only ever set when the user unchecked "Delete original file
   // info" above — a source PDF field that's blank/absent still falls back
   // to the generic PDFree value below rather than producing an empty field.
@@ -2722,7 +2753,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
         }],
       }],
     },
-    sections: [{ children }],
+    sections: [{ ...furniture, children }],
   });
 
   // toBlob() uses JSZip type:"blob" — browser-native, no polyfill needed.
