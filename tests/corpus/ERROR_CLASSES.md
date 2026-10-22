@@ -163,8 +163,8 @@ committed.
 
 ## C4 — the text layer gives other digits than the page draws
 
-- **Status:** `fixing` (2026-10-21) — fix in a pull request, not yet on
-  pdfree.io
+- **Status:** `fixing` — part 1 (Type0 fonts, #51) verified on pdfree.io
+  2026-10-21; part 2 open (2026-10-22, below)
 - **Harm:** high — wrong numbers that look right, and they reach the DOCX:
   on pdfree.io 4 of 4 checked documents carry them (0045417: "2011" on the
   page, "3122" eight times in the Word file and "2011" never).
@@ -224,6 +224,18 @@ committed.
   spot this class was found in. Reported to the owner, not changed.
 - **Not covered yet:** simple TrueType fonts (0045417's second Arial,
   4681141's B Mitra), CFF fonts, digit-order flips.
+- **Part 2 measured (2026-10-22):** 0045417's dates table ("42 مارس 3122"
+  for "31 مارس 2011") is drawn by a simple TrueType Arial (WinAnsi, no
+  ToUnicode) whose every table — encoding, Mac and Windows cmaps — names the
+  shifted digit: only the outline knows. Part 1's rule (two sources
+  disagree, the shape decides between them) has nothing to start from. A
+  shape-only check (each digit glyph against all ten references, page
+  render) was tried as a scan: 57 documents flagged, most plainly false
+  (Helvetica, Gotham, Myriad read as "every digit a 1") — not usable. Open:
+  a second source from the same document — a Type0 font of the same name
+  whose shift part 1 confirmed (0045417: `ABCDEE+Arial`, +1) gives the
+  candidate, the page decides; a handful of documents at most. The metric
+  (v5/v6) shares this blind spot: it counts the readers' "3122" as right.
 
 ## C5 — a table of contents comes out as one paragraph
 
@@ -247,8 +259,8 @@ committed.
 
 ## C6 — columns read across each other: narrow gutters, two-page spreads
 
-- **Status:** `fixing` (2026-10-20) — cause 1 fixed in a pull request, not
-  yet on pdfree.io; cause 2 found, one source only
+- **Status:** `fixing` — cause 1 (#43) verified on pdfree.io; cause 2
+  found, one source only — searched for a second 2026-10-22, none (below)
 - **Harm:** high where it happens — sentences of different columns run
   together; numbers stick to the other column's words.
 - **Seen:** 4974198 (Adobe PDF Library 15, an annual report, 97 landscape
@@ -282,6 +294,11 @@ committed.
   (4974198 pages 5, 6: no regions though 92–94 % of their lines hold
   columns side by side). Only one spread document in the corpus (one
   source): needs a second source before it is a class.
+- **Cause 2, second source searched (2026-10-22):** landscape pages with
+  text in two halves and an empty middle band, the whole corpus: three real
+  spreads (2022469 Distiller 6, a Persian book; 0519513, a magazine;
+  4974198 itself) — the other two have one column a page, two in all, and
+  read right (order 0.97, 0.99). Still one source: not a class yet.
 - **Also seen:** 6579225's headline comes out four times — the PDF draws it
   at four heights (y 637, 613, 587, 561), three hidden (clipped, most
   likely); MuPDF and poppler both read it four times too, so the metric
@@ -355,8 +372,8 @@ committed.
 
 ## C9 — words glued where the gap is narrower than a fifth of an em
 
-- **Status:** `fixing` (2026-10-21) — part 1 (#53) verified on pdfree.io;
-  part 2 in a pull request
+- **Status:** `fixing` — part 1 (#53) and part 2 (#54) verified on
+  pdfree.io 2026-10-21
 - **Harm:** medium–high — two words become one, search and spell-check fail
   on both: a Persian book read "درايران", "ايراندر", "کهدر",
   "امپرياليسمبريتانيا" (7389718: 909 glued words); a Persian admissions list
@@ -389,7 +406,8 @@ committed.
 
 ## C10 — two-letter ligatures read with their letters swapped
 
-- **Status:** `fixing` (2026-10-21) — fix in a pull request
+- **Status:** `fixing` — #55 verified on pdfree.io 2026-10-21 (8
+  documents, production = local; e2e)
 - **Harm:** high — a misspelt word in nearly every line, which search and
   spell-check fail on: "جملس" for "مجلس", "املتحدة" for "المتحدة",
   "احلقوق" for "الحقوق", "يف" for "في" (0997713: 5,516 such words; prod
@@ -431,9 +449,9 @@ committed.
 
 ## C11 — a glyph named by several letters, read backwards with its line
 
-- **Status:** `fixing` (2026-10-21) — fix in a pull request, **not merged:
-  the metric scores it worse (both of its readers share this error) — the
-  owner decides**
+- **Status:** `fixing` — #56 merged with the owner's approval and verified
+  on pdfree.io 2026-10-22 (6 documents, production = local; e2e); part 2
+  (coverage) below; the metric's blind spot answered by metric v6 (#57)
 - **Harm:** high — a misspelt word in nearly every line, search and
   spell-check fail: "اإلسالمية" for "الإسلامية", "املحكمة" for "المحكمة",
   "خالل" for "خلال", "اطالعات" for "اطلاعات"; Urdu "ےک" for "کے", "یک" for
@@ -478,3 +496,49 @@ committed.
   (`make-ligatures.py`: every glyph named by its letters, as Word does):
   fails on main ("جملس األمن"), passes; unit tests in
   `tests/textLayoutUtils.test.js`.
+- **Part 2 — coverage (2026-10-22), found by metric v6 (#57):** on 8
+  documents the output still had the reversed words (1373210 "املحكمة"
+  ×129, 1688739 "ےک", 4487592 "تسهیالت" ×66, 0045417, 7733378 …) — the
+  pairing stopped early: pdf.js splits "أ" and the reversal carries the
+  hamza off ("ٔالاساس"), glyphs name LRMs and Arabic signs (U+0604) pdf.js
+  drops, a contents line with dot leaders is a left-to-right item whose
+  Arabic run alone is reversed, ﷺ is one character of four words. Now an
+  item is mended where pdf.js's own string is reproduced exactly — the
+  glyphs' letters through the bidi algorithm (`_bidiOrder`: digits and
+  their separators, Arabic punctuation, neutrals, levels) give the item;
+  the same with each reversed glyph's letters turned give it mended —
+  compared decomposed, vowel marks and format characters aside; then the
+  first rule for the items left, which catches lines this doesn't model
+  (bracket mirroring, measured: modelling it turned 244 right "في" wrong
+  on 5955337 — dropped, not understood). Reproduced exactly: 99.5 %+ of
+  the items with a several-letter glyph on the documents checked.
+  Mistakes found on the way and fixed before this shipped, each by v6 or
+  the vocabulary: decomposed-only reversal broke "لأ" (68 documents
+  worse); a one-letter "ئ" counted as two; vowel marks shifted a "لا" onto
+  the article "ال" ("الصَّالَة"); the madda dropped ("ايات" for "الآيات").
+  **Measured (289 documents vs main, metric v6):** recall 95.09 → 95.49 %,
+  dots 830 → 473, reversed 1,348 → 993, glued 2,537 → 2,671 (real Urdu
+  words the readers split, "ہونا", "کردیں"; checked by hand); vocabulary
+  arbiter: words found 72.33 → 72.50 %, worse on none; vocabulary words
+  gained 4,532, lost 745 (mostly the readers' forms that are words too:
+  "یک", "ال"); losing more than gaining: 2 documents, both broken fonts
+  (6864345, 6866008 — garbage both ways). 72 non-Arabic documents: text
+  identical; ground-truth pages 40 of 40 identical.
+
+## Candidates — seen, not yet confirmed as classes (2026-10-22)
+
+Found while preparing the competitor comparison and measuring C4 part 2 /
+C11 part 2. Each needs its cause confirmed on documents from independent
+sources before it is a class.
+
+- **Page headers dropped, not moved.** PDF→Word removes text repeated on
+  every page as page furniture and puts it nowhere — 2563334's document
+  symbol "NPT/CONF.2020/PC.I/WP.19" is not in the .docx at all, not even in
+  a Word header. The metric's lost numbers are mostly this ("furniture"
+  2,008 of 3,565). Harm: document numbers, dates, UN symbols lost.
+- **A font naming letters wrongly, both readers agreeing.** 0045417's
+  Arabic font names "ي" as the tanween "ٌ" ("متغٌر", "فبراٌر"); 1373210's
+  names letters U+0604/U+0605 and Arabic Extended forms ("ࢭــي" for
+  "في"). The letter-level twin of C4; the metric can't see it.
+- **Persian ی / ھ in Arabic text** (6199289, macOS Quartz: "أیار",
+  "ھذا") — the PDF itself names them so; Arabic search fails on them.
