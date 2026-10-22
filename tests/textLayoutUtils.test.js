@@ -282,6 +282,18 @@ test('a one-letter glyph decomposing to two ("ئ") is no ligature, and an item w
   assert.equal(restoreGlyphOrder(rtl(['لاتب']), [['لا', 'ت', 'ب']])[0].str, 'لاتب');
 });
 
+test('a word space the stream draws and pdf.js dropped is put back: "اسٹیٹبینک" → "اسٹیٹ بینک" (Urdu Nastaleeq, Word)', () => {
+  // drawn in visual order, glyph by glyph, a space between the two words; pdf.js drops it and reverses the rest
+  const glyphs = ['ک', 'ن', 'ی', 'ب', ' ', 'ٹ', 'ی', 'ٹ', 'س', 'ا'];
+  const item = [...glyphs.filter(g => g !== ' ').join('')].reverse().join('');
+  assert.equal(restoreGlyphOrder(rtl([item]), [glyphs])[0].str, 'اسٹیٹ بینک');
+});
+
+test('spaces that would break a page\'s words into letters are not put back (1902417: "و ق ال" for "وقال")', () => {
+  const glyphs = ['ل', ' ', 'ا', ' ', 'ق', ' ', 'و'];
+  assert.equal(restoreGlyphOrder(rtl(['وقال']), [glyphs])[0].str, 'وقال');
+});
+
 test('items that do not pair with the glyphs stop it: the rest of the page left as pdf.js gave it', () => {
   // the second item's letters are not the next glyphs' (an ActualText-like change)
   const out = restoreGlyphOrder(rtl(['ےس', 'abc', 'یک']), [['سے'], ['x', 'y', 'z'], ['کی']]);

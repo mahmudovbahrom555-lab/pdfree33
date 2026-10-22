@@ -1230,15 +1230,40 @@ export function restoreGlyphOrder(items, runs) {
   return _restoreGlyphOrderInPlace(_restoreGlyphOrderExact(items, runs), runs);
 }
 
+// The page with the spaces the stream draws put back, unless that leaves it
+// in pieces: a page whose Arabic words turn into single letters had spaces
+// that were no word spaces (1902417, Word 2013: "و ق ال ش ي خ" for "وقال
+// شيخ") — it keeps pdf.js's spacing.
 function _restoreGlyphOrderExact(items, runs) {
+  const spaced = _restoreGlyphOrderPass(items, runs, true);
+  const plain = _restoreGlyphOrderPass(items, runs, false);
+  const single = list => {
+    const words = list.flatMap(i => (typeof i.str === 'string' ? i.str : '').split(/\s+/)).filter(w => /[\u0600-\u06FF]/.test(w));
+    return words.length ? words.filter(w => w.replace(/[\u064B-\u0652\u0670\u0640]/g, '').length === 1).length / words.length : 0;
+  };
+  return single(spaced) > Math.max(0.25, single(plain) + 0.1) ? plain : spaced;
+}
+
+function _restoreGlyphOrderPass(items, runs, putSpaces) {
   const IGNORED = /[\s\p{Cf}\u064B-\u0652\u0656-\u065F\u0670]/u;
   const key = s => [...s.normalize('NFKD')].filter(c => !IGNORED.test(c)).join('');
-  const glyphs = (runs ?? []).flat().map(raw => ({ raw, g: key(raw) })).filter(x => x.g);
+  // each glyph with whether the stream draws a space glyph after it
+  const glyphs = [];
+  for (const raw of (runs ?? []).flat()) {
+    const g = key(raw);
+    if (g) glyphs.push({ raw, g, spaceAfter: false });
+    else if (/\s/.test(raw) && glyphs.length) glyphs[glyphs.length - 1].spaceAfter = true;
+  }
   // several letters: as the glyph names them, or as a compatibility ligature
   // expands (ﷺ, ﳎ) — not a letter with its own mark ("ئ" is one letter)
   const letters = s => [...s].filter(c => !IGNORED.test(c)).length;
   const multi = ({ raw }) => letters(raw) > 1 || letters(raw.normalize('NFKD')) > letters(raw.normalize('NFD'));
-  if (!glyphs.some(x => multi(x) && /[\u0600-\u06FF]/.test(x.g))) return items;
+  const ARABIC = /[\u0600-\u06FF]/;
+  // a font that names its word space "۽" (U+06FD) draws its " " inside
+  // words (2262154: "ا و ذ" for "اور") — no space is put back on its page
+  const sindhiAnd = glyphs.filter(x => x.raw === '\u06FD').length;
+  if (!putSpaces || (sindhiAnd >= 5 && sindhiAnd > glyphs.filter(x => x.spaceAfter).length)) for (const x of glyphs) x.spaceAfter = false;
+  if (!glyphs.some(x => (multi(x) || x.spaceAfter) && ARABIC.test(x.g))) return items;
   // the item's characters as bidi orders them, each with its glyph; each
   // multi-letter glyph's letters turned around first when `turned`
   // — only a glyph bidi reads right to left (odd level): one it leaves in
@@ -1269,11 +1294,21 @@ function _restoreGlyphOrderExact(items, runs) {
     while (len < k.length && at < glyphs.length) { mine.push(glyphs[at]); len += glyphs[at++].g.length; }
     const sorted = s => [...s].sort().join('');
     if (len !== k.length || sorted(mine.map(x => x.g).join('')) !== sorted(k)) return [...out, ...items.slice(n)];
-    if (!mine.some(multi)) { out.push(item); continue; }
+    if (!ARABIC.test(k) || (!mine.some(multi) && !mine.slice(0, -1).some(x => x.spaceAfter))) { out.push(item); continue; }
     const rtl = item.dir === 'rtl';
     const form = [s => s.normalize('NFKC'), s => s, s => s.normalize('NFKD')].find(f => ordered(mine, f, rtl, false).map(e => e.c).join('') === k);
     const mended = form && ordered(mine, form, rtl, true);
-    if (!mended || mended.map(e => e.c).join('') === k) { out.push(item); continue; }
+    if (!mended) { out.push(item); continue; }
+    // word spaces the stream draws between two of the item's glyphs that
+    // pdf.js dropped (a space glyph the next glyph is drawn over)
+    const gaps = [];
+    for (let i = 0; i + 1 < mended.length; i++) {
+      const a = mended[i].gi, b = mended[i + 1].gi;
+      // only between glyphs the stream draws one after the other: across a
+      // bidi run's edge the two are far apart there, and a space somewhere
+      // between them says nothing about this place
+      if (Math.abs(a - b) === 1 && mine[Math.min(a, b)].spaceAfter) gaps.push(i);
+    }
     // each key character to its place among the item's decomposed characters
     // (the ignored ones staying); a glyph of several words (ﷺ) takes its
     // whole span, spaces and all, last span first so the others stay put
@@ -1286,7 +1321,25 @@ function _restoreGlyphOrderExact(items, runs) {
       const pos = mended.map((e, i) => (e.gi === gi ? i : -1)).filter(i => i >= 0);
       spans.push([pos[0], pos[pos.length - 1], x.raw]);
     });
-    for (const [a, b, raw] of spans.sort((p, q) => q[0] - p[0])) chars.splice(where[a], where[b] - where[a] + 1, ...raw.normalize('NFKD'));
+    const missing = gaps.filter(i => !chars.slice(where[i] + 1, where[i + 1]).some(c => /\s/.test(c)));
+    if (mended.map(e => e.c).join('') === k) {
+      if (!missing.length) { out.push(item); continue; }
+      // only spaces to put back: into pdf.js's own string, its characters as
+      // they are (presentation forms kept — restoreDroppedSpaces matches the
+      // glyphs by them), each after the character that ends key position i
+      const orig = [...item.str], ends = new Map();
+      let at = 0;
+      orig.forEach((c, ci) => {
+        const n = [...c.normalize('NFKD')].filter(x => !IGNORED.test(x)).length;
+        if (n) { at += n; ends.set(at - 1, ci); }
+      });
+      for (const i of missing.sort((p, q) => q - p)) if (ends.has(i)) orig.splice(ends.get(i) + 1, 0, ' ');
+      out.push({ ...item, str: orig.join('') });
+      continue;
+    }
+    // all edits from the end back, so each one's offsets still hold
+    const edits = [...missing.map(i => [where[i] + 1, 0, [' ']]), ...spans.map(([a, b, raw]) => [where[a], where[b] - where[a] + 1, [...raw.normalize('NFKD')]])];
+    for (const [at, del, put] of edits.sort((p, q) => q[0] - p[0])) chars.splice(at, del, ...put);
     out.push({ ...item, str: chars.join('').normalize('NFC') });
   }
   return out;
