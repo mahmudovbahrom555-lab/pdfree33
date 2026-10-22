@@ -247,6 +247,41 @@ test('glyphs already in order, Latin ligatures and a digit run kept left to righ
   assert.equal(restoreGlyphOrder(rtl(['یک 2011']), [['2', '0', '1', '1', ' ', 'کی']])[0].str, 'کی 2011');
 });
 
+test('a hamza pdf.js split off and carried to the word\'s start, and LRM marks the glyphs name, still pair: "ٔالاساس" → "الأساس"', () => {
+  // Distiller 11 (1373210): "الأساس" drawn visually, its last glyph "الأ" (three letters)
+  const out = restoreGlyphOrder(rtl(['ٔالاساس']), [['س', 'ا', 'س', 'الأ']]);
+  assert.equal(out[0].str, 'الأساس');
+  // one glyph of four words (ﷺ, 2262154): its words come out whole, spaces in place
+  // ("محمد ﷺ" drawn left to right: the ﷺ glyph, a space, then د م ح م; pdf.js reverses it letter by letter)
+  const salla = ['صلى الله عليه وسلم', ' ', 'د', 'م', 'ح', 'م'];
+  assert.equal(restoreGlyphOrder(rtl([[...salla.join('')].reverse().join('')]), [salla])[0].str, 'محمد صلى الله عليه وسلم');
+  // vowelled text already in reading order (5955337): a "لا" glyph is not taken for the article "ال"
+  assert.equal(restoreGlyphOrder(rtl(['الصَّلاَة']), [['ة', 'َ', 'لا', 'َّ', 'ص', 'ال']])[0].str, 'الصَّلاَة');
+  // a madda is the letter's, not a vowel mark: "لآ" read backwards becomes "الآيات" again (5955337)
+  const ayat = ['ت', 'ا', 'ي', 'لآ', 'ا'];
+  assert.equal(restoreGlyphOrder(rtl([[...ayat.join('')].reverse().join('')]), [ayat])[0].str, 'الآيات');
+  // a contents line pdf.js calls left to right (dot leaders first, 5494457): its Arabic run is mended in place
+  assert.equal(restoreGlyphOrder([{ str: '.....الضغوط األمريكية', dir: 'ltr' }],
+    [['.', '.', '.', '.', '.', 'ة', 'ي', 'ك', 'ي', 'ر', 'م', 'لأ', 'ا', ' ', 'ط', 'و', 'غ', 'ض', 'ل', 'ا']])[0].str, '.....الضغوط الأمريكية');
+  // an Arabic run bidi leaves in place (a logical-order line pdf.js calls left to right) keeps its glyphs as they are
+  assert.equal(restoreGlyphOrder([{ str: 'https://bit.ly/x الإيراني', dir: 'ltr' }],
+    [['h', 't', 't', 'p', 's', ':', '/', '/', 'b', 'i', 't', '.', 'l', 'y', '/', 'x', ' ', 'ا', 'لإ', 'ي', 'ر', 'ا', 'ن', 'ي']])[0].str, 'https://bit.ly/x الإيراني');
+  // ﷺ as one character, which pdf.js expands and reverses (2262154): a ligature too
+  assert.equal(restoreGlyphOrder(rtl(['محمد ملسو هيلع هللا ىلص']), [['\uFDFA', ' ', 'د', 'م', 'ح', 'م']])[0].str, 'محمد صلى الله عليه وسلم');
+  // and the common Word case: "لأ" reversed by its code points, "أل" (7041235: "اإلسالمية")
+  assert.equal(restoreGlyphOrder(rtl(['األلمانية']), [['ة', 'ي', 'ن', 'ا', 'م', 'ل', 'لأ', 'ا']])[0].str, 'الألمانية');
+  // Word (0045417): the glyphs name LRMs pdf.js drops from the item — the next item still pairs
+  const items = [{ str: 'IDN', dir: 'ltr' }, ...rtl(['ےس'])];
+  assert.deepEqual(restoreGlyphOrder(items, [['\u200E', 'I', 'D', 'N', '\u200E'], ['سے']]).map(i => i.str), ['IDN', 'سے']);
+});
+
+test('a one-letter glyph decomposing to two ("ئ") is no ligature, and an item whose glyphs don\'t sit where the reading puts them is left alone', () => {
+  // a Quran font's letter pairs (1902417): "ئېئى" in reading order, its glyphs one letter each — nothing to mend
+  assert.equal(restoreGlyphOrder(rtl(['ئېئى', 'ےس']), [['ئ', 'ې', 'ئ', 'ى'], ['سے']])[0].str, 'ئېئى');
+  // an item in reading order whose glyphs are read from its end only by coincidence: unchanged
+  assert.equal(restoreGlyphOrder(rtl(['لاتب']), [['لا', 'ت', 'ب']])[0].str, 'لاتب');
+});
+
 test('items that do not pair with the glyphs stop it: the rest of the page left as pdf.js gave it', () => {
   // the second item's letters are not the next glyphs' (an ActualText-like change)
   const out = restoreGlyphOrder(rtl(['ےس', 'abc', 'یک']), [['سے'], ['x', 'y', 'z'], ['کی']]);

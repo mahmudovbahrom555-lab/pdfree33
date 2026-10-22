@@ -1147,22 +1147,154 @@ export function joinSplitNumbers(items) {
   }
 }
 
+// The order pdf.js gives one item's characters in: [index into `chars`, …],
+// with `.level`, each character's bidi level (odd: read right to left)
+// — the Unicode bidi algorithm as pdf.js runs it, cut to what one text item
+// needs: strong letters, digits (after Arabic they read as Arabic numbers,
+// kept left to right; one separator between two digits is the number's),
+// neutrals (Arabic punctuation among them) taking their neighbours'
+// direction or the item's, and the runs reversed level by level.
+function _bidiOrder(chars, rtl) {
+  const cls = c => {
+    const u = c.codePointAt(0);
+    if ((u >= 0x30 && u <= 0x39) || (u >= 0x660 && u <= 0x669) || (u >= 0x6F0 && u <= 0x6F9)) return 'D';
+    if (/[.,:/+\-\u066B\u066C]/.test(c)) return 'S';                    // separators
+    if (/[\u060C\u061B\u061F\u066A\u06D4]/.test(c)) return 'N';            // Arabic punctuation
+    if ((u >= 0x590 && u <= 0x8FF) || (u >= 0xFB1D && u <= 0xFDFF) || (u >= 0xFE70 && u <= 0xFEFF)) return 'R';
+    return /\p{L}/u.test(c) ? 'L' : 'N';
+  };
+  const base = rtl ? 'R' : 'L';
+  // one separator between two digits is part of the number ("13:00", "2.7")
+  const t = chars.map(cls).map((c, i, a) => (c === 'S' ? (a[i - 1] === 'D' && a[i + 1] === 'D' ? 'D' : 'N') : c));
+  // digits: Arabic numbers after an Arabic letter, else European (left to
+  // right in a left-to-right item); for neutrals both count as right to left
+  let strong = base;
+  const dir = t.map(c => {
+    if (c === 'R' || c === 'L') { strong = c; return c; }
+    if (c === 'D') return rtl || strong === 'R' ? 'AN' : 'L';
+    return 'N';
+  });
+  const side = d => (d === 'AN' ? 'R' : d);
+  for (let i = 0; i < dir.length; i++) {
+    if (dir[i] !== 'N') continue;
+    let j = i;
+    while (j < dir.length && dir[j] === 'N') j++;
+    const before = i ? side(dir[i - 1]) : base, after = j < dir.length ? side(dir[j]) : base;
+    for (let m = i; m < j; m++) dir[m] = before === after ? before : base;
+    i = j - 1;
+  }
+  const level = dir.map(d => (rtl ? (d === 'R' ? 1 : 2) : (d === 'R' ? 1 : d === 'AN' ? 2 : 0)));
+  const order = chars.map((_, i) => i);
+  order.level = level;
+  for (let lv = Math.max(0, ...level); lv >= 1; lv--) {
+    for (let i = 0; i < order.length; i++) {
+      if (level[order[i]] < lv) continue;
+      let j = i;
+      while (j < order.length && level[order[j]] >= lv) j++;
+      order.splice(i, j - i, ...order.slice(i, j).reverse());
+      i = j - 1;
+    }
+  }
+  return order;
+}
+
 // The letters of a glyph that names several (a Nastaleeq ligature: "سے",
-// "کی", "نو"), put back in their order. pdf.js reads a right-to-left line
-// drawn in visual order backwards letter by letter, a glyph's letters with
-// it: "ےس" for "سے", "ونر رعمتف" for "نور معرفت" (class C11, Urdu Word
-// files). `runs`: each text-showing operator's glyphs, in drawing order, a
-// space glyph as " " (pdf2readCore's _glyphRuns). The items and the glyphs
-// are paired one to one: an item takes the glyphs whose letters it holds,
-// whitespace aside (pdf.js adds and drops spaces), compared after NFKC as
-// pdf.js normalizes; a right-to-left item holds its glyphs from its end. A
-// glyph's letters are put in order only where the item has them reversed
-// at the glyph's own place — a digit run bidi kept left to right moves
-// nothing else. The first item that does not pair stops it: the rest of
-// the page is left as pdf.js gave it. Only for items pdf.js gives in
+// "کی", "نو"; lam-alef "لأ"; ﷺ), put back in their order. pdf.js reads a
+// line drawn in visual order through the bidi algorithm letter by letter, a
+// glyph's letters with it: "ےس" for "سے", "اإلسالمية" for "الإسلامية"
+// (class C11). `runs`: each text-showing operator's glyphs, in drawing
+// order, a space glyph as " " (pdf2readCore's _glyphRuns). The items and the
+// glyphs are paired one to one: an item takes the glyphs whose letters it
+// holds, compared decomposed (NFKD) with whitespace, format characters and
+// vowel marks aside (pdf.js adds and drops spaces, drops the LRM or the
+// Arabic sign a glyph can name, and places the marks — separate glyphs —
+// where bidi leaves them). An item is mended only where pdf.js's own string
+// is reproduced exactly: its glyphs' letters put through the bidi
+// algorithm give the item (its letters as pdf.js normalizes them, as the
+// font names them, or decomposed — pdf.js can split "أ" before the
+// reversal carries the hamza off: "ٔالاساس" for "الأساس"); the same
+// glyphs, each one's letters turned around first, give it mended — in a
+// right-to-left item and in a left-to-right one alike (a contents line,
+// dot leaders first: bidi reverses its Arabic run only). Anything else — a
+// coincidence, a mark out
+// of place, an order this doesn't model — is left as pdf.js gave it. The
+// first item that does not pair stops it: the rest of the page is left
+// too. Then, for the items this left as they were, the first rule (#56): a
+// right-to-left item holds its glyphs from its end, and a glyph found
+// reversed at its own place is turned — it catches lines whose bidi this
+// doesn't model exactly (numbers in brackets, "(6951-0561م)"), and can't
+// turn back a glyph already read in order. Only for items pdf.js gives in
 // reading order (a page rtlItemsAreVisual finds backwards is reversed back
 // whole, its glyphs with it).
 export function restoreGlyphOrder(items, runs) {
+  return _restoreGlyphOrderInPlace(_restoreGlyphOrderExact(items, runs), runs);
+}
+
+function _restoreGlyphOrderExact(items, runs) {
+  const IGNORED = /[\s\p{Cf}\u064B-\u0652\u0656-\u065F\u0670]/u;
+  const key = s => [...s.normalize('NFKD')].filter(c => !IGNORED.test(c)).join('');
+  const glyphs = (runs ?? []).flat().map(raw => ({ raw, g: key(raw) })).filter(x => x.g);
+  // several letters: as the glyph names them, or as a compatibility ligature
+  // expands (ﷺ, ﳎ) — not a letter with its own mark ("ئ" is one letter)
+  const letters = s => [...s].filter(c => !IGNORED.test(c)).length;
+  const multi = ({ raw }) => letters(raw) > 1 || letters(raw.normalize('NFKD')) > letters(raw.normalize('NFD'));
+  if (!glyphs.some(x => multi(x) && /[\u0600-\u06FF]/.test(x.g))) return items;
+  // the item's characters as bidi orders them, each with its glyph; each
+  // multi-letter glyph's letters turned around first when `turned`
+  // — only a glyph bidi reads right to left (odd level): one it leaves in
+  // place was never turned around
+  const ordered = (mine, form, rtl, turned) => {
+    let seq = [];
+    mine.forEach((x, gi) => { for (const c of [...form(x.raw)].filter(c => !IGNORED.test(c))) seq.push({ c, gi }); });
+    if (turned) {
+      const level = _bidiOrder(seq.map(e => e.c), rtl).level;
+      const odd = new Set(seq.filter((e, i) => level[i] % 2 && multi(mine[e.gi])).map(e => e.gi));
+      seq = mine.flatMap((x, gi) => {
+        const cs = seq.filter(e => e.gi === gi);
+        return odd.has(gi) ? cs.reverse() : cs;
+      });
+    }
+    const order = _bidiOrder(seq.map(e => e.c), rtl);
+    // decomposed, one entry a key character, with its glyph
+    return order.flatMap(i => [...seq[i].c.normalize('NFKD')].filter(c => !IGNORED.test(c)).map(c => ({ c, gi: seq[i].gi })));
+  };
+  let at = 0;
+  const out = [];
+  for (let n = 0; n < items.length; n++) {
+    const item = items[n];
+    const k = typeof item.str === 'string' ? key(item.str) : '';
+    if (!k) { out.push(item); continue; }
+    const mine = [];
+    let len = 0;
+    while (len < k.length && at < glyphs.length) { mine.push(glyphs[at]); len += glyphs[at++].g.length; }
+    const sorted = s => [...s].sort().join('');
+    if (len !== k.length || sorted(mine.map(x => x.g).join('')) !== sorted(k)) return [...out, ...items.slice(n)];
+    if (!mine.some(multi)) { out.push(item); continue; }
+    const rtl = item.dir === 'rtl';
+    const form = [s => s.normalize('NFKC'), s => s, s => s.normalize('NFKD')].find(f => ordered(mine, f, rtl, false).map(e => e.c).join('') === k);
+    const mended = form && ordered(mine, form, rtl, true);
+    if (!mended || mended.map(e => e.c).join('') === k) { out.push(item); continue; }
+    // each key character to its place among the item's decomposed characters
+    // (the ignored ones staying); a glyph of several words (ﷺ) takes its
+    // whole span, spaces and all, last span first so the others stay put
+    const chars = [...item.str.normalize('NFKD')], where = [];
+    chars.forEach((c, i) => { if (!IGNORED.test(c)) where.push(i); });
+    const spans = [];
+    mended.forEach((e, i) => { if (!/\s/.test(mine[e.gi].raw.normalize('NFKD'))) chars[where[i]] = e.c; });
+    mine.forEach((x, gi) => {
+      if (!multi(x) || !/\s/.test(x.raw.normalize('NFKD'))) return;
+      const pos = mended.map((e, i) => (e.gi === gi ? i : -1)).filter(i => i >= 0);
+      spans.push([pos[0], pos[pos.length - 1], x.raw]);
+    });
+    for (const [a, b, raw] of spans.sort((p, q) => q[0] - p[0])) chars.splice(where[a], where[b] - where[a] + 1, ...raw.normalize('NFKD'));
+    out.push({ ...item, str: chars.join('').normalize('NFC') });
+  }
+  return out;
+}
+
+// restoreGlyphOrder's first rule: each glyph at the place a right-to-left
+// item reversed whole puts it (from the item's end), compared after NFKC.
+function _restoreGlyphOrderInPlace(items, runs) {
   const key = s => s.normalize('NFKC').replace(/\s+/g, '');
   const glyphs = (runs ?? []).flat().map(key).filter(Boolean);
   if (!glyphs.some(g => g.length > 1 && /[\u0600-\u06FF]/.test(g))) return items;
