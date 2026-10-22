@@ -55,19 +55,62 @@ import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
 const _XML_ILLEGAL_CONTROL_RE = /[\x00-\x08\x0B\x0C\x0E-\x1F]/g;
 
 // The glyphs of each text-showing operator in pdf.js's operator list, as
-// their letters, a space glyph as " " (see restoreDroppedSpaces,
-// restoreGlyphOrder). 44: OPS.showText — pdf.js 3.x folds TJ
+// their letters, a space glyph as " " (restoreDroppedSpaces); and, as
+// `.words`, the same with only the word spaces (restoreGlyphOrder, which
+// puts back the ones pdf.js dropped). 44: OPS.showText — pdf.js 3.x folds TJ
 // (showSpacedText) into it, numbers between the glyphs.
-const _OPS_SHOW_TEXT = 44;
+// In `.words` a space glyph is a word space only where it has a width and,
+// drawn alone, the text moves on after it: Word sets Urdu Nastaleeq glyph by
+// glyph, and the font names some joining pieces " " — zero wide, drawn
+// lifted off the line (a mark), or with the next glyph put down at the very
+// same point ("وزیر اعظم": the " " inside each word advances 0, the one
+// between them 0.6pt). Those are left out of `.words` only: elsewhere a zero
+// wide space glyph can be a real word space (3540977), and
+// restoreDroppedSpaces keeps reading it as one.
+const _TEXT_OPS = { beginText: 31, setLeading: 36, moveText: 40, setLeadingMoveText: 41, setTextMatrix: 42, nextLine: 43, showText: 44 };
+const _OPS_SHOW_TEXT = _TEXT_OPS.showText;
 function _glyphRuns(opList) {
   if (!opList?.fnArray) return null;
-  const runs = [];
+  const runs = [];         // as pdf.js names the glyphs (restoreDroppedSpaces)
+  const words = [];        // word spaces only (restoreGlyphOrder): runs.words
+  let lm = [1, 0, 0, 1, 0, 0], leading = 0, moved = false;
+  let prev = null;          // the last showText's origin, when a move placed it
+  let space = null;         // the last run when it was one space glyph: { at, x, y }
+  const move = (tx, ty) => { lm = [lm[0], lm[1], lm[2], lm[3], lm[4] + tx * lm[0] + ty * lm[2], lm[5] + tx * lm[1] + ty * lm[3]]; moved = true; };
   opList.fnArray.forEach((fn, k) => {
+    const a = opList.argsArray[k];
+    if (fn === _TEXT_OPS.beginText) { lm = [1, 0, 0, 1, 0, 0]; moved = true; return; }
+    if (fn === _TEXT_OPS.setTextMatrix) { lm = Array.isArray(a[0]) ? [...a[0]] : [...a]; moved = true; return; }
+    if (fn === _TEXT_OPS.moveText) { move(a[0], a[1]); return; }
+    if (fn === _TEXT_OPS.setLeadingMoveText) { leading = -a[1]; move(a[0], a[1]); return; }
+    if (fn === _TEXT_OPS.setLeading) { leading = a[0]; return; }
+    if (fn === _TEXT_OPS.nextLine) { move(0, -leading); return; }
     if (fn !== _OPS_SHOW_TEXT) return;
-    const glyphs = opList.argsArray[k]?.[0];
+    const glyphs = a?.[0];
     if (!Array.isArray(glyphs)) return;
-    runs.push(glyphs.filter(g => g && typeof g === 'object').map(g => (g.isSpace ? ' ' : g.unicode ?? '')));
+    const here = moved ? { x: lm[4], y: lm[5] } : null;
+    // the space before this glyph: the text didn't move on from it
+    if (space && here && Math.abs(here.y - space.y) < 0.5 && Math.abs(here.x - space.x) < 0.1) words[space.at] = [''];
+    // the space glyph as its font names it when that is no space ("۽",
+    // 2262154 — a font whose " " is drawn inside words, see restoreGlyphOrder)
+    // and a glyph named " " that is zero wide is no space: a dot or a joining
+    // piece the font misnames (codes 460–471, 1649–1654 in Word's Urdu
+    // Nastaleeq — hundreds a page, all inside words)
+    const shown = glyphs.filter(g => g && typeof g === 'object');
+    runs.push(shown.map(g => (g.isSpace ? ' ' : g.unicode ?? '')));
+    const run = shown.map(g => {
+      const name = g.isSpace ? (g.unicode && /\S/.test(g.unicode) ? g.unicode : ' ') : g.unicode ?? '';
+      return /^\s+$/.test(name) && !(g.width > 0) ? '' : name;
+    });
+    const lone = run.length === 1 && /^\s$/.test(run[0]);
+    // a space put off the line the text is on: a mark the font names " "
+    if (lone && here && prev && Math.abs(here.y - prev.y) > 0.5) run[0] = '';
+    space = lone && here && run[0] ? { at: words.length, x: here.x, y: here.y } : null;
+    if (!lone || here) prev = here ?? prev;
+    words.push(run);
+    moved = false;
   });
+  runs.words = words;
   return runs;
 }
 
@@ -694,7 +737,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
     // turned back below, their glyphs with them.
     const glyphRuns = _glyphRuns(opList);
     const itemsAsRead = content.items;
-    if (!rtlItemsAreVisual(content.items)) content.items = restoreGlyphOrder(content.items, glyphRuns);
+    if (!rtlItemsAreVisual(content.items)) content.items = restoreGlyphOrder(content.items, glyphRuns?.words);
     // a page so mended was judged in reading order before it: its letters put
     // right ("لا" back to "ال") must not turn that verdict
     const glyphsMended = content.items !== itemsAsRead && content.items.some((it, k) => it !== itemsAsRead[k]);

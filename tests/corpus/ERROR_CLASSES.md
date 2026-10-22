@@ -542,3 +542,44 @@ sources before it is a class.
   "في"). The letter-level twin of C4; the metric can't see it.
 - **Persian ی / ھ in Arabic text** (6199289, macOS Quartz: "أیار",
   "ھذا") — the PDF itself names them so; Arabic search fails on them.
+
+## C12 — Urdu Nastaleeq words run together
+
+- **Status:** `fixing` (2026-10-22) — fix in a pull request
+- **Harm:** high for Urdu — whole lines as one word: "اسٹیٹبینکنےپاکستانیمعیشتکیکیفیت"
+  (0247454), "مولاناصدرالدیناصلاحیصاحعلمیدنیامیں" (7407593). Found in the
+  competitor comparison (2026-10-22): converter D kept these words apart,
+  though it cut others into pieces ("ا گرچہ").
+- **Cause (confirmed on 7407593, 5021957, 0247454):** Word sets Urdu
+  Nastaleeq glyph by glyph, each a text operator of its own, and its word
+  spaces are space glyphs pdf.js drops when the next glyph is drawn over
+  them. The same fonts name joining pieces and dots " " too — zero wide
+  (codes 460–471, 1649–1654), lifted off the line, or with the next glyph
+  put down at the very same point ("وزیر اعظم": 0 inside each word, 0.6pt
+  between them). MuPDF and poppler make a space of every one of these and
+  cut words apart ("پ ا اتسکن"); pdf.js of none.
+- **Fix:** `_glyphRuns` (`js/pdf2readCore.js`) gives restoreGlyphOrder the
+  word spaces only (`.words`: a space glyph with a width, on the line, the
+  text moving on after it; a space glyph its font names otherwise, "۽", as
+  named); `restoreGlyphOrder` puts back a dropped space between two glyphs
+  drawn one after the other, on items whose bidi it reproduces exactly — into
+  pdf.js's own string when only spaces are missing. Not on a page that
+  would come apart into letters (1902417, Word 2013 Arabic: "و ق ال ش ي خ"
+  — kept as it was), nor on a font that names its space "۽" (2262154).
+  restoreDroppedSpaces keeps reading every space glyph (3540977: a zero
+  wide space glyph that is a real word space there).
+- **Mistakes caught before shipping:** every space glyph taken (in-word
+  pieces split "ن اشر"); "۽" fonts (+444 stray letters on 2262154);
+  Word 2013 Arabic split into letters (1902417); spaces between items lost
+  when the item was rebuilt decomposed (3540977).
+- **Measured (289 documents vs main, metric v6):** recall 95.49 → 95.88 %,
+  missing words 50,545 → 43,553; 31 documents changed, worse on none by
+  metric v6 or the vocabulary; 7407593 recall 0.28 → 0.91, 5021957 0.29 →
+  0.47, 0979902 0.81 → 0.84; Urdu vocabulary share 0247454 0.34 → 0.57,
+  0979902 0.27 → 0.67, 7407593 0.21 → 0.51. Glued 2,671 → 3,025, all of the
+  rise on 7407593 and 5021957: runs of many words that became pairs
+  ("نہیںہے", "گیاہے" — glue left), and words the readers cut ("ہونا",
+  "ہوگی"). 72 non-Arabic documents: text identical; ground-truth pages 40
+  of 40 identical.
+- **Left:** two-word glue on those pages; letters some of these fonts name
+  wrongly ("دزخواست" for "درخواست", 5021957 — all readers alike).
