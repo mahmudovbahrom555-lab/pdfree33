@@ -30,6 +30,10 @@
 //  And a glyph ToUnicode names by several letters, read backwards with its
 //  line (class C11, Urdu Word files with Nastaleeq ligatures: "ےس" for
 //  "سے"). Fixture: ar-ligatures-letters.pdf (make-ligatures.py).
+//  And text a PDF repeats at the top and bottom of its pages (2026-10-22):
+//  kept out of the body as page furniture, it now goes into the Word header
+//  and footer instead of being lost — a UN document symbol was in no part of
+//  the .docx. Fixture: running-header.pdf (make-running-header.py).
 //  Run: node tests/e2e/pdf2word-arabic.e2e.mjs   (dist/ served on :8934)
 // ============================================================
 
@@ -63,7 +67,7 @@ function recall(truth, out, marks) {
   return hit / want.length;
 }
 
-async function docxText(browser, file) {
+async function docxText(browser, file, part = 'word/document.xml') {
   const page = await (await browser.newContext({ serviceWorkers: 'block' })).newPage();
   await page.addInitScript(() => {
     const orig = URL.createObjectURL.bind(URL);
@@ -75,12 +79,12 @@ async function docxText(browser, file) {
   await page.waitForTimeout(1500);
   await page.click('#mergeBtn');
   await page.waitForFunction(() => window.__docx, null, { timeout: 90000 });
-  return page.evaluate(async () => {
+  return page.evaluate(async part => {
     await (await import('/js/lazyLibs.js')).loadJSZip();
     const zip = await window.JSZip.loadAsync(await window.__docx.arrayBuffer());
-    const xml = await zip.file('word/document.xml').async('string');
+    const xml = await zip.file(part)?.async('string') ?? '';
     return [...xml.matchAll(/<w:p[ >][\s\S]*?<\/w:p>/g)].map(m => [...m[0].matchAll(/<w:t[^>]*>([^<]*)/g)].map(t => t[1]).join('')).join('\n');
-  });
+  }, part);
 }
 
 const browser = await chromium.launch();
@@ -135,6 +139,16 @@ try {
     const truth = 'مجلس الأمن في الأمم المتحدة الحقوق والحريات لجميع الناس';
     const r = recall(truth, out, false);
     if (r < 1) throw new Error(`${(r * 100).toFixed(0)} % of the words right: ${out.slice(0, 200)}`);
+  });
+
+  await test('a symbol repeated at the top of every page goes into the Word header, a repeated last line into the footer — not lost', async () => {
+    const body = await docxText(browser, 'running-header.pdf');
+    const header = await docxText(browser, 'running-header.pdf', 'word/header1.xml');
+    const footer = await docxText(browser, 'running-header.pdf', 'word/footer1.xml');
+    if (!header.includes('A/HRC/55/L.12')) throw new Error(`header: ${JSON.stringify(header)}`);
+    if (!footer.includes('Distr.: General')) throw new Error(`footer: ${JSON.stringify(footer)}`);
+    if (body.includes('A/HRC/55/L.12')) throw new Error('the symbol is in the body too');
+    if (recall('مجلس حقوق الإنسان', body, false) < 1) throw new Error(`body: ${body.slice(0, 200)}`);
   });
 } finally {
   await browser.close();
