@@ -34,6 +34,11 @@
 //  kept out of the body as page furniture, it now goes into the Word header
 //  and footer instead of being lost — a UN document symbol was in no part of
 //  the .docx. Fixture: running-header.pdf (make-running-header.py).
+//  And CJK fonts a PDF names without embedding them, through Adobe's
+//  predefined CMaps (Chinese corpus, 2026-10-23: 8 of 128 documents —
+//  TCPDF, Acrobat PDFWriter, Hong Kong filings): pdf.js read none of their
+//  text without the CMap files, the .docx had the Latin only or nothing.
+//  Fixture: cjk-cmaps.pdf (make-cjk-cmaps.py).
 //  Run: node tests/e2e/pdf2word-arabic.e2e.mjs   (dist/ served on :8934)
 // ============================================================
 
@@ -149,6 +154,14 @@ try {
     if (!footer.includes('Distr.: General')) throw new Error(`footer: ${JSON.stringify(footer)}`);
     if (body.includes('A/HRC/55/L.12')) throw new Error('the symbol is in the body too');
     if (recall('مجلس حقوق الإنسان', body, false) < 1) throw new Error(`body: ${body.slice(0, 200)}`);
+  });
+
+  await test('CJK fonts named through predefined CMaps (not embedded): Chinese, traditional, Japanese and Korean text kept', async () => {
+    const out = await docxText(browser, 'cjk-cmaps.pdf');
+    for (const want of ['董事会成员名单与其角色和职能', '董事會成員名單與其角色和職能', '第四十八回全国学生スキー大会', '이사회 구성원 명단']) {
+      if (!out.includes(want)) throw new Error(`"${want}" missing: ${out.slice(0, 300)}`);
+    }
+    if (!out.includes('Korean 2026')) throw new Error(`Latin lost: ${out.slice(0, 300)}`);
   });
 } finally {
   await browser.close();
