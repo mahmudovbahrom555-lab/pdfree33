@@ -327,3 +327,32 @@ converter commit — never by both at once.
   3,565 → 3,532. The aim is not the number: these three can only produce
   false "worse" and "better" signals.
 - **Approved by:** this pull request's review.
+
+## 2026-10-24 — Arabic baseline, metric v6: the first one
+
+- **What:** `tests/corpus/cloud/arabic-baseline.jsonl` — new, the
+  `arabic-night.jsonl` of CI run 40037891713 (corpus-nightly #16, commit
+  c482b99e) copied as is (sha256 8d9a662888511b90…). From now on each night is compared
+  with it (`arabic.py --compare … --fail-on-worse`). No metric code and no
+  criterion changes.
+- **Two CI runs that agree:** run 39982311965 (#15, commit 4e4bb076, sha256
+  7b1312add725ef65…) and run 40037891713 (#16). Same readers (PyMuPDF 1.26.5, poppler
+  24.02.0), same corpus hash 2f8cdc58173b4494, 289 documents. Of the 280
+  scored in both, all 280 identical on every field (recall, missing, dots,
+  reversed, glued, split, numbers missing, order, OCR pages, words) — across
+  a deploy between them (#68, CJK CMaps), which changed none of them.
+- **The one difference:** 3939389.pdf (124 pages, Excel 2010) timed out in
+  #15 (302.8 s, limit 300 s) and finished in #16 (191.3 s, recall 0.81). It
+  depends on the CI machine's speed; a later night that times out on it
+  shows a ⚠ warning, not a red night (`compare` counts timeouts apart from
+  failures). Taken from #16 because it scores one document more.
+- **Totals (as the report gives them):** long documents 219, recall 96.36 %,
+  order 94.73 % on 200, numbers missing 3,337, dots 372, reversed 943, glued
+  2,375; short documents 21, recall 97.87 %, 2 with a serious error; 36 read
+  partly with OCR, judged apart; 7 set aside; 8 not evaluated (2 timeouts,
+  2 refused, 4 without Arabic-script text both readers agree on).
+- **What it is not:** proof that Arabic PDF→Word is error-free — 3,337
+  numbers and 40,525 words are still lost against the readers, and the
+  set-aside documents are outside it. It is the reference later changes are
+  judged against.
+- **Approved by:** this pull request's review.
