@@ -542,6 +542,16 @@ sources before it is a class.
   "في"). The letter-level twin of C4; the metric can't see it.
 - **Persian ی / ھ in Arabic text** (6199289, macOS Quartz: "أیار",
   "ھذا") — the PDF itself names them so; Arabic search fails on them.
+  **Closed — not a conversion defect (owner, 2026-10-23).** Measured
+  2026-10-22: the source PDFs' own text layer holds these letters (6199289:
+  ی 121, ھ 19 in the PDF and in our .docx alike), so the .docx reproduces
+  what the author typed. An offline experiment replaced them with ي / ه on
+  Arabic lines of documents detected as Arabic (25 documents; Persian and
+  Urdu controls untouched): an Arabic-vocabulary share rose 99.79 → 99.89 %,
+  but metric v6 fell 91.73 → 84.29 % recall, 20 documents worse, none better
+  — it edits the author's text. Faithful conversion and normalising letters
+  for search are different features; no automatic replacement ships, and a
+  normalising option waits for proven demand for Arabic search.
 
 ## C12 — Urdu Nastaleeq words run together
 
