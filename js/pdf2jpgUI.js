@@ -554,6 +554,19 @@ async function _loadWithRetry(retriesLeft) {
     await _loadScript(`${PDFJS_CDN}/pdf.min.js`, PDFJS_SRI);
     window.pdfjsLib.GlobalWorkerOptions.workerSrc =
       new URL('./pdfWorkerShim.js', import.meta.url).toString();
+    // Adobe's predefined CMaps, for every getDocument() on the site: without
+    // them pdf.js reads no text from a CJK font a PDF names without embedding
+    // it (UniGB-UCS2-H, 90ms-RKSJ-H, …) or from one in an Adobe character
+    // collection without ToUnicode — 8 of 128 Chinese corpus documents came
+    // out with their Chinese missing or an empty .docx (2026-10-23).
+    // pdf.js has no global option for this, and its exports are getters that
+    // can't be reassigned: window.pdfjsLib becomes the library itself (its
+    // prototype) with a getDocument that adds the default.
+    const lib = window.pdfjsLib;
+    const cMapUrl = new URL('./vendor/pdfjs-cmaps/', import.meta.url).toString();
+    window.pdfjsLib = Object.create(lib, {
+      getDocument: { value: src => lib.getDocument({ cMapUrl, cMapPacked: true, ...src }) },
+    });
   } catch (err) {
     if (retriesLeft > 0) {
       await new Promise(r => setTimeout(r, 1000 * (PDFJS_MAX_RETRIES - retriesLeft + 1)));

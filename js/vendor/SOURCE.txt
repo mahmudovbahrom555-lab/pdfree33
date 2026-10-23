@@ -142,3 +142,26 @@ makes up the bulk of qpdf.wasm is Apache License 2.0 (confirmed via the
 license text compiled directly into the binary's own `--copyright` output
 strings; qpdf offers Artistic License 2.0 as an alternative at the user's
 option, per that same embedded text).
+
+----------------------------------------------------------------
+
+Files:       pdfjs-cmaps/*.bcmap (168 files), pdfjs-cmaps/LICENSE
+Source:      pdfjs-dist npm package v3.11.174, its cmaps/ folder copied as
+             is — the same pdf.js version the site loads (PDFJS_VERSION in
+             js/pdf2jpgUI.js, vendored pdf.worker.min.js). Tarball
+             pdfjs-dist-3.11.174.tgz, npm integrity
+             sha512-TdTZPf1trZ8/UFu5Cx/GXB7GZM30LT+wWUNfsi6Bq8ePLnb+woNKtDymI2mxZYBpMbonNFqKmiz684DIfnd8dA==;
+             sha256 of the .bcmap files concatenated in name order:
+             8db80ef8ed2ece27f76b52fd45a75b6ebd7e38551e12159b7500c52756e7c964
+Downloaded:  2026-10-23 (`npm pack pdfjs-dist@3.11.174`).
+Size:        ~1.6 MB in all; pdf.js fetches only the CMap a document's font
+             names (UniGB-UCS2-H 43 KB), never the whole folder.
+License:     Adobe's CMap resources, BSD 3-clause (pdfjs-cmaps/LICENSE).
+
+Used by:     every pdf.js getDocument() on the site, through the cMapUrl the
+             loader in js/pdf2jpgUI.js sets. Without them pdf.js reads no text
+             from a CJK font a PDF names without embedding it (UniGB-UCS2-H,
+             90ms-RKSJ-H, …) or one without ToUnicode in an Adobe character
+             collection (Adobe-CNS1, -GB1, -Japan1, -Korea1): 8 of 128
+             Chinese corpus documents, 2026-10-23. Served from pdfree.io, not a
+             CDN — cdn.jsdelivr.net is unreliable from mainland China.

@@ -593,3 +593,38 @@ sources before it is a class.
   of 40 identical.
 - **Left:** two-word glue on those pages; letters some of these fonts name
   wrongly ("دزخواست" for "درخواست", 5021957 — all readers alike).
+
+## C13 — CJK text in fonts named through Adobe's CMaps: missing, or not drawn
+
+First class of the Chinese PDF→Word stage (2026-10-23). Corpus: the cloud
+sample's Chinese stratum (128 fetched) as discovery, and a control pool of
+323 Chinese-language documents picked by producer and known pains (Quartz,
+Founder, WPS, InDesign, LaTeX, scanners, web print, unmapped Unicode) —
+never looked at while fixing. Metric: a draft Chinese metric (Han both
+readers agree on, bigrams, numbers, order; not a measuring stick yet).
+
+- **Cause.** No pdf.js `getDocument()` on the site passed `cMapUrl`, and no
+  CMap files were served. A CJK font a PDF names without embedding it
+  (UniGB-UCS2-H, UniCNS-UTF16-H, 90ms-RKSJ-H — TCPDF, Acrobat PDFWriter,
+  reportlab) or one in an Adobe character collection without ToUnicode
+  (Adobe-CNS1, -GB1, -Japan1: Hong Kong filings, macOS Quartz in Japanese,
+  xdvipdfmx) gave pdf.js no text, and drew nothing — PDF→JPG, thumbnails,
+  Organize, Draw showed the Latin lines only. Known since a 2026-08 note
+  in `scripts/gen_benchmark_corpus.py`, left then as out of scope.
+- **Frequency.** 8 of 128 sample documents, 17 of 323 pool documents, from
+  independent producers (Apogee, TCPDF, PDFWriter, Bullzip, Distiller,
+  Quartz, xdvipdfmx, InDesign, iText).
+- **Fix.** Adobe's CMaps from pdfjs-dist 3.11.174 served from pdfree.io
+  (`js/vendor/pdfjs-cmaps/`, not a CDN: jsdelivr is unreliable from mainland
+  China), and the one pdf.js loader (`js/pdf2jpgUI.js`) gives every
+  `getDocument()` the `cMapUrl`. Fixture `cjk-cmaps.pdf`
+  (`make-cjk-cmaps.py`): simplified, traditional, Japanese and Korean.
+- **Result, PDF→Word.** Discovery: recall 94.72 → 98.10 % (Japanese 91.4 →
+  97.6), numbers lost 7,145 → 322; 0 worse, 4 mixed (recall up, plus spaces
+  or OCR'd pages), 4 better. Control: Chinese recall 85.13 → 98.95 %,
+  Japanese 98.95 → 99.60; 17 better, 11 mixed (recall up in all but one,
+  3344057: bigrams up), 1 worse by the metric (1744868: a scan, OCR noise,
+  its .docx otherwise identical). Same build twice: 0 changes of 128.
+- **Left.** Letter-spaced Han in table cells ("董 事 名 單", 0738745: bigrams
+  0.20); fake bold drawn four times over ("壬壬壬壬", one producer so far);
+  3658566 (Ghostscript 8.50) still an empty .docx.
