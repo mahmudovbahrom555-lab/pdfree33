@@ -60,6 +60,51 @@
      "why": "proposed by the agent from the readers' output; confirmed by the owner's review of the pull request"
     }
    ]
+  },
+  "6677618.pdf": {
+   "sha": "d78148bb671a423a",
+   "kind": "bothWrong",
+   "scope": "all",
+   "issue": "every letter doubled in both readers: each glyph's ToUnicode names its presentation form and its letter (\"ﻭوﺍاﻟﺩدﻱي\" for \"والدي\", Mac OS X 10.7.3 Quartz); both readers agree on the doubled text, so it is the reference",
+   "check": "render page 1: \"والدي الشاعر الإنسان\" on screen, \"ﻭوﺍاﻟﺩدﻱي ﺍاﻟﺷﺎﻋﺭر ﺍاﻹﻧﺳﺎﻥن\" in MuPDF and poppler",
+   "status": "known_issue",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "status": "known_issue",
+     "why": "proposed by the agent from the readers' output checked against the rendered page; awaiting the owner's review of the pull request"
+    }
+   ]
+  },
+  "6864345.pdf": {
+   "sha": "dd89cd646e53dab1",
+   "kind": "bothWrong",
+   "scope": "all",
+   "issue": "legacy font encoding: letters named as other letters and Arabic-Indic digits (\"كممة عميد الكمية\" for \"كلمة عميد الكلية\", \"حٌظَر١ش\" for \"التربية\"); 1,367 of 6,520 words carry digits inside letters; both readers agree on it",
+   "check": "render page 2 (contents table): \"كلمة عميد الكلية\", \"الهيكل الأدارى للكلية\" on screen; \"كممة عميد الكمية\", \"لمكمية\" in both readers",
+   "status": "known_issue",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "status": "known_issue",
+     "why": "proposed by the agent from the readers' output checked against the rendered page; awaiting the owner's review of the pull request"
+    }
+   ]
+  },
+  "0519513.pdf": {
+   "sha": "10c99843a625f7f2",
+   "kind": "unverifiable",
+   "scope": "all",
+   "issue": "text layer is noise: an Arabic paragraph on screen, 2,102 characters of Hebrew alef and symbols in the text layer of page 2 (\"א א  אכ\"); 101 Arabic-script words in 27 pages, themselves garbled (\"ﻄاﻏﻌ\")",
+   "check": "render page 2 against either reader's text: the paragraph on screen is not in the text layer",
+   "status": "known_issue",
+   "history": [
+    {
+     "date": "2026-10-22",
+     "status": "known_issue",
+     "why": "proposed by the agent from the readers' output checked against the rendered page; awaiting the owner's review of the pull request"
+    }
+   ]
   }
  }
 }

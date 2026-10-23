@@ -296,3 +296,34 @@ converter commit — never by both at once.
   for the set-aside list, the owner's call. No comparison
   across metric versions: a new baseline is needed under v6.
 - **Approved by:** this pull request's review.
+
+## 2026-10-22 — Arabic set-aside list: three documents whose text layer both readers read wrong
+
+- **What:** `tests/corpus/cloud/arabic-known.json` +3 entries, `scope: all`,
+  `status: known_issue`. They stay in every run and are reported on their
+  own ("set aside by a human … judged only outside its scope"), out of the
+  totals. No metric code and no criterion changes.
+  - **6677618.pdf** (`bothWrong`, Mac OS X 10.7.3 Quartz): every letter
+    doubled in both readers — each glyph named by its presentation form and
+    its letter ("ﻭوﺍاﻟﺩدﻱي" for "والدي"). Checked: page 1 rendered reads
+    "والدي الشاعر الإنسان"; both readers give the doubled text.
+  - **6864345.pdf** (`bothWrong`, Word 2010): a legacy font encoding — letters
+    named as other letters and as Arabic-Indic digits ("كممة عميد الكمية" for
+    "كلمة عميد الكلية", "حٌظَر١ش" for "التربية"); 1,367 of 6,520 words carry
+    digits inside letters. Checked: page 2 (a contents table) rendered reads
+    "كلمة عميد الكلية", "الهيكل الأدارى للكلية".
+  - **0519513.pdf** (`unverifiable`, Adobe PDF Library 15): the text layer is
+    noise — page 2 shows an Arabic paragraph, its text layer is 2,102
+    characters of Hebrew alef and symbols; 101 Arabic-script words in 27
+    pages, garbled ("ﻄاﻏﻌ"). Checked: page 2 rendered against both readers.
+- **Not set aside, though proposed with these:** 7407593.pdf (Urdu, Word
+  2010). Its readers agree on only 16 % of their words, but under metric v6
+  and C12 (#61) it is measured (recall 0.91 on 10,227 agreed words) and it
+  is the corpus's main check against an Urdu regression; set aside, a future
+  break there would not show. Left in, for the owner to decide.
+- **Effect on the totals (main 6c5c9084's outputs, v6, long documents):**
+  219 documents instead of 222; recall-weighted words 96.20 → 96.23 %, dots
+  468 → 377 (almost all 6864345's), reversed 953 → 947, numbers missing
+  3,565 → 3,532. The aim is not the number: these three can only produce
+  false "worse" and "better" signals.
+- **Approved by:** this pull request's review.
