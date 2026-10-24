@@ -43,6 +43,11 @@
 //  (class C14, 2026-10-24: 14 of 368 Chinese corpus documents, "壬壬壬壬"):
 //  read once, while "謝謝" and the same text in two cells stay.
 //  Fixture: overprint.pdf (make-overprint.py).
+//  And pages that hold only a picture and their bottom lines (a catalogue,
+//  4736268, competitor pilot 2026-10-24): the bottom lines went partly into
+//  the Word HEADER — the page's "first three" and "last three" lines were the
+//  same. Bottom lines go to the footer, top lines to the header.
+//  Fixture: footer-only.pdf (make-footer-only.py).
 //  Run: node tests/e2e/pdf2word-arabic.e2e.mjs   (dist/ served on :8934)
 // ============================================================
 
@@ -174,6 +179,15 @@ try {
     for (const w of ['年柱壬戌', '技術於校園安全建置之經驗分享', '備註欄']) if (count(w) !== 1) throw new Error(`"${w}" ${count(w)} times: ${out}`);
     if (/壬壬|備備|註註/.test(out)) throw new Error(`copies left: ${out}`);
     if (!out.includes('謝謝您的參與') || count('合計') !== 2) throw new Error(`real text lost: ${out}`);
+  });
+
+  await test('lines at the bottom of every page go to the Word footer, never the header (pages with nothing else)', async () => {
+    const header = await docxText(browser, 'footer-only.pdf', 'word/header1.xml');
+    const footer = await docxText(browser, 'footer-only.pdf', 'word/footer1.xml');
+    const body = await docxText(browser, 'footer-only.pdf');
+    if (/173842|example-shop|Firenze/.test(header)) throw new Error(`bottom line in the header: ${JSON.stringify(header)}`);
+    const all = header + footer + body;
+    for (const w of ['173842', 'example-shop.com', '0548100']) if (!all.includes(w)) throw new Error(`"${w}" lost: header ${JSON.stringify(header)} footer ${JSON.stringify(footer)}`);
   });
 } finally {
   await browser.close();

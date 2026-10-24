@@ -91,16 +91,20 @@ const _normDigits = t => t.replace(/\d+/g, '#');
 // a lone mark or letter (a vowel mark, "|", "ي" — seen on 6 corpus files).
 function _p2wRunningLines(pageData, repeatTextSet) {
   const header = new Map(), footer = new Map();
-  for (const { lines } of pageData) {
+  for (const { lines, pageH } of pageData) {
     const sorted = [...lines].sort((a, b) => b.y - a.y);
     sorted.forEach((ln, i) => {
+      // and where it is: on a page holding only a picture and its three bottom
+      // lines, those were also its "first three" — the bottom lines went into
+      // the Word header (4736268, a DOMPDF catalogue, 2026-10-24)
+      const top = !pageH || ln.y > pageH / 2;
       const raw = ln.items.map(it => it.str).join('').trim();
       const t = _normWatermark(raw);
       if (!t || t === 'CamScanner' || !repeatTextSet.has(t) || header.has(t) || footer.has(t)) return;
       // a mark or a single letter repeated at a page's edge is no header
       if ((raw.match(/\p{L}/gu) || []).length < 2) return;
-      if (i < 3) header.set(t, raw);
-      else if (i >= sorted.length - 3) footer.set(t, raw);
+      if (i < 3 && top) header.set(t, raw);
+      else if (i >= sorted.length - 3 && !top) footer.set(t, raw);
     });
   }
   return { header: [...header.values()], footer: [...footer.values()] };
