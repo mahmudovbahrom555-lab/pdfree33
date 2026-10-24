@@ -165,3 +165,26 @@ Used by:     every pdf.js getDocument() on the site, through the cMapUrl the
              collection (Adobe-CNS1, -GB1, -Japan1, -Korea1): 8 of 128
              Chinese corpus documents, 2026-10-23. Served from pdfree.io, not a
              CDN — cdn.jsdelivr.net is unreliable from mainland China.
+
+----------------------------------------------------------------
+
+Files:       jszip.min.js, docx.umd.js (and pdf-lib.min.js, already here)
+Source:      the official builds of the pinned npm versions, copied as is —
+             jszip 3.10.1 dist/jszip.min.js, docx 8.5.0 build/index.umd.js
+             (package.json; scripts/check_vendor_sync.py keeps each equal
+             to node_modules). Byte-identical to the CDN copies the site
+             loaded before (cdnjs jszip 3.10.1, jsdelivr docx 8.5.0): the
+             same sha384 the loaders pin —
+             jszip  sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG
+             docx   sha384-4xaIisuLEy2lo2HkB2C4rEf7v8jbTb2kuogX6TkuEt9feTWKBSFSOzsqNNbV+sKh
+             pdf-lib sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI
+Downloaded:  2026-10-24, from node_modules.
+Size:        jszip 95 KB, docx 725 KB; loaded only by the tools that need them.
+License:     JSZip — MIT or GPLv3 (dual, MIT chosen here; LICENSE.markdown in
+             the npm package); docx — MIT (Copyright (c) 2016 Dolan).
+
+Used by:     js/lazyLibs.js loadPdfLib / loadJSZip / loadDocx — on the main
+             thread (OCR, Split/Compress zip output, PDF→Word, Quick Edit…).
+             Served from pdfree.io, not a CDN: 2026-10-01..24, 16 people
+             couldn't load them from cdnjs/jsdelivr/unpkg on a page pdfree.io
+             had served, 8 in mainland China or Hong Kong.
