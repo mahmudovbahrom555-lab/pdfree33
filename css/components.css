@@ -273,6 +273,31 @@ button,
   margin-top: 2px;
 }
 
+/* A file the browser refused to read when the tool ran: what happened and
+   the way back, in its row (js/files.js markUnreadable). A real button,
+   32 px high (WCAG 2.5.8 asks 24), --green-text: AA in both themes. */
+.file-item-unreadable {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  font-size: 12px;
+  color: var(--text);
+  margin-top: 4px;
+}
+.file-item-reselect {
+  min-height: 32px;
+  padding: 4px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--green-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.file-item-reselect:hover:not(:disabled) { background: var(--surface2); }
+
 .file-count    { font-size: 12px; color: var(--text2); margin: 8px 0 0 2px; }
 .reorder-hint  { font-size: 11px; color: var(--text3); margin: 4px 0 0 2px; }
 

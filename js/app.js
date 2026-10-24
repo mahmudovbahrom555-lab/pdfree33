@@ -610,6 +610,11 @@ function _onMergeBtnClick() {
   // other tested interaction), the only one in the app not already using
   // this pattern.
   requestAnimationFrame(async () => {
+    // A file the browser already refused to read: the same press would only
+    // repeat the error (SPLIT-DFCC: 15 times in 3 s) — point to the file and
+    // its "choose again" in the list instead.
+    const unreadable = selectedFiles.find(f => f._unreadable);
+    if (unreadable) { showToast(t('err_file_unreadable_marked', { name: unreadable.name }), 8000); return; }
     // A PDF that still needs its user password can't be processed: every
     // pdf-lib tool loads with ignoreEncryption, so compress/watermark/page
     // numbers/metadata silently returned a corrupt file (0 pages even with
