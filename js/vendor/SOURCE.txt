@@ -188,3 +188,47 @@ Used by:     js/lazyLibs.js loadPdfLib / loadJSZip / loadDocx — on the main
              Served from pdfree.io, not a CDN: 2026-10-01..24, 16 people
              couldn't load them from cdnjs/jsdelivr/unpkg on a page pdfree.io
              had served, 8 in mainland China or Hong Kong.
+
+----------------------------------------------------------------
+
+Files:       tesseract/tesseract.min.js, tesseract/worker.min.js,
+             tesseract/core/tesseract-core-simd-lstm.wasm.js, tesseract/core/tesseract-core-lstm.wasm.js,
+             tessdata/<lang>.traineddata.gz (23 languages), tesseract/LICENSE.md
+Source:      tesseract.js 5.1.1 (npm pack, dist/), tesseract.js-core 5.1.1 (the core tesseract.js
+             5.1.1 asks for, LSTM builds — PDFree runs OEM 1), @tesseract.js-data/<lang>/4.0.0_best_int
+             (the models tesseract.js 5.1.1 loads by default). All copied as is. Each core and model
+             file downloaded from jsdelivr AND unpkg: byte-identical on both (sha256 below, first 16
+             hex); tesseract.min.js = the npm build = sha384 pinned in js/ocrEngine.js.
+Downloaded:  2026-10-24.
+Size:        engine 0.19 MB, core 2 x 3.9 MB (a browser loads one), models 38 MB in all (a user
+             loads only theirs, 0.4-3.1 MB each). Served from pdfree.io: jsdelivr failed for 3 users
+             in mainland China in October.
+License:     Apache-2.0 (tesseract.js, tesseract.js-core, Tesseract's models).
+Used by:     js/ocrEngine.js (loadTesseract, createOcrWorker: workerPath/corePath/langPath).
+             cachePath unchanged — models already cached in IndexedDB are the same bytes.
+sha256:
+             8f04aa0cc81e7bde  tesseract/core/tesseract-core-lstm.wasm.js
+             ce20eda9533cbed1  tesseract/core/tesseract-core-simd-lstm.wasm.js
+             f4746c44b02342dd  tessdata/ara.traineddata.gz
+             b8a23f10c7de5008  tessdata/chi_sim.traineddata.gz
+             11fe2610dab05d8a  tessdata/chi_tra.traineddata.gz
+             306c4280d0cbed46  tessdata/deu.traineddata.gz
+             45b4cb346724ac17  tessdata/eng.traineddata.gz
+             b5847360e25f646c  tessdata/fas.traineddata.gz
+             d611139672b3752c  tessdata/fra.traineddata.gz
+             9c70b524200dae77  tessdata/heb.traineddata.gz
+             f3b6a0d320df38d8  tessdata/hin.traineddata.gz
+             a8896d2f584a5baa  tessdata/ind.traineddata.gz
+             f702fcfad297ce02  tessdata/ita.traineddata.gz
+             2b63ebfbf1484de4  tessdata/jpn.traineddata.gz
+             3a4f4df8df8f50f3  tessdata/jpn_vert.traineddata.gz
+             78c21276ab14c9bb  tessdata/kor.traineddata.gz
+             a2d904b6ddc4feb0  tessdata/nld.traineddata.gz
+             a20fdec4ff99d8f8  tessdata/pol.traineddata.gz
+             dacebc1386ddaaf8  tessdata/por.traineddata.gz
+             f51f5edc992249ff  tessdata/rus.traineddata.gz
+             40be52f97b5d4eb7  tessdata/spa.traineddata.gz
+             4550a5505184d1b7  tessdata/tha.traineddata.gz
+             384ba0dc28040451  tessdata/tur.traineddata.gz
+             16d7f4a0af872222  tessdata/uzb.traineddata.gz
+             2284f610f262a1b1  tessdata/vie.traineddata.gz
