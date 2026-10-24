@@ -262,6 +262,12 @@ button,
 .file-item-batch-status--processing { display: inline-block; animation: spin 1s linear infinite; }
 .file-item-batch-status--done       { color:var(--green-text); }
 .file-item-batch-status--error      { color: #c00; }
+/* A password-protected file's notice and its "How to fix" link: unstyled
+   before, the browser's own link blue was under 3:1 on the dark theme's rows
+   (2026-10-24). --green-text: AA in both themes. */
+.file-item-enc-warn { display: block; font-size: 12px; color: var(--text); margin-top: 2px; }
+.file-item-enc-help { color: var(--green-text); font-weight: 600; }
+
 .file-item-dup {
   display: inline-block;
   font-size: 11px;
