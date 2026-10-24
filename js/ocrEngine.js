@@ -10,11 +10,20 @@
 
 import { cjkJoin } from './cjkText.js';
 
-const TESSERACT_CDN = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
-// Subresource Integrity — same reasoning as every loader in js/lazyLibs.js (see that
-// file's header comment): CSP allowlists jsdelivr but doesn't verify WHAT it serves.
-// Hash computed by curling this exact pinned-version URL.
+// tesseract.js 5.1.1, its worker, its WASM core and the language models come
+// from pdfree.io (js/vendor/tesseract/, js/vendor/tessdata/), not jsdelivr:
+// "Failed to load Tesseract.js" for 4 people 2026-10-01..24, 3 in mainland
+// China, where jsdelivr is unreliable. The same files byte for byte (the
+// sha384 below is the jsdelivr one; core and models checked equal on
+// jsdelivr and unpkg, js/vendor/SOURCE.txt). cachePath unchanged (owner,
+// 2026-10-24): a model already in a browser's IndexedDB is the same model.
+const TESSERACT_URL = new URL('./vendor/tesseract/tesseract.min.js', import.meta.url).href;
 const TESSERACT_SRI = 'sha384-GJqSu7vueQ9qN0E9yLPb3Wtpd7OrgK8KmYzC8T1IysG1bcvxvIO4qtYR/D3A991F';
+const TESSERACT_PATHS = {
+  workerPath: new URL('./vendor/tesseract/worker.min.js', import.meta.url).href,
+  corePath:   new URL('./vendor/tesseract/core/', import.meta.url).href,
+  langPath:   new URL('./vendor/tessdata/', import.meta.url).href,
+};
 
 // Resolution profile per script family.
 // CJK ideographs are small and dense — need higher resolution for stroke preservation.
@@ -49,7 +58,7 @@ export function loadTesseract() {
   if (window.Tesseract) return Promise.resolve();
   _tesseractLoading ??= new Promise((resolve, reject) => {
     const s = document.createElement('script');
-    s.src         = TESSERACT_CDN;
+    s.src         = TESSERACT_URL;
     s.integrity   = TESSERACT_SRI;
     s.crossOrigin = 'anonymous';
     s.onload  = resolve;
@@ -94,6 +103,7 @@ export async function createOcrWorker(lang, logger) {
   const loadFailed = new Promise((_, reject) => { failLoad = reject; });
   let ready = false;
   const created = window.Tesseract.createWorker(_tesseractLang(lang), 1, {
+    ...TESSERACT_PATHS,
     // never `logger: undefined`: it overrides tesseract.js's own no-op, and
     // every progress message then threw "b is not a function" — dozens per
     // page of every PDF→Word scan, the bulk of the js_error flood
