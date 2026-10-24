@@ -166,6 +166,19 @@ export function trackToolError(tool, errorType = 'unknown') {
   _track('Tool Error', { tool, error_type: errorType });
 }
 
+/**
+ * A selected file the browser refused to read: why it had no copy (js/files.js
+ * `_copyState`: over_budget, copying, size_changed, copy_failed:<error>,
+ * removed, copied — or unknown) and its size band. Its own event, so Tool Error's
+ * columns stay where saved queries expect them.
+ */
+export function trackFileUnreadable(tool, copy = 'unknown', size = 0) {
+  // past 50 MB, bands at the copy budgets (150 MB small devices, 600 MB others)
+  const mb = size / 1048576;
+  const band = mb <= 50 ? _sizeBucket(size) : mb <= 150 ? '50–150 MB' : mb <= 600 ? '150–600 MB' : '> 600 MB';
+  _track('File Unreadable', { tool, copy, size: band });
+}
+
 /** Track install prompt shown / accepted / dismissed */
 export function trackInstallPrompt(action) {
   // action: 'shown' | 'accepted' | 'dismissed'

@@ -297,15 +297,22 @@ export function addFiles(files) {
 // (read when a file is added, not at import: the Node test runner has no navigator)
 const _copyBudget = () => (navigator.deviceMemory ?? 8) < 4 || /Android|iPhone|iPad/i.test(navigator.userAgent)
   ? 150 * 1048576 : 600 * 1048576;
+// Why a file has no copy, kept on it (`_copyState`) and sent with a
+// "couldn't read" error — the only causes left since the copy (SPLIT-DFCC,
+// 2026-10-23: a file over 50 MB unreadable 12 s after it was added — past the
+// budget, still being copied, or changed while copied; nothing told which).
+// Only what the code knows: no state at all is reported as 'unknown'.
 async function _keepCopy(f) {
   if (typeof navigator === 'undefined' || typeof f.stream !== 'function' && typeof f.arrayBuffer !== 'function') return;
   const copied = selectedFiles.reduce((sum, x) => sum + (x !== f && x._copy ? x.size : 0), 0);
-  if (copied + f.size > _copyBudget()) return;
+  if (copied + f.size > _copyBudget()) { f._copyState = 'over_budget'; return; }
+  f._copyState = 'copying';
   let copy;
   try {
     // streamed: the copy is the browser's (paged to disk for big files), not a JS buffer
     copy = f.stream ? await new Response(f.stream()).blob() : new Blob([await f.arrayBuffer()]);
   } catch (err) {
+    f._copyState = `copy_failed:${err?.name || 'unknown'}`;
     if (err?.name !== 'NotReadableError' && err?.name !== 'NotFoundError') return;
     const i = selectedFiles.indexOf(f);
     if (i === -1) return;
@@ -315,8 +322,10 @@ async function _keepCopy(f) {
     showToast(t('err_file_unreadable_added', { name: f.name }), 9000);
     return;
   }
-  if (copy.size !== f.size || !selectedFiles.includes(f)) return;
+  if (copy.size !== f.size) { f._copyState = 'size_changed'; return; }
+  if (!selectedFiles.includes(f)) { f._copyState = 'removed'; return; }
   f._copy = copy;
+  f._copyState = 'copied';
   for (const m of ['arrayBuffer', 'slice', 'stream', 'text']) {
     Object.defineProperty(f, m, { value: copy[m].bind(copy), configurable: true });
   }
