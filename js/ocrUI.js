@@ -10,7 +10,7 @@ import { saveHandoff } from './handoff.js';
 import { truncateMiddle, esc } from './utils.js';
 import { showCancelBtn, hideCancelBtn } from './ui.js';
 import { CJK_LANGS, COMPLEX_LANGS, primaryScript, loadTesseract, createOcrWorker,
-         detectOcrLanguage, recognizePage, ocrLangForLocale } from './ocrEngine.js';
+         detectOcrLanguage, recognizePage, ocrLangForLocale, ocrProbesForBrowser } from './ocrEngine.js';
 import { getLang } from './config.js';
 import { trackToolStart, trackToolSuccess, trackToolError } from './analytics.js';
 
@@ -730,7 +730,7 @@ async function _runOcr(file, gen) {
     } else {
       _updateProgress(14, t('ocr_detecting_lang'));
       const t0 = Date.now();
-      detection = await detectOcrLanguage(pdfDoc, worker, { hint: ocrLangForLocale(getLang()) });
+      detection = await detectOcrLanguage(pdfDoc, worker, { hint: ocrLangForLocale(getLang()), prefer: ocrProbesForBrowser() });
       const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
       const switchedNote = detection.metrics.switched
         ? t('ocr_switched_from', { lang: _getLangName(detection.metrics.initial) })
