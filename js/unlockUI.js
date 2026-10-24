@@ -42,8 +42,11 @@ export function hideUnlockOptions() {
   _file = null;
 }
 
+// No password to type for a restricted file qpdf couldn't decrypt here (files.js)
+const _needsPassword = file => !!file?._pdfMeta?.mayBeEncrypted && !file._decryptFailed;
+
 export function getUnlockParams() {
-  const needsPassword = !!_file?._pdfMeta?.mayBeEncrypted;
+  const needsPassword = _needsPassword(_file);
   const input = id('unlockPwd');
   const password = (input?.value || '').normalize('NFC');
   return { password, needsPassword };
@@ -62,8 +65,12 @@ document.addEventListener('pdfree:success', e => {
 // ── Render ────────────────────────────────────────────────────
 
 function _render(container) {
-  const needsPassword = !!_file?._pdfMeta?.mayBeEncrypted;
+  const needsPassword = _needsPassword(_file);
 
+  if (_file?._decryptFailed) {
+    container.innerHTML = infoBanner(t('err_encrypted_too_large'), 'warn');
+    return;
+  }
   if (!needsPassword) {
     container.innerHTML = infoBanner(t('unlk_no_password_needed'), 'clean');
     return;
