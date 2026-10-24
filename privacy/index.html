@@ -125,97 +125,115 @@
   <div class="legal-page">
     
     <h1>Privacy Policy</h1>
-    <p class="updated">Last updated: May 7, 2026</p>
+    <p class="updated">Last updated: October 25, 2026</p>
 
     <div class="highlight-box">
-      <p><strong>TL;DR:</strong> PDFree processes everything in your browser. We don't collect, store, or transmit your files or personal data. Ever.</p>
+      <p><strong>TL;DR:</strong> Your files are processed in your browser and are never uploaded — not to us, not to anyone. To improve PDFree, we count anonymous usage events (for example, which tool was used and whether it worked). These never include your files, their contents, their names, or anything that identifies you.</p>
     </div>
 
     <h2>Our Privacy Commitment</h2>
-    
-    <p>PDFree is built on a simple principle: <strong>your documents are yours</strong>. We designed this service to operate entirely on your device (client-side) so that your files never need to leave your computer, tablet, or phone.</p>
 
-    <h2>What Data We DON'T Collect</h2>
-    
-    <p>Unlike most online PDF tools, PDFree does not:</p>
-    
+    <p>PDFree is built on a simple principle: <strong>your documents are yours</strong>. Every tool runs entirely on your device (client-side), so your files never need to leave your computer, tablet, or phone.</p>
+
+    <h2>What Never Leaves Your Device</h2>
+
     <ul>
-      <li><strong>Upload your files:</strong> All PDF processing happens in your browser using JavaScript and WebAssembly. Your documents never touch our servers because we don't have document-processing servers.</li>
-      <li><strong>Store your files:</strong> Files exist only in your browser's temporary memory (RAM) while you're using the tool. Close the tab and they're gone — no traces, no backups.</li>
-      <li><strong>Track your activity:</strong> We don't use analytics, advertising pixels, or third-party tracking scripts. We don't know which tools you use or how often.</li>
-      <li><strong>Collect personal information:</strong> No email, no name, no account required. We don't ask for it, and we don't want it.</li>
-      <li><strong>Use cookies for tracking:</strong> The only data stored locally is your UI preferences (like theme choice) using browser localStorage. This never leaves your device.</li>
+      <li><strong>Your files:</strong> All PDF processing happens in your browser using JavaScript and WebAssembly. We have no document-processing servers, so your documents never reach us.</li>
+      <li><strong>Their contents and names:</strong> Text, images, page contents and file names are never sent anywhere.</li>
+      <li><strong>What you type into a tool:</strong> Passwords for Protect and Unlock, form values in Fill, text you add to a page — all stay on your device.</li>
+      <li><strong>Personal information:</strong> No account, no email, no name required. We don't ask for it.</li>
     </ul>
+
+    <h2>What We Count to Improve PDFree</h2>
+
+    <p>To find out which tools fail, on which kinds of files and in which languages, and how long processing takes — so we can fix what doesn't work — PDFree sends small, anonymous usage events to our own server. An event contains only:</p>
+    <ul>
+      <li>what happened: a tool was opened, a file was added, processing started, finished, failed or was cancelled, a result was downloaded;</li>
+      <li>the tool's name, and for a failure, its category (for example "password-protected file") or, for an unexpected one, the first 60 characters of the program's technical error message (for example "Invalid PDF structure") — messages from the PDF libraries about what failed, not your document's text or name;</li>
+      <li>the file's size as a range (for example "1–10 MB") and the processing time rounded to 5 seconds;</li>
+      <li>the site's language, and — added by our server — your country, your device type (desktop or phone) and browser family (for example "Chrome");</li>
+      <li>a random key created when the page loads and gone when you reload or close it, used only to tell which events belong to the same visit. It is not stored on your device and cannot link one visit to another;</li>
+      <li>for the site's tool search: how many tools matched, and, only when nothing matched, the text you typed (up to 50 characters), so we can add what people are looking for. Please don't type personal information into the search box.</li>
+    </ul>
+    <p>We do <strong>not</strong> store IP addresses, use cookies, create a persistent identifier, fingerprint your browser, or sell or share this data for advertising. Visits from automated browsers are not counted. The events are kept in Cloudflare Workers Analytics Engine and deleted automatically after about three months.</p>
+    <p>We also use <strong>Cloudflare Web Analytics</strong> to count page views. It doesn't use cookies, and Cloudflare states it doesn't fingerprint visitors (<a href="https://www.cloudflare.com/web-analytics/">cloudflare.com/web-analytics</a>).</p>
+
+    <h2>Feedback You Choose to Send</h2>
+
+    <p>If you use the feedback form, we receive what you write, your email address if you choose to give one (only to reply to you), the tool and the error message if you're reporting a failure, the page's address, your device type and browser family, and a screenshot only if you attach one — please make sure it doesn't show anything confidential. Feedback is delivered to the developer through Telegram and is not stored in any database of ours.</p>
+
+    <h2>What Is Stored on Your Device</h2>
+
+    <p>Some things are kept in your browser's storage so the site works better for you. None of it is sent to us:</p>
+    <ul>
+      <li>your theme (light or dark) and settings you saved for a tool;</li>
+      <li>your OCR language choices;</li>
+      <li>in Fill: a draft of the form values you're typing (deleted once you download the filled PDF), and your signature only if you choose to save it (you can remove it in Fill at any time);</li>
+      <li>downloaded resources that make tools faster next time: OCR language models, fonts for searchable PDFs, and the site itself for offline use;</li>
+      <li>when you click "Continue in…" to pass a result to another tool, that result is kept for up to 5 minutes so the next tool can open it, then deleted.</li>
+    </ul>
+    <p>You can clear all of this at any time in your browser's settings (site data for pdfree.io).</p>
 
     <h2>Technical Details: How Privacy Works</h2>
-    
+
     <h3>Client-Side Processing</h3>
-    <p>PDFree uses <strong>pdf-lib</strong> and <strong>pdf.js</strong> — JavaScript libraries that run entirely in your browser. When you upload a PDF:</p>
+    <p>PDFree uses open-source libraries such as <strong>pdf-lib</strong> and <strong>pdf.js</strong> that run entirely in your browser. When you open a PDF in a tool:</p>
     <ol>
-      <li>The file is loaded into your browser's memory (RAM)</li>
+      <li>The file is loaded into your browser's memory</li>
       <li>JavaScript processes the file (merge, split, compress, etc.)</li>
-      <li>A new PDF is generated in memory</li>
+      <li>A new file is generated in memory</li>
       <li>You download the result directly from your browser</li>
     </ol>
-    <p>At no point does the file leave your device or get transmitted over the internet to any server.</p>
+    <p>At no point is the file transmitted over the internet to any server.</p>
 
     <h3>What Happens to Your Files</h3>
-    <p>Once you close or refresh the browser tab, all file data is immediately cleared from memory. There are no server-side logs, no cached copies, and no "temp folders" where your documents could linger.</p>
-
-    <h3>LocalStorage</h3>
-    <p>PDFree stores minimal UI state in your browser's localStorage:</p>
-    <ul>
-      <li>Theme preference (light/dark mode)</li>
-      <li>Tool-specific settings (like last-used compression level)</li>
-      <li>PWA installation state</li>
-    </ul>
-    <p>This data never leaves your device and can be cleared at any time through your browser's settings.</p>
+    <p>When you close or reload the tab, your files are cleared from memory. The only exception is a result you chose to pass to another tool, kept on your device for up to 5 minutes (see above). There are no server-side copies, because no server ever receives your files.</p>
 
     <h2>Third-Party Services</h2>
-    
-    <p>PDFree loads resources from these external domains:</p>
-    
+
+    <p>Like any website, PDFree loads some code and data from other servers. These requests carry the usual technical information of any web request (such as your IP address) to that server, but <strong>never your files</strong>:</p>
     <ul>
-      <li><strong>cdn.jsdelivr.net:</strong> To deliver pdf-lib and pdf.js libraries (open-source PDF processing tools)</li>
-      <li><strong>Fonts:</strong> Served directly from pdfree.io — no Google Fonts, no external font requests</li>
+      <li><strong>Cloudflare</strong> hosts pdfree.io. The OCR engine, its language models and the fonts for searchable PDFs are served from pdfree.io itself.</li>
+      <li><strong>cdnjs.cloudflare.com</strong> delivers pdf.js.</li>
+      <li><strong>cdn.jsdelivr.net</strong> and <strong>unpkg.com</strong> deliver open-source libraries some tools load when you use them (for example the Excel, PowerPoint and Word converters).</li>
+      <li><strong>huggingface.co</strong> delivers the name-detection model when you use automatic name detection in Redact. The model runs in your browser; your document is not sent.</li>
+      <li><strong>Telegram</strong> and <strong>WhatsApp</strong> are opened only if you click a share button.</li>
     </ul>
-    
-    <p>These are standard CDN services that do not track or log your usage in a way that can be attributed to you personally.</p>
 
     <h2>Data Security</h2>
-    
+
     <p>Since your files never leave your device, the primary security model is your device's security:</p>
-    
+
     <ul>
       <li><strong>HTTPS encryption:</strong> PDFree.io is served over HTTPS to prevent man-in-the-middle attacks</li>
       <li><strong>Content Security Policy:</strong> Strict CSP headers prevent cross-site scripting (XSS) attacks</li>
-      <li><strong>No server-side attack surface:</strong> Because there's no server processing files, there's no server to hack</li>
+      <li><strong>No server-side attack surface for documents:</strong> Because no server processes files, there's no server holding them to hack</li>
     </ul>
-    
+
     <p>Your responsibility: Keep your device secure with up-to-date software, strong passwords, and antivirus protection.</p>
 
     <h2>Children's Privacy</h2>
-    
-    <p>PDFree does not knowingly collect any information from anyone, including children under 13. Since we don't collect data at all, there's nothing to protect or delete.</p>
+
+    <p>PDFree does not knowingly collect personal information from anyone, including children under 13. The usage events described above are anonymous.</p>
 
     <h2>Changes to This Policy</h2>
-    
-    <p>If we ever change our privacy practices (for example, if we add optional analytics with your consent), we will update this page and note the revision date at the top.</p>
+
+    <p>If our practices change, we will update this page before the change takes effect and note the revision date at the top.</p>
 
     <h2>Compliance</h2>
-    
-    <p><strong>GDPR (EU):</strong> PDFree's architecture makes it GDPR-compliant by design. We cannot violate data subject rights because we don't have your data.</p>
-    
-    <p><strong>CCPA (California):</strong> We do not sell personal information because we do not collect personal information.</p>
+
+    <p><strong>GDPR (EU):</strong> Your documents are never processed by us — they stay on your device. Our usage statistics are designed to avoid personal data: no cookies, no stored IP addresses, no identifiers that link visits.</p>
+
+    <p><strong>CCPA (California):</strong> We do not sell or share personal information.</p>
 
     <h2>Contact</h2>
-    
+
     <p>If you have questions about this privacy policy or PDFree's privacy practices, you can reach us at:</p>
-    
+
     <p><strong>Email:</strong> <a href="mailto:privacy@pdfree.io">privacy@pdfree.io</a></p>
 
     <div class="highlight-box" style="margin-top: 40px;">
-      <p><strong>Bottom line:</strong> We built PDFree to be the PDF tool we'd want to use with our own confidential documents. Your privacy isn't a feature — it's the foundation.</p>
+      <p><strong>Bottom line:</strong> We built PDFree to be the PDF tool we'd want to use with our own confidential documents. Your files never leave your device; what we count is anonymous and only there to make PDFree better.</p>
     </div>
 
   </div>

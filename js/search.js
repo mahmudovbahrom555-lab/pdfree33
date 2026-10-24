@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Pure search logic — no DOM, no side-effects on import.
 
-const MISS_KEY = 'pdfree_search_misses';
-
 // Fold accented/diacritic characters to their plain-Latin base for matching
 // (never for display) — e.g. Turkish "sıkıştır" (compress) should still be
 // found by a user typing the ASCII "sikistir" on a non-Turkish keyboard, or
@@ -228,19 +226,3 @@ function _search(q, index) {
     .sort((a, b) => b.score - a.score);
 }
 
-/**
- * Persist a missed query to localStorage for product analytics.
- * Cap at 200 entries. Stored as JSON array of {q, ts}.
- * Read in DevTools console:
- *   JSON.parse(localStorage.getItem('pdfree_search_misses'))
- */
-export function trackMiss(query) {
-  try {
-    const raw    = localStorage.getItem(MISS_KEY);
-    const misses = raw ? JSON.parse(raw) : [];
-    misses.push({ q: query.trim(), ts: Date.now() });
-    localStorage.setItem(MISS_KEY, JSON.stringify(misses.slice(-200)));
-  } catch {
-    // localStorage may be blocked in private mode
-  }
-}

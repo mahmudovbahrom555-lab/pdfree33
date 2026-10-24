@@ -12,8 +12,6 @@
 //  The modal is injected once on first open and reused.
 //  Submissions POST to /api/feedback (same-origin Cloudflare Worker route),
 //  which relays them to Telegram — no database, nothing stored on our side.
-//  A lightweight aggregate event also goes to Plausible for trend counts
-//  (type only, never the message text).
 //  Email is optional and only used if the user wants a reply.
 //
 //  Copy is intentionally personal (real name, "I read this myself") rather
@@ -255,12 +253,6 @@ async function _sendFeedback(modal) {
   }
 
   if (send) send.disabled = true;
-
-  try {
-    if (typeof window.plausible === 'function') {
-      window.plausible('Feedback', { props: { type, tool: _context.tool } });
-    }
-  } catch { /* never fail */ }
 
   try {
     await fetch('/api/feedback', {
