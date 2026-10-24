@@ -10,7 +10,7 @@ import { t, tp } from './i18n.js';
 import { setProgress, hideProgress, setButtonProcessing, setButtonReady,
          showCancelBtn, hideCancelBtn, showToast, startLongOpHint, clearLongOpHint } from './ui.js';
 import { selectedFiles, setFilesLocked, renderList } from './files.js';
-import { trackToolError, trackBatchStart, trackBatchSuccess, trackRepair } from './analytics.js';
+import { trackToolError, trackBatchStart, trackBatchSuccess, trackRepair, trackFileUnreadable } from './analytics.js';
 import { TOOLS } from './config.js';
 import { maxFileMb } from './fileLimits.js';
 import { getRunner, getWorkerTool } from './toolRegistry.js';
@@ -2546,6 +2546,7 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
       // to fix; never the file's name (the unreadable-file message holds it)
       const why = String(err?.message ?? err ?? '');
       trackToolError(tool, `batch_item_failed: ${why.startsWith(_UNREADABLE) ? 'file_unreadable' : why.slice(0, 60)}`);
+      if (why.startsWith(_UNREADABLE)) _reportUnreadable(tool, why.slice(_UNREADABLE.length));
     }
     renderList(true);
   }
@@ -5965,13 +5966,24 @@ function _errorId(tool, errorType) {
 // shown as is on a Merge error card (MERGE-C308, 2026-10-13), the user left
 // to guess. Its name goes with the error so they know which file to re-add.
 const _UNREADABLE = 'FILE_UNREADABLE:';
+let _unreadable = null;   // the last file _readSelected couldn't read, for _handleError's report
 async function _readSelected(file) {
   try {
     return await file.arrayBuffer();
   } catch (err) {
-    if (err?.name === 'NotReadableError' || err?.name === 'NotFoundError') throw new Error(_UNREADABLE + file.name, { cause: err });
+    if (err?.name === 'NotReadableError' || err?.name === 'NotFoundError') {
+      _unreadable = { name: file.name, copy: file._copyState ?? 'unknown', size: file.size };
+      throw new Error(_UNREADABLE + file.name, { cause: err });
+    }
     throw err;
   }
+}
+// why the file named in a "couldn't read" message had no copy — 'unknown'
+// unless _readSelected saw that very file fail
+function _reportUnreadable(tool, name) {
+  const seen = _unreadable?.name === name ? _unreadable : null;
+  trackFileUnreadable(tool, seen?.copy ?? 'unknown', seen?.size ?? 0);
+  _unreadable = null;
 }
 
 function _handleError(tool, message, errorType = null) {
@@ -5993,6 +6005,7 @@ function _handleError(tool, message, errorType = null) {
   } else if (message?.startsWith(_UNREADABLE)) {
     friendly   = t('err_file_unreadable', { name: message.slice(_UNREADABLE.length) });
     errorType  = 'file_unreadable';
+    _reportUnreadable(tool, message.slice(_UNREADABLE.length));
   } else if (
     // the same refusal read elsewhere (a worker, a UI module): Chrome's text,
     // and Firefox's and Safari's "The I/O read operation failed"
@@ -6000,6 +6013,7 @@ function _handleError(tool, message, errorType = null) {
   ) {
     friendly   = t('err_file_unreadable_any');
     errorType  = 'file_unreadable';
+    _reportUnreadable(tool, null);
   } else if (message === 'Worker error' || /Failed to execute 'importScripts'/.test(message ?? '')) {
     // A worker whose script didn't load — the connection dropped before the
     // tool's code was in the cache (see warmToolScripts): "Worker error" from

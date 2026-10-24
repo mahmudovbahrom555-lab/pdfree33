@@ -17,11 +17,16 @@
 //  PDF→JPG ran on an empty list — "Cannot read properties of undefined
 //  (reading 'size')", PDF2JPG-2431, 8 times in two weeks from India.
 //
+//  And when a file can't be copied (past the copy budget: 150 MB on a device
+//  with under 4 GB of memory) and then can't be read, the error says why in
+//  a "File Unreadable" event (SPLIT-DFCC, 2026-10-23: the cause couldn't be
+//  told). Here: 2 GB, a 160 MB PDF, deleted after it was added → copy=over_budget.
+//
 //  Run: node tests/e2e/file-unreadable.e2e.mjs   (dist/ served on :8934)
 // ============================================================
 
 import { chromium } from 'playwright';
-import { appendFileSync, copyFileSync, mkdtempSync, rmSync } from 'fs';
+import { appendFileSync, closeSync, copyFileSync, mkdtempSync, openSync, rmSync, writeSync } from 'fs';
 import { tmpdir } from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -104,6 +109,43 @@ try {
     await page.waitForTimeout(3000);
     const toast = await page.evaluate(() => document.querySelector('#toast')?.innerText || '');
     if (/reading 'size'|Error ID/.test(toast) || errors.length) throw new Error(`toast: ${toast} | errors: ${errors}`);
+  });
+  await test('a file past the copy budget, then unreadable: the error says why (copy=over_budget)', async () => {
+    // a real PDF of 160 MB: one page, its content stream 160 MB of spaces
+    const big = path.join(dir, 'big.pdf'), N = 160 * 1048576, fd = openSync(big, 'w');
+    const head = '%PDF-1.4\n', objs = ['<</Type/Catalog/Pages 2 0 R>>', '<</Type/Pages/Kids[3 0 R]/Count 1>>',
+      '<</Type/Page/Parent 2 0 R/MediaBox[0 0 200 200]/Contents 4 0 R>>'];
+    let at = 0; const offs = []; const put = t => { writeSync(fd, t); at += Buffer.byteLength(t); };
+    put(head);
+    objs.forEach((o, i) => { offs.push(at); put(`${i + 1} 0 obj ${o} endobj\n`); });
+    offs.push(at); put(`4 0 obj <</Length ${N}>> stream\n`);
+    const chunk = Buffer.alloc(8 * 1048576, 0x20);
+    for (let k = 0; k < N / chunk.length; k++) { writeSync(fd, chunk); at += chunk.length; }
+    put('\nendstream endobj\n');
+    const xref = at;
+    put(`xref\n0 5\n0000000000 65535 f \n${offs.map(o => String(o).padStart(10, '0') + ' 00000 n \n').join('')}trailer <</Size 5/Root 1 0 R>>\nstartxref\n${xref}\n%%EOF\n`);
+    closeSync(fd);
+    const page = await (await browser.newContext({ serviceWorkers: 'block' })).newPage();
+    const events = [];
+    await page.route('**/api/analytics', r => { events.push(JSON.parse(r.request().postData() || '{}')); r.fulfill({ status: 204 }); });
+    await page.addInitScript(() => {
+      Object.defineProperty(Navigator.prototype, 'webdriver', { get: () => false });   // analytics on
+      Object.defineProperty(Navigator.prototype, 'deviceMemory', { get: () => 2 });    // the 150 MB budget
+      document.addEventListener('pdfree:error', e => { window.__error = e.detail.message; });
+    });
+    await page.goto(`${BASE_URL}/split-pdf/`, { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', big);
+    await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 60000 });
+    await page.waitForTimeout(2000);
+    rmSync(big);
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__error, null, { timeout: 60000 });
+    await page.waitForTimeout(500);
+    const ev = events.find(e => e.event === 'File Unreadable');
+    if (!ev) throw new Error(`no File Unreadable event: ${JSON.stringify(events.map(e => e.event))}`);
+    if (ev.props.tool !== 'split' || ev.props.copy !== 'over_budget' || ev.props.size !== '150–600 MB') throw new Error(JSON.stringify(ev.props));
+    const err = events.find(e => e.event === 'Tool Error');
+    if (err?.props.error_type !== 'file_unreadable' || 'copy' in err.props) throw new Error(`Tool Error changed: ${JSON.stringify(err?.props)}`);
   });
 } finally {
   await browser.close();
