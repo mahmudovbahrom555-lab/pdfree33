@@ -824,8 +824,13 @@ button,
   opacity: 1;
   transform: translate(-50%, 0);
 }
-.toast.toast--clickable {
+/* taps only while it shows: it fades by losing .show alone, and a faded one
+   still caught taps — on a phone over the lower half of the sticky button,
+   re-running the old toast's action (2026-10-24) */
+.toast.toast--clickable.show {
   pointer-events: auto;
+}
+.toast.toast--clickable {
   cursor: pointer;
   text-decoration: underline dotted;
   text-underline-offset: 3px;

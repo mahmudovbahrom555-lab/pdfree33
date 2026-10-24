@@ -33,6 +33,13 @@
 //  height/options-panel shape, confirming the fix isn't accidentally
 //  tuned to Merge's specific layout).
 //
+//  And a toast you can tap (every error's — it opens the report, or a
+//  repair) kept catching taps after it faded (2026-10-24): it only lost
+//  .show, its pointer-events stayed on, and on a phone it sits over the
+//  lower half of the sticky button — a tap there re-ran the old toast's
+//  action instead of the button. Checked: once it's gone, the button gets
+//  the tap.
+//
 //  Requires: dist/ already built (`python3 scripts/build.py`) and served
 //  at PDFREE_BASE_URL (default http://localhost:8934).
 //
@@ -161,6 +168,31 @@ for (const slug of ['merge-pdf', 'watermark-pdf']) {
     }
   });
 }
+
+await test('a faded tappable toast no longer catches taps on the sticky button', async () => {
+  const context = await browser.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    await page.goto(`${BASE_URL}/split-pdf/`, { waitUntil: 'load', timeout: 30000 });
+    await page.setInputFiles('#fileInput', FILE_1);
+    await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 30000 });
+    // a toast with an action, as every error shows; let it fade
+    await page.evaluate(async () => { (await import('/js/ui.js')).showToast('error', 1000, () => { window.__oldToastAction = true; }); });
+    await page.waitForTimeout(2000);
+    const r = await page.evaluate(() => {
+      const t = document.querySelector('#toast').getBoundingClientRect(), b = document.querySelector('#mergeBtn').getBoundingClientRect();
+      // a point on the button the toast's box covers
+      const x = Math.max(t.left, b.left) + 5, y = (Math.max(t.top, b.top) + Math.min(t.bottom, b.bottom)) / 2;
+      return { overlaps: t.top < b.bottom && t.bottom > b.top, hit: document.elementFromPoint(x, y)?.closest('#mergeBtn, #toast')?.id, x, y };
+    });
+    if (!r.overlaps) throw new Error('the toast no longer overlaps the button here — move the check');
+    expect(r.hit).toBe('mergeBtn');
+    await page.mouse.click(r.x, r.y);
+    expect(await page.evaluate(() => !!window.__oldToastAction)).toBe(false);
+  } finally {
+    await context.close();
+  }
+});
 
 await browser.close();
 
