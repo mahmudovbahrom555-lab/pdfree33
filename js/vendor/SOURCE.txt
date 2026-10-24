@@ -232,3 +232,30 @@ sha256:
              384ba0dc28040451  tessdata/tur.traineddata.gz
              16d7f4a0af872222  tessdata/uzb.traineddata.gz
              2284f610f262a1b1  tessdata/vie.traineddata.gz
+
+----------------------------------------------------------------
+
+Files:       noto/<family>-<version>.ttf (9 fonts), noto/<family>.OFL.txt
+Source:      Google Fonts — the exact TTFs js/ocrUI.js fetched from fonts.gstatic.com
+             (fonts.gstatic.com/s/<family>/<version>/…ttf): Noto Sans v42, Noto Sans Arabic v33,
+             Noto Sans JP v56, SC v40, TC v39, KR v39, Devanagari v30, Thai v29, Hebrew v50.
+             Copied as is; downloaded twice (a plain client and a Chrome/Edge User-Agent with
+             Origin pdfree.io): byte-identical (sha256 below, first 16 hex). Licence texts from
+             github.com/google/fonts ofl/<family>/OFL.txt.
+Downloaded:  2026-10-24.
+Size:        53 MB in all; a user loads only the font of the OCR language (0.05-17.8 MB, CJK
+             9-18 MB), once — IndexedDB 'pdfree-ocr-fonts' keeps it, keyed by language, so a
+             font already cached from fonts.gstatic.com is the same bytes and is kept.
+License:     SIL Open Font License 1.1.
+Used by:     js/ocrUI.js (NOTO_FONT_URLS) — the invisible text layer of a searchable PDF,
+             embedded as a subset. Served from pdfree.io like the OCR engine and models.
+sha256:
+             7b8cac46a1c86d25  noto/notosans-v42.ttf
+             d3877dbb0b285118  noto/notosansarabic-v33.ttf
+             85a4a9f334aeaf3b  noto/notosansdevanagari-v30.ttf
+             a5cc5ce90ed4f639  noto/notosanshebrew-v50.ttf
+             04b2ac921347b12c  noto/notosansjp-v56.ttf
+             84f383e0a0fda713  noto/notosanskr-v39.ttf
+             e80613a35583f59b  noto/notosanssc-v40.ttf
+             d1e21c6f2fd40466  noto/notosanstc-v39.ttf
+             974c4519bb0321cc  noto/notosansthai-v29.ttf

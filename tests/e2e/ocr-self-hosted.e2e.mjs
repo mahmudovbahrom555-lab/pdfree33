@@ -2,12 +2,14 @@
 // ============================================================
 //  tests/e2e/ocr-self-hosted.e2e.mjs — the OCR engine, its WASM core and its
 //  language models come from pdfree.io, not jsdelivr (2026-10-24: "Failed to
-//  load Tesseract.js" for 4 people in October, 3 in mainland China).
+//  load Tesseract.js" for 4 people in October, 3 in mainland China), and so
+//  does the Noto font of the searchable PDF's text layer (was fonts.gstatic.com).
 //
-//  - a first visit OCRs a scan with jsdelivr, unpkg and cdnjs refused
-//    (pdf.js itself and Google's fonts aside: their own steps);
-//  - a second run doesn't download the model again: it is in IndexedDB under
-//    the same cachePath as before (unchanged on purpose — same bytes);
+//  - a first visit OCRs a scan with jsdelivr, unpkg, cdnjs and fonts.gstatic
+//    refused (pdf.js itself aside: its own step), its text layer in Noto Sans
+//    Arabic from pdfree.io;
+//  - a second run downloads neither the model nor the font again: both are in
+//    IndexedDB under the same keys as before (unchanged on purpose — same bytes);
 //  - a model download cut once by the network comes through on the next run;
 //  - opening pages loads none of the engine.
 //
@@ -28,9 +30,9 @@ async function test(name, fn) {
   catch (e) { console.error(`  ✗ ${name}\n    ${e.message}`); failed++; }
 }
 
-// every CDN refused but pdf.js (cdnjs) and Noto fonts (Google) — not this step
+// every CDN refused but pdf.js (cdnjs) — not this step
 async function refuseCdns(page, refused) {
-  for (const host of ['cdn.jsdelivr.net', 'unpkg.com', 'cdnjs.cloudflare.com']) {
+  for (const host of ['cdn.jsdelivr.net', 'unpkg.com', 'cdnjs.cloudflare.com', 'fonts.gstatic.com']) {
     await page.route(`**://${host}/**`, r => {
       if (/pdf\.js\/3\.11\.174\/pdf\.min\.js$/.test(r.request().url())) return r.continue();
       refused.push(r.request().url()); return r.abort();
@@ -38,7 +40,8 @@ async function refuseCdns(page, refused) {
   }
 }
 
-// one OCR run of the Arabic scan; resolves to its searchable PDF's text
+// one OCR run of the Arabic scan; resolves to its searchable PDF's text and
+// the names of its fonts
 async function ocr(page) {
   await page.evaluate(() => { window.__pdf = null; window.__error = null; });
   await page.goto(`${BASE_URL}/ocr-pdf/`, { waitUntil: 'load' });
@@ -51,8 +54,16 @@ async function ocr(page) {
   const err = await page.evaluate(() => window.__error);
   if (err) throw new Error(err);
   return page.evaluate(async () => {
-    const doc = await window.pdfjsLib.getDocument({ data: new Uint8Array(await window.__pdf.arrayBuffer()) }).promise;
-    return (await (await doc.getPage(1)).getTextContent()).items.map(i => i.str).join(' ');
+    const bytes = new Uint8Array(await window.__pdf.arrayBuffer());
+    const doc = await window.pdfjsLib.getDocument({ data: bytes.slice() }).promise;
+    const text = (await (await doc.getPage(1)).getTextContent()).items.map(i => i.str).join(' ');
+    // object streams hide /BaseFont from the raw bytes: read the font dicts (pdf-lib is loaded for OCR)
+    const pdf = await window.PDFLib.PDFDocument.load(bytes);
+    const { PDFDict, PDFName } = window.PDFLib;
+    const fonts = pdf.context.enumerateIndirectObjects()
+      .filter(([, o]) => o instanceof PDFDict && o.get(PDFName.of('Type')) === PDFName.of('Font'))
+      .map(([, o]) => String(o.get(PDFName.of('BaseFont'))));
+    return { text, fonts };
   });
 }
 
@@ -65,20 +76,27 @@ const hook = () => {
 const browser = await chromium.launch();
 console.log(`\nOCR from pdfree.io E2E (real browser, ${BASE_URL}):`);
 
-await test('a first visit OCRs a scan with every CDN refused; a second run reads the model from the cache', async () => {
+await test('a first visit OCRs a scan with every CDN refused; a second run reads the model and the font from the cache', async () => {
   const ctx = await browser.newContext({ serviceWorkers: 'block' });
   const page = await ctx.newPage();
-  const refused = [], models = [];
+  const refused = [], models = [], fonts = [];
   await refuseCdns(page, refused);
-  page.on('request', r => { if (/tessdata\/.*traineddata/.test(r.url())) models.push(r.url()); });
+  page.on('request', r => {
+    if (/tessdata\/.*traineddata/.test(r.url())) models.push(r.url());
+    if (/\.ttf(\?|$)/.test(r.url())) fonts.push(r.url());
+  });
   await page.addInitScript(hook);
   try {
-    const text = await ocr(page);
+    const { text, fonts: embedded } = await ocr(page);
     if (!/[؀-ۿ]{3}/.test(text)) throw new Error(`no Arabic in the text layer: ${text.slice(0, 120)} — refused: ${refused.join(', ')}`);
     if (!models.some(u => u.includes('/js/vendor/tessdata/ara.traineddata'))) throw new Error(`the model didn't come from pdfree.io: ${models.join(', ')}`);
-    const first = models.length;
-    await ocr(page);
-    if (models.length !== first) throw new Error(`the second run downloaded the model again: ${models.slice(first).join(', ')}`);
+    if (!fonts.some(u => u.includes('/js/vendor/noto/notosansarabic-v33.ttf'))) throw new Error(`the font didn't come from pdfree.io: ${fonts.join(', ') || 'no font request'}`);
+    if (!embedded.some(f => /NotoSansArabic/.test(f))) throw new Error(`the text layer isn't in Noto Sans Arabic: ${embedded.join(', ')}`);
+    const firstModels = models.length, firstFonts = fonts.length;
+    const again = await ocr(page);
+    if (models.length !== firstModels) throw new Error(`the second run downloaded the model again: ${models.slice(firstModels).join(', ')}`);
+    if (fonts.length !== firstFonts) throw new Error(`the second run downloaded the font again: ${fonts.slice(firstFonts).join(', ')}`);
+    if (!again.fonts.some(f => /NotoSansArabic/.test(f))) throw new Error(`second run: the text layer isn't in Noto Sans Arabic: ${again.fonts.join(', ')}`);
   } finally {
     await ctx.close();
   }
@@ -94,18 +112,18 @@ await test('a model download cut once by the network comes through on the next r
     let firstFailed = false;
     try { await ocr(page); } catch { firstFailed = true; }
     if (!firstFailed) throw new Error('the first download was not cut — the test tests nothing');
-    const text = await ocr(page);
+    const { text } = await ocr(page);
     if (!/[؀-ۿ]{3}/.test(text)) throw new Error(`second run: no Arabic: ${text.slice(0, 120)}`);
   } finally {
     await ctx.close();
   }
 });
 
-await test('opening pages loads none of the OCR engine', async () => {
+await test('opening pages loads none of the OCR engine or its fonts', async () => {
   const ctx = await browser.newContext({ serviceWorkers: 'block' });
   const page = await ctx.newPage();
   const seen = [];
-  page.on('request', r => { if (/tesseract|tessdata/.test(r.url())) seen.push(r.url()); });
+  page.on('request', r => { if (/tesseract|tessdata|vendor\/noto/.test(r.url())) seen.push(r.url()); });
   try {
     for (const url of ['/', '/pdf-to-word/', '/merge-pdf/']) { await page.goto(BASE_URL + url, { waitUntil: 'networkidle' }); await page.waitForTimeout(1500); }
     if (seen.length) throw new Error(`loaded without being needed: ${seen.join(', ')}`);
