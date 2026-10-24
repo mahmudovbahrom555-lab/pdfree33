@@ -20,7 +20,9 @@
 //  And when a file can't be copied (past the copy budget: 150 MB on a device
 //  with under 4 GB of memory) and then can't be read, the error says why in
 //  a "File Unreadable" event (SPLIT-DFCC, 2026-10-23: the cause couldn't be
-//  told). Here: 2 GB, a 160 MB PDF, deleted after it was added → copy=over_budget.
+//  told). Here: 2 GB, a 160 MB PDF, deleted after it was added → copy=over_budget;
+//  then the file is marked in the list, a second press doesn't repeat the error,
+//  and "choose again" puts a new file in its place, which runs.
 //
 //  Run: node tests/e2e/file-unreadable.e2e.mjs   (dist/ served on :8934)
 // ============================================================
@@ -146,6 +148,29 @@ try {
     if (ev.props.tool !== 'split' || ev.props.copy !== 'over_budget' || ev.props.size !== '150–600 MB') throw new Error(JSON.stringify(ev.props));
     const err = events.find(e => e.event === 'Tool Error');
     if (err?.props.error_type !== 'file_unreadable' || 'copy' in err.props) throw new Error(`Tool Error changed: ${JSON.stringify(err?.props)}`);
+
+    // and the way back: the file is marked in the list; the button doesn't
+    // repeat the error; "choose again" puts a new file in its place, which runs
+    if (!await page.locator('[data-reselect="0"]').count()) throw new Error('no "choose again" on the unreadable file');
+    await page.evaluate(() => { window.__error = null; });
+    await page.click('#mergeBtn');
+    await page.waitForTimeout(1500);
+    if (events.filter(e => e.event === 'Tool Error').length !== 1) throw new Error('the press repeated the error');
+    const toast = await page.evaluate(() => document.querySelector('#toast')?.innerText || '');
+    if (!toast.includes('big.pdf')) throw new Error(`no pointer to the file: ${toast}`);
+    const again = path.join(dir, 'again.pdf'); copyFileSync(path.join(GT, 'en-web.pdf'), again);
+    const [chooser] = await Promise.all([page.waitForEvent('filechooser'), page.click('[data-reselect="0"]')]);
+    await chooser.setFiles(again);
+    await page.waitForFunction(() => !document.querySelector('[data-reselect]') && document.querySelector('.file-item-name')?.textContent === 'again.pdf', null, { timeout: 30000 });
+    await page.evaluate(() => {
+      const o = URL.createObjectURL.bind(URL);
+      URL.createObjectURL = x => { if (x instanceof Blob && x.size > 500 && /pdf|zip/.test(x.type)) window.__result = x; return o(x); };
+    });
+    await page.waitForTimeout(1500);
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__result || window.__error, null, { timeout: 60000 });
+    const after = await page.evaluate(() => window.__error);
+    if (after) throw new Error(`the chosen-again file failed: ${after}`);
   });
 } finally {
   await browser.close();

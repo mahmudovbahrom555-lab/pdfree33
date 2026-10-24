@@ -9,7 +9,7 @@ import { fmtSize } from './utils.js';
 import { t, tp } from './i18n.js';
 import { setProgress, hideProgress, setButtonProcessing, setButtonReady,
          showCancelBtn, hideCancelBtn, showToast, startLongOpHint, clearLongOpHint } from './ui.js';
-import { selectedFiles, setFilesLocked, renderList } from './files.js';
+import { selectedFiles, setFilesLocked, renderList, markUnreadable } from './files.js';
 import { trackToolError, trackBatchStart, trackBatchSuccess, trackRepair, trackFileUnreadable } from './analytics.js';
 import { TOOLS } from './config.js';
 import { maxFileMb } from './fileLimits.js';
@@ -5984,6 +5984,7 @@ function _reportUnreadable(tool, name) {
   const seen = _unreadable?.name === name ? _unreadable : null;
   trackFileUnreadable(tool, seen?.copy ?? 'unknown', seen?.size ?? 0);
   _unreadable = null;
+  if (name) markUnreadable(name);
 }
 
 function _handleError(tool, message, errorType = null) {

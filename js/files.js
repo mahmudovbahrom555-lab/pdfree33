@@ -230,7 +230,11 @@ export function addFiles(files) {
   }
 
   renderList();
+  _afterAdd(added);
+}
 
+// What every newly added file goes through: its copy, then the preflight.
+function _afterAdd(added) {
   for (const f of added) _keepCopy(f);
 
   // Run preflight on newly added PDFs — async, non-blocking.
@@ -332,6 +336,37 @@ async function _keepCopy(f) {
 }
 
 /**
+ * A file the browser refused to read when the tool ran (js/processor.js):
+ * marked in the list with a button to choose it again, in its place — the
+ * other files, their order and the tool's settings stay (SPLIT-DFCC: one user
+ * pressed the button 15 times in 3 s and got the same error each time).
+ * @param {string} name
+ */
+export function markUnreadable(name) {
+  const f = selectedFiles.find(x => x.name === name && !x._unreadable);
+  if (!f) return;
+  f._unreadable = true;
+  renderList(true);
+}
+
+/**
+ * Puts a newly chosen file where the unreadable one was.
+ * @param {number} index
+ * @param {File} file
+ */
+export function replaceFile(index, file) {
+  if (_locked || !file || !selectedFiles[index]) return;
+  if (!isFileAccepted(file, _currentAccept, ACCEPTED_MIME)) {
+    showToast(_currentAccept.startsWith('.pdf') ? t('invalid_pdf') : t('invalid_img'), 5000);
+    return;
+  }
+  selectedFiles.splice(index, 1, file);
+  renderList();
+  _afterAdd([file]);
+  document.dispatchEvent(new CustomEvent('pdfree:files-added', { detail: { wasEmpty: false } }));
+}
+
+/**
  * Удаляет файл по индексу
  * @param {number} index
  */
@@ -407,6 +442,9 @@ export function renderList(keepSuccess = false) {
       <div class="file-item-info">
         <span class="file-item-name" title="${esc(f.name)}">${esc(f.name)}</span>
         ${isDuplicate ? '<span class="file-item-dup">⚠ Duplicate</span>' : ''}
+        ${f._unreadable ? `<span class="file-item-unreadable">⚠ ${esc(t('file_unreadable_badge'))}
+          <button type="button" class="file-item-reselect" data-reselect="${i}" ${_locked ? 'disabled' : ''}>${esc(t('file_choose_again'))}</button>
+        </span>` : ''}
         ${locked ? `<span class="file-item-enc-warn" title="${esc(lockTip)}">
           🔒 ${meta.aesVersion || 'AES'}-encrypted — editing blocked.
           <a class="file-item-enc-help" href="#" data-enc-help="${i}" tabindex="0">How to fix ↗</a>
@@ -436,6 +474,18 @@ export function renderList(keepSuccess = false) {
     if (_locked) return;
     const btn = e.target.closest('.file-item-del');
     if (btn) { removeFile(+btn.dataset.i); return; }
+
+    const again = e.target.closest('[data-reselect]');
+    if (again) {
+      e.preventDefault();
+      const idx = +again.dataset.reselect;
+      const pick = document.createElement('input');
+      pick.type = 'file';
+      pick.accept = _currentAccept;
+      pick.onchange = () => replaceFile(idx, pick.files?.[0]);
+      pick.click();
+      return;
+    }
 
     const help = e.target.closest('[data-enc-help]');
     if (help) {
