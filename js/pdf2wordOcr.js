@@ -11,7 +11,7 @@
 // The page image never leaves the device.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { loadTesseract, createOcrWorker, detectOcrLanguage, recognizePage, ocrLangForLocale, joinOcrWords } from './ocrEngine.js';
+import { loadTesseract, createOcrWorker, detectOcrLanguage, recognizePage, ocrLangForLocale, ocrProbesForBrowser, joinOcrWords } from './ocrEngine.js';
 import { cjkJoin } from './cjkText.js';
 import { getLang } from './config.js';
 
@@ -173,7 +173,7 @@ export function createOcrLayer(pdfDoc, { onPage = () => {}, rotated = true } = {
     try {
       await loadTesseract();
       let worker = await createOcrWorker('eng');
-      const detection = await detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer: true, hint: ocrLangForLocale(getLang()), layerLang: await layerScript(pdfDoc) });
+      const detection = await detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer: true, hint: ocrLangForLocale(getLang()), layerLang: await layerScript(pdfDoc), prefer: ocrProbesForBrowser() });
       if (!detection.confident) { await worker.terminate(); return null; }
       // a new worker for another language (see detectOcrLanguage)
       if (detection.lang !== 'eng') {

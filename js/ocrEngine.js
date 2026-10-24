@@ -297,6 +297,25 @@ export function ocrLangForLocale(locale) {
   return _LOCALE_OCR[locale] ?? null;
 }
 
+// The browser's languages, as the probes to run beside the usual order when a
+// page doesn't read as English (2026-10-24): a Japanese newspaper scan opened
+// on the English site went through ara, heb, kor, rus, chi_sim, jpn in turn —
+// 171 s before its first page was read. No probe is added or left out, the
+// early stop and Chinese-and-Japanese-both rule stay, and the page still
+// decides (a Chinese browser's Arabic scan is Arabic).
+const _BROWSER_OCR = { zh: 'chi_sim', ja: 'jpn', ko: 'kor', ar: 'ara', fa: 'ara', ur: 'ara', he: 'heb', iw: 'heb', ru: 'rus', uk: 'rus', be: 'rus' };
+export function ocrProbesForBrowser(languages = globalThis.navigator?.languages) {
+  return [...new Set((languages ?? []).map(l => _BROWSER_OCR[String(l).toLowerCase().split('-')[0]]).filter(Boolean))];
+}
+
+// A second probe at a time only where it costs nothing: a desktop with 4+
+// cores (unknown: no) and, when the browser says, 4+ GB. A phone or a weak
+// machine keeps the usual order — the browser's languages don't apply there.
+export function hasSpareCore(nav = globalThis.navigator) {
+  if (!nav || /Mobi|Android/i.test(nav.userAgent ?? '')) return false;
+  return (nav.hardwareConcurrency ?? 0) >= 4 && (nav.deviceMemory ?? 4) >= 4;
+}
+
 // A model's confident words (70+): what decides between models, not the page's
 // mean confidence, which a page of two scripts holds down for every model.
 const _confidentWords = words => words.filter(w => w.text?.trim() && w.confidence >= 70);
@@ -307,7 +326,7 @@ const _LATIN = /[A-Za-zÀ-ɏ]/;
 // model paired with English, on workers of their own. Returns detectOcrLanguage's
 // result, without switching `worker` (the caller does, once it has its
 // answer), or null when the image has too little text to judge.
-async function _judgeImage(cvs, worker, hint, newWorker, layerLang = null) {
+async function _judgeImage(cvs, worker, hint, newWorker, layerLang = null, prefer = [], sideLane = false) {
   const res  = await worker.recognize(cvs);
   const txt  = res?.data?.text ?? '';
   const conf = res?.data?.confidence ?? 0;
@@ -321,39 +340,69 @@ async function _judgeImage(cvs, worker, hint, newWorker, layerLang = null) {
   // scan there still reads its words in Latin and stays English.
   const hinted = SCRIPT_PROBES.find(p => p.lang === (hint === 'fas' ? 'ara' : hint));
   const probes = suspicious ? [...new Set([hinted, ...SCRIPT_PROBES])].filter(Boolean) : hinted ? [hinted] : [];
+  // The browser's languages: probed beside the usual order, on a core of
+  // their own, not before it — probed first, they made a Chinese browser's
+  // Arabic, Hebrew, Korean and Russian scans wait for chi_sim and jpn: 845 →
+  // 1416 s on 65 of them (2026-10-24). Chinese and Japanese each need the other's say
+  // (below): one preferred brings both.
+  const side = suspicious && sideLane
+    ? [...new Set(prefer.flatMap(l => _CJK_PROBES.includes(l) ? _CJK_PROBES : [l]))].map(l => SCRIPT_PROBES.find(p => p.lang === l)).filter(p => p && p !== hinted)
+    : [];
 
   const tried = [];
-  const read = {};   // each model's reading of the page
+  const read = {};   // each model's reading of the page, as it comes
+  const live = new Set();
+  let decided = false, decide, firstLoaded;
+  const over = new Promise(r => { decide = r; });
+  // the side lane waits for the usual order's first model: downloaded together,
+  // on a first visit at 5 Mbit/s they shared the line, and a Chinese browser's
+  // Arabic scans took 2.3 s longer each (22.4 → 25.0 s, 2026-10-25)
+  const loaded = new Promise(r => { firstLoaded = r; });
   // A worker per model: one taken from model to model keeps the first one's
   // settings — an English invoice probed with chi_sim, then read with `eng`
   // again, lost a third of its words (70 → 47).
-  const tryModel = async lang => {
-    if (read[lang]) return read[lang];
+  // `abandon`: the side lane's probe, given up once the page is decided
+  const tryModel = (lang, abandon = () => false) => (read[lang] ??= (async () => {
     tried.push(lang);
-    const w = await newWorker(lang);
+    const w = await newWorker(lang).finally(firstLoaded);
+    if (abandon()) { await w.terminate(); throw new Error('decided'); }
+    live.add(w);
     try {
       const r = await w.recognize(cvs);
-      return (read[lang] = { lang, conf: r?.data?.confidence ?? 0, text: r?.data?.text ?? '', words: r?.data?.words ?? [] });
+      return { lang, conf: r?.data?.confidence ?? 0, text: r?.data?.text ?? '', words: r?.data?.words ?? [] };
     } finally {
+      live.delete(w);
       await w.terminate();
     }
-  };
+  })());
   const scored = [];
-  for (const p of probes) {
-    const r = await tryModel(`${p.lang}+eng`);
+  const score = (p, r) => {
+    if (decided || scored.some(s => s.lang === p.lang)) return;
     const sure = _confidentWords(r.words);
     const own = sure.filter(w => p.own.test(w.text)).length;
     scored.push({ ...p, r, own, latin: sure.filter(w => !p.own.test(w.text) && _LATIN.test(w.text)).length, share: own / (r.words.filter(w => w.text?.trim()).length || 1) });
     const best = scored.reduce((a, b) => (b.own > a.own ? b : a));
     // a clear winner ends the probing; Chinese and Japanese each need the other's say
-    if (best.share >= 0.25 && best.own >= 15 && (!_CJK_PROBES.includes(best.lang) || _CJK_PROBES.every(l => tried.includes(`${l}+eng`)))) break;
+    if ((best.share >= 0.25 && best.own >= 15 && (!_CJK_PROBES.includes(best.lang) || _CJK_PROBES.every(l => scored.some(s => s.lang === l))))
     // The page's own text layer — broken or thin, so not read — is in this
     // script: a lower bar. A two-page scan probed all six script models before
     // `ara` won (3508224-like, 61–75 s of detection); with the layer's script,
     // 4 of 8 such documents stop after the first, 20–43 s faster each, and all
     // 36 OCRed documents of the Arabic corpus come out the same (2026-10-18).
-    if (layerLang && best.lang === layerLang && best.own >= 8 && best.share >= 0.15) break;
-  }
+      || (layerLang && best.lang === layerLang && best.own >= 8 && best.share >= 0.15)) { decided = true; decide(); }
+  };
+  const lane = async (list, abandon) => {
+    for (const p of list) {
+      if (decided) return;
+      score(p, await tryModel(`${p.lang}+eng`, abandon));
+    }
+  };
+  (side.length && probes.length ? loaded.then(() => lane(side, () => decided)) : lane(side, () => decided)).catch(() => {});
+  // the usual order decides alone when it reads every probe; the side lane only ends it sooner
+  await Promise.race([lane(probes), over]);
+  decided = true;
+  // a side probe still reading is of no use now: its worker goes
+  for (const w of live) w.terminate().catch(() => {});
   const ranked = scored.filter(s => s.own >= 15 && s.share >= 0.12).sort((a, b) => b.own - a.own);
   const metrics = { initial: primary.lang, suspicious, tried, confidenceInitial: conf };
 
@@ -405,7 +454,7 @@ async function _judgeImage(cvs, worker, hint, newWorker, layerLang = null) {
 // `newWorker`: how a probe worker is made (createOcrWorker; tests pass a stub).
 // `layerLang`: a script probe the page's own (unread) text layer is written
 // in — taken at a lower bar when it comes first (see _judgeImage).
-export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = false, hint = null, newWorker = createOcrWorker, layerLang = null } = {}) {
+export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = false, hint = null, newWorker = createOcrWorker, layerLang = null, prefer = [], sideLane = hasSpareCore() } = {}) {
   const total = pdfDoc.numPages;
   const pages = [...new Set([1, Math.ceil(total / 2), total])];
 
@@ -436,11 +485,11 @@ export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = fals
     // probe on clean and office scans at this size (77 → 62, 75 → 54). A phone photo (shadow, tilt) reads at 14–33 with every model on
     // the plain render — never sure, so PDF→Word left it a picture, an English
     // invoice photo included — and at 46–72 Enhanced (2026-10-10).
-    let d = await _judgeImage(cvs, worker, hint, newWorker, layerLang);
+    let d = await _judgeImage(cvs, worker, hint, newWorker, layerLang, prefer, sideLane);
     if (!d?.confident) {
       const enh = await _enhanceForOcrAsync(cvs).catch(() => null);
       if (enh) {
-        const e = await _judgeImage(enh.canvas, worker, hint, newWorker, layerLang);
+        const e = await _judgeImage(enh.canvas, worker, hint, newWorker, layerLang, prefer, sideLane);
         enh.canvas.width = 0; enh.canvas.height = 0;
         if (e?.confident) d = { ...e, metrics: { ...e.metrics, enhanced: true } };
       }

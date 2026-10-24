@@ -10,7 +10,7 @@ import { strict as assert } from 'assert';
 
 // detectOcrLanguage renders the sample page onto a canvas; nothing is drawn.
 globalThis.document = { createElement: () => ({ width: 0, height: 0, getContext: () => ({}) }) };
-const { detectOcrLanguage, latinLanguage } = await import('../js/ocrEngine.js');
+const { detectOcrLanguage, latinLanguage, ocrProbesForBrowser, hasSpareCore } = await import('../js/ocrEngine.js');
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -40,14 +40,18 @@ function reading(conf, counts, text) {
 }
 // detectOcrLanguage(pdfDoc, `eng` worker, opts) given each model's reading;
 // a model missing from `page` reads garbage (conf 30, Latin junk).
-async function detect(page, opts = {}) {
+// `delay`: ms each model takes to read the page (0: at once).
+async function detect(page, { delay = 0, ...opts } = {}) {
   const probed = [];
   const workers = [];
   const make = lang => {
     const w = {
       terminated: false,
       reinitialize: async () => { throw new Error('a worker is not taken to another model'); },
-      recognize: async () => ({ data: page[lang] ?? reading(30, { low: 100 }) }),
+      recognize: async () => {
+        if (delay) await new Promise(r => setTimeout(r, delay));
+        return { data: page[lang] ?? reading(30, { low: 100 }) };
+      },
       terminate: async () => { w.terminated = true; },
     };
     workers.push(w);
@@ -205,6 +209,59 @@ await test('an English invoice on the Chinese site stays English, its worker nev
   assert.equal(main.terminated, false);
 });
 
+// The browser's languages (2026-10-24): probed beside the usual order, not
+// before it. A Japanese newspaper scan opened on the English site probed ara,
+// heb, kor, rus, chi_sim, jpn in turn — 171 s before the first page was read;
+// probed first, Chinese and Japanese made a Chinese browser's Arabic scans
+// wait for both.
+const CHINESE = { eng: engOn(37), 'chi_sim+eng': reading(91, { lat: 26, han: 483 }), 'jpn+eng': reading(64, { lat: 37, han: 190 }) };
+const ARABIC = { eng: engOn(30), 'ara+eng': reading(85, { lat: 10, arb: 300 }), ara: reading(85, { arb: 300 }), fas: reading(60, { arb: 300 }) };
+await test('a Chinese browser: a Chinese page is decided by the side probes, before the usual order reaches them', async () => {
+  const { d, probed, probesClosed } = await detect(CHINESE, { prefer: ['chi_sim'], sideLane: true, delay: 10 });
+  assert.equal(d.lang, 'chi_sim');
+  assert.ok(probed.includes('chi_sim+eng') && probed.includes('jpn+eng'), `probed ${probed}`);
+  assert.ok(!probed.includes('rus+eng'), `the usual order went on after the answer: ${probed}`);
+  assert.ok(probesClosed);
+});
+await test('a Chinese browser: an Arabic page is decided as soon as without the preference, the same way', async () => {
+  const timed = async opts => { const t0 = Date.now(); const r = await detect(ARABIC, opts); return { ...r, ms: Date.now() - t0 }; };
+  const plain = await timed({ delay: 50 });
+  const pref = await timed({ prefer: ['chi_sim'], sideLane: true, delay: 50 });
+  assert.equal(pref.d.lang, 'ara');
+  assert.deepEqual([pref.d.lang, pref.d.alternatives], [plain.d.lang, plain.d.alternatives]);
+  // ara+eng, then ara and fas: 3 reads either way — 5 when the side probes came first (×1.67)
+  assert.ok(pref.ms <= plain.ms * 1.3, `${pref.ms} ms with the preference, ${plain.ms} without`);
+  assert.ok(pref.probesClosed);
+});
+await test("a phone or a weak machine: the browser's languages do not apply, the usual order alone", async () => {
+  const plain = await detect(CHINESE);
+  const { d, probed } = await detect(CHINESE, { prefer: ['chi_sim'], sideLane: false });
+  assert.equal(d.lang, 'chi_sim');
+  assert.deepEqual(probed, plain.probed);
+  assert.equal(probed[0], 'ara+eng');
+});
+await test('the browser only orders: an English page on a Chinese browser is probed with nothing', async () => {
+  const { d, probed } = await detect({ eng: reading(84, { lat: 200 }, EN) }, { prefer: ['chi_sim'], sideLane: true });
+  assert.equal(d.lang, 'eng');
+  assert.deepEqual(probed, []);
+});
+await test('hasSpareCore: a desktop with 4+ cores and 4+ GB; not a phone, a weak or an unknown machine', () => {
+  const desk = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130.0 Safari/537.36 Edg/130.0';
+  assert.equal(hasSpareCore({ userAgent: desk, hardwareConcurrency: 8, deviceMemory: 8 }), true);
+  assert.equal(hasSpareCore({ userAgent: desk, hardwareConcurrency: 4 }), true);   // Firefox/Safari: no deviceMemory
+  assert.equal(hasSpareCore({ userAgent: desk, hardwareConcurrency: 2, deviceMemory: 8 }), false);
+  assert.equal(hasSpareCore({ userAgent: desk, hardwareConcurrency: 8, deviceMemory: 2 }), false);
+  assert.equal(hasSpareCore({ userAgent: desk }), false);
+  assert.equal(hasSpareCore({ userAgent: 'Mozilla/5.0 (Linux; Android 14) Chrome/130.0 Mobile Safari/537.36', hardwareConcurrency: 8, deviceMemory: 8 }), false);
+  assert.equal(hasSpareCore(null), false);
+});
+await test('ocrProbesForBrowser: each browser language to its script\'s probe, in the browser\'s order, once', () => {
+  assert.deepEqual(ocrProbesForBrowser(['zh-TW', 'en-US', 'ja']), ['chi_sim', 'jpn']);
+  assert.deepEqual(ocrProbesForBrowser(['fa-IR', 'ar']), ['ara']);
+  assert.deepEqual(ocrProbesForBrowser(['ru', 'uk', 'he-IL', 'ko-KR']), ['rus', 'heb', 'kor']);
+  assert.deepEqual(ocrProbesForBrowser(['en-GB', 'de']), []);
+  assert.deepEqual(ocrProbesForBrowser(undefined), []);
+});
 await test('alternatives: the runner-up languages, for a re-run in one click', async () => {
   const { d } = await detect({ eng: engOn(170), 'chi_sim+eng': reading(90, { lat: 164, han: 220 }), 'jpn+eng': reading(79, { lat: 168, han: 63 }) });
   assert.deepEqual(d.alternatives.slice(0, 1), ['jpn']);
