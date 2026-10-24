@@ -918,24 +918,27 @@ async function _extractTextDirect(file) {
 // Vietnamese ơ, Uzbek ʻ).
 const NON_LATIN_LANGS = new Set(['ara', 'fas', 'heb', 'jpn', 'chi_sim', 'chi_tra', 'kor', 'hin', 'tha', 'rus', 'pol', 'tur', 'vie', 'uzb']);
 
-// TTF URLs from Google Fonts CDN (variable fonts; verified 2026-05).
+// Noto Sans TTFs, served from pdfree.io: the Google Fonts files (variable fonts)
+// copied as is — provenance and sha256 in js/vendor/SOURCE.txt. IndexedDB keys
+// them by language, so a font a browser already has from Google is kept.
 // pdf-lib requires TTF or OTF — WOFF/WOFF2 cannot be embedded.
+const _noto = name => new URL(`./vendor/noto/${name}.ttf`, import.meta.url).href;
 const NOTO_FONT_URLS = {
-  ara:     'https://fonts.gstatic.com/s/notosansarabic/v33/nwpPtLGrOAZMl5nJ_wfgRg3DrWFZQML36H986K0.ttf',
-  fas:     'https://fonts.gstatic.com/s/notosansarabic/v33/nwpPtLGrOAZMl5nJ_wfgRg3DrWFZQML36H986K0.ttf',
-  jpn:     'https://fonts.gstatic.com/s/notosansjp/v56/-F62fjtqLzI2JPCgQBnw7HFoxgIO2lZ9hg.ttf',
-  chi_sim: 'https://fonts.gstatic.com/s/notosanssc/v40/k3kXo84MPvpLmixcA63oeALhKYiJ-Q7m8w.ttf',
-  chi_tra: 'https://fonts.gstatic.com/s/notosanstc/v39/-nF7OG829Oofr2wohFbTp9iFPysLA_ZJ1g.ttf',
-  kor:     'https://fonts.gstatic.com/s/notosanskr/v39/PbykFmXiEBPT4ITbgNA5Cgm21nTs4JMMuA.ttf',
-  hin:     'https://fonts.gstatic.com/s/notosansdevanagari/v30/TuGOUUFzXI5FBtUq5a8bjKYTZjtRU6Sgv2lRdRhtCC4d.ttf',
-  tha:     'https://fonts.gstatic.com/s/notosansthai/v29/iJWdBXeUZi_OHPqn4wq6hQ2_hah-5c-dUX0x.ttf',
-  heb:     'https://fonts.gstatic.com/s/notosanshebrew/v50/or3HQ7v33eiDljA1IufXTtVf7V6RvEEdhQlk0LlGxCyaeNKYZC0sqk3xXGiXd4qtog.ttf',
+  ara:     _noto('notosansarabic-v33'),
+  fas:     _noto('notosansarabic-v33'),
+  jpn:     _noto('notosansjp-v56'),
+  chi_sim: _noto('notosanssc-v40'),
+  chi_tra: _noto('notosanstc-v39'),
+  kor:     _noto('notosanskr-v39'),
+  hin:     _noto('notosansdevanagari-v30'),
+  tha:     _noto('notosansthai-v29'),
+  heb:     _noto('notosanshebrew-v50'),
   // Cyrillic and extended Latin — Noto Sans covers both
-  rus:     'https://fonts.gstatic.com/s/notosans/v42/o-0IIpQlx3QUlC5A4PNb4j5Ba_2c7A.ttf',
-  pol:     'https://fonts.gstatic.com/s/notosans/v42/o-0IIpQlx3QUlC5A4PNb4j5Ba_2c7A.ttf',
-  tur:     'https://fonts.gstatic.com/s/notosans/v42/o-0IIpQlx3QUlC5A4PNb4j5Ba_2c7A.ttf',
-  vie:     'https://fonts.gstatic.com/s/notosans/v42/o-0IIpQlx3QUlC5A4PNb4j5Ba_2c7A.ttf',
-  uzb:     'https://fonts.gstatic.com/s/notosans/v42/o-0IIpQlx3QUlC5A4PNb4j5Ba_2c7A.ttf',
+  rus:     _noto('notosans-v42'),
+  pol:     _noto('notosans-v42'),
+  tur:     _noto('notosans-v42'),
+  vie:     _noto('notosans-v42'),
+  uzb:     _noto('notosans-v42'),
 };
 
 // In-memory cache of fetched Noto TTF bytes — avoids re-downloading on
@@ -995,7 +998,7 @@ const _NO_SHAPING = Object.fromEntries(['ccmp', 'locl', 'isol', 'init', 'medi', 
   .map(tag => [tag, false]));
 
 // Returns an embedded font for a NON_LATIN_LANGS language, null if it can't
-// be had: the Noto Sans TTF from Google Fonts CDN, fontkit registered, and
+// be had: the Noto Sans TTF from pdfree.io (js/vendor/noto/), fontkit registered, and
 // embedded with subset:true so only the glyphs that actually appear in the
 // document are included — prevents CJK fonts from inflating the output PDF by
 // 10–18 MB.
