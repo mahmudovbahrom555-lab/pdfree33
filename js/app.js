@@ -39,12 +39,12 @@ import { trackToolStart, trackToolSuccess,
          trackToolOpen, trackInstallPrompt,
          trackToolError, trackDownload,
          trackSearchQuery, trackSearchMiss,
-         trackSearchSelect,
+         trackSearchSelect, trackAppLaunch,
          trackHeroFileSelect, trackChipClick,
          trackShareTool, trackBehaviorCrossSell }    from './analytics.js';
-import { buildIndex, search, trackMiss }           from './search.js';
+import { buildIndex, search }                      from './search.js';
 import { loadPdfLib }                              from './lazyLibs.js';
-import { checkReturnVisit, recordDownload,
+import { forgetStoredSignals, recordDownload,
          checkAndRecordConversion,
          checkAutoDownloadRecovery }               from './behavioralSignals.js';
 import { initHomepageEngagement }                 from './homepageEngagement.js';
@@ -382,7 +382,7 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
   // Auto-download: trigger immediately so user gets the file without an extra click.
   // We do NOT revoke the blob here — the "Download again" button still needs it.
   trackDownload(tool, blob.size);
-  recordDownload(tool);
+  recordDownload();
   const _autoA = document.createElement('a');
   _autoA.href = _capturedUrl; _autoA.download = filename;
   document.body.appendChild(_autoA); _autoA.click(); document.body.removeChild(_autoA);
@@ -1443,7 +1443,7 @@ function initSearch() {
 
     const results = search(q, index);
     if (results.length) {
-      trackSearchQuery(q, results.length);
+      trackSearchQuery(results.length);
       _applyResult(results[0]);
       // The list is for genuinely plausible alternatives, not every hit —
       // scores below 50 are the typo-tolerance/description tiers, which
@@ -1457,7 +1457,6 @@ function initSearch() {
       else candidatesEl.hidden = true;
     } else {
       trackSearchMiss(q);
-      trackMiss(q);
       resultEl.hidden = true;
       _activeResult   = null;
       // A short/early query (e.g. still mid-word) isn't a real "miss" yet —
@@ -1534,7 +1533,7 @@ function initSearch() {
     const files = Array.from(srFileInput.files);
     srFileInput.value = ''; // reset so re-selecting the same file fires change again
     if (!files.length || !_activeResult) return;
-    trackSearchSelect(searchEl.value.trim(), _activeResult.key);
+    trackSearchSelect(_activeResult.key);
     _openToolWithFiles(_activeResult.key, files);
   });
 
@@ -1549,7 +1548,7 @@ function initSearch() {
     srDropHint.classList.remove('drag-over');
     const files = Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf');
     if (!files.length || !_activeResult) return;
-    trackSearchSelect(searchEl.value.trim(), _activeResult.key);
+    trackSearchSelect(_activeResult.key);
     _openToolWithFiles(_activeResult.key, files);
   });
 
@@ -1573,7 +1572,9 @@ function initSearch() {
 // ── Initial routing ──────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
-  checkReturnVisit();   // check if user returned shortly after downloading
+  forgetStoredSignals();
+  // opened as an installed app: a return, counted with nothing stored
+  if (window.matchMedia?.('(display-mode: standalone)').matches || navigator.standalone) trackAppLaunch();
   // Abandoned handoff cleanup (user clicked a cross-sell link, then never
   // landed on the destination page) — restoreHandoff() below only clears an
   // expired entry as a side effect of running on the CORRECT tool page, so

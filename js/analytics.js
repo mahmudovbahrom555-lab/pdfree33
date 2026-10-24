@@ -225,9 +225,13 @@ export function trackBehaviorQuickRetry(tool, gapS) {
   _track('Quick Retry', { tool, gap_s: String(_roundDuration(gapS * 1000)) });
 }
 
-/** Page opened within 5 min of last download → user checked result and returned */
-export function trackBehaviorReturnVisit(gapMin, tool) {
-  _track('Return Visit', { gap_min: String(gapMin), tool });
+/**
+ * The site opened as an installed app (PWA) — how often people come back,
+ * counted with nothing stored on their device (2026-10-25: the "Return
+ * Visit" signal kept the last download's time in localStorage for it).
+ */
+export function trackAppLaunch() {
+  _track('App Launch', {});
 }
 
 /**
@@ -291,19 +295,19 @@ export function trackBatchSuccess(tool, fileCount, succeeded) {
 
 // ── Search funnel ─────────────────────────────────────────────
 
-/** User typed a query and got results */
-export function trackSearchQuery(query, hits) {
-  _track('Search Query', { query: query.slice(0, 50), hits: String(hits) });
+/** User typed a query and got results — how many, not what was typed */
+export function trackSearchQuery(hits) {
+  _track('Search Query', { hits: String(hits) });
 }
 
-/** User typed a query and got zero results */
+/** User typed a query and got zero results — its text (50 chars at most): what the search is missing */
 export function trackSearchMiss(query) {
   _track('Search Miss', { query: query.slice(0, 50) });
 }
 
-/** User clicked a search result and launched that tool */
-export function trackSearchSelect(query, tool) {
-  _track('Search Select', { query: query.slice(0, 50), tool });
+/** User clicked a search result and launched that tool — the tool, not the query */
+export function trackSearchSelect(tool) {
+  _track('Search Select', { tool });
 }
 
 // ── Hero drop zone funnel ──────────────────────────────────────
