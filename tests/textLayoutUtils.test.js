@@ -10,7 +10,7 @@
 import { strict as assert } from 'assert';
 import { joinSpacedItems, joinSplitNumbers, restoreDroppedSpaces, restoreGlyphOrder, joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
   lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
-  continuesWrappedHeading, lineRuns , textLayerLooksBroken, toUnifiedIdeographs, joinTouchingItems, dropCjkGapSpaces, isContentsEntry } from '../js/textLayoutUtils.js';
+  continuesWrappedHeading, lineRuns , textLayerLooksBroken, toUnifiedIdeographs, joinTouchingItems, dropCjkGapSpaces, isContentsEntry, dropOverprintedText } from '../js/textLayoutUtils.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -704,6 +704,62 @@ test('glyphs closer than 0.15 em stay one word', () => {
 test('a small Persian table\'s words 0.19 em apart get their space (7351637: "عنوانرشته")', () => {
   const it = (str, x, width) => ({ str, x, width, fontSize: 6.399 });
   if (joinSpacedItems([it('عنوان', 373.05, 12.36), it('رشته', 361.72, 10.12)]) !== 'عنوان رشته') throw new Error('glued');
+});
+
+// Text drawn again over itself — a printer driver's fake bold, fill then stroke
+// (class C14, Chinese corpus 2026-10-24): "壬壬壬壬", "北原北原北原北原".
+const it = (str, x, y, size = 12, w = str.length * size) => ({ str, transform: [size, 0, 0, size, x, y], width: w, height: size, dir: 'ltr', fontName: 'f' });
+const text = items => items.map(i => i.str).join('|');
+test('overprint: four copies of a glyph a quarter point apart are read once', () => {
+  const r = dropOverprintedText([it('壬', 169.92, 744.72, 9.6), it('壬', 169.68, 744.48, 9.6), it('壬', 169.92, 744.48, 9.6), it('壬', 169.68, 744.72, 9.6)]);
+  assert.equal(text(r), '壬');
+});
+test('overprint: a line drawn twice (fill, then stroke) is read once', () => {
+  const r = dropOverprintedText([it('技術於校園安全建置', 289.98, 43.73, 8), it('技術於校園安全建置', 289.69, 43.44, 8), it('之經驗分享', 361.98, 43.73, 8)]);
+  assert.equal(text(r), '技術於校園安全建置|之經驗分享');
+});
+test('overprint: copies cut into different pieces — "備註" once, not "備備註註"', () => {
+  const r = dropOverprintedText([it('備', 60.36, 559.52, 11), it('備註', 60.12, 559.28, 11), it('註', 71.4, 559.5, 11)]);
+  assert.equal(r.map(i => i.str).join(''), '備註');
+});
+test('overprint: a longer copy keeps only what the first did not draw', () => {
+  const r = dropOverprintedText([it('紀律聆訊機制', 131.9, 500, 30), it('紀律聆訊機制研討會', 131.6, 500, 30)]);
+  assert.equal(r.map(i => i.str).join(''), '紀律聆訊機制研討會');
+  const tail = r[r.length - 1];
+  assert.ok(Math.abs(tail.transform[4] - (131.6 + 6 * 30)) < 0.01 && Math.abs(tail.width - 90) < 0.01, 'the piece left sits where its glyphs are');
+});
+test('overprint, not: the same character twice in a row stays twice ("謝謝")', () => {
+  assert.equal(text(dropOverprintedText([it('謝謝', 10, 700)])), '謝謝');
+  assert.equal(text(dropOverprintedText([it('謝', 10, 700), it('謝', 22, 700)])), '謝|謝');
+});
+test('overprint, not: the same text in two table cells stays in both', () => {
+  assert.equal(text(dropOverprintedText([it('合計', 100, 400), it('合計', 300, 400), it('合計', 100, 385)])), '合計|合計|合計');
+});
+test('overprint, not: a vertical column of the same character keeps every one', () => {
+  assert.equal(text(dropOverprintedText([it('第', 50, 700), it('第', 50, 688), it('第', 50, 676)])), '第|第|第');
+});
+test('overprint, not: different glyphs set tight or kerned into each other stay', () => {
+  assert.equal(text(dropOverprintedText([it('A', 10, 700, 12, 8), it('V', 16, 700, 12, 8), it('中', 30, 700), it('文', 30.5, 700)])), 'A|V|中|文');
+});
+test('overprint, not: a copy in another size or direction is another text (a shadow, a stamp)', () => {
+  const rotated = { ...it('印', 10, 700), transform: [0, 12, -12, 0, 10, 700] };
+  assert.equal(text(dropOverprintedText([it('印', 10, 700, 12), it('印', 10, 700, 16), rotated])), '印|印|印');
+});
+test('overprint: right-to-left text drawn twice is read once, whole; overlapping different Arabic stays', () => {
+  const ar = (str, x) => ({ ...it(str, x, 600, 12, 40), dir: 'rtl' });
+  assert.equal(text(dropOverprintedText([ar('مجلس الأمن', 100), ar('مجلس الأمن', 100.2), ar('الأمم', 120)])), 'مجلس الأمن|الأمم');
+});
+test('overprint: full-width marks are on the CJK pitch too — "（星期三）" once', () => {
+  const r = dropOverprintedText([it('（星期三', 300, 450, 12), it('（', 300.2, 450, 12), it('星期三）', 312.2, 450, 12)]);
+  assert.equal(r.map(i => i.str).join(''), '（星期三）');
+});
+test('overprint, not: a shadow drawn 10 % larger stays whole — no pieces left ("南亞 花板")', () => {
+  const r = dropOverprintedText([it('南亞防火天花板', 158.81, 155.52, 25.66, 179.63), it('南亞防火天花板', 165.43, 156.53, 23.33, 163.3)]);
+  assert.equal(text(r), '南亞防火天花板|南亞防火天花板');
+});
+test('overprint: empty and space items and items without a transform pass through', () => {
+  const r = dropOverprintedText([{ str: '', hasEOL: true }, it(' ', 10, 10), it(' ', 10, 10), { str: 'x' }]);
+  assert.equal(r.length, 4);
 });
 
 const total = passed + failed;

@@ -437,6 +437,56 @@ export function joinTouchingItems(items, cuts = []) {
 // language puts spaces between its characters; a space next to Latin letters,
 // digits or Hangul (Korean is written with spaces) stays.
 const _CJK_SPACED_RE = /([\u3000-\u303F\u3040-\u30FF\u3400-\u9FFF\uF900-\uFAFF\uFF01-\uFF60]) +(?=[\u3000-\u303F\u3040-\u30FF\u3400-\u9FFF\uF900-\uFAFF\uFF01-\uFF60])/g;
+// Text drawn again over itself: printer drivers fake bold by drawing a line two
+// to four times a fraction of a point apart, or fill it and then stroke it
+// (Ghostscript, EXP Systems, Distiller; class C14, 2026-10-24: 14 of 368
+// Chinese corpus documents, "壬壬壬壬", "北原北原北原北原"). Every text reader
+// shows it once; pdf.js gives every copy. A copy is the same glyph, the same
+// size (within 2 %: a title's shadow drawn 10 % larger is another layer, and
+// half matched it left "南亞 花板", 0988799) and direction, at the same point
+// within 0.15 of its size — two of the
+// same character in a row, a column of them or the same text in two cells sit
+// a whole glyph or more apart. The copies may be cut into different items
+// ("備註" over "備" + "註"): an item of CJK glyphs and full-width marks only, on a fixed pitch,
+// is compared glyph by glyph and keeps the pieces no earlier item drew; any
+// other item only when it repeats one whole (glyph positions inside spaced,
+// proportional or right-to-left text can't be told from an item's width).
+const _OVERPRINT_CJK_RE = /[\u3001-\u303F\u3040-\u30FF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF\uAC00-\uD7AF\uFF01-\uFF60]/;
+export function dropOverprintedText(items) {
+  const drawn = new Map();   // glyph or whole string → [x, y, size, ux, uy][]
+  const near = (key, x, y, size, ux, uy) => (drawn.get(key) ?? []).some(([qx, qy, qs, qux, quy]) =>
+    Math.abs(qx - x) < 0.15 * size && Math.abs(qy - y) < 0.15 * size && Math.abs(qs - size) < 0.02 * size && qux * ux + quy * uy > 0.99);
+  const draw = (key, at) => { if (!drawn.has(key)) drawn.set(key, []); drawn.get(key).push(at); };
+  const out = [];
+  for (const item of items) {
+    const t = item.transform, str = item.str;
+    if (!t || typeof str !== 'string' || !str.trim()) { out.push(item); continue; }
+    const size = Math.hypot(t[0], t[1]) || item.height || 1, ux = t[0] / size, uy = t[1] / size;
+    const glyphs = [...str];
+    if (!glyphs.every(g => _OVERPRINT_CJK_RE.test(g))) {
+      if (near('\u0000' + str, t[4], t[5], size, ux, uy)) continue;
+      draw('\u0000' + str, [t[4], t[5], size, ux, uy]);
+      out.push(item);
+      continue;
+    }
+    const pitch = item.width / glyphs.length;
+    const at = k => [t[4] + ux * k * pitch, t[5] + uy * k * pitch];
+    const copy = glyphs.map((g, k) => near(g, ...at(k), size, ux, uy));
+    glyphs.forEach((g, k) => { if (!copy[k]) draw(g, [...at(k), size, ux, uy]); });
+    if (!copy.includes(true)) { out.push(item); continue; }
+    // the pieces no earlier item drew, each where its own glyphs sit
+    for (let k = 0; k < glyphs.length;) {
+      if (copy[k]) { k++; continue; }
+      let e = k;
+      while (e < glyphs.length && !copy[e]) e++;
+      const [x, y] = at(k);
+      out.push({ ...item, str: glyphs.slice(k, e).join(''), transform: [t[0], t[1], t[2], t[3], x, y], width: (e - k) * pitch });
+      k = e;
+    }
+  }
+  return out;
+}
+
 export function dropCjkGapSpaces(str) {
   return str.replace(_CJK_SPACED_RE, '$1');
 }
