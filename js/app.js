@@ -628,6 +628,16 @@ function _onMergeBtnClick() {
         showToast(t('ocr_password_protected_inline'), 8000);
         return;
       }
+      // Editing restrictions qpdf couldn't remove — out of memory on a stream
+      // over ~4.5 MB (decryptPdf.js), no password asked. pdf.js opens such a
+      // file itself, so the converters that only read it through pdf.js work
+      // (checked one by one, 2026-10-25); the rest would write a file still
+      // encrypted (Compress, Watermark, OCR's searchable PDF: unopenable) or
+      // fail (Rotate, Split).
+      if (!_READS_RESTRICTED.has(currentTool) && selectedFiles.some(f => f._decryptFailed && !f._decryptedBuffer)) {
+        showToast(t('err_encrypted_too_large'), 10000);
+        return;
+      }
     }
     // Registry dispatch — no more if-else per tool
     const { params, error } = collectToolParams(currentTool);
@@ -1568,6 +1578,9 @@ function initSearch() {
     showTool(tool, true, _pendingFiles);
   }, true); // capture phase: runs before inline onclick, after analytics
 }
+
+// Tools that read a restricted PDF qpdf couldn't decrypt through pdf.js alone (see the guard in _onMergeBtnClick).
+const _READS_RESTRICTED = new Set(['pdf2word', 'pdf2excel', 'pdf2ppt', 'pdf2jpg']);
 
 // ── Initial routing ──────────────────────────────────────────
 

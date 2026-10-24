@@ -274,7 +274,16 @@ function _afterAdd(added) {
             // WASM init failure throws instead, below — never flagged here).
             f._needsPassword = true;
           }
-        } catch { /* WASM init failure — keep flags as detected */ }
+        } catch (err) {
+          // qpdf out of memory (a stream over ~4.5 MB): no verdict on the
+          // password — pdf.js gives it. Needing none, the file opens in pdf.js
+          // as it is: tools that only read it go ahead, the rest say why they
+          // can't (app.js). Else WASM init failure — keep flags as detected.
+          if (err?.message === 'QPDF_OUT_OF_MEMORY') {
+            if (await _pdfjsNeedsPassword(f)) f._needsPassword = true;
+            else f._decryptFailed = true;
+          }
+        }
         // Re-init tool options either way — the first init ran before this
         // resolved and saw no _pdfMeta at all. Owner-only success clears the
         // lock (tools can now process the file); a real password staying
@@ -284,6 +293,19 @@ function _afterAdd(added) {
         renderList();
       }
     });
+  }
+}
+
+// Whether pdf.js asks for a password to open `file` (an empty one isn't enough).
+async function _pdfjsNeedsPassword(file) {
+  try {
+    const { loadPdfJs } = await import('./pdf2jpgUI.js');
+    await loadPdfJs();
+    const doc = await window.pdfjsLib.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
+    await doc.destroy();
+    return false;
+  } catch (err) {
+    return err?.name === 'PasswordException';
   }
 }
 

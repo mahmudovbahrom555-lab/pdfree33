@@ -144,7 +144,13 @@ async function _qpdfDecrypt(bytes, password) {
       [input.buffer]
     );
     return result.outputs['out.pdf'];  // Uint8Array
-  } catch {
+  } catch (err) {
+    // This build's heap is fixed: a PDF holding one stream over ~4.5 MB (a
+    // large scan or photo) aborts it — "Aborted(OOM)" — whatever the password.
+    // Reported as "password protected", a teacher's exam sheet with editing
+    // restrictions and an empty open password couldn't be converted at all
+    // (2026-10-25). Not a password verdict: the caller's to handle.
+    if (/Aborted|OOM/.test(String(err?.message ?? ''))) throw new Error('QPDF_OUT_OF_MEMORY', { cause: err });
     return null;  // wrong/missing password → caller decides how to react
   }
 }
@@ -156,6 +162,7 @@ async function _qpdfDecrypt(bytes, password) {
  * @param {Uint8Array} bytes - Raw PDF bytes
  * @returns {Promise<Uint8Array|null>}
  *   Decrypted bytes on success, null if a real user password is required.
+ *   Throws QPDF_OUT_OF_MEMORY when qpdf ran out of memory (see _qpdfDecrypt).
  */
 export async function decryptOwnerOnly(bytes) {
   return _qpdfDecrypt(bytes, '');
@@ -190,6 +197,11 @@ export async function preprocessPdfBuffer(buffer) {
   const bytes = new Uint8Array(buffer);
   if (!_looksEncrypted(bytes)) return buffer;  // fast path — 99% of PDFs
 
-  const decrypted = await decryptOwnerOnly(bytes);
+  // out of memory: the file as it is — pdf.js opens it itself when it needs no
+  // password; tools that need it decrypted were stopped before (app.js)
+  const decrypted = await decryptOwnerOnly(bytes).catch(err => {
+    if (err.message === 'QPDF_OUT_OF_MEMORY') return null;
+    throw err;
+  });
   return decrypted ? decrypted.buffer : buffer;
 }
