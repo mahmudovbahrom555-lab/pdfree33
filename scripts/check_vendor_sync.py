@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-check_vendor_sync.py — Validates js/vendor/pdf-lib.min.js matches the
-pinned devDependency version in node_modules.
+check_vendor_sync.py — Validates the vendored copies in js/vendor/ (pdf-lib,
+JSZip, docx) match the pinned versions in node_modules.
 
 Why this exists: pdf-lib is a devDependency (used only by the Node test
 suite via node_modules) — the file actually shipped to the browser/worker
@@ -44,34 +44,42 @@ def _sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+# js/vendor copy → the node_modules file it must equal
+PAIRS = [
+    ('pdf-lib.min.js', 'pdf-lib/dist/pdf-lib.min.js'),
+    ('jszip.min.js', 'jszip/dist/jszip.min.js'),
+    ('docx.umd.js', 'docx/build/index.umd.js'),
+]
+
+
 def main():
-    vendor = ROOT / 'js' / 'vendor' / 'pdf-lib.min.js'
-    npm    = ROOT / 'node_modules' / 'pdf-lib' / 'dist' / 'pdf-lib.min.js'
-
-    if not vendor.exists():
-        print(f'[check_vendor_sync] FAIL — {vendor} not found')
+    bad = False
+    for vendor_name, npm_path in PAIRS:
+        vendor = ROOT / 'js' / 'vendor' / vendor_name
+        npm    = ROOT / 'node_modules' / npm_path
+        if not vendor.exists():
+            print(f'[check_vendor_sync] FAIL — {vendor} not found')
+            bad = True
+            continue
+        if not npm.exists():
+            # node_modules not installed (e.g. a doc-only CI step) — nothing
+            # to compare against, don't fail a step that never ran `npm ci`.
+            print(f'[check_vendor_sync] SKIP — node_modules/{npm_path} not installed, nothing to compare')
+            continue
+        if _sha256(vendor) != _sha256(npm):
+            print(f'[check_vendor_sync] FAIL — js/vendor/{vendor_name} does not match')
+            print(f'  node_modules/{npm_path} (the pinned version in package.json).')
+            print('  The two have drifted: the browser is shipping a DIFFERENT build than')
+            print('  the one the test suite runs against. Fix:')
+            print(f'    cp node_modules/{npm_path} js/vendor/{vendor_name}')
+            print('  update the sha384 its loader in js/lazyLibs.js pins, then run `npm test`')
+            print('  and a live-browser smoke pass before committing — see this script\'s')
+            print('  header comment for the full checklist.')
+            bad = True
+            continue
+        print(f'[check_vendor_sync] OK — js/vendor/{vendor_name} matches node_modules/{npm_path}')
+    if bad:
         sys.exit(1)
-
-    if not npm.exists():
-        # node_modules not installed (e.g. a doc-only CI step) — nothing
-        # to compare against, don't fail a step that never ran `npm ci`.
-        print('[check_vendor_sync] SKIP — node_modules/pdf-lib not installed, nothing to compare')
-        return
-
-    vendor_hash = _sha256(vendor)
-    npm_hash    = _sha256(npm)
-
-    if vendor_hash != npm_hash:
-        print('[check_vendor_sync] FAIL — js/vendor/pdf-lib.min.js does not match')
-        print('  node_modules/pdf-lib/dist/pdf-lib.min.js (the pinned devDependency version).')
-        print('  The two have drifted: the browser is shipping a DIFFERENT pdf-lib build than')
-        print('  the one the test suite runs against. Fix:')
-        print('    cp node_modules/pdf-lib/dist/pdf-lib.min.js js/vendor/pdf-lib.min.js')
-        print('  then run `npm test` and a live-browser smoke pass before committing —')
-        print('  see this script\'s own header comment for the full checklist.')
-        sys.exit(1)
-
-    print('[check_vendor_sync] OK — js/vendor/pdf-lib.min.js matches node_modules/pdf-lib')
 
 
 if __name__ == '__main__':

@@ -34,7 +34,7 @@ function _load(key, url, integrity) {
     s.src = url;
     if (integrity) { s.integrity = integrity; s.crossOrigin = 'anonymous'; }
     s.onload  = resolve;
-    s.onerror = () => reject(new Error(`Failed to load ${key} from CDN`));
+    s.onerror = () => reject(new Error(`Failed to load ${key}`));
     document.head.appendChild(s);
   }).catch(err => {
     delete _promises[key]; // allow a later call to actually retry, not replay this same failure
@@ -43,11 +43,20 @@ function _load(key, url, integrity) {
   return _promises[key];
 }
 
+// pdf-lib, JSZip and docx come from pdfree.io itself, not a CDN: from
+// 2026-10-01 to 10-24, 16 people got "library unavailable" / "Failed to load
+// … from CDN" on a page pdfree.io had just served — 8 of them in mainland
+// China or Hong Kong (jsdelivr unreliable there, cdnjs too), docx failing on
+// both jsdelivr and its unpkg fallback for 9. The files are the official
+// builds of the pinned versions, byte-identical to the CDN copies (same
+// sha384, kept below); scripts/check_vendor_sync.py keeps them equal to
+// node_modules. One source, no retries: a page that loaded from pdfree.io
+// can load these from it too.
 export function loadPdfLib() {
   if (window.PDFLib) return Promise.resolve();
   return _load(
     'pdfLib',
-    'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js',
+    new URL('./vendor/pdf-lib.min.js', import.meta.url).href,
     'sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI',
   );
 }
@@ -68,15 +77,14 @@ export function loadJSZip() {
   if (window.JSZip) return Promise.resolve();
   return _load(
     'jsZip',
-    'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
+    new URL('./vendor/jszip.min.js', import.meta.url).href,
     'sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG',
   );
 }
 
-// docx uses a two-URL fallback chain (jsdelivr → unpkg).
-// If the first CDN is down/slow, the second is tried automatically.
-// On total failure the cached promise is cleared so the NEXT user
-// action retries from scratch rather than hitting a dead cached promise.
+// docx is served from pdfree.io (js/vendor/docx.umd.js, see loadPdfLib).
+// On failure the cached promise is cleared so the NEXT user action
+// retries from scratch rather than hitting a dead cached promise.
 //
 // NAMESPACE COLLISION, found while building Quick Edit PDF (the first
 // feature to ever need BOTH this "docx" builder library AND docx-preview
@@ -106,7 +114,7 @@ export function loadDocx() {
 
 async function _loadDocxWithFallback() {
   const ok = await _loadScriptWithFallback(
-    ['https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js', 'https://unpkg.com/docx@8.5.0/build/index.umd.js'],
+    [new URL('./vendor/docx.umd.js', import.meta.url).href],
     'sha384-4xaIisuLEy2lo2HkB2C4rEf7v8jbTb2kuogX6TkuEt9feTWKBSFSOzsqNNbV+sKh',
     () => !!window.__pdfreeDocxBuilder,
     () => { window.__pdfreeDocxBuilder = window.docx; },
@@ -114,7 +122,8 @@ async function _loadDocxWithFallback() {
   if (!ok) throw new Error(t('err_cdn_lib_unavailable', { lib: 'Word' }));
 }
 
-// Same two-URL fallback pattern as loadDocx() — see comment above.
+// A two-URL fallback chain (jsdelivr → unpkg): if the first CDN is down or
+// slow, the second is tried; on total failure the cached promise is cleared.
 export function loadExcelJs() {
   if (window.ExcelJS) return Promise.resolve();
   if (_promises['excelJs']) return _promises['excelJs'];
@@ -135,9 +144,9 @@ async function _loadExcelJsWithFallback() {
   if (!ok) throw new Error(t('err_cdn_lib_unavailable', { lib: 'Excel' }));
 }
 
-// Same two-URL fallback pattern as loadDocx()/loadExcelJs() — see comment above
-// loadDocx(). Unlike those two, pptxgenjs's browser build does NOT bundle its
-// own JSZip — it expects window.JSZip to already exist, so loadJSZip() (already
+// Same two-URL fallback pattern as loadExcelJs() — see the comment above it.
+// Unlike docx and ExcelJS, pptxgenjs's browser build does NOT bundle its own
+// JSZip — it expects window.JSZip to already exist, so loadJSZip() (already
 // used elsewhere for merge/split zip output) runs first as a prerequisite.
 export function loadPptxGenJs() {
   if (window.PptxGenJS) return Promise.resolve();
