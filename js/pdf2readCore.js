@@ -43,7 +43,7 @@ import { pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
 import { detectTableGrids, lineInGrid, gridRowsOfLines, gridHoldsTable } from './pdf2wordBorders.js';
 import { applyDigitFix } from './pdfDigitFix.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken, joinSpacedItems, dropCjkGapSpaces, applyActualText, restoreDroppedSpaces, restoreGlyphOrder, joinSplitNumbers } from './textLayoutUtils.js';
+         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken, joinSpacedItems, dropCjkGapSpaces, applyActualText, restoreDroppedSpaces, restoreGlyphOrder, joinSplitNumbers, dropOverprintedText } from './textLayoutUtils.js';
 
 // XML 1.0's Char production disallows most C0 control characters (only
 // tab/LF/CR are valid: #x9 | #xA | #xD | [#x20-...]) — pdf.js text
@@ -756,6 +756,9 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
       content.items = applyActualText(content.items, needs ? await actualText(p).catch(() => null) : null);
     }
     content.items = restoreDroppedSpaces(content.items, glyphRuns);
+    // fake bold drawn as copies of its text: read once (after the steps that
+    // match items to the page's glyphs, which draw every copy)
+    content.items = dropOverprintedText(content.items);
     const _boldFontCache = new Map(); // fontName -> boolean, one commonObjs lookup per unique font per page
     const _isFontBold = fontName => {
       if (_boldFontCache.has(fontName)) return _boldFontCache.get(fontName);

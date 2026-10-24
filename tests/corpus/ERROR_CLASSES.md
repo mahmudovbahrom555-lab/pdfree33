@@ -628,3 +628,37 @@ readers agree on, bigrams, numbers, order; not a measuring stick yet).
 - **Left.** Letter-spaced Han in table cells ("董 事 名 單", 0738745: bigrams
   0.20); fake bold drawn four times over ("壬壬壬壬", one producer so far);
   3658566 (Ghostscript 8.50) still an empty .docx.
+
+## C14 — text drawn over itself (fake bold) read two to four times
+
+Chinese PDF→Word stage, 2026-10-24. Printer drivers fake bold by drawing a
+line two to four times a fraction of a point apart, or fill it and then
+stroke it. pdf.js gives every copy; the .docx read "壬壬壬壬", "北原北原北原北原
+泰輔プロ泰輔プロ", "透透過學校過過學校".
+
+- **Frequency.** 14 of 368 Chinese corpus documents read without OCR,
+  30–790 extra Han each, from independent producers: EXP Systems, Distiller 9,
+  Ghostscript 8.15 / 8.50 / 8.70 / 9.04 / 9.07, Quartz. Two shapes: copies
+  as identical items at one point, and copies cut into different items
+  ("備註" over "備" + "註").
+- **Fix.** `dropOverprintedText` (js/textLayoutUtils.js), after the steps
+  that match items to the page's glyphs: a copy is the same glyph, the same
+  size within 2 % and direction, at the same point within 0.15 of its size;
+  items of CJK glyphs and full-width marks only are compared glyph by glyph
+  and keep the pieces no earlier item drew, other items only when they repeat
+  one whole. Unit tests: two of the same character in a row, the same text in
+  two cells, a vertical column, kerned glyphs, a shadow 10 % larger, a stamp
+  turned, Arabic — all kept. Fixture `overprint.pdf` (`make-overprint.py`).
+- **Result.** Discovery (17): 14 without a duplicate left, recall unchanged
+  everywhere. Chinese sample (128): 5 better, none worse — the one the metric
+  flagged (4734358) has its repeated title in the Word header now (#62),
+  which the draft metric doesn't read. Control pool (323): 11 better; of 3
+  flagged, one was real and is fixed (0988799: a title's shadow 10 % larger,
+  half matched — hence the 2 % size rule), one a metric artifact (4078202:
+  the old output's "別別科科" held the bigram), one a runner refusal that
+  converted on rerun. Arabic corpus (289, main vs fix, same machine): 0
+  worse; Latin sample (72): 67 identical, 5 lost a duplicate drawn at the
+  same point ("Частная лавочкаЧастная лавочка", "참고참고").
+- **Left.** Copies cut together with spaces, digits or Latin ("（ 星期三）",
+  "2 0 11 年"): positions inside such items can't be told from their width
+  — 2208776, 5569194 keep part of their duplicates.

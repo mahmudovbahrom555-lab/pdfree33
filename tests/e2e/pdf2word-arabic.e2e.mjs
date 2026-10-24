@@ -39,6 +39,10 @@
 //  TCPDF, Acrobat PDFWriter, Hong Kong filings): pdf.js read none of their
 //  text without the CMap files, the .docx had the Latin only or nothing.
 //  Fixture: cjk-cmaps.pdf (make-cjk-cmaps.py).
+//  And text a printer driver drew several times over itself to fake bold
+//  (class C14, 2026-10-24: 14 of 368 Chinese corpus documents, "壬壬壬壬"):
+//  read once, while "謝謝" and the same text in two cells stay.
+//  Fixture: overprint.pdf (make-overprint.py).
 //  Run: node tests/e2e/pdf2word-arabic.e2e.mjs   (dist/ served on :8934)
 // ============================================================
 
@@ -162,6 +166,14 @@ try {
       if (!out.includes(want)) throw new Error(`"${want}" missing: ${out.slice(0, 300)}`);
     }
     if (!out.includes('Korean 2026')) throw new Error(`Latin lost: ${out.slice(0, 300)}`);
+  });
+
+  await test('text drawn over itself (fake bold) is read once; "謝謝" and two cells of "合計" stay', async () => {
+    const out = await docxText(browser, 'overprint.pdf');
+    const count = w => out.split(w).length - 1;
+    for (const w of ['年柱壬戌', '技術於校園安全建置之經驗分享', '備註欄']) if (count(w) !== 1) throw new Error(`"${w}" ${count(w)} times: ${out}`);
+    if (/壬壬|備備|註註/.test(out)) throw new Error(`copies left: ${out}`);
+    if (!out.includes('謝謝您的參與') || count('合計') !== 2) throw new Error(`real text lost: ${out}`);
   });
 } finally {
   await browser.close();
