@@ -63,6 +63,19 @@ node scripts/corpus-cloud/robust.mjs --docs corpus-cloud-docs --out corpus-cloud
 python3 scripts/corpus-cloud/report.py corpus-cloud-out/results.jsonl
 ```
 
+For runs that compare builds, take the documents through the cache instead
+(`cache.py`): it keeps them outside temporary folders (`~/.cache/pdfree-corpus`,
+or `$PDFREE_CORPUS_CACHE`), checks each against the SHA-256 pinned in
+`tests/corpus/cloud/sha256.json`, fetches a missing or damaged one again, and
+stops with `SourceChanged` — never taking it — when the source now holds other
+bytes. A document with no pin is refused unless `--pin-new` is given. Copies,
+not links: a cleared folder once turned a 60-document run into 60 harness
+failures.
+
+```
+python3 scripts/corpus-cloud/cache.py materialize run-docs --list names.txt
+```
+
 ## Adding a file
 
 - **Never** a user-supplied or personal document — this repository is public.
