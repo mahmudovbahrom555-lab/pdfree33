@@ -6,7 +6,9 @@
 //  one (Split 65 %). An attempt runs from a tool opening, or a result, to the
 //  next result: one event however many files come, none more for removing and
 //  adding again, a new one after a result or in another tool. The event holds
-//  no file name. Analytics calls are intercepted here, never sent.
+//  no file name. And Draw, which downloads its result itself, sends Tool
+//  Success and Download like every other tool. Analytics calls are
+//  intercepted here, never sent.
 //  Run: node tests/e2e/file-added-analytics.e2e.mjs   (dist/ served on :8934)
 // ============================================================
 
@@ -97,6 +99,47 @@ await test('another tool opened in the page: its first file counts for it', asyn
     const tools = s.added().map(e => e.props.tool).join(',');
     if (tools !== 'merge,split') throw new Error(`File Added for: ${tools}`);
   } finally { await s.context.close(); }
+});
+
+// Draw downloads its result itself: Tool Success and Download were never sent
+// (verified on pdfree.io 2026-10-25: annotated.pdf saved, events Tool Open and
+// File Added only).
+async function drawStroke(page, dx = 0) {
+  const bb = await (await page.$('#drawCanvas')).boundingBox();
+  await page.mouse.move(bb.x + 80 + dx, bb.y + 80); await page.mouse.down();
+  for (let k = 1; k <= 10; k++) await page.mouse.move(bb.x + 80 + dx + k * 15, bb.y + 80 + k * 8);
+  await page.mouse.up(); await page.waitForTimeout(300);
+}
+await test('Draw: a downloaded drawing sends Tool Success and Download once per result, after the download — none with nothing drawn, none for the same drawing again', async () => {
+  const s = await open('/draw-on-pdf/');
+  const context = s.context;
+  try {
+    const at = {};
+    s.page.on('download', () => { at.download ??= Date.now(); });
+    await s.page.route('**/api/analytics', r => {
+      const e = JSON.parse(r.request().postData()); s.events.push(e);
+      if (e.event === 'Tool Success') at.success ??= Date.now();
+      r.fulfill({ status: 200, body: 'OK' });
+    });
+    await s.page.setInputFiles('#fileInput', B); await s.page.waitForTimeout(5000);
+    await s.page.click('#downloadPdfBtn'); await s.settle();   // nothing drawn: no result
+    const count = name => s.events.filter(e => e.event === name && e.props.tool === 'draw-pdf').length;
+    if (count('Tool Success')) throw new Error('a success with nothing drawn');
+    await drawStroke(s.page);
+    const [dl] = await Promise.all([s.page.waitForEvent('download', { timeout: 60000 }), s.page.click('#downloadPdfBtn')]);
+    await s.settle();
+    if (!dl) throw new Error('no download');
+    if (count('Tool Success') !== 1 || count('Download') !== 1) throw new Error(`success ${count('Tool Success')}, download ${count('Download')}`);
+    if (!(at.download <= at.success)) throw new Error('success sent before the download started');
+    await Promise.all([s.page.waitForEvent('download', { timeout: 60000 }), s.page.click('#downloadPdfBtn')]);   // same drawing again
+    await s.settle();
+    if (count('Tool Success') !== 1 || count('Download') !== 1) throw new Error(`the same drawing again: success ${count('Tool Success')}, download ${count('Download')}`);
+    await drawStroke(s.page, 120);   // a new stroke: a new result
+    await Promise.all([s.page.waitForEvent('download', { timeout: 60000 }), s.page.click('#downloadPdfBtn')]);
+    await s.settle();
+    if (count('Tool Success') !== 2 || count('Download') !== 2) throw new Error(`a changed drawing: success ${count('Tool Success')}, download ${count('Download')}`);
+    if (s.events.some(e => /normal-3page|annotated/.test(JSON.stringify(e)))) throw new Error('a file name in an event');
+  } finally { await context.close(); }
 });
 
 await browser.close();

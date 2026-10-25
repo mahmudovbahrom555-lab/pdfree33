@@ -251,8 +251,10 @@ function goHome() {
   requestAnimationFrame(() => hideAllToolOptions()); // heavy DOM — after paint
 }
 
-// File Added sent for the current attempt (the files-added listener)
+// File Added sent for the current attempt (the files-added listener); a tool
+// that delivers its result itself (Draw) ends the attempt with pdfree:attempt-done
 let _fileAddedThisAttempt = false;
+document.addEventListener('pdfree:attempt-done', () => { _fileAddedThisAttempt = false; });
 
 function showTool(tool, pushHistory = true, preFiles = null) {
   if (!TOOLS[tool]) return;
