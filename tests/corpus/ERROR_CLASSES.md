@@ -662,3 +662,42 @@ stroke it. pdf.js gives every copy; the .docx read "壬壬壬壬", "北原北原
 - **Left.** Copies cut together with spaces, digits or Latin ("（ 星期三）",
   "2 0 11 年"): positions inside such items can't be told from their width
   — 2208776, 5569194 keep part of their duplicates.
+
+## C15 — letter-spaced Chinese and Japanese read with a space between every glyph
+
+Chinese PDF→Word stage (P2a), 2026-10-25. A title, a table header or a name
+spread to a cell's width is drawn a glyph at a time with even gaps; pdf.js
+puts a space in each gap, and the .docx read "董 事 名 單", "氏 名 所 属",
+"山 口 那 智".
+
+- **Frequency.** 98 of 451 Chinese and Japanese corpus documents, from
+  independent producers (Crystal Reports, Excel, iText, Bullzip, Ghostscript,
+  Distiller, Quartz).
+- **Fix.** `markLetterSpacing` (js/textLayoutUtils.js): neighbours on a line,
+  each a single Han or kana glyph under 2 em apart, form a chain; its spacing
+  is the narrowest gap (at least 0.1 em — touching glyphs are plain text), and
+  gaps within 0.2 em of it are spacing; a chain needs two such gaps, or
+  another chain on the line with the same spacing. Wider gaps stay spaces — a
+  Japanese name's family–given gap is a whole em wider ("青山 桃子"). The
+  items are only **marked**; text is assembled from the marks (`spacedText`:
+  the .docx paragraphs, list items, table cells, `joinSpacedItems`). Run 1
+  deleted pdf.js's space items instead: table detection reads those gaps and
+  built other tables in 17 documents (0 tables → 4, 84 cells from none) —
+  rejected, fixed, re-run. Unit tests (geometry untouched, names as words
+  keep their space, full-width digits, 3 em cells, Korean, a typed space);
+  e2e fixture `letter-spacing.pdf` (`make-letter-spacing.py`).
+- **Result (run 2; criteria fixed before run 1, `scratchpad` CRITERIA_P2a.md).**
+  Chinese/Japanese (451, the set the rule was tuned on — evidence of effect,
+  not generality): 2,884 spaces closed in 98 documents; structure (tables,
+  cells, paragraphs) identical in 448/448; header/footer and paragraph count
+  unchanged; 0 spaces added; draft metric 0 worse, 0 mixed, 54 better; order
+  and numbers worse in none; time the same. Hand check of a seeded sample of
+  100 closed gaps: 92 right, 2 wrong, 6 in source text already garbled; no
+  name with a wider family–given gap glued. Arabic control (60): byte-identical.
+  English control (25): 23 byte-identical, 2 (Japanese and Chinese Wikipedia
+  PDFs) only lost spaces.
+- **Left.** Evenly spaced one-glyph table columns can't be told from
+  spacing: a calendar header "日 月 火 水 木 金 土" reads "日月火水木金土"
+  (4196938, both wrong cases). Names spread with even gaps lose their
+  family–given space ("島野博幸") — the source draws none. Proof of
+  generality waits for the holdout set.

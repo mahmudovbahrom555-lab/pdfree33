@@ -29,7 +29,7 @@ import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PR
          detectColumnGutter, reconcileColumnSplit, ereaderSampleIndices } from './ereaderCrop.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, toArabicBaseLetters, toUnifiedIdeographs, joinTouchingItems, _splitCrossColumnLines, _isCjk,
-         lineRuns, joinSpacedItems,
+         lineRuns, joinSpacedItems, spacedText,
          lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
          lineEndsParagraph, continuesWrappedHeading, isContentsEntry } from './textLayoutUtils.js';
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
@@ -4273,7 +4273,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
   // strip a marker that may span or sit inside an item boundary makes
   // per-item run preservation not worth the complexity here.
   const _buildListParagraph = (ln, markerRe, listProps) => {
-    const rawText = ln.items.map(i => i.str).join('');
+    const rawText = ln.items.map(spacedText).join('');
     const text = rawText.replace(markerRe, '').trim();
     if (!text) return null;
     const bold   = ln.items.every(i => i.bold);
@@ -4355,8 +4355,9 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
       for (let idx = 0; idx < ln.items.length; idx++) {
         const item = ln.items[idx];
         const prev = ln.items[idx - 1];
+        if (item.lsSkip) continue;   // a space inside letter spacing (markLetterSpacing)
 
-        const text0 = item.str;
+        const text0 = spacedText(item);
         let text = text0;
 
         if (idx === 0 && li > 0) {
@@ -4367,8 +4368,9 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
           if (!lastStr.endsWith(' ') && !text0.startsWith(' ') && !cjkJoin(lastStr, text0)) {
             text = ' ' + text;
           }
-        } else if (prev && !prev.str.endsWith(' ') && !text0.startsWith(' ')) {
-          // gap-based space insertion within the same line. Right-to-left lines
+        } else if (prev && !item.joinsPrev && !prev.str.endsWith(' ') && !text0.startsWith(' ')) {
+          // gap-based space insertion within the same line — not at letter
+          // spacing (dropLetterSpacing marks the glyph after such a gap). Right-to-left lines
           // too, measured either way (logical order runs right to left, a Latin
           // name inside it left to right): a Persian newsletter's words, one
           // item each and no space items, came out glued (corpus 0828977).

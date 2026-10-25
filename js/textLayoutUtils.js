@@ -12,6 +12,8 @@
 // ============================================================
 
 import { detectColumnRegions, regionIndexForX, lineSpansRegions } from './pdf2wordColumns.js';
+import { spacedText } from './pdf2wordTables.js';
+export { spacedText };
 
 // Shared list-line detector — pdf2md and pdf2word (_p2wBuildParagraphs) both
 // use this exact pattern to keep list items from being swallowed into the
@@ -365,16 +367,82 @@ const _right = item => item.x + (item.width || 0);
 // Items of one line, in reading order, as text: a space only where the gap
 // between two of them is over GAP_EM — or 0.8 of the line's space glyph, if
 // narrower (C9) — and neither side already has one.
-export function joinSpacedItems(items) {
-  let str = items[0]?.str ?? '';
+// Letter-spaced Chinese and Japanese: a title, a table header or a name spread
+// to a cell's width is drawn a glyph at a time with even gaps, and each gap
+// came out a space — "董 事 名 單", "氏 名 所 属", "山 口 那 智" (P2a, 2026-10-24:
+// 51 of 436 corpus documents, Crystal, Excel, iText, Quartz, Distiller…).
+// Neighbours on one line, each a single Chinese or Japanese glyph — spread
+// text is drawn a glyph at a time; two words side by side are a name's family
+// and given parts ("井手口 峻"), never spacing — form a chain while under 2 em
+// apart; the chain's narrowest gap is its spacing — at
+// least 0.1 em: glyphs that touch are plain text, where a 0.25 em gap is a
+// typed space ("東京都 新宿区") — and a gap within 0.2 em of it is spacing too
+// (0.14–0.18 em in one spread line), not a word gap. Wider gaps stay
+// spaces: a Japanese name's family–given gap is a whole em wider ("青山 桃子":
+// 0.54 em spacing, 1.54 between the names), a field or a cell 3 em and more. A
+// chain needs two gaps alike — three glyphs evenly apart — or another chain on
+// the line with the same spacing (within 0.1 em: "氏 名" and "所 属" as two
+// headers). Returns the indices k whose gap after items[k - 1] is spacing.
+// pdf.js often puts the space on the next glyph's item (" 名"): its x and width
+// then take in the space, so a glyph's edges are its own em at the far end.
+const _CJK_GLYPH_RE = /^[\u3040-\u30FF\u3400-\u9FFF\uF900-\uFAFF]$/u;
+const _glyphLeft = (item, em) => (/^\s/.test(item.str) ? _right(item) - em : item.x);
+const _glyphRight = (item, em) => (/\s$/.test(item.str) ? item.x + em : _right(item));
+export function letterSpacingGaps(items) {
+  const chains = [];
+  let chain = null;
   for (let k = 1; k < items.length; k++) {
     const a = items[k - 1], b = items[k];
+    const em = Math.max(a.fontSize || 0, b.fontSize || 0) || 10;
+    const gap = (_glyphLeft(b, b.fontSize || em) - _glyphRight(a, a.fontSize || em)) / em;
+    if (_CJK_GLYPH_RE.test(a.str.trim()) && _CJK_GLYPH_RE.test(b.str.trim()) && gap < 2) {
+      if (!chain) chains.push(chain = []);
+      chain.push({ k, gap });
+    } else chain = null;
+  }
+  const spaced = chains.map(c => {
+    const t = Math.min(...c.map(g => g.gap));
+    return { t, gaps: t >= 0.1 ? c.filter(g => g.gap <= t + 0.2) : [] };
+  }).filter(s => s.gaps.length);
+  const out = new Set();
+  for (const s of spaced) {
+    if (s.gaps.length >= 2 || spaced.some(o => o !== s && Math.abs(o.t - s.t) <= 0.1)) for (const g of s.gaps) out.add(g.k);
+  }
+  return out;
+}
+
+// Marks a line's letter spacing (letterSpacingGaps) on its items, changing
+// nothing else: the space items pdf.js puts in such a gap get `lsSkip`, the
+// glyphs on either side `lsTrimEnd` / `lsTrimStart` (pdf.js may carry the space
+// on a glyph's item, " 名"), the glyph after the gap `joinsPrev`. Text is
+// assembled from the marks (spacedText, joinSpacedItems, the .docx writer, the
+// table cells); the items themselves stay where they were — deleting the space
+// items opened new gaps between glyphs, and table detection, which reads those
+// gaps, built other tables in 15 of 451 Chinese and Japanese documents (0
+// tables → 4, 84 cells from none) (P2a run 1, 2026-10-25).
+export function markLetterSpacing(items) {
+  const glyphs = items.filter(item => item.str.trim());
+  for (const k of letterSpacingGaps(glyphs)) {
+    const a = glyphs[k - 1], b = glyphs[k];
+    a.lsTrimEnd = true;
+    b.lsTrimStart = true;
+    b.joinsPrev = true;
+    for (let i = items.indexOf(a) + 1; i < items.indexOf(b); i++) if (!items[i].str.trim()) items[i].lsSkip = true;
+  }
+}
+
+export function joinSpacedItems(items) {
+  let str = items[0] ? spacedText(items[0]) : '';
+  for (let k = 1; k < items.length; k++) {
+    const a = items[k - 1], b = items[k];
+    if (b.lsSkip) continue;
+    if (b.joinsPrev) { str += spacedText(b); continue; }
     const gap = Math.max(b.x - _right(a), a.x - _right(b));
     const em = Math.max(a.fontSize || 0, b.fontSize || 0) || 10;
     // the line's own space glyph, as for running text (_spaceGaps)
     const space = a.spaceWidth || b.spaceWidth;
     const wide = space ? Math.min(GAP_EM * em, 0.8 * space) : GAP_EM * em;
-    str += (gap > wide && !a.str.endsWith(' ') && !b.str.startsWith(' ') ? ' ' : '') + b.str;
+    str += (gap > wide && !a.str.endsWith(' ') && !b.str.startsWith(' ') ? ' ' : '') + spacedText(b);
   }
   return str;
 }
