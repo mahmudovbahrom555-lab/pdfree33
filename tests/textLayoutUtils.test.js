@@ -10,7 +10,7 @@
 import { strict as assert } from 'assert';
 import { joinSpacedItems, joinSplitNumbers, restoreDroppedSpaces, restoreGlyphOrder, joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
   lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
-  continuesWrappedHeading, lineRuns , textLayerLooksBroken, toUnifiedIdeographs, joinTouchingItems, dropCjkGapSpaces, isContentsEntry, dropOverprintedText } from '../js/textLayoutUtils.js';
+  continuesWrappedHeading, lineRuns , textLayerLooksBroken, toUnifiedIdeographs, joinTouchingItems, dropCjkGapSpaces, isContentsEntry, dropOverprintedText, markLetterSpacing, spacedText } from '../js/textLayoutUtils.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -760,6 +760,71 @@ test('overprint, not: a shadow drawn 10 % larger stays whole — no pieces left 
 test('overprint: empty and space items and items without a transform pass through', () => {
   const r = dropOverprintedText([{ str: '', hasEOL: true }, it(' ', 10, 10), it(' ', 10, 10), { str: 'x' }]);
   assert.equal(r.length, 4);
+});
+
+// Letter-spaced Chinese and Japanese (P2a, 2026-10-24): gaps in em as the
+// corpus documents draw them, a space item in each gap over 0.15 em as pdf.js gives.
+const spacedLine = (glyphs, gaps, size = 10) => {
+  const items = []; let x = 0;
+  [...glyphs].forEach((g, k) => {
+    if (k) {
+      const gap = gaps[k - 1] * size;
+      if (gaps[k - 1] > 0.15) items.push({ str: ' ', x, width: gap, fontSize: size });
+      x += gap;
+    }
+    items.push({ str: g, x, width: size, fontSize: size });
+    x += size;
+  });
+  markLetterSpacing(items);
+  return items.map(spacedText).join('');
+};
+test('letter spacing: an evenly spread Chinese line loses its spaces (0738745)', () => {
+  assert.equal(spacedLine('董事名單與其角色', [0.14, 0.14, 0.15, 0.14, 0.14, 0.14, 0.14]), '董事名單與其角色');
+  assert.equal(spacedLine('每週上課時間', [1, 1, 1, 1, 1]), '每週上課時間');
+});
+test('letter spacing: a Japanese name keeps its family–given space, a whole em wider (7909868)', () => {
+  assert.equal(spacedLine('青山桃子', [0.54, 1.54, 0.53]), '青山 桃子');
+  assert.equal(spacedLine('西久保直心', [0.30, 0.30, 1.30, 0.30]), '西久保 直心');
+  assert.equal(spacedLine('田嶋優里奈', [0.15, 1.15, 0.16, 0.15]), '田嶋 優里奈');
+});
+test('letter spacing: two spread headers on a line join each, not each other (5547861, 2706899)', () => {
+  assert.equal(spacedLine('氏名所属', [1.00, 4.38, 1.00]), '氏名 所属');
+  assert.equal(spacedLine('氏名所属', [0.66, 5.84, 0.66]), '氏名 所属');
+});
+test('letter spacing: cells 3 em apart stay apart; one lone spaced pair stays; Korean stays', () => {
+  assert.equal(spacedLine('日一二三四', [3.12, 3.5, 2.9, 3.2]), '日 一 二 三 四');
+  assert.equal(spacedLine('男女', [1.0]), '男 女');
+  assert.equal(spacedLine('문서관리', [0.5, 0.5, 0.5]), '문 서 관 리');
+});
+test('letter spacing: glyphs that touch are plain text — a typed space between them stays', () => {
+  assert.equal(spacedLine('東京都新宿区西新宿', [0, 0, 0.25, 0, 0, 0, 0, 0]), '東京都 新宿区西新宿');
+});
+test('letter spacing: names as words keep their family–given space, however alike the gaps (1309849, 0048931)', () => {
+  const it = (str, x) => ({ str, x, width: str.length * 10, fontSize: 10 });
+  const items = [it('井手口', 0), it(' ', 30), it('峻', 35), it(' ', 45), it('堀口', 80), it(' ', 100), it('蒼太', 105)];
+  markLetterSpacing(items);
+  assert.equal(items.map(spacedText).join(''), '井手口 峻 堀口 蒼太');
+});
+test('letter spacing: full-width digits and dashes are no glyphs of spread text (a score "３ － １")', () => {
+  assert.equal(spacedLine('３－１', [0.5, 0.5]), '３ － １');
+});
+test('letter spacing: the space pdf.js puts on the next glyph\'s item (" 名") is spacing too', () => {
+  const it = (str, x, width) => ({ str, x, width, fontSize: 10 });
+  // 氏 名 1 em apart, 所 属 too, 4.4 em between: the space carried by " 名" and " 属"
+  const items = [it('氏', 0, 10), it(' 名', 10, 20), it(' ', 20, 44), it('所', 64, 10), it(' 属', 74, 20)];
+  markLetterSpacing(items);
+  assert.equal(items.map(spacedText).join(''), '氏名 所属');
+});
+test('letter spacing only marks: the line keeps every item, where it was, with its text (tables read those gaps — P2a run 1)', () => {
+  const it = (str, x, width) => ({ str, x, width, fontSize: 10 });
+  const items = [it('氏', 0, 10), it(' ', 10, 10), it('名', 20, 10), it(' ', 30, 44), it('所', 74, 10), it(' ', 84, 10), it('属', 94, 10)];
+  const before = JSON.stringify(items.map(i => [i.str, i.x, i.width]));
+  markLetterSpacing(items);
+  assert.equal(JSON.stringify(items.map(i => [i.str, i.x, i.width])), before);
+  assert.equal(items.map(spacedText).join(''), '氏名 所属');
+});
+test('letter spacing: uneven gaps are words, not spacing', () => {
+  assert.equal(spacedLine('東京大阪名古屋', [0.0, 0.9, 0.0, 1.6, 0.0, 0.0]), '東京 大阪 名古屋');
 });
 
 const total = passed + failed;

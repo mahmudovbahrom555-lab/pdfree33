@@ -44,6 +44,17 @@ const MIN_COVERAGE_FRACTION = 0.5;
  * @param {boolean} [opts.debug=false]  — log detection details to console
  * @returns {TableResult[]}
  */
+// An item's text as letter spacing leaves it (markLetterSpacing in
+// textLayoutUtils.js marks a line's items; here, with no imports, so this
+// module and textLayoutUtils.js can both use it without a cycle).
+export function spacedText(item) {
+  if (item.lsSkip) return '';
+  let str = item.str;
+  if (item.lsTrimStart) str = str.trimStart();
+  if (item.lsTrimEnd) str = str.trimEnd();
+  return str;
+}
+
 export function detectTables(lines, { debug = false } = {}) {
   lines = lines.map(_joinTouchingItems);
   const tables = [];
@@ -565,8 +576,11 @@ function _assignToCellsWithFonts(items, colBounds) {
   const fonts = colBounds.map(() => undefined);
 
   for (const item of items) {
+    if (item.lsSkip) continue;   // a space inside letter spacing (markLetterSpacing)
     const bestCol = _nearestCol(_anchor(item), colBounds);
-    texts[bestCol].push(item.str);
+    // a glyph of letter-spaced text joins the one before it with no space
+    if (item.joinsPrev && texts[bestCol].length) texts[bestCol][texts[bestCol].length - 1] += spacedText(item);
+    else texts[bestCol].push(spacedText(item));
     if (fonts[bestCol] === undefined && item.fontFamily) fonts[bestCol] = item.fontFamily;
   }
 

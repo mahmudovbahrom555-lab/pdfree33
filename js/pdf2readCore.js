@@ -43,7 +43,7 @@ import { pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
 import { detectTableGrids, lineInGrid, gridRowsOfLines, gridHoldsTable } from './pdf2wordBorders.js';
 import { applyDigitFix } from './pdfDigitFix.js';
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
-         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken, joinSpacedItems, dropCjkGapSpaces, applyActualText, restoreDroppedSpaces, restoreGlyphOrder, joinSplitNumbers, dropOverprintedText } from './textLayoutUtils.js';
+         _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, textLayerLooksBroken, joinSpacedItems, dropCjkGapSpaces, applyActualText, restoreDroppedSpaces, restoreGlyphOrder, joinSplitNumbers, dropOverprintedText, markLetterSpacing } from './textLayoutUtils.js';
 
 // XML 1.0's Char production disallows most C0 control characters (only
 // tab/LF/CR are valid: #x9 | #xA | #xD | [#x20-...]) — pdf.js text
@@ -897,7 +897,10 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
       // lines like "Arabic (العربية)" where LTR words have lower X than RTL words.
       // Word's built-in BiDi algorithm handles display when bidirectional:true is set.
       // Exception: a stream drawn left-to-right (visual) — see reorderVisualRtlLine.
-      if (rtlCnt === 0) ln.items.sort((a, b) => a.x - b.x);
+      if (rtlCnt === 0) {
+        ln.items.sort((a, b) => a.x - b.x);
+        markLetterSpacing(ln.items);
+      }
       else {
         reorderVisualRtlLine(ln.items);
         joinSplitNumbers(ln.items);

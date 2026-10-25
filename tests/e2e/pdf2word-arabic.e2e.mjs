@@ -48,6 +48,11 @@
 //  the Word HEADER — the page's "first three" and "last three" lines were the
 //  same. Bottom lines go to the footer, top lines to the header.
 //  Fixture: footer-only.pdf (make-footer-only.py).
+//  And Chinese and Japanese spread a glyph at a time with even gaps (P2a,
+//  2026-10-24: 51 of 436 corpus documents, "董 事 名 單", "氏 名 所 属"):
+//  read as words, while a name's family–given gap and cells 3 em apart keep
+//  their space.
+//  Fixture: letter-spacing.pdf (make-letter-spacing.py).
 //  Run: node tests/e2e/pdf2word-arabic.e2e.mjs   (dist/ served on :8934)
 // ============================================================
 
@@ -188,6 +193,13 @@ try {
     if (/173842|example-shop|Firenze/.test(header)) throw new Error(`bottom line in the header: ${JSON.stringify(header)}`);
     const all = header + footer + body;
     for (const w of ['173842', 'example-shop.com', '0548100']) if (!all.includes(w)) throw new Error(`"${w}" lost: header ${JSON.stringify(header)} footer ${JSON.stringify(footer)}`);
+  });
+  await test('letter-spaced Chinese and Japanese read as words; real gaps keep their space', async () => {
+    const out = await docxText(browser, 'letter-spacing.pdf');
+    for (const w of ['董事名單與其角色', '氏名', '所属', '青山 桃子']) {
+      if (!out.includes(w)) throw new Error(`"${w}" missing: ${JSON.stringify(out)}`);
+    }
+    for (const w of ['氏名所属', '青山桃子', '日一']) if (out.includes(w)) throw new Error(`"${w}" glued: ${JSON.stringify(out)}`);
   });
 } finally {
   await browser.close();
