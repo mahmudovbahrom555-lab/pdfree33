@@ -20,6 +20,7 @@ import { loadPdfJs }  from './pdf2jpgUI.js';
 import { id }         from './utils.js';
 import { showToast }  from './ui.js';
 import { t }          from './i18n.js';
+import { trackToolSuccess, trackDownload } from './analytics.js';
 
 // ── Constants ──────────────────────────────────────────────────
 const MAX_DIMENSION            = 4096;   // internal: canvas pixel size guard
@@ -1116,6 +1117,18 @@ function _clearPage() {
 
 // ── Export ─────────────────────────────────────────────────────
 
+// What has been drawn, as a string that changes with any stroke added, undone
+// or redone: each page's command count and its last command's identity.
+const _cmdIds = new WeakMap();
+let _cmdSeq = 0, _lastExported = null;
+function _drawingSignature() {
+  return [..._pageCommands].map(([page, cmds]) => {
+    const last = cmds[cmds.length - 1];
+    if (last && typeof last === 'object' && !_cmdIds.has(last)) _cmdIds.set(last, ++_cmdSeq);
+    return `${page}:${cmds.length}:${last && typeof last === 'object' ? _cmdIds.get(last) : ''}`;
+  }).join('|');
+}
+
 async function _exportToPdf() {
   if (!_pdfJsDoc || !_originalBuf) return;
 
@@ -1156,6 +1169,17 @@ async function _exportToPdf() {
     a.click();
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(url), 10000);
+    // A result, as every other tool's — Draw downloads it itself, not through
+    // pdfree:success (that would download it a second time), so neither
+    // Tool Success nor Download was ever sent (2026-10-25). Once per result:
+    // pressed again with the drawing unchanged, it's the same file again.
+    const drawn = _drawingSignature();
+    if (drawn !== _lastExported) {
+      _lastExported = drawn;
+      trackToolSuccess('draw-pdf', { outputSize: blob.size });
+      trackDownload('draw-pdf', blob.size);
+      document.dispatchEvent(new CustomEvent('pdfree:attempt-done'));
+    }
 
   } catch (err) {
     showToast(t('draw_export_failed', { msg: err.message }));
