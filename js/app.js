@@ -251,6 +251,9 @@ function goHome() {
   requestAnimationFrame(() => hideAllToolOptions()); // heavy DOM — after paint
 }
 
+// File Added sent for the current attempt (the files-added listener)
+let _fileAddedThisAttempt = false;
+
 function showTool(tool, pushHistory = true, preFiles = null) {
   if (!TOOLS[tool]) return;
   if (isProcessing) { showToast(t('wait_processing')); return; }
@@ -262,6 +265,7 @@ function showTool(tool, pushHistory = true, preFiles = null) {
   currentTool = tool;
   const lt = getLocalizedTool(TOOLS[tool]);
   trackToolOpen(tool);
+  _fileAddedThisAttempt = false;   // a new attempt (see the files-added listener)
   // its worker's scripts into the cache while the page is idle (warmToolScripts)
   (window.requestIdleCallback ?? (f => setTimeout(f, 1500)))(() => warmToolScripts(tool));
 
@@ -356,6 +360,7 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
   // for pdf2ppt, how many use "Editable text" (a Chinese user's report on it,
   // 2026-10-15, couldn't be told apart from Image mode).
   trackToolSuccess(tool, { outputSize: blob.size, requestedCount, successCount, mode });
+  _fileAddedThisAttempt = false;   // the attempt is done: the next file starts another
 
   const card = id('successCard');
   card.style.display = 'block';
@@ -719,8 +724,13 @@ function initEvents() {
 
   // Zone B: после первого файла
   document.addEventListener('pdfree:files-added', () => {
-    // Analytics: track first file per tool session
-    if (selectedFiles.length === 1) {
+    // Analytics: once per attempt — from a tool opening, or a result, to the
+    // next result — however many files come at once. It fired only when the
+    // list held exactly one file, so Merge and JPG→PDF, whose files come
+    // several at a time, counted 11 % and 9 % of opens adding one (Split 65 %,
+    // 2026-10-25). Removing files and adding again is the same attempt.
+    if (!_fileAddedThisAttempt && selectedFiles.length) {
+      _fileAddedThisAttempt = true;
       trackFileAdded(currentTool, selectedFiles[0]?.size ?? 0);
     }
   });
