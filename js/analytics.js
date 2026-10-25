@@ -141,8 +141,11 @@ export function trackToolCancel(tool) {
 }
 
 /** Track first file added — measures "activation rate" */
+// def 2 (from 2026-10-25): once per attempt, any number of files (js/app.js).
+// Before it, only adds that left exactly one file in the list were counted —
+// compare File Added only within one definition.
 export function trackFileAdded(tool, fileSize = 0) {
-  _track('File Added', { tool, size: _sizeBucket(fileSize) });
+  _track('File Added', { tool, size: _sizeBucket(fileSize), def: 2 });
 }
 
 /**
