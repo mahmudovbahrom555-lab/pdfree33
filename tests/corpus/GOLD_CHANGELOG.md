@@ -506,3 +506,19 @@ converter commit — never by both at once.
   outputs (paragraphs written twice, words glued): worse counted, exit 1, no
   document name in its output.
 - **Approved by:** this pull request's review.
+
+## 2026-10-27 — The holdout's reserve set, v1
+
+- **What:** `tests/corpus/cloud/reserve-v1.json`, new (sha256 3b15c192def3920d…): the
+  artifact of holdout.yml run 40493113681 (mode reserve, on main ae0dc8ac,
+  triggered by the owner), copied as is. 200 documents: zh 60, ja 20, ar 40,
+  fa 15, ur 5, en 60 — drawn with the public seed
+  `pdfree-reserve-2026-10-27` from the Tika metadata of
+  CC-MAIN-2021-31-PDF-UNTRUNCATED, text layer only, not encrypted, excluding
+  the 2,306 documents already looked at (every pinned one, sample-v1, the
+  slides sample). Checked here: none of the 200 is among those, none twice.
+- **Why:** where a holdout failure is diagnosed (owner, 2026-10-25) — its
+  documents may be opened, the holdout's never; and the holdout is drawn
+  excluding them, so the two never share a document. The holdout can't run
+  without this file.
+- **Approved by:** this pull request's review.
