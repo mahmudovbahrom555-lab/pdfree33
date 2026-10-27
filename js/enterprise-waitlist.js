@@ -14,6 +14,7 @@
 
     const emailInput = document.getElementById('waitlistEmail');
     const textInput = document.getElementById('waitlistText');
+    const planInput = document.getElementById('waitlistPlan');
     const hpInput = document.getElementById('waitlistHp');
     const statusEl = document.getElementById('waitlistStatus');
     const submitBtn = document.getElementById('waitlistSubmit');
@@ -32,7 +33,7 @@
         body: JSON.stringify({
           type: 'waitlist',
           email: email,
-          text: textInput.value.trim(),
+          text: ('[' + planInput.value + '] ' + textInput.value.trim()).trim(),
           hp: hpInput.value,
           tool: 'enterprise-landing',
           url: location.href,
@@ -49,7 +50,7 @@
           statusEl.textContent = 'Something went wrong — please try again.';
           statusEl.style.color = '#c0392b';
           submitBtn.disabled = false;
-          submitBtn.textContent = 'Get in touch';
+          submitBtn.textContent = 'Send request';
         });
     });
   });

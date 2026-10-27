@@ -16,7 +16,7 @@
   ">
 
   <title>PDFree Enterprise — Self-Hosted PDF Tools On-Prem</title>
-  <meta name="description" content="Run PDFree's PDF tools on your own servers — Docker image, AGPLv3, free forever. For healthcare, legal, finance, and HR teams who need on-prem deployment.">
+  <meta name="description" content="Run PDFree's PDF tools on your own servers — Docker image, AGPLv3, free forever. Optional paid support for teams that want help.">
   <meta name="keywords" content="self-hosted PDF tools, on-prem PDF processing, enterprise PDF tools, private PDF server, HIPAA compliant PDF self-hosted, Docker PDF tools, air-gapped PDF tools">
 
   <meta property="og:title"       content="PDFree Enterprise — Self-Hosted PDF Tools">
@@ -73,7 +73,7 @@
       {
         "@type": "Question",
         "name": "Is the self-hosted image really free?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree is AGPLv3 — the Docker image is free to pull, run, and even modify, forever, for anyone. There's no license key, no seat count, no feature gate. What's a paid conversation is optional deployment help or a support contract, not the software itself." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree is AGPLv3 — the Docker image is free to pull, run, and even modify, forever, for anyone. There's no license key, no seat count, no feature gate. What you can pay for is optional: a support plan ($49 a month) — never the software itself." }
       },
       {
         "@type": "Question",
@@ -94,6 +94,11 @@
         "@type": "Question",
         "name": "Does this include SSO or user accounts?",
         "acceptedAnswer": { "@type": "Answer", "text": "Not yet. The image is anonymous-by-design, same as the hosted site — there's no built-in authentication layer. Put it behind your own reverse proxy or SSO gateway if you need access control." }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens if we stop paying for support?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Nothing changes in the software. It keeps running exactly as before, with every tool — you just stop getting email answers and update help. There is no license check to switch anything off." }
       }
     ]
   }
@@ -157,7 +162,7 @@
         <div>
           <div style="font-size:20px;margin-bottom:8px;">💸</div>
           <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 6px;">Free, no seat count</h3>
-          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">The image itself has no license fee and no per-user gate. Support and deployment help are a separate, optional conversation — not something the software enforces.</p>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">The image itself has no license fee and no per-user gate. Paid support is optional — the price is below — and nothing in the software depends on it.</p>
         </div>
       </div>
     </div>
@@ -182,7 +187,7 @@
           <div style="font-size:12px;color:var(--text2);margin-top:4px;">settles back to, seconds later</div>
         </div>
       </div>
-      <p style="font-size:13.5px;color:var(--text2);line-height:1.65;margin:0;">There's a structural reason it stays this low regardless of file size or how many people are using it: the actual PDF processing runs in each visitor's own browser, same as the public site — this container just serves pages, it never opens or processes a single PDF itself. That's a real, testable difference from self-hosted PDF tools that process files inside their own server process — <a href="https://docs.stirlingpdf.com/Paid-Offerings/" target="_blank" rel="noopener" style="color:var(--green-text)">Stirling-PDF's own docs</a>, for comparison, describe a Java heap sized to a quarter of visible system RAM by default, with real reported out-of-memory errors on large-file OCR jobs. Verify current numbers directly against whatever you're comparing before deciding — this isn't a knock on that project, just a different architecture.</p>
+      <p style="font-size:13.5px;color:var(--text2);line-height:1.65;margin:0;">There's a structural reason it stays this low regardless of file size or how many people are using it: the actual PDF processing runs in each visitor's own browser, same as the public site — this container just serves pages, it never opens or processes a single PDF itself. That's a real, testable difference from self-hosted PDF tools that process files inside their own server process, where memory grows with file size and OCR jobs. Verify current numbers directly against whatever you're comparing before deciding — it's a different architecture, not a knock on anyone.</p>
     </div>
   </section>
 
@@ -199,28 +204,31 @@
     </div>
   </section>
 
-  <!-- What's free vs what's a conversation -->
-  <section style="padding:48px 24px;border-bottom:1px solid var(--border);">
-    <div style="max-width:680px;margin:0 auto;">
-      <h2 style="font-size:22px;font-weight:700;color:var(--text);margin:0 0 24px;text-align:center;">What's free, and what's a conversation</h2>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
-        <div>
-          <h3 style="font-size:15px;font-weight:600;color:var(--green-text);margin:0 0 10px;">Free, always</h3>
-          <ul style="margin:0;padding-left:18px;color:var(--text2);font-size:14px;line-height:1.9;">
-            <li>The Docker image itself</li>
-            <li>Running it in production, at any scale</li>
-            <li>Reading, forking, modifying the source</li>
-          </ul>
-        </div>
-        <div>
-          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 10px;">A conversation, not a checkout</h3>
-          <ul style="margin:0;padding-left:18px;color:var(--text2);font-size:14px;line-height:1.9;">
-            <li>Deployment help for your specific environment</li>
-            <li>A support/SLA contract</li>
-            <li>Custom branding or integration work</li>
-          </ul>
-        </div>
+  <!-- What's free vs what's paid -->
+  <section id="pricing" style="padding:48px 24px;border-bottom:1px solid var(--border);">
+    <div style="max-width:760px;margin:0 auto;">
+      <h2 style="font-size:22px;font-weight:700;color:var(--text);margin:0 0 24px;text-align:center;">What's free, and what you can pay for</h2>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:20px;">
+        <h3 style="font-size:15px;font-weight:600;color:var(--green-text);margin:0 0 10px;">Free, always</h3>
+        <ul style="margin:0;padding-left:18px;color:var(--text2);font-size:14px;line-height:1.9;">
+          <li>The Docker image itself</li>
+          <li>Running it in production, at any scale</li>
+          <li>Reading, forking, modifying the source</li>
+        </ul>
       </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;">
+        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 4px;">Support</h3>
+        <p style="margin:0 0 12px;color:var(--text);"><span style="font-size:24px;font-weight:700;">$49</span> <span style="font-size:13px;color:var(--text2);">a month · or $490 a year</span></p>
+        <ul style="margin:0;padding-left:18px;color:var(--text2);font-size:14px;line-height:1.9;">
+          <li>Email answers within 2 business days</li>
+          <li>Help getting it running on your server, by email</li>
+          <li>Help with every update</li>
+          <li>An email when a release fixes a security issue</li>
+          <li>Bugs you report are looked at first</li>
+        </ul>
+        <p style="font-size:13px;color:var(--text3);line-height:1.6;margin:12px 0 0;">Cancel any time. The software keeps working either way — nothing is switched off.</p>
+      </div>
+      <p style="font-size:14px;color:var(--text2);line-height:1.6;text-align:center;margin:20px 0 0;">You talk directly to the developer who builds PDFree. We agree the details by email, then send an invoice — no checkout, no seat count. Custom branding or integration work is quoted separately.</p>
     </div>
   </section>
 
@@ -231,7 +239,7 @@
       <div style="display:flex;flex-direction:column;gap:16px;">
         <div>
           <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 4px;">Is the self-hosted image really free?</h3>
-          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">Yes. PDFree is AGPLv3 — the Docker image is free to pull, run, and even modify, forever, for anyone. There's no license key, no seat count, no feature gate. What's a paid conversation is optional deployment help or a support contract, not the software itself.</p>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">Yes. PDFree is AGPLv3 — the Docker image is free to pull, run, and even modify, forever, for anyone. There's no license key, no seat count, no feature gate. What you can pay for is optional: a support plan ($49 a month) — never the software itself.</p>
         </div>
         <div>
           <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 4px;">What does AGPLv3 mean for us specifically?</h3>
@@ -249,6 +257,10 @@
           <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 4px;">Does this include SSO or user accounts?</h3>
           <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">Not yet. The image is anonymous-by-design, same as the hosted site — there's no built-in authentication layer. Put it behind your own reverse proxy or SSO gateway if you need access control.</p>
         </div>
+        <div>
+          <h3 style="font-size:15px;font-weight:600;color:var(--text);margin:0 0 4px;">What happens if we stop paying for support?</h3>
+          <p style="font-size:14px;color:var(--text2);line-height:1.6;margin:0;">Nothing changes in the software. It keeps running exactly as before, with every tool — you just stop getting email answers and update help. There is no license check to switch anything off.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -256,13 +268,18 @@
   <!-- Lead capture -->
   <section style="padding:56px 24px;">
     <div style="max-width:480px;margin:0 auto;text-align:center;">
-      <h2 style="font-size:22px;font-weight:700;color:var(--text);margin:0 0 10px;">Want deployment help or a support conversation?</h2>
-      <p style="font-size:14px;color:var(--text2);margin:0 0 24px;">Leave your email — no spam, no drip campaign, just a real reply.</p>
+      <h2 style="font-size:22px;font-weight:700;color:var(--text);margin:0 0 10px;">Ask for support</h2>
+      <p style="font-size:14px;color:var(--text2);margin:0 0 24px;">Leave your email and what you need — you'll get a real reply from the developer, no drip campaign.</p>
       <form id="waitlistForm" style="display:flex;flex-direction:column;gap:10px;">
         <input type="text" id="waitlistHp" name="confirm_subject_line" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" aria-hidden="true">
         <input type="email" id="waitlistEmail" required placeholder="you@company.com" style="padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:15px;background:var(--surface);color:var(--text);font-family:var(--font-sans);">
-        <input type="text" id="waitlistText" maxlength="300" placeholder="What are you looking to deploy? (optional)" style="padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:15px;background:var(--surface);color:var(--text);font-family:var(--font-sans);">
-        <button type="submit" id="waitlistSubmit" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;border:none;cursor:pointer;font-family:var(--font-sans);">Get in touch</button>
+        <select id="waitlistPlan" aria-label="What you need" style="padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:15px;background:var(--surface);color:var(--text);font-family:var(--font-sans);">
+          <option value="Support">Support ($49 a month)</option>
+          <option value="Support yearly">Support ($490 a year)</option>
+          <option value="Something else">Something else</option>
+        </select>
+        <input type="text" id="waitlistText" maxlength="300" placeholder="Anything we should know? (optional)" style="padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:15px;background:var(--surface);color:var(--text);font-family:var(--font-sans);">
+        <button type="submit" id="waitlistSubmit" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;border:none;cursor:pointer;font-family:var(--font-sans);">Send request</button>
         <p id="waitlistStatus" role="status" aria-live="polite" style="font-size:13px;margin:4px 0 0;min-height:18px;"></p>
       </form>
       <p style="font-size:13px;color:var(--text3);margin-top:20px;">Prefer to self-serve? <a href="https://github.com/mahmudovbahrom555-lab/pdfree33/blob/main/SELF_HOSTING.md" target="_blank" rel="noopener" style="color:var(--green-text)">Read SELF_HOSTING.md</a> — no form needed, the image is public right now.</p>
