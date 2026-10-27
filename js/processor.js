@@ -198,17 +198,22 @@ export function startCompressScan(file) {
 
   return new Promise(resolve => {
     _scanResolve = resolve;
-    _shared().onmessage = (e) => {
-      if (e.data.type === 'scan-done') {
-        _scanResolve = null;
-        _shared().onmessage = null;
-        resolve(e.data.report);
-      }
-    };
-    // File is sent by structured clone (not Transferable) — stays accessible in main thread.
-    // Its private copy when there is one (files.js _keepCopy): a clone drops the
-    // File's redirected reads, and the worker would read the file on disk again.
-    _shared().postMessage({ tool: 'compress-scan', file: file._copy ?? file });
+    // pdf-lib in the HTTP cache first, as doProcess does: this scan starts the
+    // shared worker when a file is added, and its importScripts doesn't retry
+    _warmPdfLib().then(() => {
+      if (_scanResolve !== resolve) return;   // cancelled meanwhile
+      _shared().onmessage = (e) => {
+        if (e.data.type === 'scan-done') {
+          _scanResolve = null;
+          _shared().onmessage = null;
+          resolve(e.data.report);
+        }
+      };
+      // File is sent by structured clone (not Transferable) — stays accessible in main thread.
+      // Its private copy when there is one (files.js _keepCopy): a clone drops the
+      // File's redirected reads, and the worker would read the file on disk again.
+      _shared().postMessage({ tool: 'compress-scan', file: file._copy ?? file });
+    });
   });
 }
 
@@ -240,18 +245,25 @@ export function startMergeBatchScan(files) {
 
   return new Promise(resolve => {
     _mergeScanResolve = resolve;
-    _shared().onmessage = (e) => {
-      if (e.data.type === 'merge-scan-done') {
-        _mergeScanResolve = null;
-        _shared().onmessage  = null;
-        resolve(e.data.results);
-      }
-    };
-    // Files are sent as structured clone (not Transferable) — originals stay accessible;
-    // each one's private copy when there is one (see the compress scan above)
-    _shared().postMessage({
-      tool:  'merge-scan-batch',
-      items: files.map((f, i) => ({ file: f._copy ?? f, index: i })),
+    // pdf-lib first, as the compress scan above: on a flaky connection this
+    // scan's worker logged "importScripts failed: /js/vendor/pdf-lib.min.js"
+    // (Merge 5 people, Compress 1, 2026-10-24..27; 5 of 6 still got a result,
+    // without page counts)
+    _warmPdfLib().then(() => {
+      if (_mergeScanResolve !== resolve) return;   // cancelled meanwhile
+      _shared().onmessage = (e) => {
+        if (e.data.type === 'merge-scan-done') {
+          _mergeScanResolve = null;
+          _shared().onmessage  = null;
+          resolve(e.data.results);
+        }
+      };
+      // Files are sent as structured clone (not Transferable) — originals stay accessible;
+      // each one's private copy when there is one (see the compress scan above)
+      _shared().postMessage({
+        tool:  'merge-scan-batch',
+        items: files.map((f, i) => ({ file: f._copy ?? f, index: i })),
+      });
     });
   });
 }
