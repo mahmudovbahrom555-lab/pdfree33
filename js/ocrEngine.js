@@ -321,13 +321,32 @@ export function hasSpareCore(nav = globalThis.navigator) {
 const _confidentWords = words => words.filter(w => w.text?.trim() && w.confidence >= 70);
 const _LATIN = /[A-Za-zÀ-ɏ]/;
 
+// Tesseract.js turns a canvas into bytes inside canvas.toBlob's callback,
+// where nothing catches a failure: when toBlob gives null (a page image the
+// browser can't encode — too large, out of memory, emptied meanwhile), the
+// read threw an unhandled rejection and recognize() never settled, so the run
+// hung — "Failed to execute 'readAsArrayBuffer' on 'FileReader'" in PDF→Word
+// (3 people), OCR and PDF→PPT (1 each), 2026-10-24..27. The PNG is made here,
+// the same encoding Tesseract makes, and a page that can't be encoded is an
+// error the caller handles.
+async function _png(cvs) {
+  const blob = cvs.convertToBlob
+    ? await cvs.convertToBlob({ type: 'image/png' })
+    : await new Promise(resolve => cvs.toBlob(resolve, 'image/png'));
+  if (!blob) throw new Error(`OCR: the page image (${cvs.width}×${cvs.height}) could not be encoded`);
+  return blob;
+}
+
 // Judges one image of a page: a quick OCR pass with `worker`, then — when that
 // looks wrong, or the site's language has its own script — each script's
 // model paired with English, on workers of their own. Returns detectOcrLanguage's
 // result, without switching `worker` (the caller does, once it has its
 // answer), or null when the image has too little text to judge.
 async function _judgeImage(cvs, worker, hint, newWorker, layerLang = null, prefer = [], sideLane = false) {
-  const res  = await worker.recognize(cvs);
+  // one PNG for every reading of this page: the side lane's probes read it
+  // while the caller may already be emptying the canvas
+  const png  = await _png(cvs);
+  const res  = await worker.recognize(png);
   const txt  = res?.data?.text ?? '';
   const conf = res?.data?.confidence ?? 0;
   if (txt.trim().length < 20) return null;
@@ -368,7 +387,7 @@ async function _judgeImage(cvs, worker, hint, newWorker, layerLang = null, prefe
     if (abandon()) { await w.terminate(); throw new Error('decided'); }
     live.add(w);
     try {
-      const r = await w.recognize(cvs);
+      const r = await w.recognize(png);
       return { lang, conf: r?.data?.confidence ?? 0, text: r?.data?.text ?? '', words: r?.data?.words ?? [] };
     } finally {
       live.delete(w);
@@ -686,7 +705,7 @@ export async function recognizePage(worker, page, lang, { level = false } = {}) 
     // and headings with it (2026-10-09, synthetic scans).
     const { canvas: gray, skewDeg } = await _enhanceForOcrAsync(canvas)
       .catch(async () => ({ canvas: await _toGrayscaleAsync(canvas), skewDeg: 0 }));
-    const result = await worker.recognize(gray);
+    const result = await worker.recognize(await _png(gray));
     const W = gray.width, H = gray.height;
     const px = gray.getContext('2d').getImageData(0, 0, W, H).data;
     const ink = (x, y) => x >= 0 && y >= 0 && x < W && y < H && px[(y * W + x) * 4] < 128;
