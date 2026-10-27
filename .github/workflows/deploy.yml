@@ -95,14 +95,17 @@ jobs:
           python3 tests/quality/test_check_gold.py
           python3 scripts/check_gold.py --ci "${{ github.event.before }}" "${{ github.sha }}"
 
-      - name: Arabic metric — control cases
-        # scripts/quality/arabic.py must see each pain it claims to (one dot,
-        # one reversed word, one glued pair, one lost number) and say what it
-        # can't. See tests/quality/test_arabic_metric.py.
+      - name: Arabic, Chinese and English metrics — control cases
+        # each metric in scripts/quality/ must see each pain it claims to (a
+        # dot, a reversed or glued word, a lost number, spaced Han, a radical
+        # left in, a moved paragraph…) and say what it can't. See
+        # tests/quality/test_{arabic,chinese,latin}_metric.py.
         run: |
           sudo apt-get install -y -q poppler-utils
           pip3 install pymupdf==1.26.5 numpy==2.2.6 fonttools==4.60.2
           python3 tests/quality/test_arabic_metric.py
+          python3 tests/quality/test_chinese_metric.py
+          python3 tests/quality/test_latin_metric.py
 
       - name: Validate js/vendor/pdf-lib.min.js matches the pinned devDependency
         # js/vendor/pdf-lib.min.js is a manually-copied file, not tracked by

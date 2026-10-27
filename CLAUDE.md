@@ -156,7 +156,7 @@ into all N copies at once, each needing its own separate fix instead of one.
 
 The gold pages (`tests/corpus/gold/`), the frozen Arabic baseline
 (`tests/corpus/cloud/arabic-baseline.jsonl`), the metric that reads them
-(`scripts/quality/arabic.py`), its control cases (`tests/quality/`,
+(`scripts/quality/` — Arabic, Chinese, English, the holdout report), its control cases (`tests/quality/`,
 `tests/fixtures/quality/`) and their guard decide whether a change is an
 improvement. Never edit them to make a fix pass, and never loosen a test's
 criteria for it. They change only in a commit of their own (no `js/` in it), with an entry

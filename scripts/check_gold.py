@@ -4,7 +4,8 @@
 
 The gold pages (tests/corpus/gold/), the frozen Arabic baseline
 (tests/corpus/cloud/arabic-baseline.jsonl) and its set-aside list
-(arabic-known.json), the metric that reads them (scripts/quality/arabic.py),
+(arabic-known.json), the holdout's reserve set (reserve-v1.json), the metrics
+that read them (scripts/quality/: Arabic, Chinese, English, the holdout report),
 its control cases (tests/quality/, tests/fixtures/quality/) and this guard
 decide whether a change is an improvement. A fix that also edits them can
 pass by moving the target (owner rule, 2026-10-17). So a commit that touches
@@ -32,8 +33,13 @@ deploy if anything got past it.
 """
 import json, os, subprocess, sys, urllib.request
 
+# scripts/quality/ whole, not arabic.py alone (2026-10-27): the Chinese and
+# English metrics, the holdout's report and what arabic.py reads its digits and
+# glyphs with live there too — CODEOWNERS already covered the folder, this guard
+# didn't. The reserve set is where a holdout failure is diagnosed.
 GUARDED = ('tests/corpus/gold/', 'tests/corpus/cloud/arabic-baseline.jsonl', 'tests/corpus/cloud/arabic-known.json',
-           'scripts/quality/arabic.py', 'tests/quality/', 'tests/fixtures/quality/', 'scripts/check_gold.py')
+           'tests/corpus/cloud/reserve-v1.json',
+           'scripts/quality/', 'tests/quality/', 'tests/fixtures/quality/', 'scripts/check_gold.py')
 CHANGELOG = 'tests/corpus/GOLD_CHANGELOG.md'
 
 
