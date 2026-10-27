@@ -356,3 +356,53 @@ converter commit — never by both at once.
   set-aside documents are outside it. It is the reference later changes are
   judged against.
 - **Approved by:** this pull request's review.
+
+## 2026-10-27 — Arabic baseline, metric v6: after C14
+
+- **What:** `tests/corpus/cloud/arabic-baseline.jsonl` replaced by the night
+  of CI run 40278695290 (corpus-nightly #19, commit 68c4e483), sha256
+  c50b50e81e704504…: its six `arabic-results-*` shard artifacts merged with
+  the same `arabic.py --merge` the workflow runs (the workflow's own
+  `arabic-report` artifact is uploaded only on a green night, so there was
+  none). No metric code and no criterion changes.
+- **Why:** every night since 2026-10-24 is red on one document, and the
+  cause is a correct converter change, not a lost number. C14 (#72,
+  2dca79a4) reads text drawn over itself once. 7629204.pdf (Persian report,
+  Adobe PDF Library 10.0.1) draws its header year "1396" twice at the same
+  spot on four pages (62, 63, 70, 76; x 530.72 y 80.0, 10.39 pt); poppler
+  already reads it once, MuPDF twice, so the trusted count was poppler's.
+  Before C14 our DOCX held those four copies twice, and the extra copies
+  filled in for two "1396" missing elsewhere in the document; after C14 they
+  are read once, and those two show as lost (298 → 299, with "62" found where
+  the old DOCX had "6262"). Checked by building 4105e97f (before C14) and
+  main and converting the document with both: every paragraph that differs is
+  a doubled header read once. The two missing "1396" were missing before as
+  well; they are a real loss the baseline now shows instead of hiding.
+- **Two CI runs that agree:** run 40168053291 (#18, commit bbcc6c9f) and run
+  40278695290 (#19). Same readers (PyMuPDF 1.26.5, poppler 24.02.0), same
+  corpus hash 2f8cdc58173b4494, 289 documents. Of the 285 finished in both,
+  all 285 identical on every field but runtime — across #88 and #89 (C15,
+  CJK letter spacing) between them, which changed none of them.
+- **The differences:** 3479833.pdf and 3939389.pdf timed out in #18 (302.9 s,
+  limit 300 s) and finished in #19 (297.9 s, 254.8 s). Taken from #19 because
+  it scores two documents more; a night that times out on them shows a ⚠
+  warning, not a red night.
+- **Against the old baseline:** 13 documents moved. Better: 0190904, 0865218
+  (also OCR'd one page more: 8 → 9), 2707064, 3079058, 3503966, 3608860,
+  4974198, 5955337 — fewer words or numbers lost, by one to fourteen. Newly
+  scored: 3479833 (timed out before), 4799772 (refused before). 2149181:
+  refused before, timed out now — still not scored. Slightly worse, both
+  hand-checked as C14 reading a fourfold or twofold overprint once:
+  7629204 (numbers missing 298 → 299, words 1,725 → 1,729) and 7853393 (a
+  title drawn four times in a broken font: words 41,736 → 41,737, dots
+  424 → 426, glued 1,470 → 1,473).
+- **Totals (as the report gives them):** long documents 220, recall 96.36 %,
+  order 94.75 % on 201, numbers missing 3,430, dots 380, reversed 944, glued
+  2,588; short documents 21, recall 97.87 %, 2 with a serious error; 37 read
+  partly with OCR, judged apart; 7 set aside; 6 not evaluated (2 timeouts:
+  2149181, 6567268; 4 without Arabic-script text both readers agree on).
+- **What it is not:** proof that Arabic PDF→Word is error-free — 3,430
+  numbers and 41,226 words are still lost against the readers, and the
+  set-aside documents are outside it. It is the reference later changes are
+  judged against.
+- **Approved by:** this pull request's review.
