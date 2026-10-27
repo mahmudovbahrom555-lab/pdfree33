@@ -1,0 +1,157 @@
+name: Closed holdout — PDF→Word, totals only
+
+# The closed holdout (owner, 2026-10-25): documents nobody tuned anything on,
+# drawn with a seed only the owner knows, judged once per change — main vs the
+# change, on the same documents, by each language's metric — and reported as
+# totals only. Conditions, enforced here rather than by agreement:
+#   - the seed is the `holdout` environment's secret HOLDOUT_SEED, given to
+#     the one step that draws; every run of this job waits for the owner to
+#     approve it (the environment's required reviewer), from main only
+#   - the change under test is BUILT in another job, without the secret or
+#     any document; here its static files are only served and run in Chromium
+#     with --offline (its own host and the library CDNs the site loads from;
+#     nothing else is reachable)
+#   - the measuring code (draw, runner, metrics, report) is main's, never the
+#     change's
+#   - no document name, path or result line is printed, and nothing is
+#     uploaded: the log and the summary hold totals only
+# A failure is diagnosed on the reserve set (tests/corpus/cloud/reserve-v1.json),
+# never here. The holdout is evidence, not a release permission.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'holdout — judge a change; reserve — draw the public reserve set (no secret, no documents fetched), to be committed as tests/corpus/cloud/reserve-v1.json'
+        default: holdout
+        type: choice
+        options: [holdout, reserve]
+      candidate:
+        description: 'holdout: the change to judge — a branch, tag or commit'
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  reserve:
+    if: inputs.mode == 'reserve'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - run: python3 scripts/corpus-cloud/pick_holdout.py reserve reserve-v1.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: reserve
+          path: reserve-v1.json
+
+  build-candidate:
+    if: inputs.mode == 'holdout' && inputs.candidate != ''
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ inputs.candidate }}
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      - run: pip3 install jinja2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: python3 scripts/build.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: candidate-dist
+          path: dist/
+          retention-days: 1
+
+  holdout:
+    needs: build-candidate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 340
+    environment: holdout
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      - run: pip3 install jinja2 pymupdf==1.26.5 numpy==2.2.6 fonttools==4.60.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Build main
+        run: python3 scripts/build.py
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: candidate-dist
+          path: ${{ runner.temp }}/candidate
+      - run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q poppler-utils
+          npx playwright install --with-deps chromium
+      - name: Draw the holdout (counts only)
+        env:
+          HOLDOUT_SEED: ${{ secrets.HOLDOUT_SEED }}
+          H: ${{ runner.temp }}/h
+        run: |
+          mkdir -p "$H"
+          python3 scripts/corpus-cloud/pick_holdout.py holdout "$H/holdout.json"
+      - name: Fetch, convert with both builds, score (no output)
+        env:
+          H: ${{ runner.temp }}/h
+          CAND: ${{ runner.temp }}/candidate
+        run: |
+          python3 - <<'EOF'
+          import json, os
+          H = os.environ['H']
+          group = {'zh': 'zh', 'ja': 'zh', 'ar': 'ar', 'fa': 'ar', 'ur': 'ar', 'en': 'en'}
+          names = {}
+          for s in json.load(open(f'{H}/holdout.json'))['sample']:
+              names.setdefault(group[s['stratum']], []).append(s['file'])
+          for g, ns in names.items():
+              open(f'{H}/{g}.txt', 'w').write('\n'.join(ns))
+          EOF
+          python3 -m http.server 8934 --directory dist >/dev/null 2>&1 &
+          python3 -m http.server 8935 --directory "$CAND" >/dev/null 2>&1 &
+          sleep 2
+          for g in zh ar en; do
+            python3 scripts/corpus-cloud/fetch.py "$H/docs-$g" $(cat "$H/$g.txt") >/dev/null 2>&1 || true
+            echo "$g: $(ls "$H/docs-$g" 2>/dev/null | wc -l) documents fetched"
+            for b in base:8934 cand:8935; do
+              node scripts/corpus-cloud/robust.mjs --docs "$H/docs-$g" --tools pdf2word --out "$H/out-$g-${b%%:*}" \
+                --jobs 2 --save --timeout 300 --offline --quiet --base "http://localhost:${b#*:}" >/dev/null 2>&1 || true
+            done
+          done
+          for b in base cand; do
+            python3 scripts/quality/chinese.py "$H/docs-zh" "$H/out-zh-$b/files" "$H/zh-$b.jsonl" --results "$H/out-zh-$b/results.jsonl" >/dev/null 2>&1
+            python3 scripts/quality/arabic.py "$H/docs-ar" "$H/out-ar-$b/files" "$H/ar-$b.jsonl" --results "$H/out-ar-$b/results.jsonl" >/dev/null 2>&1
+            python3 scripts/quality/latin.py "$H/docs-en" "$H/out-en-$b/files" "$H/en-$b.jsonl" --results "$H/out-en-$b/results.jsonl" >/dev/null 2>&1
+          done
+      - name: Totals
+        env:
+          H: ${{ runner.temp }}/h
+        run: |
+          set +e
+          python3 scripts/quality/holdout_report.py zh "$H/zh-base.jsonl" "$H/zh-cand.jsonl" \
+            ar "$H/ar-base.jsonl" "$H/ar-cand.jsonl" en "$H/en-base.jsonl" "$H/en-cand.jsonl" > report.md 2>/dev/null
+          status=$?
+          if [ ! -s report.md ]; then echo 'The report failed to build (its error is not shown: it could name a document).' > report.md; status=1; fi
+          cat report.md >> "$GITHUB_STEP_SUMMARY"
+          cat report.md
+          exit $status
+      - name: Remove the documents
+        if: always()
+        run: rm -rf "${{ runner.temp }}/h"

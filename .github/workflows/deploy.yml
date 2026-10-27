@@ -106,6 +106,7 @@ jobs:
           python3 tests/quality/test_arabic_metric.py
           python3 tests/quality/test_chinese_metric.py
           python3 tests/quality/test_latin_metric.py
+          python3 tests/quality/test_holdout_report.py
 
       - name: Validate js/vendor/pdf-lib.min.js matches the pinned devDependency
         # js/vendor/pdf-lib.min.js is a manually-copied file, not tracked by
