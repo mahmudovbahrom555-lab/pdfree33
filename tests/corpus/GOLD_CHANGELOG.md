@@ -406,3 +406,67 @@ converter commit — never by both at once.
   set-aside documents are outside it. It is the reference later changes are
   judged against.
 - **Approved by:** this pull request's review.
+
+## 2026-10-27 — Chinese and English metrics v1; the guard covers scripts/quality/
+
+- **What:** `scripts/quality/chinese.py` (metric v1, schema 1: Chinese and
+  Japanese) and `scripts/quality/latin.py` (metric v1, schema 1: English),
+  new. Each result names its `measure`; `--compare` refuses two different
+  metrics, versions or readers, and with `--private` prints totals only (the
+  closed holdout's report). `scripts/quality/break_docx.py`, new: deliberately
+  broken copies of outputs, one defect kind per copy, seeded — how a metric is
+  checked in both directions. `scripts/quality/EquivalentUnifiedIdeograph.txt`
+  (Unicode 17.0.0, unchanged from 16.0.0): which radicals stand for which
+  ideographs. Control cases `tests/quality/test_chinese_metric.py` and
+  `test_latin_metric.py` on our own text (`tests/fixtures/quality/`, printed by
+  `make-text-metrics.mjs`), run in the deploy workflow next to the Arabic one.
+  `scripts/check_gold.py` now guards all of `scripts/quality/` (CODEOWNERS
+  already did; the guard named `arabic.py` alone, so `digits.py` and
+  `glyphs.py`, which the Arabic metric reads with, were unguarded) and the
+  holdout's reserve set `tests/corpus/cloud/reserve-v1.json`.
+- **Why:** the closed holdout (owner, 2026-10-25) judges Chinese, Arabic and
+  English PDF→Word; Arabic had its metric in the repository, the other two
+  didn't. chinese.py is the draft that judged C13, C14 and C15 (2026-10-23 to
+  10-25), which lived in a scratch folder and was lost when /tmp was wiped; it
+  is restored from the session log and moved here, where a measuring stick
+  belongs.
+- **Changed from the draft (v0):** `extra` now counts what the output has
+  beyond EITHER reader. v0 subtracted the two readers in turn, so a paragraph
+  written twice counted 0 — found by this PR's control case, never tested
+  before. No other score changes; the tolerances are v0's.
+- **Changed from the draft after the English check:** `spaced` counts letters
+  beyond the LARGER reader count, not the smaller. A title letter-spaced in the
+  source is read spaced by poppler and joined by MuPDF; against the smaller
+  count, 16,021 letters on 58 English documents were the sources' own spacing
+  (now 6,785; of those checked by hand, some are ours — "P r e s i d e n t"
+  where both readers have the word whole, a candidate error class — and some
+  are map codes, "L A L A M A B"). Found after seeing results; it makes the
+  counter match what its own description always said.
+- **Added after seeing results — for the owner to decide:** `--exact`, every
+  tolerance dropped, for two builds run on the same documents in one run (the
+  holdout), where conversions are deterministic. Not the default; the nightly
+  and any comparison across machines keep the tolerances.
+- **Validated (criteria written down before the runs; dev documents only —
+  sample-v1's zh stratum, 128 from the cache, and 60 English sample-v1
+  documents, seeded pick; one build served twice; readers PyMuPDF 1.26.5 and
+  poppler 26.10.0 on the Mac, CI has 24.02):**
+  - Same build twice: Chinese/Japanese 0 worse, 0 mixed, 0 no longer scored
+    of 128 (outcomes identical: 123 ok, 4 timeouts, 1 refused); English 0 / 0 /
+    0 of 60 (58 ok, 2 timeouts). With `--exact` too: 0.
+  - Broken copies (`break_docx.py`, seed 20261027), documents caught on the
+    defect's own counter, tolerances as v0 / with `--exact`:
+    - Chinese/Japanese: spaces 74/75 / 75; drop 73/78 / 75; radicals
+      75/75 / 75; digits 52/75 / 67; swap 29/40 where order is measurable
+      (15 more not measurable) / 34; dup 71/78 / 76.
+    - English: spaces 15/56 / 54; drop 40/57 / 57; digits 33/58 / 50; swap
+      17/51 / 43; dup 35/57 / 57; glue 9/54 / 54; split 5/56 / 53.
+  - The misses with tolerances are one error under a per-document tolerance
+    (one lost number in hundreds, 20 characters in 9,800, one glued word in
+    thousands); the misses left with `--exact` are text that also stands
+    elsewhere in the document (a multiset still finds it), order with no
+    anchor in the moved paragraph, and documents whose broken text the readers
+    don't agree on. Three spacing breaks first counted as misses changed
+    nothing (one character per run); `break_docx.py` now skips such copies.
+- **What it is not:** the closed holdout. These are dev documents; the
+  holdout is drawn later, by CI, from documents never looked at.
+- **Approved by:** this pull request's review.

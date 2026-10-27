@@ -5,6 +5,7 @@
 /tests/corpus/gold/                       @mahmudovbahrom555-lab
 /tests/corpus/cloud/arabic-baseline.jsonl @mahmudovbahrom555-lab
 /tests/corpus/cloud/arabic-known.json     @mahmudovbahrom555-lab
+/tests/corpus/cloud/reserve-v1.json       @mahmudovbahrom555-lab
 /tests/corpus/GOLD_CHANGELOG.md           @mahmudovbahrom555-lab
 /scripts/quality/                         @mahmudovbahrom555-lab
 /tests/quality/                           @mahmudovbahrom555-lab

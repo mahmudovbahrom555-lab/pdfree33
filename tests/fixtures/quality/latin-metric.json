@@ -1,0 +1,13 @@
+{
+  "en-prose": [
+    "This document checks the quality of English conversion. Every paragraph was written by us for this test and comes from no outside source.",
+    "The first paragraph states the purpose: every word must be kept, the order must not change, and no number may be lost on the way.",
+    "The second paragraph holds a few numbers. The budget for 2026 was 12500 dollars, 38 people took part, and the meeting lasted 90 minutes.",
+    "The third paragraph is about paragraph boundaries. A paragraph should still be one paragraph after conversion, not a stack of short lines.",
+    "The fourth paragraph only makes the text long enough to judge the reading order, so its sentences try not to repeat any group of four words.",
+    "The last paragraph sums it up: when the conversion is right, the metric shows full recall and reports nothing extra at all."
+  ],
+  "en-hyphen": [
+    "Internationalization considerations notwithstanding, representatives acknowledged extraordinarily complicated administrative responsibilities."
+  ]
+}

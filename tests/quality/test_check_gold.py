@@ -54,6 +54,17 @@ def approved():
 test('a bot\'s pull request the owner approved on its last commit, squash-merged as is: passes', approved)
 
 
+def new_metric_guarded():
+    for f in ('scripts/quality/chinese.py', 'scripts/quality/latin.py', 'scripts/quality/digits.py',
+              'tests/corpus/cloud/reserve-v1.json'):
+        assert g.problems([f]), f'{f} changed without a changelog entry passed'
+        assert g.problems([f, g.CHANGELOG, 'js/processor.js']), f'{f} changed together with js/ passed'
+        assert g.problems([f, g.CHANGELOG]) == [], f'{f} with its changelog entry alone was refused'
+
+
+test('every metric in scripts/quality/ and the reserve set are guarded, not arabic.py alone', new_metric_guarded)
+
+
 def no_pr():
     r = {**REPO, f'/commits/{SHA}/pulls': []}
     assert any('without a merged pull request' in p for p in check(r))
