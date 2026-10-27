@@ -18,6 +18,10 @@ name: Closed holdout — PDF→Word, totals only
 # A failure is diagnosed on the reserve set (tests/corpus/cloud/reserve-v1.json),
 # never here. The holdout is evidence, not a release permission.
 
+# the mode and the change in the run's title: a run whose jobs were all
+# skipped (two on 2026-10-27) showed no way to tell which mode it was given
+run-name: "holdout: ${{ inputs.mode }}${{ inputs.candidate && format(' — {0}', inputs.candidate) || '' }}"
+
 on:
   workflow_dispatch:
     inputs:
@@ -34,6 +38,15 @@ permissions:
   contents: read
 
 jobs:
+  no-candidate:
+    # mode holdout with no change named judged nothing and said nothing
+    if: inputs.mode == 'holdout' && inputs.candidate == ''
+    runs-on: ubuntu-24.04
+    steps:
+      - run: |
+          echo "::error::mode holdout needs a candidate: the branch, tag or commit to judge against main"
+          exit 1
+
   reserve:
     if: inputs.mode == 'reserve'
     runs-on: ubuntu-24.04
