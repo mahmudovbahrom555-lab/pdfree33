@@ -24,6 +24,12 @@
 //       [--out <dir>] [--jobs 2] [--save] [--timeout 120]
 //  --save keeps each result as <out>/files/<doc>.<tool>.<ext>, for the
 //  quality detectors (scripts/quality/props.py) to read
+//  --offline: the page reaches only --base's own host and the library CDNs
+//  the site itself loads from (OFFLINE_CDNS: pdf.js on cdnjs, the npm builds
+//  on jsdelivr/unpkg); every other request is refused — the closed holdout:
+//  the build under test must not be able to send what it reads to a server
+//  anyone can read back (.github/workflows/holdout.yml)
+//  --quiet: no line per document (the holdout's log names no document)
 // ============================================================
 
 import { chromium } from 'playwright';
@@ -40,6 +46,9 @@ const JOBS   = Math.max(1, Number(arg('jobs', 2)));
 const TOOL_LIST = arg('tools', 'compress,merge,split,pdf2jpg,pdf2word,pdf2excel,resize,nup').split(',');
 const RUN_TIMEOUT_MS = +(arg('timeout', 120)) * 1000;   // --timeout seconds (OCR of a long scanned deck needs more)
 const SAVE = process.argv.includes('--save');
+const OFFLINE = process.argv.includes('--offline');
+const OFFLINE_CDNS = ['https://cdnjs.cloudflare.com/ajax/libs/pdf.js/', 'https://cdn.jsdelivr.net/npm/', 'https://unpkg.com/'];
+const QUIET = process.argv.includes('--quiet');
 
 for (const t of TOOL_LIST) if (!TOOLS[t]) { console.error(`unknown tool: ${t}`); process.exit(2); }
 
@@ -50,6 +59,14 @@ const docs = fs.readdirSync(DOCS).filter(f => f.toLowerCase().endsWith('.pdf')).
 // One (document, tool) run → { outcome, reason, … , ms, pageErrors }.
 async function runOne(browser, tool, file, saveAs) {
   const context = await browser.newContext({ serviceWorkers: 'block' });
+  if (OFFLINE) {
+    const own = new URL(BASE).host;
+    await context.route('**/*', r => {
+      const u = r.request().url();
+      const ok = new URL(u).host === own || (r.request().method() === 'GET' && OFFLINE_CDNS.some(c => u.startsWith(c)));
+      return ok ? r.continue() : r.abort();
+    });
+  }
   const page = await context.newPage();
   const pageErrors = [];
   page.on('pageerror', e => pageErrors.push(e.message.slice(0, 200)));
@@ -163,7 +180,8 @@ async function worker() {
     const line = { doc, tool, stratum: strata[doc]?.stratum ?? '', lang: strata[doc]?.lang ?? '',
       pages: strata[doc]?.pages ?? null, ...res };
     fs.appendFileSync(outFile, JSON.stringify(line) + '\n');
-    console.log(`[${++done}/${jobs.length}] ${doc} ${tool}: ${res.outcome}${res.reason ? ' — ' + res.reason.slice(0, 80) : ''}`);
+    ++done;
+    if (!QUIET) console.log(`[${done}/${jobs.length}] ${doc} ${tool}: ${res.outcome}${res.reason ? ' — ' + res.reason.slice(0, 80) : ''}`);
   }
 }
 await Promise.all(Array.from({ length: JOBS }, worker));

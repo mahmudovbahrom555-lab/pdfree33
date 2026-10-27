@@ -470,3 +470,39 @@ converter commit — never by both at once.
 - **What it is not:** the closed holdout. These are dev documents; the
   holdout is drawn later, by CI, from documents never looked at.
 - **Approved by:** this pull request's review.
+
+## 2026-10-27 — The closed holdout: its draw, its report, its workflow
+
+- **What:** `scripts/quality/holdout_report.py`, new: the holdout's report —
+  per language (zh, ar, en), how many documents got worse, mixed, better or
+  stopped being scored between main and the change under test, and nothing
+  that names a document; exit 1 when anything got worse, mixed or stopped
+  being scored. Chinese and English judged `--exact` (the two builds run on
+  the same documents in one run, where conversions are deterministic); Arabic
+  by `arabic.py`'s own rule (`worse_on`), documents read partly with OCR left
+  out as its report leaves them out. Control cases
+  `tests/quality/test_holdout_report.py`, run in the deploy workflow.
+  Outside the guarded paths, in the same pull request:
+  `scripts/corpus-cloud/pick_holdout.py` (draws the reserve with a public seed
+  and the holdout with the `holdout` environment's secret, excluding every
+  document already looked at — every pinned one, sample-v1, the slides sample
+  — and, for the holdout, the reserve), `robust.mjs --offline --quiet`, and
+  `.github/workflows/holdout.yml`.
+- **Why:** the owner's holdout decision (2026-10-25): a dev set for tuning, a
+  closed holdout for final evaluation only, a reserve set for diagnosing its
+  failures; both directions checked; no leakage, restricted technically; a
+  human approves.
+- **How the "no leakage" holds:** the seed is a secret of the `holdout`
+  environment, which only main may use and whose every run the owner
+  approves; the change under test is built in a job with neither the secret
+  nor a document and only served as static files to a browser that reaches
+  nothing but its own host and the three library CDNs the site loads from;
+  the measuring code is main's; no document name, path or line is printed and
+  nothing is uploaded. What it does not stop: the documents are public, so
+  whoever knows the seed can draw them again — the agent does not.
+- **Checked:** a rehearsal on 12 dev documents (4 per language) ran every
+  step of the workflow on the Mac, `--offline` included — all conversions
+  finished as they do online, the report: 0 worse; the report fed broken
+  outputs (paragraphs written twice, words glued): worse counted, exit 1, no
+  document name in its output.
+- **Approved by:** this pull request's review.
