@@ -33,7 +33,8 @@ ZH = {'han': 1000, 'lang': 'zh', 'recall': 1.0, 'bigrams': 1.0, 'order': 1.0, 'n
       'numbersMissing': 0, 'numbersAgreed': 10}
 EN = {'words': 1000, 'recall': 1.0, 'pairs': 1.0, 'order': 1.0, 'numbers': 1.0, 'anchors': 50, 'extra': 0,
       'glued': 0, 'split': 0, 'spaced': 0, 'missing': 0, 'numbersMissing': 0, 'numbersAgreed': 10}
-AR = {'words': 1000, 'recall': 1.0, 'order': 1.0, 'dots': 0, 'reversed': 0, 'glued': 0, 'numbersMissing': 0}
+AR = {'words': 1000, 'recall': 1.0, 'order': 1.0, 'anchors': 50, 'dots': 0, 'reversed': 0, 'glued': 0,
+      'numbersMissing': 0, 'numbersAgreed': 10}
 
 
 def write(measure, rows):
@@ -82,6 +83,11 @@ def nothing_worse():
     assert code == 0, code
     assert 'Nothing got worse' in text, text
 test('the same results on both sides: exit 0', nothing_worse)
+
+def arabic_totals():
+    _, text = run(['zh', zh_base, zh_base, 'ar', ar_base, ar_same, 'en', en_base, en_base])
+    assert '**1 docs** — words agreed 1000, recall 100.00 %' in text and 'numbers missing 0 of 10' in text, text
+test('Arabic totals of the change are in the notes, names still nowhere', arabic_totals)
 
 print(f'\n{"─" * 40}\nTests: {passed + failed} | ✓ {passed} | {failed} failed')
 sys.exit(1 if failed else 0)
