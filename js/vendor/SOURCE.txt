@@ -259,3 +259,19 @@ sha256:
              e80613a35583f59b  noto/notosanssc-v40.ttf
              d1e21c6f2fd40466  noto/notosanstc-v39.ttf
              974c4519bb0321cc  noto/notosansthai-v29.ttf
+
+File:        jsQR.js
+Source:      jsQR v1.4.0 (npm package "jsqr", dist/jsQR.js) — https://github.com/cozmo/jsQR
+Downloaded:  2026-10-28 with `npm pack jsqr@1.4.0`. The tarball's SHA-512 matched
+             the registry's own published integrity
+             (sha512-dxLob7q65Xg2DvstYkRpkYtmKm2sPJ9oFhrhmudT1dZvNFFTlroai3AWSpLey/w5vMcLBXRgOJsbXpdN9HzU/A==),
+             and dist/jsQR.js is byte-identical to jsDelivr's copy
+             (https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js).
+             This file's SHA-384: sha384-b5Ya4Bq3qCyz39m2ISh+4DxjAIljdeFwK/BsXLuj9gugaNwAcj/ia15fxNZL9Nlx
+Size:        ~257 KB (unminified UMD build, no dependencies)
+Checked:     0 known advisories (GitHub Security Advisories, OSV, 2026-10-28).
+             Last release 2021-04-24 — no upstream fixes should be expected; it
+             runs only in a dedicated worker with a time and image-size limit.
+License:     Apache License 2.0 (see js/vendor/LICENSE.txt)
+Used by:     js/qrWorker.js (importScripts) — QR codes on a PDF's rendered pages
+             for the PDF safety check, where the browser has no BarcodeDetector.

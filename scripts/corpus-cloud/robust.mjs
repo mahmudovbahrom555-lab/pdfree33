@@ -108,6 +108,7 @@ async function drive(page, tool, file, isCrashed, saveAs) {
     return { outcome: 'refused', reason: toast || 'button stayed disabled' };
   }
   let clickedAt = Date.now();
+  const startedAt = clickedAt;
   await page.evaluate(() => { window.__armed = true; });
   await page.click('#mergeBtn');
   let retriedStandard = false;
@@ -128,6 +129,17 @@ async function drive(page, tool, file, isCrashed, saveAs) {
         const i = document.querySelector('input[name="compressPreset"][value="medium"]');
         if (i) { i.checked = true; i.dispatchEvent(new Event('change', { bubbles: true })); }
       });
+      await page.click('#mergeBtn');
+      clickedAt = Date.now();
+      continue;
+    }
+    // the page is still reading the file ("Analysing PDF…") and the click was
+    // turned away: click again, as a user would, until the run's own limit —
+    // a large file read longer than the 2.5 s wait above, and the run counted
+    // it as refused (on slower CI machines, on both builds: a holdout's
+    // "no longer scored" and "newly scored" moved together, 2026-10-28)
+    if (!s.busy && /Analys/i.test(s.toast) && Date.now() - startedAt < RUN_TIMEOUT_MS) {
+      await page.waitForTimeout(1000);
       await page.click('#mergeBtn');
       clickedAt = Date.now();
       continue;

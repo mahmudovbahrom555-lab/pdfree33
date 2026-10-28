@@ -701,3 +701,82 @@ puts a space in each gap, and the .docx read "董 事 名 單", "氏 名 所 属
   (4196938, both wrong cases). Names spread with even gaps lose their
   family–given space ("島野博幸") — the source draws none. Proof of
   generality waits for the holdout set.
+
+## C16 — short lines stacked without a gap read as one paragraph
+
+Structure stage (S1), 2026-10-27. A paragraph break needed an indent or a gap
+over 1.25× the line pitch, so single-spaced lines that stop short — a list
+without markers, form fields ("Last Name: ___ First Name: ___"), a contact
+list, a poem, an exam's options line and the next question
+("…物件導向資料庫第33題至第38題…") — ran together into one paragraph.
+
+- **Found by** the draft structure metric (tagged-PDF ground truth,
+  `scripts/quality/structure_draft/`, branch wip/structure-metric):
+  paragraphs merged in 15 of 25 trusted tagged documents; a hand check of 8
+  random merges: 7 real.
+- **Fix.** `startsAfterHardBreak` (js/textLayoutUtils.js): a line that starts
+  at the start margin (or a paragraph indent) in a column ≥ 10 em ends a
+  paragraph when the room left before the column's edge exceeds the next
+  line's first word + 2 em — the word would have fitted, so wrapping didn't
+  end the line. The edge: each line's **local** edge (`localLineEdges`: the
+  farthest end two body lines within four of it share, ±2 pt), else the
+  column's common end margin, else the farthest end two body lines share
+  (`bodyFar`) — never a single line: pdf.js joined a UN document's
+  "联合国" with its number at the top right into one line ending at 555 pt
+  against a body ending at 489, and a Chinese article beside a picture came
+  apart line by line before the local edge. Also: a line repeated on ⅔ of the
+  pages is dropped as a header, footer or stamp only if it sits at the same
+  height (±3 %) on them — a repeated name set apart by the new breaks
+  ("彼得·维蒂希(德国)") was otherwise deleted wherever it stood.
+- **Result** (criteria written before the runs; base = main dd07a125; dev sets):
+  text metrics 0 worse (zh 128, en 60, ar 60; `--exact` too for zh/en);
+  better: an English document recall 0.969 → 1.000 (repeated lines no longer
+  deleted), Han spaces down in 2; Arabic missing words +6 = a page footer that
+  had leaked into the body twice, now removed like its 21 other copies.
+  Structure (25 trusted tagged documents): merged paragraphs 41.4 → 33.8 %,
+  split 3.0 → 3.1 %, STEDS 0.432 → 0.454. Hand check of 20 random new breaks
+  (seed 20261028): 19 right — news paragraphs, footnotes, glossary entries,
+  bullet and numbered items, code lines, table rows, bibliography — 1 wrong.
+  Time ±1 % (Arabic +5.6 %). e2e pdf2word-arabic/forms/ocr/visuals pass.
+- **Left.** 6639660 still splits some wrapped prose lines (one wrong break in
+  the hand check: "…博士領" ‖ "銜…"). Merged paragraphs remain at 33.8 %:
+  stacks whose lines run close to the edge, and lines the rule can't see
+  (no common edge). Proof of generality: the holdout run.
+
+## C17 — numbered section headings only a little larger than the text read as body text
+
+Structure stage (S2), 2026-10-28. A heading needed a font ≥ 1.3× the body
+size or a fully bold line. Reports and standards set their numbered section
+headings at 1.1–1.3× and not bold: a statistics office's Word report
+("5.7.3.2.1.1 Calculating trade and transport margins") had 0 of 36 found, a
+standard's blue "3.1.1 Minimum standards for Project Proponents" 0 of 26
+(pdf.js gives no colour; the number and the size are what's left).
+
+- **Found by** the draft structure metric (tagged-PDF ground truth,
+  `scripts/quality/structure_draft/`, branch wip/structure-metric): headings
+  the tags hold that we wrote as paragraphs, grouped by how they look.
+- **Fix.** `isNumberedSectionLine` (js/textLayoutUtils.js): a multi-level
+  number ("1.2", "3.1.1", up to 7 levels) opening a line ≤ 120 characters at
+  ≥ 1.1× the body size, the title not starting lower-case ("3.14 is the
+  value…" is a sentence), not ending like a sentence or a form field (".", ",",
+  ";", ":"), not a contents line. `numberedSectionHeads` takes them per page
+  only alone or in twos: three or more in a row are a form's numbered fields,
+  over a quarter of the page's lines is a form, and a page with two contents
+  lines is a contents page (an entry too long for one line ends its first
+  line without the dot leader). Such a line alone in its paragraph becomes
+  Heading 3.
+- **Result** (criteria written before the runs; base = main; dev sets + 200
+  reserve documents): text metrics 0 worse, 0 better, exact (zh 128, en 60,
+  ar 60, reserve zh/ja 80); conversion outcomes identical; time +1…5 %.
+  Structure (tagged documents): headings found 646 → 696 of 906 (71.3 →
+  76.8 %); paragraphs, merges, splits, list items, cells and STEDS unchanged.
+  Hand checks of 20 random new headings: version 1 10/20 (a ship's
+  certificate's fields), version 2 12/20 (wrapped contents entries, seed
+  20261028), version 3 18/20 on a fresh seed (20261029) — the 2 wrong are a
+  certificate field and a table row. e2e pdf2word-arabic/forms/ocr/visuals
+  pass.
+- **Left.** New headings land in few documents (94 in 7 of ~450): the class
+  is narrow. Wrong ones left: certificate fields not in a run of three
+  (7111155, 6 lines), numeric table rows with a letter in them (5754431,
+  4581812). Colour-only headings (0 of 6) need colour from pdf.js. Proof of
+  generality: the holdout run.
