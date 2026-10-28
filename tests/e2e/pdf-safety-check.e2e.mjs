@@ -119,6 +119,25 @@ for (const [label, viewport, colorScheme] of [['phone, light', { width: 390, hei
     if (!/Cleaned: \d+ part/.test(title)) throw new Error(title);
   });
 
+  await test(`${label}: "as pictures" gives the same pages, each a picture, nothing of the original kept`, async () => {
+    const [dl] = await Promise.all([p.waitForEvent('download', { timeout: 120_000 }), p.click('#safetyPicturesBtn')]);
+    const out = path.join(os.tmpdir(), `safety-pics-${process.pid}.pdf`);
+    await dl.saveAs(out);
+    const bytes = new Uint8Array(fs.readFileSync(out));
+    fs.unlinkSync(out);
+    const pics = await PDFDocument.load(bytes);
+    const pages = pics.getPages();
+    if (pages.length !== 1) throw new Error(`${pages.length} pages`);
+    const res = pages[0].node.Resources();
+    const xo = res.lookupMaybe(PDFName.of('XObject'), PDFLib.PDFDict);
+    // pdf-lib gives every new page an empty /Font dictionary: no font in it
+    const fonts = res.lookupMaybe(PDFName.of('Font'), PDFLib.PDFDict);
+    if (!xo || xo.keys().length !== 1 || (fonts && fonts.keys().length)) throw new Error(`expected one picture and no font: ${String(res)}`);
+    const scan = await scanPdf(bytes, PDFLib);
+    if (scan.findings.length || scan.uris.length) throw new Error(JSON.stringify(scan.findings));
+    if (!/-pictures\.pdf$/.test(dl.suggestedFilename())) throw new Error(dl.suggestedFilename());
+  });
+
   await test(`${label}: no CSP violation, no page error`, async () => {
     if (problems.length) throw new Error(problems.join('\n'));
   });

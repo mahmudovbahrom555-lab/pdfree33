@@ -88,6 +88,8 @@
     <div id="safetyOptionsPanel" class="j2p-options safety-options" hidden>
       <label class="safety-check"><input type="checkbox" id="safetyRemoveLinks"> Also take out web links</label>
       <p class="safety-hint">Taken out: scripts, actions that run by themselves, programs and files the PDF can open, attached files, XFA forms, embedded media. Kept: the pages, their text, bookmarks and the document's own internal links.</p>
+      <button id="safetyPicturesBtn" class="safety-alt-btn" type="button">Download as pictures — most thorough</button>
+      <p class="safety-hint">Every page is redrawn as a picture: nothing of the original file is kept. The text can't be selected or searched afterwards, and the file is usually larger. Use it for a file that can't be cleaned, or when you want to be most careful.</p>
     </div>
 
     <button id="mergeBtn" class="merge-btn" type="button" disabled data-mode="process">Download cleaned PDF</button>

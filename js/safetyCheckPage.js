@@ -11,10 +11,11 @@ import { scanPdf } from './pdfSafetyScan.js';
 import { buildReport } from './pdfSafetyReport.js';
 import { disarmPdf } from './pdfSafetyDisarm.js';
 import { linkMismatchesOnPages, qrCodesOnPages } from './pdfSafetyPages.js';
+import { picturesPdf } from './pdfSafetyPictures.js';
 
 const $ = id => document.getElementById(id);
 const PREVIEW_PAGES = 6;
-let current = null;   // { file, bytes, scan } of the file on screen
+let current = null;   // { file, bytes, scan, pdf } of the file on screen
 let run = 0;          // a newer file drops an older one's late results
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -98,13 +99,15 @@ async function check(file) {
     // the report starts at the top of the screen, clear of the sticky button
     // (CLAUDE.md UX rule 8: new content near the bottom of a short phone)
     $('safetyReport').scrollIntoView({ block: 'start', behavior: 'instant' });
-    current = { file, bytes, scan };
+    current = { file, bytes, scan, pdf };
     $('safetyStatus').textContent = '';
-    if (scan.encrypted) {
+    if (scan.encrypted && !pdf) {
       showToast('This PDF is encrypted, so it can\'t be cleaned here. Remove the protection first (Unlock PDF), then check it again.', 9000);
     } else {
+      // an encrypted file pdf.js can still draw is offered as pictures only
       $('safetyOptionsPanel').hidden = false;
-      $('mergeBtn').disabled = false;
+      $('mergeBtn').disabled = !!scan.encrypted;
+      $('safetyPicturesBtn').disabled = !pdf;
     }
     if (pdf) await preview(pdf, mine);
   } catch (e) {
@@ -123,7 +126,9 @@ async function clean() {
     const d = await disarmPdf(bytes, window.PDFLib, { keepLinks: !$('safetyRemoveLinks').checked });
     if (d.status === 'encrypted') { showToast('This PDF is encrypted, so it can\'t be cleaned here.', 8000); return; }
     if (d.status === 'unreadable') {
-      showToast('This PDF\'s structure couldn\'t be taken apart, so it can\'t be cleaned here. Open it only with care.', 10000);
+      showToast(current.pdf
+        ? 'This PDF\'s structure couldn\'t be taken apart. "Download as pictures" can still give you a clean copy.'
+        : 'This PDF\'s structure couldn\'t be taken apart, so it can\'t be cleaned here. Open it only with care.', 10000);
       return;
     }
     setProgress(80, 'Checking the cleaned copy…');
@@ -134,22 +139,55 @@ async function clean() {
       showToast(`The cleaned copy still had ${left.length} acting part(s); it was not saved.`, 10000);
       return;
     }
-    const name = file.name.replace(/\.pdf$/i, '') + '-cleaned.pdf';
-    const url = URL.createObjectURL(new Blob([d.bytes], { type: 'application/pdf' }));
-    $('successTitle').textContent = d.removed.length ? `Cleaned: ${d.removed.length} part(s) taken out` : 'Nothing to take out';
-    $('successDesc').textContent = d.removed.length
-      ? `${[...new Set(d.removed.map(r => r.what))].slice(0, 6).join(', ')}. Checked again: nothing acting is left.`
-      : 'The copy is the same document, rewritten; checked again: nothing acting.';
-    const dl = $('downloadBtn');
-    dl.style.display = '';
-    dl.onclick = () => { const a = Object.assign(document.createElement('a'), { href: url, download: name }); a.click(); };
-    $('successCard').style.display = '';
-    dl.click();
+    offer(d.bytes, file.name.replace(/\.pdf$/i, '') + '-cleaned.pdf',
+      d.removed.length ? `Cleaned: ${d.removed.length} part(s) taken out` : 'Nothing to take out',
+      d.removed.length
+        ? `${[...new Set(d.removed.map(r => r.what))].slice(0, 6).join(', ')}. Checked again: nothing acting is left.`
+        : 'The copy is the same document, rewritten; checked again: nothing acting.');
   } catch (e) {
     showToast(`Cleaning failed: ${String(e?.message ?? e).slice(0, 100)}`, 8000);
   } finally {
     hideProgress();
     $('mergeBtn').disabled = false;
+  }
+}
+
+function offer(bytes, name, title, desc) {
+  const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+  $('successTitle').textContent = title;
+  $('successDesc').textContent = desc;
+  const dl = $('downloadBtn');
+  dl.style.display = '';
+  dl.onclick = () => { const a = Object.assign(document.createElement('a'), { href: url, download: name }); a.click(); };
+  $('successCard').style.display = '';
+  dl.click();
+}
+
+async function pictures() {
+  if (!current?.pdf) return;
+  const { file, pdf } = current;
+  const mine = run;
+  $('safetyPicturesBtn').disabled = $('mergeBtn').disabled = true;
+  try {
+    setProgress(2, 'Redrawing the pages…');
+    const bytes = await picturesPdf(pdf, window.PDFLib, {
+      onPage: (i, n) => setProgress(Math.round(95 * i / n), `Page ${i} of ${n}…`),
+      isCancelled: () => mine !== run,
+    });
+    if (!bytes) return;   // another file was chosen meanwhile
+    const after = await scanPdf(bytes, window.PDFLib);
+    if (after.findings.some(f => f.risk === 'high' || f.risk === 'medium')) {
+      showToast('The picture copy didn\'t pass the check; it was not saved.', 10000);
+      return;
+    }
+    offer(bytes, file.name.replace(/\.pdf$/i, '') + '-pictures.pdf', `${pdf.numPages} page(s) redrawn as pictures`,
+      'Nothing of the original file is kept. Checked again: nothing acting. The text is now part of the pictures.');
+  } catch (e) {
+    showToast(`Redrawing failed: ${String(e?.message ?? e).slice(0, 100)}`, 8000);
+  } finally {
+    hideProgress();
+    $('safetyPicturesBtn').disabled = false;
+    $('mergeBtn').disabled = !!current?.scan?.encrypted;
   }
 }
 
@@ -169,3 +207,4 @@ zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('
 // the button before a file: open the picker (UX rule 5 — never a dead click)
 $('mergeBtn').disabled = false;
 $('mergeBtn').addEventListener('click', clean);
+$('safetyPicturesBtn').addEventListener('click', pictures);
