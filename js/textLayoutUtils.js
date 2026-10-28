@@ -40,7 +40,15 @@ export { spacedText };
 // separately-gated use (indentation-checked at the call site, not usable
 // standalone) — see that constant's own comment for why an indent
 // requirement changes the risk calculus enough to reintroduce it there.
-export const BULLET_RE   = /^[•◦▪‣●○]\s*/;
+// Word's bullets drawn in the Symbol or Wingdings font keep their private-use
+// code point in the PDF (U+F0B7 •, U+F0A7 ▪, U+F0A8 ♦, U+F0D8 ➢, U+F0FC ✓,
+// U+F06E ■, U+F076 ❖, U+F0E0 →, U+F071 ❑): those lines came out as paragraphs
+// opening with a character Word shows as a box (19 real documents from Word
+// 2007–2016, Acrobat, PowerPoint; round-trip structure check, 2026-10-28).
+// A bullet must be followed by text: a line of bullet glyphs alone ("❖  ❖  ❖"
+// between sections) is an ornament, and it became an empty list item.
+const _BULLETS = '•◦▪‣●○\\uF0B7\\uF0A7\\uF0A8\\uF0D8\\uF0FC\\uF06E\\uF076\\uF0E0\\uF071';
+export const BULLET_RE   = new RegExp(`^[${_BULLETS}]\\s*(?=[^\\s${_BULLETS}])`);
 export const NUMBERED_RE = /^\d{1,3}[.)](?!\d)/;
 
 // A single-letter marker ("a.", "b)", "A."), used ONLY by pdf2word

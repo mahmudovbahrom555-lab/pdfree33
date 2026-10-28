@@ -4282,6 +4282,27 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
   const _MIN_GAP_PT = 20;    // minimum gap in PDF points (~0.28 inch); was 30 but
                               // CamScanner math PDFs have diagrams with tighter gaps
 
+  // Within a line, a gap between two items stands for a space when it is wider
+  // than 0.2 em — 0.1 em for Devanagari (Hindi) and the Arabic fonts Word uses
+  // (Lotus, Traditional Arabic: a word gap of 0.1–0.2 em was a space at 128
+  // seams of 111 real Arabic and Persian documents and inside a word at 1,
+  // 2026-10-17 — glued "الطربيبسنده" for "الطربي بسنده"). Not at letter spacing
+  // (markLetterSpacing marks the glyph after such a gap). Right-to-left lines
+  // too, measured either way (logical order runs right to left, a Latin name
+  // inside it left to right): a Persian newsletter's words, one item each and
+  // no space items, came out glued (corpus 0828977).
+  const _gapIsSpace = (ln, prev, item, text0) => {
+    if (!prev || item.joinsPrev || prev.str.endsWith(' ') || text0.startsWith(' ')) return false;
+    const prevW = (prev.width > 0) ? prev.width : prev.fontSize * prev.str.length * 0.5;
+    const itemW = (item.width > 0) ? item.width : item.fontSize * text0.length * 0.5;
+    const gap   = ln.rtl
+      ? Math.max(prev.x - (item.x + itemW), item.x - (prev.x + prevW))
+      : item.x - (prev.x + prevW);
+    const thr   = (_isDevanagari(prev.str) || _isDevanagari(text0) || (_ARABIC_END_RE.test(prev.str) && _ARABIC_START_RE.test(text0)))
+      ? item.fontSize * 0.1 : item.fontSize * 0.2;
+    return gap > thr;
+  };
+
   // Builds a single-line Paragraph for a detected bullet/numbered list item,
   // marker stripped so Word's own bullet/numbering supplies it instead of
   // duplicating it as literal text. Flattens the line to one TextRun (bold
@@ -4291,7 +4312,13 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
   // strip a marker that may span or sit inside an item boundary makes
   // per-item run preservation not worth the complexity here.
   const _buildListParagraph = (ln, markerRe, listProps) => {
-    const rawText = ln.items.map(spacedText).join('');
+    // joined as a paragraph's line is (_gapIsSpace): the items alone ran
+    // "Distribution CentersLEED-Certified…" where an item met a caption (7759542)
+    const rawText = ln.items.map((item, idx) => {
+      if (item.lsSkip) return '';
+      const t = spacedText(item);
+      return _gapIsSpace(ln, ln.items[idx - 1], item, t) ? ' ' + t : t;
+    }).join('');
     const text = rawText.replace(markerRe, '').trim();
     if (!text) return null;
     const bold   = ln.items.every(i => i.bold);
@@ -4388,25 +4415,8 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
           if (!lastStr.endsWith(' ') && !text0.startsWith(' ') && !cjkJoin(lastStr, text0)) {
             text = ' ' + text;
           }
-        } else if (prev && !item.joinsPrev && !prev.str.endsWith(' ') && !text0.startsWith(' ')) {
-          // gap-based space insertion within the same line — not at letter
-          // spacing (dropLetterSpacing marks the glyph after such a gap). Right-to-left lines
-          // too, measured either way (logical order runs right to left, a Latin
-          // name inside it left to right): a Persian newsletter's words, one
-          // item each and no space items, came out glued (corpus 0828977).
-          const prevW = (prev.width > 0) ? prev.width : prev.fontSize * prev.str.length * 0.5;
-          const itemW = (item.width > 0) ? item.width : item.fontSize * text0.length * 0.5;
-          const gap   = ln.rtl
-            ? Math.max(prev.x - (item.x + itemW), item.x - (prev.x + prevW))
-            : item.x - (prev.x + prevW);
-          // Devanagari (Hindi) spaces are narrower — use 10% of fontSize instead of 20%.
-          // So are the Arabic fonts Word uses (Lotus, Traditional Arabic): a word
-          // gap of 0.1–0.2 em was a space at 128 seams of 111 real Arabic and
-          // Persian documents and inside a word at 1 (2026-10-17) — glued
-          // "الطربيبسنده" for "الطربي بسنده".
-          const thr   = (_isDevanagari(prev.str) || _isDevanagari(text0) || (_ARABIC_END_RE.test(prev.str) && _ARABIC_START_RE.test(text0)))
-            ? item.fontSize * 0.1 : item.fontSize * 0.2;
-          if (gap > thr) text = ' ' + text;
+        } else if (_gapIsSpace(ln, prev, item, text0)) {
+          text = ' ' + text;
         }
         runs.push(new TextRun({
           text,
