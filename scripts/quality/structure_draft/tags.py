@@ -15,7 +15,9 @@ def tree(pdf):
                 st['text'] += txt
                 break
             continue
-        tag = re.match(r'(\S+)', s).group(1)
+        # "P (block):" and "TD:" alike — the name without its colon (a bare
+        # "TD:" read as the tag "TD:" and its cells were lost: G3, 2026-10-28)
+        tag = re.match(r'([^\s:]+)', s).group(1)
         while stack and stack[-1]['ind'] >= ind: stack.pop()
         n = {'tag': tag, 'ind': ind, 'text': '', 'parent': stack[-1] if stack else None, 'kids': []}
         if stack: stack[-1]['kids'].append(n)

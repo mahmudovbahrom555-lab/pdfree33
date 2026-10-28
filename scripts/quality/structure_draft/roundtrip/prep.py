@@ -34,8 +34,10 @@ def main(src, work, n=50):
                 else:
                     b, looks = docx_truth.blocks(dx, True)
                     h = sum(1 for r, _, _ in b if r == 'heading')
-                    row.update(headings=h, lookalikes=looks, blocks=len(b))
+                    paras = sum(1 for r, _, _ in b if r == 'para')
+                    row.update(headings=h, unseen=sum(1 for r, _, _ in b if r == 'unseen'), lookalikes=looks, blocks=len(b))
                     if h < 3: row['why'] = 'fewer than 3 styled headings'
+                    elif h > paras: row['why'] = 'more headings than paragraphs: heading styles used as formatting'
                     elif looks > h: row['why'] = 'more lookalike headings than styled ones'
                     else:
                         soffice(['--convert-to', TAGGED, '--outdir', f'{work}/A', dx])
