@@ -1669,7 +1669,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ── Lazy prefetch of heavy assets ────────────────────────────
-// pdf.worker.min.js (1 MB) and pdf.min.js (~500 KB) are NOT loaded
+// pdf.js's worker (1.4 MB) and library (~400 KB) are NOT loaded
 // on page start. They are prefetched with requestIdleCallback so the
 // browser downloads them in the background when the CPU is idle,
 // after the critical path (FCP, LCP) is done.
@@ -1684,8 +1684,10 @@ function _prefetchHeavyAssets() {
     const baseUrl = new URL('./', import.meta.url).toString();
     // Prefetch via <link rel="prefetch"> — tells browser to fetch when idle,
     // but not execute. The actual loading is triggered by _ensurePdfJs() / loadPdfJs().
+    // the worker of the pdf.js js/pdfjsLoader.js loads — not the 3.11 file
+    // kept beside it for cached old loaders (it would be a wasted 1 MB)
     for (const path of [
-      'vendor/pdf.worker.min.js',
+      'vendor/pdfjs-4.10.38/pdf.worker.min.js',
     ]) {
       try {
         const link = document.createElement('link');
