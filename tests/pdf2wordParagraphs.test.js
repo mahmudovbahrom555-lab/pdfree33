@@ -315,6 +315,23 @@ await test('a bullet line between two prose lines stays a separate list Paragrap
   if (txt.includes('•')) throw new Error('bullet marker should be stripped from list paragraph text');
 });
 
+await test('a list item\'s pieces keep the space their gap stands for', async () => {
+  // A Word bullet (U+F0B7), its item, and a picture caption at the same height
+  // in the next column: pdf.js gives three items with no space characters.
+  // The item text joined them as "Distribution CentersLEED-Certified…"
+  // (7759542) where a plain paragraph line had a space.
+  const lines = [
+    mkLine(mkItem('Uses of this area are listed below.', 50, 12), 700),
+    mkLine([mkItem('\uF0B7', 50, 12, { width: 4 }), mkItem('Distribution Centers', 68, 12, { width: 110 }),
+            mkItem('LEED-Certified Research Building', 330, 12, { width: 170 })], 686),
+    mkLine(mkItem('More text follows here.', 50, 12), 672),
+  ];
+  const { paragraphs } = await build(lines);
+  const item = paragraphs.find(isListItem);
+  if (!item) throw new Error('the bullet line should be a list item');
+  expect(paragraphText(item)).toBe('Distribution Centers LEED-Certified Research Building');
+});
+
 await test('a numbered line between two prose lines stays separate, marker stripped', async () => {
   const lines = [
     mkLine(mkItem('Первый абзац текста здесь.', 50, 12), 700),

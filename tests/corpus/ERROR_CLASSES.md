@@ -780,3 +780,46 @@ standard's blue "3.1.1 Minimum standards for Project Proponents" 0 of 26
   (7111155, 6 lines), numeric table rows with a letter in them (5754431,
   4581812). Colour-only headings (0 of 6) need colour from pdf.js. Proof of
   generality: the holdout run.
+
+## C18 — Word's Symbol / Wingdings bullets kept as private-use characters, not lists
+
+Structure stage (S3, lists), 2026-10-28. Word draws a bullet with the Symbol
+font's U+F0B7 (Wingdings U+F0A7 ▪, U+F0D8 ➢, U+F0FC ✓, U+F06E ■, U+F076 ❖,
+U+F0E0, U+F071; Symbol U+F0A8); the PDF keeps the private-use code point.
+BULLET_RE knew only "•◦▪‣●○", so such a line became a paragraph opening with a
+character Word shows as a box — or ran on into its neighbours.
+
+- **Found by** the round-trip structure check (a real DOCX's styles as truth:
+  `scripts/quality/structure_draft/roundtrip/`, branch wip/structure-metric):
+  list items written as Word lists 27–28 % on both PDF generators; before
+  U+F0B7 in 296 of ~376 items left as plain paragraphs. **Confirmed** on real
+  PDFs from independent sources: 19 documents in the dev and reserve corpora
+  (Word 2007/2010/2013/2016, Acrobat, Distiller, PowerPoint, Skia) — our DOCX
+  kept the character as text (e.g. 44 such paragraphs in one).
+- **Fix.** BULLET_RE (js/textLayoutUtils.js; PDF→Word and the reading view)
+  takes the symbol fonts' bullets, and a bullet must be followed by text: a
+  line of bullet glyphs alone ("❖ ❖ ❖" between sections) is an ornament — it
+  became an empty list item (first hand check). A list item's pieces are now
+  joined with the paragraph's own gap rule (`_gapIsSpace`, shared): joined
+  bare they read "Distribution CentersLEED-Certified…" where an item met a
+  caption beside it (7759542, Latin metric "worse" before this).
+- **Result** (criteria written before the runs; base = main; dev sets,
+  reserve 200, round-trip pilot 50): tagged documents: list items 408 → 948 of
+  1,258; paragraphs 5,054 → 5,017 — all 37 checked: lines the PDF itself opens
+  with a symbol bullet that the tags call P ("❑ Penicillin ❑ Tetracycline…",
+  "➢ Crop production"); headings, cells, merges, splits unchanged; STEDS 0.342 →
+  0.343. Round trip: items 28.0 → 82.8 % (LibreOffice PDFs), 27.0 → 34.8 %
+  (Chromium PDFs: its HTML bullets are mostly "•" already); STEDS 0.341 →
+  0.353 / 0.315 → 0.318. Text metrics (exact): Latin dev 2 better, 2 mixed
+  (±1 extra word); reserve other-language 2 better, Arabic 0 worse; Chinese
+  and Japanese 2 "worse" by Han spaces, both looked at: 0379139 is unreadable
+  font junk (recall 0.02), and in 1376256 a list item spans two table cells —
+  main glued them ("原子力災害対策本部気象庁気象研究所"), now a space parts them.
+  Hand checks of 20 random new list items: 18/20 (two ornament lines), then
+  20/20 on a fresh seed (20261031) — two of them are form check-boxes
+  (Wingdings ❑/◻) now list items. Time ±3 %. e2e pdf2word 12/2/4/7 pass;
+  pdf2md corpus gate 0 FAIL.
+- **Left.** A check-box (❑, ◻) becomes a bullet: the empty box is lost.
+  A list item set beside a caption or a table cell still takes their text
+  (columns read as one line). Lettered sub-bullets in Courier "o" are not
+  recognised.

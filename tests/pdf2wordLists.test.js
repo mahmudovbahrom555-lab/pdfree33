@@ -49,6 +49,26 @@ test('recognises common bullet glyphs', () => {
   }
 });
 
+test('recognises Word\'s Symbol / Wingdings bullets (private-use code points)', () => {
+  // Word draws a bullet with the Symbol font's U+F0B7 (Wingdings: U+F0A7 ▪,
+  // U+F0D8 ➢, U+F0FC ✓, U+F06E ■, U+F076 ❖, U+F0E0 →, U+F071 ❑; Symbol U+F0A8 ♦);
+  // the PDF keeps the code point, so the line opened with a private-use
+  // character Word shows as a box, not a list (2026-10-28: 19 real documents).
+  for (const glyph of ['\uF0B7', '\uF0A7', '\uF0A8', '\uF0D8', '\uF0FC', '\uF06E', '\uF076', '\uF0E0', '\uF071']) {
+    if (!BULLET_RE.test(`${glyph} Item text`) || !BULLET_RE.test(`${glyph}Item text`)) {
+      throw new Error(`expected U+${glyph.codePointAt(0).toString(16).toUpperCase()} to be a bullet`);
+    }
+  }
+  if (BULLET_RE.test('\uE000 a glyph pdf.js could not map')) throw new Error('only the symbol fonts\' bullets, not any private-use character');
+});
+
+test('a line of bullet glyphs alone is an ornament, not a list item', () => {
+  // "❖  ❖  ❖" between sections (Wingdings U+F076 ×3) became an empty list item
+  for (const line of ['\uF076  \uF076  \uF076', '• • •', '\uF0B7', '●']) {
+    if (BULLET_RE.test(line)) throw new Error(`"${line}" is not a list item`);
+  }
+});
+
 test('does not match plain text starting with a letter or digit', () => {
   if (BULLET_RE.test('Regular paragraph text')) throw new Error('false positive on plain text');
   if (BULLET_RE.test('1. Numbered item')) throw new Error('bullet regex should not claim numbered lines');
