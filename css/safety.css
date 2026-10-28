@@ -1,0 +1,51 @@
+/* PDF Safety Check (pdf-safety-check/index.html, js/safetyCheckPage.js).
+   Colours only from the theme's tokens that have a dark-mode pair: text uses
+   --red / --yellow-text / --green-text, never raw --green (dark-mode AA). */
+
+.safety-status { margin: 12px 0 0; font-size: 14px; color: var(--text2); min-height: 1.2em; }
+
+.safety-report {
+  scroll-margin-top: 72px;   /* below the site's sticky nav */
+  margin-top: 16px; padding: 16px 18px; border: 1px solid var(--border-strong);
+  border-radius: var(--radius); background: var(--surface);
+}
+.safety-headline { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 600; }
+.safety-badge {
+  display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
+  letter-spacing: .2px; border: 1px solid currentColor;
+}
+.safety-level-high   { color: var(--red); }
+.safety-level-medium { color: var(--yellow-text); }
+.safety-level-low,
+.safety-level-none   { color: var(--green-text); }
+
+.safety-group { margin-top: 14px; }
+.safety-group h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.safety-item {
+  display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; padding: 8px 0;
+  border-top: 1px solid var(--border); font-size: 14px;
+}
+.safety-item .safety-badge { grid-row: span 3; align-self: start; margin-top: 1px; }
+.safety-item-title { font-weight: 500; overflow-wrap: anywhere; }
+.safety-item-where,
+.safety-item-why { color: var(--text2); font-size: 13px; }
+.safety-item-detail { color: var(--text2); font-size: 13px; overflow-wrap: anywhere; grid-column: 2; }
+
+.safety-notes { margin-top: 12px; font-size: 13px; color: var(--text2); }
+.safety-notes li { margin-left: 18px; }
+.safety-limits { margin-top: 12px; font-size: 12px; color: var(--text3); }
+
+.safety-options { margin-top: 14px; }
+.safety-check { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 14px; cursor: pointer; }
+.safety-check input { width: 18px; height: 18px; }
+.safety-hint { font-size: 13px; color: var(--text2); margin-top: 4px; }
+
+.safety-preview { margin-top: 20px; }
+.safety-h2 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+.safety-pages { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+.safety-pages canvas { width: 100%; height: auto; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); background: #fff; }
+
+@media (max-width: 640px) {
+  .safety-report { padding: 12px; }
+  .safety-pages { grid-template-columns: repeat(2, 1fr); }
+}
