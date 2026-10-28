@@ -597,6 +597,27 @@ function _maybeSavePreset(tool, params) {
   if (filtered) savePreset(tool, filtered);
 }
 
+// A press on the button while the tool is still reading the file was turned
+// away ("Analysing PDF…") and nothing started — the user had to press again
+// (found 2026-10-28; the corpus run counted such files as refused). The press
+// now waits for the reading to finish and goes through the same path. Another
+// press, another file or another tool meanwhile drops the wait; so does a
+// reading that never ends (5 min).
+let _pressTicket = 0;
+function _startWhenAnalysed(tool) {
+  const ticket = ++_pressTicket;
+  const files = selectedFiles.slice();
+  const until = Date.now() + 5 * 60_000;
+  const tick = () => {
+    if (ticket !== _pressTicket || currentTool !== tool || Date.now() > until) return;
+    if (selectedFiles.length !== files.length || selectedFiles.some((f, i) => f !== files[i])) return;
+    if (collectToolParams(tool).params?.loading) { setTimeout(tick, 200); return; }
+    _pressTicket++;
+    _onMergeBtnClick();
+  };
+  setTimeout(tick, 200);
+}
+
 function _onMergeBtnClick() {
   const mode = id('mergeBtn').dataset.mode || 'process';
   if (mode === 'reset') {
@@ -648,7 +669,13 @@ function _onMergeBtnClick() {
     }
     // Registry dispatch — no more if-else per tool
     const { params, error } = collectToolParams(currentTool);
-    if (error) { showToast(error); return; }
+    if (error) {
+      // still reading the file ("Analysing PDF…"): the press is kept, not lost
+      if (params?.loading) _startWhenAnalysed(currentTool);
+      showToast(error);
+      return;
+    }
+    _pressTicket++;   // started: a press kept from the reading is done with
     _maybeSavePreset(currentTool, params);
     checkAndRecordConversion(currentTool, selectedFiles[0]);  // fire-and-forget
     trackToolStart(currentTool, selectedFiles.reduce((sum, f) => sum + (f.size || 0), 0));
