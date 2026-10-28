@@ -10,7 +10,7 @@
 import { strict as assert } from 'assert';
 import { joinSpacedItems, joinSplitNumbers, restoreDroppedSpaces, restoreGlyphOrder, joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
   lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
-  continuesWrappedHeading, startsAfterHardBreak, localLineEdges, lineRuns , textLayerLooksBroken, toUnifiedIdeographs, joinTouchingItems, dropCjkGapSpaces, isContentsEntry, dropOverprintedText, markLetterSpacing, spacedText } from '../js/textLayoutUtils.js';
+  continuesWrappedHeading, startsAfterHardBreak, localLineEdges, lineRuns, textLayerLooksBroken, toUnifiedIdeographs, joinTouchingItems, dropCjkGapSpaces, isContentsEntry, dropOverprintedText, markLetterSpacing, spacedText, isNumberedSectionLine, numberedSectionHeads } from '../js/textLayoutUtils.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -899,6 +899,37 @@ test('Chinese: an options line that stops early, then the next question, is two 
   assert.equal(startsAfterHardBreak(bl(700, '①關聯式資料庫 ②階層式資料庫', 56, 168, 12), bl(684, '第33題至第38題為題組', 56, 156, 12), m), true);
   // a CJK line wrapped one character short of the edge (kinsoku) stays
   assert.equal(startsAfterHardBreak(bl(700, '第三十題為題組圖一所示為表一表二表三之資料庫關聯', 56, 288, 12), bl(684, '圖說明', 56, 36, 12), m), false);
+});
+
+// ── Numbered section headings set only a little larger than the text.
+const nl = (str, fontSize = 11.5) => ({ y: 700, rtl: false, items: [{ str, x: 56, width: str.length * 5, fontSize }] });
+test('a multi-level numbered line a little larger than the text is a section heading', () => {
+  assert.equal(isNumberedSectionLine(nl('5.7.3.2.1.1 Calculating trade and transport margins'), 10), true);
+  assert.equal(isNumberedSectionLine(nl('3.1.1 Minimum standards for Project Proponents', 12), 10.5), true);
+  assert.equal(isNumberedSectionLine(nl('1.2 CLASSES OF COMPETITORS'), 10), true);
+});
+
+test('not a section heading: body size, a one-level "1.", a sentence, a contents line, a number alone', () => {
+  assert.equal(isNumberedSectionLine(nl('3.1.1 Minimum standards for Project Proponents', 10), 10), false);   // body size
+  assert.equal(isNumberedSectionLine(nl('1. Introduction to the scheme'), 10), false);                      // a list marker
+  assert.equal(isNumberedSectionLine(nl('2.3 The applicant must submit the form before the deadline.'), 10), false);
+  assert.equal(isNumberedSectionLine(nl('1.1 APPLICATION ........................................ 3'), 10), false);
+  assert.equal(isNumberedSectionLine(nl('2.5 %'), 10), false);
+  assert.equal(isNumberedSectionLine(nl('2.4 Approval standards:'), 10), false);                          // a form field
+  assert.equal(isNumberedSectionLine(nl('3.14 is the value of pi used throughout'), 10), false);       // "3.14" + a sentence start? one level only
+});
+
+test('a page\'s numbered headings: alone or in twos, not a form\'s run, not on a contents page', () => {
+  const body = n => Array.from({ length: n }, (_, i) => nl(`Body text of the section that runs on, line ${i}`, 10));
+  const h1 = nl('3.5.4 Monitoring Report'), h2 = nl('3.5.5 Verification');
+  const report = [h1, ...body(6), h2, ...body(6)];
+  assert.deepEqual([...numberedSectionHeads(report, 10)], [h1, h2]);
+  const form = [nl('1.3 Port of registry'), nl('1.4 Gross tonnage'), nl('1.5 Date of build'), ...body(12)];
+  assert.equal(numberedSectionHeads(form, 10).size, 0);                       // three in a row
+  const contents = [nl('3.4. TRANSITION FROM PRIVATE ACCOUNTING AND ADMINISTRATIVE CONCEPTS TO'),
+    nl('NATIONAL ACCOUNTING CONCEPTS ........................................ 52'),
+    nl('3.5. ESTIMATION METHODS ............................................... 53'), ...body(6)];
+  assert.equal(numberedSectionHeads(contents, 10).size, 0);                   // a contents page
 });
 
 const total = passed + failed;

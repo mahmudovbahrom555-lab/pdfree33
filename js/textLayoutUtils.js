@@ -865,6 +865,53 @@ export function startsAfterHardBreak(prevLn, ln, margins, localEdge) {
   return reach > firstWord.length * charWidth + 2 * em;
 }
 
+// A numbered section heading set only a little larger than the text: a
+// multi-level number ("1.2", "3.1.1", "5.7.3.2.1.1") opening a short line at
+// ≥ 1.1 × the body size that doesn't end like a sentence. Headings were found
+// only from 1.3 × or a fully bold line; a Word report's "5.7.3.2.1.1
+// Calculating trade and transport margins" (0 of 36 found) and a standard's
+// blue "3.1.1 Minimum standards for Project Proponents" (0 of 26) are 1.1–1.3 ×
+// and not bold — the tags call them headings (structure metric, 2026-10-28;
+// pdf.js gives no colour, the size and the number are what's left). A single
+// "1." stays a list marker; a contents line (dot leader) stays a contents line.
+// the title after the number doesn't start with a lower-case letter: "3.14 is
+// the value of pi" is a sentence opening on a decimal, "3.1 COMPETITION" a title
+const _SECTION_NUMBER_RE = /^\s*\d{1,3}(?:\.\d{1,3}){1,6}\.?\s+(?!\p{Ll})\S/u;
+// a sentence's end, or a form field's colon ("2.4 Approval standards:")
+const _SENTENCE_LIKE_END_RE = /[.。!?！？;；,，:：]["'”’»)\]]*$/;
+export function isNumberedSectionLine(ln, median) {
+  if (!ln?.items?.length || !median) return false;
+  const text = ln.items.map(i => i.str).join('').trim();
+  if (!_SECTION_NUMBER_RE.test(text) || _SENTENCE_LIKE_END_RE.test(text) || isContentsEntry(ln)) return false;
+  if (text.replace(/\s+/g, '').length > 120 || !/\p{L}/u.test(text.replace(_SECTION_NUMBER_RE, ''))) return false;
+  return Math.max(...ln.items.map(i => i.fontSize)) >= median * 1.1;
+}
+
+// The page's lines that are numbered section headings (isNumberedSectionLine).
+// They are headings only alone or in twos (a section and its first
+// subsection): three or more in a row are a form's numbered fields — a ship's
+// certificate ("1.3 Port of registry", "1.6.3 Date of completion of
+// conversion"…) made 9 of 20 checked new headings wrong (2026-10-28). Nor where
+// they are over a quarter of the page's lines (a form numbers nearly every
+// line, a report's headings are a few among its text), nor on a contents page:
+// an entry too long for one line ends its first line without the dot leader
+// ("3.4. TRANSITION FROM PRIVATE ACCOUNTING AND ADMINISTRATIVE CONCEPTS TO" /
+// "NATIONAL ACCOUNTING CONCEPTS ....... 52") — 5 of 20 checked were these.
+export function numberedSectionHeads(lines, median) {
+  const heads = new Set();
+  if (lines.filter(l => isContentsEntry(l)).length >= 2) return heads;
+  const flags = lines.map(l => isNumberedSectionLine(l, median));
+  if (flags.filter(Boolean).length > 0.25 * lines.length) return heads;
+  for (let i = 0; i < lines.length;) {
+    if (!flags[i]) { i++; continue; }
+    let j = i;
+    while (j < lines.length && flags[j]) j++;
+    if (j - i < 3) for (let k = i; k < j; k++) heads.add(lines[k]);
+    i = j;
+  }
+  return heads;
+}
+
 // A line of a table of contents: a dot leader (four dots or more, or "……")
 // with a page number at either end of the line. Long and without closing
 // punctuation, such a line read as a wrapped paragraph line, and a contents

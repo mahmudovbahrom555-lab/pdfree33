@@ -742,3 +742,41 @@ list, a poem, an exam's options line and the next question
   the hand check: "…博士領" ‖ "銜…"). Merged paragraphs remain at 33.8 %:
   stacks whose lines run close to the edge, and lines the rule can't see
   (no common edge). Proof of generality: the holdout run.
+
+## C17 — numbered section headings only a little larger than the text read as body text
+
+Structure stage (S2), 2026-10-28. A heading needed a font ≥ 1.3× the body
+size or a fully bold line. Reports and standards set their numbered section
+headings at 1.1–1.3× and not bold: a statistics office's Word report
+("5.7.3.2.1.1 Calculating trade and transport margins") had 0 of 36 found, a
+standard's blue "3.1.1 Minimum standards for Project Proponents" 0 of 26
+(pdf.js gives no colour; the number and the size are what's left).
+
+- **Found by** the draft structure metric (tagged-PDF ground truth,
+  `scripts/quality/structure_draft/`, branch wip/structure-metric): headings
+  the tags hold that we wrote as paragraphs, grouped by how they look.
+- **Fix.** `isNumberedSectionLine` (js/textLayoutUtils.js): a multi-level
+  number ("1.2", "3.1.1", up to 7 levels) opening a line ≤ 120 characters at
+  ≥ 1.1× the body size, the title not starting lower-case ("3.14 is the
+  value…" is a sentence), not ending like a sentence or a form field (".", ",",
+  ";", ":"), not a contents line. `numberedSectionHeads` takes them per page
+  only alone or in twos: three or more in a row are a form's numbered fields,
+  over a quarter of the page's lines is a form, and a page with two contents
+  lines is a contents page (an entry too long for one line ends its first
+  line without the dot leader). Such a line alone in its paragraph becomes
+  Heading 3.
+- **Result** (criteria written before the runs; base = main; dev sets + 200
+  reserve documents): text metrics 0 worse, 0 better, exact (zh 128, en 60,
+  ar 60, reserve zh/ja 80); conversion outcomes identical; time +1…5 %.
+  Structure (tagged documents): headings found 646 → 696 of 906 (71.3 →
+  76.8 %); paragraphs, merges, splits, list items, cells and STEDS unchanged.
+  Hand checks of 20 random new headings: version 1 10/20 (a ship's
+  certificate's fields), version 2 12/20 (wrapped contents entries, seed
+  20261028), version 3 18/20 on a fresh seed (20261029) — the 2 wrong are a
+  certificate field and a table row. e2e pdf2word-arabic/forms/ocr/visuals
+  pass.
+- **Left.** New headings land in few documents (94 in 7 of ~450): the class
+  is narrow. Wrong ones left: certificate fields not in a run of three
+  (7111155, 6 lines), numeric table rows with a letter in them (5754431,
+  4581812). Colour-only headings (0 of 6) need colour from pdf.js. Proof of
+  generality: the holdout run.
