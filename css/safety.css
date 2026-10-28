@@ -40,6 +40,14 @@
 .safety-check input { width: 18px; height: 18px; }
 .safety-hint { font-size: 13px; color: var(--text2); margin-top: 4px; }
 
+.safety-alt-btn {
+  margin-top: 12px; min-height: 44px; padding: 10px 16px; width: 100%;
+  border: 1.5px solid var(--green); border-radius: var(--radius); background: transparent;
+  color: var(--green-text); font: inherit; font-weight: 500; cursor: pointer;
+}
+.safety-alt-btn:hover:not(:disabled) { background: var(--green-light); }
+.safety-alt-btn:disabled { opacity: .55; cursor: not-allowed; }
+
 .safety-preview { margin-top: 20px; }
 .safety-h2 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
 .safety-pages { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
