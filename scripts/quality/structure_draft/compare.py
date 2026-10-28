@@ -4,6 +4,12 @@ one-to-one / split / merged, table cells inside a Word table."""
 import re, sys, zipfile, collections, unicodedata, json, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import tags
+# a table-of-contents line: a dot leader, a page number at its end. The tags
+# don't hold contents entries as headings or paragraphs (TOC/TOCI), so these
+# lines stay out of the alignment — "1.1 APPLICATION ........ 3" in the
+# contents matched the heading "1.1 APPLICATION" first, and the ordered
+# alignment then tied all 67 headings of a document to its contents (2026-10-28)
+LEADER = re.compile(r'(?:\.\s?){4,}|…{2,}|(?:·\s?){4,}')
 MARK = re.compile(r'^\s*(?:[•·▪◦‣∙●○■□➢►\-–—*]|\(?\d{1,3}[.)]|\(?[a-zA-Z][.)])\s+')
 def key(t):
     t = MARK.sub('', unicodedata.normalize('NFKC', t))
@@ -31,6 +37,7 @@ def docx_blocks(path):
                 lv = re.search(r'<w:ilvl w:val="(\d+)"', seg)
                 out.append(('item', int(lv.group(1)) + 1 if lv else 1, t))
             elif MARK.match(t) and re.match(r'^\s*[•·▪◦‣∙●○■□➢►]', t): out.append(('lookalike', 0, t))
+            elif LEADER.search(t): out.append(('toc', 0, t))
             else: out.append(('para', 0, t))
     walk(x, False)
     return [(r, l, t.replace('&amp;', '&').replace('&lt;', '<').replace('&gt;', '>')) for r, l, t in out]
@@ -50,10 +57,11 @@ def align(gt, out):
     the first block that happens to contain it). A block found only behind the
     cursor (moved text) is matched there; one not found at all is None."""
     stream, owner = [], []
-    for j, (_, _, t) in enumerate(out):
+    for j, (r, _, t) in enumerate(out):
+        if r == 'toc': continue
         k = key(t); stream.append(k); owner.extend([j] * len(k))
     s = ''.join(stream)
-    res, cur = [], 0
+    res, cur, ends = [], 0, []
     for r, l, t in gt:
         k = key(t)
         if not judgeable(k): res.append(None); continue
@@ -63,9 +71,11 @@ def align(gt, out):
             probe = k[:max(12, len(k) * 4 // 5)]
             i = s.find(probe, cur)
             if i < 0: i = s.find(k)            # moved text, behind the cursor
-        if i < 0: res.append(None); continue
+        if i < 0: res.append(None); ends.append(None); continue
         res.append(owner[i] if i >= cur else -1 - owner[i])   # behind the cursor: negative
+        ends.append(owner[min(i + len(k), len(owner)) - 1] if s.startswith(k, i) else None)
         if i >= cur: cur = i + len(k)
+    align.ends = ends
     return res
 def reliability(pdf, gt):
     """How far the tags can be trusted: the page's own text (MuPDF) and the
@@ -118,6 +128,9 @@ def score(pdf, docx):
     # paragraphs: one GT para → one output block alone (1:1), several GT paras in one block (merged)
     paras = [i for i, (r, _, _) in enumerate(gt) if r == 'para' and a[i] is not None and ahead[i]]
     row['paraMerged'] = [sum(1 for i in paras if len(back[a[i]]) > 1), len(paras)]
+    # one GT paragraph spread over several output blocks (its text starts in one, ends in another)
+    ends = align.ends
+    row['paraSplit'] = [sum(1 for i in paras if ends[i] is not None and ends[i] != a[i]), len(paras)]
     return row
 if __name__ == '__main__':
     print(json.dumps(score(sys.argv[1], sys.argv[2]), ensure_ascii=False))
