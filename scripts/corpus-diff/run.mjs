@@ -58,6 +58,7 @@ async function runOnce(browser, base, file) {
     if (TOOLS[TOOL].ready) await page.waitForFunction(TOOLS[TOOL].ready, null, { timeout: 30_000 }).catch(() => {});
     await page.click('#mergeBtn');
     let started = Date.now();
+    const firstClick = started;
     let retriedStandard = false;
     for (;;) {
       const state = await page.evaluate(() => ({
@@ -74,6 +75,16 @@ async function runOnce(browser, base, file) {
           const i = document.querySelector('input[name="compressPreset"][value="medium"]');
           if (i) { i.checked = true; i.dispatchEvent(new Event('change', { bubbles: true })); }
         });
+        await page.click('#mergeBtn');
+        started = Date.now();
+        continue;
+      }
+      // Still reading the file ("Analysing PDF…") and the click was turned away
+      // (the site starts by itself since #108, production may not yet): click
+      // again, as a user would — a slow pdf.js download in CI made one run
+      // "no output" and failed a deploy (2026-10-28, same as robust.mjs #107)
+      if (!state.busy && /Analys/i.test(state.toast) && Date.now() - firstClick < RUN_TIMEOUT_MS) {
+        await page.waitForTimeout(1000);
         await page.click('#mergeBtn');
         started = Date.now();
         continue;
