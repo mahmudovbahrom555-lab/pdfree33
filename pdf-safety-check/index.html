@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Stricter than the other pages: no ads, no third-party analytics — this
+       page opens files people suspect. pdf.js comes from cdnjs with SRI. -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src  'self' https://cdnjs.cloudflare.com;
+    style-src   'self' 'unsafe-inline';
+    font-src    'self';
+    img-src     'self' data: blob:;
+    connect-src 'self' https://cdnjs.cloudflare.com;
+    worker-src  'self' blob:;
+    frame-src   'none';
+    object-src  'none';
+    base-uri    'none';
+    form-action 'none';
+  ">
+  <title>PDF Safety Check — See What a PDF Can Do, Clean It | PDFree</title>
+  <meta name="description" content="Check a PDF for scripts, actions that run by themselves, attached files, hidden links and QR codes — and download a copy with them taken out. Runs in your browser: the file is never uploaded.">
+  <!-- not listed yet: launched when pdf.js is upgraded (CVE-2024-4367) and the owner decides -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://pdfree.io/pdf-safety-check/">
+  <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/safety.css">
+  <script src="../js/theme.js"></script>
+  <script src="../js/priorityNav.js" defer></script>
+</head>
+<body data-page="pdf-safety-check">
+  <nav>
+    <a href="../" class="logo" id="logo" style="text-decoration:none"><span class="logo-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span><span class="logo-text">PDF<span>ree</span></span></a>
+    <div class="nav-links">
+      <a href="../merge-pdf/"    class="nav-link" data-tool="merge">Merge</a>
+      <a href="../split-pdf/"    class="nav-link" data-tool="split">Split</a>
+      <a href="../compress-pdf/" class="nav-link" data-tool="compress">Compress</a>
+      <a href="../jpg2pdf/"      class="nav-link" data-tool="jpg2pdf">JPG→PDF</a>
+      <a href="../pdf2jpg/"      class="nav-link" data-tool="pdf2jpg">PDF→JPG</a>
+      <a href="../watermark-pdf/" class="nav-link" data-tool="watermark">Watermark</a>
+      <a href="../pagenum-pdf/"  class="nav-link" data-tool="pagenum">Page №</a>
+      <a href="../metadata-pdf/" class="nav-link" data-tool="meta">Metadata</a>
+      <a href="../extract-pdf/"  class="nav-link" data-tool="extract">Extract</a>
+      <a href="../draw-on-pdf/"  class="nav-link" data-tool="draw-pdf">Draw</a>
+      <a href="../rotate-pdf/"   class="nav-link" data-tool="rotate">Rotate</a>
+      <a href="../protect-pdf/"  class="nav-link" data-tool="protect">Protect</a>
+      <a href="../pdf-to-word/"  class="nav-link" data-tool="pdf2word">PDF→Word</a>
+    </div>
+    <details class="nav-more" id="navMore">
+      <summary>More <span class="nav-more__badge"></span></summary>
+      <div class="nav-more__menu"></div>
+    </details>
+    <details class="lang-switch" id="langSwitch">
+      <summary><span class="sr-only">Change language: </span>🌐 EN</summary>
+      <div class="lang-switch__menu" role="menu">
+        <a href="https://pdfree.io/compare-pdf/" role="menuitem" aria-current="true">English</a>
+      </div>
+    </details>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+  </nav>
+
+
+  <main id="toolArea" class="main-area" aria-busy="false">
+    <div class="tool-header">
+      <div class="tool-header-icon" aria-hidden="true">🛡️</div>
+      <div class="tool-header-text">
+        <h1 id="toolTitle">PDF Safety Check</h1>
+        <p  id="toolDesc">See what a PDF can do besides showing pages — scripts, actions, attached files, links, QR codes — and download a copy with them taken out. The file stays in your browser.</p>
+      </div>
+    </div>
+
+    <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Choose a PDF to check">
+      <input type="file" id="fileInput" accept=".pdf,application/pdf" aria-hidden="true">
+      <span class="drop-icon" aria-hidden="true">📂</span>
+      <div class="drop-title">Drop a PDF here</div>
+      <div class="drop-sub">Nothing in the file is run while it is checked, and it is not uploaded.</div>
+      <label class="drop-btn" for="fileInput">Choose a PDF</label>
+    </div>
+
+    <div id="safetyStatus" class="safety-status" role="status" aria-live="polite"></div>
+    <section id="safetyReport" class="safety-report" aria-live="polite" hidden></section>
+
+    <div id="safetyOptionsPanel" class="j2p-options safety-options" hidden>
+      <label class="safety-check"><input type="checkbox" id="safetyRemoveLinks"> Also take out web links</label>
+      <p class="safety-hint">Taken out: scripts, actions that run by themselves, programs and files the PDF can open, attached files, XFA forms, embedded media. Kept: the pages, their text, bookmarks and the document's own internal links.</p>
+    </div>
+
+    <button id="mergeBtn" class="merge-btn" type="button" disabled data-mode="process">Download cleaned PDF</button>
+    <div id="progressBar" class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="progressLabel" class="progress-label"></div>
+
+    <div id="successCard" class="success-card" role="alert" aria-live="polite" style="display:none">
+      <div class="success-top">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <div class="success-text">
+          <h3 id="successTitle">Cleaned</h3>
+          <p  id="successDesc"></p>
+        </div>
+        <button id="downloadBtn" class="download-btn" type="button" style="display:none">Download</button>
+      </div>
+    </div>
+
+    <section id="safetyPreview" class="safety-preview" hidden>
+      <h2 class="safety-h2">Pages (drawn with scripts off)</h2>
+      <div id="safetyPages" class="safety-pages"></div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <footer>
+    <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatives</div>
+        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green-text);text-decoration:none;padding:3px 0;margin-bottom:4px;">iLovePDF Alternative</a>
+      </div>
+      <div>
+        <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green-text);text-decoration:none;padding:3px 0;margin-bottom:4px;">HIPAA Compliant PDF</a>
+        <a href="/secure-pdf-tools/" style="display:block;color:var(--green-text);text-decoration:none;padding:3px 0;">Secure PDF Tools</a>
+      </div>
+    </div>
+    PDFree · <strong>All processing happens 100% in your browser</strong> · Files are <strong>never uploaded</strong><br>
+    <span style="color:var(--green-text)">🔒</span> Your documents never leave your device &nbsp;·&nbsp;
+    <span style="color:var(--green-text)">♥</span> Built to be free for everyone, forever<br>
+    <span style="font-size:11px;margin-top:8px;display:inline-block;color:var(--text3)">
+      <a href="/privacy/" style="color:var(--green-text)">Privacy</a>
+      &nbsp;·&nbsp;
+      <a href="/terms/" style="color:var(--green-text)">Terms</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener" style="color:var(--green-text)">GNU AGPLv3</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/mahmudovbahrom555-lab/pdfree33" target="_blank" rel="noopener" style="color:var(--green-text)">GitHub</a>
+    </span>
+  </footer>
+
+  <script type="module" src="../js/safetyCheckPage.js"></script>
+</body>
+</html>

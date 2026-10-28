@@ -15,6 +15,7 @@ import { TOOLS } from './config.js';
 import { maxFileMb } from './fileLimits.js';
 import { getRunner, getWorkerTool } from './toolRegistry.js';
 import { loadJSZip, loadDocx, loadExcelJs, loadPptxGenJs } from './lazyLibs.js';
+import { repairSplitSurrogates } from './ooxmlRepair.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer, decryptWithPassword } from './decryptPdf.js';
 import { detectTables, groupItemsIntoLines, looksLikeProseNotData, looksLikeEnumeratedList } from './pdf2wordTables.js';
@@ -30,7 +31,7 @@ import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PR
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, toArabicBaseLetters, toUnifiedIdeographs, joinTouchingItems, _splitCrossColumnLines, _isCjk,
          lineRuns, joinSpacedItems, spacedText,
-         lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
+         lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph, startsAfterHardBreak, localLineEdges, numberedSectionHeads,
          lineEndsParagraph, continuesWrappedHeading, isContentsEntry } from './textLayoutUtils.js';
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { _p2wBuildPageData, uprightMatrix, uprightBox } from './pdf2readCore.js';
@@ -198,17 +199,22 @@ export function startCompressScan(file) {
 
   return new Promise(resolve => {
     _scanResolve = resolve;
-    _shared().onmessage = (e) => {
-      if (e.data.type === 'scan-done') {
-        _scanResolve = null;
-        _shared().onmessage = null;
-        resolve(e.data.report);
-      }
-    };
-    // File is sent by structured clone (not Transferable) — stays accessible in main thread.
-    // Its private copy when there is one (files.js _keepCopy): a clone drops the
-    // File's redirected reads, and the worker would read the file on disk again.
-    _shared().postMessage({ tool: 'compress-scan', file: file._copy ?? file });
+    // pdf-lib in the HTTP cache first, as doProcess does: this scan starts the
+    // shared worker when a file is added, and its importScripts doesn't retry
+    _warmPdfLib().then(() => {
+      if (_scanResolve !== resolve) return;   // cancelled meanwhile
+      _shared().onmessage = (e) => {
+        if (e.data.type === 'scan-done') {
+          _scanResolve = null;
+          _shared().onmessage = null;
+          resolve(e.data.report);
+        }
+      };
+      // File is sent by structured clone (not Transferable) — stays accessible in main thread.
+      // Its private copy when there is one (files.js _keepCopy): a clone drops the
+      // File's redirected reads, and the worker would read the file on disk again.
+      _shared().postMessage({ tool: 'compress-scan', file: file._copy ?? file });
+    });
   });
 }
 
@@ -240,18 +246,25 @@ export function startMergeBatchScan(files) {
 
   return new Promise(resolve => {
     _mergeScanResolve = resolve;
-    _shared().onmessage = (e) => {
-      if (e.data.type === 'merge-scan-done') {
-        _mergeScanResolve = null;
-        _shared().onmessage  = null;
-        resolve(e.data.results);
-      }
-    };
-    // Files are sent as structured clone (not Transferable) — originals stay accessible;
-    // each one's private copy when there is one (see the compress scan above)
-    _shared().postMessage({
-      tool:  'merge-scan-batch',
-      items: files.map((f, i) => ({ file: f._copy ?? f, index: i })),
+    // pdf-lib first, as the compress scan above: on a flaky connection this
+    // scan's worker logged "importScripts failed: /js/vendor/pdf-lib.min.js"
+    // (Merge 5 people, Compress 1, 2026-10-24..27; 5 of 6 still got a result,
+    // without page counts)
+    _warmPdfLib().then(() => {
+      if (_mergeScanResolve !== resolve) return;   // cancelled meanwhile
+      _shared().onmessage = (e) => {
+        if (e.data.type === 'merge-scan-done') {
+          _mergeScanResolve = null;
+          _shared().onmessage  = null;
+          resolve(e.data.results);
+        }
+      };
+      // Files are sent as structured clone (not Transferable) — originals stay accessible;
+      // each one's private copy when there is one (see the compress scan above)
+      _shared().postMessage({
+        tool:  'merge-scan-batch',
+        items: files.map((f, i) => ({ file: f._copy ?? f, index: i })),
+      });
     });
   });
 }
@@ -2770,7 +2783,9 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
 
   // toBlob() uses JSZip type:"blob" — browser-native, no polyfill needed.
   // toBuffer() uses type:"nodebuffer" which JSZip does not support in browsers.
-  let blob = await Packer.toBlob(_buildDoc(paragraphs));
+  await loadJSZip();
+  // characters past U+FFFF split between two JSZip chunks (js/ooxmlRepair.js)
+  let blob = await repairSplitSurrogates(await Packer.toBlob(_buildDoc(paragraphs)), window.JSZip);
 
   // Atlas structural check — scores the ACTUAL shipped DOCX (tables real vs.
   // layout-mis-detected, paragraphs trapped in text boxes, flow chopped by
@@ -2798,7 +2813,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
         const retry = await _p2wBuildParagraphs(
           pdfDoc, pageData, median, repeatTextSet, cs, { useTables: false, repeatPatternSet, isCancelled, onProgress }
         );
-        const retryBlob = await Packer.toBlob(_buildDoc(retry.paragraphs));
+        const retryBlob = await repairSplitSurrogates(await Packer.toBlob(_buildDoc(retry.paragraphs)), window.JSZip);
         const retryEri = await evaluateStructural(await retryBlob.arrayBuffer());
         if (retryEri.eri > atlasEri.eri) {
           blob       = retryBlob;
@@ -3803,7 +3818,9 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'text' } = {}) {
 
   setProgress(92, 'Building presentation…');
 
-  const blob = await pptx.write({ outputType: 'blob' });
+  await loadJSZip();
+  // characters past U+FFFF split between two JSZip chunks (js/ooxmlRepair.js)
+  const blob = await repairSplitSurrogates(await pptx.write({ outputType: 'blob' }), window.JSZip);
   const baseName = file.name.replace(/\.pdf$/i, '');
   const filename = `${baseName}.pptx`;
   const desc = `${pageCount} slide${pageCount !== 1 ? 's' : ''} · ${fmtSize(blob.size)}`;
@@ -4226,6 +4243,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
   const { Paragraph, TextRun, HeadingLevel,
           Table, TableRow, TableCell, WidthType, ImageRun } = window.__pdfreeDocxBuilder;
   const _repeatTextSet    = repeatTextSet;
+  let _numberedHeads = new Set();   // this page's numbered section headings (set per page below)
   const _repeatPatternSet = repeatPatternSet;
   const _cs = { ...cs, totalTables: 0, totalGapVisuals: 0, totalInlineVisuals: 0 };
   // isCancelled defaults to reading the module-level isProcessing flag —
@@ -4338,6 +4356,8 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
       if      (maxSize >= median * 2.2) heading = HeadingLevel.HEADING_1;
       else if (maxSize >= median * 1.7) heading = HeadingLevel.HEADING_2;
       else if (maxSize >= median * 1.3) heading = HeadingLevel.HEADING_3;
+      // a numbered section heading only a little larger (isNumberedSectionLine)
+      else if (_paraBuffer.length === 1 && _numberedHeads.has(_paraBuffer[0])) heading = HeadingLevel.HEADING_3;
       else if (allTextTrimmed.length <= 100 && _paraBuffer.every(ln => _isBoldHeadingLine(ln.items))) {
         // No font-size jump, but every line is entirely bold — same-size-bold
         // section titles (see _isBoldHeadingLine above). All-caps gets the
@@ -4438,6 +4458,8 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     // positive like "A. Smith wrote the report." sitting flush with
     // ordinary body text.
     const margins = lineStartMargins(lines); // first-line-indent paragraph breaks
+    const lineEdges = localLineEdges(lines, margins); // lines broken by hand (startsAfterHardBreak)
+    _numberedHeads = numberedSectionHeads(lines, median);
     const pitch = linePitch(lines);          // gap vs this page's/column's own line spacing
     const ocrPitch = ocrLinePitch(lines);
     let pageBaselineX = 0;
@@ -4704,7 +4726,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
           }
 
           const maxFont = Math.max(...ln.items.map(i => i.fontSize));
-          const isHead  = maxFont >= median * 1.3 || _isBoldHeadingLine(ln.items);
+          const isHead  = maxFont >= median * 1.3 || _isBoldHeadingLine(ln.items) || _numberedHeads.has(ln);
 
           // List items never merge into the surrounding paragraph, and get
           // real Word list formatting (native bullet, or auto-numbering for
@@ -4775,7 +4797,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
             // a heading too long for its column wraps: its lines stay one heading
             const wrapsHeading = isHead && lastIsHead && continuesWrappedHeading(lastLn, ln, margins);
             if (!wrapsHeading && (isHead || lastIsHead || gap > breakGap || startsIndentedParagraph(lastLn, ln, margins)
-                || startsSpacedParagraph(lastLn, ln, pitch, margins) || isContentsEntry(lastLn) || isContentsEntry(ln))) _flushPara();
+                || startsSpacedParagraph(lastLn, ln, pitch, margins) || startsAfterHardBreak(lastLn, ln, margins, lineEdges.get(lastLn)) || isContentsEntry(lastLn) || isContentsEntry(ln))) _flushPara();
           }
           _paraBuffer.push(ln);
         }

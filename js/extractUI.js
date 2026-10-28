@@ -183,6 +183,7 @@ function _panelHTML() {
                    placeholder="${t('ext_range_placeholder')}">
             <button type="button" id="extRangeApply" class="ext-apply-btn">${t('ext_apply')}</button>
           </div>
+          <div id="extRangeStatus" class="ext-range-status" role="status" aria-live="polite"></div>
           <div class="ext-quick-btns">
             <button type="button" class="ext-quick-btn" data-preset="all">${t('ext_preset_all')}</button>
             <button type="button" class="ext-quick-btn" data-preset="odd">${t('ext_preset_odd')}</button>
@@ -381,9 +382,12 @@ function _refreshThumbSelections() {
 }
 
 function _updateSelCount() {
-  const el = document.getElementById('extSelCount');
-  const n  = _selectedPages.size;
-  if (el) el.textContent = tp(n, 'ext_selected_one', 'ext_selected_many');
+  const n    = _selectedPages.size;
+  const text = tp(n, 'ext_selected_one', 'ext_selected_many');
+  for (const id of ['extSelCount', 'extRangeStatus']) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  }
 }
 
 function _updateRangeInput() {
@@ -462,6 +466,11 @@ function _maybeSuggestMode() {
   }
 }
 
+// Applying a range showed nothing next to the field: the count sits under the
+// thumbnails (on a phone, under the sticky button) and the thumbnails stayed
+// on pages 1–16 when the range was "30-35" — Apply drew rage clicks from 8
+// people in each of two 3-day windows (2026-10-21..27). The count now shows
+// under the field too, and the thumbnails move to the first selected page.
 function _applyRange() {
   const inp = document.getElementById('extRangeInput');
   if (!inp) return;
@@ -469,6 +478,9 @@ function _applyRange() {
   _refreshThumbSelections();
   _updateSelCount();
   _maybeSuggestMode();
+  const first = Math.min(..._selectedPages);
+  const page = Number.isFinite(first) ? Math.floor((first - 1) / THUMBS_PER_PAGE) : _thumbPage;
+  if (page !== _thumbPage) { _thumbPage = page; _gotoThumbPage(); }
 }
 
 // "Without blank pages": every page rendered small and judged by

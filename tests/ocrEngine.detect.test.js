@@ -8,8 +8,9 @@
 
 import { strict as assert } from 'assert';
 
-// detectOcrLanguage renders the sample page onto a canvas; nothing is drawn.
-globalThis.document = { createElement: () => ({ width: 0, height: 0, getContext: () => ({}) }) };
+// detectOcrLanguage renders the sample page onto a canvas; nothing is drawn,
+// and the PNG handed to the (stub) worker is an empty Blob.
+globalThis.document = { createElement: () => ({ width: 0, height: 0, getContext: () => ({}), toBlob: cb => cb(new Blob()) }) };
 const { detectOcrLanguage, latinLanguage, ocrProbesForBrowser, hasSpareCore } = await import('../js/ocrEngine.js');
 
 let passed = 0, failed = 0;

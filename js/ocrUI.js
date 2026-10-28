@@ -475,7 +475,9 @@ function _bindMergeBtn() {
       }
     } catch (err) {
       _showToast(t('ocr_error_prefix', { msg: err.message }));
-      trackToolError('ocr', `unknown: ${String(err.message).slice(0, 60)}`);
+      // the size limit is a refusal of its own, not an unknown error in each
+      // locale's words (4 people in 6 days, 4 languages, 2026-10-21..27)
+      trackToolError('ocr', err.code ?? `unknown: ${String(err.message).slice(0, 60)}`);
     } finally {
       btn.classList.remove('ocr-btn--busy');
       if (bar) bar.hidden = true;
@@ -655,9 +657,9 @@ const MAX_PAGES_IOS = 30;
 //   gate) → build searchable PDF (+ optional .txt export).
 async function _runOcr(file, gen) {
   if (file.size > MAX_FILE_MB * 1024 * 1024) {
-    throw new Error(
+    throw Object.assign(new Error(
       t('ocr_too_large_for_ocr', { mb: Math.round(file.size / 1024 / 1024), max: MAX_FILE_MB })
-    );
+    ), { code: 'file_too_large' });
   }
 
   _updateProgress(5, t('p2j_loading_engine'));
@@ -870,9 +872,9 @@ function _ocrQualityLabel(avgConf, lang) {
 // ── Direct text extraction (text-layer PDFs) ─────────────────────────────────
 async function _extractTextDirect(file) {
   if (file.size > MAX_FILE_MB * 1024 * 1024) {
-    throw new Error(
+    throw Object.assign(new Error(
       t('ocr_file_too_large_extract', { mb: Math.round(file.size / 1024 / 1024), max: MAX_FILE_MB })
-    );
+    ), { code: 'file_too_large' });
   }
   await loadPdfJs();
   const buf    = await file.arrayBuffer();
