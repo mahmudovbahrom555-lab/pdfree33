@@ -701,3 +701,44 @@ puts a space in each gap, and the .docx read "董 事 名 單", "氏 名 所 属
   (4196938, both wrong cases). Names spread with even gaps lose their
   family–given space ("島野博幸") — the source draws none. Proof of
   generality waits for the holdout set.
+
+## C16 — short lines stacked without a gap read as one paragraph
+
+Structure stage (S1), 2026-10-27. A paragraph break needed an indent or a gap
+over 1.25× the line pitch, so single-spaced lines that stop short — a list
+without markers, form fields ("Last Name: ___ First Name: ___"), a contact
+list, a poem, an exam's options line and the next question
+("…物件導向資料庫第33題至第38題…") — ran together into one paragraph.
+
+- **Found by** the draft structure metric (tagged-PDF ground truth,
+  `scripts/quality/structure_draft/`, branch wip/structure-metric):
+  paragraphs merged in 15 of 25 trusted tagged documents; a hand check of 8
+  random merges: 7 real.
+- **Fix.** `startsAfterHardBreak` (js/textLayoutUtils.js): a line that starts
+  at the start margin (or a paragraph indent) in a column ≥ 10 em ends a
+  paragraph when the room left before the column's edge exceeds the next
+  line's first word + 2 em — the word would have fitted, so wrapping didn't
+  end the line. The edge: each line's **local** edge (`localLineEdges`: the
+  farthest end two body lines within four of it share, ±2 pt), else the
+  column's common end margin, else the farthest end two body lines share
+  (`bodyFar`) — never a single line: pdf.js joined a UN document's
+  "联合国" with its number at the top right into one line ending at 555 pt
+  against a body ending at 489, and a Chinese article beside a picture came
+  apart line by line before the local edge. Also: a line repeated on ⅔ of the
+  pages is dropped as a header, footer or stamp only if it sits at the same
+  height (±3 %) on them — a repeated name set apart by the new breaks
+  ("彼得·维蒂希(德国)") was otherwise deleted wherever it stood.
+- **Result** (criteria written before the runs; base = main dd07a125; dev sets):
+  text metrics 0 worse (zh 128, en 60, ar 60; `--exact` too for zh/en);
+  better: an English document recall 0.969 → 1.000 (repeated lines no longer
+  deleted), Han spaces down in 2; Arabic missing words +6 = a page footer that
+  had leaked into the body twice, now removed like its 21 other copies.
+  Structure (25 trusted tagged documents): merged paragraphs 41.4 → 33.8 %,
+  split 3.0 → 3.1 %, STEDS 0.432 → 0.454. Hand check of 20 random new breaks
+  (seed 20261028): 19 right — news paragraphs, footnotes, glossary entries,
+  bullet and numbered items, code lines, table rows, bibliography — 1 wrong.
+  Time ±1 % (Arabic +5.6 %). e2e pdf2word-arabic/forms/ocr/visuals pass.
+- **Left.** 6639660 still splits some wrapped prose lines (one wrong break in
+  the hand check: "…博士領" ‖ "銜…"). Merged paragraphs remain at 33.8 %:
+  stacks whose lines run close to the edge, and lines the rule can't see
+  (no common edge). Proof of generality: the holdout run.

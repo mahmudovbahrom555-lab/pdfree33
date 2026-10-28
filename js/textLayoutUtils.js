@@ -707,10 +707,23 @@ export function lineStartMargins(lines) {
     // far: the farthest end edge — the column's extent even when ragged text
     // (left-aligned, no justification) has no common end margin
     const ends = set.map(_lineEnd);
+    const start = _dominant(set.map(_lineStart));
+    // bodyFar: the farthest end that two lines starting at the start margin (or
+    // a first-line indent of it) both reach, within 2 pt — the body column's own
+    // extent. One line doesn't set it: pdf.js joined a UN document's "联合国" at
+    // the margin and its number "S/2012/2/Rev.2" at the top right into one line
+    // ending at 555 pt, against a body column ending at 489 (2026-10-27). Too
+    // near an edge only means fewer paragraph breaks, never more.
+    const body = start === undefined ? [] : set.filter(ln => {
+      const d = rtl ? start - _lineStart(ln) : _lineStart(ln) - start;
+      return d >= -_EDGE_TOLERANCE && d <= 4 * _lineEm(ln);
+    }).map(_lineEnd).sort((a, b) => (rtl ? a - b : b - a));   // farthest first
+    const shared = body.find((e, i) => i + 1 < body.length && Math.abs(e - body[i + 1]) <= 2);
     margins[rtl ? 'rtl' : 'ltr'] = {
-      start: _dominant(set.map(_lineStart)),
+      start,
       end: _dominant(ends),
       far: ends.length ? (rtl ? Math.min(...ends) : Math.max(...ends)) : undefined,
+      bodyFar: shared ?? body[1] ?? body[0],
     };
   }
   return margins;
@@ -789,6 +802,67 @@ export function ocrLinePitch(lines) {
 export function startsSpacedParagraph(prevLn, ln, pitch, margins) {
   if (pitch === undefined) return false;
   return prevLn.y - ln.y > pitch * 1.25 && lineEndsParagraph(prevLn, margins);
+}
+
+// A line broken by hand: it starts like body text, stops well short of the
+// column's far edge, and the next line's first word would have fitted in the
+// room left — wrapping didn't end it, its author did. Single-spaced lines
+// stacked without a gap or an indent — a list without markers, form fields,
+// a contact list, a poem, an exam's options line and the next question — were
+// read as one wrapped paragraph ("…物件導向資料庫第33題至第38題…": the options
+// and the next question ran together). Seen on 19 of 40 tagged documents whose
+// tags say the lines are paragraphs of their own (structure metric draft,
+// 2026-10-27). The same "would the next word have fitted" test keeps a wrapped
+// heading's lines together (continuesWrappedHeading); here it parts them.
+// Only in a column of running text (≥ 10 em) whose line starts at the start
+// margin (or a paragraph indent): centred and right-aligned lines are short by
+// design. The room must exceed the next word by 2 em — word widths are
+// estimated from the next line's average character width.
+// Each line's local edge: the farthest end two body lines within four lines of
+// it both reach (within 2 pt) — the edge of the column it sits in where the
+// page holds a narrower one (a Chinese article set beside a picture had every
+// line read as short against the page's full width, and came apart line by
+// line — 2026-10-27). None where no two neighbours share an end: a stack of
+// short lines of different lengths (a list, form fields) has no column edge of
+// its own, and the page's body edge stands.
+export function localLineEdges(lines, margins) {
+  const edges = new Map();
+  const isBody = ln => {
+    const m = margins[ln.rtl ? 'rtl' : 'ltr'];
+    if (m?.start === undefined || !ln.items.length) return false;
+    const d = ln.rtl ? m.start - _lineStart(ln) : _lineStart(ln) - m.start;
+    return d >= -_EDGE_TOLERANCE && d <= 4 * _lineEm(ln);
+  };
+  lines.forEach((ln, i) => {
+    if (!isBody(ln)) return;
+    const near = lines.slice(Math.max(0, i - 4), i + 5).filter(l => !!l.rtl === !!ln.rtl && isBody(l))
+      .map(_lineEnd).sort((a, b) => (ln.rtl ? a - b : b - a));
+    const shared = near.find((e, k) => k + 1 < near.length && Math.abs(e - near[k + 1]) <= 2);
+    if (shared !== undefined) edges.set(ln, shared);
+  });
+  return edges;
+}
+
+export function startsAfterHardBreak(prevLn, ln, margins, localEdge) {
+  if (!prevLn || !ln || !prevLn.items.length || !ln.items.length || !!prevLn.rtl !== !!ln.rtl) return false;
+  const m = margins[prevLn.rtl ? 'rtl' : 'ltr'];
+  // the column's common end margin where its lines share one (justified
+  // text); else the farthest end of the lines that start at the margin — not
+  // of every line: a UN document's number at the top right ("S/2012/2/Rev.2",
+  // to 555 pt against a body column ending at 489) made every body line look
+  // short, and a wrapped Chinese paragraph came apart line by line (2026-10-27)
+  const edge = localEdge ?? m?.end ?? m?.bodyFar ?? m?.far;
+  if (m?.start === undefined || edge === undefined) return false;
+  const em = _lineEm(prevLn);
+  if (Math.abs(edge - m.start) < 10 * em) return false;
+  const atStart = Math.abs(_lineStart(prevLn) - m.start) <= _EDGE_TOLERANCE || lineIsIndented(prevLn, margins);
+  if (!atStart) return false;
+  const reach = prevLn.rtl ? _lineEnd(prevLn) - edge : edge - _lineEnd(prevLn);
+  const text = ln.items.map(i => i.str).join('').trim();
+  if (!text) return false;
+  const firstWord = _isCjk(text) ? text.slice(0, 1) : text.split(/\s+/)[0];
+  const charWidth = Math.abs(_lineEnd(ln) - _lineStart(ln)) / Math.max(text.length, 1);
+  return reach > firstWord.length * charWidth + 2 * em;
 }
 
 // A line of a table of contents: a dot leader (four dots or more, or "……")
