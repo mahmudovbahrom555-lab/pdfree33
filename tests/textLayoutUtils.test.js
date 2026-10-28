@@ -10,7 +10,7 @@
 import { strict as assert } from 'assert';
 import { joinSpacedItems, joinSplitNumbers, restoreDroppedSpaces, restoreGlyphOrder, joinHyphenatedLineEnd, rtlItemsAreVisual, reorderVisualRtlLine, _visualRTLToLogical,
   lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph,
-  continuesWrappedHeading, lineRuns , textLayerLooksBroken, toUnifiedIdeographs, joinTouchingItems, dropCjkGapSpaces, isContentsEntry, dropOverprintedText, markLetterSpacing, spacedText } from '../js/textLayoutUtils.js';
+  continuesWrappedHeading, startsAfterHardBreak, localLineEdges, lineRuns , textLayerLooksBroken, toUnifiedIdeographs, joinTouchingItems, dropCjkGapSpaces, isContentsEntry, dropOverprintedText, markLetterSpacing, spacedText } from '../js/textLayoutUtils.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -825,6 +825,80 @@ test('letter spacing only marks: the line keeps every item, where it was, with i
 });
 test('letter spacing: uneven gaps are words, not spacing', () => {
   assert.equal(spacedLine('東京大阪名古屋', [0.0, 0.9, 0.0, 1.6, 0.0, 0.0]), '東京 大阪 名古屋');
+});
+
+// ── Lines broken by hand: short lines stacked without a gap are paragraphs of their own.
+const bl = (y, str, x, width, fontSize = 11) => ({ y, rtl: false, items: [{ str, x, width, fontSize }] });
+const column = Array.from({ length: 6 }, (_, i) => bl(600 - i * 13, 'body text that fills the whole width of the page column here', 56, 484)); // 56–540, A4 with margins
+
+test('a short line the next word would have fitted after starts a new paragraph (form fields, a list without markers)', () => {
+  const m = lineStartMargins(column);
+  assert.equal(startsAfterHardBreak(bl(700, 'Last Name: ____________', 56, 120), bl(687, 'First Name: ____________', 56, 124), m), true);
+  assert.equal(startsAfterHardBreak(bl(700, 'eBird checklists (approved and vetted)', 56, 170), bl(687, 'Personal observations (vetted)', 56, 140), m), true);
+});
+
+test('a wrapped line that reached the column edge does not (the next word did not fit)', () => {
+  const m = lineStartMargins(column);
+  assert.equal(startsAfterHardBreak(bl(700, 'running text that goes all the way to the edge of the column and then', 56, 478), bl(687, 'wraps onto the next line', 56, 120), m), false);
+});
+
+test('a line short by less than the next word and 2 em stays in the paragraph (ragged right)', () => {
+  const m = lineStartMargins(column);
+  // 50 pt of room, next word "considerations" ~14 × 5 pt = 70 pt: it could not fit
+  assert.equal(startsAfterHardBreak(bl(700, 'ragged right text ends a bit early here because the next word', 56, 434), bl(687, 'considerations follow on this line', 56, 170), m), false);
+});
+
+test('a centred line and a narrow cell (< 10 em) are left alone', () => {
+  const m = lineStartMargins(column);
+  assert.equal(startsAfterHardBreak(bl(700, 'Centred Title', 140, 60), bl(687, 'Subtitle', 150, 40), m), false);
+  const cell = Array.from({ length: 6 }, (_, i) => bl(600 - i * 13, 'cell', 326, 72, 10.6));
+  assert.equal(startsAfterHardBreak(bl(700, 'one', 326, 20, 10.6), bl(687, 'two', 326, 20, 10.6), lineStartMargins(cell)), false);
+});
+
+test('justified lines are judged against their common end margin, not one wider line', () => {
+  // every line ends at 540 but one runs on to 580 (a URL): a line ending at 540 is full
+  const lines = [...column.map(l => ({ ...l, items: [{ ...l.items[0], width: 484 }] })), bl(500, 'a long line with a url that runs past', 56, 524)];
+  const m = lineStartMargins(lines);
+  assert.equal(startsAfterHardBreak(bl(700, 'justified line that ends exactly at the margin', 56, 484), bl(687, 'next', 56, 20), m), false);
+});
+
+test('a line set apart at the top right (a document number) is not the body column edge', () => {
+  // as pdf.js reads it: "联合国" at the margin and the number at the top right are one line
+  const page = [{ y: 745, rtl: false, items: [{ str: '联合国', x: 123, width: 59, fontSize: 13.7 }, { str: 'S/2012/2/Rev.2', x: 485, width: 70, fontSize: 20 }] },
+    ...[0, 1, 2].map(i => bl(530 - i * 16, '根据1998年10月30日安全理事会主席的说明第4(b)段并', 123, 366, 10.5)),
+    bl(480, '和副主席如下：', 123, 79, 10.5), bl(460, '主席：', 123, 37, 10.5)];
+  const m = lineStartMargins(page);
+  // a wrapped line ending at the body's edge (489) stays with the next
+  assert.equal(startsAfterHardBreak(bl(530, '根据1998年10月30日安全理事会主席的说明第4(b)段并', 123, 366, 10.5), bl(514, '经安理会成员协商后', 123, 95, 10.5), m), false);
+  // "主席：" then the name: two paragraphs
+  assert.equal(startsAfterHardBreak(bl(460, '主席：', 123, 37, 10.5), bl(444, '彼得·维蒂希(德国)', 144, 100, 10.5), m), true);
+});
+
+test('a narrow justified column beside a picture: lines at its own edge are not short', () => {
+  // the page's body runs to 540, this column to 300 (a picture to its right)
+  const narrow = [0, 1, 2, 3, 4].map(i => bl(400 - i * 16, '宇宙及國際會議於一九九七年三月', 56, 244, 12));
+  const page = [...column, ...narrow];
+  const m = lineStartMargins(page);
+  const edges = localLineEdges(narrow, m);
+  assert.equal(startsAfterHardBreak(narrow[1], narrow[2], m, edges.get(narrow[1])), false);
+  // without the local edge, the page edge made it look short
+  assert.equal(startsAfterHardBreak(narrow[1], narrow[2], m), true);
+});
+
+test('a stack of short lines of different lengths has no edge of its own: the page edge stands', () => {
+  const stack = [bl(700, 'Last Name: ______', 56, 100), bl(687, 'First Name: __________', 56, 130), bl(674, 'Middle: ___', 56, 70)];
+  const m = lineStartMargins([...column, ...stack]);
+  const edges = localLineEdges(stack, m);
+  assert.equal(edges.get(stack[0]), undefined);
+  assert.equal(startsAfterHardBreak(stack[0], stack[1], m, edges.get(stack[0])), true);
+});
+
+test('Chinese: an options line that stops early, then the next question, is two paragraphs', () => {
+  const cjk = Array.from({ length: 6 }, (_, i) => bl(600 - i * 16, '第三十題為題組圖一所示為表一表二表三之資料庫關聯圖說明', 56, 300, 12)); // 25 chars × 12
+  const m = lineStartMargins(cjk);
+  assert.equal(startsAfterHardBreak(bl(700, '①關聯式資料庫 ②階層式資料庫', 56, 168, 12), bl(684, '第33題至第38題為題組', 56, 156, 12), m), true);
+  // a CJK line wrapped one character short of the edge (kinsoku) stays
+  assert.equal(startsAfterHardBreak(bl(700, '第三十題為題組圖一所示為表一表二表三之資料庫關聯', 56, 288, 12), bl(684, '圖說明', 56, 36, 12), m), false);
 });
 
 const total = passed + failed;

@@ -1022,15 +1022,18 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
   // watermark / header / footer and suppressed in output.
   const _repeatTextSet = new Set();
   {
-    const freq = new Map();   // lineText → number of pages it appears on
-    for (const { lines } of pageData) {
+    // lineText → the height (share of the page, from the bottom) it sits at on
+    // each page it appears on
+    const where = new Map();
+    for (const { lines, pageH } of pageData) {
       const seenOnPage = new Set();
       for (const ln of lines) {
         const raw = ln.items.map(i => i.str).join('').trim();
         const t   = _normWatermark(raw);
         if (t.length > 0 && t.length <= 60 && !seenOnPage.has(t)) {
           seenOnPage.add(t);
-          freq.set(t, (freq.get(t) || 0) + 1);
+          if (!where.has(t)) where.set(t, []);
+          where.get(t).push(pageH ? ln.y / pageH : 0);
         }
       }
     }
@@ -1038,10 +1041,17 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
     // Using ⅓ was too aggressive: on a 9-page doc a heading on 3 pages (33%)
     // would be suppressed. ⅔ preserves legitimate section titles that happen to
     // repeat while still catching CamScanner stamps (100% frequency).
+    // And at the same height on those pages (±3 % of the page): a stamp, header
+    // or footer sits where it sat on the page before; a name a list repeats on
+    // every page doesn't. A UN document listing committee chairs lost
+    // "彼得·维蒂希(德国)" once its line stood as a paragraph of its own
+    // (2026-10-27) — any repeated line set apart was deleted wherever it was.
     const minPages = Math.max(3, Math.ceil(pageData.length * 2 / 3));
-    for (const [t, cnt] of freq) {
+    for (const [t, ys] of where) {
       // Never suppress pure integers — those are handled separately as page numbers
-      if (cnt >= minPages && !/^\d+$/.test(t)) _repeatTextSet.add(t);
+      if (ys.length < minPages || /^\d+$/.test(t)) continue;
+      const mid = [...ys].sort((a, b) => a - b)[Math.floor(ys.length / 2)];
+      if (ys.filter(y => Math.abs(y - mid) <= 0.03).length >= minPages) _repeatTextSet.add(t);
     }
   }
 
