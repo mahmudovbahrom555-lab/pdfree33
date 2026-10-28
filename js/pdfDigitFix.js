@@ -145,8 +145,15 @@ export async function pageDigits(PDFLib, doc, pageIndex, cache, getTemplates) {
 
   // the page's fonts and its forms', and whether any needs correcting
   const seen = new Set();
+  // each resource dictionary once: LibreOffice gives a page's transparency
+  // groups the page's own resources, which list every group — each form opened
+  // every form again, eight levels deep (234 forms on a page of 423708: k^8
+  // visits, the tab froze for good)
+  const visited = new Set();
   let any = false;
   const visit = async (res, depth) => {
+    if (!res || visited.has(res)) return;
+    visited.add(res);
     const fonts = fontsOf(res);
     if (fonts) {
       for (const [, ref] of fonts.entries()) {
