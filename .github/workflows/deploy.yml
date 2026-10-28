@@ -221,6 +221,12 @@ jobs:
         # rule 5). See tests/e2e/empty-button.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:empty-button
 
+      - name: E2E — every tool that reads a PDF with pdf.js draws it and gives a file
+        # One built document through 16 tools; converters' files must hold its
+        # words. Added with the pdf.js 3.11 → 4.10 move, after a coverage audit
+        # found six pdf.js tools with no browser test. See tests/e2e/pdfjs-smoke.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:pdfjs-smoke
+
       - name: E2E — a press while the file is being analysed starts the conversion
         # It showed "Analysing PDF…" and started nothing; the user had to press
         # again. See tests/e2e/early-click.e2e.mjs.

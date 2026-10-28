@@ -18,6 +18,7 @@
     "test:e2e:worker-offline": "node tests/e2e/worker-offline.e2e.mjs",
     "test:e2e:empty-button": "node tests/e2e/empty-button.e2e.mjs",
     "test:e2e:early-click": "node tests/e2e/early-click.e2e.mjs",
+    "test:e2e:pdfjs-smoke": "node tests/e2e/pdfjs-smoke.e2e.mjs",
     "corpus:diff:compress": "node scripts/corpus-diff/run.mjs --tool compress --out corpus-diff-out && python3 scripts/corpus-diff/check.py corpus-diff-out",
     "corpus:diff:merge": "node scripts/corpus-diff/run.mjs --tool merge --out corpus-diff-merge && python3 scripts/corpus-diff/check.py corpus-diff-merge",
     "corpus:diff:split": "node scripts/corpus-diff/run.mjs --tool split --out corpus-diff-split && python3 scripts/corpus-diff/check.py corpus-diff-split",
