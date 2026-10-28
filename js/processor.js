@@ -15,6 +15,7 @@ import { TOOLS } from './config.js';
 import { maxFileMb } from './fileLimits.js';
 import { getRunner, getWorkerTool } from './toolRegistry.js';
 import { loadJSZip, loadDocx, loadExcelJs, loadPptxGenJs } from './lazyLibs.js';
+import { repairSplitSurrogates } from './ooxmlRepair.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer, decryptWithPassword } from './decryptPdf.js';
 import { detectTables, groupItemsIntoLines, looksLikeProseNotData, looksLikeEnumeratedList } from './pdf2wordTables.js';
@@ -2782,7 +2783,9 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
 
   // toBlob() uses JSZip type:"blob" — browser-native, no polyfill needed.
   // toBuffer() uses type:"nodebuffer" which JSZip does not support in browsers.
-  let blob = await Packer.toBlob(_buildDoc(paragraphs));
+  await loadJSZip();
+  // characters past U+FFFF split between two JSZip chunks (js/ooxmlRepair.js)
+  let blob = await repairSplitSurrogates(await Packer.toBlob(_buildDoc(paragraphs)), window.JSZip);
 
   // Atlas structural check — scores the ACTUAL shipped DOCX (tables real vs.
   // layout-mis-detected, paragraphs trapped in text boxes, flow chopped by
@@ -2810,7 +2813,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
         const retry = await _p2wBuildParagraphs(
           pdfDoc, pageData, median, repeatTextSet, cs, { useTables: false, repeatPatternSet, isCancelled, onProgress }
         );
-        const retryBlob = await Packer.toBlob(_buildDoc(retry.paragraphs));
+        const retryBlob = await repairSplitSurrogates(await Packer.toBlob(_buildDoc(retry.paragraphs)), window.JSZip);
         const retryEri = await evaluateStructural(await retryBlob.arrayBuffer());
         if (retryEri.eri > atlasEri.eri) {
           blob       = retryBlob;
@@ -3815,7 +3818,9 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'text' } = {}) {
 
   setProgress(92, 'Building presentation…');
 
-  const blob = await pptx.write({ outputType: 'blob' });
+  await loadJSZip();
+  // characters past U+FFFF split between two JSZip chunks (js/ooxmlRepair.js)
+  const blob = await repairSplitSurrogates(await pptx.write({ outputType: 'blob' }), window.JSZip);
   const baseName = file.name.replace(/\.pdf$/i, '');
   const filename = `${baseName}.pptx`;
   const desc = `${pageCount} slide${pageCount !== 1 ? 's' : ''} · ${fmtSize(blob.size)}`;
