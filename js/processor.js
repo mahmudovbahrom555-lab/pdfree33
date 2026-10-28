@@ -31,7 +31,7 @@ import { contentBBox, reconcileGlobalCrop, padBBox, composeWithAspect, DEVICE_PR
 import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, toArabicBaseLetters, toUnifiedIdeographs, joinTouchingItems, _splitCrossColumnLines, _isCjk,
          lineRuns, joinSpacedItems, spacedText,
-         lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph, startsAfterHardBreak, localLineEdges,
+         lineStartMargins, startsIndentedParagraph, linePitch, ocrLinePitch, startsSpacedParagraph, startsAfterHardBreak, localLineEdges, numberedSectionHeads,
          lineEndsParagraph, continuesWrappedHeading, isContentsEntry } from './textLayoutUtils.js';
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { _p2wBuildPageData, uprightMatrix, uprightBox } from './pdf2readCore.js';
@@ -4243,6 +4243,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
   const { Paragraph, TextRun, HeadingLevel,
           Table, TableRow, TableCell, WidthType, ImageRun } = window.__pdfreeDocxBuilder;
   const _repeatTextSet    = repeatTextSet;
+  let _numberedHeads = new Set();   // this page's numbered section headings (set per page below)
   const _repeatPatternSet = repeatPatternSet;
   const _cs = { ...cs, totalTables: 0, totalGapVisuals: 0, totalInlineVisuals: 0 };
   // isCancelled defaults to reading the module-level isProcessing flag —
@@ -4355,6 +4356,8 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
       if      (maxSize >= median * 2.2) heading = HeadingLevel.HEADING_1;
       else if (maxSize >= median * 1.7) heading = HeadingLevel.HEADING_2;
       else if (maxSize >= median * 1.3) heading = HeadingLevel.HEADING_3;
+      // a numbered section heading only a little larger (isNumberedSectionLine)
+      else if (_paraBuffer.length === 1 && _numberedHeads.has(_paraBuffer[0])) heading = HeadingLevel.HEADING_3;
       else if (allTextTrimmed.length <= 100 && _paraBuffer.every(ln => _isBoldHeadingLine(ln.items))) {
         // No font-size jump, but every line is entirely bold — same-size-bold
         // section titles (see _isBoldHeadingLine above). All-caps gets the
@@ -4456,6 +4459,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     // ordinary body text.
     const margins = lineStartMargins(lines); // first-line-indent paragraph breaks
     const lineEdges = localLineEdges(lines, margins); // lines broken by hand (startsAfterHardBreak)
+    _numberedHeads = numberedSectionHeads(lines, median);
     const pitch = linePitch(lines);          // gap vs this page's/column's own line spacing
     const ocrPitch = ocrLinePitch(lines);
     let pageBaselineX = 0;
@@ -4722,7 +4726,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
           }
 
           const maxFont = Math.max(...ln.items.map(i => i.fontSize));
-          const isHead  = maxFont >= median * 1.3 || _isBoldHeadingLine(ln.items);
+          const isHead  = maxFont >= median * 1.3 || _isBoldHeadingLine(ln.items) || _numberedHeads.has(ln);
 
           // List items never merge into the surrounding paragraph, and get
           // real Word list formatting (native bullet, or auto-numbering for
