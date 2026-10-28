@@ -103,12 +103,20 @@ def score(pdf, docx):
     covered, real = reliability(pdf, gt)
     if covered < TRUST[0] or real < TRUST[1]:
         return {'skip': 'tags not trusted', 'covered': covered, 'real': real}
-    out = docx_blocks(docx); raw = align(gt, out)
+    row = score_blocks(gt, docx)
+    row.update(covered=covered, real=real)
+    return row
+
+
+def score_blocks(gt, docx, out=None):
+    """The counts for one document: GT blocks (tags, or a source DOCX's
+    styles — roundtrip/docx_truth.py) against our DOCX (or blocks given as `out`)."""
+    out = docx_blocks(docx) if out is None else out; raw = align(gt, out)
     # found only behind the cursor (moved, or a repeated text matched to its
     # first place): counts as found, never as part of a merged block
     a = [None if j is None else (j if j >= 0 else -1 - j) for j in raw]
     ahead = [j is not None and j >= 0 for j in raw]
-    row = {'covered': covered, 'real': real, 'gt': dict(collections.Counter(r for r, _, _ in gt)), 'out': dict(collections.Counter(r for r, _, _ in out))}
+    row = {'gt': dict(collections.Counter(r for r, _, _ in gt)), 'out': dict(collections.Counter(r for r, _, _ in out))}
     found = [j is not None for j in a]
     row['found'] = round(sum(found) / (len(gt) or 1), 3)
     def share(role, want):
