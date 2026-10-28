@@ -66,5 +66,26 @@ await test('items are walked in order, other fonts untouched', () => {
   assert.deepEqual(items.map(i => i.str), ['a 20', '31', '1']);
 });
 
+console.log('\nForms sharing one resource dictionary:');
+await test('forms whose resources name every form are each looked at once, not k^8 times', async () => {
+  // LibreOffice gives a page's transparency groups ("Tr100", "Tr102"…, 234 on
+  // one page of 423708) the page's own resources, which list them all: every
+  // form opened every form again, eight levels deep, and the tab froze.
+  const doc = await PDFLib.PDFDocument.create();
+  const page = doc.addPage([200, 200]);
+  const { context: ctx } = doc;
+  const xobjects = ctx.obj({});
+  const res = ctx.register(ctx.obj({ XObject: xobjects }));
+  for (let i = 0; i < 30; i++) {
+    const form = ctx.register(ctx.stream('', { Type: 'XObject', Subtype: 'Form', BBox: [0, 0, 10, 10], Resources: res }));
+    xobjects.set(PDFLib.PDFName.of(`Tr${i}`), form);
+  }
+  page.node.set(PDFLib.PDFName.of('Resources'), res);
+  const t = Date.now();
+  const out = await pageDigits(PDFLib, doc, 0, new Map(), async () => digitTemplates());
+  assert.equal(out, null);
+  assert.ok(Date.now() - t < 2000, `took ${Date.now() - t} ms`);
+});
+
 console.log(`\n${'─'.repeat(50)}\nTests: ${passed + failed} | ✓ ${passed} | ${failed} failed`);
 process.exit(failed ? 1 : 0);
