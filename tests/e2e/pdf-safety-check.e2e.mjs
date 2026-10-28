@@ -53,7 +53,14 @@ for (const [label, viewport, colorScheme] of [['phone, light', { width: 390, hei
   const ctx = await browser.newContext({ viewport, colorScheme, acceptDownloads: true });
   const p = await ctx.newPage();
   const problems = [];
-  p.on('console', m => { if (m.type() === 'error' && /Content Security Policy|Refused to/i.test(m.text())) problems.push(m.text().slice(0, 160)); });
+  // Cloudflare injects its analytics beacon into every page at the edge; this
+  // page's CSP refuses it on purpose (no third-party script where suspect files
+  // are opened). Any other refusal is a real problem.
+  p.on('console', m => {
+    if (m.type() !== 'error' || !/Content Security Policy|Refused to/i.test(m.text())) return;
+    if (/static\.cloudflareinsights\.com\/beacon/.test(m.text())) return;
+    problems.push(m.text().slice(0, 160));
+  });
   p.on('pageerror', e => problems.push(`pageerror: ${e.message.slice(0, 160)}`));
   await p.goto(`${BASE_URL}/pdf-safety-check/`, { waitUntil: 'load' });
 
