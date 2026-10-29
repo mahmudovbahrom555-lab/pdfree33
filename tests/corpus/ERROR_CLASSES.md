@@ -823,3 +823,43 @@ character Word shows as a box — or ran on into its neighbours.
   A list item set beside a caption or a table cell still takes their text
   (columns read as one line). Lettered sub-bullets in Courier "o" are not
   recognised.
+
+## C20 — traditional Chinese scans read with the simplified model
+
+Chinese stage, 2026-10-29 — the first OCR measure with truth. Detection only
+ever picked `chi_sim` for Chinese: a traditional page (Hong Kong, Taiwan) came
+out in simplified characters — the document's own script changed
+(傳媒集團 → 传媒集团) — and with half its Han wrong. The `chi_tra` model was
+vendored and never used.
+
+- **Found by** a synthetic-scan benchmark (`/tmp/claude-501/zhocr`, criteria
+  written before results): 30 dev text documents (21 zh, 9 ja), their first
+  two pages made into image-only PDFs, clean (300 DPI) and rough (150 DPI
+  JPEG), truth = the source page's text; run as a Chinese user
+  (/zh/pdf-zhuan-word/, browser zh-CN). Main: zh Han recall 0.50, bigrams
+  0.31; the output's script wrong on 16 of 21. 17 of the 21 were traditional.
+  Also measured and **kept**: PSM 11 for CJK (PSM 6: 0.46, PSM 3: 0.45);
+  the per-glyph confidence gate (without it 0.58 but twice the junk).
+- **Fix.** `_judgeImage` (js/ocrEngine.js): when Chinese wins, `chi_sim` and
+  `chi_tra` each read the sample page alone; `chi_tra` takes it when its mean
+  confidence over Han words is 3 or more above `chi_sim`'s (traditional
+  pages +3..+21, simplified −13..+2 on the dev set). "More confident Han
+  words" was tried first and failed: `chi_tra` reads simplified pages with
+  confidence too — all three simplified dev documents turned traditional.
+  `chi_tra+eng` like `chi_sim+eng` when a fifth of the words are Latin.
+- **Result.** The rule was chosen on the dev set, so it was validated on an
+  **independent** set: 20 zh documents of the control pool (seed 20261030;
+  15 traditional, 5 simplified), criteria written before the run:
+  script right 6 → 17 of 20 (every simplified one still right; the 3 left are
+  traditional read as simplified, as before); Han recall 0.55 → 0.74 clean,
+  0.47 → 0.65 rough; bigrams 0.38 → 0.64 / 0.29 → 0.51; extra 0.14 → 0.03;
+  no document's recall down more than 0.05 (0 on the dev and pool sets,
+  clean and rough). **Two criteria missed by the letter:** script right on
+  ≥ 90 % (got 85 %), median time within +20 % (+21 % clean, +15 % rough:
+  two more models read the sample page, ~5 s). Dev set: recall 0.50 → 0.73,
+  bigrams 0.31 → 0.60. Real scans of the pool (24, almost all Japanese): 22
+  byte-identical, 2 changed — both Taiwanese (a menu, a poster), now read
+  with chi_tra, one clearly better, neither worse. Owner decides.
+- **Left.** Japanese scans: recall 0.43 on clean synthetic scans — the next
+  thing to measure. Flyers and posters (text on graphics) read mostly as
+  junk. The OCR stays far below a text layer: 0.74 is not good, only better.
