@@ -215,6 +215,16 @@ export function trackShareTool(action, tool) {
  * multiple fake-door tests can share this one event and still be told
  * apart in Analytics Engine queries.
  */
+/**
+ * A tool stopped short of a result by design, not by an error: Fill on a
+ * PDF with no form fields. 45 of 57 people who added a file to Fill
+ * (2026-10-26..29) left with no result and no error — this tells how many
+ * of them met that stop.
+ */
+export function trackToolNotice(tool, notice) {
+  _track('Tool Notice', { tool, notice });
+}
+
 export function trackFeatureInterest(feature) {
   _track('Feature Interest', { feature });
 }

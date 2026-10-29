@@ -25,6 +25,7 @@ import { loadPdfJs }         from './pdf2jpgUI.js';
 import { setButtonDisabled } from './ui.js';
 import { t, tp }             from './i18n.js';
 import { bindDragReorder }   from './dragReorder.js';
+import { trackToolNotice }   from './analytics.js';
 
 // Locale-correct slug for the "Draw on PDF" cross-link in the
 // no-fillable-fields hint below. This module is shared across every locale's
@@ -178,6 +179,7 @@ async function _extractAndRender(file, container) {
     if (_fields.length === 0) {
       container.innerHTML = _noFieldsHTML();
       setButtonDisabled();
+      trackToolNotice('fill', 'no_fields');
       return;
     }
 
@@ -1106,7 +1108,7 @@ function _noFieldsHTML() {
     <p style="margin:0 0 8px;font-weight:600;color:var(--text);">${t('fill_no_fields_title')}</p>
     <p style="margin:0;font-size:13px;color:var(--text3);line-height:1.5;">
       ${t('fill_no_fields_body')}
-      <a href="${_drawHref()}" style="color:var(--green-text);">${t('fill_no_fields_link')}</a>${t('fill_no_fields_suffix')}
+      <a href="${_drawHref()}" data-handoff data-handoff-input data-cross-sell-to="draw-pdf" style="color:var(--green-text);">${t('fill_no_fields_link')}</a>${t('fill_no_fields_suffix')}
     </p>
   </div>`;
 }
