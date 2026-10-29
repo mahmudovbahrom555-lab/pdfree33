@@ -589,6 +589,44 @@ test('a whole Chinese request holding a synonym finds it (PDF全部图片左旋�
   expect(topKey('PDF全部图片左旋转', zhIndex)).toBe('rotate');
 });
 
+// ── Real misses: what people searched and didn't find (Analytics Engine,
+//    Search Miss, 2026-10-14..29), each for a tool we have ────────────────
+console.log('\nReal misses, 2026-10-14..29:');
+const L = lc => buildIndex(TOOLS, lc, loadLocaleSearchTags(lc));
+const idx = { zh: L('zh-CN'), fr: L('fr'), es: L('es'), ru: L('ru'), ja: L('ja'), de: L('de') };
+test('"unprotect" / "remove protection" find Unlock, not Protect (the opposite)', () => {
+  expect(topKey('unprotect')).toBe('unlock');
+  expect(topKey('remove protection')).toBe('unlock');
+});
+test('"edit" finds Quick Edit (text), not Edit Metadata', () => {
+  expect(topKey('edit')).toBe('quickEdit');
+});
+test('a scan whitened or cleaned finds Clean Scan, in every language people used', () => {
+  for (const q of ['remove grey color', 'whiten scan', 'enhance scanned pdf', 'darken lines', 'remove stains']) expect(topKey(q)).toBe('cleanScan');
+  for (const q of ['漂白', '净化', '高清，底色为白色']) expect(topKey(q, idx.zh)).toBe('cleanScan');
+  expect(topKey("améliorer l'impression", idx.fr)).toBe('cleanScan');
+  expect(topKey('mejorar escaneo', idx.es)).toBe('cleanScan');
+  expect(topKey('убрать коричневые пятна', idx.ru)).toBe('cleanScan');
+  expect(topKey('背景の黒い部分を白くしたい', idx.ja)).toBe('cleanScan');
+  expect(topKey('grauen hintergrund entfernen', idx.de)).toBe('cleanScan');
+});
+test('"去水印" (remove watermark) finds Redact like "remove watermark", not Add Watermark', () => {
+  expect(topKey('去水印', idx.zh)).toBe('redact');
+  expect(topKey('去除水印', idx.zh)).toBe('redact');
+  expect(topKey('水印', idx.zh)).toBe('watermark');
+});
+test('two-letter "md" finds PDF to Markdown (exact match only for short queries)', () => {
+  expect(topKey('md')).toBe('pdf2md');
+  expect(topKey('md', idx.zh)).toBe('pdf2md');
+  expect(topKey('pd')).toBe(null);   // still too short to guess from
+});
+test('Chinese requests: insert blank page, combine, reorder, add shapes', () => {
+  expect(topKey('插入空白', idx.zh)).toBe('merge');
+  expect(topKey('拼合', idx.zh)).toBe('merge');
+  expect(topKey('调整顺序', idx.zh)).toBe('organize');
+  expect(topKey('添加形状', idx.zh)).toBe('draw-pdf');
+});
+
 // ── Summary ───────────────────────────────────────────────────
 console.log(`\n${passed} passed, ${failed} failed`);
 if (failed > 0) process.exit(1);

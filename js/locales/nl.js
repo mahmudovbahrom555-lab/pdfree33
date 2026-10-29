@@ -16,7 +16,7 @@ window.PDFREE_LOCALE = {
     resize:           ['formaat wijzigen', 'passend maken op pagina', 'papierformaat', 'afdrukformaat', 'pdf voor afdrukken', 'schalen', 'verkleinen voor afdrukken'],
     nup:              ["meerdere pagina's per vel", "2 pagina's op 1", "pagina's per vel", 'n-up', 'facturen afdrukken', "meerdere pagina's op één pagina", 'boekje', 'brochure', 'boekje afdrukken'],
     mangaSplit:       ['manga splitsen', 'dubbele pagina manga', 'manga scheiden', 'rechts naar links', 'manhwa splitsen', 'manga pdf splitsen'],
-    cleanScan:           ['scan opschonen', 'achtergrond wit maken', 'grijze achtergrond verwijderen', 'gescande pagina opfleuren', 'schaduw van scan verwijderen', 'scan schoonmaken', 'pdf rechtzetten', 'scheve scan'],
+    cleanScan:           ['scan opschonen', 'achtergrond wit maken', 'grijze achtergrond verwijderen', 'gescande pagina opfleuren', 'schaduw van scan verwijderen', 'scan schoonmaken', 'pdf rechtzetten', 'scheve scan', 'scan verbeteren', 'vlekken verwijderen', 'tekst donkerder maken'],
     ereader:             ['ereader', 'e-reader', 'kindle', 'kobo', 'marges bijsnijden', 'optimaliseren voor kindle', 'e-ink', 'marges verkleinen', 'pdf grijstinten'],
     extract:          ['extraheren', 'pagina\'s nemen', 'pagina\'s selecteren', 'pagina\'s ophalen', "lege pagina's verwijderen"],
     watermark:        ['watermerk', 'stempel', 'tekst overlay', 'merk', 'diagonaal', 'tekst toevoegen'],

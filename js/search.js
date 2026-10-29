@@ -163,7 +163,10 @@ function bestPhraseDistance(query, text) {
 // A flat "3 char minimum" query gate would silently reject these and make
 // roughly half of ja/ko's natural search terms permanently unmatchable.
 const CJK_RE = /[぀-ヿ一-鿿가-힣]/;
-function minQueryLength(q) {
+export function hasCjk(q) {
+  return CJK_RE.test(q);
+}
+export function minQueryLength(q) {
   return CJK_RE.test(q) ? 2 : 3;
 }
 
@@ -179,11 +182,15 @@ const NO_FUZZY_RE = /\d/;
 
 export function search(query, index) {
   const q = foldDiacritics(query.toLowerCase().trim());
-  if (q.length < minQueryLength(q)) return [];
+  // Below the minimum only a whole name or tag counts: "md" is PDF to
+  // Markdown, but "pd" or "cl" (a word still being typed) finds nothing.
+  const short = q.length < minQueryLength(q);
+  if (short && q.length < 2) return [];
   const simplified = toSimplified(q);
   const results = new Map();
   for (const variant of simplified === q ? [q] : [q, simplified]) {
     for (const hit of _search(variant, index)) {
+      if (short && hit.score < 90) continue;
       if (!results.has(hit.key) || results.get(hit.key).score < hit.score) results.set(hit.key, hit);
     }
   }

@@ -17,7 +17,7 @@ window.PDFREE_LOCALE = {
     resize:           ['ubah ukuran', 'sesuaikan ke halaman', 'ukuran kertas', 'ukuran cetak', 'pdf untuk cetak', 'skala pdf', 'perkecil untuk cetak'],
     nup:              ['beberapa halaman dalam satu lembar', '2 halaman jadi 1', 'halaman per lembar', 'n-up', 'cetak faktur', 'gabung halaman satu kertas', 'buklet', 'booklet', 'cetak buku lipat'],
     mangaSplit:       ['pisah manga', 'halaman ganda manga', 'pisahkan manga', 'kanan ke kiri', 'manhwa pisah', 'manga pdf pisah'],
-    cleanScan:           ['bersihkan scan', 'putihkan latar belakang', 'hapus latar abu-abu', 'cerahkan halaman scan', 'hapus bayangan scan', 'pembersihan scan', 'luruskan pdf', 'scan miring'],
+    cleanScan:           ['bersihkan scan', 'putihkan latar belakang', 'hapus latar abu-abu', 'cerahkan halaman scan', 'hapus bayangan scan', 'pembersihan scan', 'luruskan pdf', 'scan miring', 'perjelas scan', 'hapus noda', 'pertebal teks'],
     ereader:             ['ereader', 'e-reader', 'kindle', 'kobo', 'pangkas margin', 'optimalkan untuk kindle', 'e-ink', 'perkecil margin', 'pdf skala abu-abu'],
     extract:          ['ambil halaman', 'pilih halaman', 'keluarkan halaman', 'ekstrak halaman', 'ekstrak', 'hapus halaman kosong'],
     watermark:        ['tanda air', 'stempel', 'cap air', 'tambah teks', 'watermark', 'merek'],

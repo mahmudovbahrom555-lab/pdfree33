@@ -16,7 +16,7 @@ window.PDFREE_LOCALE = {
     resize:           ['redimensionar', 'ajustar a la página', 'tamaño de papel', 'tamaño de impresión', 'pdf para imprimir', 'escalar', 'reducir para imprimir'],
     nup:              ['varias páginas en una hoja', '2 páginas en 1', 'páginas por hoja', 'n-up', 'imprimir facturas', 'varias páginas por hoja', 'folleto', 'librillo', 'imprimir folleto'],
     mangaSplit:       ['dividir manga', 'páginas dobles manga', 'separar manga', 'derecha a izquierda', 'manhwa dividir', 'manga pdf dividir'],
-    cleanScan:           ['limpiar escaneo', 'blanquear fondo', 'quitar fondo gris', 'aclarar página escaneada', 'quitar sombra del escaneo', 'limpieza de escaneo', 'enderezar pdf', 'escaneo torcido'],
+    cleanScan:           ['limpiar escaneo', 'blanquear fondo', 'quitar fondo gris', 'aclarar página escaneada', 'quitar sombra del escaneo', 'limpieza de escaneo', 'enderezar pdf', 'escaneo torcido', 'mejorar escaneo', 'mejorar impresión', 'quitar manchas', 'oscurecer texto'],
     ereader:             ['ereader', 'e-reader', 'kindle', 'kobo', 'recortar márgenes', 'optimizar para kindle', 'e-ink', 'reducir márgenes', 'pdf escala de grises'],
     extract:          ['extraer', 'sacar páginas', 'seleccionar páginas', 'obtener páginas', 'eliminar páginas en blanco', 'quitar páginas en blanco'],
     watermark:        ['marca de agua', 'sello', 'superponer texto', 'marca', 'diagonal', 'añadir texto'],
