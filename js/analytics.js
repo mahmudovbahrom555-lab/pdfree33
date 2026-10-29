@@ -23,6 +23,7 @@
 // ============================================================
 
 import { getLang } from './config.js';
+import { safetyReportProps, safetyResultProps, safetyErrorType } from './safetyAnalytics.js';
 
 // Ephemeral, in-memory-only grouping key — generated fresh on every page
 // load, never written to localStorage/sessionStorage/cookies, never sent
@@ -405,4 +406,24 @@ export function trackRageClick(target) {
  */
 export function trackMangaSurveyAnswer(question, answer) {
   _track('Manga Survey Answer', { question, answer });
+}
+
+// ── PDF safety check ──────────────────────────────────────────
+// Only categories: js/safetyAnalytics.js builds every value from fixed lists,
+// so nothing of a checked file (its name, links, sites, QR codes, attachments,
+// scripts, text) can reach this — tests/safetyAnalytics.test.js shows it.
+
+/** The report shown for a checked file: level, kinds of findings, yes/no flags. */
+export function trackSafetyReport(report, scan, extra) {
+  _track('Safety Report', safetyReportProps(report, scan, extra));
+}
+
+/** A copy downloaded: cleaned ('clean') or redrawn ('pictures'), parts taken out as a band. */
+export function trackSafetyResult(mode, removedCount, outputSize = 0) {
+  _track('Tool Success', { ...safetyResultProps(mode, removedCount), output_size: _sizeBucket(outputSize) });
+}
+
+/** Why a file couldn't be checked or cleaned — a kind from a fixed list. */
+export function trackSafetyError(kind) {
+  trackToolError('safety', safetyErrorType(kind));
 }
