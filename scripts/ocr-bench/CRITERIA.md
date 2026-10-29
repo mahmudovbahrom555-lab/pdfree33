@@ -24,3 +24,16 @@ Variants:
 and on DEV ja recall not below baseline (layout docs reported, judged by eye too).
 Also reported, not judged here: seconds per page (this Mac, CPU, 1 thread and all
 threads), model file sizes. Anything else is "no big gain" — said as is.
+
+## RESULT (2026-10-29)
+Dev screening: M4 chosen (clean zh .954/ja .979 vs M .931/.954; rough equal). S (server) not better than mobile.
+POOL (independent, 20 zh), M4 vs prod (H2r = a806aea5):
+- clean: recall .810 → .954 (+.144), bigrams .745 → .905 (+.160), extra .025 → .020, script 17 → 20/20
+- rough: recall .777 → .950 (+.173), bigrams .701 → .882 (+.181), extra .026 → .018, script 17 → 20/20
+- dev ja: .490 → .979 clean, .423 → .916 rough
+(a) ✓ (b) ✓ (c) ✓ ja ✓ → BIG GAIN → propose step 3 (browser check) to the owner.
+Per doc: only 0010853 clean below prod (.95 → .87): its truth repeats fake-bold words (VPN ×4, 學校 ×4,
+操作 ×4 ≈ 26 of 323 Han) while OCR reads them once; its extra .50 = real text inside screenshots
+(browser UI) that the truth lacks. A truth artifact, not a reading loss — truth NOT edited (measuring stick).
+Speed (this Mac, native onnxruntime, 8 cores): M4 median 5.0 s/page clean, p90 14 s. Browser (wasm) unknown.
+Sizes: det mobile 4.6 MB + rec mobile 15.9 MB + cls 0.6 MB.
