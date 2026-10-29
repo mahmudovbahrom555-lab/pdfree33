@@ -12,7 +12,7 @@ import { showCancelBtn, hideCancelBtn } from './ui.js';
 import { CJK_LANGS, COMPLEX_LANGS, primaryScript, loadTesseract, createOcrWorker,
          detectOcrLanguage, recognizePage, ocrLangForLocale, ocrProbesForBrowser } from './ocrEngine.js';
 import { getLang } from './config.js';
-import { trackToolStart, trackToolSuccess, trackToolError } from './analytics.js';
+import { trackToolStart, trackToolSuccess, trackToolError, trackToolCancel } from './analytics.js';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const TEXT_CHAR_THRESHOLD = 100; // min chars across sampled pages → classified as text PDF (items-count was 5 — too low)
@@ -474,6 +474,9 @@ function _bindMergeBtn() {
         if (_selectedLang === 'auto') _showLangRetry(usedLang);
       }
     } catch (err) {
+      // the person said no to the long-document question: a cancel, not an
+      // error ("unknown: Cancelled by user." in the error log, 2026-10)
+      if (err.code === 'cancelled') { trackToolCancel('ocr'); return; }
       _showToast(t('ocr_error_prefix', { msg: err.message }));
       // the size limit is a refusal of its own, not an unknown error in each
       // locale's words (4 people in 6 days, 4 languages, 2026-10-21..27)
@@ -675,7 +678,7 @@ async function _runOcr(file, gen) {
     }).promise;
   } catch (err) {
     if (_isPasswordError(err)) {
-      throw new Error(t('ocr_password_protected_inline'), { cause: err });
+      throw Object.assign(new Error(t('ocr_password_protected_inline'), { cause: err }), { code: 'password_protected' });
     }
     throw new Error(t('ocr_could_not_open', { msg: err.message }), { cause: err });
   }
@@ -689,7 +692,7 @@ async function _runOcr(file, gen) {
     );
     if (!proceed) {
       pdfDoc.destroy();
-      throw new Error(t('ocr_cancelled_by_user'));
+      throw Object.assign(new Error(t('ocr_cancelled_by_user')), { code: 'cancelled' });
     }
   }
 

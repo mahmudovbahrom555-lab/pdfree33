@@ -226,6 +226,11 @@ jobs:
         # again. See tests/e2e/early-click.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:early-click
 
+      - name: E2E — OCR logs a locked PDF and a cancel by their own names
+        # Both were "unknown: <words in the user's language>" in the error log.
+        # See tests/e2e/ocr-error-types.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:ocr-error-types
+
       - name: E2E — Rotate has no dead end
         # The toolbar with no page selected and the main button with nothing
         # turned only said "select pages first". See
