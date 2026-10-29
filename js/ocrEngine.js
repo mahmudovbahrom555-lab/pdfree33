@@ -89,7 +89,9 @@ async function _applyLangParams(worker, lang) {
 // .catch(() => {}), and only a failed 'load' step rejects it): PDF→Word hung for
 // good, reproduced by blocking the model request. So: errors while the worker
 // is being created reject here at once; after that they only reject their own
-// job's promise; and a load that hangs gives up after _OCR_LOAD_TIMEOUT_MS.
+// job's promise; and a load that hangs gives up after _OCR_LOAD_TIMEOUT_MS —
+// its files already downloaded (_fetchOcrFiles below), so the limit is on
+// starting the engine, not on the person's connection.
 const _OCR_LOAD_TIMEOUT_MS = 120000;
 function _withTimeout(promise, what) {
   let timer;
@@ -98,7 +100,87 @@ function _withTimeout(promise, what) {
     new Promise((_, reject) => { timer = setTimeout(() => reject(new Error(`${what} timed out`)), _OCR_LOAD_TIMEOUT_MS); }),
   ]).finally(() => clearTimeout(timer));
 }
+
+// ── Downloads watched for silence, not for total time ────────────────────────
+// "OCR engine load timed out" (CN Safari, HK Edge, PS Safari, 2026-10-24..28):
+// the one 120 s limit above covered downloading the core (3.9 MB) and the
+// models (0.4–3 MB each) too, so a slow line still receiving was cut off.
+// tesseract.js reports no bytes, only a step's start and end; so the files are
+// fetched here first, a chunk at a time — a download that falls silent for
+// _STALL_MS is started again, up to _ATTEMPTS times — and the engine's own
+// requests then come from the browser's HTTP cache (max-age 3600 on
+// /js/vendor/). A model already in tesseract.js's IndexedDB isn't fetched.
+const _STALL_MS = 30000;
+const _ATTEMPTS = 3;
+const _fetched = new Map();   // url → its download, shared by probes made at once
+
+// The core tesseract.js picks: SIMD or not (its own probe, wasm-feature-detect)
+function _coreUrl() {
+  let simd = false;
+  try { simd = WebAssembly.validate(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 5, 1, 96, 0, 1, 123, 3, 2, 1, 0, 10, 10, 1, 8, 0, 65, 0, 253, 15, 253, 98, 11])); } catch { /* no WebAssembly: the engine fails on its own */ }
+  return `${TESSERACT_PATHS.corePath}tesseract-core-${simd ? 'simd-' : ''}lstm.wasm.js`;
+}
+
+// Whether tesseract.js has `name`'s model in its cache (idb-keyval's
+// 'keyval-store', key "./<name>.traineddata"). Never creates the database:
+// an upgrade means it isn't there, and is aborted.
+function _modelCached(name) {
+  return new Promise(resolve => {
+    let req;
+    try { req = indexedDB.open('keyval-store'); } catch { resolve(false); return; }
+    req.onupgradeneeded = () => req.transaction.abort();
+    req.onerror = () => resolve(false);
+    req.onsuccess = () => {
+      const db = req.result;
+      try {
+        const count = db.transaction('keyval').objectStore('keyval').count(`./${name}.traineddata`);
+        count.onsuccess = () => { resolve(count.result > 0); db.close(); };
+        count.onerror = () => { resolve(false); db.close(); };
+      } catch { resolve(false); db.close(); }
+    };
+  });
+}
+
+async function _fetchWatched(url) {
+  for (let attempt = 1; ; attempt++) {
+    const ctl = new AbortController();
+    let timer;
+    const arm = () => { clearTimeout(timer); timer = setTimeout(() => ctl.abort(), _STALL_MS); };
+    try {
+      arm();
+      const res = await fetch(url, { signal: ctl.signal });
+      if (!res.ok) throw new Error(`OCR download: ${res.status} ${url.split('/').pop()}`);
+      const reader = res.body.getReader();
+      while (!(await reader.read()).done) arm();
+      return;
+    } catch (err) {
+      if (attempt >= _ATTEMPTS) {
+        throw ctl.signal.aborted ? new Error(`OCR download stalled: ${url.split('/').pop()}`) : err;
+      }
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+}
+
+function _fetchOnce(url) {
+  if (!_fetched.has(url)) {
+    _fetched.set(url, _fetchWatched(url).catch(err => { _fetched.delete(url); throw err; }));
+  }
+  return _fetched.get(url);
+}
+
+async function _fetchOcrFiles(lang) {
+  const models = _tesseractLang(lang).split('+');
+  const cached = await Promise.all(models.map(_modelCached));
+  await Promise.all([
+    _fetchOnce(_coreUrl()),
+    ...models.filter((_, i) => !cached[i]).map(m => _fetchOnce(`${TESSERACT_PATHS.langPath}${m}.traineddata.gz`)),
+  ]);
+}
+
 export async function createOcrWorker(lang, logger) {
+  await _fetchOcrFiles(lang);
   let failLoad;
   const loadFailed = new Promise((_, reject) => { failLoad = reject; });
   let ready = false;
