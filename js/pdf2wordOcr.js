@@ -12,6 +12,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { loadTesseract, createOcrWorker, detectOcrLanguage, recognizePage, ocrLangForLocale, ocrProbesForBrowser, joinOcrWords } from './ocrEngine.js';
+import { paddleWarm } from './ppocrEngine.js';
 import { cjkJoin } from './cjkText.js';
 import { getLang } from './config.js';
 
@@ -175,6 +176,7 @@ export function createOcrLayer(pdfDoc, { onPage = () => {}, rotated = true } = {
       let worker = await createOcrWorker('eng');
       const detection = await detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer: true, hint: ocrLangForLocale(getLang()), layerLang: await layerScript(pdfDoc), prefer: ocrProbesForBrowser() });
       if (!detection.confident) { await worker.terminate(); return null; }
+      paddleWarm(detection.lang);
       // a new worker for another language (see detectOcrLanguage)
       if (detection.lang !== 'eng') {
         await worker.terminate();

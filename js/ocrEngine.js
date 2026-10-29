@@ -9,6 +9,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { cjkJoin } from './cjkText.js';
+import { paddleWanted, paddleRecognize } from './ppocrEngine.js';
 
 // tesseract.js 5.1.1, its worker, its WASM core and the language models come
 // from pdfree.io (js/vendor/tesseract/, js/vendor/tessdata/), not jsdelivr:
@@ -808,9 +809,20 @@ export async function recognizePage(worker, page, lang, { level = false } = {}) 
     // junk; Japanese 0.45 → 0.49 / 0.34 → 0.42 (2026-10-29). Skipping all of
     // Enhance gained less (0.76, 0.72, 0.61) — the rules erased are worth it.
     // Korean not measured: unchanged.
-    const { canvas: gray, skewDeg } = await _enhanceForOcrAsync(canvas, !_NO_CONTRAST.has(ps))
-      .catch(async () => ({ canvas: await _toGrayscaleAsync(canvas), skewDeg: 0 }));
-    const result = await worker.recognize(await _png(gray));
+    // Chinese and Japanese on a desktop: PP-OCRv5 (js/ppocrEngine.js) reads
+    // the page as rendered — measured that way, without Enhance; boxes come
+    // back where the text stands, nothing to un-skew. A failure there (no
+    // model download, out of memory) leaves the page to Tesseract.
+    let gray, skewDeg = 0, result = null;
+    if (paddleWanted(lang)) {
+      result = await paddleRecognize(canvas).catch(() => null);
+      gray = canvas;
+    }
+    if (!result) {
+      ({ canvas: gray, skewDeg } = await _enhanceForOcrAsync(canvas, !_NO_CONTRAST.has(ps))
+        .catch(async () => ({ canvas: await _toGrayscaleAsync(canvas), skewDeg: 0 })));
+      result = await worker.recognize(await _png(gray));
+    }
     const W = gray.width, H = gray.height;
     const px = gray.getContext('2d').getImageData(0, 0, W, H).data;
     const ink = (x, y) => x >= 0 && y >= 0 && x < W && y < H && px[(y * W + x) * 4] < 128;

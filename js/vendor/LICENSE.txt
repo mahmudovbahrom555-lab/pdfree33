@@ -357,3 +357,42 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
          The zlib parts are under the zlib license (https://zlib.net/zlib_license.html).
+
+================================================================
+js/vendor/onnxruntime/*
+================================================================
+
+Source:  onnxruntime-web v1.31.1 (https://github.com/microsoft/onnxruntime), unmodified.
+License: MIT License — Copyright (c) Microsoft Corporation.
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+
+================================================================
+js/vendor/ppocr/v5/* and the pipeline in js/ppocrWorker.js
+================================================================
+
+Models:  PP-OCRv5 mobile det/rec — PaddleOCR (https://github.com/PaddlePaddle/PaddleOCR),
+         Apache License 2.0; ONNX conversions by RapidOCR (https://github.com/RapidAI/RapidOCR),
+         Apache License 2.0.
+Code:    js/ppocrWorker.js ports RapidOCR 3.10.0's preprocessing, DB post-processing and
+         CTC decoding (Apache License 2.0, Copyright RapidAI / SWHL) to JavaScript; this
+         repository's license (AGPL-3.0) applies to the port, Apache-2.0's notice to the
+         ported parts. Full text: https://www.apache.org/licenses/LICENSE-2.0
+NOTICE:  "This product includes software and models developed by PaddlePaddle Authors
+         (PaddleOCR) and RapidAI (RapidOCR)."

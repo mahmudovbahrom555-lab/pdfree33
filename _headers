@@ -79,3 +79,6 @@
 
 /js/vendor/qpdf/lib/qpdf.wasm
   Content-Type: application/wasm
+
+/js/vendor/onnxruntime/ort-wasm-simd-threaded.wasm
+  Content-Type: application/wasm

@@ -303,3 +303,33 @@ Checked:     0 known advisories (OSV, 2026-10-29).
 License:     MIT AND Zlib (see the header of the file)
 Used by:     js/tiffWorker.js (importScripts, before UTIF.js) — UTIF.js reads
              Deflate-compressed TIFFs through self.pako.
+
+File:        onnxruntime/ort.wasm.min.mjs, onnxruntime/ort-wasm-simd-threaded.mjs,
+             onnxruntime/ort-wasm-simd-threaded.wasm
+Source:      onnxruntime-web v1.31.1 (npm package "onnxruntime-web", dist/) —
+             https://github.com/microsoft/onnxruntime
+Downloaded:  2026-10-29 with npm (registry integrity
+             sha512-5GeH+bWQ+HxM10z7erGlsWqryrwMbSvm/1tkIsKTT48g0fI19VXVVC435t4t7VsPdSQeS7NmuZPXrQ73k82URw==);
+             all three files byte-identical to jsDelivr's copies
+             (https://cdn.jsdelivr.net/npm/onnxruntime-web@1.31.1/dist/…).
+             sha256: 30ed0b5cd1182ede (glue .mjs), 4b884c203b0fa48d (.wasm), c21d9c326d453a4a (ort.wasm.min.mjs)
+Size:        ~15 MB (.wasm; ~2.4 MB brotli) — the WebAssembly CPU backend only, no WebGPU/WebGL
+Checked:     0 known advisories (OSV, 2026-10-29).
+License:     MIT (Copyright (c) Microsoft Corporation)
+Used by:     js/ppocrWorker.js (module worker, single-threaded: the site isn't cross-origin
+             isolated) — Chinese/Japanese OCR on desktops (js/ppocrEngine.js).
+
+File:        ppocr/v5/det.onnx, ppocr/v5/rec.onnx, ppocr/v5/chars.json
+Source:      PP-OCRv5 mobile text detection and recognition (PaddleOCR,
+             https://github.com/PaddlePaddle/PaddleOCR), ONNX conversions published by
+             RapidOCR v3.10.0 (https://www.modelscope.cn/models/RapidAI/RapidOCR,
+             onnx/PP-OCRv5/det/ch_PP-OCRv5_det_mobile.onnx and rec/ch_PP-OCRv5_rec_mobile.onnx).
+             chars.json = the recognizer's own character list (its ONNX metadata
+             "character", 18,383 entries) with CTC's blank first and the space last.
+             SHA-256 equal to RapidOCR's published values:
+             det 4d97c44a20d30a81aad087d6a396b08f786c4635742afc391f6621f5c6ae78ae
+             rec 5825fc7ebf84ae7a412be049820b4d86d77620f204a041697b0494669b1742c5
+Size:        det 4.6 MB, rec 15.9 MB. A new model version goes in a new folder (v6/…):
+             the folder is the HTTP cache key, so returning visitors get the new files.
+License:     Apache License 2.0 (PaddleOCR's models; RapidOCR's conversions)
+Used by:     js/ppocrWorker.js — see its header for the measurements behind it.

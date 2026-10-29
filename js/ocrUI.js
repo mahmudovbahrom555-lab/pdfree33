@@ -11,6 +11,7 @@ import { truncateMiddle, esc } from './utils.js';
 import { showCancelBtn, hideCancelBtn } from './ui.js';
 import { CJK_LANGS, COMPLEX_LANGS, primaryScript, loadTesseract, createOcrWorker,
          detectOcrLanguage, recognizePage, ocrLangForLocale, ocrProbesForBrowser } from './ocrEngine.js';
+import { paddleWarm } from './ppocrEngine.js';
 import { getLang } from './config.js';
 import { trackToolStart, trackToolSuccess, trackToolError, trackToolCancel } from './analytics.js';
 
@@ -765,6 +766,7 @@ async function _runOcr(file, gen) {
     }
   }
 
+  paddleWarm(resolvedLang);
   const langLabel = _getLangName(resolvedLang);
 
   const total      = isIos ? Math.min(pdfDoc.numPages, MAX_PAGES_IOS) : pdfDoc.numPages;
