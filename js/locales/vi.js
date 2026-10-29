@@ -17,7 +17,7 @@ window.PDFREE_LOCALE = {
     resize:           ['đổi kích thước', 'vừa khít trang', 'khổ giấy', 'kích thước in', 'pdf để in', 'thay đổi tỷ lệ', 'thu nhỏ để in'],
     nup:              ['nhiều trang trên một tờ', '2 trang thành 1', 'số trang mỗi tờ', 'n-up', 'in hóa đơn', 'gộp trang in', 'in sách gập', 'sổ tay', 'booklet'],
     mangaSplit:       ['tách manga', 'trang đôi manga', 'chia manga', 'phải sang trái', 'manhwa tách', 'manga pdf tách'],
-    cleanScan:           ['làm sạch bản scan', 'làm trắng nền', 'xóa nền xám', 'làm sáng trang scan', 'xóa bóng khỏi bản scan', 'dọn dẹp bản scan', 'làm thẳng pdf', 'sửa ảnh quét nghiêng'],
+    cleanScan:           ['làm sạch bản scan', 'làm trắng nền', 'xóa nền xám', 'làm sáng trang scan', 'xóa bóng khỏi bản scan', 'dọn dẹp bản scan', 'làm thẳng pdf', 'sửa ảnh quét nghiêng', 'cải thiện bản scan', 'xóa vết bẩn', 'làm đậm chữ'],
     ereader:             ['ereader', 'máy đọc sách', 'kindle', 'kobo', 'cắt lề', 'tối ưu cho kindle', 'e-ink', 'thu nhỏ lề', 'pdf thang xám'],
     extract:          ['trích trang', 'chọn trang', 'lấy trang', 'tách trang riêng', 'trích xuất trang', 'xóa trang trắng'],
     watermark:        ['hình mờ', 'đóng dấu', 'chèn chữ', 'watermark', 'thương hiệu'],
