@@ -863,3 +863,32 @@ vendored and never used.
 - **Left.** Japanese scans: recall 0.43 on clean synthetic scans — the next
   thing to measure. Flyers and posters (text on graphics) read mostly as
   junk. The OCR stays far below a text layer: 0.74 is not good, only better.
+
+## C21 — Enhance's contrast step blurs Chinese and Japanese strokes before OCR
+
+Chinese stage, 2026-10-29, same benchmark as C20. Every scan goes through
+Enhance before Tesseract — background and contrast, deskew, table rules
+erased — tuned on Arabic and Persian phone photos. Its contrast step costs
+dense Han and kana strokes: the same pages read without it come out with
+more characters right and less junk.
+
+- **Found by** screening variants on the dev benchmark (on top of C20):
+  no Enhance at all 0.73 → 0.76 clean, 0.63 → 0.72 rough — but it drops the
+  deskew phone photos need; no rule erasing: worse; a 3000 px cap: much
+  worse; **only the contrast step skipped: best** — 0.73 → 0.78 clean, 0.63 →
+  0.75 rough (150 DPI JPEG), 0.57 → 0.68 on tilted, shaded photo-like pages
+  (12 docs, ±3°), Japanese 0.45 → 0.49 / 0.34 → 0.42, junk down.
+- **Fix.** `recognizePage` (js/ocrEngine.js) asks js/cleanScanWorker.js for
+  Enhance without `_enhancePipeline` for `chi_sim`, `chi_tra`, `jpn`; deskew
+  and `_eraseRules` stay. Korean not measured: unchanged.
+- **Result** on the independent pool set (20 zh docs), vs C20: Han recall
+  0.74 → 0.81 clean, 0.65 → 0.78 rough; bigrams 0.64 → 0.74 / 0.51 → 0.70;
+  extra 0.034 → 0.025 / 0.046 → 0.026; time −11..−13 % (less image work).
+  **One criterion missed by the letter:** no doc down more than 0.05 — 0922125
+  (151 Han) 0.894 → 0.834 clean (9 characters), while its rough scan went
+  0.82 → 0.89. Real scans of the pool (24, mostly Japanese newsletters,
+  unreadable either way): 19 changed; junk marks ("|", "ーー") fewer in most
+  (0627254 47 → 11, 7459364 21 → 2), more in one (3891416 16 → 29, with
+  ~1,000 more Han). Owner decides.
+- **Left.** Multi-column Japanese newsletters and flyers stay junk with any
+  setting tried — a layout problem, not a pixel one.
