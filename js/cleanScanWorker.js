@@ -35,7 +35,7 @@ self.onmessage = async (e) => {
     if (type === 'processPage') {
       await handleProcessPage(e.data.index, e.data.bitmap, e.data.mode, e.data.strength, e.data.straighten, e.data.keepColor);
     } else if (type === 'enhanceForOcr') {
-      handleEnhanceForOcr(e.data.bitmap);
+      handleEnhanceForOcr(e.data.bitmap, e.data.contrast !== false);
     } else if (type === 'assemble') {
       await handleAssemble(e.data.pages, e.data.pageSizes);
     }
@@ -197,13 +197,15 @@ function _restoreColorInk(srcCanvas, grayCanvas) {
 // tilt) 47 → 76% of words found and 27 → 72% of output words right; office
 // and clean scans about even (see _enhanceForOcrAsync in js/ocrUI.js). Clean
 // (binarized) was worse on photos (68 / 54%).
-function handleEnhanceForOcr(bitmap) {
+// `contrast`: false for Chinese and Japanese (js/ocrEngine.js) — the deskew and
+// the rule erasing stay.
+function handleEnhanceForOcr(bitmap, contrast = true) {
   const w = bitmap.width, h = bitmap.height;
   const src = new OffscreenCanvas(w, h);
   src.getContext('2d').drawImage(bitmap, 0, 0);
   bitmap.close?.();
   const gray = _toGrayscaleCanvas(src);
-  _enhancePipeline(gray, 0.5);
+  if (contrast) _enhancePipeline(gray, 0.5);
   const skewDeg = -_estimateSkewDeg(gray);
   const out = skewDeg ? _rotateCanvas(gray, skewDeg) : gray;
   const { data } = out.getContext('2d').getImageData(0, 0, w, h);

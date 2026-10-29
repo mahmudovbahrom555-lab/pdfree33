@@ -36,6 +36,7 @@ export const SCRIPT_PROFILE = {
   cjk:     4200,  // Japanese/Chinese kanji are dense — extra pixels improve stroke recognition
 };
 export const CJK_LANGS = new Set(['jpn', 'chi_sim', 'chi_tra', 'kor']);
+const _NO_CONTRAST = new Set(['jpn', 'chi_sim', 'chi_tra']);   // see recognizePage
 
 // Non-Latin scripts where Tesseract confidence is structurally lower even for correct text.
 // Used for two purposes:
@@ -652,7 +653,7 @@ function _ensureGrayscaleWorker() {
 let _enhanceWorker = null;
 // Also deskews (see cleanScanWorker's _estimateSkewDeg): resolves to
 // { canvas, skewDeg }, skewDeg the rotation applied about the canvas centre.
-async function _enhanceForOcrAsync(src) {
+async function _enhanceForOcrAsync(src, contrast = true) {
   _enhanceWorker ??= new Worker(new URL('./cleanScanWorker.js', import.meta.url));
   const bitmap = await createImageBitmap(src);
   const { data, width, height, skewDeg } = await new Promise((resolve, reject) => {
@@ -661,7 +662,7 @@ async function _enhanceForOcrAsync(src) {
       else if (e.data.type === 'error') reject(new Error(e.data.message));
     };
     _enhanceWorker.onerror = (e) => reject(new Error(e.message || 'Worker error'));
-    _enhanceWorker.postMessage({ type: 'enhanceForOcr', bitmap }, [bitmap]);
+    _enhanceWorker.postMessage({ type: 'enhanceForOcr', bitmap, contrast }, [bitmap]);
   });
   const dst = document.createElement('canvas');
   dst.width  = width;
@@ -801,7 +802,13 @@ export async function recognizePage(worker, page, lang, { level = false } = {}) 
     // Otsu path, never measured against it: on tilted Chinese and Japanese
     // phone photos its reading order was 41–69%, Enhanced 96–99%, paragraphs
     // and headings with it (2026-10-09, synthetic scans).
-    const { canvas: gray, skewDeg } = await _enhanceForOcrAsync(canvas)
+    // Without its contrast step for Chinese and Japanese, deskew and rule
+    // erasing kept: Han recall on synthetic scans 0.73 → 0.78 clean, 0.63 →
+    // 0.75 rough (150 DPI JPEG), 0.57 → 0.68 on tilted shaded photos, less
+    // junk; Japanese 0.45 → 0.49 / 0.34 → 0.42 (2026-10-29). Skipping all of
+    // Enhance gained less (0.76, 0.72, 0.61) — the rules erased are worth it.
+    // Korean not measured: unchanged.
+    const { canvas: gray, skewDeg } = await _enhanceForOcrAsync(canvas, !_NO_CONTRAST.has(ps))
       .catch(async () => ({ canvas: await _toGrayscaleAsync(canvas), skewDeg: 0 }));
     const result = await worker.recognize(await _png(gray));
     const W = gray.width, H = gray.height;
