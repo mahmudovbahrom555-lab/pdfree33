@@ -93,22 +93,37 @@ const _normDigits = t => t.replace(/\d+/g, '#');
 function _p2wRunningLines(pageData, repeatTextSet) {
   const header = new Map(), footer = new Map();
   for (const { lines, pageH } of pageData) {
-    const sorted = [...lines].sort((a, b) => b.y - a.y);
-    sorted.forEach((ln, i) => {
-      // and where it is: on a page holding only a picture and its three bottom
-      // lines, those were also its "first three" — the bottom lines went into
-      // the Word header (4736268, a DOMPDF catalogue, 2026-10-24)
-      const top = !pageH || ln.y > pageH / 2;
+    const edge = _p2wEdgeLines(lines, pageH);
+    for (const [ln, into] of [...edge.top.map(l => [l, header]), ...edge.bottom.map(l => [l, footer])]) {
       const raw = ln.items.map(it => it.str).join('').trim();
       const t = _normWatermark(raw);
-      if (!t || t === 'CamScanner' || !repeatTextSet.has(t) || header.has(t) || footer.has(t)) return;
+      if (!t || t === 'CamScanner' || !repeatTextSet.has(t) || header.has(t) || footer.has(t)) continue;
       // a mark or a single letter repeated at a page's edge is no header
-      if ((raw.match(/\p{L}/gu) || []).length < 2) return;
-      if (i < 3 && top) header.set(t, raw);
-      else if (i >= sorted.length - 3 && !top) footer.set(t, raw);
-    });
+      if ((raw.match(/\p{L}/gu) || []).length < 2) continue;
+      into.set(t, raw);
+    }
   }
   return { header: [...header.values()], footer: [...footer.values()] };
+}
+
+// Where page furniture can sit: a page's three topmost lines in its upper
+// half, its three lowest in its lower half — by position, not order: on a
+// page holding only a picture and its three bottom lines, those were also its
+// "first three", and the bottom lines went into the Word header (4736268, a
+// DOMPDF catalogue, 2026-10-24). Shared by _p2wRunningLines (what goes into
+// the Word header and footer) and _p2wBuildParagraphs (what leaves the body):
+// a repeated line leaves the body only for the header or footer. It used to
+// leave it wherever it stood — a results table's heading rows, repeated on
+// each of its 10 pages, were in neither (4223578, 2026-10-29).
+function _p2wEdgeLines(lines, pageH) {
+  const sorted = [...lines].sort((a, b) => b.y - a.y);
+  const top = [], bottom = [];
+  sorted.forEach((ln, i) => {
+    const upper = !pageH || ln.y > pageH / 2;
+    if (i < 3 && upper) top.push(ln);
+    else if (i >= sorted.length - 3 && !upper) bottom.push(ln);
+  });
+  return { top, bottom };
 }
 
 // _pptxSafeFontFace moved to js/pdf2readCore.js (imported above) — its only
@@ -4334,6 +4349,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
 
   const paragraphs  = [];
   const _paraBuffer = [];   // accumulates lines that should be merged into one Paragraph
+  let _edgeItems = new Set();   // the current page's edge lines' items (_p2wEdgeLines)
   // Word numbers a list itself, counting from 1: a numbered line becomes a
   // list item only where Word shows the source's own number — a "1." starts a
   // list of its own (a fresh instance), the next number continues it; any
@@ -4365,9 +4381,14 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     // Suppress repeated watermark / header / footer lines (e.g. "CamScanner").
     // Normalise with _normWatermark so that "CamScannerCamScanner" and "cs]"
     // variants also match the canonical form stored in _repeatTextSet.
+    // A repeated line leaves the body at the page's edge only, for the Word
+    // header or footer (_p2wEdgeLines); a scanner's stamp wherever it is.
     if (_paraBuffer.length === 1) {
-      const t = _normWatermark(_paraBuffer[0].items.map(i => i.str).join('').trim());
-      if (t === '' || _repeatTextSet.has(t)) { _paraBuffer.length = 0; return; }
+      const ln = _paraBuffer[0];
+      const t = _normWatermark(ln.items.map(i => i.str).join('').trim());
+      if (t === '' || (_repeatTextSet.has(t) && (t === 'CamScanner' || ln.items.some(it => _edgeItems.has(it))))) {
+        _paraBuffer.length = 0; return;
+      }
     }
 
     const allText = _paraBuffer.flatMap(ln => ln.items).map(i => i.str).join('');
@@ -4927,6 +4948,8 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     }
 
     const { lines, rotatedItems, borderGrids, items: textItems, pageH, columnRegions: regions } = pageData[pi];
+    const edge = _p2wEdgeLines(lines, pageH);
+    _edgeItems = new Set([...edge.top, ...edge.bottom].flatMap(ln => ln.items));
 
     // Pages with no extractable text (diagram-only pages in scanned PDFs):
     // render the full page as a single ImageRun so content is not lost.
