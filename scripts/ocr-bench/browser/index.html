@@ -1,0 +1,10 @@
+<!doctype html><meta charset="utf-8"><title>PP-OCR browser test</title>
+<pre id="log">loading…</pre>
+<script type="module">
+const q = new URLSearchParams(location.search), threads = +(q.get('threads') || 1);
+const base = new URL('./', location.href).href;
+const w = new Worker('./worker.js', { type: 'module' });
+const call = msg => new Promise(res => { w.onmessage = e => res(e.data); w.postMessage(msg); });
+window.ppocr = { ready: call({ type: 'init', base, threads }), page: url => call({ type: 'page', url: base + url }) };
+window.ppocr.ready.then(r => { document.getElementById('log').textContent = JSON.stringify(r) + ' isolated=' + crossOriginIsolated; });
+</script>
