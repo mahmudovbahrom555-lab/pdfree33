@@ -823,3 +823,47 @@ character Word shows as a box — or ran on into its neighbours.
   A list item set beside a caption or a table cell still takes their text
   (columns read as one line). Lettered sub-bullets in Courier "o" are not
   recognised.
+
+## C19 — a line repeated on every page deleted from the body wherever it stood
+
+Chinese/Japanese stage, 2026-10-29. A line of up to 60 characters that stands
+at the same height on at least two thirds of the pages (min 3) is page
+furniture (`_repeatTextSet`). PDF→Word deleted such a line from the body
+wherever it stood, but put only a page's top three / bottom three lines into
+the Word header and footer — a repeated line in the middle of the page was in
+no part of the .docx.
+
+- **Found by** the Chinese dev set (128, main output): 4223578, a ski
+  competition's results (10 pages) — the table's heading rows
+  (順位 Bib 選手名 学年 得点 順位, the event groups) gone on every page: the
+  numbers stayed, what they mean did not (recall 0.79 by the metric).
+  **Confirmed** on the real .docx of the dev sets (lines repeated on ≥ ⅔ of
+  pages and absent from body, header and footer, checked by words): zh 3/125,
+  en 1/57, ar ≈ 0 (the rest were furniture: a site's stamp, "Page:").
+- **Fix.** `_p2wEdgeLines` (js/processor.js) — a page's top three lines in its
+  upper half, bottom three in its lower half — is shared by `_p2wRunningLines`
+  (what goes into the header/footer) and the body: a repeated line leaves the
+  body only when it stands there, so only for the header or footer. A
+  scanner's stamp (CamScanner) leaves it wherever it is, as before.
+- **Result** (criteria written before the run, `/tmp/claude-501/repq`; base =
+  main a8e901cc; docs with ≥ 3 pages only — fewer pages have no repeat set;
+  dev zh 31, en 48, ar 39, control zh/ja pool 116; 224 converted by both):
+  nothing removed from any body (multiset), body order unchanged, header and
+  footer XML identical, tables and every cell's text identical, time ±2 %.
+  Text gained in 5 docs, all looked at on the page: 4223578 heading rows;
+  5446413 a bracket's score labels; 0852727 "Product Name: …" in section 1 of
+  a safety data sheet; 5997414 a scanned audit report's sub-header (the
+  company name, under each page's letterhead); 7111155 a law's running "Act"
+  on 6 of 212 pages where other lines stand above it (noise, one doc).
+  Chinese metric (exact): dev 0 worse, 2 mixed (4223578 recall 0.79 → 0.98,
+  its restored headings' real word spaces count as Han spaces; 5446413
+  numbers 0.90 → 1.00); pool **1 worse by the letter**: 5997414 extra
+  2805 → 2849 — the 4 restored lines on its scanned pages, which the readers
+  can't see (no text layer), so the metric counts OCR text as extra. The
+  pre-registered criterion "0 worse" is not met by this one document; told
+  the owner rather than changing the criterion.
+- **Left.** A running line that carries the page number on its own baseline
+  ("PERIOD ENDING 4/30/17 … PAGE 7"; a title beside "1/3") is not the same
+  string on each page, so it is no header — and the page-number filter drops
+  it from the body: in no part of the .docx (7406078 en, 5187789 ja title).
+  Measured, not fixed (next candidate).
