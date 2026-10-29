@@ -866,7 +866,10 @@ function initEvents() {
     const link = e.target.closest('a[data-handoff]');
     if (!link) return;
     if (link.classList.contains('handoff-link--busy')) { e.preventDefault(); return; } // already in flight
-    const result = _getResultForHandoff();
+    // No result yet but the link carries the file in hand (Fill's "no
+    // fields — use Draw on PDF"): the person would otherwise add it again.
+    const input  = 'handoffInput' in link.dataset && selectedFiles[0];
+    const result = _getResultForHandoff() || (input ? { blob: input, filename: input.name } : null);
     if (!result) return;              // blob already revoked → normal navigation
     e.preventDefault();
     // A big merged/converted blob makes the IndexedDB write real, visible work
