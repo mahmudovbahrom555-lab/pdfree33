@@ -22,6 +22,7 @@ import { bindDragReorder } from './dragReorder.js';
 import { presetRememberCard } from './uiComponents.js';
 import { loadPreset, clearPreset } from './presets.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
+import { isTiffFile, tiffPreview } from './tiffDecode.js';
 
 // Soft, non-blocking heads-up — not a hard cap. Canvas thumbnail decoding
 // happens one file at a time (see _renderPreviews), so memory pressure is
@@ -319,7 +320,11 @@ async function _loadImage(file) {
   // to JPEG first via the vendored libheif WASM build. Cached inside
   // heicDecode.js itself, so this costs nothing extra when _runJpg2Pdf
   // (processor.js) decodes the same file again at conversion time.
-  const source = isHeicFile(file) ? (await decodeHeicToJpegBlob(file)) ?? file : file;
+  // TIFF (no browser but Safari decodes it): its first page, decoded in
+  // js/tiffWorker.js.
+  const source = isHeicFile(file) ? (await decodeHeicToJpegBlob(file)) ?? file
+    : isTiffFile(file) ? (await tiffPreview(file)) ?? file
+    : file;
 
   try {
     const bitmap = await createImageBitmap(source, {

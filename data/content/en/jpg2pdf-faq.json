@@ -4,7 +4,7 @@
     "name": "What image formats can I convert to PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree supports JPG/JPEG, PNG, and WebP. Each image becomes one page in the output PDF."
+      "text": "PDFree supports JPG/JPEG, PNG, WebP, HEIC (iPhone photos) and TIFF. Each image becomes one page in the output PDF — a multi-page TIFF from a scanner or fax becomes one PDF page per TIFF page, in order."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Can I mix JPG and PNG images in one PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. Add any combination of JPG, PNG, and WebP files. Each becomes a page in the final PDF regardless of format."
+      "text": "Yes. Add any combination of JPG, PNG, WebP, HEIC and TIFF files. Each becomes a page in the final PDF regardless of format."
     }
   },
   {

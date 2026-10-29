@@ -12,7 +12,7 @@ window.PDFREE_LOCALE = {
     split:        ['拆分pdf', '分割pdf', '拆分文件', 'chaifen', 'fenge', 'chaifenpdf'],
     extract:      ['提取pdf页面', '提取页面', 'tiqu', 'tiquyemian', '删除空白页', '去除空白页'],
     compress:     ['压缩pdf', '缩小pdf', '减小文件大小', 'yasuo', 'yasuopdf', 'pdfyasuo', '压缩'],
-    jpg2pdf:      ['jpg转pdf', '图片转pdf', '照片转pdf'],
+    jpg2pdf:      ['jpg转pdf', '图片转pdf', '照片转pdf', 'tif转pdf', 'tiff转pdf', '多页tiff'],
     scanDocument: ['扫描文件', '手机扫描'],
     pdf2jpg:      ['pdf转jpg', 'pdf转图片', 'pdf转cbz', '漫画cbz'],
     watermark:    ['添加水印', 'pdf水印', '浮水印', 'shuiyin', '水印'],
