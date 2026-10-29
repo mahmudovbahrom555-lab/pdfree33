@@ -468,7 +468,8 @@ registerTool('rotate', {
   getParams:  () => ({ ...getRotateParams(), removeWatermarks: getWmRemove() }),
   validate:   (p) => {
     const changed = p.rotations.filter(r => r.angle !== 0).length;
-    if (changed === 0) return t('val_rotate_select');
+    // the hint says how — "rotate at least one page" left users clicking
+    if (changed === 0) return t('rot_hint_click');
     return null;
   },
 });

@@ -226,6 +226,12 @@ jobs:
         # again. See tests/e2e/early-click.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:early-click
 
+      - name: E2E — Rotate has no dead end
+        # The toolbar with no page selected and the main button with nothing
+        # turned only said "select pages first". See
+        # tests/e2e/rotate-no-dead-end.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:rotate-no-dead-end
+
       - name: Corpus diff — compress, production vs this build (real documents)
         # Every PDF in tests/corpus (open-licence real documents + synthetic
         # traps) goes through /compress-pdf/ on PRODUCTION and on this build;

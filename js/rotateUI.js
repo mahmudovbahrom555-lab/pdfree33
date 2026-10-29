@@ -344,10 +344,8 @@ function _cardHTML(i) {
   // (organize_rotate_not_working_bug_report memory) — the bulk-rotate flow
   // below clears its selection after every use (fce7ffca), so repeat-
   // clicking the toolbar rotate button on the same single page silently
-  // does nothing past the first click. Top-left corner is free on this
-  // tool's card (only .rot-badge top-right / .rot-selbadge bottom-left
-  // exist here), unlike Organize's crowded 4-icon cluster — no wrap CSS
-  // needed.
+  // does nothing past the first click. Large, top-left (see
+  // .rot-card__action in css/components.css).
   const rotateHTML = `<button type="button" class="rot-card__action rot-card__action--rotate" data-act="rotate" aria-label="${esc(t('rot_rotate_page_btn'))}">↻</button>`;
 
   if (_useThumbs) {
@@ -449,15 +447,16 @@ function _rotateOnePage(idx, angle) {
 }
 
 function _applyRotation(angle) {
-  if (_selected.size === 0) {
-    showToast(t('rot_select_first'));
-    return;
-  }
+  // Nothing selected → every page. The toolbar used to answer with a
+  // "select pages first" toast and did nothing — rotating looked broken
+  // (all 4 rage-click tabs on #mergeBtn in China, 2026-10, were on Rotate,
+  // 3 of 4 left with no file). A sideways scan wants every page turned.
+  const targets = _selected.size ? [..._selected] : [...Array(_pageCount).keys()];
 
   // Save snapshot for undo (shallow copy of deltas is fine — all numbers)
   _prevDeltas = [..._deltas];
 
-  for (const idx of _selected) {
+  for (const idx of targets) {
     _deltas[idx] = ((_deltas[idx] + angle) % 360 + 360) % 360;
   }
 
@@ -469,15 +468,14 @@ function _applyRotation(angle) {
   // convention (Gmail archive, Google Photos delete, …) and also removes
   // the ambiguous "still selected AND already changed" combined card style
   // (.rot-card--changed.rot-card--selected) as a side effect.
-  const rotated = [..._selected];
   _selected.clear();
 
   // See _BULK_UPDATE_THRESHOLD above — one full-grid rebuild beats N
   // individual card updates once the selection is large.
-  if (rotated.length > _BULK_UPDATE_THRESHOLD) {
+  if (targets.length > _BULK_UPDATE_THRESHOLD) {
     _refreshAllCards();
   } else {
-    for (const idx of rotated) _updateCard(idx);
+    for (const idx of targets) _updateCard(idx);
   }
 
   _updateHistoryButtons();
@@ -566,7 +564,9 @@ function _updateMergeBtn() {
     btn.disabled    = false;
     btn.textContent = tp(changed, 'rot_btn_one', 'rot_btn_many', { n: changed });
   } else {
-    btn.disabled    = true;
+    // left clickable: a click says how to rotate (see validate in
+    // toolRegistrations.js) — a disabled button just ate the clicks
+    btn.disabled    = false;
     btn.textContent = t('rot_btn_disabled');
   }
 }
