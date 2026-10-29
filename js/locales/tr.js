@@ -16,7 +16,7 @@ window.PDFREE_LOCALE = {
     resize:           ['boyutlandır', 'sayfaya sığdır', 'kağıt boyutu', 'baskı boyutu', 'yazdırma için pdf', 'pdf ölçekle', 'baskı için küçült'],
     nup:              ['bir sayfaya birden fazla sayfa', '2 sayfa 1 sayfada', 'sayfa başına sayfa', 'n-up', 'fatura yazdırma', 'tek sayfada birden çok sayfa', 'kitapçık', 'kitapçık yazdırma', 'broşür'],
     mangaSplit:       ['manga böl', 'çift sayfa manga', 'manga ayır', 'sağdan sola', 'manhwa böl', 'manga pdf böl'],
-    cleanScan:           ['taramayı temizle', 'arka planı beyazlat', 'gri arka planı kaldır', 'taranan sayfayı aydınlat', 'taramadan gölgeyi kaldır', 'tarama temizleme', 'eğik tarama düzelt'],
+    cleanScan:           ['taramayı temizle', 'arka planı beyazlat', 'gri arka planı kaldır', 'taranan sayfayı aydınlat', 'taramadan gölgeyi kaldır', 'tarama temizleme', 'eğik tarama düzelt', 'taramayı iyileştir', 'lekeleri kaldır', 'yazıyı koyulaştır'],
     ereader:             ['ereader', 'e-okuyucu', 'kindle', 'kobo', 'kenar boşluklarını kırp', 'kindle için optimize et', 'e-ink', 'kenar boşluklarını küçült', 'pdf gri tonlama'],
     extract:          ['sayfa al', 'sayfa seç', 'sayfaları çıkar', 'sayfa ayıkla', 'sayfa çıkarma', 'boş sayfaları sil'],
     watermark:        ['filigran', 'damga', 'yazı ekle', 'marka', 'çapraz yazı'],

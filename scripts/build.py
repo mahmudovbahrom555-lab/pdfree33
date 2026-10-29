@@ -17,6 +17,7 @@ Output: dist/
   ├── manifest.json  sw.js  favicon.ico
   └── sitemap.xml                      (auto-generated)
 """
+import ast
 import hashlib
 import json
 import os
@@ -1093,6 +1094,19 @@ def _inject_hashes(hashes, out_dir):
 _SEARCH_KEYWORDS_ID_MAP = {'metadata': 'meta'}
 
 
+def _locale_search_tags(lc):
+    """js/locales/<lc>.js's search_tags, read from the source: one
+    `key: ['tag', ...],` line per tool between `search_tags: {` and `},`."""
+    src = open(os.path.join(ROOT, 'js', 'locales', f'{lc}.js'), encoding='utf-8').read()
+    block = src.split('search_tags: {', 1)[1].split('\n  },', 1)[0]
+    tags = {}
+    for m in re.finditer(r"^\s*'?([\w-]+)'?:\s*(\[.*\]),?\s*$", block, re.M):
+        tags[m.group(1)] = ast.literal_eval(m.group(2))
+    if not tags:
+        raise SystemExit(f'search_tags not found in js/locales/{lc}.js')
+    return tags
+
+
 def _generate_search_keywords(config, dist_root):
     """Writes dist/js/searchKeywords.js — window.PDFREE_SEO_KEYWORDS, a
     {lang: {toolKey: [phrase, ...]}} map built directly from each tool's own
@@ -1120,6 +1134,13 @@ def _generate_search_keywords(config, dist_root):
                 continue
             out.setdefault(lang, {})[key] = phrases
 
+    # A Chinese, Japanese or Korean request typed on a page in another
+    # language (编辑 or 漂白 on the English homepage, 2026-10) matched
+    # nothing: that page's index holds only its own language. The CJK
+    # locales' hand-written search_tags ride along here, read from their
+    # source files, for js/app.js to search such a request with.
+    cjk = {lc: _locale_search_tags(lc) for lc in ('zh-CN', 'ja', 'ko')}
+
     path = os.path.join(dist_root, 'js', 'searchKeywords.js')
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, 'w', encoding='utf-8') as f:
@@ -1129,6 +1150,9 @@ def _generate_search_keywords(config, dist_root):
             '// See js/app.js\'s initSearch() for how this is consumed.\n'
             'window.PDFREE_SEO_KEYWORDS = '
             + json.dumps(out, ensure_ascii=False, separators=(',', ':'))
+            + ';\n'
+            'window.PDFREE_CJK_TAGS = '
+            + json.dumps(cjk, ensure_ascii=False, separators=(',', ':'))
             + ';\n'
         )
     total_phrases = sum(len(v) for langs in out.values() for v in langs.values())

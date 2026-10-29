@@ -42,7 +42,8 @@ import { trackToolStart, trackToolSuccess,
          trackSearchSelect, trackAppLaunch,
          trackHeroFileSelect, trackChipClick,
          trackShareTool, trackBehaviorCrossSell }    from './analytics.js';
-import { buildIndex, search }                      from './search.js';
+import { buildIndex, search, hasCjk,
+         minQueryLength }                    from './search.js';
 import { loadPdfLib }                              from './lazyLibs.js';
 import { forgetStoredSignals, recordDownload,
          checkAndRecordConversion,
@@ -960,6 +961,26 @@ function initSearch() {
     localeTags[key] = [...(localeTags[key] || []), ...phrases];
   }
   const index = buildIndex(TOOLS, lang, localeTags);
+  // 编辑 or 漂白 typed on the English page: searched with the Chinese,
+  // Japanese and Korean synonyms too (build.py ships them in
+  // searchKeywords.js). Only for such a request — "pdf" would otherwise
+  // half-match every "pdf转word" — and not on those languages' own pages.
+  let _cjkIndex = null;
+  const indexFor = q => {
+    if (!hasCjk(q) || ['zh-CN', 'ja', 'ko'].includes(lang)) return index;
+    if (!_cjkIndex) {
+      const tags = { ...localeTags };
+      for (const lc of ['zh-CN', 'ja', 'ko']) {
+        const more = { ...(window.PDFREE_CJK_TAGS?.[lc] || {}) };
+        for (const [key, phrases] of Object.entries(window.PDFREE_SEO_KEYWORDS?.[lc] || {})) {
+          more[key] = [...(more[key] || []), ...phrases];
+        }
+        for (const [key, phrases] of Object.entries(more)) tags[key] = [...(tags[key] || []), ...phrases];
+      }
+      _cjkIndex = buildIndex(TOOLS, lang, tags);
+    }
+    return _cjkIndex;
+  };
 
   // ── Hero drop zone ──────────────────────────────────────────────
   let _pendingFiles     = null;
@@ -1490,7 +1511,7 @@ function initSearch() {
     const q = query.trim();
     if (q.length < 2) { _clearResult(); return; }
 
-    const results = search(q, index);
+    const results = search(q, indexFor(q));
     if (results.length) {
       trackSearchQuery(results.length);
       _applyResult(results[0]);
@@ -1505,7 +1526,8 @@ function initSearch() {
       if (listable.length > 1) _renderCandidates(listable, 'search-candidate');
       else candidatesEl.hidden = true;
     } else {
-      trackSearchMiss(q);
+      // "cl", "pd": a word still being typed, not a miss.
+      if (q.length >= minQueryLength(q)) trackSearchMiss(q);
       resultEl.hidden = true;
       _activeResult   = null;
       // A short/early query (e.g. still mid-word) isn't a real "miss" yet —
