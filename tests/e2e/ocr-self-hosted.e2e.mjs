@@ -10,7 +10,8 @@
 //    Arabic from pdfree.io;
 //  - a second run downloads neither the model nor the font again: both are in
 //    IndexedDB under the same keys as before (unchanged on purpose — same bytes);
-//  - a model download cut once by the network comes through on the next run;
+//  - a model download cut once by the network is tried again in the same run
+//    (js/ocrEngine.js _fetchWatched, 2026-10-29; it used to need a second run);
 //  - opening pages loads none of the engine.
 //
 //  Run: node tests/e2e/ocr-self-hosted.e2e.mjs   (dist/ served on :8934)
@@ -102,18 +103,16 @@ await test('a first visit OCRs a scan with every CDN refused; a second run reads
   }
 });
 
-await test('a model download cut once by the network comes through on the next run', async () => {
+await test('a model download cut once by the network is tried again and the run comes through', async () => {
   const ctx = await browser.newContext({ serviceWorkers: 'block' });
   const page = await ctx.newPage();
   let cut = 0;
   await page.route('**/js/vendor/tessdata/ara.traineddata*', r => (cut++ === 0 ? r.abort() : r.continue()));
   await page.addInitScript(hook);
   try {
-    let firstFailed = false;
-    try { await ocr(page); } catch { firstFailed = true; }
-    if (!firstFailed) throw new Error('the first download was not cut — the test tests nothing');
     const { text } = await ocr(page);
-    if (!/[؀-ۿ]{3}/.test(text)) throw new Error(`second run: no Arabic: ${text.slice(0, 120)}`);
+    if (cut < 2) throw new Error(`the model was requested ${cut} time(s) — the cut wasn't tried again, the test tests nothing`);
+    if (!/[؀-ۿ]{3}/.test(text)) throw new Error(`no Arabic: ${text.slice(0, 120)}`);
   } finally {
     await ctx.close();
   }
