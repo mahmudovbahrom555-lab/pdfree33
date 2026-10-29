@@ -48,6 +48,10 @@
 //  the Word HEADER — the page's "first three" and "last three" lines were the
 //  same. Bottom lines go to the footer, top lines to the header.
 //  Fixture: footer-only.pdf (make-footer-only.py).
+//  A line repeated in the MIDDLE of every page stays in the body there: only
+//  one at the page's edge goes to the header or footer (4223578, a results
+//  table's heading rows deleted on all 10 pages, 2026-10-29).
+//  Fixture: repeated-heading.pdf (make-repeated-heading.py).
 //  And Chinese and Japanese spread a glyph at a time with even gaps (P2a,
 //  2026-10-24: 51 of 436 corpus documents, "董 事 名 單", "氏 名 所 属"):
 //  read as words, while a name's family–given gap and cells 3 em apart keep
@@ -193,6 +197,15 @@ try {
     if (/173842|example-shop|Firenze/.test(header)) throw new Error(`bottom line in the header: ${JSON.stringify(header)}`);
     const all = header + footer + body;
     for (const w of ['173842', 'example-shop.com', '0548100']) if (!all.includes(w)) throw new Error(`"${w}" lost: header ${JSON.stringify(header)} footer ${JSON.stringify(footer)}`);
+  });
+  await test('a heading repeated in the middle of every page stays on each page; the edge lines go to the header and footer', async () => {
+    const body = await docxText(browser, 'repeated-heading.pdf');
+    const header = await docxText(browser, 'repeated-heading.pdf', 'word/header1.xml');
+    const footer = await docxText(browser, 'repeated-heading.pdf', 'word/footer1.xml');
+    const count = (t, w) => t.split(w).length - 1;
+    if (count(body, 'Second qualifying round') !== 3) throw new Error(`heading ${count(body, 'Second qualifying round')} times in the body: ${body.slice(0, 300)}`);
+    if (!header.includes('RES/2021/07') || body.includes('RES/2021/07')) throw new Error(`symbol: header ${JSON.stringify(header)}`);
+    if (!footer.includes('Printed by the race office') || body.includes('Printed by the race office')) throw new Error(`footer ${JSON.stringify(footer)}`);
   });
   await test('letter-spaced Chinese and Japanese read as words; real gaps keep their space', async () => {
     const out = await docxText(browser, 'letter-spacing.pdf');
