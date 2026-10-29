@@ -134,6 +134,22 @@ await test('Chinese: chi_sim, though jpn+eng reads its characters too', async ()
   assert.ok(probed.includes('jpn+eng'), 'Japanese asked too');
 });
 
+// chi_sim and chi_tra alone on the same page, `n` Han words at mean confidence `c`
+const hanAt = (c, n = 300) => ({ confidence: c, words: Array.from({ length: n }, () => ({ text: SAMPLE.han, confidence: c })), text: SAMPLE.han });
+const chinese = (sim, tra) => ({
+  eng: engOn(30), 'chi_sim+eng': reading(85, { lat: 10, han: 300 }), 'jpn+eng': reading(55, { lat: 20, han: 120 }),
+  chi_sim: hanAt(sim), chi_tra: hanAt(tra),
+});
+await test('traditional Chinese: chi_tra when it is surer of the Han by 3 or more (Hong Kong / Taiwan scans: +3..+21)', async () => {
+  const { d, probed } = await detect(chinese(70, 86));
+  assert.equal(d.lang, 'chi_tra');
+  assert.ok(probed.includes('chi_sim') && probed.includes('chi_tra'), `probed ${probed}`);
+  assert.equal((await detect(chinese(60, 63))).d.lang, 'chi_tra');
+});
+await test('simplified Chinese stays chi_sim: chi_tra less sure, or under 3 above (simplified scans: −13..+2)', async () => {
+  assert.equal((await detect(chinese(90, 86))).d.lang, 'chi_sim');
+  assert.equal((await detect(chinese(65, 67))).d.lang, 'chi_sim');
+});
 await test('Japanese: jpn — its kana and kanji outnumber chi_sim+eng\'s characters', async () => {
   const { d } = await detect({
     eng: engOn(5), 'chi_sim+eng': reading(40, { lat: 5, han: 61 }), 'jpn+eng': reading(92, { lat: 8, kana: 457, han: 144 }),
@@ -200,7 +216,8 @@ await test('the site\'s script is probed even when English looks sure: a Chinese
   // eng read the Chinese invoice at 67 — garbage, but not "suspicious"
   const { d, probed } = await detect({ eng: reading(67, { lat: 150 }, EN), 'chi_sim+eng': reading(80, { lat: 20, han: 140 }) }, { hint: 'chi_sim' });
   assert.equal(d.lang, 'chi_sim');
-  assert.deepEqual(probed, ['chi_sim+eng']);
+  // then simplified against traditional, each model alone (2026-10-29)
+  assert.deepEqual(probed, ['chi_sim+eng', 'chi_sim', 'chi_tra']);
 });
 
 await test('an English invoice on the Chinese site stays English, its worker never switched', async () => {

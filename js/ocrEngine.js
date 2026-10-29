@@ -524,6 +524,22 @@ async function _judgeImage(cvs, worker, hint, newWorker, layerLang = null, prefe
     const [a, f] = [await tryModel('ara'), await tryModel('fas')];
     if (f.conf >= a.conf - 3) lang = 'fas';
   }
+  // Simplified and traditional Chinese: chi_sim reads a traditional page in
+  // simplified characters — the document's own script changed (傳媒集團 →
+  // 传媒集团) — and badly; chi_tra reads a simplified page worse too. The model
+  // surer of the page's Han takes it: on traditional pages chi_tra's mean
+  // confidence over Han was 3–21 above chi_sim's, on simplified ones 13 below
+  // to 2 above (2026-10-29, synthetic scans of dev documents). More confident
+  // Han words alone was no test: chi_tra reads simplified pages with
+  // confidence too, and all three simplified ones turned traditional.
+  if (lang === 'chi_sim') {
+    const [s, t] = [await tryModel('chi_sim'), await tryModel('chi_tra')];
+    const hanConf = r => {
+      const han = r.words.filter(w => /[一-鿿]/.test(w.text));
+      return han.reduce((sum, w) => sum + w.confidence, 0) / (han.length || 1);
+    };
+    if (hanConf(t) >= hanConf(s) + 3) lang = 'chi_tra';
+  }
   // With English, if the page has it: ara/fas/heb/kor alone read every Latin
   // word as garbage in their own script ("PDF" → "۳۵۴"); Korean and English
   // paragraphs in turn: 8–24 → 40–73 % of words right with kor+eng. Chinese
@@ -534,7 +550,7 @@ async function _judgeImage(cvs, worker, hint, newWorker, layerLang = null, prefe
   // better (2026-10-10, 2026-10-16). Russian always (see _detectScriptFromText).
   const latinShare = win.latin / ((win.latin + win.own) || 1);
   if (lang === 'rus' || (['ara', 'fas', 'heb', 'kor'].includes(lang) && latinShare >= 0.1)
-    || (lang === 'chi_sim' && latinShare >= 0.2)) lang = `${lang}+eng`;
+    || ((lang === 'chi_sim' || lang === 'chi_tra') && latinShare >= 0.2)) lang = `${lang}+eng`;
   const alternatives = [...ranked.slice(1).map(s => s.lang), ...(lang === 'fas' || lang === 'fas+eng' ? ['ara'] : lang.startsWith('ara') ? ['fas'] : []), 'eng'];
   return { lang, confident: true, alternatives, metrics: {
     ...metrics, source: 'ocr-fallback', winner: lang, winnerConfidence: win.r.conf, switched: true,
