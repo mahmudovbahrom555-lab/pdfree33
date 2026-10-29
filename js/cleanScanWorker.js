@@ -210,7 +210,88 @@ function handleEnhanceForOcr(bitmap, contrast = true) {
   const out = skewDeg ? _rotateCanvas(gray, skewDeg) : gray;
   const { data } = out.getContext('2d').getImageData(0, 0, w, h);
   _eraseRules(data, w, h);
+  if (!contrast) _eraseDotLeaders(data, w, h);
   self.postMessage({ type: 'ocrImage', data, width: w, height: h, skewDeg }, [data.buffer]);
+}
+
+// Dot leaders, erased — the dotted runs of a table of contents between an
+// entry and its page number ("資訊科技協定委員會……7"). Without Enhance's
+// contrast step (Chinese and Japanese, js/ocrEngine.js) they stay dark, and
+// Tesseract took the glyphs beside them for part of the leader: a Taiwanese
+// contents page lost 資訊, 暨, 措施, 反傾銷 (0922125, 2026-10-29). A leader:
+// _LEADER_MIN or more small isolated dots on one line, evenly spaced; an
+// ellipsis in a sentence (……, six dots) is not one. Dots are found as
+// connected runs of ink row by row — no per-pixel label image on a page of
+// 4200 px.
+const _LEADER_MIN = 8, _LEADER_INK = 160, _LEADER_DOT = 0.005;
+function _eraseDotLeaders(data, w, h) {
+  const maxDot = Math.max(3, Math.round(w * _LEADER_DOT));
+  // runs of ink per row, joined to the runs they touch in the row above
+  const parent = [], minX = [], maxX = [], minY = [], maxY = [], area = [];
+  const find = i => { while (parent[i] !== i) { parent[i] = parent[parent[i]]; i = parent[i]; } return i; };
+  const union = (a, b) => {
+    a = find(a); b = find(b);
+    if (a === b) return;
+    parent[b] = a;
+    minX[a] = Math.min(minX[a], minX[b]); maxX[a] = Math.max(maxX[a], maxX[b]);
+    minY[a] = Math.min(minY[a], minY[b]); maxY[a] = Math.max(maxY[a], maxY[b]);
+    area[a] += area[b];
+  };
+  let prev = [];   // [x0, x1, id] of the row above
+  for (let y = 0; y < h; y++) {
+    const cur = [];
+    let x = 0;
+    while (x < w) {
+      if (data[(y * w + x) * 4] >= _LEADER_INK) { x++; continue; }
+      const x0 = x;
+      while (x < w && data[(y * w + x) * 4] < _LEADER_INK) x++;
+      const id = parent.length;
+      parent.push(id); minX.push(x0); maxX.push(x - 1); minY.push(y); maxY.push(y); area.push(x - x0);
+      cur.push([x0, x - 1, id]);
+    }
+    // 8-connected: runs overlapping or touching diagonally
+    let j = 0;
+    for (const [x0, x1, id] of cur) {
+      while (j < prev.length && prev[j][1] < x0 - 1) j++;
+      for (let k = j; k < prev.length && prev[k][0] <= x1 + 1; k++) union(prev[k][2], id);
+    }
+    prev = cur;
+  }
+  // small, roughly round, filled components
+  const dots = [];
+  for (let i = 0; i < parent.length; i++) {
+    if (find(i) !== i) continue;
+    const bw = maxX[i] - minX[i] + 1, bh = maxY[i] - minY[i] + 1;
+    if (bw > maxDot || bh > maxDot || bw / bh > 2.5 || bh / bw > 2.5 || area[i] < 0.4 * bw * bh) continue;
+    dots.push({ i, cx: (minX[i] + maxX[i]) / 2, cy: (minY[i] + maxY[i]) / 2, s: Math.max(bw, bh) });
+  }
+  // chains on one line, evenly spaced
+  dots.sort((a, b) => a.cy - b.cy || a.cx - b.cx);
+  const used = new Set();
+  for (let a = 0; a < dots.length; a++) {
+    if (used.has(a)) continue;
+    const row = [a];
+    for (let b = a + 1; b < dots.length && dots[b].cy - dots[a].cy <= dots[a].s / 2; b++) if (!used.has(b)) row.push(b);
+    row.sort((p, q) => dots[p].cx - dots[q].cx);
+    let chain = [row[0]];
+    const flush = () => {
+      if (chain.length >= _LEADER_MIN) for (const c of chain) {
+        used.add(c);
+        const d = dots[c].i;
+        for (let yy = Math.max(0, minY[d] - 1); yy <= Math.min(h - 1, maxY[d] + 1); yy++)
+          for (let xx = Math.max(0, minX[d] - 1); xx <= Math.min(w - 1, maxX[d] + 1); xx++) {
+            const o = (yy * w + xx) * 4; data[o] = data[o + 1] = data[o + 2] = 255;
+          }
+      }
+    };
+    for (let r = 1; r < row.length; r++) {
+      const gap = dots[row[r]].cx - dots[chain[chain.length - 1]].cx;
+      const last = chain.length > 1 ? dots[chain[chain.length - 1]].cx - dots[chain[chain.length - 2]].cx : gap;
+      if (gap <= 8 * dots[row[r]].s && Math.abs(gap - last) <= 0.35 * last) chain.push(row[r]);
+      else { flush(); chain = [row[r]]; }
+    }
+    flush();
+  }
 }
 
 // Table rules, erased (after deskew, so they run straight). Tesseract read a
