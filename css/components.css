@@ -2514,22 +2514,25 @@ button,
   text-align: center;
 }
 
-/* Per-card rotate icon — top-left, the one corner .rot-badge (top-right)
-   and .rot-selbadge (bottom-left, below) don't already use. Fixes the same
-   bug already fixed for Organize's .org-card__action--rotate: the bulk
-   rotate flow clears its selection after every use, so this lets a user
-   repeat-click the SAME page's own icon without needing to reselect it
-   first. No flex-wrap needed here (unlike Organize) — this is the only
-   action icon on this tool's card, no crowding. */
+/* Per-card rotate icon — the main way to turn one page. It was a 24px
+   circle with a 12px arrow, easy to miss and to mistake for the selection
+   circle; the owner, trying the Chinese page (2026-10-29), went for the
+   toolbar instead and hit the "select pages first" toast. 40px: near the
+   44px comfort target on a 90px mobile card. Top-left, not bottom: right
+   after a file is added the cards' lower half sits under the sticky
+   #mergeBtn on a desktop screen, so a bottom icon took the click meant for
+   it (tests/e2e/rotate-no-dead-end.e2e.mjs). Lets a user repeat-click the
+   SAME page without reselecting it (the bulk flow clears its selection). */
 .rot-card__action {
   position: absolute;
   top: 4px;
   left: 4px;
-  width: 24px; /* WCAG 2.5.8 24px tap-target minimum, matches .org-card__action */
-  height: 24px;
+  width: 40px;
+  height: 40px;
   border: none;
   border-radius: 50%;
-  font-size: 12px;
+  font-size: 22px;
+  font-weight: 700;
   line-height: 1;
   display: flex;
   align-items: center;
