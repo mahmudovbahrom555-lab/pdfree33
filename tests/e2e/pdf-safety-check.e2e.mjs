@@ -41,7 +41,8 @@ codes.phish.rows.forEach((row, r) => [...row].forEach((bit, c) => {
 }));
 doc.catalog.set(PDFName.of('OpenAction'), doc.context.register(doc.context.obj({ S: 'JavaScript', JS: PDFString.of('app.launchURL("https://example.test/")') })));
 await doc.attach(new TextEncoder().encode('MZ fake'), 'invoice.exe', { mimeType: 'application/octet-stream' });
-const file = path.join(os.tmpdir(), `safety-${process.pid}.pdf`);
+// a name of its own, to show it never reaches analytics
+const file = path.join(os.tmpdir(), `Q3-confidential-review-${process.pid}.pdf`);
 fs.writeFileSync(file, await doc.save());
 
 // WCAG contrast of two rgb() colours
@@ -51,6 +52,11 @@ const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p);
 const browser = await chromium.launch();
 for (const [label, viewport, colorScheme] of [['phone, light', { width: 390, height: 664 }, 'light'], ['desktop, dark', { width: 1440, height: 900 }, 'dark']]) {
   const ctx = await browser.newContext({ viewport, colorScheme, acceptDownloads: true });
+  // analytics: allowed in this automated browser (it is off for webdriver),
+  // every request caught here and answered locally — nothing leaves the test
+  await ctx.addInitScript(() => Object.defineProperty(navigator, 'webdriver', { get: () => false }));
+  const events = [];
+  await ctx.route('**/api/analytics', r => { events.push(r.request().postData() || ''); r.fulfill({ status: 204, body: '' }); });
   const p = await ctx.newPage();
   const problems = [];
   // Cloudflare injects its analytics beacon into every page at the edge; this
@@ -136,6 +142,19 @@ for (const [label, viewport, colorScheme] of [['phone, light', { width: 390, hei
     const scan = await scanPdf(bytes, PDFLib);
     if (scan.findings.length || scan.uris.length) throw new Error(JSON.stringify(scan.findings));
     if (!/-pictures\.pdf$/.test(dl.suggestedFilename())) throw new Error(dl.suggestedFilename());
+  });
+
+  await test(`${label}: analytics gets the events, and nothing of the file`, async () => {
+    const names = events.map(e => { try { return JSON.parse(e).event; } catch { return '?'; } });
+    for (const want of ['Tool Open', 'File Added', 'Safety Report', 'Tool Success']) {
+      if (!names.includes(want)) throw new Error(`no "${want}" event: ${names.join(', ')}`);
+    }
+    const all = events.join('\n');
+    const secrets = ['Q3-confidential', 'mybank', 'example.test', 'invoice.exe', 'launchURL', 'verify', 'Alphabet', 'Log in at'];
+    const leaked = secrets.filter(x => all.toLowerCase().includes(x.toLowerCase()));
+    if (leaked.length) throw new Error(`leaked: ${leaked.join(', ')}\n${all.slice(0, 600)}`);
+    const report = JSON.parse(events.find(e => JSON.parse(e).event === 'Safety Report')).props;
+    if (report.level !== 'high' || !/scripts/.test(report.kinds) || report.qr !== 'yes' || report.link_mismatch !== 'yes') throw new Error(JSON.stringify(report));
   });
 
   await test(`${label}: no CSP violation, no page error`, async () => {

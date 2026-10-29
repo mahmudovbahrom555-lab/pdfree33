@@ -12,6 +12,7 @@ import { buildReport } from './pdfSafetyReport.js';
 import { disarmPdf } from './pdfSafetyDisarm.js';
 import { linkMismatchesOnPages, qrCodesOnPages } from './pdfSafetyPages.js';
 import { picturesPdf } from './pdfSafetyPictures.js';
+import { trackToolOpen, trackFileAdded, trackSafetyReport, trackSafetyResult, trackSafetyError } from './analytics.js';
 
 const $ = id => document.getElementById(id);
 const PREVIEW_PAGES = 6;
@@ -95,13 +96,16 @@ async function check(file) {
       scan.error ??= String(e?.message ?? e).slice(0, 120);
     }
     if (mine !== run) return;
-    renderReport(buildReport(scan, { linkMismatches: mismatches }), qr);
+    const report = buildReport(scan, { linkMismatches: mismatches });
+    renderReport(report, qr);
+    trackSafetyReport(report, scan, { qr, mismatches });
     // the report starts at the top of the screen, clear of the sticky button
     // (CLAUDE.md UX rule 8: new content near the bottom of a short phone)
     $('safetyReport').scrollIntoView({ block: 'start', behavior: 'instant' });
     current = { file, bytes, scan, pdf };
     $('safetyStatus').textContent = '';
     if (scan.encrypted && !pdf) {
+      trackSafetyError('encrypted');
       showToast('This PDF is encrypted, so it can\'t be cleaned here. Remove the protection first (Unlock PDF), then check it again.', 9000);
     } else {
       // an encrypted file pdf.js can still draw is offered as pictures only
@@ -113,6 +117,7 @@ async function check(file) {
   } catch (e) {
     if (mine !== run) return;
     $('safetyStatus').textContent = '';
+    trackSafetyError('not_pdf');
     showToast(`This file couldn't be read as a PDF (${String(e?.message ?? e).slice(0, 80)}).`, 8000);
   }
 }
@@ -124,8 +129,9 @@ async function clean() {
   setProgress(30, 'Taking out what acts…');
   try {
     const d = await disarmPdf(bytes, window.PDFLib, { keepLinks: !$('safetyRemoveLinks').checked });
-    if (d.status === 'encrypted') { showToast('This PDF is encrypted, so it can\'t be cleaned here.', 8000); return; }
+    if (d.status === 'encrypted') { trackSafetyError('encrypted'); showToast('This PDF is encrypted, so it can\'t be cleaned here.', 8000); return; }
     if (d.status === 'unreadable') {
+      trackSafetyError('unreadable');
       showToast(current.pdf
         ? 'This PDF\'s structure couldn\'t be taken apart. "Download as pictures" can still give you a clean copy.'
         : 'This PDF\'s structure couldn\'t be taken apart, so it can\'t be cleaned here. Open it only with care.', 10000);
@@ -136,15 +142,18 @@ async function clean() {
     const left = after.findings.filter(f => f.risk === 'high' || f.risk === 'medium');
     if (left.length) {
       // never hand out a copy the check itself doesn't pass
+      trackSafetyError('recheck_failed');
       showToast(`The cleaned copy still had ${left.length} acting part(s); it was not saved.`, 10000);
       return;
     }
+    trackSafetyResult('clean', d.removed.length, d.bytes.length);
     offer(d.bytes, file.name.replace(/\.pdf$/i, '') + '-cleaned.pdf',
       d.removed.length ? `Cleaned: ${d.removed.length} part(s) taken out` : 'Nothing to take out',
       d.removed.length
         ? `${[...new Set(d.removed.map(r => r.what))].slice(0, 6).join(', ')}. Checked again: nothing acting is left.`
         : 'The copy is the same document, rewritten; checked again: nothing acting.');
   } catch (e) {
+    trackSafetyError('clean_failed');
     showToast(`Cleaning failed: ${String(e?.message ?? e).slice(0, 100)}`, 8000);
   } finally {
     hideProgress();
@@ -177,12 +186,15 @@ async function pictures() {
     if (!bytes) return;   // another file was chosen meanwhile
     const after = await scanPdf(bytes, window.PDFLib);
     if (after.findings.some(f => f.risk === 'high' || f.risk === 'medium')) {
+      trackSafetyError('recheck_failed');
       showToast('The picture copy didn\'t pass the check; it was not saved.', 10000);
       return;
     }
+    trackSafetyResult('pictures', 0, bytes.length);
     offer(bytes, file.name.replace(/\.pdf$/i, '') + '-pictures.pdf', `${pdf.numPages} page(s) redrawn as pictures`,
       'Nothing of the original file is kept. Checked again: nothing acting. The text is now part of the pictures.');
   } catch (e) {
+    trackSafetyError('pictures_failed');
     showToast(`Redrawing failed: ${String(e?.message ?? e).slice(0, 100)}`, 8000);
   } finally {
     hideProgress();
@@ -194,6 +206,7 @@ async function pictures() {
 function pick(files) {
   const f = [...files].find(x => /\.pdf$/i.test(x.name) || x.type === 'application/pdf');
   if (!f) { showToast('Choose a PDF file.'); return; }
+  trackFileAdded('safety', f.size);
   check(f);
 }
 
@@ -208,3 +221,4 @@ zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('
 $('mergeBtn').disabled = false;
 $('mergeBtn').addEventListener('click', clean);
 $('safetyPicturesBtn').addEventListener('click', pictures);
+trackToolOpen('safety');
