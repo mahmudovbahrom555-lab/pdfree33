@@ -162,6 +162,9 @@ export function trackFileAdded(tool, fileSize = 0) {
  *   pdf_read_failed     — could not read PDF page metadata
  *   worker_crash        — unhandled worker error
  *   no_pages            — user submitted with no pages selected (UX gap)
+ *   password_protected  — OCR: the PDF needs its password (a person who
+ *                         says no to OCR's long-document question is a
+ *                         Tool Cancel, not an error)
  *   unknown             — unclassified
  */
 export function trackToolError(tool, errorType = 'unknown') {
