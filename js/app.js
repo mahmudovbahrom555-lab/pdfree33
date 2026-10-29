@@ -1006,7 +1006,9 @@ function initSearch() {
   // safe for both tools since their actual decode step (a plain <img> src)
   // never special-cases the format itself.
   const _isPdfFile   = f => f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
-  const _isImageFile = f => /^image\//.test(f.type) || /\.(jpe?g|png|webp|heic|heif)$/i.test(f.name);
+  const _isImageFile = f => /^image\//.test(f.type) || /\.(jpe?g|png|webp|heic|heif|tiff?)$/i.test(f.name);
+  // TIFF: only Images → PDF decodes it (js/tiffDecode.js) — Scan Document can't
+  const _isTiffFile  = f => f.type === 'image/tiff' || /\.tiff?$/i.test(f.name);
   // Word to PDF is the first hero-reachable tool whose input isn't PDF or
   // image — MIME first, extension fallback (same pattern as the other two
   // predicates above), per CLAUDE.md's "hero routing checklist" for a new
@@ -1065,7 +1067,7 @@ function initSearch() {
       summary.appendChild(row);
       heroDetected.appendChild(summary);
       heroDetected.appendChild(kind === 'image'
-        ? _buildRecsGrid(['jpg2pdf', 'scanDocument'], 'jpg2pdf')
+        ? _buildRecsGrid(files.some(_isTiffFile) ? ['jpg2pdf'] : ['jpg2pdf', 'scanDocument'], 'jpg2pdf')
         : kind === 'docx'
         ? _buildRecsGrid(['docx2pdf'], 'docx2pdf')
         : _buildRecsGrid(['merge', 'compress', 'protect', 'split'], 'merge'));
@@ -1107,7 +1109,9 @@ function initSearch() {
       // scanDocument (crop/perspective-correct) is the better default there
       // than jpg2pdf (embeds the raw image as-is), but both stay one tap
       // away since we can't reliably tell camera-capture from gallery-pick.
-      heroDetected.appendChild(_buildRecsGrid(['scanDocument', 'jpg2pdf'], 'scanDocument'));
+      heroDetected.appendChild(files.some(_isTiffFile)
+        ? _buildRecsGrid(['jpg2pdf'], 'jpg2pdf')
+        : _buildRecsGrid(['scanDocument', 'jpg2pdf'], 'scanDocument'));
       heroDetected.hidden = false;
       return;
     }

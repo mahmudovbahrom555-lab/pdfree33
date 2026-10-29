@@ -275,3 +275,31 @@ Checked:     0 known advisories (GitHub Security Advisories, OSV, 2026-10-28).
 License:     Apache License 2.0 (see js/vendor/LICENSE.txt)
 Used by:     js/qrWorker.js (importScripts) — QR codes on a PDF's rendered pages
              for the PDF safety check, where the browser has no BarcodeDetector.
+
+File:        UTIF.js
+Source:      UTIF.js v3.1.0 (npm package "utif", UTIF.js) — https://github.com/photopea/UTIF.js
+Downloaded:  2026-10-29 with `npm pack utif@3.1.0`. The tarball's SHA-512 matched the
+             registry's published integrity
+             (sha512-WEo4D/xOvFW53K5f5QTaTbbiORcm2/pCL9P6qmJnup+17eYfKaEhDeX9PeQkuyEoIxlbGklDuGl8xwuXYMrrXQ==),
+             and UTIF.js is byte-identical to jsDelivr's copy
+             (https://cdn.jsdelivr.net/npm/utif@3.1.0/UTIF.js).
+             This file's SHA-384: sha384-RyBmXHdfZ/Uon+ud+/AqSyWpUWnKYt2tkRG/P4gWoRUGDU+qIAV3tGBPNlYTBZEF
+Size:        ~58 KB (unminified; TIFF decoder incl. CCITT G3/G4, LZW, PackBits, JPEG)
+Checked:     0 known advisories (OSV, 2026-10-29). Last release 2022 — runs only in a
+             dedicated worker, on a file the person chose.
+License:     MIT (Copyright (c) 2017 Photopea)
+Used by:     js/tiffWorker.js (importScripts) — TIFF pages for Images → PDF (js/tiffDecode.js).
+
+File:        pako_inflate.min.js
+Source:      pako v1.0.11 (npm package "pako", dist/pako_inflate.min.js) — https://github.com/nodeca/pako
+Downloaded:  2026-10-29 with `npm pack pako@1.0.11` (the 1.x line UTIF.js 3.1.0 declares).
+             The tarball's SHA-512 matched the registry's published integrity
+             (sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==),
+             and the file is byte-identical to jsDelivr's copy
+             (https://cdn.jsdelivr.net/npm/pako@1.0.11/dist/pako_inflate.min.js).
+             This file's SHA-384: sha384-eVEAceNXm4nXk77ToJFE5Yyd50iOqdwXwefI35sH/rqeSTw99+DhTt4CzWZU+xBz
+Size:        ~22 KB (inflate only)
+Checked:     0 known advisories (OSV, 2026-10-29).
+License:     MIT AND Zlib (see the header of the file)
+Used by:     js/tiffWorker.js (importScripts, before UTIF.js) — UTIF.js reads
+             Deflate-compressed TIFFs through self.pako.

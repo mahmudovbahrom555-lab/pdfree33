@@ -2,13 +2,13 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "How to Convert JPG to PDF",
-  "description": "Convert JPG, PNG and WebP images to a single PDF — free, no upload.",
+  "description": "Convert JPG, PNG, WebP, HEIC and TIFF images to a single PDF — free, no upload.",
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
       "name": "Add your images",
-      "text": "Click 'Choose files' or drag your JPG, PNG or WebP images into the drop zone. Multiple images are combined into one PDF."
+      "text": "Click 'Choose files' or drag your JPG, PNG, WebP, HEIC or TIFF images into the drop zone. Multiple images are combined into one PDF."
     },
     {
       "@type": "HowToStep",

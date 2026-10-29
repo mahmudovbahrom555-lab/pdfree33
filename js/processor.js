@@ -23,6 +23,7 @@ import { pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
 import { captureText, lineRunsForSlide, cutsForLine, groupRuns, fittedFontSize, eraseUnpaintedRuns, styledParts } from './pdf2pptLayered.js';
 import { openFeedback } from './feedback.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
+import { isTiffFile, decodeTiffPages } from './tiffDecode.js';
 import { evaluateStructural } from './eriScore.js';
 import { evaluateXlsxStructural } from './eriScoreXlsx.js';
 import { evaluateMarkdownStructural } from './eriScoreMd.js';
@@ -184,7 +185,8 @@ function _createWorker() {
 const _SHARED_WORKER = ['worker.js?v=__WORKER_HASH__', 'pdfEncrypt.js', 'watermarkImage.js'];
 const _RUNNER_SCRIPTS = {
   merge: ['mergeWorker.js'], split: ['splitWorker.js'], organize: ['organizeWorker.js'],
-  compress: [..._SHARED_WORKER, 'compressPrepWorker.js'], jpg2pdf: _SHARED_WORKER, worker: _SHARED_WORKER,
+  compress: [..._SHARED_WORKER, 'compressPrepWorker.js'], worker: _SHARED_WORKER,
+  jpg2pdf: [..._SHARED_WORKER, 'tiffWorker.js', 'vendor/UTIF.js', 'vendor/pako_inflate.min.js'],
   resize: ['resizeWorker.js'], nup: ['nupWorker.js', 'nupLayout.js'], mangaSplit: ['mangaSplitWorker.js'],
   fillOrder: ['fillOrderWorker.js'], cleanScan: ['cleanScanWorker.js'], ereader: ['ereaderWorker.js'],
   glossary: ['glossaryWorker.js'],
@@ -1894,19 +1896,28 @@ async function _runJpg2Pdf(filesSnapshot, params, toolKey = 'jpg2pdf') {
   // any browser except Safari. A failed decode becomes a zero-length
   // buffer, which worker.js's own existing empty-buffer guard already
   // skips and reports — no worker.js changes needed either way.
-  const buffers = await Promise.all(filesSnapshot.map(async f => {
-    if (!isHeicFile(f)) return _readSelected(f);
+  // A TIFF can hold many pages (a scanner's or fax's multi-page file):
+  // decoded to one PNG per page (js/tiffDecode.js), so each file gives a
+  // list of buffers, and EXIF angles — one per file — are spread over them.
+  const perFile = await Promise.all(filesSnapshot.map(async f => {
+    if (isTiffFile(f)) {
+      const pages = await decodeTiffPages(f);
+      return pages ? Promise.all(pages.map(b => b.arrayBuffer())) : [new ArrayBuffer(0)];
+    }
+    if (!isHeicFile(f)) return [await _readSelected(f)];
     const jpegBlob = await decodeHeicToJpegBlob(f);
-    return jpegBlob ? jpegBlob.arrayBuffer() : new ArrayBuffer(0);
+    return [jpegBlob ? await jpegBlob.arrayBuffer() : new ArrayBuffer(0)];
   }));
   setProgress(5, t('prog_loading_imgs'));
 
   if (params.separate && filesSnapshot.length > 1) {
-    return _runJpg2PdfSeparate(filesSnapshot, buffers, params, toolKey);
+    return _runJpg2PdfSeparate(filesSnapshot, perFile, params, toolKey);
   }
 
+  const buffers = perFile.flat();
+  const exifAngles = perFile.flatMap((bufs, i) => bufs.map(() => params.exifAngles?.[i] ?? 0));
   _shared().postMessage(
-    { tool: 'jpg2pdf', files: buffers, options: params },
+    { tool: 'jpg2pdf', files: buffers, options: { ...params, exifAngles } },
     buffers   // All buffers as Transferables (zero-copy)
   );
 
@@ -1965,7 +1976,7 @@ async function _runJpg2Pdf(filesSnapshot, params, toolKey = 'jpg2pdf') {
 // separate mode (see the comment there re: transferred-buffer lifetime).
 // Sequential, not parallel: _worker is one shared instance with a single
 // reassignable onmessage handler, not per-call message IDs.
-async function _runJpg2PdfSeparate(filesSnapshot, buffers, params, toolKey = 'jpg2pdf') {
+async function _runJpg2PdfSeparate(filesSnapshot, perFile, params, toolKey = 'jpg2pdf') {
   const zipEntries = [];
   const skipped    = [];
 
@@ -1973,9 +1984,11 @@ async function _runJpg2PdfSeparate(filesSnapshot, buffers, params, toolKey = 'jp
     if (!isProcessing) return; // cancelled between images
     setProgress(5 + Math.round((i / filesSnapshot.length) * 85), t('prog_loading_imgs'));
 
-    const singleOptions = { ...params, exifAngles: [params.exifAngles?.[i] ?? 0] };
+    // one PDF per file — a multi-page TIFF keeps all its pages in its own PDF
+    const bufs = perFile[i];
+    const singleOptions = { ...params, exifAngles: bufs.map(() => params.exifAngles?.[i] ?? 0) };
     const result = await new Promise((resolve) => {
-      _shared().postMessage({ tool: 'jpg2pdf', files: [buffers[i]], options: singleOptions }, [buffers[i]]);
+      _shared().postMessage({ tool: 'jpg2pdf', files: bufs, options: singleOptions }, bufs);
       _shared().onmessage = (e) => {
         const data = e.data;
         if (data.type === 'done' || data.type === 'error') resolve(data);
