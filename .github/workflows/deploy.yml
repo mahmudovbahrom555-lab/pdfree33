@@ -452,6 +452,12 @@ jobs:
         # See tests/e2e/pdf2jpg-cbz.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:pdf2jpg-cbz
 
+      - name: E2E — TIFF to PDF (fax pages kept as they are, every TIFF layout, order, Orientation)
+        # Size within 1.2 × the TIFF for a G4 fax, physical page size from the
+        # resolution, mixed TIFF + images in order, Cancel, damaged file.
+        # See tests/e2e/jpg2pdf-tiff.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:jpg2pdf-tiff
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do

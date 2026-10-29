@@ -45,6 +45,7 @@
     "test:e2e:pdf2word-arabic": "node tests/e2e/pdf2word-arabic.e2e.mjs",
     "test:e2e:pdf2ppt-layered": "node tests/e2e/pdf2ppt-layered.e2e.mjs",
     "test:e2e:pdf2jpg-cbz": "node tests/e2e/pdf2jpg-cbz.e2e.mjs",
+    "test:e2e:jpg2pdf-tiff": "node tests/e2e/jpg2pdf-tiff.e2e.mjs",
     "test:e2e:quickedit-skeleton": "node tests/e2e/quickEditSkeleton.e2e.mjs",
     "check:prod:embed-sdk": "PDFREE_BASE_URL=https://pdfree.io node tests/e2e/embed-sdk.e2e.mjs",
     "check:prod:edge": "node scripts/check_edge_routing.mjs https://pdfree.io --browser --redirect-sample 20",

@@ -23,7 +23,7 @@ import { pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
 import { captureText, lineRunsForSlide, cutsForLine, groupRuns, fittedFontSize, eraseUnpaintedRuns, styledParts } from './pdf2pptLayered.js';
 import { openFeedback } from './feedback.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
-import { isTiffFile, decodeTiffPages } from './tiffDecode.js';
+import { isTiffFile } from './tiffDecode.js';
 import { evaluateStructural } from './eriScore.js';
 import { evaluateXlsxStructural } from './eriScoreXlsx.js';
 import { evaluateMarkdownStructural } from './eriScoreMd.js';
@@ -320,6 +320,7 @@ export function cancelProcess(currentTool) {
     _compressPrepWorker = null;
     _compressPrepSettle(null);
   }
+  _tiffSettle?.({ type: 'cancelled' });
   _worker?.terminate();
   _worker = null;
   isProcessing = false;
@@ -1896,28 +1897,16 @@ async function _runJpg2Pdf(filesSnapshot, params, toolKey = 'jpg2pdf') {
   // any browser except Safari. A failed decode becomes a zero-length
   // buffer, which worker.js's own existing empty-buffer guard already
   // skips and reports — no worker.js changes needed either way.
-  // A TIFF can hold many pages (a scanner's or fax's multi-page file):
-  // decoded to one PNG per page (js/tiffDecode.js), so each file gives a
-  // list of buffers, and EXIF angles — one per file — are spread over them.
-  const perFile = await Promise.all(filesSnapshot.map(async f => {
-    if (isTiffFile(f)) {
-      const pages = await decodeTiffPages(f);
-      return pages ? Promise.all(pages.map(b => b.arrayBuffer())) : [new ArrayBuffer(0)];
-    }
-    if (!isHeicFile(f)) return [await _readSelected(f)];
-    const jpegBlob = await decodeHeicToJpegBlob(f);
-    return [jpegBlob ? await jpegBlob.arrayBuffer() : new ArrayBuffer(0)];
-  }));
+  if (filesSnapshot.some(isTiffFile)) return _runJpg2PdfTiff(filesSnapshot, params, toolKey);
+  const buffers = await Promise.all(filesSnapshot.map(_imageBuffer));
   setProgress(5, t('prog_loading_imgs'));
 
   if (params.separate && filesSnapshot.length > 1) {
-    return _runJpg2PdfSeparate(filesSnapshot, perFile, params, toolKey);
+    return _runJpg2PdfSeparate(filesSnapshot, buffers, params, toolKey);
   }
 
-  const buffers = perFile.flat();
-  const exifAngles = perFile.flatMap((bufs, i) => bufs.map(() => params.exifAngles?.[i] ?? 0));
   _shared().postMessage(
-    { tool: 'jpg2pdf', files: buffers, options: { ...params, exifAngles } },
+    { tool: 'jpg2pdf', files: buffers, options: params },
     buffers   // All buffers as Transferables (zero-copy)
   );
 
@@ -1932,29 +1921,7 @@ async function _runJpg2Pdf(filesSnapshot, params, toolKey = 'jpg2pdf') {
       if (!(data.result instanceof ArrayBuffer)) {
         _handleError(toolKey, 'Unexpected result from worker'); return;
       }
-      isProcessing = false;
-      setFilesLocked(false);
-      hideCancelBtn();
-      setProgress(100, t('prog_done'));
-
-      const blob     = new Blob([data.result], { type: 'application/pdf' });
-      const baseName = filesSnapshot.length === 1
-        ? filesSnapshot[0].name.replace(/\.[^.]+$/, '')
-        : 'converted';
-      const filename = `${baseName}.pdf`;
-      const pagesWord  = tp(data.pageCount, 'word_page', 'word_pages');
-      const imagesWord = tp(filesSnapshot.length, 'word_image', 'word_images');
-      const desc       = `${data.pageCount} ${pagesWord} · ${filesSnapshot.length} ${imagesWord} · ${fmtSize(blob.size)}`;
-
-      // Warn user about any images that couldn't be processed
-      if (data.skipped?.length > 0) {
-        const nums = data.skipped.join(', ');
-        showToast(tp(data.skipped.length, 'skipped_imgs_one', 'skipped_imgs_many', { nums }), 6000);
-      }
-
-      document.dispatchEvent(new CustomEvent('pdfree:success', {
-        detail: { tool: toolKey, blob, desc, filename }
-      }));
+      _finishJpg2Pdf(filesSnapshot, data.result, data.pageCount, data.skipped, toolKey);
     } else if (data.type === 'error') {
       isProcessing = false; setFilesLocked(false); hideCancelBtn();
       _handleError(toolKey, data.message);
@@ -1964,6 +1931,151 @@ async function _runJpg2Pdf(filesSnapshot, params, toolKey = 'jpg2pdf') {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
     _handleError(toolKey, e.message || 'Worker error');
   };
+}
+
+// An image as worker.js's jpg2pdf reads it: HEIC/HEIF decoded to JPEG first
+// (js/heicDecode.js, cached — shares the decode already done for the
+// thumbnail preview in jpg2pdfUI.js): worker.js is off-limits and its
+// createImageBitmap()-based decode can't read HEIC in any browser except
+// Safari. A failed decode becomes a zero-length buffer, which worker.js's
+// own existing empty-buffer guard already skips and reports.
+async function _imageBuffer(f) {
+  if (!isHeicFile(f)) return _readSelected(f);
+  const jpegBlob = await decodeHeicToJpegBlob(f);
+  return jpegBlob ? jpegBlob.arrayBuffer() : new ArrayBuffer(0);
+}
+
+// One jpg2pdf job on the shared worker, awaited.
+function _jpg2pdfShared(buffers, options) {
+  return new Promise((resolve) => {
+    _shared().onmessage = (e) => {
+      const data = e.data;
+      if (data.type === 'done' || data.type === 'error') resolve(data);
+      // 'progress'/'warn' from a sub-job aren't worth surfacing on their
+      // own — the caller's own per-file progress covers it.
+    };
+    _shared().onerror = (e) => resolve({ type: 'error', message: e.message || 'Worker error' });
+    _shared().postMessage({ tool: 'jpg2pdf', files: buffers, options }, buffers);
+  });
+}
+
+function _finishJpg2Pdf(filesSnapshot, result, pageCount, skipped, toolKey) {
+  isProcessing = false;
+  setFilesLocked(false);
+  hideCancelBtn();
+  setProgress(100, t('prog_done'));
+
+  const blob     = new Blob([result], { type: 'application/pdf' });
+  const baseName = filesSnapshot.length === 1
+    ? filesSnapshot[0].name.replace(/\.[^.]+$/, '')
+    : 'converted';
+  const filename = `${baseName}.pdf`;
+  const pagesWord  = tp(pageCount, 'word_page', 'word_pages');
+  const imagesWord = tp(filesSnapshot.length, 'word_image', 'word_images');
+  const desc       = `${pageCount} ${pagesWord} · ${filesSnapshot.length} ${imagesWord} · ${fmtSize(blob.size)}`;
+
+  // Warn user about any images that couldn't be processed
+  if (skipped?.length > 0) {
+    const nums = skipped.join(', ');
+    showToast(tp(skipped.length, 'skipped_imgs_one', 'skipped_imgs_many', { nums }), 6000);
+  }
+
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: { tool: toolKey, blob, desc, filename }
+  }));
+}
+
+// ── TIFF in Images → PDF ─────────────────────────────────────────
+// js/tiffWorker.js builds the TIFF pages' PDF itself — a fax page's G4
+// bytes go in as they are instead of a JPEG 13× its size (see its header).
+// Other images keep worker.js's own path: the files are cut into runs
+// of consecutive TIFFs / other images, each run becomes a PDF, and the
+// parts are joined in the person's order (pdf-lib copyPages keeps the
+// image streams as they are).
+let _tiffWorker = null;
+let _tiffSettle = null;
+const _TIFF_STALL_MS = 60000;
+function _tiffJob(msg, transfer, onProgress) {
+  return new Promise((resolve) => {
+    const worker = _tiffWorker = new Worker(new URL('./tiffWorker.js', import.meta.url));
+    const settle = (res) => {
+      if (_tiffSettle !== settle) return;
+      _tiffSettle = null;
+      worker.terminate();
+      if (_tiffWorker === worker) _tiffWorker = null;
+      resolve(res);
+    };
+    _tiffSettle = settle;
+    // A damaged page can send a decoder into an endless loop (an old-style
+    // LZW file did): 60 s with no word from the worker ends the job.
+    let watchdog;
+    const wait = () => { clearTimeout(watchdog); watchdog = setTimeout(() => settle({ type: 'error', error: 'TIFF page stalled' }), _TIFF_STALL_MS); };
+    const done = (res) => { clearTimeout(watchdog); settle(res); };
+    worker.onmessage = (e) => (e.data.type === 'progress' ? (wait(), onProgress?.(e.data)) : done(e.data));
+    worker.onerror   = (e) => done({ type: 'error', error: e.message || 'TIFF worker failed' });
+    wait();
+    worker.postMessage(msg, transfer);
+  });
+}
+
+async function _runJpg2PdfTiff(filesSnapshot, params, toolKey) {
+  const separate = params.separate && filesSnapshot.length > 1;
+  const runs = [];
+  filesSnapshot.forEach((f, i) => {
+    const tiff = isTiffFile(f), last = runs[runs.length - 1];
+    if (separate || !last || last.tiff !== tiff) runs.push({ tiff, idx: [i] });
+    else last.idx.push(i);
+  });
+
+  const parts = [], skipped = [];
+  let pageCount = 0;
+  for (let r = 0; r < runs.length; r++) {
+    const { tiff, idx } = runs[r];
+    const from = 5 + 85 * r / runs.length, span = 85 / runs.length;
+    setProgress(Math.round(from), t('prog_loading_imgs'));
+    let res;
+    if (tiff) {
+      const files = await Promise.all(idx.map(i => _readSelected(filesSnapshot[i])));
+      if (!isProcessing) return;
+      res = await _tiffJob({ type: 'pdf', files, options: params }, files,
+        p => setProgress(Math.round(from + span * p.done / p.total), t('prog_loading_imgs')));
+      if (res.type === 'done') res.result = res.pdfs[0];
+    } else {
+      const buffers = await Promise.all(idx.map(i => _imageBuffer(filesSnapshot[i])));
+      if (!isProcessing) return;
+      res = await _jpg2pdfShared(buffers, { ...params, exifAngles: idx.map(i => params.exifAngles?.[i] ?? 0) });
+    }
+    if (!isProcessing) return; // cancelled meanwhile
+    // worker skip lists number files within the run; the person sees their own list
+    skipped.push(...(res.skipped || []).map(k => idx[k - 1] + 1));
+    if (res.type !== 'done' || !(res.result instanceof ArrayBuffer)) {
+      if (!res.skipped) skipped.push(...idx.map(i => i + 1));
+      continue;
+    }
+    pageCount += res.pageCount;
+    parts.push({ name: `${filesSnapshot[idx[0]].name.replace(/\.[^.]+$/, '')}.pdf`, buffer: res.result });
+  }
+
+  if (separate) return _finishJpg2PdfZip(parts, skipped, toolKey);
+  if (!parts.length) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError(toolKey, 'All images failed to convert');
+    return;
+  }
+  let result = parts[0].buffer;
+  if (parts.length > 1) {
+    setProgress(92, t('prog_merging'));
+    const pdfs = parts.map(p => p.buffer);
+    const merged = await _tiffJob({ type: 'merge', pdfs }, pdfs);
+    if (!isProcessing) return;
+    if (merged.type !== 'done') {
+      isProcessing = false; setFilesLocked(false); hideCancelBtn();
+      _handleError(toolKey, merged.error || 'Merge failed');
+      return;
+    }
+    result = merged.pdfs[0];
+  }
+  _finishJpg2Pdf(filesSnapshot, result, pageCount, skipped, toolKey);
 }
 
 // "Separate PDFs" mode (one PDF per image instead of one merged PDF) —
@@ -1976,7 +2088,7 @@ async function _runJpg2Pdf(filesSnapshot, params, toolKey = 'jpg2pdf') {
 // separate mode (see the comment there re: transferred-buffer lifetime).
 // Sequential, not parallel: _worker is one shared instance with a single
 // reassignable onmessage handler, not per-call message IDs.
-async function _runJpg2PdfSeparate(filesSnapshot, perFile, params, toolKey = 'jpg2pdf') {
+async function _runJpg2PdfSeparate(filesSnapshot, buffers, params, toolKey = 'jpg2pdf') {
   const zipEntries = [];
   const skipped    = [];
 
@@ -1984,19 +2096,8 @@ async function _runJpg2PdfSeparate(filesSnapshot, perFile, params, toolKey = 'jp
     if (!isProcessing) return; // cancelled between images
     setProgress(5 + Math.round((i / filesSnapshot.length) * 85), t('prog_loading_imgs'));
 
-    // one PDF per file — a multi-page TIFF keeps all its pages in its own PDF
-    const bufs = perFile[i];
-    const singleOptions = { ...params, exifAngles: bufs.map(() => params.exifAngles?.[i] ?? 0) };
-    const result = await new Promise((resolve) => {
-      _shared().postMessage({ tool: 'jpg2pdf', files: bufs, options: singleOptions }, bufs);
-      _shared().onmessage = (e) => {
-        const data = e.data;
-        if (data.type === 'done' || data.type === 'error') resolve(data);
-        // 'progress'/'warn' from a single-image call aren't worth surfacing
-        // individually — the outer per-image loop progress above covers it.
-      };
-      _shared().onerror = (e) => resolve({ type: 'error', message: e.message || 'Worker error' });
-    });
+    const singleOptions = { ...params, exifAngles: [params.exifAngles?.[i] ?? 0] };
+    const result = await _jpg2pdfShared([buffers[i]], singleOptions);
 
     if (result.type !== 'done' || !(result.result instanceof ArrayBuffer)) {
       skipped.push(i + 1);
@@ -2007,7 +2108,10 @@ async function _runJpg2PdfSeparate(filesSnapshot, perFile, params, toolKey = 'jp
   }
 
   if (!isProcessing) return;
+  await _finishJpg2PdfZip(zipEntries, skipped, toolKey);
+}
 
+async function _finishJpg2PdfZip(zipEntries, skipped, toolKey) {
   if (zipEntries.length === 0) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
     _handleError(toolKey, 'All images failed to convert');
