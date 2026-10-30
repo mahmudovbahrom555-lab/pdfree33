@@ -522,3 +522,16 @@ converter commit — never by both at once.
   excluding them, so the two never share a document. The holdout can't run
   without this file.
 - **Approved by:** this pull request's review.
+
+## 2026-10-27 — The holdout report gives Arabic totals
+
+- **What:** `scripts/quality/holdout_report.py`: the Arabic line's notes now
+  carry the change's totals over its text-layer documents — documents, words
+  agreed, recall, dots, reversed, glued, numbers missing of agreed, order —
+  as Chinese and English already did. No count, rule or tolerance changes;
+  still no document name. Control case added to
+  `tests/quality/test_holdout_report.py`.
+- **Why:** the first holdout run (2026-10-27, main vs main, 0 worse on all
+  three languages) printed Chinese and English totals but only "6 read partly
+  with OCR" for Arabic — there was nothing to read the Arabic level off.
+- **Approved by:** this pull request's review.
