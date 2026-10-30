@@ -37,3 +37,5 @@ the time is ONNX inference — det ~4.3 s/page at 2496×3520, rec 6–20 s/page.
 (b) recognition batches split over 2 workers on desktops with ≥ 4 cores — no change to
     the output (same crops, same model), checked identical text on 3 pages.
 Then the site run again: crit 5 (≤ 1.5×) plus crit 1 on the pool.
+Amendment 1 (a) RESULT: dev clean, no cls — full-size detection zh .973 / ja .979, detection at
+2048 zh .962 / ja .969 (−0.011 / −0.010 > 0.005) → REJECTED; the rest of that run stopped.

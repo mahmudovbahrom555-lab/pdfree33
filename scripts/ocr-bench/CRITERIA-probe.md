@@ -20,3 +20,14 @@ Criteria (site run, PDF→Word as a zh-CN user):
 4. deviceMemory 4 / mobile: identical to prod.
 5. Added time on a probed doc ≤ 15 s median.
 Plus: the 24 real pool scans (mostly Japanese newsletters) — every changed one looked at.
+
+## Amendment 1 (2026-10-30, after the code, BEFORE any measurement), from an outside review
+6. Repeatable: the 6 docs run twice on the new build — same decision and same text.
+7. Fails safe: PP-OCR failing/unreachable → the page stays as today (unit test: a throwing
+   probe leaves detection unsure; e2e already covers "models unreachable" for reading).
+8. Precision reported beside recall: score.py's `extra` (characters output that the source
+   doesn't have) for the probed docs.
+Reported, not gated: the probe downloads the PP-OCR models (~21 MB, once, HTTP cache) on a
+desktop for every unsure scan, non-CJK ones too; memory is the same PP-OCR path as reading
+(C22, not re-measured). Kana share is a heuristic: a Japanese table with < 10 % kana goes to
+Chinese — PP-OCR then still reads it (one model for both); listed if it happens.
