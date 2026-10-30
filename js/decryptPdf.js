@@ -89,7 +89,7 @@ async function _init() {
 // producer writing a longer first section would slip past 1 KB — never
 // decrypted, pdf-lib reading ciphertext, "unusual or corrupted structure"
 // (EXTRACT-85E1, a homeschool math worksheet; the cause not yet confirmed).
-function _looksEncrypted(bytes) {
+export function looksEncrypted(bytes) {
   const dec = new TextDecoder('latin1');
   const tail = dec.decode(bytes.subarray(Math.max(0, bytes.length - 65536)));
   if (tail.includes('/Encrypt')) return true;
@@ -201,7 +201,7 @@ export async function decryptWithPassword(bytes, password) {
  */
 export async function preprocessPdfBuffer(buffer) {
   const bytes = new Uint8Array(buffer);
-  if (!_looksEncrypted(bytes)) return buffer;  // fast path — 99% of PDFs
+  if (!looksEncrypted(bytes)) return buffer;  // fast path — 99% of PDFs
 
   // out of memory: the file as it is — pdf.js opens it itself when it needs no
   // password; tools that need it decrypted were stopped before (app.js)

@@ -68,7 +68,7 @@ function _render(container) {
   const needsPassword = _needsPassword(_file);
 
   if (_file?._decryptFailed) {
-    container.innerHTML = infoBanner(t('err_encrypted_too_large'), 'warn');
+    container.innerHTML = infoBanner(t('err_restrictions_unremovable'), 'warn');
     return;
   }
   if (!needsPassword) {
