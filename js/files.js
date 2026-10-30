@@ -60,9 +60,16 @@ async function _preflightPDF(file) {
     // 64 KB: a trailer's /Encrypt is not always in the last few KB — a real
     // 332-page Persian book had it 4.9 KB from the end (cloud corpus,
     // 2026-10-14); same window as decryptPdf.js's _looksEncrypted.
+    // The head as well: a linearized ("fast web view") PDF names /Encrypt
+    // only in its first-page trailer, near the start, and never at the end
+    // (qpdf --linearize: byte 471–603 of 816 KB, 2026-10-30) — such a file
+    // was never flagged here, its lock badge and Unlock's password check
+    // missing, its decryption left to the run.
     const TAIL = 65536;
+    const dec     = new TextDecoder('latin1');
     const tailBuf = await file.slice(Math.max(0, file.size - TAIL)).arrayBuffer();
-    const tail    = new TextDecoder('latin1').decode(tailBuf);
+    const headBuf = file.size > TAIL ? await file.slice(0, TAIL).arrayBuffer() : new ArrayBuffer(0);
+    const tail    = dec.decode(headBuf) + '\n' + dec.decode(tailBuf);
 
     // Triple-AND detection — all three must match in the tail area:
     //   /Encrypt N N R  — reference to encryption dict (xref/trailer)
@@ -103,7 +110,10 @@ async function _preflightPDF(file) {
 
     // Parse /P permission flags for the "Why?" explanation
     const restrictions = [];
-    const pMatch = tail.match(/\/P\s*(-?\d+)/);
+    // /P of the encryption dictionary itself, not an annotation's "/P 12 0 R"
+    // (the head searched now holds page objects too)
+    const std    = tail.search(/\/Filter\s*\/Standard/);
+    const pMatch = tail.slice(Math.max(0, std - 600), std + 600).match(/\/P\s*(-?\d+)(?!\s+\d+\s+R)/);
     if (pMatch) {
       const P = parseInt(pMatch[1], 10);
       if (!(P & 0x04)) restrictions.push('print');
@@ -269,9 +279,12 @@ function _afterAdd(added) {
             f._decryptedBuffer = decrypted.buffer;  // cache for processor.js
             f._pdfMeta.isEncrypted    = false;       // suppress lock badge
             f._pdfMeta.mayBeEncrypted = false;       // suppress Unlock's password field
-          } else {
+          } else if (await _pdfjsNeedsPassword(f)) {
             // qpdf ran and couldn't open it without a real user password (a
             // WASM init failure throws instead, below — never flagged here).
+            // pdf.js asked too: qpdf also fails on a damaged file, and that
+            // is no password to ask for (a damaged linearized one — only now
+            // seen as encrypted, 2026-10-30 — would have been told so).
             f._needsPassword = true;
           }
         } catch (err) {

@@ -83,12 +83,18 @@ async function _init() {
 // (2026-10-14) had its trailer's /Encrypt 4.9 KB from the end — missed, so
 // it was never decrypted and every pdf-lib tool read ciphertext ("Invalid
 // header in flate stream"). 64 KB of latin1 is still nothing to decode.
+// The head is 64 KB too, not 1: a linearized ("fast web view") PDF names
+// /Encrypt only in its first-page trailer, near the start, and never again
+// at the end (qpdf --linearize: byte 471–603 of 816 KB, 2026-10-30). A
+// producer writing a longer first section would slip past 1 KB — never
+// decrypted, pdf-lib reading ciphertext, "unusual or corrupted structure"
+// (EXTRACT-85E1, a homeschool math worksheet; the cause not yet confirmed).
 function _looksEncrypted(bytes) {
-  const dec  = new TextDecoder('latin1');
+  const dec = new TextDecoder('latin1');
   const tail = dec.decode(bytes.subarray(Math.max(0, bytes.length - 65536)));
   if (tail.includes('/Encrypt')) return true;
   if (bytes.length > 65536) {
-    const head = dec.decode(bytes.subarray(0, Math.min(1024, bytes.length)));
+    const head = dec.decode(bytes.subarray(0, 65536));
     if (head.includes('/Encrypt')) return true;
   }
   return false;
