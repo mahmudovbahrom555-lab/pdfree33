@@ -120,9 +120,8 @@ async function restrictedWithLargeImage(userPassword = '') {
   return out;
 }
 const RESTRICTED = await restrictedWithLargeImage();
-const RESTRICTED_TOAST = /editing restrictions/i;
 
-await test('pdf2word: a restricted PDF qpdf can\'t decrypt here (large image) is converted — its text, no password message', async () => {
+await test('pdf2word: a restricted PDF with a large image is converted — its text, no password message', async () => {
   const context = await browser.newContext({ serviceWorkers: 'block' });
   const page = await context.newPage();
   try {
@@ -147,17 +146,35 @@ await test('pdf2word: a restricted PDF qpdf can\'t decrypt here (large image) is
   }
 });
 
-await test('/compress-pdf/: the same file is stopped with the restrictions message — no unopenable file, no password message', async () => {
-  const { blob, toast } = await processOn(browser, '/compress-pdf/', RESTRICTED);
-  if (blob) throw new Error(`produced a file (${blob.type}, ${blob.size} B) — it would still be encrypted`);
-  if (!RESTRICTED_TOAST.test(toast) || PASSWORD_TOAST.test(toast)) throw new Error(`expected the restrictions message, got: "${toast}"`);
-});
-
-await test('/unlock-pdf/: Unlock says why — not "wrong password"', async () => {
-  const { blob, toast } = await processOn(browser, '/unlock-pdf/', RESTRICTED);
-  if (blob) return;   // a build that could decrypt it: even better
-  if (!RESTRICTED_TOAST.test(toast) || /wrong|incorrect/i.test(toast)) throw new Error(`expected the restrictions message, got: "${toast}"`);
-});
+// qpdf with a growing heap (js/qpdfWorker.js, 2026-10-30) decrypts it: the
+// tools that write a PDF now give one — opened without a password, unencrypted.
+async function decryptedOut(toolPath) {
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    await page.addInitScript(() => { const o = URL.createObjectURL.bind(URL); URL.createObjectURL = b => { if (b instanceof Blob && /pdf/.test(b.type)) window.__out = b; return o(b); }; });
+    await page.goto(`${BASE_URL}${toolPath}`, { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', RESTRICTED);
+    await page.waitForTimeout(4000);
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__out || /password|restrictions/i.test(document.querySelector('#toast')?.innerText || ''), null, { timeout: 120000 });
+    return await page.evaluate(async () => {
+      if (!window.__out) return { toast: document.querySelector('#toast')?.innerText };
+      const bytes = new Uint8Array(await window.__out.arrayBuffer());
+      await (await import('/js/pdf2jpgUI.js')).loadPdfJs();
+      const doc = await window.pdfjsLib.getDocument({ data: bytes.slice() }).promise;
+      return { encrypted: new TextDecoder('latin1').decode(bytes).includes('/Encrypt'), text: (await (await doc.getPage(1)).getTextContent()).items.map(i => i.str).join('') };
+    });
+  } finally { await context.close(); }
+}
+for (const tool of ['/compress-pdf/', '/unlock-pdf/', '/pagenum-pdf/']) {
+  await test(`${tool}: the same file (a 4.6 MB image) comes out decrypted and readable — no restrictions message`, async () => {
+    const r = await decryptedOut(tool);
+    if (r.toast) throw new Error(`no file: "${r.toast}"`);
+    if (r.encrypted) throw new Error('the output is still encrypted');
+    if (!r.text.includes('Restricted exam sheet')) throw new Error(`text: ${r.text.slice(0, 80)}`);
+  });
+}
 await test('/pdf-to-word/: with a REAL open password and a large image, the password message — qpdf\'s failure says nothing on its own', async () => {
   const file = await restrictedWithLargeImage('user');
   const { blob, toast } = await processOn(browser, '/pdf-to-word/', file);

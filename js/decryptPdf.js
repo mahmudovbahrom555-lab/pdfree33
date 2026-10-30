@@ -23,7 +23,7 @@
 // Resolve WASM asset URLs relative to this module's location.
 // import.meta.url = https://pdfree.io/js/decryptPdf.js → paths resolve correctly
 // regardless of which HTML page (/, /de/, /fr/…) triggered the load.
-const _WORKER_URL  = new URL('./vendor/qpdf/worker.js',   import.meta.url).href;
+const _WORKER_URL  = new URL('./qpdfWorker.js', import.meta.url).href;
 const _QPDF_JS_URL = new URL('./vendor/qpdf/lib/qpdf.js', import.meta.url).href;
 const _WASM_URL    = new URL('./vendor/qpdf/lib/qpdf.wasm', import.meta.url).href;
 
@@ -134,7 +134,7 @@ export function _toByteTruncatedPassword(password) {
 async function _qpdfDecrypt(bytes, password) {
   await _init();
 
-  // qpdf-run worker transfers input bytes — make an owned copy first
+  // the qpdf worker takes the input bytes (transfer) — make an owned copy first
   // so the caller's buffer is not detached by postMessage.
   const input = new Uint8Array(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength));
   const pwArg = _toByteTruncatedPassword(password);

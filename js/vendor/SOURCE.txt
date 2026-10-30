@@ -91,60 +91,6 @@ full text in libheif-license/LICENSE-LGPL-3.0.txt).
 
 ----------------------------------------------------------------
 
-Files:       qpdf/worker.js, qpdf/lib/qpdf.js, qpdf/lib/qpdf.wasm
-Source:      qpdf-run npm package v0.2.1 — an Emscripten/WASM build of
-             qpdf. Origin tarball (qpdf-run-0.2.1.tgz) is at the repo root;
-             added in commit 7b4b09d9 ("Phase 2"). Bundled qpdf core:
-             11.7.0 — confirmed via the version string embedded directly in
-             qpdf.wasm (`grep -a -o "qpdf [0-9.]*" lib/qpdf.wasm`), not
-             assumed from the wrapper package's own version number.
-Downloaded:  See commit 7b4b09d9 (predates this SOURCE.txt file — this
-             entry backfilled 2026-09-01 during a security audit; qpdf had
-             no provenance record here before).
-Size:        ~1.8 MB (qpdf.wasm)
-
-Used by:     js/decryptPdf.js — spawns qpdf/worker.js, runs the single CLI
-             form `qpdf --decrypt --password=<pw> in.pdf out.pdf`. Two real
-             call paths: (1) js/files.js's silent owner-only decrypt
-             (empty password) on every uploaded PDF, feeding Merge/Split/
-             Compress/pdf2jpg/pdf2word/pdf2excel/pdf2ppt/pdf2md and the
-             generic worker tools; (2) the Unlock PDF tool
-             (js/processor.js's _runUnlock), passing the user-typed
-             password. No other qpdf subcommand (encrypt/linearize/etc.) is
-             ever invoked — Protect (encrypt) is a separate, pure-JS
-             RC4/AES implementation in js/pdfEncrypt.js/js/worker.js that
-             does not depend on this WASM build at runtime.
-
-Known CVEs:  CVE-2024-24246 (heap buffer overflow → crash, CVSS 5.5
-             Medium) affects qpdf up to 11.8.x, fixed in 11.9.0 — applies
-             to the bundled 11.7.0. DoS-only (no code-execution or data-
-             disclosure component per the CVE's own CVSS vector); real-
-             world exposure further bounded here by running inside an
-             isolated Worker — a crash fails one operation on one file,
-             not the page or other users' sessions. No upgrade fixes this:
-             qpdf-run@0.2.1 is the LATEST version ever published to npm
-             (checked 2026-09-01). Every alternative pre-built qpdf-WASM
-             npm package checked at the same time
-             (@neslinesli93/qpdf-wasm@0.3.0, qpdf-wasm-worker@0.1.0 → its
-             own dependency @jspawn/qpdf-wasm@0.0.2) bundles the SAME
-             11.7.0 core, not anything newer — this isn't a "hasn't been
-             checked" gap, there is currently no pre-built alternative.
-             A CVE-patched build would require compiling qpdf from source
-             to WASM directly (Emscripten toolchain, qpdf's own native
-             build dependencies) — a separate, much larger undertaking than
-             a version bump, deliberately not pursued given the low
-             real-world severity above. Re-check when/if qpdf-run (or any
-             equivalent package) publishes a build on qpdf >= 11.9.0.
-
-See LICENSE.txt in this directory for redistribution terms — two licenses
-apply: the qpdf-run wrapper itself is MIT, but the compiled qpdf code that
-makes up the bulk of qpdf.wasm is Apache License 2.0 (confirmed via the
-license text compiled directly into the binary's own `--copyright` output
-strings; qpdf offers Artistic License 2.0 as an alternative at the user's
-option, per that same embedded text).
-
-----------------------------------------------------------------
-
 Files:       pdfjs-cmaps/*.bcmap (168 files), pdfjs-cmaps/LICENSE
 Source:      pdfjs-dist npm package v3.11.174, its cmaps/ folder copied as
              is — the same pdf.js version the site loads (PDFJS_VERSION in
@@ -333,3 +279,22 @@ Size:        det 4.6 MB, rec 15.9 MB. A new model version goes in a new folder (
              the folder is the HTTP cache key, so returning visitors get the new files.
 License:     Apache License 2.0 (PaddleOCR's models; RapidOCR's conversions)
 Used by:     js/ppocrWorker.js — see its header for the measurements behind it.
+
+File:        qpdf/lib/qpdf.js, qpdf/lib/qpdf.wasm
+Source:      @neslinesli93/qpdf-wasm v0.3.0 (npm, dist/qpdf.js + dist/qpdf.wasm) —
+             https://github.com/neslinesli93/qpdf-wasm; qpdf 12.2.0 built with
+             emscripten, ALLOW_MEMORY_GROWTH=1, MODULARIZE (its build.sh).
+Downloaded:  2026-10-30 with `npm pack`. Registry integrity
+             sha512-ObyTmabopTMwN6AGwrEkmDbdmM5wnwlRdn9jnJYQ2KbBUPdPDcfNf1QkcWFOVD+qIgSqILz9nK51e22T+x+gkQ==;
+             both files byte-identical to jsDelivr's copies.
+             qpdf.js   sha384-viHHfnvZlwDzjAQCrTUX3UR1zDr3OW9ItyLOqwH2wTHYHXWK8NdKi5LFp++BT8NL
+             qpdf.wasm sha384-9ESKDLiqwqZ9ln5RdWhoE5TM/zLYG2UoW/AMa0KeND/fhDO5ZJsRH6FTJ3Dera+p
+Why:         qpdf-run 0.2.1's build (qpdf 11.7) had a fixed heap: one stream over
+             ~4.5 MB aborted it, so restricted PDFs with big scans couldn't be
+             decrypted (EXTRACT-85E1, a 60 MB homeschool worksheet). This build
+             decrypts a 60 MB linearized AES-256 restricted file in 0.7 s.
+Checked:     0 advisories for the package (OSV, 2026-10-30). Its libjpeg-turbo is
+             2.1.1; qpdf only reaches it when asked to recode images, which no
+             call here does (--decrypt, --password).
+License:     see js/vendor/LICENSE.txt
+Used by:     js/qpdfWorker.js (importScripts) ← js/decryptPdf.js.
