@@ -120,9 +120,8 @@ async function restrictedWithLargeImage(userPassword = '') {
   return out;
 }
 const RESTRICTED = await restrictedWithLargeImage();
-const RESTRICTED_TOAST = /editing restrictions/i;
 
-await test('pdf2word: a restricted PDF qpdf can\'t decrypt here (large image) is converted — its text, no password message', async () => {
+await test('pdf2word: a restricted PDF with a large image is converted — its text, no password message', async () => {
   const context = await browser.newContext({ serviceWorkers: 'block' });
   const page = await context.newPage();
   try {
@@ -147,17 +146,35 @@ await test('pdf2word: a restricted PDF qpdf can\'t decrypt here (large image) is
   }
 });
 
-await test('/compress-pdf/: the same file is stopped with the restrictions message — no unopenable file, no password message', async () => {
-  const { blob, toast } = await processOn(browser, '/compress-pdf/', RESTRICTED);
-  if (blob) throw new Error(`produced a file (${blob.type}, ${blob.size} B) — it would still be encrypted`);
-  if (!RESTRICTED_TOAST.test(toast) || PASSWORD_TOAST.test(toast)) throw new Error(`expected the restrictions message, got: "${toast}"`);
-});
-
-await test('/unlock-pdf/: Unlock says why — not "wrong password"', async () => {
-  const { blob, toast } = await processOn(browser, '/unlock-pdf/', RESTRICTED);
-  if (blob) return;   // a build that could decrypt it: even better
-  if (!RESTRICTED_TOAST.test(toast) || /wrong|incorrect/i.test(toast)) throw new Error(`expected the restrictions message, got: "${toast}"`);
-});
+// qpdf with a growing heap (js/qpdfWorker.js, 2026-10-30) decrypts it: the
+// tools that write a PDF now give one — opened without a password, unencrypted.
+async function decryptedOut(toolPath) {
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    await page.addInitScript(() => { const o = URL.createObjectURL.bind(URL); URL.createObjectURL = b => { if (b instanceof Blob && /pdf/.test(b.type)) window.__out = b; return o(b); }; });
+    await page.goto(`${BASE_URL}${toolPath}`, { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', RESTRICTED);
+    await page.waitForTimeout(4000);
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__out || /password|restrictions/i.test(document.querySelector('#toast')?.innerText || ''), null, { timeout: 120000 });
+    return await page.evaluate(async () => {
+      if (!window.__out) return { toast: document.querySelector('#toast')?.innerText };
+      const bytes = new Uint8Array(await window.__out.arrayBuffer());
+      await (await import('/js/pdf2jpgUI.js')).loadPdfJs();
+      const doc = await window.pdfjsLib.getDocument({ data: bytes.slice() }).promise;
+      return { encrypted: new TextDecoder('latin1').decode(bytes).includes('/Encrypt'), text: (await (await doc.getPage(1)).getTextContent()).items.map(i => i.str).join('') };
+    });
+  } finally { await context.close(); }
+}
+for (const tool of ['/compress-pdf/', '/unlock-pdf/', '/pagenum-pdf/']) {
+  await test(`${tool}: the same file (a 4.6 MB image) comes out decrypted and readable — no restrictions message`, async () => {
+    const r = await decryptedOut(tool);
+    if (r.toast) throw new Error(`no file: "${r.toast}"`);
+    if (r.encrypted) throw new Error('the output is still encrypted');
+    if (!r.text.includes('Restricted exam sheet')) throw new Error(`text: ${r.text.slice(0, 80)}`);
+  });
+}
 await test('/pdf-to-word/: with a REAL open password and a large image, the password message — qpdf\'s failure says nothing on its own', async () => {
   const file = await restrictedWithLargeImage('user');
   const { blob, toast } = await processOn(browser, '/pdf-to-word/', file);
@@ -166,6 +183,69 @@ await test('/pdf-to-word/: with a REAL open password and a large image, the pass
   if (!PASSWORD_TOAST.test(toast)) throw new Error(`expected the password message, got: "${toast}"`);
 });
 fs.rmSync(RESTRICTED, { force: true }); fs.rmSync(RESTRICTED.replace('-aes.pdf', '.pdf'), { force: true });
+
+// A linearized ("fast web view") restricted PDF names /Encrypt only near its
+// start (EXTRACT-85E1, a homeschool math worksheet, 2026-10-30): the preflight
+// read only the end and never flagged it. Extract and Split must give pages
+// that READ — not merely a file.
+async function linearizedRestricted() {
+  const doc = await PDFDocument.create();
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  for (let i = 1; i <= 3; i++) {
+    const page = doc.addPage([595, 842]);
+    page.drawText(`Math worksheet page ${i}: 3 + 4 = ___`, { x: 72, y: 780, size: 14, font });
+    const side = 200;    // noise, so the file passes 64 KB and the tail never holds /Encrypt
+    const img = doc.context.stream(crypto.randomBytes(side * side * 3), { Type: 'XObject', Subtype: 'Image', Width: side, Height: side, ColorSpace: 'DeviceRGB', BitsPerComponent: 8 });
+    page.node.setXObject(PDFName.of('Im1'), doc.context.register(img));
+  }
+  const plain = path.join(os.tmpdir(), `pdfree-linear-${process.pid}.pdf`), out = plain.replace('.pdf', '-aes256.pdf');
+  fs.writeFileSync(plain, await doc.save({ useObjectStreams: false }));
+  execFileSync('qpdf', ['--linearize', '--encrypt', '', 'owner-pw', '256', '--modify=none', '--extract=n', '--', plain, out]);
+  fs.rmSync(plain, { force: true });
+  const bytes = fs.readFileSync(out), latin = bytes.toString('latin1');
+  if (latin.lastIndexOf('/Encrypt') > 65536 || bytes.length - latin.lastIndexOf('/Encrypt') <= 65536) throw new Error('fixture: /Encrypt must sit near the start only');
+  return out;
+}
+const LINEAR = await linearizedRestricted();
+async function pagesOf(browser, toolPath, prepare) {
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    await page.addInitScript(() => { const o = URL.createObjectURL.bind(URL); URL.createObjectURL = b => { if (b instanceof Blob && /pdf|zip/.test(b.type)) window.__out = b; return o(b); }; });
+    await page.goto(`${BASE_URL}${toolPath}`, { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', LINEAR);
+    await page.waitForTimeout(3000);
+    const meta = await page.evaluate(async () => (await import('/js/files.js')).selectedFiles[0]?._pdfMeta);
+    if (prepare) await prepare(page);
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__out, null, { timeout: 60000 });
+    const texts = await page.evaluate(async () => {
+      await (await import('/js/pdf2jpgUI.js')).loadPdfJs();
+      const read = async data => { const d = await window.pdfjsLib.getDocument({ data }).promise; const t = []; for (let i = 1; i <= d.numPages; i++) t.push((await (await d.getPage(i)).getTextContent()).items.map(x => x.str).join('')); return t; };
+      const bytes = new Uint8Array(await window.__out.arrayBuffer());
+      if (window.__out.type.includes('pdf')) return read(bytes);
+      await (await import('/js/lazyLibs.js')).loadJSZip();
+      const zip = await window.JSZip.loadAsync(bytes), out = [];
+      for (const n of Object.keys(zip.files).sort()) out.push(...await read(await zip.file(n).async('uint8array')));
+      return out;
+    });
+    return { meta, texts };
+  } finally { await context.close(); }
+}
+await test('a linearized restricted PDF: its encryption seen on adding (its /Encrypt only near the start) — and quietly removed', async () => {
+  const { meta } = await pagesOf(browser, '/split-pdf/');
+  // seen: AES-256 and its restrictions read; removed: the lock flags cleared again
+  if (meta?.aesVersion !== 'AES-256' || meta.isEncrypted) throw new Error(`preflight: ${JSON.stringify(meta)}`);
+});
+await test('/extract-pdf/: pages 1–2 of it come out readable — not EXTRACT-85E1', async () => {
+  const { texts } = await pagesOf(browser, '/extract-pdf/', async page => { await page.fill('#extRangeInput', '1-2'); await page.click('#extRangeApply'); });
+  if (texts.length !== 2 || !/page 1/.test(texts[0]) || !/page 2/.test(texts[1])) throw new Error(JSON.stringify(texts));
+});
+await test('/split-pdf/: every page readable', async () => {
+  const { texts } = await pagesOf(browser, '/split-pdf/');
+  if (texts.length !== 3 || texts.some((t, i) => !t.includes(`page ${i + 1}`))) throw new Error(JSON.stringify(texts));
+});
+fs.rmSync(LINEAR, { force: true });
 
 await browser.close();
 console.log(`\n${'─'.repeat(40)}`);

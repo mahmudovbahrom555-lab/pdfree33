@@ -6266,9 +6266,19 @@ function _handleError(tool, message, errorType = null) {
   // real failure distribution entirely). Kept OUT of resolvedType itself —
   // _errorId()/the user-facing toast stay on the stable 'unknown' bucket,
   // so this doesn't fragment the Telegram-report correlation ID.
+  // A file called restricted or damaged: what the library said and what the
+  // preflight saw of its encryption go along — EXTRACT-85E1 (a homeschool
+  // math worksheet, 2026-10-30) arrived as a bare "pdf_restricted", nothing to
+  // tell an encrypted file pdf-lib couldn't read from a malformed one.
+  const enc = () => {
+    const f = selectedFiles.find(x => x._pdfMeta) ?? selectedFiles[0], m = f?._pdfMeta ?? {};
+    return `[enc ${m.isEncrypted ? 1 : 0}${m.mayBeEncrypted ? 1 : 0}${f?._decryptedBuffer ? 1 : 0}${f?._decryptFailed ? 1 : 0}]`;
+  };
   trackToolError(tool, resolvedType === 'unknown' && message
     ? `unknown: ${message.slice(0, 60)}`
-    : resolvedType);
+    : (resolvedType === 'pdf_restricted' || resolvedType === 'pdf_damaged') && message
+      ? `${resolvedType}: ${enc()} ${message.slice(0, 60)}`
+      : resolvedType);
   // Mirrors the 'pdfree:success' dispatch below — found missing while
   // adding embed-SDK contract tests: embed/sdk.js's public onError callback
   // and js/embedBridge.js's listener both already existed and expected this
