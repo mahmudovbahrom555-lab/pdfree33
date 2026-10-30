@@ -25,9 +25,14 @@
 //  in — as RapidOCR's word boxes do — so a searchable PDF selects the right
 //  characters and PDF→Word keeps them in place.
 //
-//  In:  { type: 'init', base }                   → { type: 'ready' } | { type: 'error' }
-//       { type: 'page', image: ImageData }       → { type: 'done', lines } | { type: 'error' }
-//       lines: [{ text, score, quad: [[x,y]×4], chars: [{ text, quad }] }]
+//  In:  { type: 'init', base, detect }            → { type: 'ready' } | { type: 'error' }
+//         detect false: a recognition-only helper (no detection model)
+//       { type: 'detect', image: ImageData }      → { type: 'done', quads, crops, scale }
+//         quads on the page as given; crops: [{ w, h, d, vertical }] cut out upright
+//       { type: 'recognize', batches: [[crop]] }  → { type: 'done', results: [[{ text, score, spans }]] }
+//         every batch run as it is — js/ppocrEngine.js makes the batches (sorted
+//         by width, 6 a batch, as RapidOCR does) and spreads them over workers,
+//         so the text doesn't depend on how many workers there are
 //  Download progress: { type: 'progress', loaded, total }.
 // ============================================================
 
@@ -35,7 +40,7 @@ import * as ort from './vendor/onnxruntime/ort.wasm.min.mjs';
 
 const MAX_SIDE = 4000, MIN_SIDE = 30, DET_LIMIT = 736;
 const THRESH = 0.3, BOX_THRESH = 0.5, UNCLIP = 1.6, MAX_CAND = 1000, MIN_SIZE = 3;
-const REC_H = 48, REC_W = 320, REC_BATCH = 6, TEXT_SCORE = 0.5;
+const REC_H = 48, REC_W = 320;
 const MODELS = 'vendor/ppocr/v5/';          // a new model version gets a new folder (HTTP cache key)
 const STALL_MS = 30000, ATTEMPTS = 3;
 
@@ -67,19 +72,19 @@ async function fetchWatched(url, onBytes) {
   throw lastErr;
 }
 
-async function init(base) {
+async function init(base, withDetect) {
   ort.env.wasm.wasmPaths = base + 'vendor/onnxruntime/';
   ort.env.wasm.numThreads = 1;                 // threads need cross-origin isolation, which the site doesn't have
-  const total = 4819576 + 16631306;            // det + rec bytes, for the progress bar
+  const total = (withDetect ? 4819576 : 0) + 16631306;   // model bytes, for the progress bar
   let loaded = 0;
   const onBytes = n => { loaded += n; self.postMessage({ type: 'progress', loaded, total }); };
+  const opt = { executionProviders: ['wasm'], graphOptimizationLevel: 'all' };
   const [d, r, c] = await Promise.all([
-    fetchWatched(base + MODELS + 'det.onnx', onBytes),
+    withDetect ? fetchWatched(base + MODELS + 'det.onnx', onBytes) : null,
     fetchWatched(base + MODELS + 'rec.onnx', onBytes),
     fetch(base + MODELS + 'chars.json').then(x => x.json()),
   ]);
-  const opt = { executionProviders: ['wasm'], graphOptimizationLevel: 'all' };
-  [det, rec] = await Promise.all([ort.InferenceSession.create(d, opt), ort.InferenceSession.create(r, opt)]);
+  [det, rec] = await Promise.all([d && ort.InferenceSession.create(d, opt), ort.InferenceSession.create(r, opt)]);
   chars = c;
 }
 
@@ -233,77 +238,57 @@ function crop(img, q) {
   return { w: ch, h: cw, d: r, vertical: true };
 }
 
-// CTC: per line, the characters with the frame span each was read in
-async function recognize(crops) {
-  const order = crops.map((c, i) => [c.w / c.h, i]).sort((a, b) => a[0] - b[0]).map(x => x[1]);
-  const res = new Array(crops.length);
-  for (let s = 0; s < order.length; s += REC_BATCH) {
-    const ids = order.slice(s, s + REC_BATCH);
-    const maxR = Math.max(REC_W / REC_H, ...ids.map(i => crops[i].w / crops[i].h));
-    const W = Math.trunc(REC_H * maxR), t = new Float32Array(ids.length * 3 * REC_H * W);
-    const widths = ids.map((i, k) => {
-      const c = crops[i], rw = Math.max(1, Math.min(W, Math.ceil(REC_H * c.w / c.h)));
-      toTensor(resizeBilinear(c, rw, REC_H), ids.length, W, t, k);
-      return rw;
-    });
-    const out = await rec.run({ x: new ort.Tensor('float32', t, [ids.length, 3, REC_H, W]) });
-    const o = out[Object.keys(out)[0]], [, T, C] = o.dims, p = o.data;
-    ids.forEach((i, k) => {
-      const found = []; let prev = -1, sum = 0;
-      for (let tt = 0; tt < T; tt++) {
-        let best = 0, bv = -Infinity; const off = (k * T + tt) * C;
-        for (let c = 0; c < C; c++) if (p[off + c] > bv) { bv = p[off + c]; best = c; }
-        if (best !== 0 && best === prev && found.length) found[found.length - 1].t1 = tt;
-        else if (best !== 0) { found.push({ ch: chars[best], t0: tt, t1: tt }); sum += bv; }
-        prev = best;
-      }
-      // frames → x on the crop (frames span the padded width W; the crop filled widths[k] of it)
-      const f = (W / T) * (crops[i].w / widths[k]);
-      res[i] = { text: found.map(c => c.ch).join(''), score: found.length ? sum / found.length : 0, spans: found.map(c => ({ ch: c.ch, x0: c.t0 * f, x1: (c.t1 + 1) * f })) };
-    });
-  }
-  return res;
+// CTC on one batch: per line, the characters with the frame span each was read in
+async function recognizeBatch(batch) {
+  const maxR = Math.max(REC_W / REC_H, ...batch.map(c => c.w / c.h));
+  const W = Math.trunc(REC_H * maxR), t = new Float32Array(batch.length * 3 * REC_H * W);
+  const widths = batch.map((c, k) => {
+    const rw = Math.max(1, Math.min(W, Math.ceil(REC_H * c.w / c.h)));
+    toTensor(resizeBilinear(c, rw, REC_H), batch.length, W, t, k);
+    return rw;
+  });
+  const out = await rec.run({ x: new ort.Tensor('float32', t, [batch.length, 3, REC_H, W]) });
+  const o = out[Object.keys(out)[0]], [, T, C] = o.dims, p = o.data;
+  return batch.map((c, k) => {
+    const found = []; let prev = -1, sum = 0;
+    for (let tt = 0; tt < T; tt++) {
+      let best = 0, bv = -Infinity; const off = (k * T + tt) * C;
+      for (let x = 0; x < C; x++) if (p[off + x] > bv) { bv = p[off + x]; best = x; }
+      if (best !== 0 && best === prev && found.length) found[found.length - 1].t1 = tt;
+      else if (best !== 0) { found.push({ ch: chars[best], t0: tt, t1: tt }); sum += bv; }
+      prev = best;
+    }
+    // frames → x on the crop (frames span the padded width W; the crop filled widths[k] of it)
+    const f = (W / T) * (c.w / widths[k]);
+    return { text: found.map(x => x.ch).join(''), score: found.length ? sum / found.length : 0, spans: found.map(x => ({ ch: x.ch, x0: x.t0 * f, x1: (x.t1 + 1) * f })) };
+  });
 }
 
-// a span along the cut-out line → a quad on the page
-function spanQuad(q, crop, x0, x1) {
-  const at = (u, v) => [q[0][0] + u * (q[1][0] - q[0][0]) + v * (q[3][0] - q[0][0]), q[0][1] + u * (q[1][1] - q[0][1]) + v * (q[3][1] - q[0][1])];
-  if (!crop.vertical) {
-    const a = Math.min(1, x0 / crop.w), b = Math.min(1, x1 / crop.w);
-    return [at(a, 0), at(b, 0), at(b, 1), at(a, 1)];
-  }
-  // turned a quarter: the cut-out's x runs down the original box
-  const a = Math.min(1, x0 / crop.w), b = Math.min(1, x1 / crop.w);
-  return [at(0, a), at(1, a), at(1, b), at(0, b)];
-}
-
-async function ocrPage(img) {
+// the page's text lines: quads (on the page as given) and their cut-outs
+async function detectPage(img) {
   let page = img;
   if (Math.max(img.w, img.h) > MAX_SIDE) {
     const r = MAX_SIDE / Math.max(img.w, img.h);
     page = resizeBilinear(img, r32(Math.trunc(img.w * r)), r32(Math.trunc(img.h * r)));
   }
-  if (Math.min(page.w, page.h) < MIN_SIDE) return [];
-  const sx = img.w / page.w, sy = img.h / page.h;            // back to the caller's pixels
+  if (Math.min(page.w, page.h) < MIN_SIDE) return { quads: [], crops: [], scale: [1, 1] };
   const boxes = await detect(page);
-  const crops = boxes.map(b => crop(page, b));
-  const recs = await recognize(crops);
-  const lines = [];
-  boxes.forEach((q, i) => {
-    const r = recs[i];
-    if (r.score < TEXT_SCORE || !r.text) return;
-    const scale = quad => quad.map(([x, y]) => [x * sx, y * sy]);
-    lines.push({ text: r.text, score: r.score, quad: scale(q), chars: r.spans.map(s => ({ text: s.ch, quad: scale(spanQuad(q, crops[i], s.x0, s.x1)) })) });
-  });
-  return lines;
+  return { quads: boxes, crops: boxes.map(b => crop(page, b)), scale: [img.w / page.w, img.h / page.h] };
 }
 
 self.onmessage = async (e) => {
   const m = e.data;
   try {
-    if (m.type === 'init') { await init(m.base); self.postMessage({ type: 'ready' }); return; }
-    const { width: w, height: h, data: d } = m.image;
-    self.postMessage({ type: 'done', lines: await ocrPage({ w, h, d }) });
+    if (m.type === 'init') { await init(m.base, m.detect !== false); self.postMessage({ type: 'ready' }); return; }
+    if (m.type === 'detect') {
+      const { width: w, height: h, data: d } = m.image;
+      const res = await detectPage({ w, h, d });
+      self.postMessage({ type: 'done', ...res }, res.crops.map(c => c.d.buffer));
+      return;
+    }
+    const results = [];
+    for (const batch of m.batches) results.push(await recognizeBatch(batch));
+    self.postMessage({ type: 'done', results });
   } catch (err) {
     self.postMessage({ type: 'error', message: String(err && err.message || err) });
   }

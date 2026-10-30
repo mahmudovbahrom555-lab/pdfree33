@@ -935,3 +935,36 @@ more characters right and less junk.
   ~1,000 more Han). Owner decides.
 - **Left.** Multi-column Japanese newsletters and flyers stay junk with any
   setting tried — a layout problem, not a pixel one.
+
+## C22 — Tesseract reads Chinese and Japanese scans poorly, whatever the settings
+
+Chinese stage, 2026-10-29/30. After C20 and C21, Tesseract still lost about one
+Han character in five on clean Chinese scans and half of Japanese; variants of
+its settings (page segmentation, confidence, render size, dot leaders, adaptive
+contrast) were measured and closed. A ready model does better: PP-OCRv5 mobile
+(PaddleOCR, Apache-2.0), one model for simplified, traditional and Japanese.
+
+- **Measured offline first** (RapidOCR, same benchmark): independent pool
+  0.81 → 0.95 clean, 0.78 → 0.95 rough; Japanese (dev) 0.49 → 0.98; script
+  right 20/20. Its direction model (cls) turned upright lines over and lost
+  them (pool 0.954 with it, 0.995 without) — left out.
+- **In a browser** (own JS port, onnxruntime-web, single thread): the same
+  text as Python's within 0.003 per document; 10–13 s a page; but ~1–1.4 GB on
+  an A4 page — too much for phones. 93 % of the people in China adding a file
+  to PDF→Word / PowerPoint / OCR / Excel are on a desktop (Analytics, 10-15..29).
+- **Fix.** `recognizePage` (js/ocrEngine.js) reads a Chinese/Japanese page with
+  PP-OCRv5 (js/ppocrEngine.js, js/ppocrWorker.js) on desktops with ≥ 8 GB (the
+  js/fileLimits.js gate); recognition batches dealt over two workers on 4+ cores
+  (same batches → same text). Phones, other scripts, other browsers: Tesseract,
+  unchanged; any PP-OCR failure falls back to it. Models served from pdfree.io.
+- **Result** through the site, as a Chinese user of PDF→Word, vs prod: pool
+  0.81 → 0.91 clean, 0.78 → 0.89 rough (bigrams 0.74 → 0.86 / 0.70 → 0.82,
+  junk down, script 17/20 as before); dev 0.78 → 0.95, rough 0.75 → 0.92,
+  tilted 0.68 → 0.89, Japanese 0.49 → 0.60. Non-CJK scans: text identical to
+  prod. Time per document 26 → 38 s (1.50×, the bar set beforehand — met by a
+  hair; detection on a smaller image would have been faster but cost ~1 point,
+  rejected).
+- **Left.** Documents whose language Tesseract's detection isn't sure of stay
+  pictures (4 of 20 pool docs, a 4,970-character Japanese one in dev) — the gap
+  to the offline 0.95 and most of Japanese's. Next: PP-OCR as the CJK probe
+  on desktops.
