@@ -245,6 +245,46 @@ await test('/split-pdf/: every page readable', async () => {
   const { texts } = await pagesOf(browser, '/split-pdf/');
   if (texts.length !== 3 || texts.some((t, i) => !t.includes(`page ${i + 1}`))) throw new Error(JSON.stringify(texts));
 });
+// The same, damaged (bytes inserted after the header shift every offset): qpdf
+// can't decrypt it, pdf.js opens it without a password. Nine tools that write a
+// PDF used to hand back a locked or unopenable file as a success (2026-10-30);
+// they stop with the restrictions message now — and the readers still work.
+const DAMAGED = LINEAR.replace('.pdf', '-damaged.pdf');
+{
+  const b = fs.readFileSync(LINEAR), nl = b.indexOf(10, b.indexOf(10) + 1) + 1;
+  fs.writeFileSync(DAMAGED, Buffer.concat([b.subarray(0, nl), Buffer.from('%' + 'p'.repeat(1500) + '\n'), b.subarray(nl)]));
+}
+const WRITERS = [
+  ['/compress-pdf/'], ['/compress-pdf-for-email/'], ['/pagenum-pdf/'], ['/metadata-pdf/'], ['/flatten-pdf/'], ['/organize-pdf/'],
+  ['/watermark-pdf/', async page => page.fill('#wmText', 'DRAFT')],
+  ['/rotate-pdf/', async page => page.click('#rotRight')],
+];
+for (const [tool, prepare] of WRITERS) {
+  await test(`${tool}: a damaged restricted PDF — no "success" with a locked file; the restrictions message instead`, async () => {
+    const context = await browser.newContext({ serviceWorkers: 'block' });
+    const page = await context.newPage();
+    try {
+      await page.addInitScript(() => { const o = URL.createObjectURL.bind(URL); URL.createObjectURL = b => { if (b instanceof Blob && /pdf/.test(b.type)) window.__out = b; return o(b); }; });
+      await page.goto(`${BASE_URL}${tool}`, { waitUntil: 'load' });
+      await page.setInputFiles('#fileInput', DAMAGED);
+      await page.waitForTimeout(4000);
+      if (prepare) await prepare(page);
+      await page.click('#mergeBtn');
+      await page.waitForFunction(() => window.__out || /restrictions/i.test(document.querySelector('#toast')?.innerText || ''), null, { timeout: 60000 });
+      const r = await page.evaluate(() => ({ out: !!window.__out, card: getComputedStyle(document.querySelector('#successCard')).display !== 'none', toast: document.querySelector('#toast')?.innerText || '' }));
+      if (r.card) throw new Error('the success card was shown');
+      if (r.out) throw new Error('a file was handed out');
+      if (!/restrictions/i.test(r.toast) || PASSWORD_TOAST.test(r.toast)) throw new Error(`toast: "${r.toast}"`);
+    } finally { await context.close(); }
+  });
+}
+for (const tool of ['/pdf2jpg/', '/clean-scan/']) {
+  await test(`${tool}: the same damaged restricted PDF still converts (read through pdf.js)`, async () => {
+    const { blob, toast } = await processOn(browser, tool, DAMAGED);
+    if (!blob) throw new Error(`no output; toast: "${toast}"`);
+  });
+}
+fs.rmSync(DAMAGED, { force: true });
 fs.rmSync(LINEAR, { force: true });
 
 await browser.close();

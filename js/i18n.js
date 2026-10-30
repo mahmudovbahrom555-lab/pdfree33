@@ -210,7 +210,7 @@ export const EN = {
   file_unreadable_badge: "can't be read",
   file_choose_again: "Choose it again",
   err_file_unreadable_marked: "\"{name}\" can't be read — choose it again in the list (the other files stay).",
-  err_encrypted_too_large: "🔒 This PDF has editing restrictions, and a very large image in it keeps your browser from removing them. PDF→Word, PDF→Excel, PDF→PowerPoint and PDF→JPG still work with it.",
+  err_restrictions_unremovable: "🔒 This PDF has editing restrictions that couldn't be removed here — the file may be damaged. PDF→Word, PDF→Excel, PDF→PowerPoint, PDF→JPG and PDF→Markdown still work with it; for this tool, re-save it first (open it in your browser → Print → Save as PDF) and try again.",
   err_worker_load: "The tool couldn't start \u2014 your connection dropped before its code finished loading. Check your internet connection and press the button again; your files are still here.",
   err_unlock_wrong_password: 'The password is incorrect. Please try again.',
   err_docx_legacy_or_encrypted: "This file looks password-protected, or it's in the old .doc format rather than .docx. Word→PDF needs an unencrypted, modern .docx file — in Word, remove the password (File → Info → Protect Document) or use File → Save As → Word Document (.docx), then try again.",

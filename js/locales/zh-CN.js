@@ -229,7 +229,7 @@ window.PDFREE_LOCALE = {
   err_enc_unavailable:  '加密库加载失败。请刷新页面后重试。',
   err_enc_failed:       '加密失败。此 PDF 可能是不受支持的格式。',
   err_encrypted_pdf:    '此 PDF 结构异常或已损坏（受密码保护的文件也可能出现此情况）。请尝试用其他 PDF 应用重新保存，或移除密码后再试。',
-  err_encrypted_too_large: "🔒 此 PDF 设有编辑限制，其中一张非常大的图片使浏览器无法解除限制。PDF 转 Word、Excel、PowerPoint 和 JPG 仍可正常使用。",
+  err_restrictions_unremovable: "🔒 此 PDF 设有编辑限制，在这里无法解除——文件可能已损坏。PDF 转 Word、Excel、PowerPoint、JPG 和 Markdown 仍可正常使用；使用此工具前，请先重新保存（在浏览器中打开 → 打印 → 另存为 PDF），然后再试一次。",
   err_out_of_memory:    '处理此文件时设备内存不足 — 这是真实的硬件限制，并非程序错误。请尝试缩小页面范围、关闭其他浏览器标签页，或（多文件输出时）改用单一合并文件而非分开输出。感谢您使用 PDFree — 很抱歉这次没能顺利处理。',
   err_file_unreadable: "无法读取“{name}”。选择该文件后，它已被更改或无法访问：在其他应用中重新保存、被移动或删除，或者是不在本设备上的云端文件（OneDrive、iCloud、Google 云端硬盘）。请将其从列表中移除后重新添加。其他文件不受影响。",
   err_file_unreadable_any: "无法读取其中一个文件。选择后它已被更改或无法访问：重新保存、被移动或删除，或者是不在本设备上的云端文件。请将文件从列表中移除后重新添加。",

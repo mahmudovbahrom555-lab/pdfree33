@@ -4316,7 +4316,7 @@ async function _runUnlock(filesSnapshot, { password } = {}) {
   } catch (err) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
     // out of memory (decryptPdf.js) — not a wrong password
-    if (err.message === 'QPDF_OUT_OF_MEMORY') { _handleError('unlock', t('err_encrypted_too_large'), 'qpdf_out_of_memory'); return; }
+    if (err.message === 'QPDF_OUT_OF_MEMORY') { _handleError('unlock', t('err_restrictions_unremovable'), 'qpdf_out_of_memory'); return; }
     _handleError('unlock', err.message); return;
   }
 

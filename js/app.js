@@ -17,6 +17,7 @@ import { wireShareButton, resetShareButton } from './shareButton.js';
 // If you see an old version here after deploying, clear SW cache:
 //   DevTools → Application → Service Workers → Unregister → Ctrl+F5
 console.info(`[PDFree] v${APP_VERSION} loaded — rotate implemented: ${TOOLS.rotate?.implemented}`);
+import { looksEncrypted } from './decryptPdf.js';
 import { showHomePage, showToolPage,
          renderToolHeader, setButtonReady,
          setButtonDisabled, hideCancelBtn,
@@ -347,6 +348,27 @@ function resetState() {
 
 // ── Success handler ───────────────────────────────────────────
 
+// A PDF handed back still encrypted is no success, unless it was asked for
+// (Protect). A restricted file qpdf couldn't decrypt came out of nine tools
+// locked or unopenable, shown as done (2026-10-30). Head and tail are read,
+// as decryptPdf.js's check reads them.
+async function _successUnlessLocked(detail) {
+  const { tool, blob } = detail;
+  if (tool !== 'protect' && /pdf/.test(blob?.type || '')) {
+    const part = async (a, b) => new Uint8Array(await blob.slice(a, b).arrayBuffer());
+    const head = await part(0, 65536), tail = blob.size > 65536 ? await part(blob.size - 65536, blob.size) : new Uint8Array(0);
+    const both = new Uint8Array(head.length + tail.length);
+    both.set(head); both.set(tail, head.length);
+    if (looksEncrypted(both)) {
+      trackToolError(tool, 'output_still_encrypted');
+      setButtonReady(getLocalizedTool(TOOLS[tool]).btn);
+      showToast(t('err_restrictions_unremovable'), 12000);
+      return;
+    }
+  }
+  _handleSuccess(detail);
+}
+
 function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCompressSummary, pageCounts, confidence, atlasEri, requestedCount, successCount, mode }) {
   _freeResultUrl();
   _resultUrl      = URL.createObjectURL(blob);
@@ -664,7 +686,7 @@ function _onMergeBtnClick() {
       // encrypted (Compress, Watermark, OCR's searchable PDF: unopenable) or
       // fail (Rotate, Split).
       if (!_READS_RESTRICTED.has(currentTool) && selectedFiles.some(f => f._decryptFailed && !f._decryptedBuffer)) {
-        showToast(t('err_encrypted_too_large'), 10000);
+        showToast(t('err_restrictions_unremovable'), 10000);
         return;
       }
     }
@@ -857,7 +879,7 @@ function initEvents() {
   document.addEventListener('pdfree:wm-remove-changed', () => renderList(true));
   document.addEventListener('pdfree:merge-order-changed', () => renderList(true));
 
-  document.addEventListener('pdfree:success', e => _handleSuccess(e.detail));
+  document.addEventListener('pdfree:success', e => _successUnlessLocked(e.detail));
 
   // Cross-sell handoff: when user clicks a link with data-handoff and a result
   // PDF is still in memory, save it to IndexedDB before navigating so the
@@ -1648,7 +1670,10 @@ function initSearch() {
 }
 
 // Tools that read a restricted PDF qpdf couldn't decrypt through pdf.js alone (see the guard in _onMergeBtnClick).
-const _READS_RESTRICTED = new Set(['pdf2word', 'pdf2excel', 'pdf2ppt', 'pdf2jpg']);
+// Tools that only read a PDF through pdf.js (which decrypts by itself): they
+// work on a restricted file qpdf couldn't decrypt — checked on a damaged one,
+// 2026-10-30, the last four added then.
+const _READS_RESTRICTED = new Set(['pdf2word', 'pdf2excel', 'pdf2ppt', 'pdf2jpg', 'pdf2md', 'cleanScan', 'mangaSplit', 'ereader']);
 
 // ── Initial routing ──────────────────────────────────────────
 

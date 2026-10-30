@@ -286,6 +286,12 @@ function _afterAdd(added) {
             // is no password to ask for (a damaged linearized one — only now
             // seen as encrypted, 2026-10-30 — would have been told so).
             f._needsPassword = true;
+          } else {
+            // Encrypted, no password needed, yet qpdf couldn't decrypt it (a
+            // damaged file): tools that write a PDF made one still locked or
+            // unopenable and called it a success (9 of them, 2026-10-30) —
+            // they stop now (app.js); the ones reading through pdf.js go on.
+            f._decryptFailed = true;
           }
         } catch (err) {
           // qpdf out of memory (a stream over ~4.5 MB): no verdict on the
