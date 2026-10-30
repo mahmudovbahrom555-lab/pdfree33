@@ -202,6 +202,14 @@ jobs:
         # /Encrypt forms; see tests/e2e/password-guard.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:password-guard
 
+      - name: E2E — Unlock with Cyrillic, Chinese and Japanese passwords
+        # Each writer stores a non-Latin password differently (UTF-8 for
+        # AES-256, PDFDoc, our Protect's truncated bytes, LibreOffice's "?",
+        # GBK/Shift-JIS/CP1251); Unlock took one form, so every such password
+        # was "incorrect". 24 fixtures + a Protect → Unlock round trip; see
+        # tests/e2e/unlock-unicode.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:unlock-unicode
+
       - name: E2E — selected files that change or disappear — named, or nothing run
         # Chrome refuses to read a selected file that changed on disk (saved
         # again, moved, cloud file not on the device); Merge showed its raw
