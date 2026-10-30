@@ -1,0 +1,98 @@
+[
+ {
+  "file": "qpdf-r6-ru.pdf",
+  "password": "пароль123"
+ },
+ {
+  "file": "qpdf-r4-ru.pdf",
+  "password": "пароль123"
+ },
+ {
+  "file": "codepage-r4-ru.pdf",
+  "password": "пароль123"
+ },
+ {
+  "file": "codepage-r2-ru.pdf",
+  "password": "пароль123"
+ },
+ {
+  "file": "libreoffice-ru.pdf",
+  "password": "пароль123"
+ },
+ {
+  "file": "qpdf-r6-zh.pdf",
+  "password": "密码测试"
+ },
+ {
+  "file": "qpdf-r4-zh.pdf",
+  "password": "密码测试"
+ },
+ {
+  "file": "codepage-r4-zh.pdf",
+  "password": "密码测试"
+ },
+ {
+  "file": "codepage-r2-zh.pdf",
+  "password": "密码测试"
+ },
+ {
+  "file": "libreoffice-zh.pdf",
+  "password": "密码测试"
+ },
+ {
+  "file": "qpdf-r6-ja.pdf",
+  "password": "パスワード"
+ },
+ {
+  "file": "qpdf-r4-ja.pdf",
+  "password": "パスワード"
+ },
+ {
+  "file": "codepage-r4-ja.pdf",
+  "password": "パスワード"
+ },
+ {
+  "file": "codepage-r2-ja.pdf",
+  "password": "パスワード"
+ },
+ {
+  "file": "libreoffice-ja.pdf",
+  "password": "パスワード"
+ },
+ {
+  "file": "qpdf-r6-tr.pdf",
+  "password": "şifre-café"
+ },
+ {
+  "file": "qpdf-r4-tr.pdf",
+  "password": "şifre-café"
+ },
+ {
+  "file": "libreoffice-tr.pdf",
+  "password": "şifre-café"
+ },
+ {
+  "file": "qpdf-r6-mix.pdf",
+  "password": "Pass密码1"
+ },
+ {
+  "file": "qpdf-r4-mix.pdf",
+  "password": "Pass密码1"
+ },
+ {
+  "file": "libreoffice-mix.pdf",
+  "password": "Pass密码1"
+ },
+ {
+  "file": "qpdf-r6-ascii.pdf",
+  "password": "secret-42"
+ },
+ {
+  "file": "qpdf-r4-ascii.pdf",
+  "password": "secret-42"
+ },
+ {
+  "file": "libreoffice-ascii.pdf",
+  "password": "secret-42"
+ }
+]

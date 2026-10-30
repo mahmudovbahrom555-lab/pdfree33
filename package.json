@@ -14,6 +14,7 @@
     "test:e2e:pdf-safety-check": "node tests/e2e/pdf-safety-check.e2e.mjs",
     "test:e2e:compress": "node tests/e2e/compress.e2e.mjs",
     "test:e2e:password-guard": "node tests/e2e/password-guard.e2e.mjs",
+    "test:e2e:unlock-unicode": "node tests/e2e/unlock-unicode.e2e.mjs",
     "test:e2e:file-unreadable": "node tests/e2e/file-unreadable.e2e.mjs",
     "test:e2e:worker-offline": "node tests/e2e/worker-offline.e2e.mjs",
     "test:e2e:empty-button": "node tests/e2e/empty-button.e2e.mjs",
