@@ -27,3 +27,13 @@ Judged through the real site (local build, _robust_local as a zh-CN user on
    fetch; page works offline-after-first-use (HTTP cache) — reported.
 Ship only if 1, 3, 4 hold and 2/5/6 show no regression; anything else is reported
 to the owner as is.
+
+## Amendment 1 (2026-10-30, after the site run; speed only)
+Crit 5 failed: 1.66–1.71× (median 44 vs 26 s/doc). Profile (browser, 1 thread): > 95 % of
+the time is ONNX inference — det ~4.3 s/page at 2496×3520, rec 6–20 s/page. Two changes:
+(a) detection on a smaller copy (Det limit_type max, 2048) with recognition still on the
+    full page — accepted only if, offline (Python, no cls), DEV clean+rough recall drops
+    by ≤ 0.005 per language vs full-size detection, then POOL the same; else dropped;
+(b) recognition batches split over 2 workers on desktops with ≥ 4 cores — no change to
+    the output (same crops, same model), checked identical text on 3 pages.
+Then the site run again: crit 5 (≤ 1.5×) plus crit 1 on the pool.
