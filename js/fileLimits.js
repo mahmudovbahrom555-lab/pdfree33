@@ -56,7 +56,7 @@ const LARGE = {
 };
 const DEFAULT_MB = 200;
 
-function isLargeDevice(nav = globalThis.navigator) {
+export function isLargeDevice(nav = globalThis.navigator) {
   return (nav?.deviceMemory ?? 0) >= 8 && nav?.userAgentData?.mobile === false;
 }
 
