@@ -31,3 +31,18 @@ Reported, not gated: the probe downloads the PP-OCR models (~21 MB, once, HTTP c
 desktop for every unsure scan, non-CJK ones too; memory is the same PP-OCR path as reading
 (C22, not re-measured). Kana share is a heuristic: a Japanese table with < 10 % kana goes to
 Chinese — PP-OCR then still reads it (one model for both); listed if it happens.
+
+## Results (2026-10-30..11-03, main 0f4bbe0a-era build A vs probe build B, same harness)
+1. FAILED: 1 of 6 read (4939526 ja table: 0 → 0.978 clean / 0.871 rough). The other 5 stay pictures:
+   detection stops at the first page with any text, so PP-OCR sees only title pages
+   (12/20/7/10 sure Han, bar 30); 3852070 has 273 sure Han but 31 % of letters (bar 50 %).
+   Not retuned (same docs). A v2 (sum 2–3 sample pages) needs a fresh draw + new criteria.
+2. PASSED: 99 of 100 runs byte-identical (only 4939526 changed), dev 30 + pool 20 × clean/rough.
+3. PASSED: control set 46 docs × clean/rough (he, th, hi, el, ko, ar, Latin tables/forms/lists):
+   92/92 identical, 0 CJK in output.
+4. Not separately run; code path gated by isLargeDevice() (same gate as C22's e2e).
+5. PASSED: added time on unsure non-CJK scans median 3.9 s clean / 12.0 s rough (max 73 s; under load).
+6. PASSED: 4939526 twice → identical (4,872 kana+Han), 271 / 267 s.
+7. PASSED: unit test — a throwing probe leaves detection unsure.
+8. extra on 4939526: 0.002 clean / 0.088 rough.
+Japanese dev: 0.596 → 0.981 (clean), 0.551 → 0.894 (rough). Chinese: unchanged.
