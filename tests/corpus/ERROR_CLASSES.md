@@ -968,3 +968,20 @@ contrast) were measured and closed. A ready model does better: PP-OCRv5 mobile
   pictures (4 of 20 pool docs, a 4,970-character Japanese one in dev) — the gap
   to the offline 0.95 and most of Japanese's. Next: PP-OCR as the CJK probe
   on desktops.
+- **PP-OCR as the CJK probe** (2026-10-30..11-03). When Tesseract's detection
+  isn't sure, a desktop with ≥ 8 GB asks PP-OCR about the same sample page
+  (`_paddleProbe`, js/ocrEngine.js): 30+ sure (0.85) Han or kana that are half
+  the letters read → Chinese or Japanese (a tenth kana → Japanese; simplified
+  or traditional by C20's rule), else unchanged. Thresholds set beforehand
+  (scripts/ocr-bench/CRITERIA-probe.md on the wip/ocr-bench-tools branch).
+  Result vs the build without it, same harness: **1 of the 6 picture-only
+  documents read — the bar was 4, not met.** The Japanese table (39 % of dev
+  Japanese) 0 → 0.98 clean / 0.87 rough; Japanese dev 0.60 → 0.98 / 0.55 →
+  0.89; every other dev/pool run byte-identical (99/100); control set of 46
+  unsure scans in Hebrew, Thai, Hindi, Greek, Korean, Arabic and Latin tables:
+  92/92 identical, no CJK; +3.9 s / +12 s median on unsure non-CJK scans;
+  repeatable. Why not the other five: detection stops at the first page with
+  any text, so PP-OCR sees a title page (7–20 sure Han); one Chinese–English
+  chart has 273 sure Han but 31 % of its letters. Not retuned on these
+  documents; a v2 that sums 2–3 sample pages needs a fresh draw and its own
+  criteria.

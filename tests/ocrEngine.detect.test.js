@@ -304,6 +304,39 @@ await test('latinLanguage: each language by its own words, eng read', async () =
   assert.equal(latinLanguage('PDF 12 34 ok').lang, 'eng', 'too few words: English');
 });
 
+// PP-OCR's reading of a page Tesseract leaves unsure (desktops): `cjk` sure
+// Han characters, `kana` sure kana, `other` sure two-letter Latin words, `unsure` Han
+// below 0.85 — in Tesseract's shape, as paddleRecognize gives it
+const ppReading = ({ cjk = 0, kana = 0, other = 0, unsure = 0 }) => async () => ({ data: { words: [
+  ...Array.from({ length: cjk }, () => ({ text: '文', confidence: 95 })),
+  ...Array.from({ length: kana }, () => ({ text: 'の', confidence: 95 })),
+  ...Array.from({ length: other }, () => ({ text: 'ID', confidence: 95 })),
+  ...Array.from({ length: unsure }, () => ({ text: '文', confidence: 60 })),
+] } });
+const unsurePage = { eng: engOn(5, 150) };
+await test('PP-OCR probe: an unsure page PP-OCR reads as Japanese (a tenth kana) is read as jpn', async () => {
+  const { d } = await detect(unsurePage, { paddle: ppReading({ cjk: 120, kana: 20 }) });
+  assert.equal(d.confident, true); assert.equal(d.lang, 'jpn'); assert.equal(d.metrics.source, 'paddle-probe');
+});
+await test('PP-OCR probe: Chinese — simplified or traditional by the Tesseract rule, +eng from a fifth Latin', async () => {
+  const sim = await detect(unsurePage, { paddle: ppReading({ cjk: 100, kana: 3 }) });
+  assert.equal(sim.d.lang, 'chi_sim'); assert.ok(sim.probed.includes('chi_tra'));
+  const tra = await detect({ ...unsurePage, chi_sim: reading(60, { han: 50 }), chi_tra: { ...reading(80, { han: 50 }), words: reading(80, { han: 50 }).words.map(w => ({ ...w, confidence: 96 })) } }, { paddle: ppReading({ cjk: 100 }) });
+  assert.equal(tra.d.lang, 'chi_tra');
+  assert.equal((await detect(unsurePage, { paddle: ppReading({ cjk: 80, other: 30 }) })).d.lang, 'chi_sim+eng');
+});
+await test('PP-OCR probe: too few sure Han, or Han under half the letters, or PP-OCR failing — the page stays unsure', async () => {
+  for (const paddle of [ppReading({ cjk: 29 }), ppReading({ cjk: 10, unsure: 200 }), ppReading({ cjk: 40, other: 30 }), async () => { throw new Error('no model'); }]) {
+    const { d } = await detect(unsurePage, { paddle });
+    assert.equal(d.confident, false);
+  }
+});
+await test('PP-OCR probe: never asked when Tesseract is sure', async () => {
+  let asked = 0;
+  const { d } = await detect({ eng: reading(92, { lat: 200 }, EN) }, { paddle: async () => { asked++; return { data: { words: [] } }; } });
+  assert.equal(d.lang, 'eng'); assert.equal(asked, 0);
+});
+
 console.log(`\n${'─'.repeat(50)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed} failed`);
 if (failed > 0) process.exit(1);

@@ -10,6 +10,7 @@
 
 import { cjkJoin } from './cjkText.js';
 import { paddleWanted, paddleRecognize } from './ppocrEngine.js';
+import { isLargeDevice } from './fileLimits.js';
 
 // tesseract.js 5.1.1, its worker, its WASM core and the language models come
 // from pdfree.io (js/vendor/tesseract/, js/vendor/tessdata/), not jsdelivr:
@@ -421,6 +422,46 @@ async function _png(cvs) {
   return blob;
 }
 
+// Simplified or traditional Chinese, from chi_sim's and chi_tra's readings of
+// a page (see _judgeImage)
+function _chineseScript(s, t) {
+  const hanConf = r => {
+    const han = r.words.filter(w => /[一-鿿]/.test(w.text));
+    return han.reduce((sum, w) => sum + w.confidence, 0) / (han.length || 1);
+  };
+  return hanConf(t) >= hanConf(s) + 3 ? 'chi_tra' : 'chi_sim';
+}
+
+// A page Tesseract leaves unsure, asked of PP-OCRv5 on a desktop (`paddle`:
+// paddleRecognize): one model for Chinese and Japanese, sure of each line on
+// its own. Tables, forms and lists — a Japanese store list, 39 % of the
+// Japanese characters of the dev set — left every Tesseract model unsure, so
+// whole documents stayed pictures (6 of 50 benchmark documents, 2026-10-30).
+// Chinese or Japanese when its sure lines (0.85+) hold 30+ Han or kana and
+// those are half the letters read; Japanese with a tenth of them kana.
+// Thresholds set before measuring (scripts/ocr-bench/CRITERIA-probe.md).
+// null: not Chinese or Japanese, or PP-OCR couldn't run.
+const _HAN_OR_KANA = /[\u3041-\u3096\u30A1-\u30FA\u3400-\u9FFF\uF900-\uFAFF]/, _KANA = /[\u3041-\u3096\u30A1-\u30FA]/;
+async function _paddleProbe(cvs, paddle, newWorker) {
+  const res = await paddle(cvs).catch(() => null);
+  const words = res?.data?.words ?? [];
+  const letters = words.reduce((n, w) => n + [...w.text].filter(c => /\p{L}/u.test(c)).length, 0);
+  const sure = words.filter(w => w.confidence >= 85);
+  const cjk = sure.filter(w => _HAN_OR_KANA.test(w.text));
+  if (cjk.length < 30 || cjk.length < 0.5 * letters) return null;
+  if (cjk.filter(w => _KANA.test(w.text)).length >= 0.1 * cjk.length) return { lang: 'jpn', alternatives: ['chi_sim', 'eng'] };
+  const png = await _png(cvs);
+  const readWith = async lang => {
+    const w = await newWorker(lang);
+    try { const r = await w.recognize(png); return { words: r?.data?.words ?? [] }; }
+    finally { await w.terminate(); }
+  };
+  const lang = _chineseScript(await readWith('chi_sim'), await readWith('chi_tra'));
+  // with English from a fifth of the words Latin, as Tesseract's decision has it
+  const latin = sure.filter(w => _LATIN.test(w.text)).length;
+  return { lang: latin >= 0.2 * (latin + cjk.length) ? `${lang}+eng` : lang, alternatives: ['jpn', 'eng'] };
+}
+
 // Judges one image of a page: a quick OCR pass with `worker`, then — when that
 // looks wrong, or the site's language has its own script — each script's
 // model paired with English, on workers of their own. Returns detectOcrLanguage's
@@ -534,14 +575,7 @@ async function _judgeImage(cvs, worker, hint, newWorker, layerLang = null, prefe
   // to 2 above (2026-10-29, synthetic scans of dev documents). More confident
   // Han words alone was no test: chi_tra reads simplified pages with
   // confidence too, and all three simplified ones turned traditional.
-  if (lang === 'chi_sim') {
-    const [s, t] = [await tryModel('chi_sim'), await tryModel('chi_tra')];
-    const hanConf = r => {
-      const han = r.words.filter(w => /[一-鿿]/.test(w.text));
-      return han.reduce((sum, w) => sum + w.confidence, 0) / (han.length || 1);
-    };
-    if (hanConf(t) >= hanConf(s) + 3) lang = 'chi_tra';
-  }
+  if (lang === 'chi_sim') lang = _chineseScript(await tryModel('chi_sim'), await tryModel('chi_tra'));
   // With English, if the page has it: ara/fas/heb/kor alone read every Latin
   // word as garbage in their own script ("PDF" → "۳۵۴"); Korean and English
   // paragraphs in turn: 8–24 → 40–73 % of words right with kor+eng. Chinese
@@ -573,7 +607,9 @@ async function _judgeImage(cvs, worker, hint, newWorker, layerLang = null, prefe
 // `newWorker`: how a probe worker is made (createOcrWorker; tests pass a stub).
 // `layerLang`: a script probe the page's own (unread) text layer is written
 // in — taken at a lower bar when it comes first (see _judgeImage).
-export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = false, hint = null, newWorker = createOcrWorker, layerLang = null, prefer = [], sideLane = hasSpareCore() } = {}) {
+// `paddle`: PP-OCR for a page Tesseract leaves unsure (see _paddleProbe) —
+// desktops with 8+ GB; null: none.
+export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = false, hint = null, newWorker = createOcrWorker, layerLang = null, prefer = [], sideLane = hasSpareCore(), paddle = isLargeDevice() ? paddleRecognize : null } = {}) {
   const total = pdfDoc.numPages;
   const pages = [...new Set([1, Math.ceil(total / 2), total])];
 
@@ -612,6 +648,10 @@ export async function detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer = fals
         enh.canvas.width = 0; enh.canvas.height = 0;
         if (e?.confident) d = { ...e, metrics: { ...e.metrics, enhanced: true } };
       }
+    }
+    if (!d?.confident && paddle) {
+      const p = await _paddleProbe(cvs, paddle, newWorker);
+      if (p) d = { ...p, confident: true, metrics: { ...d?.metrics, source: 'paddle-probe', winner: p.lang, switched: !!d && d.lang !== p.lang } };
     }
     cvs.width = 0; cvs.height = 0;
     if (d) return d;
