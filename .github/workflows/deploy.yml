@@ -73,7 +73,7 @@ jobs:
         run: |
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list
           sudo apt-get update
-          sudo apt-get install -y qpdf
+          sudo apt-get install -y qpdf tesseract-ocr   # tesseract: clean-scan-dark e2e reads its output
 
       - name: Validate source pages (DOM + i18n + SW)
         run: |
@@ -440,6 +440,14 @@ jobs:
         # everything else" + "The ImageBitmap could not be allocated". See
         # tests/e2e/clean-scan-stamp.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:clean-scan-stamp
+
+      - name: E2E — Clean Scan, light text on a dark background (offered, off by default)
+        # A user's dark-blue page came back blue and 50× bigger ("text only,
+        # not the blue background"). The switch is offered, off by default;
+        # turned on, the text reads (OCR ≥ 90 %), the background is gone and
+        # the file is as small as on white paper; a photo under white text is
+        # not offered. See tests/e2e/clean-scan-dark.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:clean-scan-dark
 
       - name: E2E — PDF to Word keeps filled-in form values
         # Typed answers live in widget annotations, never in pdf.js's text

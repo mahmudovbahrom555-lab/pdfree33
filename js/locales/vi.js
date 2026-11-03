@@ -441,6 +441,8 @@ window.PDFREE_LOCALE = {
   cs_strength: 'Cường độ',
   cs_keep_color: "Giữ màu con dấu và chữ ký",
   cs_keep_color_sub: "Con dấu xanh hay chữ ký bút giữ nguyên màu; phần còn lại được làm sạch",
+  cs_dark_title: "Đổi nền tối thành trắng",
+  cs_dark_sub: "Trang này có chữ sáng trên nền tối hoặc nền màu. Bật để nền thành màu trắng và chữ thành màu tối — hãy xem bản xem trước: ảnh bên dưới chữ có thể bị mất.",
   cs_straighten: "Làm thẳng trang bị nghiêng",
   cs_straighten_sub: "Xoay thẳng lại mỗi trang được quét hoặc chụp hơi nghiêng (tối đa 5°)",
   cs_quality: 'Chất lượng',

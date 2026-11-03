@@ -442,6 +442,8 @@ window.PDFREE_LOCALE = {
   cs_strength: '강도',
   cs_keep_color: "컬러 도장과 서명 유지",
   cs_keep_color_sub: "파란 도장이나 펜 서명은 색을 유지하고 나머지는 깨끗하게 합니다",
+  cs_dark_title: "어두운 배경을 흰색으로",
+  cs_dark_sub: "이 페이지에는 어둡거나 색이 있는 배경 위에 밝은 글자가 있습니다. 켜면 배경은 흰색, 글자는 어둡게 바뀝니다. 미리보기를 확인하세요: 글자 아래의 사진이 사라질 수 있습니다.",
   cs_straighten: "기울어진 페이지 바로잡기",
   cs_straighten_sub: "약간 기울게 스캔하거나 촬영한 페이지를 수평으로 맞춥니다(최대 5°)",
   cs_quality: '품질',

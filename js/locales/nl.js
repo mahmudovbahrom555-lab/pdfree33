@@ -440,6 +440,8 @@ window.PDFREE_LOCALE = {
   cs_strength: 'Sterkte',
   cs_keep_color: "Gekleurde stempels en handtekeningen behouden",
   cs_keep_color_sub: "Een blauwe stempel of een handtekening met pen houdt zijn kleur; de rest wordt opgeschoond",
+  cs_dark_title: "Donkere achtergrond wit maken",
+  cs_dark_sub: "Deze pagina heeft lichte tekst op een donkere of gekleurde achtergrond. Zet aan voor een witte achtergrond en donkere tekst — controleer het voorbeeld: een foto onder de tekst kan verloren gaan.",
   cs_straighten: "Scheve pagina's rechtzetten",
   cs_straighten_sub: "Zet elke pagina recht die licht scheef is gescand of gefotografeerd (tot 5°)",
   cs_quality: 'Kwaliteit',

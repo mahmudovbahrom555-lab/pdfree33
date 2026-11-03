@@ -3036,6 +3036,19 @@ button,
   background: var(--surface);
 }
 
+.cs-warning--dark {
+  /* the site's own surface and text tokens (AA in both themes); an amber
+     edge makes it stand out — the yellow box's colours left the switch's
+     text at 1.1:1 in dark mode */
+  display: block;
+  background: var(--surface);
+  border: 1px solid #f59e0b;
+  border-left-width: 4px;
+  margin: 12px 0 0;
+}
+:root[data-theme="dark"] .cs-warning--dark { background: var(--surface); }
+.cs-warning--dark .ui-toggle-row { padding: 0; }
+
 .cs-warning__btn {
   border: none;
   background: var(--green);

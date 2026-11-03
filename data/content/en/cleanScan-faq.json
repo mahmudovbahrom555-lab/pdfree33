@@ -25,6 +25,14 @@
   },
   {
     "@type": "Question",
+    "name": "My page has white text on a dark or blue background — can I get dark text on white?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. When Clean Scan finds light text on a dark or coloured background, it shows a switch, \"Make the dark background white\", above the preview. It is off by default: turned on, the background becomes white and the text dark, which also keeps the file small. Check the preview first — a photo under the text (a book cover, a slide) can be lost, so leave it off for such pages. If you need the text itself to edit or copy, use PDF to Word, which reads scanned text."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Why does my scan have a shadow or grey gradient in the first place?",
     "acceptedAnswer": {
       "@type": "Answer",

@@ -1402,7 +1402,7 @@ function _cleanScanWorkerRequest(worker, message, transfer, onProgress) {
 }
 
 const _CS_MAX_PIXELS = 12_000_000;
-async function _runCleanScan(filesSnapshot, { mode = 'clean', strength = 0.5, scale = 2, straighten = false, keepColor = true } = {}) {
+async function _runCleanScan(filesSnapshot, { mode = 'clean', strength = 0.5, scale = 2, straighten = false, keepColor = true, lightOnDark = false } = {}) {
   if (!_checkSize(filesSnapshot[0], maxFileMb('cleanScan'))) { _abortUI(); return; }
   const file = filesSnapshot[0];
 
@@ -1452,7 +1452,7 @@ async function _runCleanScan(filesSnapshot, { mode = 'clean', strength = 0.5, sc
 
       const result = await _cleanScanWorkerRequest(
         worker,
-        { type: 'processPage', index: i - 1, bitmap, mode, strength, straighten, keepColor },
+        { type: 'processPage', index: i - 1, bitmap, mode, strength, straighten, keepColor, lightOnDark },
         [bitmap]
       );
       pages.push(result);

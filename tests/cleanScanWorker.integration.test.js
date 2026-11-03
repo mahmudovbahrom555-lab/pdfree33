@@ -24,12 +24,12 @@ const { fileURLToPath } = await import('url');
 const __dir = dirname(fileURLToPath(import.meta.url));
 
 const workerSrc = readFileSync(join(__dir, '../js/cleanScanWorker.js'), 'utf8')
-  .replace(/importScripts\([^)]+\);?/g, '')
+  .replace(/importScripts\([^)]+\);?/g, 'void 0;') // a statement left in its place: `if (…) importScripts(…)` stays valid
   .replace(/self\.onmessage\s*=[\s\S]*?^};/m, '');
 
 const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-const workerModule = new AsyncFunction(workerSrc + '\nreturn { _buildIntegralImage, _windowStats };');
-const { _buildIntegralImage, _windowStats } = await workerModule();
+const workerModule = new AsyncFunction(workerSrc + '\nreturn { _buildIntegralImage, _windowStats, _darkRegionMask };');
+const { _buildIntegralImage, _windowStats, _darkRegionMask } = await workerModule();
 
 // ── Test runner ───────────────────────────────────────────────
 
@@ -127,6 +127,57 @@ test('the whole point of a LOCAL window: a dark patch surrounded by light reads 
   const farBright = _windowStats(ii, 25, 25, 3);
   expect(nearDark.mean).toBeLessThan(farBright.mean);
   expect(farBright.std).toBeCloseTo(0);
+});
+
+// _darkRegionMask: a 480×480 page, background `bg`, with "letters" — short
+// strokes of value `ink`, 2 px wide and 12 tall, as text is — in rows; `box` limits background and letters to a
+// rectangle (the rest white paper with dark letters).
+function page({ bg, ink, box = [0, 0, 480, 480], letters = true }) {
+  const w = 480, h = 480, v = new Array(w * h).fill(255);
+  const [bx0, by0, bx1, by1] = box;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const inBox = x >= bx0 && x < bx1 && y >= by0 && y < by1;
+    const letter = letters && y % 24 < 12 && x % 10 < 2 && x > 20 && x < 460;
+    v[y * w + x] = inBox ? (letter ? ink : bg) : (letter ? 20 : 255);
+  }
+  return { d: fakeRGBA(v), w, h };
+}
+const share = (mask, w, [x0, y0, x1, y1]) => { let k = 0, n = 0; for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) { n++; k += mask[y * w + x]; } return k / n; };
+
+console.log('\n🌑 _darkRegionMask (light text on a dark background):');
+
+test('a dark page with light letters: the whole page is turned', () => {
+  const { d, w, h } = page({ bg: 30, ink: 235 });
+  const m = _darkRegionMask(d, w, h);
+  expect(share(m, w, [0, 0, 480, 480])).toBeGreaterThan(0.99);
+});
+
+test('an ordinary page (dark letters on white): nothing found', () => {
+  const { d, w, h } = page({ bg: 255, ink: 20 });
+  expect(_darkRegionMask(d, w, h)).toBe(null);
+});
+
+test('a dark area without light letters (a photo, a desk): nothing found', () => {
+  const { d, w, h } = page({ bg: 25, ink: 25, box: [60, 60, 420, 300] });
+  expect(_darkRegionMask(d, w, h)).toBe(null);
+});
+
+test('a dark box with light letters on a white page: the box is turned, the paper around it is not', () => {
+  const { d, w, h } = page({ bg: 15, ink: 240, box: [100, 100, 380, 340] });
+  const m = _darkRegionMask(d, w, h);
+  expect(share(m, w, [110, 110, 370, 330])).toBeGreaterThan(0.99);
+  expect(share(m, w, [0, 400, 480, 480])).toBe(0);
+  expect(share(m, w, [0, 0, 480, 80])).toBe(0);
+});
+
+test('a dark area with light letters AND a photograph (patches of grey): left as it is', () => {
+  const { d, w, h } = page({ bg: 25, ink: 235 });
+  // a "photo" in the lower half: patches of grey 20 px wide, between background and letters
+  for (let y = 260; y < 460; y++) for (let x = 40; x < 440; x++) {
+    const g = ((x / 20 | 0) + (y / 20 | 0)) % 2 ? 75 : 25;
+    const i = (y * w + x) * 4; d[i] = d[i + 1] = d[i + 2] = g;
+  }
+  expect(_darkRegionMask(d, w, h)).toBe(null);
 });
 
 console.log('\n' + '─'.repeat(50));

@@ -985,3 +985,39 @@ contrast) were measured and closed. A ready model does better: PP-OCRv5 mobile
   chart has 273 sure Han but 31 % of its letters. Not retuned on these
   documents; a v2 that sums 2–3 sample pages needs a fresh draw and its own
   criteria.
+
+## C23 — Clean Scan keeps a dark background as "coloured ink"
+
+A user (SD, a phone, 2026-10-30): a <1 MB file came back over 50 MB after
+9.5 min, then "اريد النص فقط لا اريد الخلفية الزرقاء" (text only, not the blue
+background). Reproduced on prod: a dark-blue page with white text keeps
+blue blobs with Keep colours on (PNG ~900 KB a page; 56 KB → 8.9 MB for 10
+pages) and turns the white text into black blots with it off. Cause: Clean
+takes the lighter side as paper.
+
+- **Detector** (`_darkRegionMask`, js/cleanScanWorker.js): large-block
+  background; dark regions ≥ 4 % of the page whose light pixels look like
+  text (1–40 % of it, thin after an erosion, in lines) and hold no
+  photograph (wide mid-grey areas); judged on a 1200 px copy so the preview
+  and the export agree. Three versions failed before it, all disclosed:
+  block-by-block (bold headings turned hollow, full dark pages missed), no
+  photo rule (a cover's photo lost), per-resolution judging (preview and
+  download disagreed on 2 of 84 corpus pages).
+- **Offered, not applied** (owner, 2026-11-04): turned over automatically, a
+  fresh draw of 24 corpus pages lost a man's photo on a book cover and
+  letters by a dark scanner edge. A switch "Make the dark background white"
+  appears at the top of the options when the preview page has such a
+  region; off by default; the preview and the download follow it.
+- **Result.** Switch off: byte-identical to prod on every page (198 runs:
+  12 synthetic, 3 × 24 corpus draws, 3 real examples, adversarial pages).
+  Switch on, synthetic dark pages: OCR 0–0.98 → 1.00 on navy, black, green,
+  maroon, gradient, textured, stamp-on-dark, a black box with a caption, a
+  title band; background white; size 2–26× → 0.9–1.1× of the same text on
+  white paper. A 1924 photostat (black box, white type) reads cleanly. Not
+  improved: a cyanotype in a script hand (OCR 0.24; 0.66 even on white
+  paper) and a page with two lines of text (not offered). Offered on 3–4 of
+  24 random corpus pages; on two of them (a bold black Chinese heading, a
+  newspaper by a dark scanner edge) switching on damages the page — shown in
+  the preview before download.
+- e2e: tests/e2e/clean-scan-dark.e2e.mjs (CI, tesseract installed); real
+  corpus pages: CLEANSCAN_CORPUS=1 (local), corpus-pages.json.

@@ -16,8 +16,10 @@
 //  the final assembly step needs pdf-lib.
 //
 //  Message contract:
-//    in  → { type: 'processPage', index, bitmap: ImageBitmap, mode: 'clean'|'enhance', strength: 0..1, straighten, keepColor }
-//    out → { type: 'pageDone', index, bytes: ArrayBuffer, format: 'png'|'jpeg', width, height }
+//    in  → { type: 'processPage', index, bitmap: ImageBitmap, mode: 'clean'|'enhance', strength: 0..1, straighten, keepColor, lightOnDark, detectDark }
+//    out → { type: 'pageDone', index, bytes: ArrayBuffer, format: 'png'|'jpeg', width, height, dark }
+//    lightOnDark: turn light-on-dark regions over before cleaning (off by default —
+//    see _darkRegionMask); detectDark: only look for them; dark: one was found
 //
 //    in  → { type: 'assemble', pages: [{index, bytes, format, width, height}], pageSizes: [{width, height}] }
 //    out → { type: 'progress', value, label } | { type: 'done', result, pageCount } | { type: 'error', message }
@@ -33,7 +35,7 @@ self.onmessage = async (e) => {
   try {
     const { type } = e.data;
     if (type === 'processPage') {
-      await handleProcessPage(e.data.index, e.data.bitmap, e.data.mode, e.data.strength, e.data.straighten, e.data.keepColor);
+      await handleProcessPage(e.data.index, e.data.bitmap, e.data.mode, e.data.strength, e.data.straighten, e.data.keepColor, e.data.lightOnDark, e.data.detectDark);
     } else if (type === 'enhanceForOcr') {
       handleEnhanceForOcr(e.data.bitmap, e.data.contrast !== false);
     } else if (type === 'assemble') {
@@ -50,12 +52,13 @@ function progress(value, label) {
 
 // ── Per-page pixel pipeline ─────────────────────────────────────
 
-async function handleProcessPage(index, bitmap, mode, strength, straighten = false, keepColor = false) {
+async function handleProcessPage(index, bitmap, mode, strength, straighten = false, keepColor = false, lightOnDark = false, detectDark = false) {
   const w = bitmap.width, h = bitmap.height;
   const src = new OffscreenCanvas(w, h);
   src.getContext('2d').drawImage(bitmap, 0, 0);
   bitmap.close?.();
 
+  const dark = mode !== 'enhance' && (lightOnDark || detectDark) ? _invertDarkRegions(src, lightOnDark) : false;
   const gray = _toGrayscaleCanvas(src);
 
   if (mode === 'enhance') {
@@ -78,7 +81,201 @@ async function handleProcessPage(index, bitmap, mode, strength, straighten = fal
     : await page.convertToBlob({ type: 'image/png' });
   const bytes  = await blob.arrayBuffer();
 
-  self.postMessage({ type: 'pageDone', index, bytes, format, width: w, height: h }, [bytes]);
+  self.postMessage({ type: 'pageDone', index, bytes, format, width: w, height: h, dark }, [bytes]);
+}
+
+// Light text on a dark or coloured background — a dark-blue certificate, a
+// slide, a photostat's black box, a cyanotype. Clean takes the lighter side
+// as paper, so such a background was kept as "coloured ink" (blue blobs,
+// a PNG of ~900 KB a page: a <1 MB file came back over 50 MB after 9.5 min
+// on a phone, and its owner wrote "text only, not the blue background",
+// 2026-10-30) or, without Keep colours, the white text turned to black
+// blots. Such regions are found and, when the person turns it on, turned
+// over (255 − value) before the usual pipeline, which then sees dark text
+// on light paper. Off by default, offered when one is found (the owner,
+// 2026-11-04): turned over automatically, a fresh draw of 24 corpus pages
+// lost a man's photo on a book cover and letters by a dark scanner edge.
+//
+// Regions: the page's background is the median of large blocks (1/16 of
+// the long edge — text never fills one); dark blocks join into regions, and
+// a region of at least _DARK_MIN_AREA of the page is turned over only when
+// what is light in it looks like text:
+//  - light pixels (brighter than their block's background by _DARK_LIFT)
+//    are _DARK_LIGHT_MIN.._DARK_LIGHT_MAX of it;
+//  - they are thin: an erosion by ~1/250 of the long edge leaves under
+//    _DARK_THICK of them. A bold black heading's "light" is the paper
+//    between its strokes, a dark photo's its sky and faces — wide, so they
+//    stay (the first, block-by-block version turned a bold Chinese heading
+//    hollow and parts of newspaper photos, 2026-11-03);
+//  - they come in lines: at least _DARK_GAP_ROWS of its rows hold almost
+//    none (under _DARK_GAP_LIT).
+// And it holds no photograph: grey between background and text, in areas
+// wide enough to survive a small erosion, under _DARK_PHOTO of it. Grain
+// and the edges of letters are thin; a photo's faces and clothes are not.
+// Turned over, a photo under a cover's or slide's title was lost (two of
+// 24 corpus scans, 2026-11-03) — such a region keeps today's treatment.
+// Measured: text on flat, gradient, textured backgrounds, a 1924 photostat
+// and a cyanotype 0–0.0002; covers and slides with photos 0.015–0.055.
+// Only pixels whose neighbourhood (a window ~1/140 of the long edge) is dark
+// count — the blocks of a region overlap the paper around a black box.
+// Which pixels are turned: every one inside a region; on its edge and in
+// the blocks around it those whose neighbourhood is darker than halfway
+// between the region's background and the paper — the paper beside a black
+// box and a caption under it keep their ink.
+// No region: null, and the page goes through unchanged.
+const _DARK_BLOCKS = 16, _DARK_BG = 110, _DARK_LIFT = 70, _DARK_MIN_AREA = 0.04;
+const _DARK_LIGHT_MIN = 0.01, _DARK_LIGHT_MAX = 0.4, _DARK_THICK = 0.15, _DARK_GAP_ROWS = 0.2, _DARK_GAP_LIT = 0.02, _DARK_AREA = 140;
+const _DARK_MID = 20, _DARK_PHOTO = 0.005;
+function _darkRegionMask(d, w, h) {
+  const n = w * h, long = Math.max(w, h);
+  const lum = new Uint8Array(n);
+  for (let p = 0, i = 0; p < n; p++, i += 4) lum[p] = (77 * d[i] + 150 * d[i + 1] + 29 * d[i + 2]) >> 8;
+  const B = Math.max(16, Math.round(long / _DARK_BLOCKS));
+  const cols = Math.ceil(w / B), rows = Math.ceil(h / B), nb = cols * rows;
+  const med = new Uint8Array(nb), hist = new Uint32Array(256);
+  for (let by = 0; by < rows; by++) {
+    for (let bx = 0; bx < cols; bx++) {
+      hist.fill(0);
+      const x1 = Math.min(w, (bx + 1) * B), y1 = Math.min(h, (by + 1) * B);
+      let count = 0;
+      for (let y = by * B; y < y1; y++) for (let x = bx * B; x < x1; x++) { hist[lum[y * w + x]]++; count++; }
+      let k = 0, acc = 0;
+      while (k < 255 && acc + hist[k] <= count / 2) acc += hist[k++];
+      med[by * cols + bx] = k;
+    }
+  }
+  const blockOf = p => Math.floor((p / w | 0) / B) * cols + Math.floor((p % w) / B);
+  // a pixel's neighbourhood mean (a window ~1/140 of the long edge), from an integral image
+  const W1 = w + 1, ii = new Uint32Array(W1 * (h + 1));
+  for (let y = 0; y < h; y++) {
+    let row = 0;
+    for (let x = 0; x < w; x++) { row += lum[y * w + x]; ii[(y + 1) * W1 + x + 1] = ii[y * W1 + x + 1] + row; }
+  }
+  const r = Math.max(2, Math.round(long / 140));
+  const around = (x, y) => {
+    const xa = Math.max(0, x - r), xb = Math.min(w, x + r + 1), ya = Math.max(0, y - r), yb = Math.min(h, y + r + 1);
+    return (ii[yb * W1 + xb] - ii[ya * W1 + xb] - ii[yb * W1 + xa] + ii[ya * W1 + xa]) / ((xb - xa) * (yb - ya));
+  };
+  const keep = new Uint8Array(nb), seen = new Uint8Array(nb);
+  const e = Math.max(2, Math.round(long / 250));
+  for (let s = 0; s < nb; s++) {
+    if (med[s] >= _DARK_BG || seen[s]) continue;
+    const comp = [s];
+    seen[s] = 1;
+    for (let k = 0; k < comp.length; k++) {
+      const b = comp[k], bx = b % cols, by = (b / cols) | 0;
+      for (const [x, y] of [[bx - 1, by], [bx + 1, by], [bx, by - 1], [bx, by + 1]]) {
+        const c = y * cols + x;
+        if (x >= 0 && y >= 0 && x < cols && y < rows && med[c] < _DARK_BG && !seen[c]) { seen[c] = 1; comp.push(c); }
+      }
+    }
+    if (comp.length * B * B < _DARK_MIN_AREA * n) continue;
+    const inComp = new Uint8Array(nb);
+    comp.forEach(b => { inComp[b] = 1; });
+    // the region's light pixels, on its bounding box
+    let bx0 = cols, by0 = rows, bx1 = 0, by1 = 0;
+    for (const b of comp) { const x = b % cols, y = (b / cols) | 0; bx0 = Math.min(bx0, x); by0 = Math.min(by0, y); bx1 = Math.max(bx1, x); by1 = Math.max(by1, y); }
+    const X0 = bx0 * B, Y0 = by0 * B, X1 = Math.min(w, (bx1 + 1) * B), Y1 = Math.min(h, (by1 + 1) * B), RW = X1 - X0, RH = Y1 - Y0;
+    const light = new Uint8Array(RW * RH), midtone = new Uint8Array(RW * RH);
+    let total = 0, lit = 0, gapRows = 0, rowsIn = 0, mids = 0;
+    for (let y = Y0; y < Y1; y++) {
+      let rowLit = 0, rowPx = 0;
+      for (let x = X0; x < X1; x++) {
+        const p = y * w + x, b = blockOf(p);
+        if (!inComp[b] || around(x, y) >= _DARK_AREA) continue;
+        rowPx++;
+        const v = lum[p] - med[b];
+        if (v > _DARK_LIFT) { light[(y - Y0) * RW + x - X0] = 1; rowLit++; }
+        else if (v > _DARK_MID) { midtone[(y - Y0) * RW + x - X0] = 1; mids++; }
+      }
+      if (!rowPx) continue;
+      rowsIn++; total += rowPx; lit += rowLit;
+      if (rowLit <= rowPx * _DARK_GAP_LIT) gapRows++;
+    }
+    if (lit < _DARK_LIGHT_MIN * total || lit > _DARK_LIGHT_MAX * total || gapRows < _DARK_GAP_ROWS * rowsIn) continue;
+    if (_erodedShare(light, RW, RH, e) >= _DARK_THICK) continue;
+    if (mids && _erodedShare(midtone, RW, RH, Math.max(1, Math.round(long / 840))) * mids >= _DARK_PHOTO * total) continue;
+    comp.forEach(b => { keep[b] = 1; });
+  }
+  if (!keep.some(Boolean)) return null;
+
+  // halfway between the turned regions' background and the paper
+  const mid = inside => { const v = []; for (let b = 0; b < nb; b++) if (!!keep[b] === inside && (inside || med[b] >= _DARK_BG)) v.push(med[b]); v.sort((a, c) => a - c); return v.length ? v[v.length >> 1] : 255; };
+  const cut = (mid(true) + mid(false)) / 2;
+  const mask = new Uint8Array(n);
+  for (let by = 0; by < rows; by++) {
+    for (let bx = 0; bx < cols; bx++) {
+      // inside a region: every pixel; on its edge and around it: by neighbourhood
+      let near = 0, all = 0;
+      for (let y = by - 1; y <= by + 1; y++) for (let x = bx - 1; x <= bx + 1; x++) {
+        if (x < 0 || y < 0 || x >= cols || y >= rows) continue;
+        all++; near += keep[y * cols + x];
+      }
+      if (!near) continue;
+      const whole = keep[by * cols + bx] && near === all;
+      const x1 = Math.min(w, (bx + 1) * B), y1 = Math.min(h, (by + 1) * B);
+      for (let y = by * B; y < y1; y++) {
+        for (let x = bx * B; x < x1; x++) if (whole || around(x, y) < cut) mask[y * w + x] = 1;
+      }
+    }
+  }
+  return mask;
+}
+
+// Share of a binary image's set pixels that survive an erosion by a
+// (2e+1)² square — thin strokes vanish, wide areas stay.
+function _erodedShare(m, w, h, e) {
+  const k = 2 * e + 1, hor = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) {
+    let run = 0;
+    for (let x = 0; x < w; x++) {
+      run = m[y * w + x] ? run + 1 : 0;
+      if (run >= k) hor[y * w + x - e] = 1;
+    }
+  }
+  let set = 0, kept = 0;
+  for (let p = 0; p < w * h; p++) set += m[p];
+  for (let x = 0; x < w; x++) {
+    let run = 0;
+    for (let y = 0; y < h; y++) {
+      run = hor[y * w + x] ? run + 1 : 0;
+      if (run >= k) kept++;
+    }
+  }
+  return set ? kept / set : 0;
+}
+
+// Whether the page has such a region; turned over only when `apply`.
+// Judged on a copy of the page _DARK_SIZE on its long edge, whatever the
+// render: the preview (900 px wide) and the export (2× or 3×) then agree —
+// judged at their own sizes, the preview offered the switch on pages the
+// export left as they were (2 of 84 corpus pages, 2026-11-04). The mask is
+// taken back to the page's size, nearest pixel.
+const _DARK_SIZE = 1200;
+function _invertDarkRegions(canvas, apply) {
+  const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+  const k = _DARK_SIZE / Math.max(w, h);
+  const sw = Math.max(1, Math.round(w * k)), sh = Math.max(1, Math.round(h * k));
+  const small = new OffscreenCanvas(sw, sh), sctx = small.getContext('2d');
+  sctx.imageSmoothingEnabled = true;
+  sctx.imageSmoothingQuality = 'high';
+  sctx.drawImage(canvas, 0, 0, sw, sh);
+  const mask = _darkRegionMask(sctx.getImageData(0, 0, sw, sh).data, sw, sh);
+  if (!mask || !apply) return !!mask;
+  const img = ctx.getImageData(0, 0, w, h), d = img.data;
+  const col = new Uint32Array(w);
+  for (let x = 0; x < w; x++) col[x] = Math.min(sw - 1, Math.floor(x * sw / w));
+  for (let y = 0, i = 0; y < h; y++) {
+    const row = Math.min(sh - 1, Math.floor(y * sh / h)) * sw;
+    for (let x = 0; x < w; x++, i += 4) {
+      // turned over in grey: the background's hue turned over (dark blue →
+      // orange) and the JPEG colour fringes around letters would otherwise be
+      // kept as "coloured ink" by Keep colours — 3–5× the size of a white page
+      if (mask[row + col[x]]) d[i] = d[i + 1] = d[i + 2] = 255 - ((77 * d[i] + 150 * d[i + 1] + 29 * d[i + 2]) >> 8);
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+  return true;
 }
 
 // Enhance stays continuous-tone (no binarization) — the coarse flat-field

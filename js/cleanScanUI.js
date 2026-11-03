@@ -43,6 +43,8 @@ let _strength     = 0.5;        // 0..1, nudges the auto (Otsu) baseline
 let _quality      = 'standard'; // 'standard' | 'high' — export render scale
 let _straighten   = false;      // deskew each page (off by default: no change for current users)
 let _keepColor    = true;       // coloured stamps and signatures keep their colour
+let _lightOnDark  = false;      // turn light-on-dark regions over — offered when the preview page has one
+let _hasDark      = false;      // the preview page has a region of light text on a dark background
 let _pageCount    = 0;
 let _pdfJsDoc     = null;
 let _previewPage  = 1;
@@ -72,6 +74,7 @@ export function getCleanScanParams() {
     strength: _strength,
     straighten: _straighten,
     keepColor:  _keepColor,
+    lightOnDark: _lightOnDark,
     scale:    _quality === 'high' ? 3 : 2,
     hasFile:  !!_pdfJsDoc,
     pageCount: _pageCount,
@@ -117,6 +120,7 @@ export async function initCleanScanOptions(file) {
     if (_pageCount === 0) { showToast(t('no_pages_pdf')); _hide(container); return; }
 
     _previewPage = 1;
+    _lightOnDark = false; _hasDark = false; // a new file starts as it is
     await _checkLooksDigital();
     if (gen !== _initGen) return;
     _render(file);
@@ -134,9 +138,9 @@ export function hideCleanScanOptions() {
   _cleanup();
   const container = id('cleanScanOptions');
   if (container) { container.style.display = 'none'; container.innerHTML = ''; }
-  _mode = 'clean'; _strength = 0.5; _quality = 'standard'; _straighten = false; _keepColor = true;
+  _mode = 'clean'; _strength = 0.5; _quality = 'standard'; _straighten = false; _keepColor = true; _lightOnDark = false;
   _pageCount = 0; _pdfJsDoc = null; _previewPage = 1;
-  _hasColor = false; _looksDigital = false;
+  _hasColor = false; _looksDigital = false; _hasDark = false;
 }
 
 // ── Non-scanned-PDF detection ─────────────────────────────────
@@ -234,10 +238,12 @@ async function _updatePreview() {
     const worker = _ensurePreviewWorker();
     const result = await _previewWorkerRequest(
       worker,
-      { type: 'processPage', index: 0, bitmap, mode: _mode, strength: _strength, straighten: _straighten, keepColor: _keepColor },
+      { type: 'processPage', index: 0, bitmap, mode: _mode, strength: _strength, straighten: _straighten, keepColor: _keepColor, lightOnDark: _lightOnDark, detectDark: true },
       [bitmap]
     );
     if (myGen !== _previewGen) return;
+    _hasDark = result.dark;
+    _syncWarnings();
     const afterBlob = new Blob([result.bytes], { type: result.format === 'jpeg' ? 'image/jpeg' : 'image/png' });
     _setPreviewImg('csAfterImg', afterBlob, true);
   } catch {
@@ -272,6 +278,11 @@ function _render(file) {
       <span class="compress-info__name" title="${esc(file.name)}">${esc(_truncName(file.name))}</span>
       <span class="compress-info__dot">·</span>
       <span class="compress-info__meta">${tp(_pageCount, 'split_info_page', 'split_info_pages', { n: _pageCount })}</span>
+    </div>
+
+    <!-- first in the panel: below the preview it opened off-screen on a phone and under the sticky button on a desktop -->
+    <div id="csDarkHint" class="cs-warning cs-warning--dark" style="display:none">
+      ${checkbox({ id: 'csLightOnDark', checked: _lightOnDark, title: t('cs_dark_title'), subtitle: t('cs_dark_sub') })}
     </div>
 
     ${_chipGroup('cs_mode', 'csMode', _mode, [
@@ -344,6 +355,10 @@ function _syncWarnings() {
   const el = id('csColorWarning');
   // colour is lost only when it isn't kept
   if (el) el.style.display = (_hasColor && _mode === 'clean' && !_keepColor) ? 'flex' : 'none';
+  // light text on a dark background: offered, never turned over unasked —
+  // it can lose a photo under a title (see js/cleanScanWorker.js)
+  const dark = id('csDarkHint');
+  if (dark) dark.style.display = (_mode === 'clean' && (_hasDark || _lightOnDark)) ? 'block' : 'none';
 }
 
 function _syncChips(name, value) {
@@ -375,6 +390,10 @@ function _bindEvents() {
     if (e.target.id === 'csKeepColor') {
       _keepColor = e.target.checked;
       _syncWarnings();
+      _schedulePreview();
+    }
+    if (e.target.id === 'csLightOnDark') {
+      _lightOnDark = e.target.checked;
       _schedulePreview();
     }
     if (e.target.id === 'csStraighten') {

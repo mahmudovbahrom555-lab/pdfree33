@@ -449,6 +449,8 @@ window.PDFREE_LOCALE = {
   cs_strength:           '强度',
   cs_keep_color: "保留彩色印章和签名",
   cs_keep_color_sub: "蓝色印章或钢笔签名保留原色，其余部分清理干净",
+  cs_dark_title: "将深色背景变白",
+  cs_dark_sub: "此页是深色或彩色背景上的浅色文字。开启后背景变白、文字变深——请查看预览：文字下方的照片可能会丢失。",
   cs_straighten: "校正倾斜页面",
   cs_straighten_sub: "将扫描或拍摄时略有倾斜的页面摆正（最多 5°）",
   cs_quality:            '质量',

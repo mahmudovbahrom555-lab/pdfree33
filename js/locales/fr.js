@@ -440,6 +440,8 @@ window.PDFREE_LOCALE = {
   cs_strength: 'Intensité',
   cs_keep_color: "Garder les tampons et signatures en couleur",
   cs_keep_color_sub: "Un tampon bleu ou une signature au stylo garde sa couleur ; le reste est nettoyé",
+  cs_dark_title: "Rendre blanc le fond sombre",
+  cs_dark_sub: "Cette page contient du texte clair sur un fond sombre ou coloré. Activez pour obtenir un fond blanc et un texte foncé — vérifiez l'aperçu : une photo sous le texte peut disparaître.",
   cs_straighten: "Redresser les pages inclinées",
   cs_straighten_sub: "Remet droite chaque page numérisée ou photographiée légèrement de travers (jusqu’à 5°)",
   cs_quality: 'Qualité',

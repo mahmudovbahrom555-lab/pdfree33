@@ -440,6 +440,8 @@ window.PDFREE_LOCALE = {
   cs_strength: 'Siła',
   cs_keep_color: "Zachowaj kolorowe pieczątki i podpisy",
   cs_keep_color_sub: "Niebieska pieczątka lub podpis długopisem zachowują kolor; reszta jest oczyszczana",
+  cs_dark_title: "Zmień ciemne tło na białe",
+  cs_dark_sub: "Ta strona ma jasny tekst na ciemnym lub kolorowym tle. Włącz, aby tło stało się białe, a tekst ciemny — sprawdź podgląd: zdjęcie pod tekstem może zniknąć.",
   cs_straighten: "Wyprostuj przekrzywione strony",
   cs_straighten_sub: "Prostuje każdą stronę zeskanowaną lub sfotografowaną lekko krzywo (do 5°)",
   cs_quality: 'Jakość',

@@ -440,6 +440,8 @@ window.PDFREE_LOCALE = {
   cs_strength: 'Intensità',
   cs_keep_color: "Mantieni timbri e firme a colori",
   cs_keep_color_sub: "Un timbro blu o una firma a penna mantengono il colore; il resto viene ripulito",
+  cs_dark_title: "Rendi bianco lo sfondo scuro",
+  cs_dark_sub: "Questa pagina ha testo chiaro su sfondo scuro o colorato. Attiva per avere sfondo bianco e testo scuro — controlla l'anteprima: una foto sotto il testo può andare persa.",
   cs_straighten: "Raddrizza le pagine inclinate",
   cs_straighten_sub: "Rimette dritta ogni pagina scansionata o fotografata leggermente storta (fino a 5°)",
   cs_quality: 'Qualità',
