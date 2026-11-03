@@ -42,3 +42,13 @@ Final evaluation of v2: the same criteria 1–7 on S (kept: built before any des
 control draw — 24 first pages of corpus scans with seed 20261104, none of run 1's — and the
 adversarial pages (night photo, paper on a desk, B/W photo) as before; R by eye.
 Run 1's controls are dev data from now on.
+
+## Owner decision 2026-11-04 → v4/v5 (switch, off by default) — PR #132
+v3 on the fresh draw 3 (seed 20261105, 24 pages): 4 changed — a book cover's photo of a man
+lost (2119505), letters by a dark scanner edge cut (0459184), report title better, manga ≈.
+Owner: option 2 — offer, off by default, real preview, download follows the switch.
+v5 (analysis on a 1200 px copy; v4 judged per resolution: preview offered on 2 of 84 pages
+where the download didn't change). Results: switch off 198/198 byte-identical to main + 8/8
+corpus pages identical to pdfree.io; switch on: offered ⇔ changed on every set; S as before
+(6 of 8 low pages fixed; cyanotype script hand 0.24, 2-line Arabic not offered). False offers
+that damage when accepted: 0988799 (bold heading hollow), 0459184 (edge letters).
