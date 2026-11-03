@@ -44,8 +44,18 @@ def arabic_counts(base_path, cand_path):
                 worse += 1
             elif g:
                 better += 1
+    # the change's totals over its text-layer documents (OCR'd ones apart, as above)
+    T = [r for r in N.values() if r.get('recall') is not None and not r.get('ocrPages')]
+    words = sum(r['words'] for r in T) or 1
+    od = [r for r in T if r.get('order') is not None]
+    totals = (f"**{len(T)} docs** — words agreed {sum(r['words'] for r in T)}, "
+              f"recall {100 * sum(r['recall'] * r['words'] for r in T) / words:.2f} %, "
+              f"dots {sum(r['dots'] for r in T)}, reversed {sum(r['reversed'] for r in T)}, "
+              f"glued {sum(r['glued'] for r in T)}, numbers missing {sum(r['numbersMissing'] for r in T)} "
+              f"of {sum(r.get('numbersAgreed', 0) for r in T)}, "
+              f"order {100 * sum(r['order'] * r.get('anchors', 1) for r in od) / max(1, sum(r.get('anchors', 1) for r in od)):.2f} % on {len(od)} docs")
     return {'docs': len(set(B) & set(N)), 'worse': worse, 'mixed': mixed, 'lost': lost,
-            'better': better, 'gained': gained, 'note': f'{ocr} read partly with OCR, not judged'}
+            'better': better, 'gained': gained, 'note': f'{ocr} read partly with OCR, not judged · {totals}'}
 
 
 def text_counts(module, base_path, cand_path):
