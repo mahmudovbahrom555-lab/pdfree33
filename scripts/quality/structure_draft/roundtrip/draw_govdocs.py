@@ -2,7 +2,7 @@
 """Fetch the .doc/.docx members of randomly drawn govdocs1 zips (HTTP Range
 reads, no full download). Names are printed in the seeded order.
 
-  python3 draw_govdocs.py <out-dir> [zips=6]
+  python3 draw_govdocs.py <out-dir> [zips=6] [seed]
 """
 import os, random, sys, zipfile
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../../../corpus-cloud'))
@@ -29,9 +29,9 @@ def fetch_zip(out, z, threads=8):
     with ThreadPoolExecutor(threads) as ex: list(ex.map(get, members))
     return [os.path.basename(m) for m in members]
 
-def main(out, nzips=6):
+def main(out, nzips=6, seed=SEED):
     os.makedirs(out, exist_ok=True)
-    rng = random.Random(SEED)
+    rng = random.Random(seed)
     zips = rng.sample(range(1000), nzips)
     names = []
     for z in zips: names += fetch_zip(out, z)
@@ -40,4 +40,4 @@ def main(out, nzips=6):
     print(f'{len(names)} documents from zips {sorted(zips)}')
 
 if __name__ == '__main__':
-    main(sys.argv[1], int(sys.argv[2]) if len(sys.argv) > 2 else 6)
+    main(sys.argv[1], int(sys.argv[2]) if len(sys.argv) > 2 else 6, sys.argv[3] if len(sys.argv) > 3 else SEED)

@@ -94,3 +94,13 @@ as the tagged-PDF draft (compare.py, steds.py), truth read by docx_truth.py.
   documents).** Scale up to a larger govdocs1 draw. New class candidate seen
   on both generators: list items found as Word lists 27-28 % (numbered items
   written as text with their number, short items merged, items out of order).
+
+## Scale-up 1 — state after C16–C18 (2026-11-04, written before the run)
+Purpose: rank the remaining structure classes by how many documents they hurt, not a fix.
+Fresh draw: 30 govdocs1 zips, seed `pdfree-roundtrip-scale1-2026-11-04` (the pilot's 6 zips
+excluded if drawn), the same keep rules, up to 200 documents; generators A and B; our
+PDF→Word = main at the time of the run. Reported per class (heading recall, items as Word
+lists, cells in tables, para kept / merged / split, STEDS) as macro means AND the number of
+documents where the class is bad (below 50 % for recalls, above 20 % for merged), on both
+generators (G5: a class counts only when seen on both). Then a hand look at 10 documents of
+the top class before any fix.
