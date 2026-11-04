@@ -36,11 +36,16 @@ function _detectDevice() {
   const ua = navigator.userAgent || '';
 
   let os = 'Unknown OS';
-  if      (/Windows NT/.test(ua))        os = 'Windows';
+  if      (/OpenHarmony|HarmonyOS/.test(ua)) os = 'HarmonyOS';   // ArkWeb: no "Android", Chrome/1xx
+  else if (/Windows NT/.test(ua))        os = 'Windows';
   else if (/iPhone|iPad|iPod/.test(ua))  os = 'iOS';
-  else if (/Mac OS X/.test(ua))          os = 'macOS';
   else if (/Android/.test(ua))           os = 'Android';
+  else if (/CrOS/.test(ua))              os = 'ChromeOS';
+  else if (/Mac OS X/.test(ua))          os = 'macOS';
   else if (/Linux/.test(ua))             os = 'Linux';
+  // an app's own browser (WeChat, QQ, DingTalk…) — downloads may not be saved there
+  const app = [[/MicroMessenger/, 'WeChat'], [/DingTalk/, 'DingTalk'], [/AlipayClient/, 'Alipay'], [/Weibo/, 'Weibo'],
+    [/Lark|Feishu/, 'Lark'], [/aweme|Douyin/, 'Douyin'], [/\bQQ\/[\d.]+/, 'QQ']].find(([re]) => re.test(ua))?.[1];
 
   let browser = 'Unknown browser', m;
   if      ((m = ua.match(/Edg\/([\d.]+)/)))              browser = `Edge ${m[1].split('.')[0]}`;
@@ -49,7 +54,7 @@ function _detectDevice() {
   else if ((m = ua.match(/Firefox\/([\d.]+)/)))           browser = `Firefox ${m[1].split('.')[0]}`;
   else if ((m = ua.match(/Version\/([\d.]+).*Safari/)))  browser = `Safari ${m[1].split('.')[0]}`;
 
-  return `${os} · ${browser}`;
+  return app ? `${os} · ${browser} · ${app}` : `${os} · ${browser}`;
 }
 
 // ── Screenshot attach: read → downscale → JPEG data URL ─────────────────

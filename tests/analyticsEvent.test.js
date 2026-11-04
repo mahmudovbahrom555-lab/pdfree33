@@ -18,7 +18,7 @@
 //  Run: node tests/analyticsEvent.test.js
 // ============================================================
 
-import { _classifyUserAgent, _dataPointFromEvent } from '../src/index.js';
+import { _classifyUserAgent, _classifyPlatform, _dataPointFromEvent } from '../src/index.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -31,6 +31,31 @@ function expect(actual) {
     toEqual:    (e) => { if (JSON.stringify(actual) !== JSON.stringify(e)) throw new Error(`Expected ${JSON.stringify(e)}, got ${JSON.stringify(actual)}`); },
   };
 }
+
+console.log('\n_classifyPlatform — OS and in-app browser buckets:');
+
+test('HarmonyOS NEXT (ArkWeb: OpenHarmony, Chrome/132, no "Android") → harmonyos', () => {
+  const ua = 'Mozilla/5.0 (Phone; OpenHarmony 5.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 ArkWeb/5.0.0 Mobile';
+  expect(_classifyPlatform(ua)).toEqual({ os: 'harmonyos', app: 'none' });
+});
+
+test('WeChat on Android → android / wechat', () => {
+  const ua = 'Mozilla/5.0 (Linux; Android 13; V2148A) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36 XWEB/1160065 MMWEBSDK/20231202 MicroMessenger/8.0.47.2560(0x28002F30) WeChat/arm64 Weixin NetType/WIFI Language/zh_CN';
+  expect(_classifyPlatform(ua)).toEqual({ os: 'android', app: 'wechat' });
+});
+
+test('WeChat on iPhone → ios / wechat; QQ app → qq; QQ Browser (MQQBrowser) is a browser, not the app', () => {
+  expect(_classifyPlatform('Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.50(0x1800322e) NetType/WIFI Language/zh_CN')).toEqual({ os: 'ios', app: 'wechat' });
+  expect(_classifyPlatform('Mozilla/5.0 (Linux; Android 12; PEGM00) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0 Mobile Safari/537.36 V1_AND_SQ_9.0.0_5282_YYB_D QQ/9.0.0.14110 NetType/WIFI')).toEqual({ os: 'android', app: 'qq' });
+  expect(_classifyPlatform('Mozilla/5.0 (Linux; Android 12) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/89.0 MQQBrowser/14.0 Mobile Safari/537.36')).toEqual({ os: 'android', app: 'none' });
+});
+
+test('DingTalk on Windows, desktop Chrome on macOS / Linux / ChromeOS', () => {
+  expect(_classifyPlatform('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0 Safari/537.36 DingTalk(7.6.0) nw')).toEqual({ os: 'windows', app: 'dingtalk' });
+  expect(_classifyPlatform('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Safari/537.36')).toEqual({ os: 'macos', app: 'none' });
+  expect(_classifyPlatform('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Safari/537.36')).toEqual({ os: 'linux', app: 'none' });
+  expect(_classifyPlatform('Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Safari/537.36')).toEqual({ os: 'chromeos', app: 'none' });
+});
 
 console.log('\n_classifyUserAgent — device/browser bucketing:');
 

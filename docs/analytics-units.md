@@ -55,6 +55,22 @@ The download was started: once per result (the automatic one). "Download
 again", or Draw exporting the same drawing again, is not counted. Success and
 Download are separate facts — successes without downloads mean downloads that
 didn't start.
+Started is not saved: an app's own browser (WeChat, QQ, DingTalk…) can start a
+download and keep nothing, and this event can't tell. `app` (below) shows
+where people are; whether the file arrived is not measured.
+
+## Where — `country`, `device`, `browser`, `os`, `app`
+
+Added by the server to every event, from the request, never from the page:
+`country` (Cloudflare), `device` (desktop / mobile / tablet), `browser`
+(edge / opera / firefox / chrome / safari / other), and since 2026-11-04
+`os` (windows / macos / ios / android / harmonyos / linux / chromeos / other)
+and `app` (wechat / qq / dingtalk / alipay / weibo / lark / douyin / none —
+the app whose own browser opened the page). Buckets only, never the raw
+User-Agent. `os` and `app` come after `browser`, so the earlier fields keep
+their places. HarmonyOS NEXT and in-app browsers counted as plain `chrome`
+before (a Huawei/WeChat user's feedback, 2026-11-04).
+
 
 ## What these units can't tell
 
