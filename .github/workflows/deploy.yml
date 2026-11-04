@@ -80,6 +80,7 @@ jobs:
           python3 scripts/check_dom.py
           python3 scripts/check_i18n.py
           python3 scripts/check_sw.py
+          python3 scripts/check_claims.py   # promises the site can't prove (HIPAA/GDPR, "no tracking"…)
 
       - name: Measuring sticks change only on their own, with a written reason
         # Gold pages, baselines, the Arabic metric and its control cases: every

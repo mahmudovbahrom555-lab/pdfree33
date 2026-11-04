@@ -25,7 +25,7 @@
   <meta name="description" content="PDF tools that never upload your files to a server. All processing happens in your browser — merge, compress, split, protect PDFs with complete privacy.">
 
   <meta property="og:title"       content="Secure PDF Tools — Files Never Uploaded | PDFree">
-  <meta property="og:description" content="The only PDF toolkit that processes everything in your browser. No server, no storage, no tracking.">
+  <meta property="og:description" content="PDF tools that process your files in your browser — not uploaded, not stored on our servers.">
   <meta property="og:type"        content="website">
   <meta property="og:url"         content="https://pdfree.io/secure-pdf-tools/">
   <meta property="og:site_name"   content="PDFree">
@@ -36,7 +36,7 @@
   <meta name="twitter:card"       content="summary_large_image">
   <meta name="twitter:site"       content="@pdfree_io">
   <meta name="twitter:title"      content="Secure PDF Tools — Files Never Uploaded | PDFree">
-  <meta name="twitter:description" content="The only PDF toolkit that processes everything in your browser. No server, no storage, no tracking.">
+  <meta name="twitter:description" content="PDF tools that process your files in your browser — not uploaded, not stored on our servers.">
   <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
   <meta name="twitter:image:alt"   content="Secure PDF Tools — Files Never Uploaded | PDFree">
 
@@ -99,7 +99,7 @@
       "No daily limits",
       "Works offline (PWA)",
       "Password-protect PDF (RC4-128 encryption) available",
-      "Zero data retention"
+      "No copies of your files on our servers"
     ],
     "dateModified": "2026-08-03",
     "provider": {
@@ -145,12 +145,12 @@
       {
         "@type": "Question",
         "name": "How can I verify that my files are not being uploaded?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Open your browser's DevTools (F12), go to the Network tab, then use any PDFree tool. You will see no requests containing your PDF file data — only requests for the app's JavaScript and CSS files." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Open your browser's DevTools (F12), go to the Network tab, then use any PDFree tool. You will see no request carrying your PDF file. You will see the site loading what it needs to run (scripts, styles, fonts, and for some tools libraries or language models) and small technical usage and error events, described in our Privacy Policy — never your file or its contents." }
       },
       {
         "@type": "Question",
-        "name": "Are PDFree tools GDPR compliant?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree is GDPR compliant by design. Since no personal data or files are ever transferred to our servers, there is no data to protect, delete, or report on. The architecture makes GDPR violations structurally impossible." }
+        "name": "What does PDFree do with my data under GDPR?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Your PDF files are processed in your browser and are not uploaded to our servers, so we hold none of their contents. The site does collect limited technical usage and error information without cookies or persistent identifiers, as our Privacy Policy describes. We don't certify compliance: whether a workflow meets your GDPR obligations is for your organization to assess." }
       },
       {
         "@type": "Question",
@@ -203,7 +203,7 @@
     <div style="max-width:720px;margin:0 auto;">
       <div style="display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green-text);font-weight:500;margin-bottom:20px;">
         <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
-        Zero uploads · Zero storage · Zero tracking
+        No upload · No copies on our servers · No account
       </div>
       <h1 style="font-size:clamp(28px,4.5vw,44px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">Secure PDF Tools That Don't<br>Upload Your Files</h1>
       <p style="font-size:17px;color:var(--text2);max-width:580px;margin:0 auto 28px;line-height:1.6;">Every PDFree tool processes your documents entirely in your browser. Your files never leave your device — not for a millisecond. Merge, compress, split, protect, and redact PDFs with complete privacy.</p>
@@ -216,9 +216,9 @@
     <div style="max-width:720px;margin:0 auto;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;">
       <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🔒 Files never leave your device</span>
       <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">⚡ Works 100% offline</span>
-      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ GDPR safe by design</span>
-      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ HIPAA safe by design</span>
-      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🚫 No account, no tracking</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ No cookies, no persistent identifier</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ No account needed</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🚫 No ads tracking, no data selling</span>
     </div>
   </section>
 
@@ -284,7 +284,7 @@
 
         <!-- Verify -->
         <h2 style="font-size:26px;color:var(--text);margin:48px 0 12px;font-weight:700;">How to Verify No Files Are Uploaded</h2>
-        <p>Open your browser's DevTools (press <kbd style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;font-size:13px;">F12</kbd>), go to the <strong>Network</strong> tab, then use any PDFree tool. Filter requests by "Doc" or "XHR" — you will find nothing containing your PDF data. The only network requests are for JavaScript and CSS files that make the app run.</p>
+        <p>Open your browser's DevTools (press <kbd style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;font-size:13px;">F12</kbd>), go to the <strong>Network</strong> tab, then use any PDFree tool. Filter requests by "Doc" or "XHR" — you will find nothing containing your PDF data. What you will see: the files the site needs to run (scripts, styles, fonts, and for some tools libraries or language models) and small technical usage and error events described in our <a href="/privacy/" style="color:var(--green-text);">Privacy Policy</a>.</p>
         <p>This is the most direct proof that your files stay on your device. No trust required — verify it yourself in 30 seconds.</p>
 
         <!-- Who it's for -->
@@ -313,11 +313,11 @@
         <div style="display:flex;flex-direction:column;gap:20px;">
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Do any PDFree tools upload files to a server?</h3>
-            <p style="margin:0;font-size:14px;">No. Every PDFree tool processes files entirely in your browser. Your files are never sent to any server, stored anywhere, or logged in any way.</p>
+            <p style="margin:0;font-size:14px;">No. Every PDFree tool processes files in your browser. Your files are not sent to our servers, stored there, or logged.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Are PDFree tools GDPR compliant?</h3>
-            <p style="margin:0;font-size:14px;">Yes, by design. Because no personal data or files are ever transmitted to our servers, GDPR compliance is structurally guaranteed — there is simply no data to mishandle.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">What does PDFree do with my data under GDPR?</h3>
+            <p style="margin:0;font-size:14px;">Your PDF files are processed in your browser and are not uploaded to our servers, so we hold none of their contents. The site does collect limited technical usage and error information without cookies or persistent identifiers, as our <a href="/privacy/" style="color:var(--green-text);">Privacy Policy</a> describes. We don't certify compliance: whether a workflow meets your GDPR obligations is for your organization to assess.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I use PDFree for HIPAA-regulated medical records?</h3>
@@ -343,7 +343,7 @@
       </div>
       <div>
         <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
-        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green-text);text-decoration:none;padding:3px 0;margin-bottom:4px;">HIPAA Compliant PDF</a>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green-text);text-decoration:none;padding:3px 0;margin-bottom:4px;">PDF Tools for Medical Documents</a>
         <a href="/secure-pdf-tools/" style="display:block;color:var(--green-text);text-decoration:none;padding:3px 0;">Secure PDF Tools</a>
       </div>
     </div>

@@ -55,6 +55,7 @@
     "lint": "eslint js/*.js --ignore-pattern 'js/vendor/**'",
     "check:dom": "python3 scripts/check_dom.py",
     "check:i18n": "python3 scripts/check_i18n.py",
+    "check:claims": "python3 scripts/check_claims.py",
     "check:vendor": "python3 scripts/check_vendor_sync.py",
     "check:prod": "bash scripts/smoke_prod.sh",
     "validate": "npm run check:dom && npm run check:i18n && npm run check:vendor && npm run lint && npm test && npm run build",

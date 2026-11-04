@@ -29,10 +29,10 @@
     object-src  'none';
   ">
 
-  <title>Private PDF Tools — No Uploads, No Tracking | PDFree</title>
+  <title>Private PDF Tools — No Uploads, No Account | PDFree</title>
   <meta name="description" content="A full private PDF toolkit that runs entirely in your browser — merge, split, compress, redact, OCR and more. No uploads, no accounts.">
 
-  <meta property="og:title"       content="Private PDF Tools — No Uploads, No Tracking | PDFree">
+  <meta property="og:title"       content="Private PDF Tools — No Uploads, No Account | PDFree">
   <meta property="og:description" content="Merge, split, compress, redact, protect, OCR, fill and flatten PDFs entirely in your browser. WebAssembly-powered, verifiable, no accounts.">
   <meta property="og:type"        content="website">
   <meta property="og:url"         content="https://pdfree.io/private-pdf-tools/">
@@ -41,13 +41,13 @@
   <meta property="og:image"       content="https://pdfree.io/icons/og-image.jpg">
   <meta property="og:image:width"  content="1200">
   <meta property="og:image:height" content="633">
-  <meta property="og:image:alt"    content="Private PDF Tools — No Uploads, No Tracking | PDFree">
+  <meta property="og:image:alt"    content="Private PDF Tools — No Uploads, No Account | PDFree">
   <meta name="twitter:card"  content="summary_large_image">
   <meta name="twitter:site"  content="@pdfree_io">
-  <meta name="twitter:title" content="Private PDF Tools — No Uploads, No Tracking | PDFree">
+  <meta name="twitter:title" content="Private PDF Tools — No Uploads, No Account | PDFree">
   <meta name="twitter:description" content="Merge, split, compress, redact, protect, OCR, fill and flatten PDFs entirely in your browser. WebAssembly-powered, verifiable, no accounts.">
   <meta name="twitter:image" content="https://pdfree.io/icons/og-image.jpg">
-  <meta name="twitter:image:alt" content="Private PDF Tools — No Uploads, No Tracking | PDFree">
+  <meta name="twitter:image:alt" content="Private PDF Tools — No Uploads, No Account | PDFree">
 
   <link rel="canonical" href="https://pdfree.io/private-pdf-tools/">
   <link rel="alternate" hreflang="en"        href="https://pdfree.io/private-pdf-tools/">
@@ -80,7 +80,7 @@
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "Private PDF Tools — PDFree",
-    "description": "A full PDF toolkit — merge, split, compress, redact, protect, OCR, fill and flatten — that runs entirely in the browser via WebAssembly. No file uploads, no accounts, no analytics on document content.",
+    "description": "A full PDF toolkit — merge, split, compress, redact, protect, OCR, fill and flatten — that runs entirely in the browser via WebAssembly. No file uploads, no accounts, no analytics on document content: only anonymous technical events, never file names or contents.",
     "url": "https://pdfree.io/private-pdf-tools/",
     "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Any",
@@ -88,7 +88,7 @@
     "featureList": [
       "Files processed locally via WebAssembly — never uploaded",
       "No account, email or signup required",
-      "No analytics or tracking attached to document content",
+      "No file names or contents in our analytics",
       "Works offline after first load (PWA)",
       "Open-source processing code, publicly auditable",
       "8 privacy-relevant tools: merge, split, compress, redact, protect, OCR, fill, flatten"
@@ -181,7 +181,7 @@
         "name": "Does PDFree collect analytics on my documents or their content?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. PDFree uses privacy-respecting page-view analytics (Plausible) to see which tool pages get visited, the same way any website tracks traffic. It has no visibility into file names, file contents, or what you do inside a tool — that data is never generated in the first place because processing never leaves your device."
+          "text": "No. Your files and their contents never reach us — they are processed on your device. We do count anonymous technical events, without cookies or a persistent identifier: which tool was opened, that a file was added and its size range (e.g. \"1–10 MB\"), whether the result succeeded or which error happened. Never file names or contents. Page views are counted with Cloudflare Web Analytics. Details: our Privacy Policy."
         }
       },
       {
@@ -247,7 +247,7 @@
         WebAssembly-powered · No uploads · No accounts · No file analytics
       </div>
       <h1 style="font-size:clamp(28px,4.5vw,44px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">A Private PDF Toolkit That Never<br>Sees Your Files</h1>
-      <p style="font-size:17px;color:var(--text2);max-width:600px;margin:0 auto 28px;line-height:1.6;">Merge, split, compress, redact, protect, OCR, fill and flatten PDFs — every operation runs inside your browser via WebAssembly. There's no server in the loop, so there's nothing for us to see, store, or ever hand over.</p>
+      <p style="font-size:17px;color:var(--text2);max-width:600px;margin:0 auto 28px;line-height:1.6;">Merge, split, compress, redact, protect, OCR, fill and flatten PDFs — every operation runs inside your browser via WebAssembly. Your files are not uploaded, so their contents are never ours to see, store, or hand over.</p>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
         <a href="../" style="background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;">Browse All PDF Tools — Free</a>
         <a href="#verify" style="background:var(--surface);color:var(--green-text);padding:13px 28px;border-radius:10px;font-weight:500;font-size:15px;text-decoration:none;border:1.5px solid rgba(45,122,79,0.3);">Verify it yourself ↓</a>
@@ -395,7 +395,7 @@
             <p style="font-size:13px;margin:8px 0 0;color:var(--text2);">If your instinct is "why would this need to leave my computer at all" — that instinct is correct, and this toolkit agrees with it.</p>
           </div>
         </div>
-        <p style="margin-top:8px;">For regulated use cases with a specific compliance framework, see our dedicated pages for <a href="/hipaa-pdf-tools/" style="color:var(--green-text);">healthcare (HIPAA)</a> and <a href="/legal-pdf-tools/" style="color:var(--green-text);">legal professionals</a>.</p>
+        <p style="margin-top:8px;">For medical and legal documents, see our pages <a href="/hipaa-pdf-tools/" style="color:var(--green-text);">PDF tools for medical documents</a> and <a href="/legal-pdf-tools/" style="color:var(--green-text);">legal professionals</a>.</p>
 
         <!-- FAQ -->
         <h2 style="font-size:26px;color:var(--text);margin:52px 0 20px;font-weight:700;">Frequently Asked Questions</h2>
@@ -414,7 +414,7 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Does PDFree collect analytics on my documents?</h3>
-            <p style="margin:0;font-size:14px;">No. Page-view analytics track which tool pages get visited, the same as any website. There's no visibility into file names or content — that data never exists in the first place because processing stays on your device.</p>
+            <p style="margin:0;font-size:14px;">No. Your files and their contents never reach us — they are processed on your device. We do count anonymous technical events, without cookies or a persistent identifier: which tool was opened, that a file was added and its size range, whether the result succeeded or which error happened — never file names or contents. Page views are counted with Cloudflare Web Analytics. Details: our <a href="/privacy/" style="color:var(--green-text);">Privacy Policy</a>.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Do I need an account?</h3>
@@ -440,7 +440,7 @@
       </div>
       <div>
         <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>
-        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green-text);text-decoration:none;padding:3px 0;margin-bottom:4px;">HIPAA Compliant PDF</a>
+        <a href="/hipaa-pdf-tools/" style="display:block;color:var(--green-text);text-decoration:none;padding:3px 0;margin-bottom:4px;">PDF Tools for Medical Documents</a>
         <a href="/legal-pdf-tools/" style="display:block;color:var(--green-text);text-decoration:none;padding:3px 0;margin-bottom:4px;">Legal PDF Tools</a>
         <a href="/secure-pdf-tools/" style="display:block;color:var(--green-text);text-decoration:none;padding:3px 0;">Secure PDF Tools</a>
       </div>

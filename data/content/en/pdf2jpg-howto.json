@@ -24,7 +24,7 @@
       "@type": "HowToStep",
       "position": 3,
       "name": "Convert and download",
-      "text": "Click 'Convert to JPG'. Each page is rendered as a separate image file. Multiple pages download as a ZIP archive. Nothing is sent to any server at any step.",
+      "text": "Click 'Convert to JPG'. Each page is rendered as a separate image file. Multiple pages download as a ZIP archive. Your file is not uploaded to any server at any step.",
       "url": "https://pdfree.io/pdf2jpg/#step3"
     }
   ]

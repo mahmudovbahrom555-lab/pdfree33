@@ -94,7 +94,7 @@ TOOLS = {
             ("Will the formatting and fonts be preserved after merging?", "Yes. PDFree uses pdf-lib, which copies pages at the PDF object level — fonts, images, vector graphics, and formatting are preserved exactly as in the originals."),
             ("Can I merge password-protected PDFs?", "No. Encrypted PDFs cannot be read or modified without the password. Remove the password first using a PDF tool, then merge."),
             ("Is there a daily limit on how many merges I can do?", "No. Unlike SmallPDF (2 tasks/day free) or iLovePDF (daily limits), PDFree has no usage caps. Merge as many PDFs as you want, as often as you need."),
-            ("Does merging upload my files to a server?", "No. Your files are processed entirely in your browser's memory. Nothing is sent to any server. Close the tab and the files are gone from memory — no trace on any server."),
+            ("Does merging upload my files to a server?", "No. Your files are processed entirely in your browser's memory. Your file is not uploaded to any server. Close the tab and the files are gone from memory — no trace on any server."),
             ("Can I merge PDFs on a phone or tablet?", "Yes. PDFree works in mobile browsers (Chrome for Android, Safari for iOS). Drag and drop is replaced by a file picker, and reordering works by tapping the up/down buttons."),
         ],
         "related": [
@@ -295,7 +295,7 @@ TOOLS = {
         "intro": "Draw black boxes over names, account numbers, addresses, or any sensitive information and download a PDF where that content is permanently gone — not just covered with a colored overlay, but removed. Done entirely in your browser.",
         "how_title": "How to Redact a PDF in 3 Steps",
         "steps": [
-            ("Upload your PDF", "Click <strong>Choose files</strong> or drag your PDF into the drop zone. Pages render as thumbnails in your browser — nothing is sent to a server."),
+            ("Upload your PDF", "Click <strong>Choose files</strong> or drag your PDF into the drop zone. Pages render as thumbnails in your browser — your file is not uploaded to a server."),
             ("Draw redaction boxes", "Click and drag to draw black cover boxes over the content you want to remove — names, addresses, account numbers, phone numbers, or any text or image you need to hide."),
             ("Apply and download", "Click <strong>Apply Redaction</strong>. The boxes are burned into the PDF — the underlying content is replaced, not just covered. Download the redacted file."),
         ],
