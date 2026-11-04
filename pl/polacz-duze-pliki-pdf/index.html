@@ -131,8 +131,8 @@
       },
       {
         "@type": "Question",
-        "name": "Dlaczego iLovePDF ma limit 25 MB na plik?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF przetwarza pliki na swoich serwerach, co generuje koszty transferu i przechowywania. Aby ograniczyć te koszty dla darmowych użytkowników, narzędzie wprowadza limity rozmiaru pliku. PDFree przetwarza wszystko lokalnie w Twojej przeglądarce, więc nie ponosi kosztów serwerowych — a co za tym idzie, nie ma dziennego limitu ani limitu 25 MB; jedno łączenie może mieć do 500 MB na komputerze, a limit służy wyłącznie ochronie pamięci Twojego urządzenia." }
+        "name": "Dlaczego narzędzia w chmurze mają limit na plik?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Narzędzia w chmurze przetwarzają pliki na swoich serwerach, co generuje koszty transferu i przechowywania. Aby ograniczyć te koszty dla darmowych użytkowników, narzędzie wprowadza limity rozmiaru pliku. PDFree przetwarza wszystko lokalnie w Twojej przeglądarce, więc nie ponosi kosztów serwerowych — a co za tym idzie, nie ma dziennego limitu ani limitu 25 MB; jedno łączenie może mieć do 500 MB na komputerze, a limit służy wyłącznie ochronie pamięci Twojego urządzenia." }
       },
       {
         "@type": "Question",
@@ -147,7 +147,7 @@
       {
         "@type": "Question",
         "name": "Czy istnieje dzienny limit liczby łączeń PDF?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Nie. PDFree nie ma żadnych dziennych limitów użycia. W przeciwieństwie do SmallPDF (2 zadania dziennie w darmowym planie) czy iLovePDF (dzienne limity dla darmowych kont), PDFree pozwala połączyć tyle PDF-ów, ile potrzebujesz, tak często, jak chcesz — za darmo." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Nie. PDFree nie ma żadnych dziennych limitów użycia. W przeciwieństwie do narzędzi w chmurze z dziennymi limitami w darmowym planie, PDFree pozwala połączyć tyle PDF-ów, ile potrzebujesz, tak często, jak chcesz — za darmo." }
       },
       {
         "@type": "Question",
@@ -161,8 +161,8 @@
       },
       {
         "@type": "Question",
-        "name": "Dlaczego łączenie dużych PDF-ów jest wolne w iLovePDF, a szybkie w PDFree?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF wymaga przesłania pliku na serwer, przetworzenia go tam i pobrania wyniku — trzy etapy transferu sieciowego, które przy dużych plikach znacząco wydłużają czas. PDFree przetwarza wszystko lokalnie w Twojej przeglądarce, bez żadnego transferu sieciowego, więc szybkość zależy wyłącznie od procesora Twojego urządzenia, a nie od połączenia internetowego." }
+        "name": "Dlaczego łączenie dużych PDF-ów jest wolne w narzędziach w chmurze, a szybkie w PDFree?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Narzędzia w chmurze wymagają przesłania pliku na serwer, przetworzenia go tam i pobrania wyniku — trzy etapy transferu sieciowego, które przy dużych plikach znacząco wydłużają czas. PDFree przetwarza wszystko lokalnie w Twojej przeglądarce, bez żadnego transferu sieciowego, więc szybkość zależy wyłącznie od procesora Twojego urządzenia, a nie od połączenia internetowego." }
       }
     ]
   }
@@ -317,9 +317,7 @@
   <!-- Odznaki porównawcze — poniżej narzędzia, by nie opóźniać dostępu -->
   <section style="padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
     <div style="max-width:760px;margin:0 auto;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;">
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">iLovePDF: limit 25 MB</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">SmallPDF: 2 zadania/dzień</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Adobe: wymagany płatny plan</span>
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Narzędzia w chmurze: limity rozmiaru i dzienne w darmowym planie</span>
       <span style="font-size:13px;color:var(--text2);">vs</span>
       <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">PDFree: bez dziennego limitu, zawsze za darmo</span>
     </div>
@@ -379,22 +377,10 @@
                 <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Za darmo na zawsze</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">iLovePDF (darmowy)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~25 MB</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Ograniczony</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Za darmo / od 6 $/mies.</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">SmallPDF (darmowy)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~5 MB po kompresji</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 zadania/dzień</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Za darmo / od 9 $/mies.</td>
-              </tr>
-              <tr>
-                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">100 MB (płatny)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Bez limitu (płatny)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">19,99 $/mies.</td>
+                <td style="padding:10px 14px;color:var(--text);">Typowe narzędzia PDF w chmurze</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Zależy od narzędzia</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Zależy od narzędzia</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Zależy od narzędzia</td>
               </tr>
             </tbody>
           </table>
@@ -494,12 +480,12 @@
             <p style="margin:0;font-size:14px;">Tak — do 500 MB na jedno łączenie w Chrome lub Edge na komputerze z co najmniej 8 GB pamięci i do 300 MB na telefonach, w Safari i Firefoksie. Przetwarzanie odbywa się całkowicie w Twojej przeglądarce, więc limit chroni pamięć Twojego urządzenia, a nie przepustowość serwera — w naszych testach połączenie 500 MB zajęło około 5 sekund na laptopie z 8 GB RAM.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Dlaczego iLovePDF ma limit 25 MB, a PDFree nie?</h3>
-            <p style="margin:0;font-size:14px;">iLovePDF przetwarza pliki na swoich serwerach, co generuje koszty transferu i przechowywania. PDFree przetwarza pliki lokalnie w Twojej przeglądarce — nie ponosi kosztów serwerowych, więc nie ma dziennego limitu ani limitu 25 MB; jedno łączenie może mieć do 500 MB na komputerze, a limit służy wyłącznie ochronie pamięci Twojego urządzenia.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Dlaczego narzędzia w chmurze mają limit rozmiaru, a PDFree nie?</h3>
+            <p style="margin:0;font-size:14px;">Narzędzia w chmurze przetwarzają pliki na swoich serwerach, co generuje koszty transferu i przechowywania. PDFree przetwarza pliki lokalnie w Twojej przeglądarce — nie ponosi kosztów serwerowych, więc nie ma dziennego limitu ani limitu 25 MB; jedno łączenie może mieć do 500 MB na komputerze, a limit służy wyłącznie ochronie pamięci Twojego urządzenia.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Czy istnieje dzienny limit łączeń?</h3>
-            <p style="margin:0;font-size:14px;">Nie. W przeciwieństwie do SmallPDF (2 zadania/dzień za darmo) czy iLovePDF (dzienne limity), PDFree nie ma dziennego limitu. Połącz tyle PDF-ów, ile potrzebujesz, tak często, jak chcesz.</p>
+            <p style="margin:0;font-size:14px;">Nie. W przeciwieństwie do narzędzi w chmurze z dziennymi limitami w darmowym planie, PDFree nie ma dziennego limitu. Połącz tyle PDF-ów, ile potrzebujesz, tak często, jak chcesz.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Jak duży PDF mogę połączyć?</h3>
@@ -515,7 +501,7 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Czy mogę za darmo połączyć 50 lub 100 plików PDF naraz?</h3>
-            <p style="margin:0;font-size:14px;">Tak, całkowicie za darmo i bez dziennego limitu. W przeciwieństwie do SmallPDF (2 zadania/dzień) czy iLovePDF (dzienne limity), PDFree nie ma żadnych ograniczeń użycia. Upuść wszystkie 50 lub 100 plików naraz, ustaw kolejność i kliknij Połącz — wynik pobierze się bezpośrednio na Twoje urządzenie, bez przesyłania na jakikolwiek serwer.</p>
+            <p style="margin:0;font-size:14px;">Tak, całkowicie za darmo i bez dziennego limitu. W przeciwieństwie do narzędzi w chmurze z dziennymi limitami w darmowym planie, PDFree nie ma żadnych ograniczeń użycia. Upuść wszystkie 50 lub 100 plików naraz, ustaw kolejność i kliknij Połącz — wynik pobierze się bezpośrednio na Twoje urządzenie, bez przesyłania na jakikolwiek serwer.</p>
           </div>
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Czy muszę założyć konto?</h3>

@@ -131,8 +131,8 @@
       },
       {
         "@type": "Question",
-        "name": "Почему у iLovePDF ограничение в 25 МБ на файл?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF обрабатывает файлы на своих серверах, что создаёт расходы на трафик и хранение данных. Чтобы ограничить эти расходы для бесплатных пользователей, сервис вводит лимиты на размер файлов. PDFree обрабатывает всё локально в вашем браузере, поэтому серверных расходов нет — а значит, нет ни дневного лимита, ни ограничения в 25 МБ; одно объединение может занимать до 500 МБ на компьютере, а лимит нужен лишь для защиты памяти вашего устройства." }
+        "name": "Почему у облачных сервисов есть ограничение на размер файла?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Облачные сервисы обрабатывают файлы на своих серверах, что создаёт расходы на трафик и хранение данных. Чтобы ограничить эти расходы для бесплатных пользователей, сервис вводит лимиты на размер файлов. PDFree обрабатывает всё локально в вашем браузере, поэтому серверных расходов нет — а значит, нет ни дневного лимита, ни ограничения в 25 МБ; одно объединение может занимать до 500 МБ на компьютере, а лимит нужен лишь для защиты памяти вашего устройства." }
       },
       {
         "@type": "Question",
@@ -147,7 +147,7 @@
       {
         "@type": "Question",
         "name": "Есть ли дневной лимит на количество объединений PDF?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Нет. У PDFree нет дневных лимитов использования. В отличие от SmallPDF (2 задачи в день на бесплатном плане) или iLovePDF (дневные лимиты для бесплатных аккаунтов), PDFree позволяет объединять столько PDF, сколько нужно, так часто, как хочется — бесплатно." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Нет. У PDFree нет дневных лимитов использования. В отличие от облачных сервисов с дневными лимитами на бесплатном тарифе, PDFree позволяет объединять столько PDF, сколько нужно, так часто, как хочется — бесплатно." }
       },
       {
         "@type": "Question",
@@ -161,8 +161,8 @@
       },
       {
         "@type": "Question",
-        "name": "Почему объединение больших PDF медленное на iLovePDF, но быстрое на PDFree?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF требует загрузки файла на сервер, обработки его там и скачивания результата — три сетевых этапа, которые значительно увеличивают время для больших файлов. PDFree обрабатывает всё локально в вашем браузере без передачи данных по сети, поэтому скорость зависит только от процессора вашего устройства, а не от интернет-соединения." }
+        "name": "Почему объединение больших PDF медленное в облачных сервисах, но быстрое в PDFree?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Облачные сервисы требуют загрузки файла на сервер, обработки его там и скачивания результата — три сетевых этапа, которые значительно увеличивают время для больших файлов. PDFree обрабатывает всё локально в вашем браузере без передачи данных по сети, поэтому скорость зависит только от процессора вашего устройства, а не от интернет-соединения." }
       }
     ]
   }
@@ -317,9 +317,7 @@
   <!-- Сравнительные бейджи — под инструментом, чтобы не задерживать доступ -->
   <section style="padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
     <div style="max-width:760px;margin:0 auto;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;">
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">iLovePDF: лимит 25 МБ</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">SmallPDF: 2 задачи/день</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Adobe: нужен платный план</span>
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Облачные сервисы: лимиты размера и задач в день на бесплатном тарифе</span>
       <span style="font-size:13px;color:var(--text2);">vs</span>
       <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">PDFree: без дневного лимита, всегда бесплатно</span>
     </div>
@@ -379,22 +377,10 @@
                 <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Бесплатно навсегда</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">iLovePDF (бесплатно)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~25 МБ</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Ограничено</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Бесплатно / от $6/мес</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">SmallPDF (бесплатно)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~5 МБ сжато</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 задачи/день</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Бесплатно / от $9/мес</td>
-              </tr>
-              <tr>
-                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">100 МБ (платно)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Без ограничений (платно)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">$19.99/мес</td>
+                <td style="padding:10px 14px;color:var(--text);">Типичные облачные PDF-сервисы</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Зависит от сервиса</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Зависит от сервиса</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Зависит от сервиса</td>
               </tr>
             </tbody>
           </table>
@@ -494,12 +480,12 @@
             <p style="margin:0;font-size:14px;">Да — до 500 МБ за одно объединение в Chrome или Edge на компьютере с 8 ГБ+ памяти и до 300 МБ на телефонах, в Safari и Firefox. Обработка полностью происходит в вашем браузере, поэтому лимит защищает память вашего устройства, а не пропускную способность сервера: в наших тестах объединение 500 МБ заняло около 5 секунд на ноутбуке с 8 ГБ памяти.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Почему у iLovePDF ограничение 25 МБ на файл?</h3>
-            <p style="margin:0;font-size:14px;">iLovePDF обрабатывает файлы на своих серверах, что создаёт расходы на трафик и хранение данных. PDFree обрабатывает файлы локально в вашем браузере — серверных расходов нет, поэтому нет ни дневного лимита, ни ограничения в 25 МБ; одно объединение может занимать до 500 МБ на компьютере, а лимит нужен лишь для защиты памяти вашего устройства.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Почему у облачных сервисов есть ограничение на размер файла, а у PDFree нет?</h3>
+            <p style="margin:0;font-size:14px;">Облачные сервисы обрабатывают файлы на своих серверах, что создаёт расходы на трафик и хранение данных. PDFree обрабатывает файлы локально в вашем браузере — серверных расходов нет, поэтому нет ни дневного лимита, ни ограничения в 25 МБ; одно объединение может занимать до 500 МБ на компьютере, а лимит нужен лишь для защиты памяти вашего устройства.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Есть ли дневной лимит на объединения?</h3>
-            <p style="margin:0;font-size:14px;">Нет. В отличие от SmallPDF (2 задачи/день бесплатно) или iLovePDF (дневные лимиты), у PDFree нет дневного лимита. Объединяйте столько PDF, сколько нужно, так часто, как хочется.</p>
+            <p style="margin:0;font-size:14px;">Нет. В отличие от облачных сервисов с дневными лимитами на бесплатном тарифе, у PDFree нет дневного лимита. Объединяйте столько PDF, сколько нужно, так часто, как хочется.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Насколько большой PDF я могу объединить?</h3>
@@ -515,7 +501,7 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Можно ли бесплатно объединить 50 или 100 PDF-файлов за раз?</h3>
-            <p style="margin:0;font-size:14px;">Да, совершенно бесплатно и без дневного лимита. В отличие от SmallPDF (2 задачи/день) или iLovePDF (дневные лимиты), у PDFree нет ограничений по использованию. Перетащите сразу все 50 или 100 файлов, расположите их в нужном порядке и нажмите «Объединить» — результат скачается прямо на ваше устройство без загрузки на какой-либо сервер.</p>
+            <p style="margin:0;font-size:14px;">Да, совершенно бесплатно и без дневного лимита. В отличие от облачных сервисов с дневными лимитами на бесплатном тарифе, у PDFree нет ограничений по использованию. Перетащите сразу все 50 или 100 файлов, расположите их в нужном порядке и нажмите «Объединить» — результат скачается прямо на ваше устройство без загрузки на какой-либо сервер.</p>
           </div>
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Нужно ли создавать аккаунт?</h3>

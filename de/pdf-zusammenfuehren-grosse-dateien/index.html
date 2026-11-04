@@ -132,8 +132,8 @@
       },
       {
         "@type": "Question",
-        "name": "Warum hat iLovePDF ein Limit von 25 MB pro Datei?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF verarbeitet Dateien auf seinen Servern, was Bandbreiten- und Speicherkosten verursacht. Um diese Kosten für kostenlose Nutzer zu begrenzen, setzt der Dienst Dateigrößenlimits. PDFree verarbeitet alles lokal in deinem Browser — es entstehen keine Serverkosten, also gibt es weder ein Tageslimit noch eine 25-MB-Grenze; eine Zusammenführung darf am Computer bis zu 500 MB groß sein, begrenzt nur zum Schutz des Arbeitsspeichers deines Geräts." }
+        "name": "Warum haben Cloud-Tools ein Limit pro Datei?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Cloud-Tools verarbeiten Dateien auf ihren Servern, was Bandbreiten- und Speicherkosten verursacht. Um diese Kosten für kostenlose Nutzer zu begrenzen, setzt der Dienst Dateigrößenlimits. PDFree verarbeitet alles lokal in deinem Browser — es entstehen keine Serverkosten, also gibt es weder ein Tageslimit noch eine 25-MB-Grenze; eine Zusammenführung darf am Computer bis zu 500 MB groß sein, begrenzt nur zum Schutz des Arbeitsspeichers deines Geräts." }
       },
       {
         "@type": "Question",
@@ -148,7 +148,7 @@
       {
         "@type": "Question",
         "name": "Gibt es ein Tageslimit für die Anzahl der Zusammenführungen?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Nein. PDFree hat keine täglichen Nutzungslimits. Anders als SmallPDF (2 Aufgaben pro Tag im kostenlosen Plan) oder iLovePDF (Tageslimits für kostenlose Konten) kannst du mit PDFree so viele PDFs zusammenführen, wie du brauchst, so oft du willst — kostenlos." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Nein. PDFree hat keine täglichen Nutzungslimits. Anders als Cloud-Tools mit Tageslimits im Gratis-Tarif kannst du mit PDFree so viele PDFs zusammenführen, wie du brauchst, so oft du willst — kostenlos." }
       },
       {
         "@type": "Question",
@@ -162,8 +162,8 @@
       },
       {
         "@type": "Question",
-        "name": "Warum ist das Zusammenführen großer PDFs bei iLovePDF langsam, bei PDFree aber schnell?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF erfordert das Hochladen deiner Datei auf den Server, die Verarbeitung dort und den Download des Ergebnisses — drei Netzwerkwege, die bei großen Dateien deutlich Zeit kosten. PDFree verarbeitet alles lokal in deinem Browser ohne Netzwerkübertragung, sodass die Geschwindigkeit nur von der CPU deines Geräts abhängt, nicht von deiner Internetverbindung." }
+        "name": "Warum ist das Zusammenführen großer PDFs bei Cloud-Tools langsam, bei PDFree aber schnell?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Cloud-Tools erfordern das Hochladen deiner Datei auf den Server, die Verarbeitung dort und den Download des Ergebnisses — drei Netzwerkwege, die bei großen Dateien deutlich Zeit kosten. PDFree verarbeitet alles lokal in deinem Browser ohne Netzwerkübertragung, sodass die Geschwindigkeit nur von der CPU deines Geräts abhängt, nicht von deiner Internetverbindung." }
       }
     ]
   }
@@ -316,9 +316,7 @@
   <!-- Vergleichs-Badges — unterhalb des Tools, damit der Zugriff nicht verzögert wird -->
   <section style="padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
     <div style="max-width:760px;margin:0 auto;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;">
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">iLovePDF: 25-MB-Limit</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">SmallPDF: 2 Aufgaben/Tag</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Adobe: kostenpflichtiger Plan nötig</span>
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Cloud-Tools: Größen- und Tageslimits im Gratis-Tarif</span>
       <span style="font-size:13px;color:var(--text2);">vs</span>
       <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">PDFree: kein Tageslimit, immer kostenlos</span>
     </div>
@@ -378,22 +376,10 @@
                 <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Für immer kostenlos</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">iLovePDF (kostenlos)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~25 MB</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Begrenzt</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Kostenlos / ab 6 $/Monat</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">SmallPDF (kostenlos)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~5 MB komprimiert</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 Aufgaben/Tag</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Kostenlos / ab 9 $/Monat</td>
-              </tr>
-              <tr>
-                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">100 MB (kostenpflichtig)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Unbegrenzt (kostenpflichtig)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">19,99 $/Monat</td>
+                <td style="padding:10px 14px;color:var(--text);">Übliche Cloud-PDF-Tools</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Je nach Tool</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Je nach Tool</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Je nach Tool</td>
               </tr>
             </tbody>
           </table>
@@ -493,12 +479,12 @@
             <p style="margin:0;font-size:14px;">Ja — bis zu 500 MB pro Zusammenführung in Chrome oder Edge auf einem Computer mit mindestens 8 GB Arbeitsspeicher, bis zu 300 MB auf Smartphones sowie in Safari und Firefox. Die Verarbeitung erfolgt vollständig in deinem Browser, die Grenze schützt also den Arbeitsspeicher deines Geräts und nicht die Bandbreite eines Servers — in unseren Tests dauerte eine 500-MB-Zusammenführung auf einem Laptop mit 8 GB etwa 5 Sekunden.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Warum hat iLovePDF ein 25-MB-Limit, PDFree aber nicht?</h3>
-            <p style="margin:0;font-size:14px;">iLovePDF verarbeitet Dateien auf seinen Servern, was Bandbreiten- und Speicherkosten verursacht. PDFree verarbeitet Dateien lokal in deinem Browser — es entstehen keine Serverkosten, also gibt es weder ein Tageslimit noch eine 25-MB-Grenze; eine Zusammenführung darf am Computer bis zu 500 MB groß sein, begrenzt nur zum Schutz des Arbeitsspeichers deines Geräts.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Warum haben Cloud-Tools ein Größenlimit, PDFree aber nicht?</h3>
+            <p style="margin:0;font-size:14px;">Cloud-Tools verarbeiten Dateien auf ihren Servern, was Bandbreiten- und Speicherkosten verursacht. PDFree verarbeitet Dateien lokal in deinem Browser — es entstehen keine Serverkosten, also gibt es weder ein Tageslimit noch eine 25-MB-Grenze; eine Zusammenführung darf am Computer bis zu 500 MB groß sein, begrenzt nur zum Schutz des Arbeitsspeichers deines Geräts.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Gibt es ein Tageslimit für Zusammenführungen?</h3>
-            <p style="margin:0;font-size:14px;">Nein. Anders als SmallPDF (2 Aufgaben/Tag kostenlos) oder iLovePDF (Tageslimits) hat PDFree kein Tageslimit. Führe so viele PDFs zusammen, wie du brauchst, so oft du willst.</p>
+            <p style="margin:0;font-size:14px;">Nein. Anders als Cloud-Tools mit Tageslimits im Gratis-Tarif hat PDFree kein Tageslimit. Führe so viele PDFs zusammen, wie du brauchst, so oft du willst.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Wie groß darf ein PDF sein, das ich zusammenführe?</h3>
@@ -514,7 +500,7 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Kann ich kostenlos 50 oder 100 PDF-Dateien auf einmal zusammenführen?</h3>
-            <p style="margin:0;font-size:14px;">Ja, komplett kostenlos und ohne Tageslimit. Anders als SmallPDF (2 Aufgaben/Tag) oder iLovePDF (Tageslimits) hat PDFree keine Nutzungseinschränkungen. Lege alle 50 oder 100 Dateien auf einmal ab, ordne sie an und klicke auf Zusammenführen — das Ergebnis wird direkt auf dein Gerät heruntergeladen, ohne Upload auf einen Server.</p>
+            <p style="margin:0;font-size:14px;">Ja, komplett kostenlos und ohne Tageslimit. Anders als Cloud-Tools mit Tageslimits im Gratis-Tarif hat PDFree keine Nutzungseinschränkungen. Lege alle 50 oder 100 Dateien auf einmal ab, ordne sie an und klicke auf Zusammenführen — das Ergebnis wird direkt auf dein Gerät heruntergeladen, ohne Upload auf einen Server.</p>
           </div>
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Muss ich ein Konto erstellen?</h3>

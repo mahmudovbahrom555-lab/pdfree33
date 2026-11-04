@@ -174,10 +174,10 @@
       },
       {
         "@type": "Question",
-        "name": "How is PDFree different from iLovePDF or SmallPDF?",
+        "name": "How is PDFree different from cloud PDF tools?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "iLovePDF and SmallPDF upload your files to their servers for processing and delete them after 1-2 hours. PDFree processes everything locally in your browser — your files never leave your device. This makes PDFree inherently safer for sensitive documents and usable without an internet connection once loaded."
+          "text": "Cloud PDF tools upload your files to their servers for processing and delete them later; how long they keep them varies. PDFree processes everything locally in your browser — your files never leave your device. This makes PDFree inherently safer for sensitive documents and usable without an internet connection once loaded."
         }
       },
       {
@@ -341,7 +341,7 @@
         <!-- How it works -->
         <div id="how-it-works"></div>
         <h2 style="font-size:26px;color:var(--text);margin:0 0 12px;font-weight:700;">Why "No Upload" Matters</h2>
-        <p>When you use tools like iLovePDF or SmallPDF, your files travel over the internet to a remote server. That server processes them, stores them temporarily (for 1–2 hours), and then deletes them. During that window, your documents exist on someone else's computer.</p>
+        <p>When you use cloud PDF tools, your files travel over the internet to a remote server. That server processes them, stores them temporarily, and then deletes them. During that window, your documents exist on someone else's computer.</p>
         <p>For everyday files like meeting agendas this is fine. But for <strong>bank statements, medical records, legal contracts, tax returns, or personal IDs</strong> — uploading to a third-party server creates unnecessary exposure. A server breach, a misconfigured permission, or a subpoena could expose your documents.</p>
 
         <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
@@ -380,8 +380,7 @@
               <tr style="border-bottom:2px solid var(--border);">
                 <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Feature</th>
                 <th style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:700;">PDFree</th>
-                <th style="text-align:center;padding:10px 14px;color:var(--text2);font-weight:600;">iLovePDF</th>
-                <th style="text-align:center;padding:10px 14px;color:var(--text2);font-weight:600;">SmallPDF</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text2);font-weight:600;">Typical cloud PDF tools</th>
               </tr>
             </thead>
             <tbody>
@@ -389,42 +388,35 @@
                 <td style="padding:10px 14px;color:var(--text);font-weight:500;">Files uploaded to server</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:700;">Never</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">Always</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Always</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:10px 14px;color:var(--text);">Files deleted from server</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:700;">N/A — never stored</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">After 2 hours</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">After 1 hour</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Varies by tool</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
                 <td style="padding:10px 14px;color:var(--text);">Works offline</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:700;">✓ Yes (PWA)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">✗ No</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">✗ No</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:10px 14px;color:var(--text);">File size limit</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:700;">500 MB per merge (computer) · 300 MB (phone)</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limited (free)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limited (free)</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
                 <td style="padding:10px 14px;color:var(--text);">Daily usage limit</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:700;">None</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limited (free)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 tasks/day (free)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Varies by tool</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:10px 14px;color:var(--text);">Account required</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:700;">✓ Never</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">Optional</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Optional</td>
               </tr>
               <tr>
                 <td style="padding:10px 14px;color:var(--text);">File stays on your device</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:700;">✓ Yes</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">No (uploaded)</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">No (uploaded)</td>
               </tr>
             </tbody>
@@ -482,8 +474,8 @@
             <p style="margin:0;font-size:14px;">Yes. Because files never leave your device, PDFree is safe for HIPAA-regulated medical records, privileged legal documents, and any other sensitive content. There is no server that could be breached.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">How is this different from iLovePDF or SmallPDF?</h3>
-            <p style="margin:0;font-size:14px;">iLovePDF and SmallPDF upload your files to their servers, process them there, and delete them after 1–2 hours. PDFree processes everything locally — your files never travel to any server. You also get no daily usage limits.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">How is this different from cloud PDF tools?</h3>
+            <p style="margin:0;font-size:14px;">Cloud PDF tools upload your files to their servers, process them there, and delete them later; how long they keep them varies. PDFree processes everything locally — your files never travel to any server. You also get no daily usage limits.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Is there a file size limit?</h3>
@@ -517,7 +509,7 @@
     <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
       <div>
         <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatives</div>
-        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green-text);text-decoration:none;padding:3px 0;margin-bottom:4px;">iLovePDF Alternative</a>
+        <a href="/alternative-to-cloud-pdf-tools/" style="display:block;color:var(--green-text);text-decoration:none;padding:3px 0;margin-bottom:4px;">Alternative to cloud PDF tools</a>
       </div>
       <div>
         <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>

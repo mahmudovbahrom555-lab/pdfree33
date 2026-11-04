@@ -131,8 +131,8 @@
       },
       {
         "@type": "Question",
-        "name": "Tại sao iLovePDF lại giới hạn dung lượng file ở mức 25MB?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF xử lý file trên server của họ, điều này phát sinh chi phí băng thông và lưu trữ. Để kiểm soát chi phí cho người dùng miễn phí, họ áp giới hạn dung lượng file. PDFree xử lý mọi thứ ngay trong trình duyệt của bạn nên không có chi phí server — vì vậy không có giới hạn hàng ngày và không có mức trần 25MB; một lần ghép có thể lên đến 500 MB trên máy tính, giới hạn chỉ để bảo vệ bộ nhớ thiết bị của bạn." }
+        "name": "Tại sao các công cụ đám mây lại giới hạn dung lượng file?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Các công cụ đám mây xử lý file trên server của họ, điều này phát sinh chi phí băng thông và lưu trữ. Để kiểm soát chi phí cho người dùng miễn phí, họ áp giới hạn dung lượng file. PDFree xử lý mọi thứ ngay trong trình duyệt của bạn nên không có chi phí server — vì vậy không có giới hạn hàng ngày và không có mức trần 25MB; một lần ghép có thể lên đến 500 MB trên máy tính, giới hạn chỉ để bảo vệ bộ nhớ thiết bị của bạn." }
       },
       {
         "@type": "Question",
@@ -147,7 +147,7 @@
       {
         "@type": "Question",
         "name": "Có giới hạn số lần ghép PDF mỗi ngày không?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Không. PDFree không giới hạn lượt dùng mỗi ngày. Khác với SmallPDF (2 tác vụ/ngày ở gói miễn phí) hay iLovePDF (giới hạn theo ngày cho tài khoản miễn phí), PDFree cho phép bạn ghép bao nhiêu file PDF tùy thích, bất kỳ lúc nào, hoàn toàn miễn phí." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Không. PDFree không giới hạn lượt dùng mỗi ngày. Khác với các công cụ đám mây giới hạn số lần mỗi ngày ở gói miễn phí, PDFree cho phép bạn ghép bao nhiêu file PDF tùy thích, bất kỳ lúc nào, hoàn toàn miễn phí." }
       },
       {
         "@type": "Question",
@@ -161,8 +161,8 @@
       },
       {
         "@type": "Question",
-        "name": "Tại sao ghép PDF lớn trên iLovePDF chậm nhưng trên PDFree lại nhanh?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF yêu cầu tải file của bạn lên server, xử lý ở đó rồi tải kết quả về — ba bước truyền tải mạng khiến file lớn tốn nhiều thời gian. PDFree xử lý mọi thứ ngay trong trình duyệt mà không cần truyền tải qua mạng, nên tốc độ chỉ phụ thuộc vào CPU thiết bị của bạn, không phụ thuộc vào kết nối internet." }
+        "name": "Tại sao ghép PDF lớn trên công cụ đám mây chậm nhưng trên PDFree lại nhanh?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Các công cụ đám mây yêu cầu tải file của bạn lên server, xử lý ở đó rồi tải kết quả về — ba bước truyền tải mạng khiến file lớn tốn nhiều thời gian. PDFree xử lý mọi thứ ngay trong trình duyệt mà không cần truyền tải qua mạng, nên tốc độ chỉ phụ thuộc vào CPU thiết bị của bạn, không phụ thuộc vào kết nối internet." }
       }
     ]
   }
@@ -317,9 +317,7 @@
   <!-- Huy hiệu so sánh — bên dưới tool để không làm chậm việc truy cập -->
   <section style="padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
     <div style="max-width:760px;margin:0 auto;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;">
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">iLovePDF: giới hạn 25MB</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">SmallPDF: 2 tác vụ/ngày</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Adobe: cần gói trả phí</span>
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Công cụ đám mây: giới hạn dung lượng và số lần mỗi ngày ở gói miễn phí</span>
       <span style="font-size:13px;color:var(--text2);">so với</span>
       <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">PDFree: không giới hạn hàng ngày, luôn miễn phí</span>
     </div>
@@ -379,22 +377,10 @@
                 <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Miễn phí vĩnh viễn</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">iLovePDF (miễn phí)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~25MB</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Có giới hạn</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Miễn phí / từ 6$/tháng</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">SmallPDF (miễn phí)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~5MB nén</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 tác vụ/ngày</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Miễn phí / từ 9$/tháng</td>
-              </tr>
-              <tr>
-                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">100MB (trả phí)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Không giới hạn (trả phí)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">19,99$/tháng</td>
+                <td style="padding:10px 14px;color:var(--text);">Công cụ PDF đám mây phổ biến</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Tùy công cụ</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Tùy công cụ</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Tùy công cụ</td>
               </tr>
             </tbody>
           </table>
@@ -494,12 +480,12 @@
             <p style="margin:0;font-size:14px;">Có — đến 500 MB mỗi lần ghép trong Chrome hoặc Edge trên máy tính có bộ nhớ từ 8 GB trở lên, và đến 300 MB trên điện thoại, Safari và Firefox. Quá trình xử lý diễn ra hoàn toàn trong trình duyệt của bạn, nên mức trần này để bảo vệ bộ nhớ thiết bị chứ không phải băng thông server — trong thử nghiệm của chúng tôi, ghép 500 MB mất khoảng 5 giây trên laptop RAM 8 GB.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Tại sao iLovePDF giới hạn 25MB còn PDFree cho phép file lớn hơn nhiều?</h3>
-            <p style="margin:0;font-size:14px;">iLovePDF xử lý file trên server của họ, gây ra chi phí băng thông và lưu trữ. PDFree xử lý file ngay trong trình duyệt của bạn — không có chi phí server, nên không có giới hạn hàng ngày và không có mức trần 25MB; một lần ghép có thể lên đến 500 MB trên máy tính, giới hạn chỉ để bảo vệ bộ nhớ thiết bị của bạn.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Tại sao công cụ đám mây giới hạn dung lượng còn PDFree cho phép file lớn hơn nhiều?</h3>
+            <p style="margin:0;font-size:14px;">Các công cụ đám mây xử lý file trên server của họ, gây ra chi phí băng thông và lưu trữ. PDFree xử lý file ngay trong trình duyệt của bạn — không có chi phí server, nên không có giới hạn hàng ngày và không có mức trần 25MB; một lần ghép có thể lên đến 500 MB trên máy tính, giới hạn chỉ để bảo vệ bộ nhớ thiết bị của bạn.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Có giới hạn số lần ghép mỗi ngày không?</h3>
-            <p style="margin:0;font-size:14px;">Không. Khác với SmallPDF (2 tác vụ/ngày miễn phí) hay iLovePDF (giới hạn theo ngày), PDFree không giới hạn theo ngày. Ghép bao nhiêu PDF tùy thích, bất kỳ lúc nào.</p>
+            <p style="margin:0;font-size:14px;">Không. Khác với các công cụ đám mây giới hạn số lần mỗi ngày ở gói miễn phí, PDFree không giới hạn theo ngày. Ghép bao nhiêu PDF tùy thích, bất kỳ lúc nào.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Tôi có thể ghép file PDF lớn đến mức nào?</h3>
@@ -515,7 +501,7 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Tôi có thể ghép 50 hoặc 100 file PDF cùng lúc miễn phí không?</h3>
-            <p style="margin:0;font-size:14px;">Có, hoàn toàn miễn phí và không giới hạn theo ngày. Khác với SmallPDF (2 tác vụ/ngày) hay iLovePDF (giới hạn theo ngày), PDFree không có bất kỳ ràng buộc sử dụng nào. Thả cả 50 hoặc 100 file vào cùng lúc, sắp xếp thứ tự và nhấn Ghép — kết quả tải trực tiếp về thiết bị của bạn, không cần tải lên bất kỳ server nào.</p>
+            <p style="margin:0;font-size:14px;">Có, hoàn toàn miễn phí và không giới hạn theo ngày. Khác với các công cụ đám mây giới hạn số lần mỗi ngày ở gói miễn phí, PDFree không có bất kỳ ràng buộc sử dụng nào. Thả cả 50 hoặc 100 file vào cùng lúc, sắp xếp thứ tự và nhấn Ghép — kết quả tải trực tiếp về thiết bị của bạn, không cần tải lên bất kỳ server nào.</p>
           </div>
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Tôi có cần tạo tài khoản không?</h3>

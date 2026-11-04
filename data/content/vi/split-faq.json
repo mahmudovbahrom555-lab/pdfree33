@@ -89,10 +89,10 @@
   },
   {
     "@type": "Question",
-    "name": "Có thể tách PDF trên iPhone hoặc Android không cần Adobe?",
+    "name": "Có thể tách PDF trên iPhone hoặc Android không cần cài ứng dụng?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Mở PDFree trong Safari (iPhone/iPad) hoặc bất kỳ trình duyệt nào trên Mac — không cần tải app hoặc Adobe Acrobat. Công cụ chạy hoàn toàn trong trình duyệt: tải PDF, chọn trang, nhấn Tách PDF. Kết quả lưu vào ứng dụng Tệp trên iOS hoặc thư mục Tải xuống trên Mac."
+      "text": "Mở PDFree trong Safari (iPhone/iPad) hoặc bất kỳ trình duyệt nào trên Mac — không cần tải app hay phần mềm trả phí. Công cụ chạy hoàn toàn trong trình duyệt: tải PDF, chọn trang, nhấn Tách PDF. Kết quả lưu vào ứng dụng Tệp trên iOS hoặc thư mục Tải xuống trên Mac."
     }
   },
   {

@@ -131,8 +131,8 @@
       },
       {
         "@type": "Question",
-        "name": "Waarom heeft iLovePDF een limiet van 25 MB per bestand?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF verwerkt bestanden op hun servers, wat bandbreedte- en opslagkosten met zich meebrengt. Om die kosten voor gratis gebruikers te beperken, hanteren zij limieten op bestandsgrootte. PDFree verwerkt alles lokaal in je browser, dus er zijn geen serverkosten — en daarom ook geen dagelijkse limiet en geen limiet van 25 MB; één samenvoeging mag op een computer tot 500 MB groot zijn, alleen begrensd om het geheugen van je apparaat te beschermen." }
+        "name": "Waarom hebben cloudtools een limiet per bestand?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Cloudtools verwerken bestanden op hun servers, wat bandbreedte- en opslagkosten met zich meebrengt. Om die kosten voor gratis gebruikers te beperken, hanteren zij limieten op bestandsgrootte. PDFree verwerkt alles lokaal in je browser, dus er zijn geen serverkosten — en daarom ook geen dagelijkse limiet en geen limiet van 25 MB; één samenvoeging mag op een computer tot 500 MB groot zijn, alleen begrensd om het geheugen van je apparaat te beschermen." }
       },
       {
         "@type": "Question",
@@ -147,7 +147,7 @@
       {
         "@type": "Question",
         "name": "Is er een dagelijkse limiet op het aantal samenvoegingen?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Nee. PDFree heeft geen dagelijkse gebruikslimieten. In tegenstelling tot SmallPDF (2 taken per dag in het gratis plan) of iLovePDF (dagelijkse limieten voor gratis accounts) kun je met PDFree zoveel PDF's samenvoegen als nodig, zo vaak als je wilt — gratis." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Nee. PDFree heeft geen dagelijkse gebruikslimieten. In tegenstelling tot cloudtools met daglimieten in het gratis plan kun je met PDFree zoveel PDF's samenvoegen als nodig, zo vaak als je wilt — gratis." }
       },
       {
         "@type": "Question",
@@ -161,8 +161,8 @@
       },
       {
         "@type": "Question",
-        "name": "Waarom is het samenvoegen van grote PDF's traag bij iLovePDF, maar snel bij PDFree?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Bij iLovePDF moet je je bestand naar hun server uploaden, daar laten verwerken en het resultaat downloaden — drie netwerkstappen die bij grote bestanden aanzienlijk tijd kosten. PDFree verwerkt alles lokaal in je browser zonder netwerkoverdracht, dus de snelheid hangt alleen af van de processor van je apparaat, niet van je internetverbinding." }
+        "name": "Waarom is het samenvoegen van grote PDF's traag bij cloudtools, maar snel bij PDFree?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Bij cloudtools moet je je bestand naar hun server uploaden, daar laten verwerken en het resultaat downloaden — drie netwerkstappen die bij grote bestanden aanzienlijk tijd kosten. PDFree verwerkt alles lokaal in je browser zonder netwerkoverdracht, dus de snelheid hangt alleen af van de processor van je apparaat, niet van je internetverbinding." }
       }
     ]
   }
@@ -317,9 +317,7 @@
   <!-- Vergelijkingsbadges — onder de tool zodat toegang niet vertraagd wordt -->
   <section style="padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
     <div style="max-width:760px;margin:0 auto;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;">
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">iLovePDF: limiet 25 MB</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">SmallPDF: 2 taken/dag</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Adobe: betaald plan nodig</span>
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Cloudtools: grootte- en daglimieten in het gratis plan</span>
       <span style="font-size:13px;color:var(--text2);">vs</span>
       <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">PDFree: geen dagelijkse limiet, altijd gratis</span>
     </div>
@@ -378,22 +376,10 @@
                 <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Voor altijd gratis</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">iLovePDF (gratis)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~25 MB</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Beperkt</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Gratis / vanaf $6/maand</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">SmallPDF (gratis)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~5 MB gecomprimeerd</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 taken/dag</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Gratis / vanaf $9/maand</td>
-              </tr>
-              <tr>
-                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">100 MB (betaald)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Onbeperkt (betaald)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">$19,99/maand</td>
+                <td style="padding:10px 14px;color:var(--text);">Gangbare cloud-PDF-tools</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Verschilt per tool</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Verschilt per tool</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Verschilt per tool</td>
               </tr>
             </tbody>
           </table>
@@ -493,12 +479,12 @@
             <p style="margin:0;font-size:14px;">Ja — tot 500 MB per samenvoeging in Chrome of Edge op een computer met 8 GB+ geheugen, en tot 300 MB op telefoons, in Safari en in Firefox. De verwerking gebeurt volledig in je browser, dus de limiet beschermt het geheugen van je apparaat, niet de bandbreedte van een server — in onze tests duurde een samenvoeging van 500 MB ongeveer 5 seconden op een laptop met 8 GB.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Waarom heeft iLovePDF een limiet van 25 MB, maar PDFree niet?</h3>
-            <p style="margin:0;font-size:14px;">iLovePDF verwerkt bestanden op hun servers, wat bandbreedte- en opslagkosten met zich meebrengt. PDFree verwerkt bestanden lokaal in je browser — er zijn geen serverkosten, dus er is geen dagelijkse limiet en geen limiet van 25 MB; één samenvoeging mag op een computer tot 500 MB groot zijn, alleen begrensd om het geheugen van je apparaat te beschermen.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Waarom hebben cloudtools een groottelimiet, maar PDFree niet?</h3>
+            <p style="margin:0;font-size:14px;">Cloudtools verwerken bestanden op hun servers, wat bandbreedte- en opslagkosten met zich meebrengt. PDFree verwerkt bestanden lokaal in je browser — er zijn geen serverkosten, dus er is geen dagelijkse limiet en geen limiet van 25 MB; één samenvoeging mag op een computer tot 500 MB groot zijn, alleen begrensd om het geheugen van je apparaat te beschermen.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Is er een dagelijkse limiet op samenvoegingen?</h3>
-            <p style="margin:0;font-size:14px;">Nee. In tegenstelling tot SmallPDF (2 taken/dag gratis) of iLovePDF (dagelijkse limieten) heeft PDFree geen dagelijkse limiet. Voeg zoveel PDF's samen als nodig, zo vaak als je wilt.</p>
+            <p style="margin:0;font-size:14px;">Nee. In tegenstelling tot cloudtools met daglimieten in het gratis plan heeft PDFree geen dagelijkse limiet. Voeg zoveel PDF's samen als nodig, zo vaak als je wilt.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Hoe groot mag een PDF zijn die ik samenvoeg?</h3>
@@ -514,7 +500,7 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Kan ik gratis 50 of 100 PDF-bestanden tegelijk samenvoegen?</h3>
-            <p style="margin:0;font-size:14px;">Ja, volledig gratis en zonder dagelijkse limiet. In tegenstelling tot SmallPDF (2 taken/dag) of iLovePDF (dagelijkse limieten) heeft PDFree geen gebruiksbeperkingen. Sleep alle 50 of 100 bestanden in één keer erin, bepaal de volgorde en klik op Samenvoegen — het resultaat wordt direct naar je apparaat gedownload, zonder upload naar een server.</p>
+            <p style="margin:0;font-size:14px;">Ja, volledig gratis en zonder dagelijkse limiet. In tegenstelling tot cloudtools met daglimieten in het gratis plan heeft PDFree geen gebruiksbeperkingen. Sleep alle 50 of 100 bestanden in één keer erin, bepaal de volgorde en klik op Samenvoegen — het resultaat wordt direct naar je apparaat gedownload, zonder upload naar een server.</p>
           </div>
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Moet ik een account aanmaken?</h3>

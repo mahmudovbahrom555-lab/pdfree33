@@ -65,10 +65,10 @@
   },
   {
     "@type": "Question",
-    "name": "Como divido um PDF no iPhone, iPad ou Mac sem Adobe Acrobat?",
+    "name": "Como divido um PDF no iPhone, iPad ou Mac sem instalar nada?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Abra o PDFree no Safari (iPhone/iPad) ou em qualquer navegador no Mac — não é necessário baixar nenhuma app nem o Adobe Acrobat. A ferramenta funciona completamente no navegador: carregue o PDF, selecione páginas, toque em Dividir PDF. O resultado é guardado na app Arquivos (iOS) ou na pasta Downloads (Mac)."
+      "text": "Abra o PDFree no Safari (iPhone/iPad) ou em qualquer navegador no Mac — não é necessário baixar nenhuma app nem programa pago. A ferramenta funciona completamente no navegador: carregue o PDF, selecione páginas, toque em Dividir PDF. O resultado é guardado na app Arquivos (iOS) ou na pasta Downloads (Mac)."
     }
   },
   {

@@ -68,3 +68,15 @@
 /pdf-en-word/   /fr/pdf-en-word/    301
 /pdf-para-word  /pt/pdf-para-word/  301
 /pdf-para-word/ /pt/pdf-para-word/  301
+
+# competitor-named pages → one neutral page (owner 2026-11-04: compare yes, name no)
+/ilovepdf-alternative /alternative-to-cloud-pdf-tools/ 301
+/ilovepdf-alternative/ /alternative-to-cloud-pdf-tools/ 301
+/smallpdf-alternative /alternative-to-cloud-pdf-tools/ 301
+/smallpdf-alternative/ /alternative-to-cloud-pdf-tools/ 301
+/pdf24-alternative /alternative-to-cloud-pdf-tools/ 301
+/pdf24-alternative/ /alternative-to-cloud-pdf-tools/ 301
+/adobe-acrobat-alternative /alternative-to-cloud-pdf-tools/ 301
+/adobe-acrobat-alternative/ /alternative-to-cloud-pdf-tools/ 301
+/best-free-pdf-tools /alternative-to-cloud-pdf-tools/ 301
+/best-free-pdf-tools/ /alternative-to-cloud-pdf-tools/ 301

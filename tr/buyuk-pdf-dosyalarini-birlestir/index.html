@@ -131,8 +131,8 @@
       },
       {
         "@type": "Question",
-        "name": "iLovePDF neden 25 MB dosya boyutu sınırı koyuyor?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF, dosyaları kendi sunucularında işler; bu da bant genişliği ve depolama maliyeti anlamına gelir. Ücretsiz kullanıcılar için bu maliyetleri kontrol altında tutmak amacıyla dosya boyutu sınırları uygularlar. PDFree, her şeyi tarayıcınızda yerel olarak işler; bu nedenle sunucu maliyeti yoktur — dolayısıyla günlük limit ve 25 MB sınırı da yoktur; tek bir birleştirme bilgisayarda 500 MB'a kadar çıkabilir ve bu sınır yalnızca cihazınızın belleğini korumak içindir." }
+        "name": "Bulut araçları neden dosya boyutu sınırı koyuyor?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Bulut araçları dosyaları kendi sunucularında işler; bu da bant genişliği ve depolama maliyeti anlamına gelir. Ücretsiz kullanıcılar için bu maliyetleri kontrol altında tutmak amacıyla dosya boyutu sınırları uygularlar. PDFree, her şeyi tarayıcınızda yerel olarak işler; bu nedenle sunucu maliyeti yoktur — dolayısıyla günlük limit ve 25 MB sınırı da yoktur; tek bir birleştirme bilgisayarda 500 MB'a kadar çıkabilir ve bu sınır yalnızca cihazınızın belleğini korumak içindir." }
       },
       {
         "@type": "Question",
@@ -147,7 +147,7 @@
       {
         "@type": "Question",
         "name": "Kaç PDF birleştirebileceğime dair günlük bir limit var mı?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Hayır. PDFree'de günlük kullanım limiti yoktur. SmallPDF'in (ücretsiz planda günde 2 görev) veya iLovePDF'in (ücretsiz hesaplarda günlük limitler) aksine, PDFree ile ihtiyacınız kadar, istediğiniz sıklıkta PDF birleştirebilirsiniz — ücretsiz olarak." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Hayır. PDFree'de günlük kullanım limiti yoktur. ücretsiz planda günlük sınırı olan bulut araçlarının aksine, PDFree ile ihtiyacınız kadar, istediğiniz sıklıkta PDF birleştirebilirsiniz — ücretsiz olarak." }
       },
       {
         "@type": "Question",
@@ -161,8 +161,8 @@
       },
       {
         "@type": "Question",
-        "name": "Büyük PDF'leri birleştirmek iLovePDF'te neden yavaş ama PDFree'de hızlı?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF, dosyanızı sunucularına yüklemenizi, orada işlenmesini ve sonucun indirilmesini gerektirir — bu, büyük dosyalarda ciddi zaman kaybettiren üç ağ aktarımıdır. PDFree her şeyi tarayıcınızda yerel olarak, ağ aktarımı olmadan işler; bu nedenle hız yalnızca cihazınızın işlemcisine bağlıdır, internet bağlantınıza değil." }
+        "name": "Büyük PDF'leri birleştirmek bulut araçlarında neden yavaş ama PDFree'de hızlı?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Bulut araçları dosyanızı sunucularına yüklemenizi, orada işlenmesini ve sonucun indirilmesini gerektirir — bu, büyük dosyalarda ciddi zaman kaybettiren üç ağ aktarımıdır. PDFree her şeyi tarayıcınızda yerel olarak, ağ aktarımı olmadan işler; bu nedenle hız yalnızca cihazınızın işlemcisine bağlıdır, internet bağlantınıza değil." }
       }
     ]
   }
@@ -317,9 +317,7 @@
   <!-- Karşılaştırma rozetleri — aracın erişimini geciktirmemek için altına yerleştirildi -->
   <section style="padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
     <div style="max-width:760px;margin:0 auto;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;">
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">iLovePDF: 25 MB sınırı</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">SmallPDF: günde 2 görev</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Adobe: ücretli plan gerekli</span>
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Bulut araçları: ücretsiz planda boyut ve günlük sınırlar</span>
       <span style="font-size:13px;color:var(--text2);">vs</span>
       <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">PDFree: günlük limit yok, her zaman ücretsiz</span>
     </div>
@@ -379,22 +377,10 @@
                 <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Sonsuza kadar ücretsiz</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">iLovePDF (ücretsiz)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~25 MB</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Sınırlı</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Ücretsiz / 6 $+/ay</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">SmallPDF (ücretsiz)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~5 MB sıkıştırılmış</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Günde 2 görev</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Ücretsiz / 9 $+/ay</td>
-              </tr>
-              <tr>
-                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">100 MB (ücretli)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Sınırsız (ücretli)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">19,99 $/ay</td>
+                <td style="padding:10px 14px;color:var(--text);">Yaygın bulut PDF araçları</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Araca göre değişir</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Araca göre değişir</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Araca göre değişir</td>
               </tr>
             </tbody>
           </table>
@@ -494,12 +480,12 @@
             <p style="margin:0;font-size:14px;">Evet — 8 GB+ belleğe sahip bir bilgisayarda Chrome veya Edge ile birleştirme başına 500 MB'a, telefonlarda, Safari'de ve Firefox'ta 300 MB'a kadar. İşlem tamamen tarayıcınızda gerçekleştiği için bu sınır bir sunucunun bant genişliğini değil, cihazınızın belleğini korur — testlerimizde 8 GB'lık bir dizüstü bilgisayarda 500 MB'lık bir birleştirme yaklaşık 5 saniye sürdü.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">iLovePDF'te neden 25 MB sınırı var ama PDFree'de yok?</h3>
-            <p style="margin:0;font-size:14px;">iLovePDF, dosyaları kendi sunucularında işler; bu da bant genişliği ve depolama maliyeti yaratır. PDFree, dosyaları tarayıcınızda yerel olarak işler — sunucu maliyeti olmadığından günlük limit ve 25 MB sınırı da yoktur; tek bir birleştirme bilgisayarda 500 MB'a kadar çıkabilir ve bu sınır yalnızca cihazınızın belleğini korumak içindir.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Bulut araçlarında neden boyut sınırı var ama PDFree'de yok?</h3>
+            <p style="margin:0;font-size:14px;">Bulut araçları dosyaları kendi sunucularında işler; bu da bant genişliği ve depolama maliyeti yaratır. PDFree, dosyaları tarayıcınızda yerel olarak işler — sunucu maliyeti olmadığından günlük limit ve 25 MB sınırı da yoktur; tek bir birleştirme bilgisayarda 500 MB'a kadar çıkabilir ve bu sınır yalnızca cihazınızın belleğini korumak içindir.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Birleştirmelerde günlük bir sınır var mı?</h3>
-            <p style="margin:0;font-size:14px;">Hayır. SmallPDF'in (ücretsiz planda günde 2 görev) veya iLovePDF'in (günlük limitler) aksine, PDFree'de günlük limit yoktur. İhtiyacınız kadar, istediğiniz sıklıkta PDF birleştirin.</p>
+            <p style="margin:0;font-size:14px;">Hayır. ücretsiz planda günlük sınırı olan bulut araçlarının aksine, PDFree'de günlük limit yoktur. İhtiyacınız kadar, istediğiniz sıklıkta PDF birleştirin.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">En fazla ne kadar büyük bir PDF'yi birleştirebilirim?</h3>
@@ -515,7 +501,7 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">50 veya 100 PDF dosyasını aynı anda ücretsiz birleştirebilir miyim?</h3>
-            <p style="margin:0;font-size:14px;">Evet, günlük limit olmadan tamamen ücretsiz. SmallPDF (günde 2 görev) veya iLovePDF'in (günlük limitler) aksine, PDFree'de kullanım kısıtlaması yoktur. 50 veya 100 dosyanızı tek seferde bırakın, sırayı düzenleyin ve Birleştir'e tıklayın — sonuç herhangi bir sunucuya yükleme yapılmadan doğrudan cihazınıza indirilir.</p>
+            <p style="margin:0;font-size:14px;">Evet, günlük limit olmadan tamamen ücretsiz. ücretsiz planda günlük sınırı olan bulut araçlarının aksine, PDFree'de kullanım kısıtlaması yoktur. 50 veya 100 dosyanızı tek seferde bırakın, sırayı düzenleyin ve Birleştir'e tıklayın — sonuç herhangi bir sunucuya yükleme yapılmadan doğrudan cihazınıza indirilir.</p>
           </div>
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Bir hesap oluşturmam gerekiyor mu?</h3>

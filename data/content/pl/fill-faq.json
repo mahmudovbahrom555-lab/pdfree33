@@ -89,10 +89,10 @@
   },
   {
     "@type": "Question",
-    "name": "Czym różni się to od darmowego Fill & Sign od Adobe?",
+    "name": "Czym różni się to od darmowych usług w chmurze do wypełniania i podpisywania?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Fill & Sign od Adobe jest darmowy do wypełniania i podpisywania własnego pliku PDF, ale wymaga darmowego konta Adobe i przesyła plik na serwery Adobe. PDFree nie wymaga konta ani logowania, a Twój plik nigdy nie opuszcza urządzenia. (Limit 2 na miesiąc u Adobe dotyczy tylko wysyłania dokumentu do innej osoby do podpisu, a nie samodzielnego wypełniania.)"
+      "text": "Darmowe usługi w chmurze do wypełniania i podpisywania zwykle wymagają konta i przesyłają plik na swoje serwery. PDFree nie wymaga konta ani logowania, a Twój plik nigdy nie opuszcza urządzenia."
     }
   },
   {

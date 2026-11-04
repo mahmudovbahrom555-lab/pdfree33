@@ -89,10 +89,10 @@
   },
   {
     "@type": "Question",
-    "name": "Wat is het verschil met Adobe's gratis Fill & Sign?",
+    "name": "Wat is het verschil met gratis clouddiensten om in te vullen en te ondertekenen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Adobe's Fill & Sign is gratis om je eigen PDF in te vullen en te ondertekenen, maar vereist een gratis Adobe-account en uploadt je bestand naar Adobe's servers. PDFree heeft geen account of login nodig, en je bestand verlaat nooit je apparaat. (De limiet van 2 per maand bij Adobe geldt alleen als je een document naar iemand anders stuurt om te laten ondertekenen, niet als je het zelf invult.)"
+      "text": "Gratis clouddiensten om in te vullen en te ondertekenen vragen meestal een account en uploaden je bestand naar hun servers. PDFree heeft geen account of login nodig, en je bestand verlaat nooit je apparaat."
     }
   },
   {
