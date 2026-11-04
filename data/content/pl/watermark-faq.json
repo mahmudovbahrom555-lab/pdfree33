@@ -49,10 +49,10 @@
   },
   {
     "@type": "Question",
-    "name": "Czy jest zgodny z RODO?",
+    "name": "Co dzieje się z moimi danymi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tak — żadne pliki nigdy nie są wysyłane na serwery. Wszystko odbywa się w Twojej przeglądarce. Zgodny z RODO."
+      "text": "Pliki nigdy nie opuszczają przeglądarki: nie trafiają na nasze serwery ani nie są tam zapisywane. Serwis nie używa śledzących plików cookie i liczy tylko anonimowe zdarzenia techniczne, jak opisano w Polityce prywatności. Nie certyfikujemy zgodności z RODO: czy dane użycie spełnia Twoje obowiązki, ocenia Twoja organizacja."
     }
   },
   {

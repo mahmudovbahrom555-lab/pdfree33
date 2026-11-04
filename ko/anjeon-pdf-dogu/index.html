@@ -25,7 +25,7 @@
   <meta name="description" content="파일을 서버에 절대 업로드하지 않는 PDF 도구입니다. 모든 처리가 브라우저에서 이루어집니다 — PDF 병합, 압축, 분할, 보호를 완전한 개인정보 보호와 함께.">
 
   <meta property="og:title"       content="안전한 PDF 도구 — 파일이 절대 업로드되지 않습니다 | PDFree">
-  <meta property="og:description" content="모든 작업을 브라우저에서 처리하는 유일한 PDF 도구 모음입니다. 서버도, 저장도, 추적도 없습니다.">
+  <meta property="og:description" content="파일을 브라우저에서 처리하는 PDF 도구 — 업로드하지 않고 당사 서버에 저장하지 않습니다.">
   <meta property="og:type"        content="website">
   <meta property="og:url"         content="https://pdfree.io/ko/anjeon-pdf-dogu/">
   <meta property="og:site_name"   content="PDFree">
@@ -37,7 +37,7 @@
   <meta name="twitter:card"       content="summary_large_image">
   <meta name="twitter:site"       content="@pdfree_io">
   <meta name="twitter:title"      content="안전한 PDF 도구 — 파일이 절대 업로드되지 않습니다 | PDFree">
-  <meta name="twitter:description" content="모든 작업을 브라우저에서 처리하는 유일한 PDF 도구 모음입니다. 서버도, 저장도, 추적도 없습니다.">
+  <meta name="twitter:description" content="파일을 브라우저에서 처리하는 PDF 도구 — 업로드하지 않고 당사 서버에 저장하지 않습니다.">
   <meta name="twitter:image"       content="https://pdfree.io/icons/og-image.jpg">
   <meta name="twitter:image:alt"   content="안전한 PDF 도구 — 파일이 절대 업로드되지 않습니다 | PDFree">
 
@@ -100,7 +100,7 @@
       "일일 사용 제한 없음",
       "오프라인에서도 작동 (PWA)",
       "PDF 비밀번호 보호 지원 (RC4-128 암호화)",
-      "데이터를 전혀 보관하지 않음"
+      "당사 서버에 파일 사본 없음"
     ],
     "dateModified": "2026-08-09",
     "provider": {
@@ -146,17 +146,17 @@
       {
         "@type": "Question",
         "name": "제 파일이 업로드되지 않는다는 것을 어떻게 확인할 수 있나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "브라우저의 DevTools(F12)를 열고 Network 탭으로 이동한 다음, 아무 PDFree 도구나 사용해 보세요. PDF 파일 데이터가 담긴 요청은 전혀 보이지 않고, 앱의 JavaScript와 CSS 파일에 대한 요청만 보일 것입니다." }
+        "acceptedAnswer": { "@type": "Answer", "text": "브라우저 DevTools(F12)를 열고 네트워크 탭에서 PDFree 도구를 사용해 보세요. PDF 파일을 담은 요청은 보이지 않습니다. 사이트 실행에 필요한 파일(스크립트, 스타일, 글꼴, 일부 도구의 라이브러리나 언어 모델)과 개인정보 처리방침에 설명된 작은 사용·오류 기술 이벤트가 보입니다. PDF 파일이나 그 내용은 절대 보이지 않습니다." }
       },
       {
         "@type": "Question",
-        "name": "PDFree 도구는 GDPR을 준수하나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "네. PDFree는 설계 자체로 GDPR을 준수합니다. 개인 데이터나 파일이 저희 서버로 전송되는 일이 전혀 없으므로, 보호하거나 삭제하거나 보고할 데이터 자체가 존재하지 않습니다. 이 아키텍처는 구조적으로 GDPR 위반을 불가능하게 만듭니다." }
+        "name": "GDPR 관점에서 PDFree는 내 데이터를 어떻게 다루나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "PDF 파일은 브라우저에서 처리되며 당사 서버에 업로드되지 않으므로 당사는 그 내용을 갖지 않습니다. 사이트는 개인정보 처리방침에 설명된 대로 쿠키나 영구 식별자 없이 사용 및 오류에 관한 제한된 기술 정보를 수집합니다. 당사는 준수를 인증하지 않습니다. 어떤 작업 방식이 GDPR 의무를 충족하는지는 귀하의 조직이 판단해야 합니다." }
       },
       {
         "@type": "Question",
         "name": "HIPAA 규제 대상 문서에 PDFree를 사용할 수 있나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "네. PDFree의 브라우저 기반 아키텍처 덕분에 보호 대상 건강 정보(PHI)가 외부 서버로 전송되는 일이 전혀 없습니다. 의료 종사자는 환자 기록과 의료 문서를 PDFree로 안전하게 처리할 수 있습니다." }
+        "acceptedAnswer": { "@type": "Answer", "text": "PDF 파일은 브라우저에서 처리되며 당사 서버에 업로드되지 않습니다. 당사는 HIPAA 준수를 인증하지 않으며 BAA를 체결하지 않습니다. 환자 기록에 PDFree를 쓰는 것이 의무에 맞는지는 귀하의 조직이 결정합니다." }
       }
     ]
   }
@@ -230,7 +230,7 @@
     <div style="max-width:720px;margin:0 auto;">
       <div style="display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid rgba(45,122,79,0.2);border-radius:24px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:500;margin-bottom:20px;">
         <span style="width:7px;height:7px;background:var(--green);border-radius:50%;display:inline-block;"></span>
-        업로드 없음 · 저장 없음 · 추적 없음
+        업로드 없음 · 서버에 사본 없음 · 계정 없음
       </div>
       <h1 style="font-size:clamp(28px,4.5vw,44px);font-weight:700;letter-spacing:-1px;line-height:1.15;color:var(--text);margin:0 0 16px;">파일을 업로드하지 않는<br>안전한 PDF 도구</h1>
       <p style="font-size:17px;color:var(--text2);max-width:580px;margin:0 auto 28px;line-height:1.6;">PDFree의 모든 도구는 문서를 전적으로 브라우저에서 처리합니다. 파일은 단 1밀리초도 기기를 벗어나지 않습니다. PDF 병합, 압축, 분할, 보호, 가리기를 완전한 개인정보 보호와 함께 사용하세요.</p>
@@ -243,9 +243,9 @@
     <div style="max-width:720px;margin:0 auto;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;">
       <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🔒 파일이 기기를 벗어나지 않습니다</span>
       <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">⚡ 100% 오프라인에서 작동</span>
-      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ 설계상 GDPR 안전</span>
-      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ 설계상 HIPAA 안전</span>
-      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🚫 회원가입 없음, 추적 없음</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ 쿠키·영구 식별자 없음</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">✓ 계정 불필요</span>
+      <span style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px;">🚫 광고 추적·데이터 판매 없음</span>
     </div>
   </section>
 
@@ -311,7 +311,7 @@
 
         <!-- Verify -->
         <h2 style="font-size:26px;color:var(--text);margin:48px 0 12px;font-weight:700;">파일이 업로드되지 않는지 확인하는 방법</h2>
-        <p>브라우저의 DevTools(<kbd style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;font-size:13px;">F12</kbd> 키)를 열고 <strong>Network</strong> 탭으로 이동한 다음, 아무 PDFree 도구나 사용해 보세요. "Doc" 또는 "XHR"로 요청을 필터링하면 PDF 데이터가 담긴 항목은 전혀 찾을 수 없습니다. 유일한 네트워크 요청은 앱을 구동하는 JavaScript와 CSS 파일뿐입니다.</p>
+        <p>브라우저 DevTools(F12)를 열고 네트워크 탭에서 PDFree 도구를 사용해 보세요. PDF 파일을 담은 요청은 보이지 않습니다. 사이트 실행에 필요한 파일(스크립트, 스타일, 글꼴, 일부 도구의 라이브러리나 언어 모델)과 <a href="/privacy/" style="color:var(--green-text);">개인정보 처리방침</a>에 설명된 작은 사용·오류 기술 이벤트가 보입니다. PDF 파일이나 그 내용은 절대 보이지 않습니다.</p>
         <p>이것이 여러분의 파일이 기기에 그대로 남아 있다는 가장 직접적인 증거입니다. 믿을 필요 없이, 30초 안에 직접 확인해 보세요.</p>
 
         <!-- Who it's for -->
@@ -323,7 +323,7 @@
           </div>
           <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
             <strong style="color:var(--text);display:block;margin-bottom:6px;">🏥 의료 종사자</strong>
-            <p style="font-size:13px;margin:0;color:var(--text2);">HIPAA는 환자 데이터 보호를 요구합니다. PDFree는 진료 기록을 로컬에서 처리합니다 — PHI는 전혀 전송되지 않습니다.</p>
+            <p style="font-size:13px;margin:0;color:var(--text2);">환자 데이터는 엄격하게 보호되어야 합니다. PDFree는 의료 기록을 사용자 기기에서 처리합니다 — 파일은 업로드되지 않습니다.</p>
           </div>
           <div style="border:1px solid var(--border);border-radius:12px;padding:18px;">
             <strong style="color:var(--text);display:block;margin-bottom:6px;">💼 재무 및 회계</strong>
@@ -343,8 +343,8 @@
             <p style="margin:0;font-size:14px;">아니요. PDFree의 모든 도구는 브라우저에서 전적으로 파일을 처리합니다. 파일은 서버로 전송되거나, 어딘가에 저장되거나, 어떤 방식으로든 기록되지 않습니다.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFree 도구는 GDPR을 준수하나요?</h3>
-            <p style="margin:0;font-size:14px;">네, 설계상 그렇습니다. 개인 데이터나 파일이 저희 서버로 전송되는 일이 전혀 없으므로, GDPR 준수는 구조적으로 보장됩니다 — 애초에 잘못 다룰 데이터가 없습니다.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">GDPR 관점에서 PDFree는 내 데이터를 어떻게 다루나요?</h3>
+            <p style="margin:0;font-size:14px;">PDF 파일은 브라우저에서 처리되며 당사 서버에 업로드되지 않으므로 당사는 그 내용을 갖지 않습니다. 사이트는 <a href="/privacy/" style="color:var(--green-text);">개인정보 처리방침</a>에 설명된 대로 쿠키나 영구 식별자 없이 사용 및 오류에 관한 제한된 기술 정보를 수집합니다. 당사는 준수를 인증하지 않습니다. 어떤 작업 방식이 GDPR 의무를 충족하는지는 귀하의 조직이 판단해야 합니다.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">HIPAA 규제 대상 진료 기록에 PDFree를 사용할 수 있나요?</h3>

@@ -33,10 +33,10 @@
   },
   {
     "@type": "Question",
-    "name": "KVKK uyumlu mu?",
+    "name": "Verilerime ne oluyor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. Dosyalar ve parola tarayıcıyı asla terk etmez. Tamamen KVKK uyumludur."
+      "text": "Dosyalar tarayıcınızdan hiç çıkmaz: sunucularımıza yüklenmez ve orada saklanmaz. Site izleme çerezi kullanmaz ve Gizlilik Politikamızda anlatıldığı gibi yalnızca anonim teknik olayları sayar. KVKK uyumluluğu belgelemiyoruz: bir kullanımın yükümlülüklerinizi karşılayıp karşılamadığını kuruluşunuz değerlendirir."
     }
   },
   {

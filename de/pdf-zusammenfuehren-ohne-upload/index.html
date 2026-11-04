@@ -95,7 +95,7 @@
       "Kein Tageslimit",
       "Kein Konto erforderlich",
       "Funktioniert offline",
-      "DSGVO- und sicherheitskonform durch Architektur"
+      "Dateien werden auf deinem Gerät verarbeitet, nicht hochgeladen"
     ],
     "dateModified": "2026-08-03",
     "provider": {
@@ -198,10 +198,10 @@
       },
       {
         "@type": "Question",
-        "name": "Ist PDFree DSGVO-konform?",
+        "name": "Was macht PDFree mit meinen Daten nach der DSGVO?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Die Architektur von PDFree ist durch Design DSGVO-sicher: Es werden niemals personenbezogene Daten an unsere Server übertragen, weil nie Dateien hochgeladen werden. Es gibt keine serverseitige Verarbeitung, keine Speicherung und keine Protokolle. Auch im Gesundheitswesen können patientenbezogene PDFs sicher mit PDFree zusammengeführt werden."
+          "text": "Deine PDF-Dateien werden in deinem Browser verarbeitet und nicht auf unsere Server hochgeladen – ihre Inhalte liegen uns also nie vor. Die Website erfasst begrenzte technische Nutzungs- und Fehlerdaten ohne Cookies oder dauerhafte Kennungen, wie in unserer Datenschutzerklärung beschrieben. Wir zertifizieren keine Konformität: Ob ein Arbeitsablauf deinen DSGVO-Pflichten genügt, muss deine Organisation beurteilen."
         }
       }
     ]
@@ -422,10 +422,10 @@
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">Optional</td>
               </tr>
               <tr>
-                <td style="padding:10px 14px;color:var(--text);">Sicher für vertrauliche Dokumente</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">✓ Von Natur aus</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Vertrauenssache</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Vertrauenssache</td>
+                <td style="padding:10px 14px;color:var(--text);">Die Datei bleibt auf deinem Gerät</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">✓ Ja</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Nein (hochgeladen)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Nein (hochgeladen)</td>
               </tr>
             </tbody>
           </table>
@@ -441,7 +441,7 @@
           <li>Füge deine PDF-Dateien hinzu und klicke auf Zusammenführen</li>
           <li>Suche nach Anfragen mit deinem Dateinamen oder PDF-Daten — <strong>du wirst keine finden</strong></li>
         </ol>
-        <p>Die einzigen Netzwerkanfragen, die du siehst, laden das JavaScript und CSS der App. Deine PDF-Dateien tauchen im Netzwerkprotokoll nie auf, weil sie deinen Browser nie verlassen.</p>
+        <p>Deine PDF-Dateien tauchen im Netzwerkprotokoll nie auf, weil sie nicht hochgeladen werden. Du siehst die Dateien, die die Website zum Laufen braucht (Skripte, Stile, Schriften und bei manchen Tools Bibliotheken oder Sprachmodelle), und kleine technische Nutzungs- und Fehlerereignisse, die in unserer <a href="/privacy/" style="color:var(--green-text);">Datenschutzerklärung</a> beschrieben sind – nie deine PDF-Datei oder ihren Inhalt.</p>
 
         <!-- Use cases -->
         <h2 style="font-size:26px;color:var(--text);margin:52px 0 12px;font-weight:700;">Wer Einen No-Upload-PDF-Zusammenführer Nutzen Sollte</h2>
@@ -455,7 +455,7 @@
           <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;">
             <div style="font-size:24px;margin-bottom:8px;">🏥</div>
             <strong style="color:var(--text);">Beschäftigte im Gesundheitswesen</strong>
-            <p style="font-size:13px;margin:8px 0 0;color:var(--text2);">Patientenakten unterliegen strengen Datenschutzregeln. PDFree ist durch Design sicher — es werden nie Gesundheitsdaten übertragen.</p>
+            <p style="font-size:13px;margin:8px 0 0;color:var(--text2);">Patientenakten unterliegen strengen Datenschutzregeln. Mit PDFree werden die Dateien auf deinem Gerät verarbeitet und nicht hochgeladen; ob das zu deinen Pflichten passt, entscheidet deine Organisation.</p>
           </div>
           <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;">
             <div style="font-size:24px;margin-bottom:8px;">💼</div>
@@ -494,8 +494,8 @@
             <p style="margin:0;font-size:14px;">Ja. Nach deinem ersten Besuch wird PDFree als PWA zwischengespeichert und funktioniert vollständig offline — für die Verarbeitung ist keine Internetverbindung nötig.</p>
           </div>
           <div>
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Ist PDFree DSGVO-konform?</h3>
-            <p style="margin:0;font-size:14px;">PDFree ist durch seine Architektur DSGVO-sicher: Es werden nie Gesundheits- oder personenbezogene Daten an unsere Server übertragen, weil es keine serverseitige Verarbeitung gibt. Beschäftigte im Gesundheitswesen können PDFree sicher für patientenbezogene Dokumente nutzen.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Was macht PDFree mit meinen Daten nach der DSGVO?</h3>
+            <p style="margin:0;font-size:14px;">Deine PDF-Dateien werden in deinem Browser verarbeitet und nicht auf unsere Server hochgeladen – ihre Inhalte liegen uns also nie vor. Die Website erfasst begrenzte technische Nutzungs- und Fehlerdaten ohne Cookies oder dauerhafte Kennungen, wie in unserer <a href="/privacy/" style="color:var(--green-text);">Datenschutzerklärung</a> beschrieben. Wir zertifizieren keine Konformität: Ob ein Arbeitsablauf deinen DSGVO-Pflichten genügt, muss deine Organisation beurteilen.</p>
           </div>
         </div>
 

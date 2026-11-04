@@ -41,10 +41,10 @@
   },
   {
     "@type": "Question",
-    "name": "Is het AVG/GDPR-conform?",
+    "name": "Wat gebeurt er met mijn gegevens?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja — bestanden verlaten nooit de browser. Geen gegevens worden naar servers gestuurd. Volledig AVG-conform."
+      "text": "Bestanden verlaten nooit de browser: ze worden niet naar onze servers geüpload of daar opgeslagen. De site gebruikt geen trackingcookies en telt alleen anonieme technische gebeurtenissen, zoals ons privacybeleid beschrijft. Wij certificeren geen AVG-naleving: of een toepassing aan je verplichtingen voldoet, beoordeelt je organisatie."
     }
   },
   {
