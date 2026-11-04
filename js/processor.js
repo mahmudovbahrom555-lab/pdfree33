@@ -1752,7 +1752,9 @@ let _compressPrepWorker = null;
 let _compressPrepSettle = null;
 const _COMPRESS_PREP_TIMEOUT_MS = 60_000;
 
+let _compressPrepXmp = 0;   // XMP streams the last pre-pass removed (0 on fallback)
 function _compressPrep(buffer, file, preset) {
+  _compressPrepXmp = 0;
   return new Promise(resolve => {
     let timer;
     const settle = (val) => { clearTimeout(timer); _compressPrepSettle = null; resolve(val); };
@@ -1764,7 +1766,8 @@ function _compressPrep(buffer, file, preset) {
     if (!_compressPrepWorker) {
       _compressPrepWorker = new Worker(new URL('./compressPrepWorker.js', import.meta.url));
     }
-    _compressPrepWorker.onmessage = (e) => settle(e.data.result);
+    // the bytes, and how many objects' XMP the pass removed — for the result card
+    _compressPrepWorker.onmessage = (e) => { _compressPrepXmp = e.data.xmp || 0; settle(e.data.result); };
     _compressPrepWorker.onerror   = fallback;
     timer = setTimeout(fallback, _COMPRESS_PREP_TIMEOUT_MS);
     _compressPrepSettle = settle;
@@ -1785,6 +1788,7 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
   setProgress(5, t('prog_loading_pdf'));
   const buffer = await _compressPrep(original, file, preset);
   if (!buffer || !isProcessing) return;
+  const prepXmp = _compressPrepXmp;
 
   // Watchdog: if the worker goes silent for 45s (OOM crash or freeze),
   // browsers don't reliably fire onerror — detect it ourselves.
@@ -1839,7 +1843,8 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
           originalSize,
           compressedSize: final.compressedSize,
           savedBytes,
-          report:         data.report,
+          // XMP removed from images/pages by the pre-pass is listed like the catalog's
+          report:         prepXmp && data.report ? { ...data.report, hasXMP: true } : data.report,
           targetSizeMb,
         },
       }

@@ -196,12 +196,16 @@ function _dropUnreachable(pdf) {
 }
 
 async function _encodeRawImages(buffer, stripXmp = false) {
-  const { PDFDocument, PDFName, PDFRawStream, PDFArray, PDFRef } = PDFLib;
+  const { PDFDocument, PDFName, PDFRawStream, PDFArray, PDFRef, ParseSpeeds } = PDFLib;
   const bytesIn = new Uint8Array(buffer);
   const rawImages = _mayHaveRawImage(bytesIn), dimRefs = _mayHaveIndirectDims(bytesIn);
   const objectXmp = stripXmp && _mayHaveObjectXmp(bytesIn);
   if (!rawImages && !dimRefs && !objectXmp) return { result: buffer, encoded: 0, resolved: 0, xmp: 0 };
-  const pdf = await PDFDocument.load(buffer, { ignoreEncryption: true, updateMetadata: false });
+  // No yielding while parsing or writing: pdf-lib pauses every 100 objects
+  // (load) and 50 (save) to keep a page responsive, but this is a worker and
+  // each pause is a timer — on ~14,000 objects that alone cost seconds. The
+  // bytes written are identical; only the pauses go.
+  const pdf = await PDFDocument.load(buffer, { ignoreEncryption: true, updateMetadata: false, parseSpeed: ParseSpeeds.Fastest });
   // Still-encrypted stream bytes are ciphertext: Flate-encoding them would
   // make a reader decrypt compressed bytes. Ciphertext happens not to
   // compress (so the 10% rule below already rejects it), but don't deflate
@@ -241,6 +245,6 @@ async function _encodeRawImages(buffer, stripXmp = false) {
   }
 
   if (!encoded && !resolved && !xmp) return { result: buffer, encoded: 0, resolved: 0, xmp: 0 };
-  const bytes = await pdf.save({ useObjectStreams: false, addDefaultPage: false, updateFieldAppearances: false });
+  const bytes = await pdf.save({ useObjectStreams: false, addDefaultPage: false, updateFieldAppearances: false, objectsPerTick: Infinity });
   return { result: bytes.buffer, encoded, resolved, xmp };
 }
