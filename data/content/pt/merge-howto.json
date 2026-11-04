@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "Como combinar arquivos PDF gratuitamente",
-  "description": "Combine 2, 50 ou mais de 100 arquivos PDF num único documento gratuitamente — sem upload, sem conta, 100% privado.",
+  "description": "Combine 2, 50 ou mais de 100 arquivos PDF num único documento gratuitamente — sem upload, sem conta, os arquivos ficam no seu dispositivo.",
   "totalTime": "PT1M",
   "tool": [{ "@type": "HowToTool", "name": "PDFree — ferramenta de combinação de PDF gratuita baseada no navegador, sem necessidade de upload" }],
   "step": [

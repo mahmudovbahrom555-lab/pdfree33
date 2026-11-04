@@ -8,7 +8,8 @@ network requests are JavaScript and CSS" — while the privacy policy (#81)
 says, truthfully, that the site counts anonymous technical events and loads
 libraries and models from CDNs. The site now states only what the code
 proves: your files are processed on your device and are not uploaded; we do
-not certify HIPAA/GDPR compliance or sign BAAs.
+not certify HIPAA/GDPR compliance or sign BAAs. "100% private" became
+"files stay on your device" in every language (owner, 2026-11-04).
 
 This check fails when a removed phrase comes back in any page source,
 content file, template or translation. Link targets and URLs are ignored
@@ -37,6 +38,11 @@ BLOCK = [
     (r'the only pdf toolkit', 'an unprovable superlative'),
     (r'can safely (?:use|process|merge)', 'a safety promise for regulated data'),
     (r'(?:zero|no) phi (?:is )?(?:ever )?transmitted|no phi ever', 'say the FILE is not uploaded'),
+    (r'100\s?%\s?(?:(?:private|privat|privé|privad|prywatn|gizli|pribadi|приватн|конфиденциальн)\w*|riêng tư|プライベート|비공개|私密)', 'an absolute promise: say the files stay on your device'),
+    (r'private by design|safe for confidential docs', 'an absolute promise: say the files stay on your device'),
+    (r'100\s?%\s?(?:de\s)?(?:privacy|privacidad|privacidade|confidentialité)|privacy by design|(?:privasi|quyền riêng tư) 100%|100\s?%\s?の?プライバシー|100% 개인정보|%100 gizli', 'an absolute promise: say the files stay on your device'),
+    (r'100\s?%\s?(?:的\s?)?隐私|从设计上|حریم خصوصی 100٪|פרטיות של 100%|100% رازدار|১০০%\s?গোপনীয়', 'an absolute promise: say the files stay on your device'),
+    # Arabic keeps "خصوصية 100%" until its SEO re-check ends (2026-11-16) — then the same change, and its pattern here
     # the same promises in the translations (removed 2026-11-04, PR 1b);
     # a user's question ("…conforme à HIPAA ?") stays — its answer says we don't certify
     (r'DSGVO-(?:konform|sicher)\b(?!e Weitergabe)|strukturell (?:garantiert|unmöglich)|kein(?:e)? (?:Tracking|Datenerfassung)|Null Tracking|einzigen Netzwerkanfragen|das einzige PDF-Toolkit', 'de: a promise the code can\'t prove'),
@@ -54,7 +60,7 @@ BLOCK = [
     (r'структурно невозможн|никакие данные не передаются', 'ru: a promise the code can\'t prove'),
 ]
 # where the site's public words live (tracked files only)
-PATHS = ['*.html', '**/*.html', 'data/content/**', 'js/i18n.js', 'js/locales/*.js', 'scripts/templates/**']
+PATHS = ['*.html', '**/*.html', 'data/content/**', 'data/tools-config.json', 'js/config.js', 'js/i18n.js', 'js/locales/*.js', 'scripts/templates/**']
 EXCLUDE = (':!tests', ':!docs', ':!research', ':!packages', ':!seo-content.html', ':!dist')
 URL = re.compile(r'(?:href|src|content|action)="[^"]*/[^"]*"|https?://\S+|"(?:url|item|@id)":\s*"[^"]*"')
 

@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "Comment fusionner des fichiers PDF gratuitement",
-  "description": "Combinez 2, 50 ou plus de 100 fichiers PDF en un seul document gratuitement — sans téléversement, sans compte, 100% privé.",
+  "description": "Combinez 2, 50 ou plus de 100 fichiers PDF en un seul document gratuitement — sans téléversement, sans compte, les fichiers restent sur votre appareil.",
   "totalTime": "PT1M",
   "tool": [{ "@type": "HowToTool", "name": "PDFree — outil de fusion PDF gratuit en ligne, aucun téléversement requis" }],
   "step": [

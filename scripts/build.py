@@ -276,7 +276,7 @@ def _webapp_schema(tool, lang, canonical_path):
         },
         "featureList": [
             "No file upload required — 100% client-side processing",
-            "100% private — files never leave your device",
+            "Files never leave your device",
             "No account or signup needed",
             "No daily limit — processes locally in your browser",
             "Works offline after first visit",

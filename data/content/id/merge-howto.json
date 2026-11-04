@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "Cara Menggabungkan File PDF Gratis",
-  "description": "Gabungkan 2, 50, atau 100+ file PDF menjadi satu dokumen secara gratis — tanpa upload, tanpa akun, 100% pribadi.",
+  "description": "Gabungkan 2, 50, atau 100+ file PDF menjadi satu dokumen secara gratis — tanpa upload, tanpa akun, file tetap di perangkat Anda.",
   "totalTime": "PT1M",
   "tool": [{ "@type": "HowToTool", "name": "PDFree — penggabung PDF gratis berbasis browser, tanpa upload" }],
   "step": [
