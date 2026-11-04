@@ -59,3 +59,24 @@ Chosen by the measured causes, not by the technology.
 - Light grows this file (1.028×).
 Note: js/worker.js is off-limits — any fix goes in a dedicated worker (compressPrepWorker.js pattern).
 Network: the corpus bucket serves 36 KB/s here (Cloudflare 7.4 MB/s) — B50/B10 download ~5 h, in the background.
+
+## Fixes B and C — pre-registered 2026-11-04, before code (owner: "start with B and C, then A";
+## baseline = local-run/ and cloud-run/ outputs of main 146ba96a + ~/Desktop/compress-compare/pdfree)
+
+B — XMP on objects other than the catalog (images, pages, forms), Standard/Maximum only (the same
+rule the catalog's XMP already follows; Light keeps them). Done in js/compressPrepWorker.js (worker.js
+is off-limits): the /Metadata keys removed AND the streams deleted (pdf-lib writes unreferenced objects).
+  B1 every document where such XMP is ≥ 1 % of the file (local 32 + cloud 20): Standard and Maximum
+     output smaller than baseline by ≥ 90 % of those XMP bytes;
+  B2 pages render pixel-identical to the baseline output (MuPDF, 72 DPI, every page of ≤ 20, else 20
+     spread), text identical, page count identical, the file opens in MuPDF and pdf.js, `qpdf --check`
+     gives no error the baseline output didn't have;
+  B3 documents without such XMP: output byte-identical to baseline (the pre-pass returns the input);
+  B4 time: median ≤ +10 % on the 52 documents; no new timeout.
+C — Light (and any preset) never returns a larger file: when the result isn't smaller than the input
+(and the input wasn't encrypted), the input's own bytes are returned and the result card says so.
+  C1 on the 52 documents × 3 presets, every output ≤ input size;
+  C2 where the baseline was not larger, the output is byte-identical to baseline;
+  C3 where it was larger, the output is byte-identical to the input file;
+  C4 batch compress follows the same rule.
+Both: npm test, lint, compress e2e, corpus gate `corpus:diff:compress` (CI) pass.

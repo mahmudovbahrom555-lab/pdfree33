@@ -19,7 +19,13 @@ for (const f of files) for (const preset of ['auto', 'low', 'medium', 'high']) {
     if (preset !== 'auto') await page.click(`label[data-preset="${preset}"]`);
     await page.waitForTimeout(500);
     const t0 = Date.now(); await page.click('#mergeBtn');
-    const r = await page.waitForFunction(() => window.__blob || (document.querySelector('#toast') && !document.querySelector('#toast').hidden && document.querySelector('#toast').innerText), null, { timeout: 900000 }).then(h => h.jsonValue()).catch(e => 'TIMEOUT');
+    // only an error toast ends the wait — "Large file … may take 1–2 min" is information
+    const r = await page.waitForFunction(() => {
+      if (window.__blob) return true;
+      const t = document.querySelector('#toast');
+      const txt = t && !t.hidden ? t.innerText : '';
+      return /Error ID|could not|failed|cannot|can't|too large|refus/i.test(txt) ? txt : false;
+    }, null, { timeout: 1800000 }).then(h => h.jsonValue()).catch(() => 'TIMEOUT');
     row.ms = Date.now() - t0;
     if (typeof r === 'string') { row.toast = r.slice(0, 120); }
     else {
