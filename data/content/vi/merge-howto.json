@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "Cách Ghép File PDF Miễn Phí",
-  "description": "Ghép 2, 50 hoặc 100+ file PDF thành một tài liệu miễn phí — không tải lên, không cần tài khoản, 100% riêng tư.",
+  "description": "Ghép 2, 50 hoặc 100+ file PDF thành một tài liệu miễn phí — không tải lên, không cần tài khoản, tệp ở lại trên thiết bị của bạn.",
   "totalTime": "PT1M",
   "tool": [{ "@type": "HowToTool", "name": "PDFree — công cụ ghép PDF miễn phí dựa trên trình duyệt, không cần tải lên" }],
   "step": [

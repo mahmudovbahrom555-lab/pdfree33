@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "Cómo fusionar archivos PDF gratis",
-  "description": "Combina 2, 50 o más de 100 archivos PDF en un documento gratis — sin subir, sin cuenta, 100% privado.",
+  "description": "Combina 2, 50 o más de 100 archivos PDF en un documento gratis — sin subir, sin cuenta, los archivos se quedan en tu dispositivo.",
   "totalTime": "PT1M",
   "tool": [{ "@type": "HowToTool", "name": "PDFree — fusionador de PDF gratuito basado en navegador, sin necesidad de subir archivos" }],
   "step": [

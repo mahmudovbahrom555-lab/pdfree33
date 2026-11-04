@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "How to Merge PDF Files Free",
-  "description": "Combine 2, 50, or 100+ PDF files into one document for free — no upload, no account, 100% private.",
+  "description": "Combine 2, 50, or 100+ PDF files into one document for free — no upload, no account, files stay on your device.",
   "totalTime": "PT1M",
   "tool": [{ "@type": "HowToTool", "name": "PDFree — free browser-based PDF merger, no upload required" }],
   "step": [
