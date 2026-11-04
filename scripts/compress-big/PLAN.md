@@ -50,3 +50,12 @@ Owner asked about trained AI compression models: neural codecs can't go into a P
 (PDF images: DCT, JPX, JBIG2, CCITT, Flate). Candidates if Step 4 points there: MRC (text layer 1-bit
 JBIG2/CCITT + low-res background), 1-bit CCITT for B&W scans, a modern JPEG encoder (mozjpeg/jpegli wasm).
 Chosen by the measured causes, not by the technology.
+
+## Early findings (2026-11-04, one document, 0486224; to be counted on the whole set before any fix)
+- XMP: Compress (medium/high) deletes only the catalog's /Metadata. InDesign/Photoshop put XMP on each
+  image XObject (8 images; two streams of 5.5 MB, unfiltered) — 12.2 MB of 29.5 MB left in our Maximum output.
+- CMYK images are skipped by design (worker.js _recompressImages: canvas gives sRGB → colour shift):
+  a 2048×1536 CMYK Flate image (6.2 MB) and 300 DPI CMYK JPEGs stay as they are even at Maximum (96 DPI).
+- Light grows this file (1.028×).
+Note: js/worker.js is off-limits — any fix goes in a dedicated worker (compressPrepWorker.js pattern).
+Network: the corpus bucket serves 36 KB/s here (Cloudflare 7.4 MB/s) — B50/B10 download ~5 h, in the background.
