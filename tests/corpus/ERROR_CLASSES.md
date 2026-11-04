@@ -1021,3 +1021,53 @@ takes the lighter side as paper.
   the preview before download.
 - e2e: tests/e2e/clean-scan-dark.e2e.mjs (CI, tesseract installed); real
   corpus pages: CLEANSCAN_CORPUS=1 (local), corpus-pages.json.
+
+## C24 — Compress keeps metadata on images and pages, and objects nothing uses
+
+Found on 32 large local corpus files (2026-11-04): XMP metadata hung on
+images, pages and InDesign's marked-content properties
+(`/Properties /MC0 << /Metadata … >>`) survived Standard and Maximum — only
+the catalog's XMP was removed — and pdf-lib writes every parsed object, so
+the stripped streams and other orphans stayed in the file. Up to 41 % of a
+file was such XMP (5754431), 35 % (0486224).
+
+- **Fix** (js/compressPrepWorker.js, worker.js untouched): on Standard and
+  Maximum the pre-pass removes /Metadata from every object but the catalog,
+  at any depth, then deletes every object the trailer no longer reaches.
+  Light keeps them, like the catalog's. The pass runs without pdf-lib's
+  yield pauses (same bytes; on ~14,000 objects the pauses alone cost
+  seconds). The result card lists the XMP removed.
+- **Result** (52 files 10–160 MB, local 32 + cloud 20, prod and the fix
+  run one after the other on each file; criteria fixed before the code):
+  every file with such XMP shrank by ≥ 90 % of it (e.g. 31.1 → 19.2 MB,
+  29.5 → 16.9 MB); pages (MuPDF render), text, page count and `qpdf --check`
+  unchanged; files without it identical in content and structure except
+  /ModDate and /ID, which change on every save (the criterion's wording was
+  corrected for that with the owner, 2026-11-05); median time +5.5 %; no new
+  error or timeout. Corpus gate 39/39.
+- **Compared** on 8 documents with competitors A, B, C (owner, by hand): this
+  is metadata cleanup, not image recompression — they stay far smaller on
+  image-heavy files (CMYK images, which Compress skips by design, and plain
+  JPEGs), which is the next class. One competitor turns vector pages into
+  pictures and another breaks CMYK colours; neither is a model.
+- **Status:** `fixing` — until verified on pdfree.io.
+
+## C25 — Light can return a file larger than the one given
+
+Light grew 21 of 32 large files (up to +12 %) and every preset could grow
+some. Fix (js/processor.js, `_notLarger`): when the result isn't smaller
+than the input (and the input wasn't encrypted), the input's own bytes are
+returned — single file and batch alike. On the 52 files × 4 presets: no
+output larger than its input; where prod's was larger, the output is the
+input byte for byte; a mixed batch of 5 follows the same rule.
+**Status:** `fixing` — until verified on pdfree.io.
+
+## Candidates found while fixing C24/C25 (not yet confirmed on independent sources)
+
+- **C26 — Compress removes the PDF/A identification.** Standard and Maximum
+  delete the catalog's XMP, where `pdfaid` lives: a PDF/A file comes out
+  without saying it is one, and nothing tells the user.
+- **C27 — Maximum removes accessibility tags** (StructTreeRoot, MarkInfo,
+  StructParents) when "keep text" is off.
+- **C28 — any re-save invalidates a digital signature** (/ByteRange); 2
+  signed files in the caches (2395337, 3307692) checked with pdfsig.

@@ -1785,6 +1785,19 @@ async function _readCompressBuffer(file) {
   return file._decryptedBuffer ? file._decryptedBuffer.slice(0) : preprocessPdfBuffer(await _readSelected(file));
 }
 
+// Never a bigger file: when compress's result isn't smaller than what it was
+// given, that file's own bytes go back instead. Light re-saves without
+// touching images and grew 21 of 32 large real PDFs (up to +12 %, 2026-11-04).
+async function _notLarger(data, originalSize, file) {
+  if (data.compressedSize < originalSize) return { result: data.result, compressedSize: data.compressedSize };
+  try {
+    const own = await _readCompressBuffer(file);
+    return { result: own, compressedSize: own.byteLength };
+  } catch {
+    return { result: data.result, compressedSize: data.compressedSize };   // the file can't be read again: the result as it is
+  }
+}
+
 // Lossless pre-pass (js/compressPrepWorker.js — see its header): images
 // stored with no /Filter are Flate-encoded before handleCompress, which
 // otherwise skips them entirely. Own dedicated worker, NOT the shared
@@ -1796,7 +1809,9 @@ let _compressPrepWorker = null;
 let _compressPrepSettle = null;
 const _COMPRESS_PREP_TIMEOUT_MS = 60_000;
 
-function _compressPrep(buffer, file) {
+let _compressPrepXmp = 0;   // XMP streams the last pre-pass removed (0 on fallback)
+function _compressPrep(buffer, file, preset) {
+  _compressPrepXmp = 0;
   return new Promise(resolve => {
     let timer;
     const settle = (val) => { clearTimeout(timer); _compressPrepSettle = null; resolve(val); };
@@ -1808,11 +1823,13 @@ function _compressPrep(buffer, file) {
     if (!_compressPrepWorker) {
       _compressPrepWorker = new Worker(new URL('./compressPrepWorker.js', import.meta.url));
     }
-    _compressPrepWorker.onmessage = (e) => settle(e.data.result);
+    // the bytes, and how many objects' XMP the pass removed — for the result card
+    _compressPrepWorker.onmessage = (e) => { _compressPrepXmp = e.data.xmp || 0; settle(e.data.result); };
     _compressPrepWorker.onerror   = fallback;
     timer = setTimeout(fallback, _COMPRESS_PREP_TIMEOUT_MS);
     _compressPrepSettle = settle;
-    _compressPrepWorker.postMessage({ file: buffer }, [buffer]);
+    // Light keeps every XMP, as handleCompress keeps the catalog's on Light
+    _compressPrepWorker.postMessage({ file: buffer, stripXmp: preset !== 'low' }, [buffer]);
   });
 }
 
@@ -1826,8 +1843,9 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
   // reported against what the user actually uploaded.
   const originalSize = original.byteLength;
   setProgress(5, t('prog_loading_pdf'));
-  const buffer = await _compressPrep(original, file);
+  const buffer = await _compressPrep(original, file, preset);
   if (!buffer || !isProcessing) return;
+  const prepXmp = _compressPrepXmp;
 
   // Watchdog: if the worker goes silent for 45s (OOM crash or freeze),
   // browsers don't reliably fire onerror — detect it ourselves.
@@ -1850,6 +1868,50 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
     }, WATCHDOG_MS);
   };
 
+  // The result card, once the bytes are final: never a bigger file (see _notLarger).
+  const _finishCompress = async (data) => {
+    const final = await _notLarger(data, originalSize, file);
+    isProcessing = false;
+    setFilesLocked(false);
+    hideCancelBtn();
+    setProgress(100, t('prog_done'));
+    const blob = new Blob([final.result], { type: 'application/pdf' });
+
+    // Build filename: "report.pdf" → "report-compressed.pdf"
+    const baseName = file.name.replace(/\.pdf$/i, '');
+    const filename  = `${baseName}-compressed.pdf`;
+
+    const savedBytes = originalSize - final.compressedSize;
+    const savedPct  = originalSize > 0
+      ? Math.round((savedBytes / originalSize) * 100)
+      : 0;
+    const desc = savedPct > 0
+      ? t('desc_compress_saved', { pct: savedPct })
+      : t('desc_compress_optimized');
+
+    document.dispatchEvent(new CustomEvent('pdfree:success', {
+      detail: {
+        tool: toolKey,  // actual tool key (compress or compress-email) for registry dispatch
+        blob,
+        desc,
+        filename,
+        // Extra data for compression report UI (beyond standard ТЗ)
+        compressionReport: {
+          originalSize,
+          compressedSize: final.compressedSize,
+          savedBytes,
+          // XMP removed from images/pages by the pre-pass is listed like the catalog's
+          report:         prepXmp && data.report ? { ...data.report, hasXMP: true } : data.report,
+          targetSizeMb,
+        },
+      }
+    }));
+
+    if (data.report?.wasEncrypted) {
+      showToast(t('warn_encrypted_pdf'), 5000);
+    }
+  };
+
   // ⚠️  TRANSFERABLE: buffer detached after this call — worker owns it until done.
   _shared().postMessage(
     { tool: 'compress', file: buffer, options: { preset, preserveText, removeWatermarks, targetDpi, quality, targetSizeMb } },
@@ -1868,52 +1930,16 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
       }));
     } else if (data.type === 'done') {
       clearTimeout(watchdog);
-      isProcessing = false;
-      setFilesLocked(false);
-      hideCancelBtn();
-      setProgress(100, t('prog_done'));
-
       // Guard: worker must return an ArrayBuffer. Any other type means
       // something went wrong in serialisation (detached buffer, wrong transfer, etc.)
       if (!(data.result instanceof ArrayBuffer)) {
+        isProcessing = false;
+        setFilesLocked(false);
+        hideCancelBtn();
         _handleError('compress', 'Unexpected result type from worker');
         return;
       }
-
-      const blob = new Blob([data.result], { type: 'application/pdf' });
-
-      // Build filename: "report.pdf" → "report-compressed.pdf"
-      const baseName = file.name.replace(/\.pdf$/i, '');
-      const filename  = `${baseName}-compressed.pdf`;
-
-      const savedBytes = originalSize - data.compressedSize;
-      const savedPct  = originalSize > 0
-        ? Math.round((savedBytes / originalSize) * 100)
-        : 0;
-      const desc = savedPct > 0
-        ? t('desc_compress_saved', { pct: savedPct })
-        : t('desc_compress_optimized');
-
-      document.dispatchEvent(new CustomEvent('pdfree:success', {
-        detail: {
-          tool: toolKey,  // actual tool key (compress or compress-email) for registry dispatch
-          blob,
-          desc,
-          filename,
-          // Extra data for compression report UI (beyond standard ТЗ)
-          compressionReport: {
-            originalSize,
-            compressedSize: data.compressedSize,
-            savedBytes,
-            report:         data.report,
-            targetSizeMb,
-          },
-        }
-      }));
-
-      if (data.report?.wasEncrypted) {
-        showToast(t('warn_encrypted_pdf'), 5000);
-      }
+      _finishCompress(data);
     } else if (data.type === 'error') {
       clearTimeout(watchdog);
       isProcessing = false;
@@ -2662,20 +2688,21 @@ function _postToWorkerForBatch(msg, transfer, onProgress) {
 async function _batchCompressOne(file, params, onProgress) {
   const original     = await _readCompressBuffer(file);
   const originalSize = original.byteLength; // before the pre-pass detaches it — see _runCompress
-  const buffer       = await _compressPrep(original, file);
-  if (!buffer) throw new _BatchCancelled();
   const { preset = 'medium', preserveText = true, removeWatermarks = false, targetDpi = null, quality = null, targetSizeMb = null } = params;
+  const buffer       = await _compressPrep(original, file, preset);
+  if (!buffer) throw new _BatchCancelled();
   const data = await _postToWorkerForBatch(
     { tool: 'compress', file: buffer, options: { preset, preserveText, removeWatermarks, targetDpi, quality, targetSizeMb } },
     [buffer],
     onProgress
   );
   if (!(data.result instanceof ArrayBuffer)) throw new Error('Unexpected result type from worker');
+  const final = await _notLarger(data, originalSize, file);
   const baseName = file.name.replace(/\.pdf$/i, '');
   // compressedSize comes straight from worker.js's compress handler; originalSize
   // is the real uploaded size (not the pre-passed one worker.js saw) — _runBatch
   // sums both across the whole batch for the aggregate "before → after" summary.
-  return { name: `${baseName}-compressed.pdf`, buffer: data.result, originalSize, compressedSize: data.compressedSize };
+  return { name: `${baseName}-compressed.pdf`, buffer: final.result, originalSize, compressedSize: final.compressedSize };
 }
 
 /** One file through a generic worker tool (watermark/protect/pagenum/flatten) — returns { name, buffer }. */
