@@ -95,7 +95,7 @@ export const EN = {
   pn_size_label:        'Size',
   pn_section_text: 'Text & style',
   pn_aria_text_format: 'Number format',
-  pn_tpl_page: 'Page',
+  pn_tpl_page: 'Page {n}',
   pn_prefix: 'Before the number',
   pn_suffix: 'After the number',
   pn_color: 'Colour',

@@ -120,7 +120,7 @@ window.PDFREE_LOCALE = {
   pn_size_label: '크기',
   pn_section_text: '텍스트 및 스타일',
   pn_aria_text_format: '번호 형식',
-  pn_tpl_page: '페이지',
+  pn_tpl_page: '{n} 페이지',
   pn_prefix: '번호 앞',
   pn_suffix: '번호 뒤',
   pn_color: '색상',

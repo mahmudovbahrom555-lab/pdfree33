@@ -119,7 +119,7 @@ window.PDFREE_LOCALE = {
   pn_size_label: 'Ukuran',
   pn_section_text: 'Teks & gaya',
   pn_aria_text_format: 'Format nomor',
-  pn_tpl_page: 'Halaman',
+  pn_tpl_page: 'Halaman {n}',
   pn_prefix: 'Sebelum nomor',
   pn_suffix: 'Sesudah nomor',
   pn_color: 'Warna',

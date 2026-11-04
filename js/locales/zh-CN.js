@@ -121,7 +121,7 @@ window.PDFREE_LOCALE = {
   pn_size_label:        '大小',
   pn_section_text: '文字与样式',
   pn_aria_text_format: '页码格式',
-  pn_tpl_page: '第',
+  pn_tpl_page: '第 {n} 页',
   pn_prefix: '页码前文字',
   pn_suffix: '页码后文字',
   pn_color: '颜色',

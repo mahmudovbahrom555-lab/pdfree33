@@ -119,7 +119,7 @@ window.PDFREE_LOCALE = {
   pn_size_label: 'Kích thước',
   pn_section_text: 'Văn bản và kiểu',
   pn_aria_text_format: 'Định dạng số',
-  pn_tpl_page: 'Trang',
+  pn_tpl_page: 'Trang {n}',
   pn_prefix: 'Trước số',
   pn_suffix: 'Sau số',
   pn_color: 'Màu',

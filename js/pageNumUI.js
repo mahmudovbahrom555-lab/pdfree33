@@ -172,14 +172,20 @@ function _numInput(id, value, placeholder = '') {
 }
 
 // Quick formats — they only fill the two fields below, which stay editable.
+// "Page {n}" comes in the page's language ("第 {n} 页", "{n} ページ"); a
+// format pageNumWorker.js would refuse (right-to-left text) isn't offered,
+// and one that repeats another isn't shown twice.
+const _RTL = /[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/u;
 function _templates() {
-  const page = t('pn_tpl_page');
-  return [
-    { value: 'none',  label: '1',             prefix: '',           suffix: '' },
-    { value: 'page',  label: `${page} 1`,     prefix: `${page} `,   suffix: '' },
-    { value: 'dash',  label: '— 1 —',         prefix: '— ',         suffix: ' —' },
-    { value: 'zh',    label: '第 1 页',        prefix: '第 ',         suffix: ' 页' },
+  const [pre = '', suf = ''] = t('pn_tpl_page').split('{n}');
+  const all = [
+    { value: 'none',  label: '1',                prefix: '',   suffix: '' },
+    { value: 'page',  label: `${pre}1${suf}`,     prefix: pre,  suffix: suf },
+    { value: 'dash',  label: '— 1 —',            prefix: '— ', suffix: ' —' },
+    { value: 'zh',    label: '第 1 页',           prefix: '第 ', suffix: ' 页' },
   ];
+  return all.filter((x, i) => !_RTL.test(x.prefix + x.suffix)
+    && !all.slice(0, i).some(y => y.prefix === x.prefix && y.suffix === x.suffix));
 }
 const _COLORS = [
   { value: '',        label: () => t('pn_color_grey'),  swatch: '#333333' },
@@ -381,7 +387,7 @@ function _render() {
     <!-- ── POSITION ── -->
     <div class="pn-section">
       <div class="pn-section-label">${t('pn_section_position')}</div>
-      ${chipGroup('pnPos', posOpts, _position, t('pn_section_position'), { vertical: true, radius: '8px' })}
+      ${chipGroup('pnPos', posOpts, _position, t('pn_section_position'), { radius: '8px' })}
     </div>
 
     <!-- ── SIZE ── -->

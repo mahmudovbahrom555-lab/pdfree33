@@ -118,7 +118,7 @@ window.PDFREE_LOCALE = {
   pn_size_label: 'Boyut',
   pn_section_text: 'Metin ve stil',
   pn_aria_text_format: 'Numara biçimi',
-  pn_tpl_page: 'Sayfa',
+  pn_tpl_page: 'Sayfa {n}',
   pn_prefix: 'Numaradan önce',
   pn_suffix: 'Numaradan sonra',
   pn_color: 'Renk',

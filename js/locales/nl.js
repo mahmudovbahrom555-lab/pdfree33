@@ -118,7 +118,7 @@ window.PDFREE_LOCALE = {
   pn_size_label: 'Grootte',
   pn_section_text: 'Tekst en stijl',
   pn_aria_text_format: 'Nummernotatie',
-  pn_tpl_page: 'Pagina',
+  pn_tpl_page: 'Pagina {n}',
   pn_prefix: 'Voor het nummer',
   pn_suffix: 'Na het nummer',
   pn_color: 'Kleur',

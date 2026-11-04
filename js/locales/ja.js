@@ -121,7 +121,7 @@ window.PDFREE_LOCALE = {
   pn_size_label: 'サイズ',
   pn_section_text: 'テキストとスタイル',
   pn_aria_text_format: '番号の形式',
-  pn_tpl_page: 'ページ',
+  pn_tpl_page: '{n} ページ',
   pn_prefix: '番号の前',
   pn_suffix: '番号の後',
   pn_color: '色',

@@ -31,7 +31,7 @@ async function test(name, fn) {
 }
 
 const browser = await chromium.launch();
-async function openTool(files, viewport = { width: 1280, height: 900 }) {
+async function openTool(files, viewport = { width: 1280, height: 900 }, urlPath = '/pagenum-pdf/') {
   const page = await (await browser.newContext({ serviceWorkers: 'block', viewport })).newPage();
   const errors = [], workers = [];
   page.on('pageerror', e => errors.push(e.message));
@@ -40,7 +40,7 @@ async function openTool(files, viewport = { width: 1280, height: 900 }) {
     const orig = URL.createObjectURL.bind(URL);
     URL.createObjectURL = b => { if (b instanceof Blob && /pdf|zip/.test(b.type)) window.__out = b; return orig(b); };
   });
-  await page.goto(BASE_URL + '/pagenum-pdf/', { waitUntil: 'load' });
+  await page.goto(BASE_URL + urlPath, { waitUntil: 'load' });
   await page.setInputFiles('#fileInput', files.map(f => path.join(FIX, f)));
   await page.waitForSelector('#pnPrefix', { timeout: 30000 });
   return { page, errors, workers };
@@ -141,6 +141,17 @@ try {
     });
     if (n !== 2) throw new Error(`${n} files in the zip`);
     if (errors.length) throw new Error(errors.join('; '));
+  });
+
+  await test('the "Page 1" chip speaks the page\'s language; none that would be refused; no repeats', async () => {
+    const chips = async (urlPath) => {
+      const { page } = await openTool(['five-pages.pdf'], undefined, urlPath);
+      return page.$$eval('[data-name="pnTpl"]', els => els.map(e => e.textContent.trim()));
+    };
+    const zh = await chips('/zh/yema-pdf/'), ar = await chips('/ar/tarqim-pdf/'), en = await chips('/pagenum-pdf/');
+    if (zh.filter(x => /第\s*1\s*页/.test(x)).length !== 1) throw new Error('zh: ' + zh.join(' | '));
+    if (ar.some(x => /[\u0600-\u06FF]/.test(x))) throw new Error('ar offers Arabic text: ' + ar.join(' | '));
+    if (!en.includes('Page 1')) throw new Error('en: ' + en.join(' | '));
   });
 
   await test('phone (390 px): the new chips and fields are at least 24 px tall and fit the screen', async () => {

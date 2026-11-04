@@ -119,7 +119,7 @@ window.PDFREE_LOCALE = {
   pn_size_label: 'Размер',
   pn_section_text: 'Текст и стиль',
   pn_aria_text_format: 'Формат номера',
-  pn_tpl_page: 'Стр.',
+  pn_tpl_page: 'Стр. {n}',
   pn_prefix: 'Перед номером',
   pn_suffix: 'После номера',
   pn_color: 'Цвет',

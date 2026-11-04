@@ -118,7 +118,7 @@ window.PDFREE_LOCALE = {
   pn_size_label: 'Rozmiar',
   pn_section_text: 'Tekst i styl',
   pn_aria_text_format: 'Format numeru',
-  pn_tpl_page: 'Strona',
+  pn_tpl_page: 'Strona {n}',
   pn_prefix: 'Przed numerem',
   pn_suffix: 'Po numerze',
   pn_color: 'Kolor',

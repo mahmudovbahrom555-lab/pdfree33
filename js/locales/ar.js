@@ -123,7 +123,7 @@ window.PDFREE_LOCALE = {
   pn_size_label:        'الحجم',
   pn_section_text: 'النص والنمط',
   pn_aria_text_format: 'تنسيق الرقم',
-  pn_tpl_page: 'صفحة',
+  pn_tpl_page: 'صفحة {n}',
   pn_prefix: 'قبل الرقم',
   pn_suffix: 'بعد الرقم',
   pn_color: 'اللون',
