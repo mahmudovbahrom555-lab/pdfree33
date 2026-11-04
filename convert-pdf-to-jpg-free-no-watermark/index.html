@@ -130,7 +130,7 @@
       {
         "@type": "Question",
         "name": "Is my PDF uploaded when converting to JPG?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. Your PDF is rendered to images entirely in your browser using PDF.js (Mozilla's open-source PDF rendering engine). The conversion happens in browser memory — nothing is sent to any server." }
+        "acceptedAnswer": { "@type": "Answer", "text": "No. Your PDF is rendered to images entirely in your browser using PDF.js (Mozilla's open-source PDF rendering engine). The conversion happens in browser memory — your file is not uploaded to any server." }
       },
       {
         "@type": "Question",
@@ -268,7 +268,7 @@
         <p>PDFree converts PDF pages to images using PDF.js — Mozilla's open-source PDF rendering engine — running directly in your browser. The rendered images are exact representations of your PDF pages, with nothing overlaid. Because the conversion happens locally, there is no server cost associated with your conversion — and therefore no business incentive to watermark the output.</p>
 
         <div style="background:var(--green-light);border-left:4px solid var(--green);padding:16px 20px;border-radius:0 8px 8px 0;margin:24px 0;">
-          <p style="margin:0;font-size:14px;color:var(--text);"><strong>Under the hood:</strong> PDF.js renders each page to an HTML canvas element at your chosen DPI. The canvas is then exported as a JPG or PNG Blob. For multi-page PDFs, all page images are packaged into a ZIP using JSZip and downloaded at once. Nothing is sent to any server.</p>
+          <p style="margin:0;font-size:14px;color:var(--text);"><strong>Under the hood:</strong> PDF.js renders each page to an HTML canvas element at your chosen DPI. The canvas is then exported as a JPG or PNG Blob. For multi-page PDFs, all page images are packaged into a ZIP using JSZip and downloaded at once. Your file is not uploaded to any server.</p>
         </div>
 
         <h2 style="font-size:26px;color:var(--text);margin:48px 0 16px;font-weight:700;">DPI Guide — Which Setting to Choose</h2>
@@ -313,7 +313,7 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Is my PDF uploaded during conversion?</h3>
-            <p style="margin:0;font-size:14px;">No. Conversion happens in browser memory using PDF.js. Nothing is sent to any server. Your PDF stays on your device throughout.</p>
+            <p style="margin:0;font-size:14px;">No. Conversion happens in browser memory using PDF.js. Your file is not uploaded to any server. Your PDF stays on your device throughout.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">How do I convert a multi-page PDF to individual JPGs?</h3>
