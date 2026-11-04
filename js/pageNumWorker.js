@@ -17,18 +17,22 @@
 //  colour could not be chosen (a user's request, 2026-11-05).
 //
 //  Fonts: Latin text in Helvetica / Times / Courier (the three standard
-//  families, nothing to download); any letter those can't write
-//  (Chinese, Japanese, Korean, Cyrillic, Vietnamese, Thai, Devanagari…) in
-//  the self-hosted Noto Sans for its script (js/vendor/noto/), embedded as a
-//  subset — only the glyphs the labels use. Right-to-left text is refused
-//  with code 'rtl': pdf-lib lays glyphs out left to right, so Arabic or
-//  Hebrew would come out reversed.
+//  families, nothing to download). Any letter those can't write is drawn in
+//  a small Noto font made for page labels (fonts/pagenum/, built by
+//  scripts/make_pagenum_fonts.py: digits, Latin with accents, Greek,
+//  Cyrillic, Vietnamese, Thai, Devanagari, Hangul and the CJK/kana words put
+//  around page numbers), embedded WHOLE — pdf-lib's subset embedding drops
+//  glyphs from Noto fonts ("第 1 页" came out as "第" on pdfree.io,
+//  2026-11-05). A label with a character none of them has is drawn as a
+//  picture with the browser's own fonts. Right-to-left text is refused with
+//  code 'rtl': pdf-lib lays glyphs out left to right, so Arabic or Hebrew
+//  would come out reversed.
 //
 //  Message contract:
 //    in  → { fileBuffer: ArrayBuffer, options: {...} }
 //    out → { type: 'progress', value, label }
 //        | { type: 'done', result: ArrayBuffer, pageCount }
-//        | { type: 'error', message, code?, chars? }   code: 'rtl' | 'unsupported-characters' | 'font-load'
+//        | { type: 'error', message, code?, chars? }   code: 'rtl' | 'font-load' | 'unsupported-characters'
 // ============================================================
 
 importScripts('./vendor/pdf-lib.min.js');
@@ -39,29 +43,23 @@ const DEFAULT_RGB = [0.2, 0.2, 0.2], DEFAULT_OPACITY = 0.8;   // handlePageNum's
 
 const STANDARD = { sans: 'Helvetica', serif: 'TimesRoman', mono: 'Courier' };
 
-// The Noto file for a label's script; the first one whose glyphs cover the
-// whole label is used (checked with fontkit before embedding).
-const _noto = name => new URL(`./vendor/noto/${name}.ttf`, self.location.href).href;
-const NOTO = {
-  sc: _noto('notosanssc-v40'), tc: _noto('notosanstc-v39'), jp: _noto('notosansjp-v56'),
-  kr: _noto('notosanskr-v39'), deva: _noto('notosansdevanagari-v30'), thai: _noto('notosansthai-v29'),
-  latin: _noto('notosans-v42'),
-};
+// The small Noto for a label's script (fonts/pagenum/); the first one whose
+// glyphs cover the whole label is used (checked with fontkit before embedding).
+const _font = name => new URL(`../fonts/pagenum/pagenum-${name}.ttf`, self.location.href).href;
 const RTL = /[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/u;
 
 function _candidates(text) {
-  if (/[\u3040-\u30FF]/u.test(text)) return ['jp', 'sc'];
-  if (/[\uAC00-\uD7AF\u1100-\u11FF]/u.test(text)) return ['kr'];
-  if (/[\u3400-\u9FFF\uF900-\uFAFF]/u.test(text)) return ['sc', 'tc', 'jp'];
+  if (/[\uAC00-\uD7AF\u1100-\u11FF\u3131-\u318E]/u.test(text)) return ['kr'];
+  if (/[\u3040-\u30FF\u3400-\u9FFF\uF900-\uFAFF]/u.test(text)) return ['cjk'];
   if (/[\u0900-\u097F]/u.test(text)) return ['deva'];
   if (/[\u0E00-\u0E7F]/u.test(text)) return ['thai'];
   return ['latin'];
 }
 
 const _fontBytes = new Map();   // per worker: a second job doesn't download the same font again
-async function _loadNoto(key) {
+async function _loadFont(key) {
   if (!_fontBytes.has(key)) {
-    _fontBytes.set(key, fetch(NOTO[key]).then(r => {
+    _fontBytes.set(key, fetch(_font(key)).then(r => {
       if (!r.ok) throw new Error(`font ${r.status}`);
       return r.arrayBuffer();
     }).catch(err => {   // offline on first use, or the file missing
@@ -108,27 +106,48 @@ function _hexToRgb(hex) {
   return [(v >> 16 & 255) / 255, (v >> 8 & 255) / 255, (v & 255) / 255];
 }
 
-// A standard font when it can write every label, else the Noto that covers
-// them all. Throws code 'rtl' / 'unsupported-characters'.
+// A standard font when it can write every label, else the small Noto that
+// covers them all — or null: then the labels are drawn as pictures.
+// Throws code 'rtl'.
 async function _pickFont(pdf, labels, family) {
   const { StandardFonts } = self.PDFLib;
   const all = labels.join('');
   if (RTL.test(all)) { const e = new Error('Right-to-left text is not supported in page numbers yet'); e.code = 'rtl'; throw e; }
   const standard = await pdf.embedFont(StandardFonts[STANDARD[family] || STANDARD.sans]);
   try { labels.forEach(l => standard.encodeText(l)); return standard; } catch { /* a letter outside Windows-1252 */ }
-  let missing = [];
   for (const key of _candidates(all)) {
-    const bytes = await _loadNoto(key);
+    const bytes = await _loadFont(key);
     const fk = self.fontkit.create(bytes);
-    missing = [...new Set([...all].filter(ch => !fk.hasGlyphForCodePoint(ch.codePointAt(0))))];
-    if (missing.length === 0) {
-      pdf.registerFontkit(self.fontkit);
-      return pdf.embedFont(bytes, { subset: true });
-    }
+    if ([...all].some(ch => !fk.hasGlyphForCodePoint(ch.codePointAt(0)))) continue;
+    pdf.registerFontkit(self.fontkit);
+    // whole, never subset: see the header
+    const font = await pdf.embedFont(bytes, { subset: false });
+    try { labels.forEach(l => font.encodeText(l)); return font; } catch { /* shaping failed */ }
   }
-  const e = new Error('These characters cannot be written in page numbers: ' + missing.join(' '));
-  e.code = 'unsupported-characters'; e.chars = missing;
-  throw e;
+  return null;
+}
+
+// A label the fonts above can't write, drawn by the browser (its own fonts
+// cover every script); returns the PNG and its size in points.
+async function _labelPicture(label, fontSize, [r, g, b], family) {
+  if (typeof OffscreenCanvas === 'undefined') {   // older iOS Safari: nothing to draw it with
+    const e = new Error('These characters cannot be written in page numbers: ' + label);
+    e.code = 'unsupported-characters'; e.chars = [...new Set(label)].filter(ch => ch.codePointAt(0) > 0x7E); throw e;
+  }
+  const SCALE = 4, px = fontSize * SCALE;
+  const css = `${px}px ${family === 'serif' ? 'serif' : family === 'mono' ? 'monospace' : 'sans-serif'}`;
+  const probe = new OffscreenCanvas(1, 1).getContext('2d');
+  probe.font = css;
+  const m = probe.measureText(label);
+  const ascent = m.actualBoundingBoxAscent || px * 0.8, descent = m.actualBoundingBoxDescent || px * 0.2;
+  const w = Math.max(1, Math.ceil(m.width)), h = Math.max(1, Math.ceil(ascent + descent));
+  const canvas = new OffscreenCanvas(w, h), ctx = canvas.getContext('2d');
+  ctx.font = css;
+  ctx.fillStyle = `rgb(${Math.round(r * 255)},${Math.round(g * 255)},${Math.round(b * 255)})`;
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillText(label, 0, ascent);
+  const png = new Uint8Array(await (await canvas.convertToBlob({ type: 'image/png' })).arrayBuffer());
+  return { png, width: w / SCALE, height: h / SCALE, descent: descent / SCALE };
 }
 
 self.onmessage = async (e) => {
@@ -170,14 +189,16 @@ self.onmessage = async (e) => {
       const page = pages[i];
       const { width, height } = _safeSize(page);
       const label = labels[i - fromIdx];
-      const tw    = font.widthOfTextAtSize(label, fontSize);
+      const pic   = font ? null : await _labelPicture(label, fontSize, [r, g, b], family);
+      const tw    = font ? font.widthOfTextAtSize(label, fontSize) : pic.width;
       const isOdd = (i % 2) === 0;
       const x = position === 'book'         ? (isOdd ? width - MARGIN - tw : MARGIN)
               : position === 'bottom-right' ? width - MARGIN - tw
               : position === 'bottom-left'  ? MARGIN
               :                              (width - tw) / 2;
       const y = position === 'top-center' ? height - MARGIN - fontSize : MARGIN;
-      page.drawText(label, { x, y, size: fontSize, font, color: rgb(r, g, b), opacity });
+      if (font) page.drawText(label, { x, y, size: fontSize, font, color: rgb(r, g, b), opacity });
+      else page.drawImage(await pdf.embedPng(pic.png), { x, y: y - pic.descent, width: pic.width, height: pic.height, opacity });
     }
 
     progress(93, 'Saving…');

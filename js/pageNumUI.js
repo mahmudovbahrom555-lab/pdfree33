@@ -177,7 +177,8 @@ function _numInput(id, value, placeholder = '') {
 // and one that repeats another isn't shown twice.
 const _RTL = /[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/u;
 function _templates() {
-  const [pre = '', suf = ''] = t('pn_tpl_page').split('{n}');
+  // t() fills every {name}; a marker keeps the number's place to split on
+  const [pre = '', suf = ''] = t('pn_tpl_page', { n: '\u0001' }).split('\u0001');
   const all = [
     { value: 'none',  label: '1',                prefix: '',   suffix: '' },
     { value: 'page',  label: `${pre}1${suf}`,     prefix: pre,  suffix: suf },

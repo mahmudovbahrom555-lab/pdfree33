@@ -60,9 +60,13 @@ async function result(page) {
       const c = document.createElement('canvas'); c.width = vp.width; c.height = vp.height;
       await p.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise;
       const d = c.getContext('2d').getImageData(0, vp.height - 120, vp.width, 120).data;
-      let blue = 0;
-      for (let k = 0; k < d.length; k += 4) if (d[k + 2] > 120 && d[k + 2] - d[k] > 60) blue++;
-      out.push({ bottom, blue });
+      let blue = 0, minX = Infinity, maxX = -1;
+      for (let k = 0; k < d.length; k += 4) {
+        if (d[k + 2] > 120 && d[k + 2] - d[k] > 60) { blue++; const x = (k / 4) % vp.width; minX = Math.min(minX, x); maxX = Math.max(maxX, x); }
+      }
+      // what the eye sees: the BLUE label's drawn width in em (10 pt at scale 2 = 20 px) — only the
+      // label is blue; any dark pixel would count the page's own text too (17 em, a false pass)
+      out.push({ bottom, blue, inkEm: maxX < 0 ? 0 : (maxX - minX + 1) / 20 });
     }
     return out;
   });
@@ -90,6 +94,8 @@ try {
     const want = [1, 2, 3, 4, 5].map(n => `第 ${n} 页`);
     if (pages.map(p => p.bottom).join('|') !== want.join('|')) throw new Error(pages.map(p => p.bottom).join('|'));
     if (pages.some(p => p.blue < 20)) throw new Error('not blue: ' + pages.map(p => p.blue).join(','));
+    // every glyph drawn, not just the first: "第 1 页" is ~3 em wide, "第" alone 1 em (pdfree.io 2026-11-05)
+    if (pages.some(p => p.inkEm < 2.4)) throw new Error('glyphs missing, drawn width in em: ' + pages.map(p => p.inkEm.toFixed(1)).join(','));
     if (!workers.some(u => /pageNumWorker/.test(u))) throw new Error('pageNumWorker not used');
     if (errors.length) throw new Error(errors.join('; '));
   });
@@ -113,6 +119,18 @@ try {
     if (pages.map(p => p.bottom).join(',') !== 'i,ii,iii,iv,v') throw new Error(pages.map(p => p.bottom).join(','));
   });
 
+  await test('a character no page-label font has (蘿), and Devanagari: drawn, every page, no error', async () => {
+    for (const prefix of ['蘿 ', 'पृष्ठ ']) {
+      const { page, errors } = await openTool(['five-pages.pdf']);
+      await page.fill('#pnPrefix', prefix);
+      await page.click('label[data-name="pnColor"][data-value="#1d4ed8"]');
+      await page.click('#mergeBtn');
+      const pages = await result(page);
+      if (pages.length !== 5 || pages.some(p => p.inkEm < 1.6)) throw new Error(`${prefix}: drawn width ` + pages.map(p => p.inkEm.toFixed(1)).join(','));
+      if (errors.length) throw new Error(errors.join('; '));
+    }
+  });
+
   await test('Arabic around the number: a clear message, no download', async () => {
     const { page } = await openTool(['five-pages.pdf']);
     await page.fill('#pnPrefix', 'صفحة ');
@@ -123,7 +141,7 @@ try {
 
   await test('font cannot be downloaded (offline on first use): a clear message, no download', async () => {
     const { page } = await openTool(['five-pages.pdf']);
-    await page.route('**/vendor/noto/**', r => r.abort());
+    await page.route('**/fonts/pagenum/**', r => r.abort());
     await page.click('label[data-name="pnTpl"][data-value="zh"]');
     await page.click('#mergeBtn');
     await page.waitForFunction(() => { const t = document.querySelector('#toast'); return t && !t.hidden && /Noto Sans/.test(t.innerText) && /connection/i.test(t.innerText); }, null, { timeout: 30000 });
@@ -150,6 +168,7 @@ try {
     };
     const zh = await chips('/zh/yema-pdf/'), ar = await chips('/ar/tarqim-pdf/'), en = await chips('/pagenum-pdf/');
     if (zh.filter(x => /第\s*1\s*页/.test(x)).length !== 1) throw new Error('zh: ' + zh.join(' | '));
+    if (zh.some(x => /页\s*1$/.test(x))) throw new Error('zh chip lost the place of the number: ' + zh.join(' | '));
     if (ar.some(x => /[\u0600-\u06FF]/.test(x))) throw new Error('ar offers Arabic text: ' + ar.join(' | '));
     if (!en.includes('Page 1')) throw new Error('en: ' + en.join(' | '));
   });

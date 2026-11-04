@@ -76,7 +76,7 @@
     "name": "Can I write the page number in another language, or choose its colour and font?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. Type any text before and after the number — “Page 1”, “Seite 1” or “第 1 页” (there is a one-click button for it). Chinese, Japanese, Korean, Cyrillic and other alphabets are written with an embedded Noto Sans font, so they show in every PDF reader. You can also pick grey, black, blue, red or any colour, and a sans, serif or monospaced font for Latin text. Arabic and Hebrew text around the number is not supported yet."
+      "text": "Yes. Type any text before and after the number — “Page 1”, “Seite 1” or “第 1 页” (there is a one-click button for it). Chinese, Japanese, Korean, Cyrillic, Vietnamese, Thai and Devanagari are written as real text with a small embedded Noto Sans font, so they show in every PDF reader and can be searched; a rare character outside that font is drawn as a picture instead. You can also pick grey, black, blue, red or any colour, and a sans, serif or monospaced font for Latin text. Arabic and Hebrew text around the number is not supported yet."
     }
   },
   {
