@@ -440,6 +440,8 @@ window.PDFREE_LOCALE = {
   cs_strength: 'Intensidade',
   cs_keep_color: "Manter carimbos e assinaturas coloridos",
   cs_keep_color_sub: "Um carimbo azul ou uma assinatura a caneta mantêm a cor; o resto é limpo",
+  cs_dark_title: "Deixar branco o fundo escuro",
+  cs_dark_sub: "Esta página tem texto claro sobre fundo escuro ou colorido. Ative para deixar o fundo branco e o texto escuro — confira a pré-visualização: uma foto sob o texto pode se perder.",
   cs_straighten: "Endireitar páginas inclinadas",
   cs_straighten_sub: "Deixa reta cada página digitalizada ou fotografada com uma leve inclinação (até 5°)",
   cs_quality: 'Qualidade',

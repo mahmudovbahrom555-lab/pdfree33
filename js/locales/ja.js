@@ -443,6 +443,8 @@ window.PDFREE_LOCALE = {
   cs_strength: '強さ',
   cs_keep_color: "カラーの印鑑・署名を残す",
   cs_keep_color_sub: "青い印や手書きの署名は色を残し、それ以外をきれいにします",
+  cs_dark_title: "暗い背景を白にする",
+  cs_dark_sub: "このページには、暗い背景や色付きの背景の上に明るい文字があります。オンにすると背景が白、文字が黒になります。プレビューを確認してください：文字の下の写真が消えることがあります。",
   cs_straighten: "傾いたページをまっすぐに",
   cs_straighten_sub: "少し傾いてスキャン・撮影されたページを水平に直します（最大5°）",
   cs_quality: '品質',

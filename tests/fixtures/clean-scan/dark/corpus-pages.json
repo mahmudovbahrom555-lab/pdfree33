@@ -1,0 +1,58 @@
+[
+ {
+  "name": "2119505.pdf",
+  "page": 1,
+  "sha256": "4455ff96ec20abae930157624262a5beec3a9b20adc74c98b4728e0233f45fa1",
+  "cache": "pdfree-corpus-en",
+  "why": "book cover, a man in a suit on a dark gradient: switched on, the photo was lost (v3, 2026-11-03)"
+ },
+ {
+  "name": "0459184.pdf",
+  "page": 1,
+  "sha256": "0ed9d3cf8704f95db5ef97e2391ae8f67f80df16794208858a3dfb3f30732a8b",
+  "cache": "pdfree-corpus-en",
+  "why": "1955 newspaper with a dark scanner edge: switched on, letters by the edge were cut (v3)"
+ },
+ {
+  "name": "5081551.pdf",
+  "page": 1,
+  "sha256": "a3fae4824fb40e0f696189fc40b65f429f8e8ab1d58a95c395dbaa635cbd9022",
+  "cache": "pdfree-corpus",
+  "why": "book cover, white title over a dark photo: the photo was lost when turned over (v2)"
+ },
+ {
+  "name": "3574097.pdf",
+  "page": 1,
+  "sha256": "735369ca4a764ef589003434b06d878ae28e7c248b0d9dcc4fc63bd1a72b7482",
+  "cache": "pdfree-corpus",
+  "why": "slide, white text over a dark photo: the photo was lost when turned over (v2)"
+ },
+ {
+  "name": "3084100.pdf",
+  "page": 1,
+  "sha256": "6383c9705dfa3fcd02f9bce72c709c468a6488939ca5ee2d73561bb9e13a6886",
+  "cache": "pdfree-corpus",
+  "why": "slide, black background, colour swooshes"
+ },
+ {
+  "name": "2373126.pdf",
+  "page": 1,
+  "sha256": "4c8b2acc228c9c80a616192ef8a3d6282abbc3a4c6dc7a42f50c5487feacc022",
+  "cache": "pdfree-corpus",
+  "why": "yearbook cover with a team photo"
+ },
+ {
+  "name": "1363272.pdf",
+  "page": 1,
+  "sha256": "2bf4aad7bafd1a993cac9a8162d1e6bb89faa7421f1babc5b2c181f3fe48e3ff",
+  "cache": "pdfree-corpus",
+  "why": "poster, white horse on black"
+ },
+ {
+  "name": "0988799.pdf",
+  "page": 1,
+  "sha256": "1fe3ae1e3500a6effd2044dc32490ee7d26a4112975e1f6f781e7c88bfafe2a8",
+  "cache": "pdfree-corpus",
+  "why": "brochure, bold black Chinese heading — v1 turned it hollow"
+ }
+]

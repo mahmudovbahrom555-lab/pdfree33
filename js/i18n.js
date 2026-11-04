@@ -423,6 +423,8 @@ export const EN = {
   cs_strength:           'Strength',
   cs_keep_color: "Keep coloured stamps and signatures",
   cs_keep_color_sub: "A blue stamp or a signature in pen keeps its colour; everything else is cleaned",
+  cs_dark_title: "Make the dark background white",
+  cs_dark_sub: "This page has light text on a dark or coloured background. Turn on to make the background white and the text dark — check the preview: a photo under the text can be lost.",
   cs_straighten: "Straighten tilted pages",
   cs_straighten_sub: "Turns each page back level when it was scanned or photographed at a slight angle (up to 5°)",
   cs_quality:            'Quality',

@@ -441,6 +441,8 @@ window.PDFREE_LOCALE = {
   cs_strength: 'Kekuatan',
   cs_keep_color: "Pertahankan stempel dan tanda tangan berwarna",
   cs_keep_color_sub: "Stempel biru atau tanda tangan pena tetap berwarna; selebihnya dibersihkan",
+  cs_dark_title: "Jadikan latar gelap putih",
+  cs_dark_sub: "Halaman ini berisi teks terang di atas latar gelap atau berwarna. Aktifkan agar latar menjadi putih dan teks gelap — periksa pratinjau: foto di bawah teks bisa hilang.",
   cs_straighten: "Luruskan halaman yang miring",
   cs_straighten_sub: "Meluruskan setiap halaman yang dipindai atau difoto sedikit miring (hingga 5°)",
   cs_quality: 'Kualitas',

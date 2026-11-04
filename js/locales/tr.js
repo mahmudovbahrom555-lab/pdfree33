@@ -440,6 +440,8 @@ window.PDFREE_LOCALE = {
   cs_strength: 'Güç',
   cs_keep_color: "Renkli mühür ve imzaları koru",
   cs_keep_color_sub: "Mavi bir mühür ya da kalemle atılmış imza rengini korur; geri kalan temizlenir",
+  cs_dark_title: "Koyu arka planı beyaz yap",
+  cs_dark_sub: "Bu sayfada koyu veya renkli arka plan üzerinde açık renkli metin var. Arka planı beyaz, metni koyu yapmak için açın — önizlemeyi kontrol edin: metnin altındaki fotoğraf kaybolabilir.",
   cs_straighten: "Eğik sayfaları düzelt",
   cs_straighten_sub: "Hafif eğik taranmış veya çekilmiş her sayfayı düzeltir (5°'ye kadar)",
   cs_quality: 'Kalite',
