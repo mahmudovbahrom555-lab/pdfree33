@@ -90,3 +90,15 @@ Both: npm test, lint, compress e2e, corpus gate `corpus:diff:compress` (CI) pass
   every re-save breaks /ByteRange, no warning. None of the 52 is signed; 2 signed docs in the caches
   (2395337, 3307692, both "Signature is Valid") — checked on main vs fix with pdfsig. Own class/fix later
   (owner asked: "check signed PDFs").
+
+## Result on the 52 documents (2026-11-05) — reported to the owner, criteria NOT changed
+- B1 PASS (0/22 doc×preset short of 90 % of XMP bytes). B2 PASS (render 72 DPI, text, pages, MuPDF, qpdf: 0 new).
+- B3 FAIL as written — and unachievable: two runs of the SAME baseline build differ in /ModDate and the
+  second /ID string (0365285, checked with qpdf --qdf). Supplementary, labelled: after blanking those two,
+  every no-XMP output is identical except 3184083 (0.16 % object XMP < the 1 % line, so B applies; render
+  and text identical). Wording fix proposed to the owner, not applied.
+- B4 FAIL: median time +18.1 % (1226 → 1448 ms). XMP docs Standard/Max ~1.9–2× (e.g. 1.3 → 4.5 s,
+  1.2 → 4.9 s, 3.1 → 6.3 s); no-XMP docs +9–12 %. No new timeout: Light "TIMEOUT" rows are a harness
+  artifact (the "found nothing to remove" toast isn't matched) — identical in both builds, checked live.
+- C1 PASS (0 outputs larger than input). C2 PASS after excluding auto-on-XMP rows (expected change) and
+  the /ModDate–/ID noise. C3 PASS (0). C4 NOT RUN yet (batch).
