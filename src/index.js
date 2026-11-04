@@ -584,6 +584,35 @@ export function _classifyUserAgent(ua) {
   return { device, browser };
 }
 
+// Coarse OS and in-app-browser buckets, same posture as above (a bucket,
+// never the UA). A user on /zh/chaifen-pdf/ wrote "没有能跳转到浏览器"
+// (couldn't go to the browser) from what the feedback form called "Unknown
+// OS · Chrome 132" (2026-11-04) — HarmonyOS NEXT (ArkWeb says OpenHarmony
+// and Chrome/132, no Android) and in-app browsers (WeChat, QQ, DingTalk…),
+// which may not save downloads, were invisible: all counted as Chrome.
+// Order matters: an Android or HarmonyOS phone's WeChat is both.
+export function _classifyPlatform(ua) {
+  ua = ua || '';
+  let os = 'other';
+  if (/OpenHarmony|HarmonyOS/i.test(ua)) os = 'harmonyos';
+  else if (/Windows NT/i.test(ua)) os = 'windows';
+  else if (/iPhone|iPad|iPod/i.test(ua)) os = 'ios';
+  else if (/Android/i.test(ua)) os = 'android';
+  else if (/CrOS/i.test(ua)) os = 'chromeos';
+  else if (/Mac OS X|Macintosh/i.test(ua)) os = 'macos';
+  else if (/Linux/i.test(ua)) os = 'linux';
+
+  let app = 'none';
+  if (/MicroMessenger/i.test(ua)) app = 'wechat';
+  else if (/DingTalk/i.test(ua)) app = 'dingtalk';
+  else if (/AlipayClient/i.test(ua)) app = 'alipay';
+  else if (/Weibo/i.test(ua)) app = 'weibo';
+  else if (/Lark|Feishu/i.test(ua)) app = 'lark';
+  else if (/aweme|Douyin|BytedanceWebview/i.test(ua)) app = 'douyin';
+  else if (/\bQQ\/[\d.]+/i.test(ua) && !/MQQBrowser/i.test(ua)) app = 'qq';
+  return { os, app };
+}
+
 export function _dataPointFromEvent(eventName, props) {
   const { locale = '', tool = '', session = '', ...rest } = props;
   const blobs = [String(locale).slice(0, 100), String(tool).slice(0, 100), String(session).slice(0, 100)];
@@ -678,6 +707,10 @@ async function handleAnalytics(request, env) {
   const { device, browser } = _classifyUserAgent(request.headers.get('User-Agent'));
   props.device  = device;
   props.browser = browser;
+  // after browser: the blobs before keep their places in every saved query
+  const { os, app } = _classifyPlatform(request.headers.get('User-Agent'));
+  props.os  = os;
+  props.app = app;
 
   if (!env.ANALYTICS) {
     console.log(`[analytics] ANALYTICS binding missing, event=${eventName} — dropped`);
