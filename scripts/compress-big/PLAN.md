@@ -80,3 +80,13 @@ C — Light (and any preset) never returns a larger file: when the result isn't 
   C3 where it was larger, the output is byte-identical to the input file;
   C4 batch compress follows the same rule.
 Both: npm test, lint, compress e2e, corpus gate `corpus:diff:compress` (CI) pass.
+
+## Implementation notes for B (2026-11-04) — the cause went deeper; criteria B1–B4/C1–C4 unchanged
+- XMP also on marked-content property dicts nested in page resources (InDesign: /Properties /MC0
+  << /Metadata … >>) — not just on images/pages: stripped at any depth, catalog's own key kept.
+- pdf-lib writes every parsed object, reachable or not: after stripping, objects unreachable from the
+  trailer are deleted. Prep step alone: 0486224 32.6 → 22.2 MB (18 XMP), 5754431 29.2 → 18.4 MB (825).
+- New class found (pre-existing, not caused by B/C): Compress silently invalidates digital signatures —
+  every re-save breaks /ByteRange, no warning. None of the 52 is signed; 2 signed docs in the caches
+  (2395337, 3307692, both "Signature is Valid") — checked on main vs fix with pdfsig. Own class/fix later
+  (owner asked: "check signed PDFs").
