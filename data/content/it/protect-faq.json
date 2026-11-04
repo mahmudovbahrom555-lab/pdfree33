@@ -41,10 +41,10 @@
   },
   {
     "@type": "Question",
-    "name": "È conforme al GDPR?",
+    "name": "Cosa succede ai miei dati?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sì — i file non lasciano mai il browser. Nessun dato viene inviato a server. Completamente conforme al GDPR."
+      "text": "I file non lasciano mai il browser: non vengono caricati sui nostri server né salvati lì. Il sito non usa cookie di tracciamento e conta solo eventi tecnici anonimi, come descritto nell'Informativa sulla privacy. Non certifichiamo la conformità al GDPR: se un utilizzo rispetta i tuoi obblighi lo valuta la tua organizzazione."
     }
   },
   {
