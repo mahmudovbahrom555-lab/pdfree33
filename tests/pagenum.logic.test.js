@@ -85,6 +85,16 @@ test('a value typed mid-interaction, then a 2nd file added, does not reset the f
   expect(h.fromInputNode.focused).toBeTruthy(); // still focused — no rebuild happened
 });
 
+// ── Lowercase formats (2026-11-05) — the tool page promised i, ii, iii and
+//    a, b, c; the panel and the preview now offer them (pageNumWorker.js draws them).
+const { formatPageNumber } = await import('../js/pageNumUtils.js');
+test('lowercase Roman and letters: i ii iii iv · xiv · a b … z aa', () => {
+  expect([1, 2, 3, 4].map(n => formatPageNumber(n, 'roman-lower')).join(' ')).toBe('i ii iii iv');
+  expect(formatPageNumber(14, 'roman-lower')).toBe('xiv');
+  expect([1, 2, 26, 27].map(n => formatPageNumber(n, 'alpha-lower')).join(' ')).toBe('a b z aa');
+  expect(formatPageNumber(4, 'roman')).toBe('IV');   // uppercase unchanged
+});
+
 // ── Summary ────────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);

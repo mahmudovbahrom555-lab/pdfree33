@@ -424,7 +424,8 @@ registerTool('pagenum', {
   },
   // fromPage/toPage are this document's page range, not a reusable setting —
   // the next file re-applies the saved format/position from page 1.
-  presetFilter: ({ position, format, fontSize, showTotal }) => ({ position, format, fontSize, showTotal }),
+  presetFilter: ({ position, format, fontSize, showTotal, prefix, suffix, color, font }) =>
+    ({ position, format, fontSize, showTotal, prefix, suffix, color, font }),
 });
 
 registerTool('meta', {

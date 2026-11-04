@@ -17,7 +17,7 @@
       "@type": "HowToStep",
       "position": 2,
       "name": "Configure the numbering",
-      "text": "Choose number format (Arabic 1,2,3 / Roman i,ii,iii / Alphabetic A,B,C), position (top or bottom, left/center/right), starting number, and whether to skip the first page. Optionally add a prefix or suffix for 'Page 1 of 20' style.",
+      "text": "Choose number format (Arabic 1,2,3 / Roman i,ii,iii / Alphabetic A,B,C), position (top or bottom, left/center/right), starting number, and whether to skip the first page. Optionally add text before or after the number ('Page 1', '第 1 页', 'Page 1 of 20'), a colour and a font.",
       "url": "https://pdfree.io/pagenum-pdf/#step2"
     },
     {

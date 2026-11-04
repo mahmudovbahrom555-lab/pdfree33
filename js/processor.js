@@ -1305,6 +1305,63 @@ async function _runWatermarkText(filesSnapshot, params) {
   }));
 }
 
+// ── Page numbers with a prefix/suffix, a colour or a font: own worker ──
+// See pageNumWorker.js's header. Plain numbers (no prefix/suffix, the
+// default grey and font, an uppercase or Arabic format) stay on
+// worker.js's handlePageNum() unchanged.
+function _pageNumNeedsOwnWorker(params) {
+  return !!(params.prefix || params.suffix || params.color || (params.font && params.font !== 'sans')
+    || /-lower$/.test(params.format || ''));
+}
+let _pageNumWorker = null;
+function _pageNumRequest(fileBuffer, options, onProgress) {
+  return new Promise((resolve, reject) => {
+    if (!_pageNumWorker) _pageNumWorker = new Worker(new URL('./pageNumWorker.js', import.meta.url));
+    const worker = _pageNumWorker;
+    worker.onmessage = (e) => {
+      const data = e.data;
+      if (data.type === 'progress') { onProgress?.(data.value, data.label); return; }
+      if (data.type === 'done')     { resolve(data); return; }
+      if (data.type === 'error')    { const err = new Error(data.message); err.code = data.code; err.chars = data.chars; reject(err); }
+    };
+    worker.onerror = (e) => reject(new Error(e.message || 'Worker error'));
+    worker.postMessage({ fileBuffer, options }, [fileBuffer]);
+  });
+}
+
+async function _runPageNumText(filesSnapshot, params) {
+  const file = filesSnapshot[0];
+  if (!_checkSize(file, maxFileMb('pagenum'))) { _abortUI(); return; }
+  const buffer = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(file));
+
+  setProgress(5, t('prog_pagenum'));
+
+  let data;
+  try {
+    data = await _pageNumRequest(buffer, params, (value, label) => setProgress(value, label));
+  } catch (err) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    if (err.code === 'rtl') _handleError('pagenum', t('err_pagenum_rtl'), 'pagenum_rtl');
+    else if (err.code === 'unsupported-characters') _handleError('pagenum', t('err_pagenum_unsupported_chars', { chars: (err.chars || []).join(' ') }), 'pagenum_unsupported_chars');
+    else if (err.code === 'font-load') _handleError('pagenum', t('err_cdn_lib_unavailable', { lib: 'Noto Sans' }), 'pagenum_font_load');
+    else _handleError('pagenum', err.message);
+    return;
+  }
+  if (!isProcessing) return;
+
+  isProcessing = false;
+  setFilesLocked(false);
+  hideCancelBtn();
+  setProgress(100, t('prog_done'));
+
+  const blob = new Blob([data.result], { type: 'application/pdf' });
+  const base = file.name.replace(/\.pdf$/i, '');
+  const desc = t('desc_pagenum', { pages: data.pageCount, size: fmtSize(blob.size) });
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: { tool: 'pagenum', blob, desc, filename: `${base}-numbered.pdf` }
+  }));
+}
+
 // ── Add Form Fields: dedicated Unicode-capable worker ──────────────────
 // See js/formFieldsWorker.js's own header for the full rationale — same
 // "own dedicated worker, own embedded font" pattern as the text-watermark
@@ -2413,6 +2470,10 @@ async function _runWorkerTool(tool, filesSnapshot, params, bufferOverride) {
   if (tool === 'watermark' && params.kind !== 'image') {
     return _runWatermarkText(filesSnapshot, params);
   }
+  // Page numbers with text around them, a colour or a font — pageNumWorker.js.
+  if (tool === 'pagenum' && _pageNumNeedsOwnWorker(params)) {
+    return _runPageNumText(filesSnapshot, params);
+  }
   // Add Form Fields — always routes to its own dedicated worker (needs a
   // Unicode-capable embedded font for the fields it creates). See
   // js/formFieldsWorker.js's own header for why.
@@ -2626,6 +2687,8 @@ async function _batchWorkerToolOne(tool, file, params, onProgress) {
   // per-file try/catch, same as any other batch-item failure.
   const data = (tool === 'watermark' && params.kind !== 'image')
     ? await _watermarkTextRequest(buffer, params, onProgress)
+    : (tool === 'pagenum' && _pageNumNeedsOwnWorker(params))
+    ? await _pageNumRequest(buffer, params, onProgress)
     : await _postToWorkerForBatch({ tool, file: buffer, options: params }, [buffer], onProgress);
   if (!(data.result instanceof ArrayBuffer)) throw new Error('Unexpected result from worker');
   const base = file.name.replace(/\.pdf$/i, '');
