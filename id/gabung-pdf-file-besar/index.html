@@ -131,8 +131,8 @@
       },
       {
         "@type": "Question",
-        "name": "Kenapa iLovePDF punya batas ukuran file 25MB?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF memproses file di servernya, yang berarti ada biaya bandwidth dan penyimpanan. Untuk mengontrol biaya tersebut bagi pengguna gratis, mereka menerapkan batas ukuran file. PDFree memproses semuanya secara lokal di browser Anda — tidak ada biaya server, jadi tidak ada batas harian dan tidak ada batas 25MB; satu penggabungan bisa mencapai 500 MB di komputer, dibatasi hanya untuk melindungi memori perangkat Anda." }
+        "name": "Kenapa alat cloud punya batas ukuran file?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Alat cloud memproses file di server mereka, yang berarti ada biaya bandwidth dan penyimpanan. Untuk mengontrol biaya tersebut bagi pengguna gratis, mereka menerapkan batas ukuran file. PDFree memproses semuanya secara lokal di browser Anda — tidak ada biaya server, jadi tidak ada batas harian dan tidak ada batas 25MB; satu penggabungan bisa mencapai 500 MB di komputer, dibatasi hanya untuk melindungi memori perangkat Anda." }
       },
       {
         "@type": "Question",
@@ -147,7 +147,7 @@
       {
         "@type": "Question",
         "name": "Apakah ada batas harian untuk jumlah PDF yang bisa saya gabungkan?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Tidak. PDFree tidak punya batas penggunaan harian. Berbeda dengan SmallPDF (2 tugas per hari di paket gratis) atau iLovePDF (batas harian untuk akun gratis), PDFree memungkinkan Anda menggabungkan sebanyak apa pun PDF yang Anda butuhkan, sesering yang Anda mau, secara gratis." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Tidak. PDFree tidak punya batas penggunaan harian. Berbeda dengan alat cloud yang membatasi paket gratis per hari, PDFree memungkinkan Anda menggabungkan sebanyak apa pun PDF yang Anda butuhkan, sesering yang Anda mau, secara gratis." }
       },
       {
         "@type": "Question",
@@ -161,8 +161,8 @@
       },
       {
         "@type": "Question",
-        "name": "Kenapa menggabungkan PDF besar lambat di iLovePDF tapi cepat di PDFree?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF mengharuskan Anda mengupload file ke server mereka, memprosesnya di sana, lalu mengunduh hasilnya — tiga perjalanan jaringan yang menambah waktu signifikan untuk file besar. PDFree memproses semuanya secara lokal di browser Anda tanpa transfer jaringan, jadi kecepatannya hanya bergantung pada CPU perangkat Anda, bukan koneksi internet Anda." }
+        "name": "Kenapa menggabungkan PDF besar lambat di alat cloud tapi cepat di PDFree?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Alat cloud mengharuskan Anda mengupload file ke server mereka, memprosesnya di sana, lalu mengunduh hasilnya — tiga perjalanan jaringan yang menambah waktu signifikan untuk file besar. PDFree memproses semuanya secara lokal di browser Anda tanpa transfer jaringan, jadi kecepatannya hanya bergantung pada CPU perangkat Anda, bukan koneksi internet Anda." }
       }
     ]
   }
@@ -317,9 +317,7 @@
   <!-- Badge perbandingan — di bawah tool agar tidak menghalangi akses -->
   <section style="padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
     <div style="max-width:760px;margin:0 auto;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;">
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">iLovePDF: batas 25MB</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">SmallPDF: 2 tugas/hari</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Adobe: perlu paket berbayar</span>
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Alat cloud: batas ukuran dan harian di paket gratis</span>
       <span style="font-size:13px;color:var(--text2);">vs</span>
       <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">PDFree: tanpa batas harian, selalu gratis</span>
     </div>
@@ -379,22 +377,10 @@
                 <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Gratis selamanya</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">iLovePDF (gratis)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~25MB</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Terbatas</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Gratis / mulai $6/bulan</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">SmallPDF (gratis)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~5MB terkompresi</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 tugas/hari</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Gratis / mulai $9/bulan</td>
-              </tr>
-              <tr>
-                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">100MB (berbayar)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Tanpa batas (berbayar)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">$19,99/bulan</td>
+                <td style="padding:10px 14px;color:var(--text);">Alat PDF cloud pada umumnya</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Tergantung alatnya</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Tergantung alatnya</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Tergantung alatnya</td>
               </tr>
             </tbody>
           </table>
@@ -494,12 +480,12 @@
             <p style="margin:0;font-size:14px;">Ya — hingga 500 MB per penggabungan di Chrome atau Edge pada komputer dengan memori 8 GB ke atas, dan hingga 300 MB di ponsel, Safari, dan Firefox. Pemrosesan sepenuhnya terjadi di browser Anda, jadi batas ini melindungi memori perangkat Anda, bukan bandwidth server — dalam pengujian kami, penggabungan 500 MB selesai sekitar 5 detik di laptop 8 GB.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Kenapa iLovePDF punya batas 25MB tapi PDFree tidak?</h3>
-            <p style="margin:0;font-size:14px;">iLovePDF memproses file di servernya, yang berarti ada biaya bandwidth dan penyimpanan. Untuk mengontrol biaya tersebut bagi pengguna gratis, mereka menerapkan batas ukuran file. PDFree memproses semuanya secara lokal di browser Anda — tidak ada biaya server, jadi tidak ada batas harian dan tidak ada batas 25MB; satu penggabungan bisa mencapai 500 MB di komputer, dibatasi hanya untuk melindungi memori perangkat Anda.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Kenapa alat cloud punya batas ukuran tapi PDFree tidak?</h3>
+            <p style="margin:0;font-size:14px;">Alat cloud memproses file di server mereka, yang berarti ada biaya bandwidth dan penyimpanan. Untuk mengontrol biaya tersebut bagi pengguna gratis, mereka menerapkan batas ukuran file. PDFree memproses semuanya secara lokal di browser Anda — tidak ada biaya server, jadi tidak ada batas harian dan tidak ada batas 25MB; satu penggabungan bisa mencapai 500 MB di komputer, dibatasi hanya untuk melindungi memori perangkat Anda.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Apakah ada batas harian untuk penggabungan?</h3>
-            <p style="margin:0;font-size:14px;">Tidak. Berbeda dengan SmallPDF (2 tugas/hari gratis) atau iLovePDF (batas harian), PDFree tidak punya batas harian. Gabungkan sebanyak apa pun PDF yang Anda butuhkan, sesering yang Anda mau.</p>
+            <p style="margin:0;font-size:14px;">Tidak. Berbeda dengan alat cloud yang membatasi paket gratis per hari, PDFree tidak punya batas harian. Gabungkan sebanyak apa pun PDF yang Anda butuhkan, sesering yang Anda mau.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Seberapa besar PDF yang bisa saya gabungkan?</h3>
@@ -515,7 +501,7 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Bisakah saya menggabungkan 50 atau 100 file PDF sekaligus secara gratis?</h3>
-            <p style="margin:0;font-size:14px;">Ya, sepenuhnya gratis tanpa batas harian. Berbeda dengan SmallPDF (2 tugas/hari) atau iLovePDF (batas harian), PDFree tidak punya batas penggunaan harian. Letakkan 50 atau 100 file sekaligus, atur urutannya, dan klik Gabung — hasilnya langsung terunduh ke perangkat Anda tanpa upload ke server mana pun.</p>
+            <p style="margin:0;font-size:14px;">Ya, sepenuhnya gratis tanpa batas harian. Berbeda dengan alat cloud yang membatasi paket gratis per hari, PDFree tidak punya batas penggunaan harian. Letakkan 50 atau 100 file sekaligus, atur urutannya, dan klik Gabung — hasilnya langsung terunduh ke perangkat Anda tanpa upload ke server mana pun.</p>
           </div>
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Apakah saya perlu membuat akun?</h3>

@@ -42,6 +42,10 @@ BLOCK = [
     (r'private by design|safe for confidential docs', 'an absolute promise: say the files stay on your device'),
     (r'100\s?%\s?(?:de\s)?(?:privacy|privacidad|privacidade|confidentialité)|privacy by design|(?:privasi|quyền riêng tư) 100%|100\s?%\s?の?プライバシー|100% 개인정보|%100 gizli', 'an absolute promise: say the files stay on your device'),
     (r'100\s?%\s?(?:的\s?)?隐私|从设计上|حریم خصوصی 100٪|פרטיות של 100%|100% رازدار|১০০%\s?গোপনীয়', 'an absolute promise: say the files stay on your device'),
+    # competitors are compared, never named (owner, 2026-11-04); a viewer named as a format fact
+    # ("opens in Adobe Acrobat") stays. Arabic pages wait for their own PR (SEO re-check until 2026-11-16).
+    (r'\b(?:iLovePDF|Smallpdf|PDF24|Sejda|DocuSign|HelloSign|SignNow|pymupdf4llm|Docling)\b', 'a competitor named: say cloud PDF tools / other tools', r'^(?:ar/|data/content/ar/|js/locales/ar\.js)'),
+    (r'(?:without|ohne|sin|sans|sem|senza|zonder|bez|olmadan|không cần|tanpa|なしで|없이|без) (?:Adobe|Acrobat)|\bvs\.? Adobe|Adobe\'s (?:free )?Fill', 'a competitor named: say paid software / cloud tools', r'^(?:ar/|data/content/ar/|js/locales/ar\.js)'),
     # Arabic keeps "خصوصية 100%" until its SEO re-check ends (2026-11-16) — then the same change, and its pattern here
     # the same promises in the translations (removed 2026-11-04, PR 1b);
     # a user's question ("…conforme à HIPAA ?") stays — its answer says we don't certify
@@ -62,7 +66,9 @@ BLOCK = [
 # where the site's public words live (tracked files only)
 PATHS = ['*.html', '**/*.html', 'data/content/**', 'data/tools-config.json', 'js/config.js', 'js/i18n.js', 'js/locales/*.js', 'scripts/templates/**']
 EXCLUDE = (':!tests', ':!docs', ':!research', ':!packages', ':!seo-content.html', ':!dist')
-URL = re.compile(r'(?:href|src|content|action)="[^"]*/[^"]*"|https?://\S+|"(?:url|item|@id)":\s*"[^"]*"')
+# a link or address, not words: href/src/action, and content="" only when it holds a URL or path —
+# a meta description with "PDF/A" in it is words and is checked
+URL = re.compile(r'(?:href|src|action)="[^"]*"|content="(?:https?:|/)[^"]*"|https?://\S+|"(?:url|item|@id)":\s*"[^"]*"')
 
 
 def main():
@@ -76,7 +82,9 @@ def main():
             continue
         for n, line in enumerate(text.split('\n'), 1):
             plain = URL.sub(' ', line)
-            for rx, why in BLOCK:
+            for rx, why, *skip in BLOCK:
+                if skip and re.match(skip[0], path):
+                    continue
                 m = re.search(rx, plain, re.I)
                 if m:
                     found.append(f'{path}:{n}: "{m.group(0)}" — {why}')

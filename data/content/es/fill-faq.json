@@ -73,10 +73,10 @@
   },
   {
     "@type": "Question",
-    "name": "¿En qué se diferencia esto de Fill & Sign gratuito de Adobe?",
+    "name": "¿En qué se diferencia de los servicios gratuitos en la nube para rellenar y firmar?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Fill & Sign de Adobe es gratis para rellenar y firmar tu propio PDF, pero requiere una cuenta gratuita de Adobe y sube tu archivo a los servidores de Adobe. PDFree no necesita ni cuenta ni inicio de sesión, y tu archivo nunca sale de tu dispositivo. (El límite de 2 al mes de Adobe solo se aplica si envías un documento a otra persona para que lo firme, no si lo rellenas tú mismo.)"
+      "text": "Los servicios gratuitos en la nube para rellenar y firmar suelen pedir una cuenta y suben tu archivo a sus servidores. PDFree no necesita ni cuenta ni inicio de sesión, y tu archivo nunca sale de tu dispositivo."
     }
   },
   {

@@ -89,10 +89,10 @@
   },
   {
     "@type": "Question",
-    "name": "How is this different from Adobe's free Fill & Sign?",
+    "name": "How is this different from free cloud fill-and-sign services?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Adobe's Fill & Sign is free to use for filling and signing your own PDF, but it requires a free Adobe account and uploads your file to Adobe's servers. PDFree needs neither — no account, no sign-in, and your file never leaves your device. (Adobe's 2-per-month limit only applies if you're sending a document to someone else for their signature, not to filling one yourself.)"
+      "text": "Free cloud fill-and-sign services usually require an account and upload your file to their servers. PDFree needs neither — no account, no sign-in, and your file never leaves your device."
     }
   },
   {

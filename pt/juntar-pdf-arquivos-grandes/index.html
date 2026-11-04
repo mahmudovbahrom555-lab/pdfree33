@@ -132,8 +132,8 @@
       },
       {
         "@type": "Question",
-        "name": "Por que o iLovePDF tem um limite de 25MB por arquivo?",
-        "acceptedAnswer": { "@type": "Answer", "text": "O iLovePDF processa arquivos em seus servidores, o que gera custos de largura de banda e armazenamento. Para controlar esses custos para usuários gratuitos, a ferramenta impõe limites de tamanho de arquivo. O PDFree processa tudo localmente no seu navegador, então não há custos de servidor — e, portanto, nenhum limite diário nem teto de 25MB; uma junção pode ter até 500MB em um computador, limite que só existe para proteger a memória do seu dispositivo." }
+        "name": "Por que as ferramentas na nuvem têm um limite por arquivo?",
+        "acceptedAnswer": { "@type": "Answer", "text": "As ferramentas na nuvem processam arquivos em seus servidores, o que gera custos de largura de banda e armazenamento. Para controlar esses custos para usuários gratuitos, a ferramenta impõe limites de tamanho de arquivo. O PDFree processa tudo localmente no seu navegador, então não há custos de servidor — e, portanto, nenhum limite diário nem teto de 25MB; uma junção pode ter até 500MB em um computador, limite que só existe para proteger a memória do seu dispositivo." }
       },
       {
         "@type": "Question",
@@ -148,7 +148,7 @@
       {
         "@type": "Question",
         "name": "Existe um limite diário de quantos PDFs posso juntar?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Não. O PDFree não tem limites de uso diário. Diferente do SmallPDF (2 tarefas por dia no plano gratuito) ou do iLovePDF (limites diários em contas gratuitas), o PDFree permite juntar quantos PDFs você precisar, quantas vezes quiser, de graça." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Não. O PDFree não tem limites de uso diário. Ao contrário das ferramentas na nuvem com limites diários no plano grátis, o PDFree permite juntar quantos PDFs você precisar, quantas vezes quiser, de graça." }
       },
       {
         "@type": "Question",
@@ -162,8 +162,8 @@
       },
       {
         "@type": "Question",
-        "name": "Por que juntar PDFs grandes é lento no iLovePDF, mas rápido no PDFree?",
-        "acceptedAnswer": { "@type": "Answer", "text": "O iLovePDF exige o upload do seu arquivo para o servidor, o processamento lá e o download do resultado — três trajetos de rede que somam tempo significativo em arquivos grandes. O PDFree processa tudo localmente no seu navegador, sem transferência de rede, então a velocidade depende apenas da CPU do seu dispositivo, não da sua conexão com a internet." }
+        "name": "Por que juntar PDFs grandes é lento nas ferramentas na nuvem, mas rápido no PDFree?",
+        "acceptedAnswer": { "@type": "Answer", "text": "As ferramentas na nuvem exigem o upload do seu arquivo para o servidor, o processamento lá e o download do resultado — três trajetos de rede que somam tempo significativo em arquivos grandes. O PDFree processa tudo localmente no seu navegador, sem transferência de rede, então a velocidade depende apenas da CPU do seu dispositivo, não da sua conexão com a internet." }
       }
     ]
   }
@@ -316,9 +316,7 @@
   <!-- Selos de comparação — abaixo da ferramenta para não atrasar o acesso -->
   <section style="padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
     <div style="max-width:760px;margin:0 auto;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;">
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">iLovePDF: limite de 25MB</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">SmallPDF: 2 tarefas/dia</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Adobe: exige plano pago</span>
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Ferramentas na nuvem: limites de tamanho e diários no plano grátis</span>
       <span style="font-size:13px;color:var(--text2);">vs</span>
       <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">PDFree: sem limite diário, sempre grátis</span>
     </div>
@@ -378,22 +376,10 @@
                 <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Grátis para sempre</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">iLovePDF (grátis)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~25MB</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limitado</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Grátis / a partir de $6/mês</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">SmallPDF (grátis)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~5MB comprimido</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 tarefas/dia</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Grátis / a partir de $9/mês</td>
-              </tr>
-              <tr>
-                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">100MB (pago)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Ilimitado (pago)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">$19,99/mês</td>
+                <td style="padding:10px 14px;color:var(--text);">Ferramentas PDF na nuvem comuns</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Depende da ferramenta</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Depende da ferramenta</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Depende da ferramenta</td>
               </tr>
             </tbody>
           </table>
@@ -493,12 +479,12 @@
             <p style="margin:0;font-size:14px;">Sim — até 500MB por junção no Chrome ou Edge em um computador com 8GB+ de memória, e até 300MB em celulares, no Safari e no Firefox. O processamento acontece inteiramente no seu navegador, então o limite protege a memória do seu dispositivo, não a largura de banda de um servidor — uma junção de 500MB levou cerca de 5 segundos em um notebook de 8GB nos nossos testes.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Por que o iLovePDF tem limite de 25MB, mas o PDFree não?</h3>
-            <p style="margin:0;font-size:14px;">O iLovePDF processa arquivos em seus servidores, o que gera custos de largura de banda e armazenamento. O PDFree processa arquivos localmente no seu navegador — não há custos de servidor, então não há limite diário nem teto de 25MB; uma junção pode ter até 500MB em um computador, limite que só existe para proteger a memória do seu dispositivo.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Por que as ferramentas na nuvem têm limite de tamanho, mas o PDFree não?</h3>
+            <p style="margin:0;font-size:14px;">As ferramentas na nuvem processam arquivos em seus servidores, o que gera custos de largura de banda e armazenamento. O PDFree processa arquivos localmente no seu navegador — não há custos de servidor, então não há limite diário nem teto de 25MB; uma junção pode ter até 500MB em um computador, limite que só existe para proteger a memória do seu dispositivo.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Existe um limite diário para junções?</h3>
-            <p style="margin:0;font-size:14px;">Não. Diferente do SmallPDF (2 tarefas/dia grátis) ou do iLovePDF (limites diários), o PDFree não tem limite diário. Junte quantos PDFs precisar, quantas vezes quiser.</p>
+            <p style="margin:0;font-size:14px;">Não. Ao contrário das ferramentas na nuvem com limites diários no plano grátis, o PDFree não tem limite diário. Junte quantos PDFs precisar, quantas vezes quiser.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Qual o tamanho máximo de PDF que posso juntar?</h3>
@@ -514,7 +500,7 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Posso juntar 50 ou 100 arquivos PDF de uma vez gratuitamente?</h3>
-            <p style="margin:0;font-size:14px;">Sim, totalmente grátis e sem limite diário. Diferente do SmallPDF (2 tarefas/dia) ou do iLovePDF (limites diários), o PDFree não tem restrições de uso. Solte todos os 50 ou 100 arquivos de uma vez, organize a ordem e clique em Juntar — o resultado é baixado diretamente no seu dispositivo, sem upload para nenhum servidor.</p>
+            <p style="margin:0;font-size:14px;">Sim, totalmente grátis e sem limite diário. Ao contrário das ferramentas na nuvem com limites diários no plano grátis, o PDFree não tem restrições de uso. Solte todos os 50 ou 100 arquivos de uma vez, organize a ordem e clique em Juntar — o resultado é baixado diretamente no seu dispositivo, sem upload para nenhum servidor.</p>
           </div>
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Preciso criar uma conta?</h3>

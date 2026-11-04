@@ -131,8 +131,8 @@
       },
       {
         "@type": "Question",
-        "name": "Почему iLovePDF ограничивает бесплатное сжатие 25 МБ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF сжимает файлы на своих серверах, что создаёт расходы на трафик и хранение данных. Чтобы ограничить эти расходы для бесплатных пользователей, сервис вводит лимиты на размер файлов и дневные лимиты. PDFree сжимает всё локально в вашем браузере, поэтому серверных расходов нет — а значит, нет ни дневного лимита, ни ограничения в 25 МБ; файлы принимаются до 500 МБ на компьютере, а лимит нужен лишь для защиты памяти вашего устройства." }
+        "name": "Почему облачные сервисы ограничивают бесплатное сжатие?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Облачные сервисы сжимают файлы на своих серверах, что создаёт расходы на трафик и хранение данных. Чтобы ограничить эти расходы для бесплатных пользователей, сервис вводит лимиты на размер файлов и дневные лимиты. PDFree сжимает всё локально в вашем браузере, поэтому серверных расходов нет — а значит, нет ни дневного лимита, ни ограничения в 25 МБ; файлы принимаются до 500 МБ на компьютере, а лимит нужен лишь для защиты памяти вашего устройства." }
       },
       {
         "@type": "Question",
@@ -142,7 +142,7 @@
       {
         "@type": "Question",
         "name": "Есть ли дневной лимит на количество сжатий PDF?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Нет. У PDFree нет дневных лимитов использования. В отличие от SmallPDF (2 задачи в день на бесплатном плане) или iLovePDF (дневные лимиты для бесплатных аккаунтов), PDFree позволяет сжимать столько PDF, сколько нужно, так часто, как хочется — бесплатно." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Нет. У PDFree нет дневных лимитов использования. В отличие от облачных сервисов с дневными лимитами на бесплатном тарифе, PDFree позволяет сжимать столько PDF, сколько нужно, так часто, как хочется — бесплатно." }
       },
       {
         "@type": "Question",
@@ -366,22 +366,10 @@
                 <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Никогда</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">iLovePDF (бесплатно)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~25 МБ</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Ограничено</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Да — на их серверы</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">SmallPDF (бесплатно)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~5 МБ сжато</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 задачи/день</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Да — на их серверы</td>
-              </tr>
-              <tr>
-                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">100 МБ (платно)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Без ограничений (платно)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Да — в облако Adobe</td>
+                <td style="padding:10px 14px;color:var(--text);">Типичные облачные PDF-сервисы</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Зависит от сервиса</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Зависит от сервиса</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Зависит от сервиса</td>
               </tr>
             </tbody>
           </table>
@@ -416,8 +404,8 @@
             <p style="margin:0;font-size:14px;">Да — до 500 МБ в Chrome или Edge на компьютере с 8 ГБ+ памяти и до 150 МБ на телефонах, в Safari и Firefox. Обработка полностью происходит в вашем браузере, поэтому лимит защищает память вашего устройства, а не пропускную способность сервера: в наших тестах скан на 500 МБ сжался примерно за 30 секунд на ноутбуке с 8 ГБ памяти.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Почему iLovePDF ограничивает бесплатное сжатие 25 МБ?</h3>
-            <p style="margin:0;font-size:14px;">iLovePDF обрабатывает файлы на своих серверах, что создаёт реальные расходы на трафик и вычисления. PDFree обрабатывает файлы локально в вашем браузере — серверных расходов нет, поэтому нет ни дневного лимита, ни ограничения в 25 МБ; файлы принимаются до 500 МБ на компьютере, а лимит нужен лишь для защиты памяти вашего устройства.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Почему облачные сервисы ограничивают бесплатное сжатие?</h3>
+            <p style="margin:0;font-size:14px;">Облачные сервисы обрабатывают файлы на своих серверах, что создаёт реальные расходы на трафик и вычисления. PDFree обрабатывает файлы локально в вашем браузере — серверных расходов нет, поэтому нет ни дневного лимита, ни ограничения в 25 МБ; файлы принимаются до 500 МБ на компьютере, а лимит нужен лишь для защиты памяти вашего устройства.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Насколько сжатие уменьшит размер моего PDF?</h3>
@@ -425,7 +413,7 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Есть ли дневной лимит на сжатие PDF?</h3>
-            <p style="margin:0;font-size:14px;">Нет. В отличие от SmallPDF (2 задачи/день бесплатно) или iLovePDF (дневные лимиты), у PDFree нет дневного лимита. Сжимайте столько PDF, сколько нужно, так часто, как хочется.</p>
+            <p style="margin:0;font-size:14px;">Нет. В отличие от облачных сервисов с дневными лимитами на бесплатном тарифе, у PDFree нет дневного лимита. Сжимайте столько PDF, сколько нужно, так часто, как хочется.</p>
           </div>
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Загружается ли мой файл на сервер при сжатии?</h3>

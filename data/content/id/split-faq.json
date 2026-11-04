@@ -81,10 +81,10 @@
   },
   {
     "@type": "Question",
-    "name": "Bisakah memisahkan PDF di iPhone atau Android tanpa Adobe?",
+    "name": "Bisakah memisahkan PDF di iPhone atau Android tanpa aplikasi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Buka PDFree di Safari (iPhone/iPad) atau browser apa pun di Android — tidak diperlukan unduhan aplikasi atau Adobe Acrobat. Alat ini berjalan sepenuhnya di browser: muat PDF Anda, pilih halaman, ketuk Pisah PDF. Hasilnya tersimpan ke aplikasi File di iOS atau folder Unduhan di Android."
+      "text": "Buka PDFree di Safari (iPhone/iPad) atau browser apa pun di Android — tidak perlu mengunduh aplikasi atau perangkat lunak berbayar. Alat ini berjalan sepenuhnya di browser: muat PDF Anda, pilih halaman, ketuk Pisah PDF. Hasilnya tersimpan ke aplikasi File di iOS atau folder Unduhan di Android."
     }
   },
   {

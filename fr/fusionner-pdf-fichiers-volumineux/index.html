@@ -132,8 +132,8 @@
       },
       {
         "@type": "Question",
-        "name": "Pourquoi iLovePDF a-t-il une limite de 25 Mo par fichier ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF traite les fichiers sur ses serveurs, ce qui engendre des coûts de bande passante et de stockage. Pour maîtriser ces coûts pour les utilisateurs gratuits, le service impose des limites de taille de fichier. PDFree traite tout localement dans votre navigateur, il n'y a donc aucun coût serveur — et par conséquent ni limite quotidienne ni plafond à 25 Mo ; une fusion peut atteindre 500 Mo sur ordinateur, une limite qui ne sert qu'à protéger la mémoire de votre appareil." }
+        "name": "Pourquoi les outils cloud ont-ils une limite par fichier ?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Les outils cloud traitent les fichiers sur leurs serveurs, ce qui engendre des coûts de bande passante et de stockage. Pour maîtriser ces coûts pour les utilisateurs gratuits, le service impose des limites de taille de fichier. PDFree traite tout localement dans votre navigateur, il n'y a donc aucun coût serveur — et par conséquent ni limite quotidienne ni plafond à 25 Mo ; une fusion peut atteindre 500 Mo sur ordinateur, une limite qui ne sert qu'à protéger la mémoire de votre appareil." }
       },
       {
         "@type": "Question",
@@ -148,7 +148,7 @@
       {
         "@type": "Question",
         "name": "Y a-t-il une limite quotidienne sur le nombre de PDF que je peux fusionner ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Non. PDFree n'impose aucune limite d'utilisation quotidienne. Contrairement à SmallPDF (2 tâches par jour sur le plan gratuit) ou iLovePDF (limites quotidiennes sur les comptes gratuits), PDFree vous permet de fusionner autant de PDF que nécessaire, aussi souvent que vous le souhaitez, gratuitement." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Non. PDFree n'impose aucune limite d'utilisation quotidienne. Contrairement aux outils cloud qui limitent l'usage gratuit par jour, PDFree vous permet de fusionner autant de PDF que nécessaire, aussi souvent que vous le souhaitez, gratuitement." }
       },
       {
         "@type": "Question",
@@ -162,8 +162,8 @@
       },
       {
         "@type": "Question",
-        "name": "Pourquoi la fusion de gros PDF est-elle lente sur iLovePDF mais rapide sur PDFree ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF exige d'envoyer votre fichier vers son serveur, de le traiter là-bas, puis de télécharger le résultat — trois allers-retours réseau qui ajoutent un temps considérable pour les gros fichiers. PDFree traite tout localement dans votre navigateur sans transfert réseau, la vitesse ne dépend donc que du processeur de votre appareil, pas de votre connexion internet." }
+        "name": "Pourquoi la fusion de gros PDF est-elle lente sur les outils cloud mais rapide sur PDFree ?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Les outils cloud exigent d'envoyer votre fichier vers leur serveur, de le traiter là-bas, puis de télécharger le résultat — trois allers-retours réseau qui ajoutent un temps considérable pour les gros fichiers. PDFree traite tout localement dans votre navigateur sans transfert réseau, la vitesse ne dépend donc que du processeur de votre appareil, pas de votre connexion internet." }
       }
     ]
   }
@@ -316,9 +316,7 @@
   <!-- Badges comparatifs — sous l'outil pour ne pas retarder l'accès -->
   <section style="padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
     <div style="max-width:760px;margin:0 auto;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;">
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">iLovePDF : limite de 25 Mo</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">SmallPDF : 2 tâches/jour</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Adobe : abonnement payant requis</span>
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Outils cloud : limites de taille et quotidiennes en gratuit</span>
       <span style="font-size:13px;color:var(--text2);">vs</span>
       <span style="font-size:12px;background:var(--green-light);color:var(--green);padding:4px 11px;border-radius:20px;font-weight:600;">PDFree : sans limite quotidienne, toujours gratuit</span>
     </div>
@@ -378,22 +376,10 @@
                 <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Gratuit à vie</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">iLovePDF (gratuit)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~25 Mo</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limitée</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Gratuit / dès 6 $/mois</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">SmallPDF (gratuit)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~5 Mo compressé</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 tâches/jour</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Gratuit / dès 9 $/mois</td>
-              </tr>
-              <tr>
-                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">100 Mo (payant)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Illimitée (payant)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">19,99 $/mois</td>
+                <td style="padding:10px 14px;color:var(--text);">Outils PDF cloud courants</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Selon l'outil</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Selon l'outil</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Selon l'outil</td>
               </tr>
             </tbody>
           </table>
@@ -493,12 +479,12 @@
             <p style="margin:0;font-size:14px;">Oui — jusqu'à 500 Mo par fusion dans Chrome ou Edge sur un ordinateur doté d'au moins 8 Go de mémoire, et 300 Mo sur téléphone, Safari et Firefox. Le traitement se fait entièrement dans votre navigateur : cette limite protège la mémoire de votre appareil, ce n'est ni un plafond d'envoi ni une offre payante.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Pourquoi iLovePDF a-t-il une limite de 25 Mo mais pas PDFree ?</h3>
-            <p style="margin:0;font-size:14px;">iLovePDF traite les fichiers sur ses serveurs, ce qui crée des coûts réels de bande passante et de stockage. PDFree traite les fichiers localement dans votre navigateur — il n'y a aucun coût serveur, donc ni limite quotidienne ni plafond à 25 Mo ; une fusion peut atteindre 500 Mo sur ordinateur, une limite qui ne sert qu'à protéger la mémoire de votre appareil.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Pourquoi les outils cloud ont-ils une limite de taille, mais pas PDFree ?</h3>
+            <p style="margin:0;font-size:14px;">Les outils cloud traitent les fichiers sur leurs serveurs, ce qui crée des coûts réels de bande passante et de stockage. PDFree traite les fichiers localement dans votre navigateur — il n'y a aucun coût serveur, donc ni limite quotidienne ni plafond à 25 Mo ; une fusion peut atteindre 500 Mo sur ordinateur, une limite qui ne sert qu'à protéger la mémoire de votre appareil.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Y a-t-il une limite quotidienne sur les fusions ?</h3>
-            <p style="margin:0;font-size:14px;">Non. Contrairement à SmallPDF (2 tâches/jour en gratuit) ou iLovePDF (limites quotidiennes), PDFree n'a aucun plafond quotidien. Fusionnez autant de PDF que nécessaire, aussi souvent que vous le souhaitez.</p>
+            <p style="margin:0;font-size:14px;">Non. Contrairement aux outils cloud qui limitent l'usage gratuit par jour, PDFree n'a aucun plafond quotidien. Fusionnez autant de PDF que nécessaire, aussi souvent que vous le souhaitez.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Quelle taille de PDF puis-je fusionner ?</h3>
@@ -514,7 +500,7 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Puis-je fusionner gratuitement 50 ou 100 fichiers PDF en une seule fois ?</h3>
-            <p style="margin:0;font-size:14px;">Oui, totalement gratuit et sans plafond quotidien. Contrairement à SmallPDF (2 tâches/jour) ou iLovePDF (limites quotidiennes), PDFree n'a aucune restriction d'utilisation. Déposez vos 50 ou 100 fichiers à la fois, organisez l'ordre et cliquez sur Fusionner — le résultat se télécharge directement sur votre appareil, sans aucun envoi vers un serveur.</p>
+            <p style="margin:0;font-size:14px;">Oui, totalement gratuit et sans plafond quotidien. Contrairement aux outils cloud qui limitent l'usage gratuit par jour, PDFree n'a aucune restriction d'utilisation. Déposez vos 50 ou 100 fichiers à la fois, organisez l'ordre et cliquez sur Fusionner — le résultat se télécharge directement sur votre appareil, sans aucun envoi vers un serveur.</p>
           </div>
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Dois-je créer un compte ?</h3>

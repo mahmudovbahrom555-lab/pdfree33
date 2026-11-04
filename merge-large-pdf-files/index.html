@@ -131,8 +131,8 @@
       },
       {
         "@type": "Question",
-        "name": "Why does iLovePDF have a 25MB file size limit?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF processes files on its servers, which means bandwidth and storage costs. To control those costs for free users, they impose file size limits. PDFree processes everything locally in your browser, so there are no server costs — and therefore no daily limit and no 25MB cap; one merge can be up to 500 MB on a computer, limited only to protect your device's memory." }
+        "name": "Why do cloud tools have a file size limit?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Cloud tools process files on their servers, which means bandwidth and storage costs. To control those costs for free users, they impose file size limits. PDFree processes everything locally in your browser, so there are no server costs — and therefore no daily limit and no 25MB cap; one merge can be up to 500 MB on a computer, limited only to protect your device's memory." }
       },
       {
         "@type": "Question",
@@ -147,7 +147,7 @@
       {
         "@type": "Question",
         "name": "Is there a daily limit on how many PDFs I can merge?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. PDFree has no daily usage limits. Unlike SmallPDF (2 tasks per day on the free plan) or iLovePDF (daily limits on free accounts), PDFree lets you merge as many PDFs as you need, as often as you want, for free." }
+        "acceptedAnswer": { "@type": "Answer", "text": "No. PDFree has no daily usage limits. Unlike cloud tools with daily limits on their free plans, PDFree lets you merge as many PDFs as you need, as often as you want, for free." }
       },
       {
         "@type": "Question",
@@ -161,8 +161,8 @@
       },
       {
         "@type": "Question",
-        "name": "Why is merging large PDFs slow on iLovePDF but fast on PDFree?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF requires uploading your file to their server, processing it there, and downloading the result — three network trips that add significant time for large files. PDFree processes everything locally in your browser with no network transfer, so the speed depends only on your device's CPU, not your internet connection." }
+        "name": "Why is merging large PDFs slow on cloud tools but fast on PDFree?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Cloud tools require uploading your file to their server, processing it there, and downloading the result — three network trips that add significant time for large files. PDFree processes everything locally in your browser with no network transfer, so the speed depends only on your device's CPU, not your internet connection." }
       }
     ]
   }
@@ -312,9 +312,7 @@
   <!-- Comparison badges — below the tool so it doesn't delay access -->
   <section style="padding:14px 24px;border-bottom:1px solid var(--border);background:var(--surface);">
     <div style="max-width:760px;margin:0 auto;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;">
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">iLovePDF: 25MB limit</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">SmallPDF: 2 tasks/day</span>
-      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Adobe: paid plan required</span>
+      <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 11px;border-radius:20px;font-weight:500;">Cloud tools: size and daily limits on free plans</span>
       <span style="font-size:13px;color:var(--text2);">vs</span>
       <span style="font-size:12px;background:var(--green-light);color:var(--green-text);padding:4px 11px;border-radius:20px;font-weight:600;">PDFree: no daily limit, always free</span>
     </div>
@@ -374,22 +372,10 @@
                 <td style="text-align:center;padding:10px 14px;color:var(--green-text);font-weight:700;">Free forever</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">iLovePDF (free)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~25MB</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limited</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Free / $6+/mo</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:10px 14px;color:var(--text);">SmallPDF (free)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">~5MB compressed</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 tasks/day</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Free / $9+/mo</td>
-              </tr>
-              <tr>
-                <td style="padding:10px 14px;color:var(--text);">Adobe Acrobat</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">100MB (paid)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Unlimited (paid)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">$19.99/mo</td>
+                <td style="padding:10px 14px;color:var(--text);">Typical cloud PDF tools</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Varies by tool</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Varies by tool</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Varies by tool</td>
               </tr>
             </tbody>
           </table>
@@ -489,12 +475,12 @@
             <p style="margin:0;font-size:14px;">Yes — up to 500 MB per merge in Chrome or Edge on a computer with 8 GB+ memory, and up to 300 MB on phones, Safari and Firefox. Processing happens entirely in your browser, so the cap protects your device's memory rather than a server's bandwidth — a 500 MB merge took about 5 seconds on an 8 GB laptop in our tests.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Why does iLovePDF have a 25MB limit but PDFree doesn't?</h3>
-            <p style="margin:0;font-size:14px;">iLovePDF processes files on their servers, which creates bandwidth and storage costs. PDFree processes files locally in your browser — there are no server costs, so there is no daily limit and no 25MB cap; one merge can be up to 500 MB on a computer, limited only to protect your device's memory.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Why do cloud tools have a size limit but PDFree doesn't?</h3>
+            <p style="margin:0;font-size:14px;">Cloud tools process files on their servers, which creates bandwidth and storage costs. PDFree processes files locally in your browser — there are no server costs, so there is no daily limit and no 25MB cap; one merge can be up to 500 MB on a computer, limited only to protect your device's memory.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Is there a daily limit on merges?</h3>
-            <p style="margin:0;font-size:14px;">No. Unlike SmallPDF (2 tasks/day free) or iLovePDF (daily limits), PDFree has no daily cap. Merge as many PDFs as you need, as often as you want.</p>
+            <p style="margin:0;font-size:14px;">No. Unlike cloud tools with daily limits on free plans, PDFree has no daily cap. Merge as many PDFs as you need, as often as you want.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">How large a PDF can I merge?</h3>
@@ -510,7 +496,7 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I merge 50 or 100 PDF files at once for free?</h3>
-            <p style="margin:0;font-size:14px;">Yes, completely free with no daily cap. Unlike SmallPDF (2 tasks/day) or iLovePDF (daily limits), PDFree has no usage restrictions. Drop all 50 or 100 files at once, arrange the order, and click Merge — the result downloads directly to your device with no upload to any server.</p>
+            <p style="margin:0;font-size:14px;">Yes, completely free with no daily cap. Unlike cloud tools with daily limits, PDFree has no usage restrictions. Drop all 50 or 100 files at once, arrange the order, and click Merge — the result downloads directly to your device with no upload to any server.</p>
           </div>
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Do I need to create an account?</h3>

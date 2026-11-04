@@ -20,10 +20,7 @@ PDFree offers merge, split, compress, rotate, watermark, redact, protect/unlock,
 
 ## Comparisons
 
-- [iLovePDF Alternative](https://pdfree.io/ilovepdf-alternative/): no upload, no daily limits, direct feature-by-feature comparison.
-- [Smallpdf Alternative](https://pdfree.io/smallpdf-alternative/): free, no upload, no daily limit — direct comparison.
-- [Adobe Acrobat Alternative](https://pdfree.io/adobe-acrobat-alternative/): fill, sign, edit PDF without a subscription.
-- [PDF24 Alternative](https://pdfree.io/pdf24-alternative/): browser-based, no upload, no install.
+- [Alternative to cloud PDF tools](https://pdfree.io/alternative-to-cloud-pdf-tools/): no upload, no daily limits — PDFree compared with typical cloud PDF tools.
 
 ## Notes
 

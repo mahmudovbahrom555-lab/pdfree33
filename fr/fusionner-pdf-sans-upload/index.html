@@ -174,10 +174,10 @@
       },
       {
         "@type": "Question",
-        "name": "En quoi PDFree diffère-t-il d'iLovePDF ou SmallPDF ?",
+        "name": "En quoi PDFree diffère-t-il des outils PDF cloud ?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "iLovePDF et SmallPDF envoient vos fichiers sur leurs serveurs pour les traiter, puis les suppriment après 1 à 2 heures. PDFree traite tout localement dans votre navigateur — vos fichiers ne quittent jamais votre appareil. Cela rend PDFree intrinsèquement plus sûr pour les documents sensibles et utilisable sans connexion internet une fois chargé."
+          "text": "Les outils PDF cloud envoient vos fichiers sur leurs serveurs pour les traiter, puis les suppriment plus tard ; la durée de conservation varie. PDFree traite tout localement dans votre navigateur — vos fichiers ne quittent jamais votre appareil. Cela rend PDFree intrinsèquement plus sûr pour les documents sensibles et utilisable sans connexion internet une fois chargé."
         }
       },
       {
@@ -341,7 +341,7 @@
         <!-- How it works -->
         <div id="how-it-works"></div>
         <h2 style="font-size:26px;color:var(--text);margin:0 0 12px;font-weight:700;">Pourquoi « Sans Envoi » Est Important</h2>
-        <p>Lorsque vous utilisez des outils comme iLovePDF ou SmallPDF, vos fichiers voyagent sur internet jusqu'à un serveur distant. Ce serveur les traite, les stocke temporairement (pendant 1 à 2 heures), puis les supprime. Pendant cette fenêtre, vos documents existent sur l'ordinateur de quelqu'un d'autre.</p>
+        <p>Lorsque vous utilisez des outils PDF cloud, vos fichiers voyagent sur internet jusqu'à un serveur distant. Ce serveur les traite, les stocke temporairement, puis les supprime. Pendant cette fenêtre, vos documents existent sur l'ordinateur de quelqu'un d'autre.</p>
         <p>Pour des fichiers du quotidien comme des ordres du jour de réunion, c'est acceptable. Mais pour des <strong>relevés bancaires, dossiers médicaux, contrats juridiques, déclarations fiscales ou pièces d'identité</strong> — les envoyer à un serveur tiers crée une exposition inutile. Une brèche serveur, une permission mal configurée ou une réquisition judiciaire pourrait exposer vos documents.</p>
 
         <div style="background:var(--green-light);border-left:4px solid var(--green);padding:18px 20px;border-radius:0 8px 8px 0;margin:28px 0;">
@@ -380,8 +380,7 @@
               <tr style="border-bottom:2px solid var(--border);">
                 <th style="text-align:left;padding:10px 14px;color:var(--text);font-weight:600;">Fonctionnalité</th>
                 <th style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">PDFree</th>
-                <th style="text-align:center;padding:10px 14px;color:var(--text2);font-weight:600;">iLovePDF</th>
-                <th style="text-align:center;padding:10px 14px;color:var(--text2);font-weight:600;">SmallPDF</th>
+                <th style="text-align:center;padding:10px 14px;color:var(--text2);font-weight:600;">Outils PDF cloud courants</th>
               </tr>
             </thead>
             <tbody>
@@ -389,42 +388,35 @@
                 <td style="padding:10px 14px;color:var(--text);font-weight:500;">Fichiers envoyés au serveur</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Jamais</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">Toujours</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Toujours</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:10px 14px;color:var(--text);">Fichiers supprimés du serveur</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">N/A — jamais stockés</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Après 2 heures</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Après 1 heure</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Selon l'outil</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
                 <td style="padding:10px 14px;color:var(--text);">Fonctionne hors ligne</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">✓ Oui (PWA)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">✗ Non</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">✗ Non</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:10px 14px;color:var(--text);">Limite de taille de fichier</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">500 Mo par fusion (ordinateur) · 300 Mo (téléphone)</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limitée (gratuit)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limitée (gratuit)</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);background:var(--green-light);">
                 <td style="padding:10px 14px;color:var(--text);">Limite d'utilisation quotidienne</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">Aucune</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Limitée (gratuit)</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">2 tâches/jour (gratuit)</td>
+                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Selon l'outil</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:10px 14px;color:var(--text);">Compte requis</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">✓ Jamais</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">Facultatif</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Facultatif</td>
               </tr>
               <tr>
                 <td style="padding:10px 14px;color:var(--text);">Le fichier reste sur votre appareil</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--green);font-weight:700;">✓ Oui</td>
-                <td style="text-align:center;padding:10px 14px;color:var(--text2);">Non (envoyé)</td>
                 <td style="text-align:center;padding:10px 14px;color:var(--text2);">Non (envoyé)</td>
               </tr>
             </tbody>
@@ -482,8 +474,8 @@
             <p style="margin:0;font-size:14px;">Oui. Comme les fichiers ne quittent jamais votre appareil, PDFree est sûr pour les dossiers médicaux protégés, les documents juridiques confidentiels et tout autre contenu sensible. Il n'y a aucun serveur qui pourrait être compromis.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
-            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">En quoi est-ce différent d'iLovePDF ou SmallPDF ?</h3>
-            <p style="margin:0;font-size:14px;">iLovePDF et SmallPDF envoient vos fichiers sur leurs serveurs, les traitent là-bas, puis les suppriment après 1 à 2 heures. PDFree traite tout localement — vos fichiers ne voyagent jamais vers un serveur. Vous n'avez pas non plus de limite d'utilisation quotidienne.</p>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">En quoi est-ce différent des outils PDF cloud ?</h3>
+            <p style="margin:0;font-size:14px;">Les outils PDF cloud envoient vos fichiers sur leurs serveurs, les traitent là-bas, puis les suppriment plus tard ; la durée de conservation varie. PDFree traite tout localement — vos fichiers ne voyagent jamais vers un serveur. Vous n'avez pas non plus de limite d'utilisation quotidienne.</p>
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Y a-t-il une limite de taille de fichier ?</h3>
@@ -517,7 +509,7 @@
     <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;border-top:1px solid var(--border);padding-top:20px;">
       <div>
         <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Alternatives</div>
-        <a href="/ilovepdf-alternative/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">Alternative à iLovePDF</a>
+        <a href="/alternative-to-cloud-pdf-tools/" style="display:block;color:var(--green);text-decoration:none;margin-bottom:4px;">Alternatives aux outils cloud</a>
       </div>
       <div>
         <div style="color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Solutions</div>

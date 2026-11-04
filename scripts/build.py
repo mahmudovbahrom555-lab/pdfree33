@@ -444,7 +444,9 @@ SPECIALTY_PAGES = [
     'legal-pdf-tools',
     'sign-pdf-free-no-account',
     'fill-sign-flatten-guide',
-    'ilovepdf-alternative',
+    # one neutral page replaced the competitor-named ones (owner 2026-11-04:
+    # compare yes, name no) — the old URLs 301 here (_redirects)
+    'alternative-to-cloud-pdf-tools',
     # compare-pdf is EN-only so stays here; draw-on-pdf/secure-pdf-tools/
     # merge-pdf-without-uploading/pdf-tools-no-upload/merge-scanned-pdf/
     # compress-large-pdf-free/merge-large-pdf-files are handled by
@@ -476,13 +478,6 @@ SPECIALTY_PAGES = [
     'make-scanned-pdf-searchable',
     'ocr-pdf-no-upload',
     'pdf-compression-glossary',
-    # Competitor alternative pages
-    'smallpdf-alternative',
-    'pdf24-alternative',
-    'adobe-acrobat-alternative',
-    # Roundup comparing PDFree against the 3 alternative pages above +
-    # Adobe — AI-SEO content type (ItemList schema), EN-only
-    'best-free-pdf-tools',
     # Stage 5 long-tail landing pages
     # merge-pdf-no-size-limit: consolidated into merge-large-pdf-files (301
     # redirect in _redirects) — near-zero internal linking, near-duplicate
