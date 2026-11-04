@@ -19,12 +19,14 @@
 /**
  * Format a 1-based page number in the requested style.
  * @param {number} n     — page number (1-indexed)
- * @param {'arabic'|'roman'|'alpha'} format
+ * @param {'arabic'|'roman'|'roman-lower'|'alpha'|'alpha-lower'} format
  * @returns {string}
  */
 export function formatPageNumber(n, format) {
   if (format === 'roman') return toRoman(n);
+  if (format === 'roman-lower') return toRoman(n).toLowerCase();
   if (format === 'alpha') return toAlpha(n);
+  if (format === 'alpha-lower') return toAlpha(n).toLowerCase();
   return String(n);
 }
 

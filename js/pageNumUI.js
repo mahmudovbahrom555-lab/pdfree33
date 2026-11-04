@@ -7,10 +7,11 @@
 //  Two separate concerns, clearly separated in the UI:
 //  PAGE RANGE  — which PDF pages to number (fromPage / toPage)
 //  NUMBERING   — what numbers to show (format / startAt / showTotal)
+//  TEXT & STYLE — text around the number, colour, font (pageNumWorker.js)
 //  POSITION    — where on the page (position chips)
 // ============================================================
 
-import { id } from './utils.js';
+import { id, esc } from './utils.js';
 import { chipGroup, sliderRow, checkbox, presetRememberCard } from './uiComponents.js';
 import { formatPageNumber } from './pageNumUtils.js';
 import { t } from './i18n.js';
@@ -19,13 +20,17 @@ import { loadPdfLib } from './lazyLibs.js';
 
 // ── State ──────────────────────────────────────────────────────
 let _position  = 'bottom-center'; // 'bottom-center'|'bottom-right'|'bottom-left'|'top-center'|'book'
-let _format    = 'arabic';        // 'arabic'|'roman'|'alpha'
+let _format    = 'arabic';        // 'arabic'|'roman'|'roman-lower'|'alpha'|'alpha-lower'
 let _fromPage  = 1;               // first PDF page to number (1-based)
 let _toPage    = null;            // last PDF page to number (null = last page)
 let _startAt   = 1;               // number shown on the first numbered page
 let _autoStart = true;            // true = startAt mirrors fromPage automatically
 let _fontSize  = 10;
 let _showTotal = false;           // show "1 / N" instead of just "1"
+let _prefix    = '';              // text before / after the number: "Page 1", "第 1 页"
+let _suffix    = '';
+let _color     = '';              // '' = the default grey; else '#rrggbb'
+let _font      = 'sans';          // 'sans'|'serif'|'mono' — Latin; other alphabets get Noto Sans
 let _rememberLoaded = false;      // "Remember my settings" applied once per tool session
 // 0 = not known yet (or read failed) — validate() in toolRegistrations.js skips
 // the bounds check in that case rather than risk a false-positive block; the
@@ -42,6 +47,10 @@ export function getPageNumParams() {
     startAt:   _startAt,
     fontSize:  _fontSize,
     showTotal: _showTotal,
+    prefix:    _prefix,
+    suffix:    _suffix,
+    color:     _color || null,
+    font:      _font,
     // legacy compat: skipFirst = fromPage > 1
     skipFirst: _fromPage > 1,
     // Real page count of the current (first/representative) file, once known —
@@ -67,6 +76,10 @@ export function initPageNumOptions(file) {
       _format    = saved.format    ?? _format;
       _fontSize  = saved.fontSize  ?? _fontSize;
       _showTotal = saved.showTotal ?? _showTotal;
+      _prefix    = saved.prefix    ?? _prefix;
+      _suffix    = saved.suffix    ?? _suffix;
+      _color     = saved.color     ?? _color;
+      _font      = saved.font      ?? _font;
     }
   }
 
@@ -131,6 +144,10 @@ export function hidePageNumOptions() {
   _autoStart = true;
   _fontSize  = 10;
   _showTotal = false;
+  _prefix    = '';
+  _suffix    = '';
+  _color     = '';
+  _font      = 'sans';
   _rememberLoaded = false;
   _pageCount = 0;
   _pageCountGen++; // invalidate any in-flight read from the file that just left
@@ -154,6 +171,66 @@ function _numInput(id, value, placeholder = '') {
     aria-label="${id}">`;
 }
 
+// Quick formats — they only fill the two fields below, which stay editable.
+function _templates() {
+  const page = t('pn_tpl_page');
+  return [
+    { value: 'none',  label: '1',             prefix: '',           suffix: '' },
+    { value: 'page',  label: `${page} 1`,     prefix: `${page} `,   suffix: '' },
+    { value: 'dash',  label: '— 1 —',         prefix: '— ',         suffix: ' —' },
+    { value: 'zh',    label: '第 1 页',        prefix: '第 ',         suffix: ' 页' },
+  ];
+}
+const _COLORS = [
+  { value: '',        label: () => t('pn_color_grey'),  swatch: '#333333' },
+  { value: '#000000', label: () => t('pn_color_black'), swatch: '#000000' },
+  { value: '#1d4ed8', label: () => t('pn_color_blue'),  swatch: '#1d4ed8' },
+  { value: '#c81e1e', label: () => t('pn_color_red'),   swatch: '#c81e1e' },
+];
+const _FONT_CSS = { sans: 'Helvetica, Arial, sans-serif', serif: '"Times New Roman", Times, serif', mono: '"Courier New", Courier, monospace' };
+const _templateValue = () => (_templates().find(x => x.prefix === _prefix && x.suffix === _suffix) || {}).value || '';
+
+function _textStyleHTML() {
+  const tpl = _templateValue();
+  const chip = (name, value, label, active, extra = '') =>
+    `<label class="j2p-chip${active ? ' j2p-chip--active' : ''}" data-name="${name}" data-value="${esc(value)}" style="border-radius:8px${extra}">
+       <input type="radio" name="${name}" value="${esc(value)}"${active ? ' checked' : ''} style="position:absolute;opacity:0;pointer-events:none">${label}</label>`;
+  const custom = _color && !_COLORS.some(c => c.value === _color);
+  return `
+    <div class="pn-section">
+      <div class="pn-section-label">${t('pn_section_text')}</div>
+      <div class="pn-row" role="radiogroup" aria-label="${esc(t('pn_aria_text_format'))}">
+        ${_templates().map(x => chip('pnTpl', x.value, esc(x.label), tpl === x.value)).join('')}
+      </div>
+      <div class="pn-row" style="margin-top:10px">
+        <label class="pn-field"><span class="pn-field-label">${t('pn_prefix')}</span>
+          <input type="text" id="pnPrefix" maxlength="40" value="${esc(_prefix)}" style="${TEXT_STYLE}"></label>
+        <span style="padding-top:18px;color:var(--text3);font-weight:600">1</span>
+        <label class="pn-field"><span class="pn-field-label">${t('pn_suffix')}</span>
+          <input type="text" id="pnSuffix" maxlength="40" value="${esc(_suffix)}" style="${TEXT_STYLE}"></label>
+      </div>
+      <div class="pn-field-label" style="margin:12px 0 6px">${t('pn_color')}</div>
+      <div class="pn-row" role="radiogroup" aria-label="${esc(t('pn_color'))}">
+        ${_COLORS.map(c => chip('pnColor', c.value, `<span class="pn-swatch" style="background:${c.swatch}"></span>${esc(c.label())}`, !custom && _color === c.value)).join('')}
+        <label class="j2p-chip${custom ? ' j2p-chip--active' : ''}" style="border-radius:8px" title="${esc(t('pn_color_custom'))}">
+          <input type="color" id="pnColorCustom" value="${custom ? _color : '#2563eb'}" aria-label="${esc(t('pn_color_custom'))}" style="width:22px;height:22px;border:none;padding:0;background:none;cursor:pointer">${esc(t('pn_color_custom'))}</label>
+      </div>
+      <div class="pn-field-label" style="margin:12px 0 6px">${t('pn_font')}</div>
+      <div class="pn-row" role="radiogroup" aria-label="${esc(t('pn_font'))}">
+        ${chip('pnFont', 'sans', `<span style="font-family:${_FONT_CSS.sans}">${esc(t('pn_font_sans'))}</span>`, _font === 'sans')}
+        ${chip('pnFont', 'serif', `<span style="font-family:${_FONT_CSS.serif}">${esc(t('pn_font_serif'))}</span>`, _font === 'serif')}
+        ${chip('pnFont', 'mono', `<span style="font-family:${_FONT_CSS.mono}">${esc(t('pn_font_mono'))}</span>`, _font === 'mono')}
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-top:6px">${t('pn_font_hint')}</div>
+    </div>
+    <hr class="pn-divider">`;
+}
+
+const TEXT_STYLE = `
+  width:120px;border:1px solid var(--border);border-radius:6px;
+  padding:6px 8px;font-size:14px;background:var(--surface);color:var(--text);
+`.replace(/\n\s*/g, '');
+
 function _render() {
   const container = id('pageNumOptions');
   if (!container) return;
@@ -167,7 +244,9 @@ function _render() {
   ];
   const fmtOpts = [
     { value: 'arabic', label: '1  2  3'   },
+    { value: 'roman-lower', label: 'i  ii  iii' },
     { value: 'roman',  label: 'I  II  III' },
+    { value: 'alpha-lower', label: 'a  b  c' },
     { value: 'alpha',  label: 'A  B  C'    },
   ];
 
@@ -189,6 +268,8 @@ function _render() {
       }
       .pn-stepper:hover { background:var(--border); }
       .pn-divider { border:none;border-top:1px solid var(--border);margin:16px 0; }
+      .pn-swatch { display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px;border:1px solid var(--border); }
+      #pageNumOptions .j2p-chip { position:relative;min-height:36px; }
       input[type=number]::-webkit-inner-spin-button,
       input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; }
 
@@ -210,11 +291,10 @@ function _render() {
       }
       .pn-mock-page__num {
         /* font-weight intentionally normal, not bold — matches the real
-           output exactly: js/worker.js's handlePageNum() always embeds
-           plain StandardFonts.Helvetica, never a bold/italic variant (no
-           style choice exists yet). A bold mockup previously implied a
-           result the tool can't actually produce — a real user-reported
-           mismatch. */
+           output: plain Helvetica / Times / Courier (or Noto Sans for other
+           alphabets), never a bold/italic variant. A bold mockup previously
+           implied a result the tool can't actually produce — a real
+           user-reported mismatch. */
         position:absolute;font-weight:400;color:var(--text2);line-height:1;
         white-space:nowrap;
       }
@@ -296,6 +376,8 @@ function _render() {
 
     <hr class="pn-divider">
 
+    ${_textStyleHTML()}
+
     <!-- ── POSITION ── -->
     <div class="pn-section">
       <div class="pn-section-label">${t('pn_section_position')}</div>
@@ -356,7 +438,7 @@ function _mockNumStyle(isRightPage) {
 }
 
 function _mockPageHTML(isRightPage) {
-  const label   = _formatNum(_startAt, _format) + (_showTotal ? ` / ${_formatNum(_startAt + 9, _format)}` : '');
+  const label   = esc(_prefix + _formatNum(_startAt, _format) + (_showTotal ? ` / ${_formatNum(_startAt + 9, _format)}` : '') + _suffix);
   // A real, literally-to-page-scale font size would be sub-pixel and
   // invisible at this thumbnail size (a 10pt number on a real ~612pt-wide
   // Letter page is a tiny fraction of the page). Instead of chasing true
@@ -373,7 +455,7 @@ function _mockPageHTML(isRightPage) {
       <span class="pn-mock-page__line" style="top:14%;width:70%"></span>
       <span class="pn-mock-page__line" style="top:24%;width:55%"></span>
       <span class="pn-mock-page__line" style="top:34%;width:62%"></span>
-      <span class="pn-mock-page__num" style="${_mockNumStyle(isRightPage)}font-size:${fontPx}px">${label}</span>
+      <span class="pn-mock-page__num" style="${_mockNumStyle(isRightPage)}font-size:${fontPx}px;font-family:${_FONT_CSS[_font]};${_color ? `color:${_color};` : ''}">${label}</span>
     </div>`;
 }
 
@@ -387,15 +469,15 @@ function _previewHTML() {
   const ex1 = _formatNum(_startAt,     _format);
   const ex2 = _formatNum(_startAt + 1, _format);
   const ex3 = _formatNum(_startAt + 2, _format);
-  const sfx = n => _showTotal ? ` / ${_formatNum(_startAt + 9, _format)}` : '';
-  const p1  = _fromPage > 1 ? '—' : ex1 + sfx(1);
+  const sfx = n => (_showTotal ? ` / ${_formatNum(_startAt + 9, _format)}` : '') + _suffix;
+  const p1  = _fromPage > 1 ? '—' : esc(_prefix + ex1 + sfx(1));
   const rangeHint = _toPage !== null
     ? `<span class="pn-preview__label" style="margin-left:8px;opacity:.6">${t('pn_preview_range', { from: _fromPage, to: _toPage })}</span>`
     : (_fromPage > 1 ? `<span class="pn-preview__label" style="margin-left:8px;opacity:.6">${t('pn_preview_from', { from: _fromPage })}</span>` : '');
   return `<span class="pn-preview__label">${t('pn_preview_label')}</span>
     <span class="pn-preview__ex">${p1}</span>
-    <span class="pn-preview__ex">${ex2 + sfx(2)}</span>
-    <span class="pn-preview__ex">${ex3 + sfx(3)}</span>
+    <span class="pn-preview__ex">${esc(_prefix + ex2 + sfx(2))}</span>
+    <span class="pn-preview__ex">${esc(_prefix + ex3 + sfx(3))}</span>
     <span class="pn-preview__dots">…</span>${rangeHint}`;
 }
 
@@ -434,11 +516,41 @@ function _bindEvents() {
       _refreshPreview();
     }
     if (e.target.id === 'pnShowTotal') { _showTotal = e.target.checked; _refreshPreview(); }
+    if (e.target.name === 'pnTpl') {
+      const tpl = _templates().find(x => x.value === e.target.value);
+      if (tpl) {
+        _prefix = tpl.prefix; _suffix = tpl.suffix;
+        id('pnPrefix').value = _prefix; id('pnSuffix').value = _suffix;
+        _syncChips('pnTpl', tpl.value);
+        _refreshPreview();
+      }
+    }
+    if (e.target.name === 'pnColor') { _color = e.target.value; _syncChips('pnColor', _color); _refreshPreview(); }
+    if (e.target.name === 'pnFont')  { _font = e.target.value;  _syncChips('pnFont', _font);  _refreshPreview(); }
     // Unchecking forgets immediately — saving happens centrally in app.js
     // (_maybeSavePreset) right before processing starts.
     if (e.target.id === 'pagenumRememberCheck' && !e.target.checked) {
       clearPreset('pagenum');
     }
+  });
+
+  function _syncChips(name, value) {
+    container.querySelectorAll(`[data-name="${name}"]`).forEach(el =>
+      el.classList.toggle('j2p-chip--active', el.dataset.value === value));
+    if (name === 'pnColor') id('pnColorCustom')?.closest('label')?.classList.toggle('j2p-chip--active', false);
+  }
+  const _onText = () => {
+    _prefix = id('pnPrefix')?.value ?? ''; _suffix = id('pnSuffix')?.value ?? '';
+    _syncChips('pnTpl', _templateValue());
+    _refreshPreview();
+  };
+  id('pnPrefix')?.addEventListener('input', _onText);
+  id('pnSuffix')?.addEventListener('input', _onText);
+  id('pnColorCustom')?.addEventListener('input', e => {
+    _color = e.target.value;
+    container.querySelectorAll('[data-name="pnColor"]').forEach(el => el.classList.remove('j2p-chip--active'));
+    e.target.closest('label')?.classList.add('j2p-chip--active');
+    _refreshPreview();
   });
 
   // Helper: sync startAt to fromPage when in auto mode + microanimation

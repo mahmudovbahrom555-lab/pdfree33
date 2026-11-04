@@ -37,6 +37,7 @@
     "test:e2e:docx2pdf": "node tests/e2e/docx2pdf.e2e.mjs",
     "test:e2e:quickedit": "node tests/e2e/quickEdit.e2e.mjs",
     "test:e2e:nup": "node tests/e2e/nup.e2e.mjs",
+    "test:e2e:pagenum-text": "node tests/e2e/pagenum-text.e2e.mjs",
     "test:e2e:merge-alternate": "node tests/e2e/merge-alternate.e2e.mjs",
     "test:e2e:repair": "node tests/e2e/repair.e2e.mjs",
     "test:e2e:draw-image": "node tests/e2e/draw-image.e2e.mjs",
