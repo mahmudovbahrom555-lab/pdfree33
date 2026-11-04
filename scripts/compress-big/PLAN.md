@@ -41,3 +41,12 @@ No new presets unless Step 4 shows the current strategy can't fit a class.
 ## Analytics change (separate small PR)
 Size buckets under 1 MB: < 100 KB, 100–200 KB, 200–500 KB, 500 KB–1 MB; plus reduction % as a number
 on Compress success (owner's addition).
+
+## Step 0 result (owner exports 2026-11-04) — GLOBAL, not India-only
+Tool Success, 30 days, >50 MB in → still >50 MB: CN 53 (vs 25 smaller), IN 41 (15), US 24 (9), PH 22 (8),
+EG 16 (5), GB 9, JP 8, BR 7, CA 7, AE 7. 10–50 MB → 10–50 MB: IN 40, CN 39 (35 smaller), US 25 (20), AE 20, GB 16.
+Re-compressions: CN 150 / quick 152, IN 82/86, US 39/34, EG 27/34, SA 23/24, PH 22/24, GB 20/23.
+Owner asked about trained AI compression models: neural codecs can't go into a PDF any viewer reads
+(PDF images: DCT, JPX, JBIG2, CCITT, Flate). Candidates if Step 4 points there: MRC (text layer 1-bit
+JBIG2/CCITT + low-res background), 1-bit CCITT for B&W scans, a modern JPEG encoder (mozjpeg/jpegli wasm).
+Chosen by the measured causes, not by the technology.
