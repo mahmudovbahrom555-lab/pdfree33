@@ -64,7 +64,7 @@ BLOCK = [
     (r'структурно невозможн|никакие данные не передаются', 'ru: a promise the code can\'t prove'),
 ]
 # where the site's public words live (tracked files only)
-PATHS = ['*.html', '**/*.html', 'data/content/**', 'data/tools-config.json', 'js/config.js', 'js/i18n.js', 'js/locales/*.js', 'scripts/templates/**']
+PATHS = ['*.html', '**/*.html', 'data/content/**', 'data/tools-config.json', 'data/fixes.json', 'js/config.js', 'js/i18n.js', 'js/locales/*.js', 'scripts/templates/**']
 EXCLUDE = (':!tests', ':!docs', ':!research', ':!packages', ':!seo-content.html', ':!dist')
 # a link or address, not words: href/src/action, and content="" only when it holds a URL or path —
 # a meta description with "PDF/A" in it is words and is checked

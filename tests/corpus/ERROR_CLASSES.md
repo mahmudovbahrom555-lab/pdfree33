@@ -1,5 +1,7 @@
 # Error classes — the quality loop's ledger
 
+Public, plain-words status of each class: data/fixes.json → https://pdfree.io/fixes/ ("fixed" there only with a live check here).
+
 How PDFree's conversion quality is improved (owner, 2026-10-18): not one bug
 at a time, and not "the average score went up" — **one class of error at a
 time, closed with evidence**.
@@ -1050,7 +1052,7 @@ file was such XMP (5754431), 35 % (0486224).
   image-heavy files (CMYK images, which Compress skips by design, and plain
   JPEGs), which is the next class. One competitor turns vector pages into
   pictures and another breaks CMYK colours; neither is a model.
-- **Status:** `fixing` — until verified on pdfree.io.
+- **Status:** `verified` — #139 on pdfree.io (5430c1d1, 2026-11-04).
 
 ## C25 — Light can return a file larger than the one given
 
@@ -1060,7 +1062,7 @@ than the input (and the input wasn't encrypted), the input's own bytes are
 returned — single file and batch alike. On the 52 files × 4 presets: no
 output larger than its input; where prod's was larger, the output is the
 input byte for byte; a mixed batch of 5 follows the same rule.
-**Status:** `fixing` — until verified on pdfree.io.
+**Status:** `verified` — #139 on pdfree.io (5430c1d1, 2026-11-04): 4 large files × 4 presets through the live site match the local run.
 
 ## Candidates found while fixing C24/C25 (not yet confirmed on independent sources)
 
@@ -1152,4 +1154,4 @@ built locally):
 
 Unit tests: dedup 5 cases. e2e: a soft mask stays DeviceGray with the same
 values; it fails on the build without the fix.
-**Status:** `fixing` — until verified on pdfree.io.
+**Status:** `verified` — #149 on pdfree.io (bc7ce5d6, 2026-11-05): compress e2e 14/14 against the live site incl. the mask case; 1369728 through the live site keeps each image's own DeviceGray mask.

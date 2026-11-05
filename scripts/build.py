@@ -390,6 +390,35 @@ def _write_version_json(hashes, dist):
 
 # ── Sitemap ───────────────────────────────────────────────────────────────────
 
+# ── Fixes & work in progress page (/fixes/) ────────────────────────────────────
+# Built from data/fixes.json — one entry per error class (tests/corpus/
+# ERROR_CLASSES.md) in plain words. The rules that keep it honest are checked
+# here, so a wrong entry fails the build instead of reaching the page:
+# "fixed" / "partly" only with a live check on pdfree.io, at most two in
+# progress, no document IDs, no competitor names (owner rule 2026-10-19).
+from fixes_data import FIXES_TOOLS, FIXES_TOOL_IDS, load_fixes as _load_fixes   # noqa: E402  (scripts/fixes_data.py)
+
+
+def _generate_fixes_page(env, out_dir):
+    statuses, items = _load_fixes()
+    order = list(statuses)
+    tools = []
+    for slug, name in FIXES_TOOLS.items():
+        rows = [dict(it, label=statuses[it['status']]) for it in items if it['tool'] == slug]
+        rows.sort(key=lambda it: it['date'], reverse=True)                       # newest first…
+        rows.sort(key=lambda it: it['status'] not in ('in_progress', 'investigating'))   # …work in progress on top
+        if rows: tools.append({'slug': slug, 'name': name, 'entries': rows})
+    n = {k: sum(it['status'] == k for it in items) for k in order}
+    counts = ', '.join(f'{n[k]} {statuses[k].split(" —")[0].lower()}' for k in reversed(order) if n[k])
+    html = env.get_template('fixes.html').render(
+        statuses=[(k, statuses[k]) for k in reversed(order)], tools=tools, counts=counts,
+        updated=max(it['date'] for it in items))
+    os.makedirs(os.path.join(out_dir, 'fixes'), exist_ok=True)
+    with open(os.path.join(out_dir, 'fixes', 'index.html'), 'w', encoding='utf-8') as f:
+        f.write(html)
+    return len(items)
+
+
 def _git_lastmod(rel_path):
     """Return YYYY-MM-DD of the last git commit that touched rel_path.
     Falls back to today if the file has no git history (new/untracked)."""
@@ -665,6 +694,11 @@ def _write_sitemap(config, out_dir):
         else:
             _sp_priority, _sp_freq = '0.7', 'monthly'
         lines += _url_block(url, _git_lastmod(lastmod_path), alts, priority=_sp_priority, changefreq=_sp_freq)
+
+    # ── Fixes page (generated from data/fixes.json — its lastmod is the data's) ──
+    fixes_url = f"{BASE_URL}/fixes/"
+    lines += _url_block(fixes_url, _git_lastmod('data/fixes.json'), [('en', fixes_url), ('x-default', fixes_url)],
+                        priority='0.5', changefreq='weekly')
 
     # ── Localized specialty pages ──────────────────────────────
     for en_slug, loc_map in _localized_specialty.items():
@@ -1405,6 +1439,7 @@ def _minify_js(out_dir):
 # ── Tool page generation ──────────────────────────────────────────────────────
 
 def _generate_pages(config, hashes, env, out_dir, dry_run=False):
+    fixes_sections = {it['tool'] for it in _load_fixes()[1]}
     tmpl = env.get_template('tool-page.html')
     langs = config['languages']
     all_tools = config['tools']
@@ -1447,6 +1482,8 @@ def _generate_pages(config, hashes, env, out_dir, dry_run=False):
                 breadcrumb_schema = _breadcrumb_schema(tool, lang, lang_cfg, canonical_path),
                 hashes         = type('H', (), hashes)(),  # dict → attr access
                 lang_names     = LANG_NAMES,
+                # EN-only page for now: the link appears on EN tool pages whose section has entries
+                fixes_anchor   = (FIXES_TOOL_IDS.get(tool['id']) if lang == 'en' and FIXES_TOOL_IDS.get(tool['id']) in fixes_sections else None),
             )
 
             if not dry_run:
@@ -1531,6 +1568,11 @@ def main():
     print(f'Generating tool pages{"  (dry run)" if dry_run else ""}...')
     n = _generate_pages(config, hashes, env, DIST, dry_run)
     print(f'  {n} pages generated')
+
+    # The fixes page — its data is validated even on a dry run
+    print('Generating fixes page...')
+    n_fixes = len(_load_fixes()[1]) if dry_run else _generate_fixes_page(env, DIST)
+    print(f'  {n_fixes} entries')
 
     if not dry_run:
         # Generate sitemap
