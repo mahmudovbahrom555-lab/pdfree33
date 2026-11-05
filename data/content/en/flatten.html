@@ -155,7 +155,7 @@
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Does flattening remove digital signatures?</h3>
-          <p style="margin:0;font-size:14px;">Drawn signatures created with the Fill PDF tool (signature pad images) are flattened into the page. Cryptographic digital signatures from certified e-signature providers may be handled differently — the visual appearance is preserved but the cryptographic certificate may no longer validate after flattening.</p>
+          <p style="margin:0;font-size:14px;">Drawn signatures created with the Fill PDF tool (signature pad images) are flattened into the page. A cryptographic digital signature keeps its look, but it is no longer valid in the flattened copy: any new copy of a signed PDF changes the bytes the signature covers. PDFree tells you before it starts, and your original file keeps its valid signature.</p>
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Is my PDF uploaded to any server?</h3>

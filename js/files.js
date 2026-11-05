@@ -10,6 +10,8 @@ import { showToast } from './ui.js';
 import { ACCEPTED_MIME, TOOLS } from './config.js';
 import { t, tp } from './i18n.js';
 import { decryptOwnerOnly } from './decryptPdf.js';
+import { detectSignature } from './signedPdf.js';
+import { trackToolNotice } from './analytics.js';
 import { bindDragReorder } from './dragReorder.js';
 import { getWmRemove } from './watermarkRemoveUI.js';
 import { getMergeOrder } from './mergeOrderUI.js';
@@ -250,6 +252,14 @@ function _afterAdd(added) {
   // Run preflight on newly added PDFs — async, non-blocking.
   // Annotates file._pdfMeta. For AES- or RC4-encrypted files, tries QPDF
   // silent decryption (owner-only / empty user password) before showing badge.
+  // Digitally signed? (C28) — a tool that writes a new PDF asks first (app.js)
+  for (const f of added) {
+    if (!f.name.toLowerCase().endsWith('.pdf')) continue;
+    f._signatureCheck = detectSignature(f).then(sig => {
+      f._signed = sig;
+      if (sig) { trackToolNotice(_currentTool, sig.certified ? 'signed_pdf_certified' : 'signed_pdf'); renderList(); }
+    }).catch(() => { /* unreadable: the file's own error says so */ });
+  }
   for (const f of added) {
     // Kept on the file so the process button can wait for it (see
     // app.js's password guard) — a click right after adding must not race it.
@@ -486,6 +496,7 @@ export function renderList(keepSuccess = false) {
         ${f._unreadable ? `<span class="file-item-unreadable">⚠ ${esc(t('file_unreadable_badge'))}
           <button type="button" class="file-item-reselect" data-reselect="${i}" ${_locked ? 'disabled' : ''}>${esc(t('file_choose_again'))}</button>
         </span>` : ''}
+        ${f._signed ? `<span class="file-item-signed" title="${esc(t('sig_badge_tip'))}">✍ ${esc(t('sig_badge'))}</span>` : ''}
         ${locked ? `<span class="file-item-enc-warn" title="${esc(lockTip)}">
           🔒 ${meta.aesVersion || 'AES'}-encrypted — editing blocked.
           <a class="file-item-enc-help" href="#" data-enc-help="${i}" tabindex="0">How to fix ↗</a>
