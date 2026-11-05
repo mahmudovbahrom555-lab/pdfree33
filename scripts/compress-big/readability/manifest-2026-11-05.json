@@ -1,0 +1,310 @@
+[
+ {
+  "name": "en-text-01",
+  "class": "en-text",
+  "lang": "en",
+  "src": "2738790.pdf",
+  "page": 2
+ },
+ {
+  "name": "en-stamp-01",
+  "class": "en-stamp",
+  "lang": "en",
+  "src": "2738790.pdf",
+  "page": 2
+ },
+ {
+  "name": "zh-text-01",
+  "class": "zh-text",
+  "lang": "zh",
+  "src": "4939526.pdf",
+  "page": 2
+ },
+ {
+  "name": "en-text-02",
+  "class": "en-text",
+  "lang": "en",
+  "src": "2395337.pdf",
+  "page": 1
+ },
+ {
+  "name": "en-stamp-02",
+  "class": "en-stamp",
+  "lang": "en",
+  "src": "2395337.pdf",
+  "page": 1
+ },
+ {
+  "name": "en-table-01",
+  "class": "en-table",
+  "lang": "en",
+  "src": "3913458.pdf",
+  "page": 1
+ },
+ {
+  "name": "zh-text-02",
+  "class": "zh-text",
+  "lang": "zh",
+  "src": "0922125.pdf",
+  "page": 3
+ },
+ {
+  "name": "zh-text-03",
+  "class": "zh-text",
+  "lang": "zh",
+  "src": "0413309.pdf",
+  "page": 1
+ },
+ {
+  "name": "zh-text-04",
+  "class": "zh-text",
+  "lang": "zh",
+  "src": "2740207.pdf",
+  "page": 17
+ },
+ {
+  "name": "zh-text-05",
+  "class": "zh-text",
+  "lang": "zh",
+  "src": "0527128.pdf",
+  "page": 4
+ },
+ {
+  "name": "zh-text-06",
+  "class": "zh-text",
+  "lang": "zh",
+  "src": "3598184.pdf",
+  "page": 48
+ },
+ {
+  "name": "zh-text-07",
+  "class": "zh-text",
+  "lang": "zh",
+  "src": "1486630.pdf",
+  "page": 74
+ },
+ {
+  "name": "zh-text-08",
+  "class": "zh-text",
+  "lang": "zh",
+  "src": "5819959.pdf",
+  "page": 1
+ },
+ {
+  "name": "en-table-02",
+  "class": "en-table",
+  "lang": "en",
+  "src": "2119505.pdf",
+  "page": 295
+ },
+ {
+  "name": "en-table-03",
+  "class": "en-table",
+  "lang": "en",
+  "src": "4459947.pdf",
+  "page": 1
+ },
+ {
+  "name": "en-text-03",
+  "class": "en-text",
+  "lang": "en",
+  "src": "7759542.pdf",
+  "page": 54
+ },
+ {
+  "name": "en-stamp-03",
+  "class": "en-stamp",
+  "lang": "en",
+  "src": "7759542.pdf",
+  "page": 54
+ },
+ {
+  "name": "en-text-04",
+  "class": "en-text",
+  "lang": "en",
+  "src": "1193095.pdf",
+  "page": 8
+ },
+ {
+  "name": "en-stamp-04",
+  "class": "en-stamp",
+  "lang": "en",
+  "src": "1193095.pdf",
+  "page": 8
+ },
+ {
+  "name": "en-small-01",
+  "class": "en-small",
+  "lang": "en",
+  "src": "7757782.pdf",
+  "page": 2
+ },
+ {
+  "name": "en-table-04",
+  "class": "en-table",
+  "lang": "en",
+  "src": "4740653.pdf",
+  "page": 1
+ },
+ {
+  "name": "en-text-05",
+  "class": "en-text",
+  "lang": "en",
+  "src": "arxiv-2609.36931.pdf",
+  "page": 7
+ },
+ {
+  "name": "en-stamp-05",
+  "class": "en-stamp",
+  "lang": "en",
+  "src": "arxiv-2609.36931.pdf",
+  "page": 7
+ },
+ {
+  "name": "en-table-05",
+  "class": "en-table",
+  "lang": "en",
+  "src": "arxiv-2609.36796.pdf",
+  "page": 2
+ },
+ {
+  "name": "en-small-02",
+  "class": "en-small",
+  "lang": "en",
+  "src": "2810171.pdf",
+  "page": 1
+ },
+ {
+  "name": "en-text-06",
+  "class": "en-text",
+  "lang": "en",
+  "src": "0485891.pdf",
+  "page": 2
+ },
+ {
+  "name": "en-stamp-06",
+  "class": "en-stamp",
+  "lang": "en",
+  "src": "0485891.pdf",
+  "page": 2
+ },
+ {
+  "name": "en-text-07",
+  "class": "en-text",
+  "lang": "en",
+  "src": "4502662.pdf",
+  "page": 5
+ },
+ {
+  "name": "en-stamp-07",
+  "class": "en-stamp",
+  "lang": "en",
+  "src": "4502662.pdf",
+  "page": 5
+ },
+ {
+  "name": "en-small-03",
+  "class": "en-small",
+  "lang": "en",
+  "src": "4935837.pdf",
+  "page": 1
+ },
+ {
+  "name": "en-table-06",
+  "class": "en-table",
+  "lang": "en",
+  "src": "3307692.pdf",
+  "page": 2
+ },
+ {
+  "name": "en-small-04",
+  "class": "en-small",
+  "lang": "en",
+  "src": "6228781.pdf",
+  "page": 1
+ },
+ {
+  "name": "en-table-07",
+  "class": "en-table",
+  "lang": "en",
+  "src": "1843240.pdf",
+  "page": 2
+ },
+ {
+  "name": "en-color-01",
+  "class": "en-color",
+  "lang": "en",
+  "src": "5344954.pdf",
+  "page": 89
+ },
+ {
+  "name": "en-table-08",
+  "class": "en-table",
+  "lang": "en",
+  "src": "7140734.pdf",
+  "page": 2
+ },
+ {
+  "name": "en-text-08",
+  "class": "en-text",
+  "lang": "en",
+  "src": "6773779.pdf",
+  "page": 290
+ },
+ {
+  "name": "en-stamp-08",
+  "class": "en-stamp",
+  "lang": "en",
+  "src": "6773779.pdf",
+  "page": 290
+ },
+ {
+  "name": "ru-text-01",
+  "class": "ru-text",
+  "lang": "ru",
+  "src": "5147208.pdf",
+  "page": 32
+ },
+ {
+  "name": "en-small-05",
+  "class": "en-small",
+  "lang": "en",
+  "src": "4422774.pdf",
+  "page": 1
+ },
+ {
+  "name": "en-small-06",
+  "class": "en-small",
+  "lang": "en",
+  "src": "0340290.pdf",
+  "page": 12
+ },
+ {
+  "name": "en-color-02",
+  "class": "en-color",
+  "lang": "en",
+  "src": "1158755.pdf",
+  "page": 44
+ },
+ {
+  "name": "en-small-07",
+  "class": "en-small",
+  "lang": "en",
+  "src": "3852070.pdf",
+  "page": 1
+ },
+ {
+  "name": "en-small-08",
+  "class": "en-small",
+  "lang": "en",
+  "src": "2136862.pdf",
+  "page": 8
+ },
+ {
+  "name": "ru-text-02",
+  "class": "ru-text",
+  "lang": "ru",
+  "src": "wikipedia-ru-pdf.pdf",
+  "page": 2
+ }
+]

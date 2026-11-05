@@ -5,7 +5,8 @@ import fs from 'fs'; import path from 'path';
 const [base, out, ...files] = process.argv.slice(2);
 fs.mkdirSync(out, { recursive: true });
 const b = await chromium.launch();
-for (const f of files) for (const preset of ['auto', 'low', 'medium', 'high']) {
+const PRESETS = (process.env.PRESETS || 'auto,low,medium,high').split(',');
+for (const f of files) for (const preset of PRESETS) {
   const doc = path.basename(f, '.pdf'), dst = path.join(out, `${doc}.${preset}.pdf`);
   const row = { doc, preset, inBytes: fs.statSync(f).size };
   const ctx = await b.newContext({ serviceWorkers: 'block' }), page = await ctx.newPage();
@@ -16,9 +17,12 @@ for (const f of files) for (const preset of ['auto', 'low', 'medium', 'high']) {
     await page.waitForFunction(() => document.querySelector('#compressScanBanner:not(.compress-scan--info)') || document.querySelector('#compressQualityNote'), null, { timeout: 240000 }).catch(() => {});
     await page.waitForTimeout(1500);
     row.auto = await page.evaluate(() => document.querySelector('input[name="compressPreset"]:checked')?.value);
-    if (preset !== 'auto') await page.click(`label[data-preset="${preset}"]`);
+    if (preset.startsWith('target')) await page.click(`label[data-target="${preset.slice(6)}"]`);
+    else if (preset !== 'auto') await page.click(`label[data-preset="${preset}"]`);
     await page.waitForTimeout(500);
     const t0 = Date.now(); await page.click('#mergeBtn');
+    // a signed file (C28): the user chooses "Make the copy"
+    if (await page.locator('#sigConfirmGo').waitFor({ timeout: 3000 }).then(() => true, () => false)) { row.signedPrompt = true; await page.click('#sigConfirmGo'); }
     // only an error toast (or Light's "found nothing to remove") ends the wait — "Large file … may take 1–2 min" is information
     const r = await page.waitForFunction(() => {
       if (window.__blob) return true;
