@@ -1,0 +1,272 @@
+{
+ "_comment": "Public 'Fixes & work in progress' page (/fixes/), built by scripts/build.py. One entry per error class in tests/corpus/ERROR_CLASSES.md (or a named piece of work). Status rules, checked at build: 'fixed' only with a live check on pdfree.io (verified = date + what was run); 'released' = merged and live, the check on pdfree.io not done yet; 'partly' = some causes fixed and checked live, others open; at most two 'in_progress'. No competitor names, no user documents, no document IDs.",
+ "statuses": {
+  "investigating": "Investigating",
+  "in_progress": "In progress",
+  "partly": "Partly fixed",
+  "released": "Released — live check pending",
+  "fixed": "Fixed"
+ },
+ "items": [
+  {
+   "id": "TS",
+   "tool": "compress",
+   "status": "in_progress",
+   "date": "2026-11-05",
+   "title": "Compress to a target size, without making text unreadable",
+   "summary": "Today the 5 / 10 / 25 MB choices apply fixed settings and don't check the result. We measured it: the target was met for 13–50 % of large files. We are building a size check that keeps small print, stamps and Chinese text readable, and says so honestly when a size can't be reached."
+  },
+  {
+   "id": "C30",
+   "tool": "compress",
+   "status": "fixed",
+   "date": "2026-11-05",
+   "verified": "2026-11-05, compress e2e on pdfree.io",
+   "title": "Compress turned transparency masks into colour images",
+   "summary": "Images with soft edges or transparency could get a slightly wrong outline. Masks now stay as they are."
+  },
+  {
+   "id": "C29",
+   "tool": "compress",
+   "status": "fixed",
+   "date": "2026-11-05",
+   "verified": "2026-11-05, a real affected document through pdfree.io",
+   "title": "Compress merged images that only looked alike",
+   "summary": "Two images with the same pixels but a different mask or size could be stored as one, so one of them was drawn wrong. Only true duplicates are merged now."
+  },
+  {
+   "id": "CMYK",
+   "tool": "compress",
+   "status": "fixed",
+   "date": "2026-11-05",
+   "verified": "2026-11-05, compress e2e on pdfree.io",
+   "title": "Print-ready (CMYK) images: smaller without any change",
+   "summary": "Standard and Maximum now re-pack CMYK images losslessly: the same colours, fewer bytes on large print files."
+  },
+  {
+   "id": "C28",
+   "tool": "all",
+   "status": "fixed",
+   "date": "2026-11-05",
+   "verified": "2026-11-05, signed-PDF e2e on pdfree.io",
+   "title": "Digitally signed PDFs lost their valid signature without warning",
+   "summary": "Any edit breaks a digital signature. PDFree now tells you before a tool makes a copy of a signed PDF; the original keeps its signature."
+  },
+  {
+   "id": "C25",
+   "tool": "compress",
+   "status": "fixed",
+   "date": "2026-11-04",
+   "verified": "2026-11-04, 4 large files × 4 presets through pdfree.io",
+   "title": "Compress could return a file larger than the original",
+   "summary": "If compressing doesn't make the file smaller, you now get your original file back."
+  },
+  {
+   "id": "C24",
+   "tool": "compress",
+   "status": "fixed",
+   "date": "2026-11-04",
+   "verified": "2026-11-04, 4 large files × 4 presets through pdfree.io",
+   "title": "Hidden metadata on images kept large files large",
+   "summary": "Editing history stored on each image (often megabytes) is now removed on Standard and Maximum."
+  },
+  {
+   "id": "C23",
+   "tool": "clean-scan",
+   "status": "fixed",
+   "date": "2026-11-04",
+   "verified": "2026-11-04, Clean Scan e2e on pdfree.io",
+   "title": "Clean Scan kept dark backgrounds",
+   "summary": "Light text on a dark background can now be turned into dark text on white (an option, off by default, shown in the preview)."
+  },
+  {
+   "id": "C22",
+   "tool": "ocr",
+   "status": "fixed",
+   "date": "2026-10-30",
+   "verified": "2026-10-30, model files and output on pdfree.io",
+   "title": "Chinese and Japanese scans were read poorly",
+   "summary": "A second, stronger reader is used for Chinese and Japanese scans on desktop computers."
+  },
+  {
+   "id": "C21",
+   "tool": "ocr",
+   "status": "released",
+   "date": "2026-10-29",
+   "title": "Contrast enhancement blurred Chinese and Japanese characters",
+   "summary": "Chinese and Japanese scans skip the contrast step that made thin strokes run together."
+  },
+  {
+   "id": "C20",
+   "tool": "ocr",
+   "status": "released",
+   "date": "2026-10-29",
+   "title": "Traditional Chinese scans were read as simplified Chinese",
+   "summary": "Traditional Chinese is now recognised with its own model."
+  },
+  {
+   "id": "C19",
+   "tool": "pdf-to-word",
+   "status": "released",
+   "date": "2026-10-28",
+   "title": "A line repeated on every page disappeared from the Word body",
+   "summary": "Only lines at the page edges are moved to the header; a repeated line in the middle of the page stays in the text."
+  },
+  {
+   "id": "C18",
+   "tool": "pdf-to-word",
+   "status": "released",
+   "date": "2026-10-28",
+   "title": "Word's symbol bullets came out as boxes",
+   "summary": "Bullets made with Symbol or Wingdings fonts are real list items in the Word file."
+  },
+  {
+   "id": "C17",
+   "tool": "pdf-to-word",
+   "status": "released",
+   "date": "2026-10-28",
+   "title": "Numbered section headings came out as body text",
+   "summary": "Numbered headings only a little larger than the text are recognised as headings."
+  },
+  {
+   "id": "C16",
+   "tool": "pdf-to-word",
+   "status": "released",
+   "date": "2026-10-28",
+   "title": "Short stacked lines were merged into one paragraph",
+   "summary": "Lines stacked without a gap (addresses, lists) keep their own paragraphs."
+  },
+  {
+   "id": "C15",
+   "tool": "pdf-to-word",
+   "status": "released",
+   "date": "2026-10-25",
+   "title": "Spaced-out Chinese and Japanese text had a space between every character",
+   "summary": "Letter-spaced CJK text is read as words."
+  },
+  {
+   "id": "C14",
+   "tool": "pdf-to-word",
+   "status": "released",
+   "date": "2026-10-24",
+   "title": "Bold text drawn twice came out two to four times",
+   "summary": "Text drawn over itself to look bold is read once."
+  },
+  {
+   "id": "C13",
+   "tool": "pdf-to-word",
+   "status": "fixed",
+   "date": "2026-10-23",
+   "verified": "on pdfree.io after #68 (memory: zh stage)",
+   "title": "Chinese text in some fonts was missing",
+   "summary": "Fonts that name their characters through Adobe's CJK tables are read and shown."
+  },
+  {
+   "id": "C12",
+   "tool": "pdf-to-word",
+   "status": "released",
+   "date": "2026-10-22",
+   "title": "Urdu words ran together",
+   "summary": "Urdu Nastaleeq text keeps the spaces between words."
+  },
+  {
+   "id": "C11",
+   "tool": "pdf-to-word",
+   "status": "fixed",
+   "date": "2026-10-22",
+   "verified": "on pdfree.io after #56 and #58",
+   "title": "Arabic letters joined in one glyph came out reversed",
+   "summary": "A glyph that stands for several letters keeps them in the right order."
+  },
+  {
+   "id": "C10",
+   "tool": "pdf-to-word",
+   "status": "partly",
+   "date": "2026-10-21",
+   "verified": "on pdfree.io after #55 (ledger C10)",
+   "title": "Two-letter Arabic ligatures came out with letters swapped",
+   "summary": "Fixed for Arabic. Some Urdu and Persian swaps remain."
+  },
+  {
+   "id": "C9",
+   "tool": "pdf-to-word",
+   "status": "partly",
+   "date": "2026-10-20",
+   "verified": "on pdfree.io after #53 and #54 (ledger C9)",
+   "title": "Words glued together in tightly set lines",
+   "summary": "Words a space or 0.15 em apart are separated, in text and in table cells. Some very tight lines remain."
+  },
+  {
+   "id": "C8",
+   "tool": "pdf-to-word",
+   "status": "fixed",
+   "date": "2026-10-19",
+   "verified": "2026-10-19, Arabic documents through pdfree.io",
+   "title": "Right-to-left lines lost their word spaces",
+   "summary": "Arabic and Hebrew lines stored in reading order keep the spaces between words."
+  },
+  {
+   "id": "C7",
+   "tool": "pdf-to-word",
+   "status": "fixed",
+   "date": "2026-10-19",
+   "verified": "2026-10-19, 6 documents through pdfree.io",
+   "title": "One-column Arabic pages were split into two columns",
+   "summary": "Justified right-to-left pages are no longer cut in the middle."
+  },
+  {
+   "id": "C6",
+   "tool": "pdf-to-word",
+   "status": "partly",
+   "date": "2026-10-20",
+   "verified": "on pdfree.io after #43, 5 documents (ledger C6)",
+   "title": "Columns were read across each other",
+   "summary": "Newsletters with narrow gaps between columns are read column by column. Two-page spreads remain."
+  },
+  {
+   "id": "C5",
+   "tool": "pdf-to-word",
+   "status": "partly",
+   "date": "2026-10-19",
+   "verified": "2026-10-19, documents through pdfree.io",
+   "title": "A table of contents came out as one paragraph",
+   "summary": "Most contents entries get their own paragraph; some layouts remain."
+  },
+  {
+   "id": "C4",
+   "tool": "pdf-to-word",
+   "status": "partly",
+   "date": "2026-10-20",
+   "verified": "on pdfree.io after #51 (ledger C4)",
+   "title": "Some PDFs gave other digits than the page shows",
+   "summary": "Digits are taken as the page draws them for the most common font type; other cases remain."
+  },
+  {
+   "id": "C3",
+   "tool": "pdf-to-word",
+   "status": "partly",
+   "date": "2026-10-19",
+   "verified": "2026-10-19, Arabic documents through pdfree.io",
+   "title": "Numbers in right-to-left lines were lost or split",
+   "summary": "Numbers with spaces inside them are joined; other cases remain."
+  },
+  {
+   "id": "C2",
+   "tool": "ocr",
+   "status": "partly",
+   "date": "2026-10-19",
+   "verified": "2026-10-19, documents through pdfree.io",
+   "title": "Language detection took most of a short scan's time",
+   "summary": "When a page already has some text, its script is used and fewer checks run. Detection on pure scans is still slow."
+  },
+  {
+   "id": "C1",
+   "tool": "pdf-to-word",
+   "status": "fixed",
+   "date": "2026-10-18",
+   "verified": "2026-10-18, documents through pdfree.io",
+   "title": "Rotated pages lost their text in Word",
+   "summary": "Pages turned with a rotation setting keep their text in the Word file."
+  }
+ ]
+}

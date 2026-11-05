@@ -319,6 +319,10 @@
         <button type="button" class="fb-row-btn fb-row-btn--idea" data-open-feedback data-fb-type="idea">{{ ui.fbIdeaBtn }}</button>
         <button type="button" class="fb-row-btn fb-row-btn--good" data-open-feedback data-fb-type="other">{{ ui.fbGoodBtn }}</button>
       </div>
+      {% if fixes_anchor %}
+      <!-- Known problems of this tool and where each fix stands (/fixes/, EN for now) -->
+      <a class="fb-row-link" href="/fixes/#{{ fixes_anchor }}">Known issues and fixes for this tool →</a>
+      {% endif %}
 
       <div class="privacy-cleared" id="privacyCleared" aria-live="polite" aria-label="{{ ui.privacyClearedTitle }}">
         <div class="privacy-cleared__shield" aria-hidden="true">🔒</div>
@@ -350,6 +354,9 @@
   <section class="seo-article" aria-label="{{ tool.breadcrumb[lang] }}">
     <div class="seo-article__inner">
       {{ seo_content }}
+      {% if fixes_anchor %}
+      <p class="fixes-link"><a href="/fixes/#{{ fixes_anchor }}">Known issues and fixes for this tool →</a> Problems we found, and where each fix stands.</p>
+      {% endif %}
     </div>
   </section>
 

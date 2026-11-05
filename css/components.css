@@ -4076,6 +4076,18 @@ button,
 }
 .fb-row-btn:hover { background: var(--surface2); }
 
+/* Known issues and fixes for this tool (/fixes/) — under the feedback row and in the tool's article */
+.fb-row-link {
+  display: block;
+  padding: 0 28px 14px;
+  background: var(--surface);
+  font-size: 13px;
+  color: var(--green-text);
+  line-height: 24px;   /* a standalone link: 24 px target height (WCAG 2.5.8) */
+}
+.fixes-link { font-size: 14px; color: var(--text2); }
+.fixes-link a { color: var(--green-text); font-weight: 600; display: inline-block; min-height: 24px; }
+
 .fb-row-btn--bug:hover  { border-color: #e05252; color: #c0392b; }
 .fb-row-btn--idea:hover { border-color: #3b82f6; color: #1d4ed8; }
 .fb-row-btn--good:hover { border-color: var(--green); color:var(--green-text); }
