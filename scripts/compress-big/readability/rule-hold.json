@@ -1,0 +1,166 @@
+{
+ "zh-text-01": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "zh-text-02": {
+  "variant": "J200",
+  "why": "CJK"
+ },
+ "zh-text-03": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "zh-text-04": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "zh-text-05": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "zh-text-06": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "en-table-01": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "zh-text-07": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "zh-text-08": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "en-table-02": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "en-table-03": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "en-table-04": {
+  "variant": "J200",
+  "why": "CJK"
+ },
+ "en-text-01": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "en-stamp-01": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "en-text-02": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "en-stamp-02": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "en-text-03": {
+  "variant": "J200",
+  "why": "small print"
+ },
+ "en-stamp-03": {
+  "variant": "J200",
+  "why": "small print"
+ },
+ "en-table-05": {
+  "variant": "J200",
+  "why": "small print"
+ },
+ "en-table-06": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "en-text-04": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "en-stamp-04": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "en-table-07": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "en-table-08": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "en-small-01": {
+  "variant": "J200",
+  "why": "small print"
+ },
+ "en-text-05": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "en-stamp-05": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "en-text-06": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "en-stamp-06": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "en-text-07": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "en-stamp-07": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "en-text-08": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "en-stamp-08": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "en-small-02": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "en-small-03": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "en-small-04": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "en-small-05": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "en-small-06": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "en-small-07": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "en-small-08": {
+  "variant": "J200",
+  "why": "small print"
+ },
+ "ru-text-01": {
+  "variant": "J96",
+  "why": "large text"
+ }
+}

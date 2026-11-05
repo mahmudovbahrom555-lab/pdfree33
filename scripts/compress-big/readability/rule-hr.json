@@ -1,0 +1,202 @@
+{
+ "real-0022682-p1": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "real-0022682-p2": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "real-0028058-p1": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "real-0169963-p1": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "real-0169963-p2": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "real-0195204-p1": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "real-0350769-p1": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-0350769-p2": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-0457312-p1": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "real-0457312-p2": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "real-0514655-p1": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-0514655-p2": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-0568691-p1": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "real-0663451-p1": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-0663451-p2": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-0668365-p1": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "real-0668365-p2": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "real-0720596-p1": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-0720596-p2": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "real-0752341-p1": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-0752341-p2": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-0811921-p1": {
+  "variant": "J200",
+  "why": "small print"
+ },
+ "real-0815640-p1": {
+  "variant": "J200",
+  "why": "small print"
+ },
+ "real-0815640-p2": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "real-0850305-p1": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "real-0850305-p2": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-0911015-p1": {
+  "variant": "J200",
+  "why": "small print"
+ },
+ "real-0911015-p2": {
+  "variant": "J200",
+  "why": "small print"
+ },
+ "real-1043739-p1": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-1149974-p1": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-1149974-p2": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-1361504-p1": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "real-1361504-p2": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "real-1367724-p1": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-1367724-p2": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-1435738-p1": {
+  "variant": "J200",
+  "why": "small print"
+ },
+ "real-1452858-p1": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "real-1456224-p1": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "real-1456224-p2": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "real-1489412-p1": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "real-1494970-p1": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-1494970-p2": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-1549659-p1": {
+  "variant": "J200",
+  "why": "unknown layout"
+ },
+ "real-1549659-p2": {
+  "variant": "MRC-M300B50",
+  "why": "coloured ink"
+ },
+ "real-1624466-p1": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-1624466-p2": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-1666653-p1": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-1666653-p2": {
+  "variant": "J96",
+  "why": "large text"
+ },
+ "real-1687201-p1": {
+  "variant": "J200",
+  "why": "small print"
+ },
+ "real-1687201-p2": {
+  "variant": "J96",
+  "why": "large text"
+ }
+}
