@@ -1100,6 +1100,16 @@ user. Owner and audit
   input isn't a PDF, and PDF/A (it refuses signed files itself) don't ask.
 - **Checks**: e2e tests/e2e/signed-pdf.e2e.mjs 9/9 (CI); run against prod
   without the feature it fails exactly the 5 signed cases.
+- **First deploy blocked (637462a9, 2026-11-05)**: the compress corpus gate
+  found no output on irs-f1040-form and irs-fw9-form — the dialog had opened
+  and the runner presses nothing. Their only "signature" is Adobe's
+  usage-rights signature (/Perms /UR3, "This is a Rights-Enabled PDF
+  Document": lets Reader fill the form; nobody signed). The 772-file check
+  above was the local cache, not tests/corpus/real, so it never saw them.
+  Fix: a signature with /TransformMethod /UR3 in its dictionary, or the
+  object /Perms /UR3 points at, isn't counted. Over 742 corpus PDFs
+  (tests/corpus real + synthetic + two caches): flagged 3 → 1 (3307692 kept,
+  the IRS forms gone); 2395337 still flagged. Unit cases 8 → 11.
 - **Status:** `fixing` — until verified on pdfree.io. Not done: keeping the
   signature (an incremental save that only appends) — not possible with how
   the tools rebuild PDFs today.

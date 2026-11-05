@@ -16,13 +16,20 @@
 //  A signature dictionary is never inside a compressed object stream: the
 //  signing tool writes the file, then patches /ByteRange and /Contents in
 //  place at known offsets — so a byte scan finds every one.
-//  Not counted: an empty signature field, a picture of a signature.
+//  Not counted: an empty signature field, a picture of a signature, and
+//  Adobe's usage-rights signature (/Perms /UR3, "Rights-Enabled PDF
+//  Document": lets Reader fill a form — nobody signed; on every IRS form,
+//  caught by the corpus gate 2026-11-05). It is known by /TransformMethod
+//  /UR3 in its own dictionary, or by /Perms /UR3 pointing at its object.
 //  Certified (certification signature): /TransformMethod /DocMDP.
 // ============================================================
 
 const RANGE = /\/ByteRange\s*\[\s*(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s*\]/g;
 const DOCMDP = /\/TransformMethod\s*\/DocMDP/;
-const CHUNK = 4 << 20, OVERLAP = 256;
+const UR_REF = /\/UR3?\s+(\d+)\s+\d+\s+R/g;          // /Perms << /UR3 12 0 R >>
+const UR_METHOD = /\/TransformMethod\s*\/UR3?(?![A-Za-z0-9])/;
+const OBJ = /(\d+)\s+\d+\s+obj\b/g;
+const CHUNK = 4 << 20, OVERLAP = 256, AROUND = 16384;
 
 /**
  * @param {Blob} file  a PDF (File or Blob)
@@ -30,11 +37,12 @@ const CHUNK = 4 << 20, OVERLAP = 256;
  */
 export async function detectSignature(file) {
   const size = file.size, dec = new TextDecoder('latin1');
-  const ranges = new Set();
+  const ranges = new Set(), usageRights = new Set();
   let certified = false;
   for (let at = 0; at < size; at += CHUNK) {
     const text = dec.decode(await file.slice(at, Math.min(size, at + CHUNK + OVERLAP)).arrayBuffer());
     for (const m of text.matchAll(RANGE)) ranges.add(m.slice(1, 5).join(' '));
+    for (const m of text.matchAll(UR_REF)) usageRights.add(m[1]);
     if (!certified && DOCMDP.test(text)) certified = true;
   }
   let count = 0;
@@ -43,7 +51,14 @@ export async function detectSignature(file) {
     if (a !== 0 || !(b > 0 && c > b && c + d <= size)) continue;
     // the hole between the two signed ranges is the /Contents hex string
     const hole = dec.decode(await file.slice(b, Math.min(c, b + 4096)).arrayBuffer());
-    if (hole[0] === '<' && /[1-9a-fA-F]/.test(hole.slice(1))) count++;
+    if (hole[0] !== '<' || !/[1-9a-fA-F]/.test(hole.slice(1))) continue;
+    // the signature dictionary around the hole: from its "N 0 obj" to its "endobj"
+    const before = dec.decode(await file.slice(Math.max(0, b - AROUND), b).arrayBuffer());
+    const after = dec.decode(await file.slice(c, Math.min(size, c + AROUND)).arrayBuffer());
+    const objs = [...before.matchAll(OBJ)], own = objs[objs.length - 1];
+    const dict = (own ? before.slice(own.index) : before) + after.slice(0, (after.indexOf('endobj') + 1 || after.length + 1) - 1);
+    if (UR_METHOD.test(dict) || (own && usageRights.has(own[1]))) continue;
+    count++;
   }
   return count ? { count, certified } : null;
 }

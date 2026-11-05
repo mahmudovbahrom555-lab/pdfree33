@@ -40,6 +40,24 @@ await test('a zero-filled /Contents placeholder (prepared, never signed) is not 
   eq(await detectSignature(new Blob([Buffer.from(zeroed, 'latin1')])), null);
 });
 
+// Adobe's usage-rights signature (/Perms /UR3, "Rights-Enabled PDF Document") lets Reader fill a
+// form; no person signed anything. Counting it put the dialog on every IRS form (the corpus gate
+// caught it on f1040 and fw9, deploy 637462a9, 2026-11-05).
+const CORPUS = path.join(DIR, '..', 'corpus', 'real');
+for (const f of ['irs-f1040-form.pdf', 'irs-fw9-form.pdf']) {
+  await test(`a usage-rights signature (/UR3) is not a signature: ${f}`, async () =>
+    eq(await detectSignature(new Blob([fs.readFileSync(path.join(CORPUS, f))])), null));
+}
+await test('a usage-rights signature found only through /Perms /UR3 (no inline TransformMethod)', async () => {
+  // fw9 keeps /Perms in a compressed object; written out here in place (same length, offsets kept)
+  const s = fs.readFileSync(path.join(CORPUS, 'irs-fw9-form.pdf')).toString('latin1');
+  const prefs = '/ViewerPreferences<</DisplayDocTitle 1059 0 R>>/Perms 1076 0 R';
+  if (!s.includes(prefs) || !s.includes('1075 0 obj')) throw new Error('fixture changed');
+  const hidden = s.replace(prefs, '/Perms<</UR3 1075 0 R>>'.padEnd(prefs.length, ' '))
+    .replace(/\/TransformMethod\s*\/UR3/, m => '/TransformMethod/XX3'.padEnd(m.length, ' '));
+  eq(await detectSignature(new Blob([Buffer.from(hidden, 'latin1')])), null);
+});
+
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);
 if (failed > 0) process.exit(1);
