@@ -32,9 +32,9 @@ check('"fixed" without a live check is refused', lambda d: first(d, 'fixed').pop
 check('"partly" without a live check is refused', lambda d: first(d, 'partly').pop('verified'), False)
 check('a document ID in a title is refused', lambda d: first(d, 'fixed').update(title='Fixed on 1369728'), False)
 check('a third item in progress is refused', lambda d: [it.update(status='in_progress') for it in d['items'][:3]], False)
-check('an unknown status is refused', lambda d: first(d, 'released').update(status='done'), False)
-check('an unknown tool is refused', lambda d: first(d, 'released').update(tool='merge-tool'), False)
-check('a date not YYYY-MM-DD is refused', lambda d: first(d, 'released').update(date='5 Nov'), False)
+check('an unknown status is refused', lambda d: d['items'][0].update(status='done'), False)
+check('an unknown tool is refused', lambda d: d['items'][0].update(tool='merge-tool'), False)
+check('a date not YYYY-MM-DD is refused', lambda d: d['items'][0].update(date='5 Nov'), False)
 
 print(f'\nTests: {passed + failed} | ✓ {passed} | {failed} failed')
 sys.exit(1 if failed else 0)
