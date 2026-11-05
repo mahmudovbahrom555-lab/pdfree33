@@ -42,9 +42,22 @@
 //  first file were referenced by nothing at all (left by earlier edits),
 //  invisible to any reader, but pdf-lib writes every object it parsed.
 //
+//  And (Standard/Maximum, not a signed file — `cmykFlate`): every CMYK Flate
+//  image deflated again — the same decoded samples, fewer bytes ("L",
+//  criteria v0.2, owner 2026-11-05). handleCompress skips CMYK images
+//  entirely, so these bytes are what ships. Some writers store CMYK at a
+//  low zlib level: re-deflating saved 8.7 % of such streams on the files it
+//  was developed on, 5.1 % on 14 held-out files (pdf-lib's deflate, level
+//  6) — a share of one stream class, not of every CMYK file. Kept only when
+//  smaller, and only after the new stream inflates back to exactly the old
+//  bytes; a stream whose inflated length isn't what /Width /Height (and its
+//  predictor) say — cut short, damaged — is left as it is. The dictionary
+//  is untouched (/DecodeParms too: the predicted rows are re-deflated as
+//  they are). Gate: scripts/cmyk-gate/l1_gate.py.
+//
 //  Message contract:
-//   in  → { file: ArrayBuffer, stripXmp: boolean }             [transferred]
-//   out → { type: 'done', result: ArrayBuffer, encoded: number, resolved: number, xmp: number } [transferred]
+//   in  → { file: ArrayBuffer, stripXmp: boolean, cmykFlate: boolean } [transferred]
+//   out → { type: 'done', result: ArrayBuffer, encoded: number, resolved: number, xmp: number, cmyk: number } [transferred]
 //         result is the original buffer when nothing was changed.
 //         Any failure also answers 'done' with the original buffer and
 //         encoded: 0 — this pass must never block a compression.
@@ -54,9 +67,9 @@ importScripts('./vendor/pdf-lib.min.js');
 
 self.onmessage = async (e) => {
   const buffer = e.data.file;
-  let out = { result: buffer, encoded: 0, resolved: 0, xmp: 0 };
+  let out = { result: buffer, encoded: 0, resolved: 0, xmp: 0, cmyk: 0 };
   try {
-    out = await _encodeRawImages(buffer, !!e.data.stripXmp);
+    out = await _encodeRawImages(buffer, !!e.data.stripXmp, !!e.data.cmykFlate);
   } catch { /* fall through with the original buffer */ }
   self.postMessage({ type: 'done', ...out }, [out.result]);
 };
@@ -195,12 +208,97 @@ function _dropUnreachable(pdf) {
   return dropped;
 }
 
-async function _encodeRawImages(buffer, stripXmp = false) {
+// Cheap scan: "/DeviceCMYK" anywhere in the plain text. An image's stream dict
+// is never in an object stream; a colour space given by reference to a
+// compressed object is missed — that only forgoes savings.
+function _mayHaveCmyk(bytes) {
+  const CHUNK = 1 << 20, latin1 = new TextDecoder('latin1');
+  for (let i = 0; i < bytes.length; i += CHUNK - 64) {
+    if (latin1.decode(bytes.subarray(i, Math.min(bytes.length, i + CHUNK))).includes('/DeviceCMYK')) return true;
+  }
+  return false;
+}
+
+// The inflated length a CMYK image's Flate data must have, or 0 when it
+// can't be told (then the stream is left alone): /Width × /Height × 4
+// bytes, or with a PNG predictor (≥ 10) one tag byte more per row.
+function _cmykFlateLength(pdf, dict) {
+  const { PDFName, PDFNumber, PDFDict } = PDFLib;
+  const num = (d, k, dflt) => {
+    const v = d.get(PDFName.of(k));
+    if (v === undefined) return dflt;
+    const n = pdf.context.lookup(v);
+    return n instanceof PDFNumber ? n.asNumber() : NaN;
+  };
+  const w = num(dict, 'Width'), h = num(dict, 'Height');
+  if (!(w > 0 && h > 0)) return 0;
+  const parms = pdf.context.lookup(dict.get(PDFName.of('DecodeParms')));
+  if (parms === undefined) return w * h * 4;
+  if (!(parms instanceof PDFDict)) return 0;
+  const predictor = num(parms, 'Predictor', 1);
+  if (predictor === 1 || predictor === 2) return w * h * 4;
+  if (!(predictor >= 10)) return 0;
+  const colors = num(parms, 'Colors', 1), bpc = num(parms, 'BitsPerComponent', 8), columns = num(parms, 'Columns', 1);
+  if (!(colors > 0 && bpc > 0 && columns > 0)) return 0;
+  return h * (1 + Math.ceil(colors * bpc * columns / 8));
+}
+
+// Every 8-bit DeviceCMYK image with one FlateDecode filter and no mask,
+// deflated again (see the header). Returns how many were replaced.
+//
+// Never leaves two images with identical stream bytes that weren't before:
+// handleCompress merges images by their bytes alone (worker.js
+// _deduplicateImages ignores the dictionary), so two copies of one picture
+// stored at different zlib levels, with different /Decode or size, would
+// become one object after re-deflating — one of them drawn wrong. Such a
+// repack is skipped. (The merge itself also joins images whose masks
+// differ — a separate, older fault: ledger candidate C29.)
+function _repackCmykFlate(pdf) {
+  const { PDFName, PDFRawStream, PDFArray, decodePDFRawStream } = PDFLib;
+  const same = (a, b) => a.length === b.length && a.every((x, i) => x === b[i]);
+  const fp = c => { let h = 0x811c9dc5; for (let i = 0; i < c.length; i += 7) h = Math.imul(h ^ c[i], 16777619); return `${c.length}:${h >>> 0}`; };
+  const images = new Map();   // fingerprint → the stream bytes of every image with it
+  const remember = c => { const k = fp(c); images.set(k, [...(images.get(k) || []), c]); };
+  const taken = c => (images.get(fp(c)) || []).some(x => same(x, c));
+  for (const [, obj] of pdf.context.enumerateIndirectObjects()) {
+    if (obj instanceof PDFRawStream && obj.dict.get(PDFName.of('Subtype'))?.toString() === '/Image') remember(obj.contents);
+  }
+  let repacked = 0;
+  for (const [ref, obj] of pdf.context.enumerateIndirectObjects()) {
+    if (!(obj instanceof PDFRawStream)) continue;
+    const dict = obj.dict;
+    if (dict.get(PDFName.of('Subtype'))?.toString() !== '/Image') continue;
+    if (pdf.context.lookup(dict.get(PDFName.of('ColorSpace')))?.toString() !== '/DeviceCMYK') continue;
+    if (pdf.context.lookup(dict.get(PDFName.of('BitsPerComponent')))?.toString() !== '8') continue;
+    if (dict.has(PDFName.of('SMask')) || dict.has(PDFName.of('Mask'))) continue;
+    let filter = pdf.context.lookup(dict.get(PDFName.of('Filter')));
+    if (filter instanceof PDFArray && filter.size() === 1) filter = pdf.context.lookup(filter.get(0));
+    if (filter?.toString() !== '/FlateDecode') continue;
+    if (obj.contents.length < 2048) continue;   // too small to be worth the work
+    try {
+      const expected = _cmykFlateLength(pdf, dict);
+      const data = decodePDFRawStream(obj).decode();
+      if (!expected || data.length !== expected) continue;
+      const deflated = pdf.context.flateStream(data).contents;
+      if (deflated.length >= obj.contents.length || taken(deflated)) continue;
+      const fresh = PDFRawStream.of(dict, deflated);
+      if (!same(decodePDFRawStream(fresh).decode(), data)) continue;
+      pdf.context.assign(ref, fresh);   // same object: every use of a shared image follows
+      remember(deflated);
+      repacked++;
+    } catch { /* undecodable: left as it is */ }
+  }
+  return repacked;
+}
+
+async function _encodeRawImages(buffer, stripXmp = false, cmykFlate = false) {
   const { PDFDocument, PDFName, PDFRawStream, PDFArray, PDFRef, ParseSpeeds } = PDFLib;
   const bytesIn = new Uint8Array(buffer);
   const rawImages = _mayHaveRawImage(bytesIn), dimRefs = _mayHaveIndirectDims(bytesIn);
   const objectXmp = stripXmp && _mayHaveObjectXmp(bytesIn);
-  if (!rawImages && !dimRefs && !objectXmp) return { result: buffer, encoded: 0, resolved: 0, xmp: 0 };
+  const cmyk = cmykFlate && _mayHaveCmyk(bytesIn);
+  const none = { result: buffer, encoded: 0, resolved: 0, xmp: 0, cmyk: 0 };
+  if (!rawImages && !dimRefs && !objectXmp && !cmyk) return none;
   // No yielding while parsing or writing: pdf-lib pauses every 100 objects
   // (load) and 50 (save) to keep a page responsive, but this is a worker and
   // each pause is a timer — on ~14,000 objects that alone cost seconds. The
@@ -210,10 +308,11 @@ async function _encodeRawImages(buffer, stripXmp = false) {
   // make a reader decrypt compressed bytes. Ciphertext happens not to
   // compress (so the 10% rule below already rejects it), but don't deflate
   // megabytes of it just to find that out.
-  if (pdf.isEncrypted) return { result: buffer, encoded: 0, resolved: 0, xmp: 0 };
+  if (pdf.isEncrypted) return none;
 
   const resolved = dimRefs ? _resolveImageDims(pdf) : 0;
   const xmp = objectXmp ? _stripObjectXmp(pdf) : 0;
+  const repacked = cmyk ? _repackCmykFlate(pdf) : 0;
   let encoded = 0;
   for (const [ref, obj] of rawImages ? pdf.context.enumerateIndirectObjects() : []) {
     if (!(obj instanceof PDFRawStream)) continue;
@@ -244,7 +343,7 @@ async function _encodeRawImages(buffer, stripXmp = false) {
     encoded++;
   }
 
-  if (!encoded && !resolved && !xmp) return { result: buffer, encoded: 0, resolved: 0, xmp: 0 };
+  if (!encoded && !resolved && !xmp && !repacked) return none;
   const bytes = await pdf.save({ useObjectStreams: false, addDefaultPage: false, updateFieldAppearances: false, objectsPerTick: Infinity });
-  return { result: bytes.buffer, encoded, resolved, xmp };
+  return { result: bytes.buffer, encoded, resolved, xmp, cmyk: repacked };
 }

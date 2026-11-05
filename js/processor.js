@@ -1828,8 +1828,10 @@ function _compressPrep(buffer, file, preset) {
     _compressPrepWorker.onerror   = fallback;
     timer = setTimeout(fallback, _COMPRESS_PREP_TIMEOUT_MS);
     _compressPrepSettle = settle;
-    // Light keeps every XMP, as handleCompress keeps the catalog's on Light
-    _compressPrepWorker.postMessage({ file: buffer, stripXmp: preset !== 'low' }, [buffer]);
+    // Light keeps every XMP, as handleCompress keeps the catalog's on Light.
+    // CMYK Flate images re-deflated (lossless) on Standard/Maximum — never on a
+    // signed file: its original images stay byte for byte (criteria v0.2, T12)
+    _compressPrepWorker.postMessage({ file: buffer, stripXmp: preset !== 'low', cmykFlate: preset !== 'low' && !file?._signed }, [buffer]);
   });
 }
 

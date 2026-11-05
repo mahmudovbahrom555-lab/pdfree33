@@ -9,7 +9,10 @@
 //     'recompressed' (savings that must not be lost). The worker.js fixes
 //     behind most of them are an owner-approved exception to its off-limits
 //     rule (CLAUDE.md).
-//  2. js/compressUI.js — the background pre-scan only covers
+//  2. CMYK Flate images (criteria v0.2, owner 2026-11-05): re-deflated on
+//     Standard — the same decoded samples, the same dictionary, fewer bytes.
+//     (Light leaves them: tests/compressPrep.test.js.)
+//  3. js/compressUI.js — the background pre-scan only covers
 //     selectedFiles[0], yet its recommended preset was applied to the whole
 //     batch: a plain-text first file flipped every file to Light (real
 //     report: a 21-file batch saved 1%). A batch must stay on Standard.
@@ -25,7 +28,7 @@ import zlib from 'zlib';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { trapCases, textPdf, firstImage } from '../corpus/traps.mjs';
+import { trapCases, textPdf, firstImage, imagePdf } from '../corpus/traps.mjs';
 
 const BASE_URL = process.env.PDFREE_BASE_URL || 'http://localhost:8934';
 
@@ -46,7 +49,7 @@ const BLOB_HOOK = () => {
   URL.createObjectURL = function (blob) { if (blob instanceof Blob && blob.type === 'application/pdf') window.__blob = blob; return orig(blob); };
 };
 // Real single-file compress through the UI (auto-picked preset) → output PDF bytes
-async function compressViaUi(browser, file) {
+async function compressViaUi(browser, file, preset = null) {
   const context = await browser.newContext({ serviceWorkers: 'block' });
   const page = await context.newPage();
   try {
@@ -54,6 +57,7 @@ async function compressViaUi(browser, file) {
     await page.goto(`${BASE_URL}/compress-pdf/`, { waitUntil: 'load', timeout: 30000 });
     await page.setInputFiles('#fileInput', file);
     await page.waitForTimeout(3000); // background pre-scan + preset auto-pick
+    if (preset) await page.click(`label[data-preset="${preset}"]`);
     await page.click('#mergeBtn');
     await page.waitForFunction(() => window.__blob, null, { timeout: 60000 });
     const b64 = await page.evaluate(async () => {
@@ -108,6 +112,27 @@ for (const trap of traps) {
     CHECKS[trap.expect](before, after, trap);
   });
 }
+
+// A CMYK photo-like image stored at zlib level 1, as some print workflows write it
+const CW = 600, CH = 800, CMYK = Buffer.alloc(CW * CH * 4);
+for (let y = 0; y < CH; y++) for (let x = 0; x < CW; x++) {
+  const i = (y * CW + x) * 4, n = (x * 7 + y * 13) % 5;
+  CMYK[i] = 128 + 100 * Math.sin(x / 40) + n; CMYK[i + 1] = 100 + 80 * Math.cos(y / 30) + n;
+  CMYK[i + 2] = 90 + 60 * Math.sin((x + y) / 50) + n; CMYK[i + 3] = 20 + n;
+}
+const cmykFile = path.join(tmp, 'cmyk-flate.pdf');
+const cmykBytes = await imagePdf(zlib.deflateSync(CMYK, { level: 1 }), { Width: CW, Height: CH, ColorSpace: 'DeviceCMYK', Filter: 'FlateDecode', Decode: [0, 1, 0, 1, 0, 1, 0, 1] });
+fs.writeFileSync(cmykFile, cmykBytes);
+const cmykBefore = firstImage(await PDFDocument.load(cmykBytes));
+
+await test('a CMYK Flate image on Standard: fewer bytes, the same samples, the same dictionary', async () => {
+  const after = firstImage(await PDFDocument.load(await compressViaUi(browser, cmykFile, 'medium')));
+  for (const key of ['ColorSpace', 'BitsPerComponent', 'Decode', 'Filter', 'Width', 'Height', 'DecodeParms']) {
+    expect(String(after.dict.get(PDFName.of(key)))).toBe(String(cmykBefore.dict.get(PDFName.of(key))));
+  }
+  if (!(after.contents.length < cmykBefore.contents.length)) throw new Error(`not smaller: ${after.contents.length} vs ${cmykBefore.contents.length}`);
+  expect(Buffer.compare(zlib.inflateSync(Buffer.from(after.contents)), CMYK)).toBe(0);
+});
 
 await test('a batch whose first file is plain text stays on Standard, not the scan\'s Light pick', async () => {
   const textFile = path.join(tmp, 'text-first.pdf');
