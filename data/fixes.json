@@ -91,10 +91,11 @@
   {
    "id": "C21",
    "tool": "ocr",
-   "status": "released",
+   "status": "fixed",
    "date": "2026-10-29",
    "title": "Contrast enhancement blurred Chinese and Japanese characters",
-   "summary": "Chinese and Japanese scans skip the contrast step that made thin strokes run together."
+   "summary": "Chinese and Japanese scans skip the contrast step that made thin strokes run together.",
+   "verified": "2026-11-05, code check: pdfree.io serves the same ocrEngine.js / ocrUI.js / ppocrEngine.js as the main build (the behaviour was measured before merge)"
   },
   {
    "id": "C20",

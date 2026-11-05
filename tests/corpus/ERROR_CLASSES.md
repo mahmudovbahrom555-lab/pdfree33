@@ -946,6 +946,7 @@ more characters right and less junk.
   ~1,000 more Han). Owner decides.
 - **Left.** Multi-column Japanese newsletters and flyers stay junk with any
   setting tried — a layout problem, not a pixel one.
+- **Live check (2026-11-05), code level:** pdfree.io serves the same ocrEngine.js, ocrUI.js and ppocrEngine.js as the main build; the behaviour was measured before merge → `verified` (weaker than a behaviour check on the live site).
 
 ## C22 — Tesseract reads Chinese and Japanese scans poorly, whatever the settings
 
