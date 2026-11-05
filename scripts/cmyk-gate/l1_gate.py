@@ -92,7 +92,8 @@ class Canon:
             return '[' + ','.join(self(x) for x in o) + ']'
         if isinstance(o, pikepdf.String): return 's' + h(bytes(o))
         if isinstance(o, pikepdf.Name): return str(o)
-        if isinstance(o, (float, Decimal)): return f'{float(o):.4f}'
+        # a number by its value: a writer may put 1 for 1.0 (pdf-lib does), the same number
+        if isinstance(o, (int, float, Decimal)) and not isinstance(o, bool): return f'{float(o):.4f}'
         return repr(o)
 
 
