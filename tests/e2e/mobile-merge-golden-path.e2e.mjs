@@ -76,22 +76,27 @@ try {
   process.exit(1);
 }
 
-await test('add 2 files on a real mobile viewport, click #mergeBtn, get a real valid merged PDF, no silent errors', async () => {
+// One attempt. Besides console/page errors it records every failed request
+// and every HTTP error status, so a failure says WHY (2026-11-05: twice on CI,
+// #132 and #139, "importScripts … failed to load" for a worker script served
+// by CI's local python http.server — never reproduced locally).
+async function goldenPath() {
   const context = await browser.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
   const page = await context.newPage();
-  const consoleErrors = [];
+  const consoleErrors = [], failedRequests = [], httpErrors = [];
   page.on('console', (msg) => {
     if (msg.type() === 'error' && !isBenignConsoleText(msg.text())) consoleErrors.push(msg.text());
   });
   page.on('pageerror', (err) => consoleErrors.push(String(err)));
+  page.on('requestfailed', (req) => failedRequests.push(`${req.url()} — ${req.failure()?.errorText}`));
+  page.on('response', (res) => { if (res.status() >= 400 && res.url().startsWith(BASE_URL)) httpErrors.push(`${res.status()} ${res.url()}`); });
+  // workers' own requests (importScripts) don't all reach page events
+  context.on('requestfailed', (req) => { const line = `${req.url()} — ${req.failure()?.errorText}`; if (!failedRequests.includes(line)) failedRequests.push(line); });
 
   try {
     await page.goto(`${BASE_URL}/merge-pdf/`, { waitUntil: 'load', timeout: 30000 });
     await page.setInputFiles('#fileInput', [FILE_1, FILE_2]);
 
-    // "nothing visibly happened" checks — the file list actually renders
-    // both files, and the button actually leaves its disabled state —
-    // before we even get to the download.
     await page.waitForFunction(
       () => document.querySelectorAll('#fileList .file-item').length >= 2,
       { timeout: 15000 },
@@ -117,8 +122,6 @@ await test('add 2 files on a real mobile viewport, click #mergeBtn, get a real v
     const doc = await PDFDocument.load(bytes);
     expect(doc.getPageCount()).toBe(EXPECTED_PAGE_COUNT);
 
-    // Opportunistic "silently broken" catch-alls — directly targeting the
-    // incident class this test exists for.
     await page.waitForFunction(
       () => document.getElementById('toast')?.classList.contains('show'),
       { timeout: 5000 },
@@ -127,9 +130,34 @@ await test('add 2 files on a real mobile viewport, click #mergeBtn, get a real v
     if (consoleErrors.length > 0) {
       throw new Error(`console/page errors during the golden path (silent-failure signal):\n${consoleErrors.join('\n')}`);
     }
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e, consoleErrors, failedRequests, httpErrors };
   } finally {
     await context.close();
   }
+}
+
+// A load failure of one of OUR OWN static files, with no HTTP error status,
+// is a test-server network blip, not the app: retried once, loudly. A 404/500,
+// a file missing from dist/ (fails both times) or any other error is not retried.
+// (requests to other sites — the analytics beacon — fail in tests anyway and don't count)
+const isNetworkBlip = (r) => r.httpErrors.length === 0
+  && r.failedRequests.some(l => l.startsWith(BASE_URL))
+  && r.consoleErrors.length > 0 && r.consoleErrors.every(t => /NetworkError|failed to load|Failed to load resource|importScripts/i.test(t));
+const report = (r) => `${r.error.stack || r.error.message}
+    failed requests: ${r.failedRequests.join('; ') || 'none'}
+    HTTP errors: ${r.httpErrors.join('; ') || 'none'}`;
+
+await test('add 2 files on a real mobile viewport, click #mergeBtn, get a real valid merged PDF, no silent errors', async () => {
+  let r = await goldenPath();
+  if (!r.ok && isNetworkBlip(r)) {
+    console.warn(`  ⚠ RETRY — a static file failed to load from the test server (network, no HTTP error):\n    ${r.failedRequests.join('\n    ')}`);
+    const first = r;
+    r = await goldenPath();
+    if (!r.ok) throw new Error(`failed twice.\n  first: ${report(first)}\n  second: ${report(r)}`);
+  }
+  if (!r.ok) throw new Error(report(r));
 });
 
 await browser.close();
