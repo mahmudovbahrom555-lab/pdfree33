@@ -102,3 +102,20 @@ Both: npm test, lint, compress e2e, corpus gate `corpus:diff:compress` (CI) pass
   artifact (the "found nothing to remove" toast isn't matched) — identical in both builds, checked live.
 - C1 PASS (0 outputs larger than input). C2 PASS after excluding auto-on-XMP rows (expected change) and
   the /ModDate–/ID noise. C3 PASS (0). C4 NOT RUN yet (batch).
+
+## Owner decisions (2026-11-05)
+- B3 reworded (owner-approved, own dated entry; not a loosening): "documents without such XMP: output identical
+  to the baseline in content and structure, except the save-time /ModDate and the second /ID string".
+  Checked by qpdf --qdf (objects uncompressed) with only those two blanked — so page content, objects,
+  resources, text and images all compared — plus no new qpdf/MuPDF errors.
+- B4: option (a) — speed up the pass, then re-run all 52. Constraints: detect meaningful XMP without a
+  full second parse; skip heavy work when there is little to remove; reuse the parse; keep B1–B3/C1–C3.
+  No speed bought with quality/robustness — if not safely possible, keep the slowdown, documented.
+- C4 (batch) must pass before merge: several XMP files, no-XMP files, a mixed batch; no output larger
+  than its input; every file correct.
+- No branch A (CMYK) until B+C passes everything. For A later (owner's advisor): keep ICC profiles,
+  don't break overprint/black preservation, judge colour by ΔE2000 not SSIM alone.
+- Report wording: the gain comes without image recompression; the gap to A/B/C stays image recompression.
+  B's numbers are from screenshots — unverified, no conclusions. C rasterizes vectors — not a model.
+  D's sizes come from broken colour — not comparable.
+- To check (advisor): is removing object XMP acceptable for PDF/A, signatures, accessibility?

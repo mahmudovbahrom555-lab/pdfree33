@@ -1,0 +1,218 @@
+<title>CMYK Compress Criteria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --paper: #fbfbf9;
+  --ink: #1d2126;
+  --ink2: #4a515a;
+  --rule: #dcdfe3;
+  --panel: #f1f3f4;
+  --cyan: #0093c9;
+  --magenta: #c4007a;
+  --yellow: #e2b100;
+  --key: #1d2126;
+  --pass: #1f7a4d;
+  --warn: #9a5b00;
+  --fail: #b3261e;
+  --hyp-bg: #fff6dc;
+  --hyp-line: #e2b100;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #15181b; --ink: #e7e9ec; --ink2: #a9b0b8; --rule: #2c3238; --panel: #1d2125;
+    --cyan: #46b9e6; --magenta: #ef5aa8; --yellow: #f0c63a; --key: #e7e9ec;
+    --pass: #5cc48f; --warn: #e2a64b; --fail: #f08079; --hyp-bg: #2a2412; --hyp-line: #c9a227;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #15181b; --ink: #e7e9ec; --ink2: #a9b0b8; --rule: #2c3238; --panel: #1d2125;
+  --cyan: #46b9e6; --magenta: #ef5aa8; --yellow: #f0c63a; --key: #e7e9ec;
+  --pass: #5cc48f; --warn: #e2a64b; --fail: #f08079; --hyp-bg: #2a2412; --hyp-line: #c9a227;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--ink);
+  font: 400 15.5px/1.6 "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  padding-inline: 20px; padding-block: 0 64px;
+}
+.wrap { max-width: 860px; margin: 0 auto; }
+.bar { display: flex; height: 6px; margin: 0 -20px; }
+.bar span { flex: 1; }
+header { padding-block: 28px 8px; }
+.eyebrow { font: 500 12px/1.4 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--ink2); }
+h1 { font: 600 clamp(26px, 4.6vw, 38px)/1.15 "IBM Plex Sans Condensed", "IBM Plex Sans", sans-serif; margin: 6px 0 10px; text-wrap: balance; }
+h2 { font: 600 22px/1.25 "IBM Plex Sans Condensed", "IBM Plex Sans", sans-serif; margin: 44px 0 10px; text-wrap: balance; padding-top: 14px; border-top: 1px solid var(--rule); }
+h3 { font: 600 16.5px/1.35 "IBM Plex Sans", sans-serif; margin: 24px 0 6px; }
+p, li { max-width: 68ch; }
+.lede { font-size: 17px; color: var(--ink2); }
+code, .mono { font: 400 13.5px/1.5 "IBM Plex Mono", ui-monospace, monospace; }
+code { background: var(--panel); padding: 1px 5px; border-radius: 3px; }
+.status { display: inline-flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 0; }
+.chip { font: 500 12px/1 "IBM Plex Mono", monospace; padding: 6px 9px; border: 1px solid var(--rule); border-radius: 999px; color: var(--ink2); }
+.chip b { color: var(--ink); font-weight: 500; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 16px 0; }
+.fact { border-left: 3px solid var(--cyan); padding: 4px 0 4px 12px; }
+.fact:nth-child(2) { border-color: var(--magenta); } .fact:nth-child(3) { border-color: var(--yellow); } .fact:nth-child(4) { border-color: var(--key); }
+.fact .n { font: 500 22px/1.2 "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; }
+.fact .l { font-size: 13px; color: var(--ink2); }
+.tablebox { overflow-x: auto; margin: 12px 0 4px; border: 1px solid var(--rule); border-radius: 6px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--rule); }
+th { font: 600 12.5px/1.3 "IBM Plex Sans", sans-serif; color: var(--ink2); background: var(--panel); letter-spacing: .02em; }
+tr:last-child td { border-bottom: 0; }
+td.id { font: 500 13px/1.4 "IBM Plex Mono", monospace; white-space: nowrap; color: var(--ink2); }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lvl { font: 600 11px/1 "IBM Plex Mono", monospace; letter-spacing: .06em; padding: 3px 6px; border-radius: 3px; color: var(--paper); white-space: nowrap; }
+.l1 { background: var(--cyan); } .l2 { background: var(--magenta); } .l3 { background: var(--key); }
+.hyp { background: var(--hyp-bg); border-left: 3px solid var(--hyp-line); padding: 10px 14px; margin: 14px 0; border-radius: 0 6px 6px 0; }
+.hyp b:first-child { font: 600 11.5px/1 "IBM Plex Mono", monospace; letter-spacing: .07em; text-transform: uppercase; display: block; margin-bottom: 4px; color: var(--warn); }
+.decide { border: 1px solid var(--rule); border-radius: 6px; padding: 12px 16px; margin: 12px 0; }
+.decide h3 { margin-top: 2px; }
+.decide .q { font: 600 11.5px/1 "IBM Plex Mono", monospace; letter-spacing: .07em; color: var(--magenta); text-transform: uppercase; }
+ul, ol { padding-left: 22px; }
+li { margin: 4px 0; }
+.ok { color: var(--pass); font-weight: 600; } .no { color: var(--fail); font-weight: 600; } .warn { color: var(--warn); font-weight: 600; }
+footer { margin-top: 48px; padding-top: 14px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--ink2); }
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+@media (max-width: 520px) { body { font-size: 15px; padding-inline: 16px; } .bar { margin: 0 -16px; } }
+</style>
+
+<div class="bar" aria-hidden="true"><span style="background:var(--cyan)"></span><span style="background:var(--magenta)"></span><span style="background:var(--yellow)"></span><span style="background:var(--key)"></span></div>
+<div class="wrap">
+<header>
+  <div class="eyebrow">PDFree · Compress · ветка A · черновик до кода</div>
+  <h1>Сжатие CMYK-изображений: критерии приёмки v0.1</h1>
+  <p class="lede">Что считается успехом, как это измеряется и когда файл остаётся нетронутым. Ни одной строки кода ветки A до утверждения этого документа владельцем и независимого аудита.</p>
+  <div class="status">
+    <span class="chip">статус <b>черновик</b></span>
+    <span class="chip">дата <b>2026-11-05</b></span>
+    <span class="chip">после <b>B+C (#139), проверено на проде</b></span>
+  </div>
+</header>
+
+<h2>1. Исходные факты</h2>
+<p>Проверено на 52 файлах (10–160 MB) из корпуса, на которых закрывались B и C, и на ручном сравнении владельца с конкурентами A–D (8 документов).</p>
+<div class="facts">
+  <div class="fact"><div class="n">223 MB</div><div class="l">CMYK-изображений в 18 из 52 файлов — крупнейший тип после серых и RGB</div></div>
+  <div class="fact"><div class="n">166 MB</div><div class="l">из них CMYK JPEG (DCTDecode); 56 MB — CMYK Flate</div></div>
+  <div class="fact"><div class="n">0</div><div class="l">CMYK-картинок с ICC-профилем (ICCBased N=4) — все DeviceCMYK</div></div>
+  <div class="fact"><div class="n">12 · 16 · 4</div><div class="l">файлов с overprint (OP true) · OPM 1 · OutputIntent</div></div>
+</div>
+<ul>
+  <li><b>Сейчас:</b> Compress (<code>_recompressImages</code> в <code>js/worker.js</code>) сознательно <b>пропускает</b> CMYK, ICC N=4, Separation, DeviceN, Indexed: раньше CMYK JPEG пережимался как RGB с меткой CMYK и портил цвета.</li>
+  <li><b>Ограничение архитектуры:</b> <code>js/worker.js</code> менять нельзя. Ветка A работает в предварительном проходе <code>js/compressPrepWorker.js</code>: перекодирует только CMYK-изображения, после чего <code>worker.js</code> пропускает их, как и сейчас.</li>
+  <li><b>Конкуренты на ваших файлах:</b> A <span class="ok">сохраняет CMYK</span> и уменьшает CMYK-картинки примерно вдвое (8,5 → 4,3 MB; 11,6 → 6,7 MB); B, C, D <span class="no">переводят CMYK в RGB</span>, отсюда их размер. C на одном файле дополнительно создаёт DeviceN. Значит, сжатие без перевода в RGB достижимо — ориентир A, не B/C/D.</li>
+  <li>Также в файлах: прозрачность в 17, SMask в 27, Separation в 6, DeviceN в 4.</li>
+</ul>
+
+<h2>2. Главный принцип и рамки v1</h2>
+<p><b>Compress не экономит мегабайты ценой печатных свойств.</b> Если безопасно сжать нельзя — изображение (и при C — весь файл) остаётся как было.</p>
+<div class="tablebox"><table>
+  <tr><th>Входит в v1</th><th>Не трогается (объект остаётся байт-в-байт)</th></tr>
+  <tr><td>Изображения DeviceCMYK, 8 бит, фильтр DCTDecode или FlateDecode, без SMask/Mask</td><td>Separation, DeviceN, ICCBased N=4, Lab, Indexed, JPX, 16 бит, изображения с SMask/Mask</td></tr>
+  <tr><td>Только Standard и Maximum</td><td>Light — никогда</td></tr>
+  <tr><td>Только данные изображения (поток) и размеры при уменьшении разрешения</td><td>Контентные потоки страниц, ExtGState (OP/op/OPM), OutputIntents, ICC-потоки, группы прозрачности, шрифты</td></tr>
+  <tr><td>/Decode по умолчанию или инвертированный Adobe <code>[1 0 1 0 1 0 1 0]</code></td><td>Любой другой /Decode</td></tr>
+  <tr><td colspan="2"><b>Запрещено всегда:</b> переводить CMYK в RGB или в любое другое пространство; менять число компонент.</td></tr>
+</table></div>
+
+<h2>3. Как сжимать — решение владельца до кода</h2>
+<p>Варианты не исключают друг друга; от выбора зависят пороги раздела 5.</p>
+<div class="tablebox"><table>
+  <tr><th>Вариант</th><th>Что делает</th><th>Ожидаемый выигрыш</th><th>Риск для цвета</th></tr>
+  <tr><td><b>L — без потерь</b></td><td>CMYK JPEG: перестроить кодирование без изменения коэффициентов (как <code>jpegtran -optimize</code>). CMYK Flate: лучшее сжатие и предиктор PNG.</td><td class="num">малый, по оценке 5–15% CMYK-байтов <span class="warn">(гипотеза)</span></td><td>нет: пиксели совпадают точно</td></tr>
+  <tr><td><b>D — уменьшение разрешения</b></td><td>Изображения выше порога DPI уменьшаются до него, остаются CMYK и перекодируются JPEG с 4 компонентами (Adobe CMYK).</td><td class="num">большой, у A ≈ 50% <span class="warn">(по 2 файлам)</span></td><td>есть: потери JPEG и пересэмплирование</td></tr>
+  <tr><td><b>Q — только переквантование</b></td><td>То же разрешение, CMYK JPEG с меньшим качеством.</td><td class="num">средний</td><td>есть</td></tr>
+</table></div>
+<p><b>Предложение:</b> Standard — только L; Maximum — L + D, каждый результат проходит самопроверку раздела 6. Для D нужен кодировщик CMYK JPEG в браузере (декодирование есть в pdf.js; кодировщика с 4 компонентами в проекте нет) — это отдельная техническая задача с собственной проверкой.</p>
+
+<h2>4. Контрольный корпус</h2>
+<p>Каждая категория — минимум из двух независимых источников (одна типография или один генератор — один источник). Документы делятся на набор для разработки и <b>контрольный набор, на который не смотрят до оценки</b>. Пользовательские документы не используются; синтетика создаётся скриптом и хранится в <code>tests/fixtures/compress-cmyk/</code>.</p>
+<div class="tablebox"><table>
+  <tr><th>Категория</th><th>Откуда</th><th>Что проверяет</th></tr>
+  <tr><td>CMYK JPEG, фото</td><td>корпус (5722582, 2315841, 3778515 + ещё ≥ 3)</td><td>основной выигрыш, ΔE на фото</td></tr>
+  <tr><td>CMYK Flate</td><td>корпус (44 MB в нём)</td><td>без потерь, точное совпадение</td></tr>
+  <tr><td>Чистый чёрный K=100 поверх CMYK-фото</td><td>синтетика + корпус</td><td>K-only не становится составным</td></tr>
+  <tr><td>Rich Black</td><td>синтетика</td><td>составной чёрный остаётся составным</td></tr>
+  <tr><td>Overprint (OP/op, OPM 1)</td><td>корпус (12 файлов) + синтетика</td><td>наложение красок по пластинам</td></tr>
+  <tr><td>Spot / Separation / DeviceN</td><td>корпус (6 и 4 файла) + синтетика</td><td>не тронуты</td></tr>
+  <tr><td>Прозрачность и blending</td><td>корпус (17) + синтетика</td><td>группы не тронуты, вид не меняется</td></tr>
+  <tr><td>OutputIntent (PDF/X)</td><td>корпус (4) + синтетика</td><td>профиль вывода байт-в-байт</td></tr>
+  <tr><td>CMYK с ICC N=4</td><td>только синтетика (в корпусе 0)</td><td>v1 не трогает — проверка, что пропускается</td></tr>
+  <tr><td>RGB + CMYK вместе; фото + вектор; многостраничный печатный</td><td>корпус</td><td>RGB-путь не изменился; вектор цел</td></tr>
+  <tr><td>Подписанный PDF с CMYK</td><td>корпус (2395337, 3307692)</td><td>фиксируется как класс C28, не скрывается</td></tr>
+</table></div>
+
+<h2>5. Критерии PASS/FAIL</h2>
+<p>Каждый критерий — на каждом документе и каждом режиме. Один FAIL на контрольном наборе — ветка не выходит.</p>
+
+<h3>Уровень 1 — техническая целостность (точная проверка, без порогов)</h3>
+<div class="tablebox"><table>
+  <tr><th>ID</th><th>Критерий</th><th>Как измеряется</th></tr>
+  <tr><td class="id">T1</td><td>Каждое изображение сохраняет /ColorSpace, число компонент и /BitsPerComponent; CMYK остаётся CMYK</td><td>сравнение словарей изображений до/после (PyMuPDF), по ссылке и по имени ресурса</td></tr>
+  <tr><td class="id">T2</td><td>ICC-потоки и OutputIntents (включая DestOutputProfile) — байт-в-байт</td><td>хеш распакованных потоков</td></tr>
+  <tr><td class="id">T3</td><td>ExtGState (OP, op, OPM), группы прозрачности, SMask, Separation/DeviceN — без изменений</td><td><code>qpdf --qdf</code>, сравнение объектов с нормализацией /ModDate и /ID</td></tr>
+  <tr><td class="id">T4</td><td>Контентные потоки страниц и всё, что не CMYK-изображение, — как в текущей продакшн-версии</td><td>как B3: совпадение после нормализации, кроме изменённых потоков изображений</td></tr>
+  <tr><td class="id">T5</td><td>Файл не больше исходного; открывается; <code>qpdf --check</code> без новых ошибок</td><td>как C1 и B2</td></tr>
+  <tr><td class="id">T6</td><td>Режим L: декодированные пиксели совпадают точно</td><td>декодирование до и после, побайтовое сравнение CMYK-отсчётов</td></tr>
+</table></div>
+
+<h3>Уровень 2 — точность цвета (пороги — на утверждение)</h3>
+<div class="tablebox"><table>
+  <tr><th>ID</th><th>Критерий</th><th>Как измеряется</th><th>Порог (предложение)</th></tr>
+  <tr><td class="id">V1</td><td>Чистый K не получает C, M, Y</td><td>в пространстве CMYK, по пикселям, где исходно C=M=Y=0 (±1/255)</td><td class="num">C, M, Y ≤ 2/255 на 100% таких пикселей</td></tr>
+  <tr><td class="id">V2</td><td>Цвет однотонных областей</td><td>CMYK → Lab через OutputIntent документа, иначе эталонный профиль; ΔE2000 по блокам 8×8 при 150 dpi с низкой локальной дисперсией</td><td class="num">среднее ≤ 1,0; p95 ≤ 2,0</td></tr>
+  <tr><td class="id">V3</td><td>Цвет фото и текстур</td><td>то же, блоки с высокой дисперсией</td><td class="num">среднее ≤ 1,5; p95 ≤ 3,0</td></tr>
+  <tr><td class="id">V4</td><td>Нет локальных выбросов</td><td>максимум ΔE2000 по блоку</td><td class="num">≤ 5,0 в любом блоке</td></tr>
+  <tr><td class="id">V5</td><td>Пластины совпадают (печатный вид, с overprint)</td><td>Ghostscript <code>tiffsep</code> при 150 dpi: отдельные пластины C, M, Y, K и спотовые, до/после</td><td class="num">среднее |Δ| ≤ 1,5% по пластине, p99 ≤ 6%; спотовые пластины — без изменений</td></tr>
+  <tr><td class="id">V6</td><td>SSIM страницы</td><td>как в B2</td><td class="num">только справочно, не основание для PASS</td></tr>
+</table></div>
+<div class="hyp"><b>Гипотеза, не проверено</b>Пороги V2–V5 взяты из общих знаний (ΔE2000 ≈ 1 — едва заметная разница; допуски цветопробы обычно 2–3 единицы ΔE2000). Перед заморозкой их нужно откалибровать: (1) режим L обязан дать 0; (2) замерить, что даёт A на тех же файлах; (3) два прогона одной сборки — разброс измерения. Пороги утверждает владелец, после этого они не двигаются.</div>
+<p>Один общий порог для всех цветов не используется: однотонные области, фото и чёрный проверяются отдельно (V1–V4), а печатный вид — по пластинам (V5), а не по экранному RGB.</p>
+
+<h3>Уровень 3 — практическая совместимость</h3>
+<div class="tablebox"><table>
+  <tr><th>ID</th><th>Критерий</th><th>Как измеряется</th></tr>
+  <tr><td class="id">P1</td><td>Файл открывается и рисуется в четырёх независимых движках: MuPDF, pdf.js (Chrome), Poppler, Ghostscript</td><td>рендер каждой страницы без ошибок и новых предупреждений</td></tr>
+  <tr><td class="id">P2</td><td>Цветоделение не ухудшено</td><td>V5 на всех документах с overprint и спотами</td></tr>
+  <tr><td class="id">P3</td><td>Выборочный ручной просмотр владельцем 5 файлов из контрольного набора</td><td>пары до/после, без указания, где что</td></tr>
+</table></div>
+
+<h2>6. Когда остаётся оригинал</h2>
+<ol>
+  <li><b>До обработки изображения:</b> всё, что вне рамок раздела 2 (неизвестный /Decode, маркер JPEG, не 8 бит, SMask), — пропускается без попытки.</li>
+  <li><b>После перекодирования, в браузере:</b> новое изображение декодируется и сравнивается с исходным — V1 (чистый K) и средний ΔCMYK. Нарушение — сохраняются исходные байты этого изображения.</li>
+  <li><b>Любая ошибка декодирования или кодирования</b> — исходное изображение; файл продолжает обрабатываться остальными шагами.</li>
+  <li><b>Файл не меньше исходного</b> — возвращается исходный файл (правило C, уже на проде).</li>
+</ol>
+
+<h2>7. Как проверяется сама проверка</h2>
+<p>Прежде чем доверять гейту, он проверяется в обе стороны (правило проекта):</p>
+<ul>
+  <li>одинаковые сборки → <span class="ok">0 FAIL</span>;</li>
+  <li>намеренно сломанные сборки → <span class="no">FAIL</span> обязательно: CMYK → RGB; добавить 3% C/M/Y в чистый K; заменить ICC-профиль; снять OP в ExtGState; уменьшить JPEG до качества 30.</li>
+</ul>
+<p>Инструменты: PyMuPDF и qpdf (есть), littleCMS через Pillow (есть, 2.17), Poppler (есть), Ghostscript (поставить: brew локально, apt в CI). Скрипты — в <code>scripts/compress-cmyk/</code>, пороги — в одном файле, который меняется только отдельным коммитом с записью причины.</p>
+
+<h2>8. Решения, которые нужны до кода</h2>
+<div class="decide"><span class="q">Решение 1</span><h3>Standard — только без потерь (L)? Maximum — L + уменьшение разрешения (D)?</h3><p>От этого зависят ожидания по размеру: L даёт мало, основной выигрыш — D.</p></div>
+<div class="decide"><span class="q">Решение 2</span><h3>Пороги V2–V5</h3><p>Утвердить после калибровки (раздел 5), не раньше.</p></div>
+<div class="decide"><span class="q">Решение 3</span><h3>Эталонный CMYK-профиль, когда в файле нет OutputIntent</h3><p>Варианты: Coated FOGRA39 (Европа), GRACoL/SWOP (США), или проверять по тому профилю, которым рисует MuPDF. Влияет только на измерение, не на файл.</p></div>
+<div class="decide"><span class="q">Решение 4</span><h3>Порог DPI для D</h3><p>Предложение: Maximum — 200 dpi для фото; меньше никогда для изображений с чистым K (текст в картинке).</p></div>
+
+<h2>9. Порядок работы после утверждения</h2>
+<ol>
+  <li>Синтетические фикстуры и скрипты гейта; проверка гейта в обе стороны (раздел 7).</li>
+  <li>Калибровка порогов и их утверждение владельцем.</li>
+  <li>Режим L — реализация, прогон: разработка → контроль → весь корпус.</li>
+  <li>Режим D — отдельно, с той же процедурой.</li>
+  <li>Ручное сравнение владельцем с A на 2–5 документах; B, C, D — не ориентиры (переводят в RGB или портят цвет).</li>
+  <li>PR → одобрение → прод → проверка на pdfree.io.</li>
+</ol>
+
+<footer>Черновик для владельца и независимого аудита. Факты раздела 1 измерены 2026-11-05 скриптом <code>cmyk_survey.py</code> на 52 файлах и на результатах ручного прогона A–D; конкуренты обозначены буквами.</footer>
+</div>
