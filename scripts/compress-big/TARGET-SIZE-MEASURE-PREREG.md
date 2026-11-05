@@ -157,3 +157,19 @@ Median and worst-case byte size per class, relative to J200 and J96.
 - It fails quality → not adopted, whatever its size.
 
 All results are reported per class and with worst 10 %, including failures.
+
+### Addendum B — deviation, recorded before building HOLD-R (2026-11-05)
+The corpus manifests (tests/corpus/cloud/sample-v1.json, reserve-v1.json) carry `stratum`
+but no source site, so "at most 3 per source site" cannot be enforced.
+
+Replacement rule:
+- files with stratum `scan` from both manifests that are in the local caches;
+- sorted by file name;
+- the first 30 with no text layer on their first 2 pages;
+- first 2 pages each.
+
+The CommonCrawl sample spans thousands of sites, so one site dominating is unlikely but not
+excluded; reported as such.
+
+**HOLD-S:** make_synth.py with seed 7 (DEV used 20261105), excluding every source file in DEV's
+manifest.
