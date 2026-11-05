@@ -7,7 +7,7 @@ Each page is classified: text / small (median span size < 8 pt) / table (>= 6 ru
 color (meaningful chroma in the render); language: zh (CJK), ru (Cyrillic), en (Latin).
 S-stamp: copies of text pages with a red round stamp and a blue signature stroke drawn on.
 
-  python3 make_synth.py <out-dir> [per-class=8]
+  [SEED=7 EXCLUDE_MANIFEST=<dev manifest.json>] python3 make_synth.py <out-dir> [per-class=8]
 """
 import os, sys, glob, json, io, random, statistics, unicodedata
 import fitz, numpy as np
@@ -17,7 +17,9 @@ DIRS = ['/Users/murodjon/pdfree33/pdfree33/tests/corpus/real'] + [os.path.expand
         ('~/.cache/pdfree-corpus', '~/.cache/pdfree-corpus-reserve', '~/.cache/pdfree-corpus-en')]
 out, PER = sys.argv[1], int(sys.argv[2]) if len(sys.argv) > 2 else 8
 os.makedirs(out, exist_ok=True)
-random.seed(20261105)
+random.seed(int(os.environ.get('SEED', 20261105)))
+# HOLD sets: another seed, and no source file the DEV set used
+EXCLUDE = {m['src'] for m in json.load(open(os.environ['EXCLUDE_MANIFEST']))} if os.environ.get('EXCLUDE_MANIFEST') else set()
 
 
 def lang_of(text):
@@ -65,6 +67,7 @@ have = {}
 manifest = []
 for p in files:
     if all(have.get(k, 0) >= PER for k in ('en-text', 'en-small', 'en-table', 'en-color', 'zh-text', 'ru-text')): break
+    if os.path.basename(p) in EXCLUDE: continue
     try: doc = fitz.open(p)
     except Exception: continue
     if doc.is_encrypted or doc.page_count == 0: continue
