@@ -83,3 +83,77 @@ small files readable. Before any number of this addendum:
 
 A prototype is Python; the browser path (a G4 encoder in JS/WASM) is a separate step after
 these numbers.
+
+## Addendum B — adaptive MRC on independent documents (owner + review 2026-11-05), PRE-REGISTERED
+
+Written before any number of this addendum. No worker.js change, no G4 encoder for the browser:
+the question is only whether adaptive MRC wins on documents it was not tuned on.
+
+### Metric v3 (fixed formulas)
+Normalisation:
+- all languages: Unicode NFKC, case-fold;
+- en/ru: punctuation and whitespace removed for character metrics; words = \w+ tokens;
+- zh: whitespace and punctuation (Unicode categories P*) removed; full-width = half-width by NFKC.
+
+Character recall and precision are multiset (bag) based:
+- CharRecall = |GT chars ∩ OCR chars| / |GT chars|
+- CharPrecision = |GT chars ∩ OCR chars| / |OCR chars|
+
+Reported separately:
+- zh BigramRecall, the same formula over character pairs — its own metric, never replacing the
+  character metrics;
+- CER (and WER for en/ru) as in stage 1, a separate column, never mixed into recall/precision.
+
+Every metric is reported as the delta against the same document's uncompressed scan.
+
+### Sets
+- **DEV (calibration):** the 44 class-S synthetic scans already seen. Parameters are chosen
+  here only.
+- **HOLD-S:** new synthetic scans from source PDFs not used by DEV (another seed; a source file
+  in DEV is excluded). The same classes.
+- **HOLD-R:** real image-only scans from the corpus (no text layer; old, faint, stamps,
+  photographed pages), with no ground truth.
+  - The metric is relative to OCR of the uncompressed scan: recall and precision of the
+    variant's OCR against the original's OCR — weaker, labelled as such.
+  - Chosen by a fixed rule before looking: every image-only PDF in the corpus caches, first 2
+    pages, at most 3 per source site, up to 30 files.
+- HOLD-S and HOLD-R are run **once**, after DEV calibration is frozen in a commit.
+
+### Variants
+| | Variant |
+|---|---|
+| J96 / J150 / J200 | today's pipeline (worker.js, Maximum quality 72) |
+| MRC-F | fixed: mask 300 dpi G4, background 100 dpi JPEG q50, foreground 75 dpi |
+| MRC-A | adaptive: mask dpi and background dpi chosen per page from text-component statistics |
+
+**MRC-A rule**, calibrated on DEV only:
+- Text-like components are connected components of the mask, excluding noise (area < 4 px at
+  300 dpi) and blobs (height > 8 % of the page).
+- Per page the statistics are: median, p10 and p90 component height, the share of components
+  < 12 px, and mask density.
+- Grid: mask dpi ∈ {150, 200, 300}, background dpi ∈ {50, 75, 100}.
+- The rule maps the statistics to the cheapest grid point that passes the quality criteria
+  below on DEV, as a small decision table (≤ 4 rules), frozen in a commit before HOLD.
+
+### Quality criteria (a variant "keeps readability" for a class)
+- median CharRecall delta >= -1.0 point and median CharPrecision delta >= -1.0 point;
+- worst-10 % CharRecall delta >= -5.0 points;
+- zh additionally: median BigramRecall delta >= -2.0 points.
+
+**Engines:**
+- OCR on renders by MuPDF and by Ghostscript (300 dpi); a variant must pass in both.
+- pdf.js and Poppler render without error and without missing layers (a non-blank check).
+
+**Visual:** the owner's blind check on a sample (pairs in random order, answers: worse / same /
+can't tell); no variant passes with "worse" on stamps, signatures or small print in more than
+10 % of pairs.
+
+### Size criterion
+Median and worst-case byte size per class, relative to J200 and J96.
+
+### Decision (owner, 2026-11-05)
+- MRC-A keeps readability AND is smaller than J200 → adopt.
+- It works only on some classes → hybrid engine (per page).
+- It fails quality → not adopted, whatever its size.
+
+All results are reported per class and with worst 10 %, including failures.
