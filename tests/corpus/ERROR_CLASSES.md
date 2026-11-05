@@ -1069,5 +1069,37 @@ input byte for byte; a mixed batch of 5 follows the same rule.
   without saying it is one, and nothing tells the user.
 - **C27 — Maximum removes accessibility tags** (StructTreeRoot, MarkInfo,
   StructParents) when "keep text" is off.
-- **C28 — any re-save invalidates a digital signature** (/ByteRange); 2
-  signed files in the caches (2395337, 3307692) checked with pdfsig.
+- **C28 — any re-save invalidates a digital signature** — moved up to its own
+  section below (2026-11-05).
+
+## C28 — a digitally signed PDF loses its valid signature, silently
+
+Every tool that writes a PDF saves it again, and a save changes the bytes a
+signature covers (/ByteRange): the copy's signature is no longer valid.
+Measured 2026-11-05 on a real signature (tests/fixtures/signed/signed-one.pdf,
+loaded and saved with pdf-lib as the tools do): pyHanko `intact` True →
+False (the signed digest no longer matches the bytes); pdfsig "Signature is
+Valid" → "has not yet been verified". The two signed corpus files
+(2395337, 3307692) after Compress read the same in pdfsig. Nothing told the
+user. Owner and audit
+(2026-11-05): warn and ask, don't refuse — an edited copy can be wanted.
+
+- **Detection** (js/signedPdf.js): a byte scan, no parse — /ByteRange
+  [0 b c d] inside the file with a non-zero <hex> /Contents between b and c;
+  certified by /TransformMethod /DocMDP. A signature dictionary is never in
+  a compressed object stream (the signer patches it in place), so the scan
+  finds every one. Against pdfsig on all 772 local corpus PDFs: 772/772
+  agree (2 signed), plus 8/8 unit cases on real pyHanko signatures (one, two,
+  certified, empty field, a picture of a signature, an all-zero placeholder,
+  a /ByteRange across the 4 MB read boundary).
+- **Behaviour**: a "Digitally signed" badge in the file list; before any
+  tool that writes a new PDF runs, a dialog names the signed files and says
+  the copy's signature won't be valid, the original keeps its own. Cancel
+  (focused default), Esc and the backdrop start nothing; "Make the copy"
+  goes on, asked once per file. Converters to another format, tools whose
+  input isn't a PDF, and PDF/A (it refuses signed files itself) don't ask.
+- **Checks**: e2e tests/e2e/signed-pdf.e2e.mjs 9/9 (CI); run against prod
+  without the feature it fails exactly the 5 signed cases.
+- **Status:** `fixing` — until verified on pdfree.io. Not done: keeping the
+  signature (an incremental save that only appends) — not possible with how
+  the tools rebuild PDFs today.

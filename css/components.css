@@ -6458,3 +6458,25 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 [dir="rtl"] .next-step-row:hover .next-step-row__arrow {
   transform: scaleX(-1) translateX(3px);
 }
+
+/* ── Digitally signed PDF: confirm before a new copy (js/signedConfirm.js, C28) ── */
+.sig-confirm { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px; }
+.sig-confirm__backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, .45); }
+.sig-confirm__card {
+  position: relative; max-width: 460px; width: 100%; max-height: calc(100vh - 32px); overflow-y: auto;
+  background: var(--surface); color: var(--text); border: 1px solid var(--border-strong);
+  border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 22px 22px 18px;
+}
+.sig-confirm__icon { font-size: 26px; line-height: 1; margin-bottom: 8px; }
+.sig-confirm__title { font-size: 18px; font-weight: 700; margin: 0 0 8px; }
+.sig-confirm__text { font-size: 14px; line-height: 1.55; color: var(--text2); margin: 0 0 10px; }
+.sig-confirm__files { margin: 0 0 16px; padding-left: 18px; font-size: 13px; color: var(--text); word-break: break-word; }
+.sig-confirm__actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+.sig-confirm__btn {
+  min-height: 44px; padding: 0 16px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer;
+  border: 1px solid var(--border-strong); background: var(--surface); color: var(--text);
+}
+.sig-confirm__btn--go { background: var(--green); border-color: var(--green); color: #fff; }
+.sig-confirm__btn:focus-visible { outline: 2px solid var(--green-text); outline-offset: 2px; }
+@media (max-width: 420px) { .sig-confirm__actions { flex-direction: column-reverse; } .sig-confirm__btn { width: 100%; } }
+.file-item-signed { display: inline-block; font-size: 12px; color: var(--text2); margin-top: 2px; }

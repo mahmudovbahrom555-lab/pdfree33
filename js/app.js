@@ -42,7 +42,8 @@ import { trackToolStart, trackToolSuccess,
          trackSearchQuery, trackSearchMiss,
          trackSearchSelect, trackAppLaunch,
          trackHeroFileSelect, trackChipClick,
-         trackShareTool, trackBehaviorCrossSell }    from './analytics.js';
+         trackShareTool, trackBehaviorCrossSell, trackToolNotice } from './analytics.js';
+import { confirmSignedCopy } from './signedConfirm.js';
 import { buildIndex, search, hasCjk,
          minQueryLength }                    from './search.js';
 import { loadPdfLib }                              from './lazyLibs.js';
@@ -688,6 +689,20 @@ function _onMergeBtnClick() {
       if (!_READS_RESTRICTED.has(currentTool) && selectedFiles.some(f => f._decryptFailed && !f._decryptedBuffer)) {
         showToast(t('err_restrictions_unremovable'), 10000);
         return;
+      }
+    }
+    // A digitally signed PDF (C28): a tool that writes a new PDF makes a copy
+    // whose signature is no longer valid — said before it runs, and nothing
+    // starts until the user chooses to make the copy. Converters to another
+    // format, and tools whose input isn't a PDF, don't ask.
+    if (!_NO_SIGNED_PROMPT.has(currentTool)) {
+      await Promise.all(selectedFiles.map(f => f._signatureCheck));
+      const signed = selectedFiles.filter(f => f._signed && !f._signedAck);
+      if (signed.length) {
+        const ok = await confirmSignedCopy(signed.map(f => ({ name: f.name, certified: f._signed.certified })));
+        trackToolNotice(currentTool, ok ? 'signed_pdf_copy' : 'signed_pdf_cancel');
+        if (!ok) return;
+        signed.forEach(f => { f._signedAck = true; });   // asked once per file
       }
     }
     // Registry dispatch — no more if-else per tool
@@ -1674,6 +1689,11 @@ function initSearch() {
 // work on a restricted file qpdf couldn't decrypt — checked on a damaged one,
 // 2026-10-30, the last four added then.
 const _READS_RESTRICTED = new Set(['pdf2word', 'pdf2excel', 'pdf2ppt', 'pdf2jpg', 'pdf2md', 'cleanScan', 'mangaSplit', 'ereader']);
+// Tools whose result isn't a new version of the PDF given (another format,
+// or the input isn't a PDF): a digital signature doesn't concern them (C28).
+// PDF/A is left out too: it finds an applied signature itself and refuses to
+// convert (pdfaAnalyze), so asking "make the copy?" first would contradict it.
+const _NO_SIGNED_PROMPT = new Set(['pdf2jpg', 'pdf2word', 'pdf2excel', 'pdf2ppt', 'pdf2md', 'compare', 'read', 'jpg2pdf', 'docx2pdf', 'scanDocument', 'pdf2pdfa']);
 
 // ── Initial routing ──────────────────────────────────────────
 

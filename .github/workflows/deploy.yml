@@ -414,6 +414,12 @@ jobs:
         # sheet (embedPage() alone drops them). See tests/e2e/nup.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:nup
 
+      - name: E2E — a digitally signed PDF is announced before a tool writes a copy (C28)
+        # Real pyHanko signatures (tests/fixtures/signed/): one, two, certified ask;
+        # a picture of a signature, an empty field, an ordinary PDF and converters
+        # don't; Cancel/Esc start nothing. See tests/e2e/signed-pdf.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:signed-pdf
+
       - name: E2E — Page Numbers with text, colour and font (第 1 页, i ii iii)
         # Plain numbers stay on worker.js; text around the number, a colour, a
         # font or a lowercase format go to pageNumWorker.js — Chinese written

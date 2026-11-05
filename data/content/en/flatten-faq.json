@@ -28,7 +28,7 @@
     "name": "Does flattening remove digital signatures?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Drawn signatures created with the Fill PDF tool (signature pad images) are flattened into the page. Cryptographic digital signatures from certified e-signature providers may be handled differently — the visual appearance is preserved but the cryptographic certificate may no longer validate after flattening."
+      "text": "Drawn signatures created with the Fill PDF tool (signature pad images) are flattened into the page. A cryptographic digital signature keeps its look, but it is no longer valid in the flattened copy: any new copy of a signed PDF changes the bytes the signature covers. PDFree tells you before it starts, and your original file keeps its valid signature."
     }
   },
   {
