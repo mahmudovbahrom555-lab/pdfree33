@@ -11,7 +11,8 @@
 //     rule (CLAUDE.md).
 //  2. CMYK Flate images (criteria v0.2, owner 2026-11-05): re-deflated on
 //     Standard — the same decoded samples, the same dictionary, fewer bytes.
-//     (Light leaves them: tests/compressPrep.test.js.)
+//     (Light leaves them: tests/compressPrep.test.js.) A soft mask stays a
+//     DeviceGray mask (C30).
 //  3. js/compressUI.js — the background pre-scan only covers
 //     selectedFiles[0], yet its recommended preset was applied to the whole
 //     batch: a plain-text first file flipped every file to Light (real
@@ -132,6 +133,27 @@ await test('a CMYK Flate image on Standard: fewer bytes, the same samples, the s
   }
   if (!(after.contents.length < cmykBefore.contents.length)) throw new Error(`not smaller: ${after.contents.length} vs ${cmykBefore.contents.length}`);
   expect(Buffer.compare(zlib.inflateSync(Buffer.from(after.contents)), CMYK)).toBe(0);
+});
+
+// C30 (owner-approved worker.js change 2026-11-05): an image's soft mask is a mask,
+// not a picture — it was re-encoded into an RGB JPEG labelled /DeviceRGB.
+await test('a soft mask stays a one-channel DeviceGray mask with the same values (C30)', async () => {
+  const MW = 600, MH = 800, mask = Buffer.alloc(MW * MH), rgb = Buffer.alloc(MW * MH * 3);
+  for (let y = 0; y < MH; y++) for (let x = 0; x < MW; x++) {
+    // a photo-like alpha (noisy, so a JPEG would come out smaller than Flate and be kept)
+    mask[y * MW + x] = (128 + 100 * Math.sin(x / 23) * Math.cos(y / 17) + ((x * 7919 + y * 104729) % 41) - 20) | 0;
+    const i = (y * MW + x) * 3; rgb[i] = x % 256; rgb[i + 1] = y % 256; rgb[i + 2] = (x * y) % 256;
+  }
+  const bytes = await imagePdf(zlib.deflateSync(rgb), pdf => ({ Width: MW, Height: MH, ColorSpace: 'DeviceRGB', Filter: 'FlateDecode',
+    SMask: pdf.context.register(pdf.context.stream(zlib.deflateSync(mask), { Type: 'XObject', Subtype: 'Image', Width: MW, Height: MH, ColorSpace: 'DeviceGray', BitsPerComponent: 8, Filter: 'FlateDecode' })) }));
+  const file = path.join(tmp, 'smask.pdf');
+  fs.writeFileSync(file, bytes);
+  const out = await PDFDocument.load(await compressViaUi(browser, file, 'medium'));
+  const withMask = out.context.enumerateIndirectObjects().map(([, o]) => o).find(o => o?.dict?.has?.(PDFName.of('SMask')));
+  const sm = out.context.lookup(withMask.dict.get(PDFName.of('SMask')));
+  expect(sm.dict.get(PDFName.of('ColorSpace'))?.toString()).toBe('/DeviceGray');
+  expect(sm.dict.get(PDFName.of('Filter'))?.toString()).toBe('/FlateDecode');
+  expect(Buffer.compare(zlib.inflateSync(Buffer.from(sm.contents)), mask)).toBe(0);
 });
 
 await test('a batch whose first file is plain text stays on Standard, not the scan\'s Light pick', async () => {

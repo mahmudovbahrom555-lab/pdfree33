@@ -1071,16 +1071,8 @@ input byte for byte; a mixed batch of 5 follows the same rule.
   StructParents) when "keep text" is off.
 - **C28 — any re-save invalidates a digital signature** — moved up to its own
   section below (2026-11-05).
-- **C29 — Compress merges images whose masks differ.** handleCompress's
-  image dedup (worker.js `_deduplicateImages`) compares stream bytes only,
-  not the dictionary: two images with the same samples but different /SMask
-  (or /Decode, size, /DecodeParms) become one object. Found 2026-11-05 by
-  the CMYK L1 gate (T8) on 1369728 (held-out): page 1's Im1 takes Im0's
-  soft mask, 95 pixels drawn wrong at 144 dpi (up to 172/255). On
-  production today, independent of the CMYK work. The fix is in worker.js
-  (off-limits): needs the owner's OK for that change. Flate L (CMYK) never
-  creates a new such pair (its repack is skipped when the new bytes equal
-  another image's).
+- **C29 — Compress merges images that differ** — moved to its own section
+  below (2026-11-05).
 
 ## C28 — a digitally signed PDF loses its valid signature, silently
 
@@ -1125,3 +1117,39 @@ user. Owner and audit
   compress corpus gate. Not done: keeping the
   signature (an incremental save that only appends) — not possible with how
   the tools rebuild PDFs today.
+
+## C29 — Compress merges images that differ; C30 — it turns soft masks into colour JPEGs
+
+Found 2026-11-05 by the CMYK L1 gate (T8) on 1369728, then measured over the
+corpus (wip-bench dedup_scan.py, a simulation of handleCompress's dedup):
+
+- **C29.** `_deduplicateImages` keyed images on a sample of the stream bytes
+  (length + five 128-byte windows), never the dictionary. In 58 of 813 corpus
+  PDFs: 3,695 merges of images with the same bytes but another /SMask,
+  /Width × /Height or /ColorSpace, and 17 merges of images with *different*
+  bytes that agreed in the five windows (5333813). It also deleted a duplicate
+  still used inside a Form XObject or as a mask: references to nothing in
+  real outputs (0942799, 1250344).
+- **C30.** `_recompressImages` re-encoded an image that is another image's
+  /SMask into an RGB JPEG labelled /DeviceRGB: a soft mask must be one gray
+  channel. 201 of 851 masks in the 58 files' Standard outputs.
+
+**Fix** (worker.js, owner-approved for these two changes, CLAUDE.md):
+- Dedup merges only images with the same dictionary (bar /Length, /Name) and
+  the same bytes, compared in full.
+- A duplicate still referenced elsewhere is kept.
+- Masks are not recompressed.
+
+**Checked** on the 58 files, Standard, main without the fix vs with it (both
+built locally):
+
+| Check | Without the fix | With the fix |
+|---|---|---|
+| Pages closer to the original (of 111 that render differently, MuPDF) | 0 | 105 (6 tie) |
+| Soft masks not DeviceGray | 201 | 0 |
+| Files with references to missing objects | 2 | 0 |
+| Size | — | +1.3 % (no more merging of images that differ) |
+
+Unit tests: dedup 5 cases. e2e: a soft mask stays DeviceGray with the same
+values; it fails on the build without the fix.
+**Status:** `fixing` — until verified on pdfree.io.
