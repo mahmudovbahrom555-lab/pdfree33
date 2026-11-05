@@ -1071,6 +1071,16 @@ input byte for byte; a mixed batch of 5 follows the same rule.
   StructParents) when "keep text" is off.
 - **C28 — any re-save invalidates a digital signature** — moved up to its own
   section below (2026-11-05).
+- **C29 — Compress merges images whose masks differ.** handleCompress's
+  image dedup (worker.js `_deduplicateImages`) compares stream bytes only,
+  not the dictionary: two images with the same samples but different /SMask
+  (or /Decode, size, /DecodeParms) become one object. Found 2026-11-05 by
+  the CMYK L1 gate (T8) on 1369728 (held-out): page 1's Im1 takes Im0's
+  soft mask, 95 pixels drawn wrong at 144 dpi (up to 172/255). On
+  production today, independent of the CMYK work. The fix is in worker.js
+  (off-limits): needs the owner's OK for that change. Flate L (CMYK) never
+  creates a new such pair (its repack is skipped when the new bytes equal
+  another image's).
 
 ## C28 — a digitally signed PDF loses its valid signature, silently
 
@@ -1110,6 +1120,8 @@ user. Owner and audit
   object /Perms /UR3 points at, isn't counted. Over 742 corpus PDFs
   (tests/corpus real + synthetic + two caches): flagged 3 → 1 (3307692 kept,
   the IRS forms gone); 2395337 still flagged. Unit cases 8 → 11.
-- **Status:** `fixing` — until verified on pdfree.io. Not done: keeping the
+- **Status:** `verified` — d53f89bd (#143 + #145) on pdfree.io 2026-11-05:
+  tests/e2e/signed-pdf.e2e.mjs 9/9 against production; the IRS forms pass the
+  compress corpus gate. Not done: keeping the
   signature (an incremental save that only appends) — not possible with how
   the tools rebuild PDFs today.
