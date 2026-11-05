@@ -4,6 +4,16 @@ on:
   push:
     branches: [main]
 
+# One deploy at a time, never cancelled midway. Without this, 4 merges on
+# 2026-11-05 deployed in parallel (~50 min each): whichever run finished last
+# set production, so an older commit finishing after a newer one would have
+# rolled pdfree.io back. GitHub keeps one run going and one waiting; a newer
+# merge replaces the waiting one, which is fine — main is linear, so the
+# newest commit holds everything the replaced one had.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
