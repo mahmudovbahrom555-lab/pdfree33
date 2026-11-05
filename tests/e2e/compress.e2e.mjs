@@ -156,6 +156,22 @@ await test('a soft mask stays a one-channel DeviceGray mask with the same values
   expect(Buffer.compare(zlib.inflateSync(Buffer.from(sm.contents)), mask)).toBe(0);
 });
 
+// A grey JPEG scan (as office scanners write) downsampled on Standard: canvas re-encodes
+// it as an RGB JPEG; the label stayed /DeviceGray, so readers drew three channels as grey —
+// a page of overlapping ghost copies (C31, real scans, 2026-11-06). The JPEG's own component
+// count must match the colour space the dictionary names.
+const jpegComponents = b => { for (let i = 2; i < b.length - 9; ) { if (b[i] !== 0xFF) return null; const m = b[i + 1], len = (b[i + 2] << 8) | b[i + 3]; if (m >= 0xC0 && m <= 0xC3) return b[i + 9]; i += 2 + len; } return null; };
+await test('a grey JPEG scan on Standard: the JPEG\'s channels match its colour space (C31)', async () => {
+  const file = path.join(tmp, 'gray-scan.pdf');
+  fs.writeFileSync(file, await imagePdf(fs.readFileSync(path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'fixtures', 'gray-scan.jpg')), { Width: 1700, Height: 2200, ColorSpace: 'DeviceGray', Filter: 'DCTDecode' }));
+  const after = firstImage(await PDFDocument.load(await compressViaUi(browser, file, 'medium')));
+  const cs = after.dict.get(PDFName.of('ColorSpace'))?.toString();
+  if (after.dict.get(PDFName.of('Filter'))?.toString() === '/DCTDecode') {
+    const n = jpegComponents(after.contents);
+    expect(`${cs} ${n}`).toBe(n === 1 ? '/DeviceGray 1' : '/DeviceRGB 3');
+  }
+});
+
 await test('a batch whose first file is plain text stays on Standard, not the scan\'s Light pick', async () => {
   const textFile = path.join(tmp, 'text-first.pdf');
   fs.writeFileSync(textFile, await textPdf());
