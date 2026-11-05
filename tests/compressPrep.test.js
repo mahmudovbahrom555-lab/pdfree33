@@ -196,7 +196,10 @@ await test('two images, same samples, different /Decode: never left with the sam
 });
 
 await test('already as small as the encoder makes it: not touched', async () => {
-  const input = await cmykPdf({ data: deflateSync(cmykSamples(), { level: 9 }) });
+  // stored by the very encoder the pass uses (pdf-lib's deflate), so nothing can be gained —
+  // not by Node's zlib at level 9: its output differs between Node versions (on CI's Node 20
+  // pdf-lib's level 6 came out smaller, a valid repack, and this test failed on it, 2026-11-05)
+  const input = await cmykPdf({ data: (await PDFDocument.create()).context.flateStream(cmykSamples()).contents });
   const out = await _encodeRawImages(input, true, true);
   assert(out.cmyk === 0, 'repacked to no gain');
 });
