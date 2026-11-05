@@ -82,8 +82,8 @@ const workerSrc = readFileSync(join(__dir, '../js/worker.js'), 'utf8')
 
 // eval into module scope — gives us access to all private functions
 const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-const workerModule = new AsyncFunction(workerSrc + '\nreturn { handleCompress };');
-const { handleCompress } = await workerModule();
+const workerModule = new AsyncFunction(workerSrc + '\nreturn { handleCompress, _deduplicateImages };');
+const { handleCompress, _deduplicateImages } = await workerModule();
 
 // ── Test runner ───────────────────────────────────────────────
 
@@ -130,6 +130,67 @@ function lastError() { return messages.findLast(m => m.type === 'error'); }
 // ══════════════════════════════════════════════════════════════
 
 console.log('\n🗜️  handleCompress:');
+
+// ── Image dedup merges only true duplicates (C29, 2026-11-05) ──
+// It merged by a 5-window sample of the stream bytes alone: images with the
+// same bytes but another soft mask, size or colour space became one object
+// (337 merges in 20 corpus files; 1369728: 95 pixels drawn wrong), and two
+// different images agreeing in those windows would have been merged too.
+async function dedupPdf(images) {
+  const { PDFDocument, PDFName, PDFRawStream } = PDFLib;
+  const pdf = await PDFDocument.create();
+  const page = pdf.addPage([200, 200]);
+  const refs = images.map(({ bytes, dict }) => pdf.context.register(PDFRawStream.of(pdf.context.obj({ Type: 'XObject', Subtype: 'Image', BitsPerComponent: 8, ...dict(pdf) }), bytes)));
+  page.node.set(PDFName.of('Resources'), pdf.context.obj({ XObject: Object.fromEntries(refs.map((r, i) => [`Im${i}`, r])) }));
+  return { pdf, xo: () => pdf.getPage(0).node.Resources().lookup(PDFName.of('XObject')) };
+}
+const gray = (w, h) => () => ({ Width: w, Height: h, ColorSpace: 'DeviceGray' });
+
+await test('dedup: same bytes, different soft mask → two objects', async () => {
+  const bytes = new Uint8Array(4096).fill(7);
+  const { pdf, xo } = await dedupPdf([
+    { bytes, dict: p => ({ ...gray(64, 64)(), SMask: p.context.register(p.context.stream(new Uint8Array(4096).fill(0), gray(64, 64)())) }) },
+    { bytes, dict: p => ({ ...gray(64, 64)(), SMask: p.context.register(p.context.stream(new Uint8Array(4096).fill(255), gray(64, 64)())) }) },
+  ]);
+  _deduplicateImages(pdf);
+  expect(String(xo().get(PDFLib.PDFName.of('Im0'))) === String(xo().get(PDFLib.PDFName.of('Im1')))).toBeFalsy();
+});
+
+await test('dedup: same bytes, different /Width × /Height → two objects', async () => {
+  const bytes = new Uint8Array(4096).fill(9);
+  const { pdf, xo } = await dedupPdf([{ bytes, dict: gray(64, 64) }, { bytes, dict: gray(32, 128) }]);
+  _deduplicateImages(pdf);
+  expect(String(xo().get(PDFLib.PDFName.of('Im0'))) === String(xo().get(PDFLib.PDFName.of('Im1')))).toBeFalsy();
+});
+
+await test('dedup: equal in the five sampled windows, different elsewhere → two objects', async () => {
+  // 10000 bytes: windows at 0, 2500, 5000, 7500, 9872 (128 each); byte 1000 lies outside all of them
+  const a = new Uint8Array(10000), b = new Uint8Array(10000); b[1000] = 255;
+  const { pdf, xo } = await dedupPdf([{ bytes: a, dict: gray(100, 100) }, { bytes: b, dict: gray(100, 100) }]);
+  _deduplicateImages(pdf);
+  expect(String(xo().get(PDFLib.PDFName.of('Im0'))) === String(xo().get(PDFLib.PDFName.of('Im1')))).toBeFalsy();
+});
+
+await test('dedup: a duplicate also used inside a Form XObject is kept — no reference left pointing at nothing', async () => {
+  const { PDFName, PDFRawStream, PDFRef } = PDFLib;
+  const bytes = new Uint8Array(4096).fill(5);
+  const { pdf, xo } = await dedupPdf([{ bytes, dict: gray(64, 64) }, { bytes, dict: gray(64, 64) }]);
+  const dup = xo().get(PDFName.of('Im1'));
+  const form = pdf.context.register(PDFRawStream.of(pdf.context.obj({ Type: 'XObject', Subtype: 'Form', BBox: [0, 0, 10, 10], Resources: { XObject: { Fx: dup } } }), new TextEncoder().encode('/Fx Do')));
+  xo().set(PDFName.of('Fm0'), form);
+  _deduplicateImages(pdf);
+  const inner = pdf.context.lookup(form).dict.lookup(PDFName.of('Resources')).lookup(PDFName.of('XObject')).get(PDFName.of('Fx'));
+  expect(inner instanceof PDFRef).toBeTruthy();
+  expect(pdf.context.lookup(inner) instanceof PDFRawStream).toBeTruthy();
+});
+
+await test('dedup: a true duplicate (only the obsolete /Name differs) is still merged', async () => {
+  const bytes = new Uint8Array(4096).fill(3);
+  const { pdf, xo } = await dedupPdf([{ bytes, dict: () => ({ ...gray(64, 64)(), Name: 'X1' }) }, { bytes, dict: () => ({ ...gray(64, 64)(), Name: 'X2' }) }]);
+  const r = _deduplicateImages(pdf);
+  expect(r.count).toBe(1);
+  expect(String(xo().get(PDFLib.PDFName.of('Im0'))) === String(xo().get(PDFLib.PDFName.of('Im1')))).toBeTruthy();
+});
 
 await test('compresses a valid PDF (medium preset)', async () => {
   await handleCompress(normal3(), { preset: 'medium', preserveText: true });

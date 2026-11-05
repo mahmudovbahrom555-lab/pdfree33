@@ -784,22 +784,39 @@ function _getPdfIndirectObjects(pdf) {
 // Scope: page-level XObjects only — covers 95%+ of real-world duplicate cases
 // (logos, signatures, headers). FormXObject-hosted images are left untouched
 // to avoid dangling-ref corruption on complex structured PDFs.
+//
+// Only TRUE duplicates (C29, owner-approved worker.js change 2026-11-05): the
+// same dictionary (every entry but /Length and the obsolete /Name) and the
+// same bytes, compared in full. The fingerprint alone merged images that
+// differ — same bytes but another /SMask, /Width, /Height or /ColorSpace (3,695
+// merges in 58 of 813 corpus files; one drew 95 pixels wrong), and 17 images
+// that agreed only in the five sampled windows.
 function _deduplicateImages(pdf) {
   const { PDFName, PDFRawStream } = PDFLib;
+  const IGNORED = new Set(['/Length', '/Name']);
+  const dictKey = dict => dict.entries()
+    .filter(([k]) => !IGNORED.has(k.toString()))
+    .map(([k, v]) => `${k} ${v}`).sort().join(' ');
+  const sameBytes = (a, b) => {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+    return true;
+  };
 
   // Pass 1 — build canonical ref map and identify duplicates
-  const canonical    = new Map(); // fingerprint → first PDFRef
+  const canonical    = new Map(); // fingerprint + dictionary → [{ ref, contents }]
   const replacements = new Map(); // duplicate objectNumber → canonical PDFRef
 
   for (const [ref, obj] of pdf.context.enumerateIndirectObjects()) {
     if (!(obj instanceof PDFRawStream)) continue;
     if (obj.dict.get(PDFName.of('Subtype'))?.toString() !== '/Image') continue;
 
-    const fp = _imageFingerprint(obj.contents);
-    if (canonical.has(fp)) {
-      replacements.set(ref.objectNumber, canonical.get(fp));
+    const key  = `${_imageFingerprint(obj.contents)}|${dictKey(obj.dict)}`;
+    const same = (canonical.get(key) || []).find(c => sameBytes(c.contents, obj.contents));
+    if (same) {
+      replacements.set(ref.objectNumber, same.ref);
     } else {
-      canonical.set(fp, ref);
+      canonical.set(key, [...(canonical.get(key) || []), { ref, contents: obj.contents }]);
     }
   }
 
@@ -833,6 +850,28 @@ function _deduplicateImages(pdf) {
     }
   }
 
+  if (toDelete.size === 0) return { count: 0, savedBytes: 0 };
+
+  // A duplicate still referenced elsewhere — inside a Form XObject, as another
+  // image's /SMask — stays: deleting it left a reference to nothing (C29,
+  // seen in real outputs, MuPDF "cannot find object in xref"). Only the
+  // page-level entries above were rewired.
+  const { PDFRef, PDFDict, PDFArray } = PDFLib;
+  const stillUsed = new Set();
+  const visit = v => {
+    if (v instanceof PDFRef) stillUsed.add(v.objectNumber);
+    else if (v instanceof PDFDict) for (const [, x] of v.entries()) visit(x);
+    else if (v instanceof PDFArray) for (const x of v.asArray()) visit(x);
+    else if (v instanceof PDFRawStream) visit(v.dict);
+  };
+  for (const [, obj] of pdf.context.enumerateIndirectObjects()) visit(obj);
+  visit(pdf.context.trailerInfo.Root);
+  for (const objNum of toDelete) {
+    if (!stillUsed.has(objNum)) continue;
+    toDelete.delete(objNum);
+    const kept = pdf.context.lookup(PDFRef.of(objNum));
+    if (kept instanceof PDFRawStream) savedBytes -= kept.contents.length;
+  }
   if (toDelete.size === 0) return { count: 0, savedBytes: 0 };
 
   // Pass 3 — remove orphaned objects so pdf-lib doesn't serialise them
@@ -992,7 +1031,19 @@ async function _recompressImages(pdf, jpegQuality, targetDpi, medianPageSize) {
   const totalImages = imageEntries.length;
   let imgIdx = 0;
 
-  for (const [, obj] of entries) {
+  // An image that IS another image's /SMask or /Mask is a mask, not a picture:
+  // it must stay one gray channel (DeviceGray, 1 component — PDF spec). Re-encoded
+  // here it became an RGB JPEG labelled /DeviceRGB (C30, owner-approved worker.js
+  // change 2026-11-05; 17 of 37 masks in one real file).
+  const maskObjects = new Set();
+  for (const [, obj] of imageEntries) {
+    for (const key of ['SMask', 'Mask']) {
+      const ref = obj.dict.get(PDFName.of(key));
+      if (ref?.objectNumber !== undefined) maskObjects.add(ref.objectNumber);
+    }
+  }
+
+  for (const [ref, obj] of entries) {
     // Must be a raw stream
     if (!(obj instanceof PDFRawStream)) continue;
 
@@ -1005,6 +1056,7 @@ async function _recompressImages(pdf, jpegQuality, targetDpi, medianPageSize) {
       const pct = 55 + Math.round((imgIdx / totalImages) * 17);
       self.postMessage({ type: 'progress', value: Math.min(pct, 72), label: `Recompressing image ${imgIdx} of ${totalImages}…` });
     }
+    if (maskObjects.has(ref.objectNumber))            { skipped++; continue; }  // a mask (C30)
 
     const filter     = dict.get(PDFName.of('Filter'))?.toString() ?? '';
     const rawColorSpace = dict.get(PDFName.of('ColorSpace'));
