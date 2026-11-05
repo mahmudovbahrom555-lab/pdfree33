@@ -297,6 +297,7 @@ export function renderWorkerScanReport(report, fileCount = 1) {
 
   // Show time estimate in the tier span
   _updateTimeEstimate();
+  _syncDpiNote();
 
 
   // Add/update ⭐ Recommended badge on the correct preset card
@@ -527,6 +528,8 @@ function _render(file, scan) {
 
     ${_qualityNote()}
 
+    <div class="compress-scan compress-scan--warn" id="compressDpiNote" role="status" hidden></div>
+
     ${_dpiRow()}
 
     ${_targetSizeRow()}
@@ -551,6 +554,7 @@ function _render(file, scan) {
   `;
 
   _bindEvents();
+  _syncDpiNote();
 
   if (scan?.isEncrypted) {
     showToast(t('cmp_encrypted_toast'), 5000);
@@ -619,6 +623,25 @@ function _qualityRow() {
 function _qualityNote() {
   if (_preset === 'low') return '';
   return `<div class="compress-scan compress-scan--info" id="compressQualityNote" role="status">${t('cmp_quality_note')}</div>`;
+}
+
+// A scan downsampled below 150 dpi: small print and Chinese / Japanese
+// characters can become hard to read — measured 2026-11-05 on synthetic scans
+// with an exact ground truth (Tesseract on the output): at 96 dpi the worst
+// small-print pages lost 23–44 % of their characters, Chinese pages up to
+// 61 %; 150 dpi kept body text. Maximum's default and the target-size chips
+// use 96 dpi; the owner kept the algorithm for now and asked for an honest
+// note instead (wip-bench TARGET-SIZE-MEASURE-PREREG.md).
+function _dpiNoteVisible() {
+  return _preset !== 'low' && _targetDpi != null && _targetDpi < 150
+    && !!_lastScan && _docType(_lastScan).type === 'scan';
+}
+
+function _syncDpiNote() {
+  const note = id('compressDpiNote');
+  if (!note) return;
+  note.hidden = !_dpiNoteVisible();
+  if (!note.hidden) note.textContent = t('cmp_scan_dpi_note', { dpi: _targetDpi });
 }
 
 function _presetCard(value, icon, label, desc, isRecommended = false) {
@@ -759,6 +782,7 @@ function _bindEvents() {
     if (e.target.id === 'compressRememberCheck' && !e.target.checked) {
       clearPreset('compress');
     }
+    _syncDpiNote();   // preset, resolution or target size may have changed
   });
 
   // Slider needs 'input' (fires while dragging), not 'change' (fires on release only)

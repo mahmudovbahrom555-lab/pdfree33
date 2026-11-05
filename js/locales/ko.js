@@ -984,6 +984,7 @@ window.PDFREE_LOCALE = {
   cmp_quality_label:      '이미지 품질',
   cmp_quality_aria:       '재압축을 위한 JPEG 이미지 품질',
   cmp_quality_note:       '⚠️ 이미지를 압축하면 QR 코드와 사진의 세부 디테일을 읽기 어려워질 수 있습니다. PDF에 스캔 가능한 코드나 중요한 사진이 있다면 \'가벼움\' 또는 더 높은 품질을 사용해 보세요.',
+  cmp_scan_dpi_note:      '⚠️ 스캔한 문서입니다: {dpi} dpi에서는 작은 글자와 중국어·일본어 문자가 읽기 어려워질 수 있습니다. 제출해야 하는 문서라면 150 dpi 이상을 선택하세요.',
   cmp_dpi_email:          '이메일',
   cmp_dpi_email_hint:     '96 DPI',
   cmp_dpi_web:            '웹',

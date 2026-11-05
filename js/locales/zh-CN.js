@@ -1027,6 +1027,7 @@ window.PDFREE_LOCALE = {
   cmp_quality_label:      '图片质量',
   cmp_quality_aria:       '重新压缩时的 JPEG 图片质量',
   cmp_quality_note:       '⚠️ 压缩图片可能使二维码和精细照片细节更难辨识。如果您的 PDF 包含可扫描的二维码或重要照片，请尝试"轻度"预设或更高的质量数值。',
+  cmp_scan_dpi_note:      '⚠️ 这是扫描件：在 {dpi} dpi 下，小字号文字以及中文或日文字符可能变得难以辨认。如需提交给机构，请选择 150 dpi 或更高。',
   cmp_dpi_email:          '邮件',
   cmp_dpi_email_hint:     '96 DPI',
   cmp_dpi_web:            '网页',

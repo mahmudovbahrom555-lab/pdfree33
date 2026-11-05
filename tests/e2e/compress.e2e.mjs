@@ -29,7 +29,7 @@ import zlib from 'zlib';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { trapCases, textPdf, firstImage, imagePdf } from '../corpus/traps.mjs';
+import { trapCases, textPdf, firstImage, imagePdf, RAW_RGB, W as TW, H as TH } from '../corpus/traps.mjs';
 
 const BASE_URL = process.env.PDFREE_BASE_URL || 'http://localhost:8934';
 
@@ -169,6 +169,34 @@ await test('a grey JPEG scan on Standard: the JPEG\'s channels match its colour 
   if (after.dict.get(PDFName.of('Filter'))?.toString() === '/DCTDecode') {
     const n = jpegComponents(after.contents);
     expect(`${cs} ${n}`).toBe(n === 1 ? '/DeviceGray 1' : '/DeviceRGB 3');
+  }
+});
+
+// A scan at 96 dpi (Maximum's default, the target-size chips): an honest note that small
+// print and Chinese / Japanese characters can become hard to read (measured 2026-11-05).
+await test('a scan on Maximum (96 dpi) shows the readability note; Standard hides it; a text PDF never shows it', async () => {
+  const scanFile = path.join(tmp, 'scan-note.pdf');
+  fs.writeFileSync(scanFile, await imagePdf(zlib.deflateSync(RAW_RGB), { Width: TW, Height: TH, ColorSpace: 'DeviceRGB', Filter: 'FlateDecode' }));
+  const textFile = path.join(tmp, 'text-note.pdf');
+  fs.writeFileSync(textFile, await textPdf());
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  const noteShown = () => page.evaluate(() => { const n = document.getElementById('compressDpiNote'); return !!n && !n.hidden && /96/.test(n.textContent); });
+  try {
+    await page.goto(`${BASE_URL}/compress-pdf/`, { waitUntil: 'load', timeout: 30000 });
+    await page.setInputFiles('#fileInput', scanFile);
+    await page.waitForFunction(() => /compress-scan--(clean|found)/.test(document.getElementById('compressScanBanner')?.className || ''), null, { timeout: 45000 });   // the background scan can be slow on a busy machine
+    await page.click('label[data-preset="high"]');
+    if (!(await noteShown())) throw new Error('no note on a scan at 96 dpi');
+    await page.click('label[data-preset="medium"]');
+    if (await noteShown()) throw new Error('note still shown on Standard (150 dpi)');
+    await page.goto(`${BASE_URL}/compress-pdf/`, { waitUntil: 'load', timeout: 30000 });
+    await page.setInputFiles('#fileInput', textFile);
+    await page.waitForFunction(() => /compress-scan--(clean|found)/.test(document.getElementById('compressScanBanner')?.className || ''), null, { timeout: 45000 });   // the background scan can be slow on a busy machine
+    await page.click('label[data-preset="high"]');
+    if (await noteShown()) throw new Error('note shown for a text PDF');
+  } finally {
+    await context.close();
   }
 });
 

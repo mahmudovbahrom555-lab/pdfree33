@@ -983,6 +983,7 @@ window.PDFREE_LOCALE = {
   cmp_quality_label:      'Chất lượng hình ảnh',
   cmp_quality_aria:       'Chất lượng hình ảnh JPEG khi nén lại',
   cmp_quality_note:       '⚠️ Nén hình ảnh có thể khiến mã QR và chi tiết ảnh nhỏ khó đọc hơn. Nếu PDF của bạn có mã quét được hoặc ảnh quan trọng, hãy thử mức Nhẹ hoặc chất lượng cao hơn.',
+  cmp_scan_dpi_note:      '⚠️ Đây là bản quét: ở {dpi} dpi, chữ nhỏ và ký tự tiếng Trung hoặc tiếng Nhật có thể trở nên khó đọc. Với tài liệu bạn cần nộp, hãy chọn 150 dpi trở lên.',
   cmp_dpi_email:          'Email',
   cmp_dpi_email_hint:     '96 DPI',
   cmp_dpi_web:            'Web',

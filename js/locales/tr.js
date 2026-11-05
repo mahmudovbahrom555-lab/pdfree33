@@ -982,6 +982,7 @@ window.PDFREE_LOCALE = {
   cmp_quality_label:      'Görsel kalitesi',
   cmp_quality_aria:       'Yeniden sıkıştırma için JPEG görsel kalitesi',
   cmp_quality_note:       '⚠️ Görsel sıkıştırma, QR kodlarının ve fotoğraflardaki ince ayrıntıların okunmasını zorlaştırabilir. PDF\'inizde taranabilir kodlar veya önemli fotoğraflar varsa Hafif modu veya daha yüksek kalite deneyin.',
+  cmp_scan_dpi_note:      '⚠️ Bu bir tarama: {dpi} dpi\'de küçük yazılar ve Çince ya da Japonca karakterler zor okunur hâle gelebilir. Sunmanız gereken bir belge için 150 dpi veya üzerini seçin.',
   cmp_dpi_email:          'E-posta',
   cmp_dpi_email_hint:     '96 DPI',
   cmp_dpi_web:            'Web',

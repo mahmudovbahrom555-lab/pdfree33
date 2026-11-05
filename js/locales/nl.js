@@ -982,6 +982,7 @@ window.PDFREE_LOCALE = {
   cmp_quality_label:      'Beeldkwaliteit',
   cmp_quality_aria:       'JPEG-beeldkwaliteit voor hercompressie',
   cmp_quality_note:       '⚠️ Het comprimeren van afbeeldingen kan QR-codes en fijne fotodetails moeilijker leesbaar maken. Bevat je PDF scanbare codes of belangrijke foto\'s? Probeer dan Licht of een hogere kwaliteit.',
+  cmp_scan_dpi_note:      '⚠️ Dit is een scan: bij {dpi} dpi kunnen kleine letters en Chinese of Japanse tekens moeilijk leesbaar worden. Kies voor een document dat je moet indienen 150 dpi of hoger.',
   cmp_dpi_email:          'E-mail',
   cmp_dpi_email_hint:     '96 DPI',
   cmp_dpi_web:            'Web',
