@@ -443,3 +443,25 @@ D300 is closer to L once the reduction is ours. The 50-dpi divergence came from 
 - D200: 55/67. Among re-encoded codes 25/37 — 12 broken: 2-px modules at 300 ppi (→ 1.33 px) and 4-px
   modules at 600 ppi (→ 1.33 px).
   - A real defect class of D200: modules under ~1.5 px after downsampling. D300 keeps them at ≥ 2 px here.
+
+## Owner decisions 2026-11-06 (after the plan)
+- D300 in Standard (300 dpi, q82) and Maximum (300 dpi, q75); Light unchanged.
+- Maximum must not be larger than Standard on the control corpus at comparable readability, else
+  investigate before release.
+- C32 kept apart:
+  - if it is only compression → defer;
+  - if it is confirmed document damage → a separate minimal worker.js bugfix with regression tests,
+    independent of D300.
+- No site or code change by these decisions.
+
+## Stage 4c — D300 q82 (Standard), PRE-REGISTERED before the run
+Same chain, D_TARGET=300, Q=82, on the 17 DEV docs. Reported next to D300 q75:
+- size;
+- the integrity checks (stage4_checks.py);
+- worst-page |Δ| vs L;
+- d_metrics.
+
+**Pass:**
+- integrity OK on all docs;
+- worst-page |Δ| vs L ≤ q75's on every doc (Standard must be at least as close to today);
+- Maximum (q75) total ≤ Standard (q82) total.
