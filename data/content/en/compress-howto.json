@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "How to Compress a PDF Free",
-  "description": "Reduce PDF file size without losing quality — free, no upload, processed entirely in your browser.",
+  "description": "Reduce PDF file size locally in your browser. Choose a compression level; stronger settings can reduce image quality. No upload or signup.",
   "totalTime": "PT1M",
   "tool": [{ "@type": "HowToTool", "name": "PDFree — free browser-based PDF compressor, no upload required" }],
   "step": [
