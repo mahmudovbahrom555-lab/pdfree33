@@ -35,6 +35,12 @@
 //  doesn't read the size it is drawn at (patterns, annotation appearances…).
 // ============================================================
 
+// One function scope: this file shares the worker's global scope with
+// pdf-lib.min.js and compressPrepWorker.js, and the build minifies it as a
+// module (scripts/build.py) — its top-level names would become one-letter
+// names that collide there ("Identifier 'e' has already been declared" took
+// the whole pre-pass down). Only self.cmykD leaves this scope.
+(() => {
 const CMYKD_PURE_K_MAX_SHARE = 0.001;
 const CMYKD_BATCH_BYTES = 48 * 1024 * 1024;   // uncompressed samples per qpdf run
 
@@ -401,6 +407,7 @@ async function cmykD(pdf, opts) {
   return { replaced, before, after, skipped };
 }
 
-// The build minifies js/*.js as modules (scripts/build.py): an unexported top-level
-// function would be dropped. Published on the worker's global, as pdfEncrypt.js does.
+// Published on the worker's global, as pdfEncrypt.js does (an unexported function
+// would also be dropped by the module minify).
 if (typeof self !== 'undefined') self.cmykD = cmykD;
+})();

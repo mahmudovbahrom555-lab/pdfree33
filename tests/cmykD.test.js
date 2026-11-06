@@ -37,7 +37,8 @@ const URLS = {
   qpdfJs: '', qpdfWasm: join(ROOT, 'js/vendor/qpdf/lib/qpdf.wasm'),
 };
 
-const src = readFileSync(join(ROOT, 'js/cmykD.js'), 'utf8');
+// the file is one function scope (see its header); the test reads its inner functions
+const src = readFileSync(join(ROOT, 'js/cmykD.js'), 'utf8').replace(/^\(\(\) => \{$/m, '').replace(/^\}\)\(\);\s*$/m, '');
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 const D = await new AsyncFunction(src + '\nreturn { cmykD, _cmykdDownsample, _cmykdPlacements, _cmykdUsedElsewhere };')();
 

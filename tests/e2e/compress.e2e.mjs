@@ -76,6 +76,10 @@ async function compressViaUi(browser, file, preset = null) {
   }
 }
 
+// pdf.js's JPEG decoder — the same build the page uses (js/vendor/pdfjs-4.10.38)
+const { JpegImage } = await import('pdfjs-dist/legacy/image_decoders/pdf.image_decoders.mjs');
+const meanDiff = (a, b) => { let s = 0; for (let i = 0; i < a.length; i++) s += Math.abs(a[i] - b[i]); return s / a.length; };
+
 const CHECKS = {
   untouched(before, after) {
     for (const key of ['Filter', 'Width', 'Height', 'BitsPerComponent', 'DecodeParms']) {
@@ -91,6 +95,18 @@ const CHECKS = {
   },
   recompressed(before, after) {
     expect(after.dict.get(PDFName.of('Filter'))?.toString()).toBe('/DCTDecode');
+  },
+  // still CMYK, and what a reader shows is what it showed (D300 may re-encode it, as CMYK)
+  cmykKept(before, after) {
+    const cs = o => { const v = o.dict.get(PDFName.of('ColorSpace')); return String(o.dict.context.lookup(v) ?? v); };
+    expect(cs(after)).toBe('/DeviceCMYK');
+    const seen = o => {   // samples as a reader takes them: the JPEG's, then /Decode [1 0 …] inverts
+      const { data } = cmykJpegSamples(o);
+      const inv = String(o.dict.get(PDFName.of('Decode')) ?? '').startsWith('[ 1 0');
+      return inv ? data.map(v => 255 - v) : data;
+    };
+    const d = meanDiff(seen(after), seen(before));
+    if (!(d < 3)) throw new Error(`mean |Δ| ${d.toFixed(2)} of 255 from what it showed`);
   },
 };
 
@@ -130,15 +146,12 @@ const cmykBytes = await imagePdf(zlib.deflateSync(CMYK, { level: 1 }), { Width: 
 fs.writeFileSync(cmykFile, cmykBytes);
 const cmykBefore = firstImage(await PDFDocument.load(cmykBytes));
 
-// pdf.js's JPEG decoder — the same build the page uses (js/vendor/pdfjs-4.10.38)
-const { JpegImage } = await import('pdfjs-dist/legacy/image_decoders/pdf.image_decoders.mjs');
 function cmykJpegSamples(img) {
   const j = new JpegImage({ decodeTransform: null, colorTransform: -1 });
   j.parse(new Uint8Array(img.contents));
   if (j.numComponents !== 4 || !j.adobe) throw new Error(`not an Adobe 4-channel JPEG (${j.numComponents} components)`);
   return { data: j.getData({ width: j.width, height: j.height, forceRGB: false, isSourcePDF: true }), w: j.width, h: j.height };
 }
-const meanDiff = (a, b) => { let s = 0; for (let i = 0; i < a.length; i++) s += Math.abs(a[i] - b[i]); return s / a.length; };
 
 await test('D300 on Standard: a 72-dpi CMYK photo → a DeviceCMYK JPEG at its own size, close to the source, smaller', async () => {
   const after = firstImage(await PDFDocument.load(await compressViaUi(browser, cmykFile, 'medium')));
