@@ -1,6 +1,8 @@
 # Korean Style Guide — PDFree
 
 Reference glossary for all Korean content, FAQ, UI strings, and future articles.
+> **Claims check:** Before publishing copy, verify current behavior in `js/fileLimits.js` and the project's README. PDF processing is local, but the site can request assets and send usage analytics or user-submitted feedback. File-size limits apply. Do not assert GDPR/RODO/KVKK/AVG compliance without a documented legal assessment.
+
 
 ## Tool Names
 
@@ -28,9 +30,9 @@ Reference glossary for all Korean content, FAQ, UI strings, and future articles.
 | Free | 무료 | Never 공짜 |
 | No upload | 업로드 없이 | Standard |
 | No registration | 회원가입 없이 | Never 등록 없이 or 불필요 |
-| Without limits | 제한 없이 | Never 무제한 (sounds like a pricing tier) |
+| File-size limits apply | 파일 크기 제한이 있습니다. | Check js/fileLimits.js; limits vary by tool and device |
 | Processed in browser | 브라우저에서 처리됩니다. | Full sentence, not 로컬 처리 |
-| Files never leave your device | 파일은 기기를 떠나지 않습니다. | Natural, not 파일이 기기를 벗어나지 않습니다 |
+| PDF processing stays on your device | PDF 파일은 기기에서 처리됩니다. | Describes PDF processing, not all website network traffic |
 | Online | 온라인 | |
 | Safe | 안전하게 | |
 | Fast | 빠르게 | |
@@ -81,7 +83,7 @@ Short sentences. Modern Korean SaaS style:
 PDF를 브라우저에서 바로 처리합니다.
 업로드가 필요 없습니다.
 회원가입도 필요 없습니다.
-파일은 기기를 떠나지 않습니다.
+PDF 파일은 기기에서 처리됩니다.
 ```
 
 ❌ Avoid:
