@@ -1234,4 +1234,11 @@ through decryptPdf.js in Chromium, with a forced abort and a forced OOM:
 10. The same e2e against the build without the fix fails tests 2, 3 and 9 (the gate is
     checked both ways).
 
-**Status:** `fixing`.
+**Status:** `verified`:
+- #155 on pdfree.io (07e07d74, 2026-11-06): tests/e2e/qpdf-recovery.e2e.mjs against the live site, 9/9;
+- unlock-unicode 28/28 and password-guard 27/27 against the live site.
+
+**Still open:** a REAL out-of-memory abort is not tested. The e2e simulates one (every call throws
+"Aborted(OOM)"), which tests the recovery, not every real way WASM runs out of memory.
+Also: the wrong-password verdict reads qpdf 12.2's "invalid password" message. A qpdf update must
+pass this e2e (tests 2, 5, 7 fail if the message changes).

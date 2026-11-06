@@ -17,6 +17,15 @@
    "summary": "Today the 5 / 10 / 25 MB choices apply fixed settings and don't check the result. We measured it: the target was met for 13–50 % of large files. We are building a size check that keeps small print, stamps and Chinese text readable, and says so honestly when a size can't be reached."
   },
   {
+   "id": "C33",
+   "tool": "all",
+   "status": "fixed",
+   "date": "2026-11-06",
+   "verified": "2026-11-06, qpdf recovery e2e on pdfree.io (800 mixed passwords, forced failures, the Unlock screen), 9/9",
+   "title": "After one failure, password-protected PDFs stopped opening until the page was reloaded",
+   "summary": "If decrypting one file failed (for example a very large one), every later protected or restricted PDF in the same tab failed too, and Unlock called a right password wrong. Now the next file works, and 'incorrect password' is shown only when the password is wrong."
+  },
+  {
    "id": "C30",
    "tool": "compress",
    "status": "fixed",
