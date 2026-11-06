@@ -365,7 +365,9 @@ add independent control cases for it.
 
 **QR (check 4):**
 - the pre-registered decoder (OpenCV QRCodeDetector, 300 dpi) reads the one QR code in NONE of L/D200/D300 → reported, not counted;
-- extra, beyond the prereg: OpenCV's WeChat decoder at 600 dpi reads the same URL in L, D200 and D300;
+- extra, beyond the prereg: OpenCV's QRCodeDetector on a 600-dpi render upscaled 2× reads the same URL in L, D200 and D300.
+  CORRECTED 2026-11-06: first reported as "the WeChat decoder", but this OpenCV build has no WeChat
+  module; the try/except hid it. The decoder was QRCodeDetector;
 - D300 does not downsample that image at all (314 dpi < 330).
 
 **G3 controls at 300 (check 6), ink kept, min:**
@@ -417,3 +419,9 @@ D300 is the main candidate. A browser plan may be PREPARED, not implemented.
 - codes that decode in neither are dropped from the set and counted;
 - the set must keep >= 20 codes that decode in the original, else it is redone with larger modules.
 D200 results are reported apart.
+
+**Amendment to 4b(b), before any QR control was decoded:**
+- This OpenCV build has no WeChat module. Decoders: OpenCV QRCodeDetector on the 300-dpi render, and
+  the same on that render upscaled 2× (nearest).
+- The QR sources are JPEG (CMYK, q95, made by ljtool), not Flate: a Flate QR is never replaced by D
+  (JPEG is larger — the first run replaced 0 of 96). A QR inside a JPEG image is the case D touches.
