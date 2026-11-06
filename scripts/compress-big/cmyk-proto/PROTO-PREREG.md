@@ -296,3 +296,42 @@ None of these real images holds rasters as fine as the Stage 3 controls (5-pt CJ
 - a classifier buys at most 1.9–4.2 MB on these docs and misses half of the text-bearing images;
 - the classifier-free conservative option, a 300 dpi floor for every image, costs +12 MB (+3.9 %)
   and has no misclassification risk.
+
+## Stage 4 — D300 candidate (owner 2026-11-06; PRE-REGISTERED before any D300 run; research only, no production change)
+Owner: classifier v0 dropped. Next candidate: 300 dpi for EVERY downsampled raster image. Not
+approved for production; it must prove quality by tests, not by being more conservative than D200.
+**The "+12 MB" from 3b is a forecast, not a result.**
+
+**Policy under test:**
+- target 300 dpi, resample only when effective dpi > 330 (1.1×; same rule as D200);
+- never upsample;
+- JPEG q75 unchanged (isolates the dpi effect);
+- everything else as Stage 2: scope, smaller-only, pure-K guard, SMask kept, fail-closed.
+
+**Measured:**
+1. 17 DEV docs, D300 next to D200 (Stage 2 chain) and L: size per doc and total; worst-page |Δ| vs L.
+2. d_metrics vs L: V1 pure K, V5 plates, texture ΔE.
+3. Integrity vs L, per doc:
+   - page count;
+   - text layer (MuPDF get_text, every page, identical string);
+   - images with an SMask still have it and it is byte-identical;
+   - no image's /ColorSpace changed;
+   - the file opens in MuPDF, Ghostscript and pdf.js (pdf.js: page count via the decoder build).
+4. QR codes:
+   - every QR code found by eye in the 76 (2448448-6371) must decode to the same text from a page
+     render of L and of the D output (OpenCV QRCodeDetector, 300 dpi render);
+   - if not decodable in L either: reported, not counted.
+5. The same regions at the same scale for today / D200 / D300 on 0486224 + the 3b DETAIL/MIXED images,
+   as images and a PDF the owner can pass on.
+6. G3 controls (Stage 3) at 300 dpi next to 200: ink kept for 1-px lines and 5–6 pt CJK. They stay
+   mandatory, whatever the 17 docs show.
+
+**Blocking (decided now):**
+- any integrity check in 3 failing on any doc → stop, find the class;
+- a QR code that decodes in L but not in D300 → stop;
+- worst-page |Δ| vs L above D200's on any doc → explain before going on (D300 should be closer to L).
+
+**If D300 shows damage:** no threshold tuning on these 17 docs. Name the defect class first, then
+add independent control cases for it.
+
+**Results for D200 and D300 are kept apart:** a D200 defect is checked against D300, not assumed.
