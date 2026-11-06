@@ -283,7 +283,7 @@ function showTool(tool, pushHistory = true, preFiles = null) {
 
   // Heavy DOM work deferred to after first paint — keeps INP under 200ms
   requestAnimationFrame(() => {
-    renderToolHeader(lt);
+    renderToolHeader(lt, tool);
     setCurrentTool(tool, lt.accept);
     setDropHint(lt.accept);
     setBatchHint(lt.batch);

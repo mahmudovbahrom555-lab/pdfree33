@@ -8,6 +8,9 @@
 
 import { id, show, hide, setText } from './utils.js';
 import { t } from './i18n.js';
+import { resolveToolPageTitle } from './toolPageTitle.js';
+
+let initialToolPage = null;
 
 // ── Toast ──────────────────────────────────────────────────
 
@@ -111,12 +114,18 @@ export function showToolPage() {
 /**
  * Обновляет заголовок инструмента
  * @param {{ icon: string, title: string, desc: string }} tool
+ * @param {string} toolKey
  */
-export function renderToolHeader(tool) {
+export function renderToolHeader(tool, toolKey) {
+  initialToolPage ??= {
+    title: document.title,
+    toolKey: document.body?.dataset.tool,
+    lang: document.documentElement.lang,
+  };
   setText('toolIcon',  tool.icon);
   setText('toolTitle', tool.title);
   setText('toolDesc',  tool.desc);
-  document.title = tool.title + ' — PDFree';
+  document.title = resolveToolPageTitle(tool.title, toolKey, initialToolPage);
 }
 
 // ── Process button ─────────────────────────────────────────
