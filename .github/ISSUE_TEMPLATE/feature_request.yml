@@ -1,0 +1,35 @@
+name: Feature request
+description: Suggest a PDFree improvement based on a real user need.
+title: "[Feature] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please describe the problem first. Avoid sharing confidential documents or personal data.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: Describe the task and where the current workflow falls short.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed improvement
+      description: What would a useful solution look like?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Current workaround or alternatives
+    validations:
+      required: false
+  - type: textarea
+    id: privacy
+    attributes:
+      label: Privacy, offline, or device constraints
+      description: Note any constraints relevant to local browser processing.
+    validations:
+      required: false
