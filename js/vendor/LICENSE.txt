@@ -52,6 +52,22 @@ License: - the build tooling (@neslinesli93/qpdf-wasm): ISC.
 Used by: js/decryptPdf.js (through js/qpdfWorker.js): owner-only decryption on
          adding a PDF (js/files.js) and the Unlock PDF tool. Runs client-side
          in a Web Worker; no file leaves the browser.
+         Also js/cmykD.js (in js/compressPrepWorker.js): Compress's print-image
+         pass encodes CMYK JPEG through qpdf --optimize-images (libjpeg).
+
+================================================================
+js/vendor/pdfjs-4.10.38/pdf.image_decoders.min.mjs
+================================================================
+
+Source:  pdfjs-dist npm package v4.10.38 (https://github.com/mozilla/pdf.js),
+         legacy/image_decoders/pdf.image_decoders.min.mjs copied as is — the
+         official build of pdf.js's image decoders (JpegImage, JpxImage,
+         Jbig2Image), the same version as the pdf.js the site already ships.
+License: Apache License 2.0, Copyright Mozilla Foundation (the license notice
+         is kept at the top of the file).
+Used by: js/cmykD.js (in js/compressPrepWorker.js): decodes CMYK and YCCK JPEG
+         images to their samples for Compress's print-image pass. Runs
+         client-side in a Web Worker; no file leaves the browser.
 
 ================================================================
 js/vendor/sRGB2014.icc
