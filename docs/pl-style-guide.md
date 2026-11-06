@@ -1,6 +1,8 @@
 # Polish Style Guide — PDFree
 
 Reference glossary for all Polish content, FAQ, UI strings, and future articles.
+> **Claims check:** Before publishing copy, verify current behavior in `js/fileLimits.js` and the project's README. PDF processing is local, but the site can request assets and send usage analytics or user-submitted feedback. File-size limits apply. Do not assert GDPR/RODO/KVKK/AVG compliance without a documented legal assessment.
+
 
 ## Tool Names
 
@@ -28,11 +30,10 @@ Reference glossary for all Polish content, FAQ, UI strings, and future articles.
 | Free | Darmowy / Za darmo | "Darmowy" in H1 (adjective); "Za darmo" in body text |
 | No upload | Bez przesyłania plików | NOT "Bez uploadu" |
 | No registration | Bez rejestracji | NOT "Bez zakładania konta" in headings |
-| Without limits | Bez ograniczeń | Never "Nieograniczony" — sounds like a pricing tier |
+| File-size limits apply | Obowiązują limity rozmiaru plików | Check js/fileLimits.js; limits vary by tool and device |
 | Processed in browser | Przetwarzane bezpośrednio w przeglądarce. | Or: "Przetwarzanie odbywa się w przeglądarce." |
-| Files never leave your device | Pliki nigdy nie opuszczają Twojego urządzenia. | Full sentence |
+| PDF processing stays on your device | Pliki PDF są przetwarzane na Twoim urządzeniu. | Describes PDF processing, not all website network traffic |
 | Also natural | Twoje pliki pozostają na urządzeniu. | Shorter alternative |
-| GDPR compliant | Zgodny z RODO | Poland uses RODO (Rozporządzenie o Ochronie Danych Osobowych) — stronger trust signal than "GDPR" |
 | Online | Online | Keep as-is |
 | Safe | Bezpieczny | |
 | Fast | Szybko | |
@@ -151,7 +152,7 @@ Short, natural Polish questions:
 - Czy mogę połączyć ponad 100 plików PDF?
 - Czy obsługuje zabezpieczone pliki PDF?
 - Czy jest limit rozmiaru pliku?
-- Czy jest zgodny z RODO?
+- Gdzie przetwarzane są moje pliki PDF?
 
 ## Do Not Translate
 
@@ -212,7 +213,7 @@ Anonymous label (never name competitors):
 ## Special Notes for Polish Audience
 
 - **"Połącz PDF" beats "Scal PDF"**: "Połącz" is more natural everyday language; "scal" is too technical.
-- **RODO not GDPR**: Polish users know the regulation as RODO. Always use "Zgodny z RODO" — much stronger trust signal.
-- **"Bez ograniczeń" not "Nieograniczony"**: Like Korean 무제한 and Dutch "onbeperkt", "nieograniczony" sounds like a pricing tier. Use "bez ograniczeń" (without restrictions) for feature descriptions.
+- **RODO/GDPR**: Do not claim legal compliance without a documented legal assessment. Explain local PDF processing instead.
+- **File-size wording**: Avoid "Bez ograniczeń" and "Nieograniczony" for file sizes. Use "Obowiązują limity rozmiaru plików" and check the tool's current cap.
 - **Direct "Ty" form**: Polish SaaS uses "Twoje pliki" (your files, informal). Never formal "Państwa pliki" — too stiff.
 - **Short imperative verbs**: "Połącz", "Podziel", "Kompresuj" — Poles prefer action words, not noun constructions.

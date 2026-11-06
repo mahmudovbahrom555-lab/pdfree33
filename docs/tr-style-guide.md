@@ -1,6 +1,8 @@
 # Turkish Style Guide — PDFree
 
 Reference glossary for all Turkish content, FAQ, UI strings, and future articles.
+> **Claims check:** Before publishing copy, verify current behavior in `js/fileLimits.js` and the project's README. PDF processing is local, but the site can request assets and send usage analytics or user-submitted feedback. File-size limits apply. Do not assert GDPR/RODO/KVKK/AVG compliance without a documented legal assessment.
+
 
 ## Tool Names
 
@@ -30,12 +32,11 @@ Reference glossary for all Turkish content, FAQ, UI strings, and future articles
 | Online | Çevrimiçi / Online | both acceptable |
 | No upload | Yükleme Yapmadan | or "Dosyalarınızı yüklemeniz gerekmez." |
 | No registration | Kayıt Olmadan | NOT "Hesap oluşturmadan" in H1 |
-| Without limits | Sınır yok / Herhangi bir limit yok | NEVER "Sınırsız" — sounds like a pricing tier |
+| File-size limits apply | Dosya boyutu sınırları geçerlidir. | Check js/fileLimits.js; limits vary by tool and device |
 | Processed in browser | Tarayıcınızda işlenir. | or "Her şey tarayıcınızda gerçekleşir." |
-| Files never leave your device | Dosyalarınız cihazınızdan ayrılmaz. | full sentence |
+| PDF processing stays on your device | PDF dosyalarınız cihazınızda işlenir. | Describes PDF processing, not all website network traffic |
 | Also natural | Dosyalarınız hiçbir sunucuya gönderilmez. | alternative privacy phrase |
 | Local processing | Her şey tarayıcınızda gerçekleşir. | NOT "Yerel işlem" in SEO text |
-| GDPR compliant | KVKK uyumlu | Turkey's own law: Kişisel Verilerin Korunması Kanunu — stronger trust signal than "GDPR" |
 | Safe | Güvenli | |
 | Fast | Hızlı | |
 | Choose file | Dosya Seç | or "PDF Seç" |
@@ -153,7 +154,7 @@ Short, direct Turkish questions (informal but professional):
 - 100'den fazla PDF birleştirebilir miyim?
 - Parola korumalı PDF'leri destekliyor mu?
 - Dosya boyutu sınırı var mı?
-- KVKK uyumlu mu?
+- PDF dosyalarım nerede işleniyor?
 
 ## Do Not Translate
 
@@ -217,8 +218,8 @@ Turkish special characters converted to ASCII for URLs (ş→s, ı→i, ğ→g, 
 
 - **"Ücretsiz" not "Bedava"**: "Bedava" sounds too cheap/casual. "Ücretsiz" is the professional standard used by Turkish SaaS products.
 - **"Filigran" not "Watermark"/"Damga"**: "Filigran" is the correct Turkish technical term. "Damga" means stamp/seal, not watermark.
-- **KVKK not GDPR**: Turkey has its own data protection law (KVKK). "KVKK uyumlu" is a strong trust signal for Turkish users — analogous to RODO in Poland.
-- **"Sınırsız" = pricing tier**: Like Korean 무제한, Dutch "onbeperkt", and Polish "Nieograniczony", avoid "Sınırsız" for feature descriptions. Use "Sınır yok" or "Herhangi bir limit yok" instead.
+- **KVKK/GDPR**: Do not claim legal compliance without a documented legal assessment. Describe local PDF processing instead.
+- **File-size wording**: Avoid "Sınırsız", "Sınır yok" and "Herhangi bir limit yok" for file sizes. Use "Dosya boyutu sınırları geçerlidir" and check the tool's current cap.
 - **Short sentences**: Turkish SaaS uses very direct, short sentences. No long relative clauses.
 - **"Tarayıcınızda" construction**: "Your browser" in Turkish becomes "tarayıcınızda" (in your browser) — a commonly understood phrase that signals privacy and local processing.
 - **ASCII slugs**: Turkish characters must be converted for URLs: birleştir→birlestir, sıkıştır→sikistir, böl→bol, etc.
