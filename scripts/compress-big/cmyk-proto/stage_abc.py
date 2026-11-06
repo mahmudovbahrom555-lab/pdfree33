@@ -59,7 +59,7 @@ for r in json.load(open(f'{S}/results.json')):
         if k.max() > 2: fails.append(f'{nid} B pure-K patch interiors C/M/Y max {k.max()}')
         line.append(f'pureK CMY max {k.max()}')
     # C — embedded, 4 decoders
-    pj = subprocess.run(['node', '/tmp/claude-501/dec1.mjs', f'{HERE}/node_modules/pdfjs-dist/image_decoders/pdf.image_decoders.mjs', f'{S}/{nid}.jpg', f'{S}/{nid}.pj.raw'], capture_output=True, text=True)
+    pj = subprocess.run(['node', f'{HERE}/dec1.mjs', f'{HERE}/node_modules/pdfjs-dist/image_decoders/pdf.image_decoders.mjs', f'{S}/{nid}.jpg', f'{S}/{nid}.pj.raw'], capture_output=True, text=True)
     pjr = np.fromfile(f'{S}/{nid}.pj.raw', np.uint8).astype(int).reshape(lj.shape)
     with tempfile.TemporaryDirectory() as t:
         mu, gsr = ink_pdf(f'{S}/{nid}.jpg', w, h, nc, t)
