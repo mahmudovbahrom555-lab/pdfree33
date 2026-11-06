@@ -251,3 +251,48 @@ fixed now; v0 is judged, not tuned. A tuned v1 would be a new version judged on 
   separately and listed — small text in scans called PHOTO is the failure that matters.
 
 **Nothing is decided from 3b alone:** a new criteria version is written from it, for the owner.
+
+## Stage 3b RESULTS (2026-11-06)
+**Population.** Stage 2's chain downsamples only 76 images in the 17 docs (72.7 MB as stored). Eye labels,
+committed before the classifier ran: PHOTO 54, MIXED 10, DETAIL 9 (lettering logos, a QR code,
+line-art illustrations), UNSURE 3 (tiny swatches).
+
+**(1)+(2) Size of those 76 images after D, MB:**
+
+| Label | n | stored | 200 dpi | 300 dpi | no downsampling |
+|---|---|---|---|---|---|
+| DETAIL | 9 | 2.05 | 0.87 | 1.57 | 1.97 |
+| MIXED | 10 | 34.07* | 1.28 | 2.48 | 4.41 |
+| PHOTO | 54 | 36.61 | 10.33 | 20.45 | 27.46 |
+| all | 76 | 72.7 | 12.48 | 24.50 | 33.85 |
+
+\* incl. one 29.7 MB photo containing an out-of-focus document (6619605).
+
+What protecting costs against Stage 2's ≈310 MB:
+- DETAIL+MIXED+UNSURE kept at 300 dpi: +1.9 MB (+0.6 %);
+- the same not downsampled: +4.2 MB (+1.4 %);
+- a 300 dpi floor for ALL images, no classifier: +12.0 MB (+3.9 %);
+- no downsampling at all: +21.4 MB (+6.9 %).
+
+**(3) Ink kept in each image's busiest region (99.5th pct), median / min:**
+
+| Label | 200 dpi | 300 dpi |
+|---|---|---|
+| DETAIL | 100 / 87.1 | 100 / 94.6 |
+| MIXED | 99.3 / 96.3 | 100 / 99.2 |
+| PHOTO | 98.8 / 88.4 | 100 / 97.2 |
+
+None of these real images holds rasters as fine as the Stage 3 controls (5-pt CJK, 1-px lines).
+
+**(4) Classifier v0 (thresholds fixed before) vs labels:**
+- DETAIL 8 of 9 found, MIXED 2 of 10;
+- **misses (text/detail called PHOTO): 9**: 0486224-855, -1294, 2448448-6380, 2569172-672, 5061921-941, -947, -949,
+  5754431-125, 6619605-22;
+- PHOTO called DETAIL: 14 (cut-out product photos on white backgrounds: "flat").
+- **v0 is not good enough to rely on** — exactly the failure the owner warned about (small text in
+  photos called PHOTO). Not tuned.
+
+**Reading (for the owner, not a decision):**
+- a classifier buys at most 1.9–4.2 MB on these docs and misses half of the text-bearing images;
+- the classifier-free conservative option, a 300 dpi floor for every image, costs +12 MB (+3.9 %)
+  and has no misclassification risk.
