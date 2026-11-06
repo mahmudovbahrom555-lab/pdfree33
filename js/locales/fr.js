@@ -257,6 +257,7 @@ window.PDFREE_LOCALE = {
   err_file_unreadable_marked: "« {name} » est illisible — choisissez-le à nouveau dans la liste (les autres fichiers restent).",
   err_worker_load: "L'outil n'a pas pu démarrer : la connexion a été coupée avant la fin du chargement de son code. Vérifiez votre connexion Internet et appuyez de nouveau sur le bouton ; vos fichiers sont toujours là.",
   err_unlock_wrong_password: 'Le mot de passe est incorrect. Veuillez réessayer.',
+  err_unlock_failed: "Ce PDF n'a pas pu être déverrouillé ici, et ce n'est pas le mot de passe. Réessayez ; si cela se reproduit, rechargez la page.",
   err_docx_legacy_or_encrypted: 'Ce fichier semble protégé par mot de passe, ou il est dans l\'ancien format .doc plutôt que .docx. Word→PDF nécessite un fichier .docx moderne et non chiffré — dans Word, retirez le mot de passe (Fichier → Informations → Protéger le document) ou utilisez Fichier → Enregistrer sous → Document Word (.docx), puis réessayez.',
   err_docx_parse_failed: 'Ce document Word n\'a pas pu être lu — il est peut-être corrompu, incomplet ou enregistré d\'une façon que cet outil ne reconnaît pas. Essayez de l\'enregistrer à nouveau depuis Word (ou votre traitement de texte) sous forme d\'un nouveau fichier .docx, puis réessayez.',
   err_watermark_unsupported_chars: 'Ce texte de filigrane ne peut pas être affiché — essayez un texte sans caractères chinois, japonais ou coréens.',

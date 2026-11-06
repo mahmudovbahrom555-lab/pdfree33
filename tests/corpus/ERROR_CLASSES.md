@@ -1185,3 +1185,53 @@ unreadable. Whenever the new JPEG is smaller (any downsample, a lower quality) i
 - After the fix: those pages −0.1…−4.8 %; the real scan renders whole; e2e (channels match
   the colour space) fails before, passes after; corpus gate 39/0 FAIL.
 **Status:** `fixing` — waiting for the owner's OK, then verified on pdfree.io.
+
+## C33 — after one qpdf abort, every later decryption in the tab fails
+
+Found 2026-11-06 while using the site's qpdf as a JPEG encoder (Compress mode D prototype);
+reproduced in Chromium through the real js/qpdfWorker.js with decryptPdf.js's own messages.
+- **Cause 1, no recovery:** after an abort the worker rebuilt qpdf from the URLs of the
+  current message, and decryptPdf.js sends them only with 'init' → `locateFile` got
+  undefined → every later run failed ("Cannot read properties of undefined (reading
+  'startsWith')") until the tab was reloaded.
+- **Cause 2, a leak that aborts:** a wrong-password exit leaves its input file open. Open
+  streams grew +1 per wrong password (38 → 304 over 450 runs); heap (17 MB) and time
+  (~11 ms/run) stayed flat; abort at run 477 of 800 with 2 in 3 passwords wrong. 400
+  right passwords: no growth, no abort.
+- **Cause 3, wrong verdicts:** decryptPdf.js read every failure but /Aborted|OOM/ as "wrong
+  password":
+  - Unlock said "The password is incorrect" to a right one;
+  - a restricted file with no open password was marked "couldn't decrypt" (files.js `_decryptFailed`).
+- **Who:** any tab after one abort — a big file running out of memory (#82) is one way in,
+  ~320 wrong passwords another.
+  - Hypothesis, not measured: more often after a big file than after many passwords.
+
+**Fix:**
+- The worker keeps the 'init' URLs and rebuilds from them.
+- An abort is retried once on a clean instance.
+- After each run, its files are removed and the files qpdf left open are closed.
+- Failures say their kind: QPDF_WRONG_PASSWORD (exit 2 + "invalid password"),
+  QPDF_EXEC_FAILED, QPDF_ABORTED.
+- decryptPdf.js returns null only for a wrong password; otherwise it throws QPDF_OUT_OF_MEMORY
+  or QPDF_FAILED and starts a new worker after an abort.
+- Unlock shows a new honest message (err_unlock_failed, 16 languages); files.js treats it
+  like out-of-memory (pdf.js decides).
+- No rotation by count: with the leak closed, there is no measured reason for one.
+
+**Acceptance, PRE-REGISTERED before the test run** (owner, 2026-11-06), tests/e2e/qpdf-recovery.e2e.mjs
+through decryptPdf.js in Chromium, with a forced abort and a forced OOM:
+1. 400 right passwords → 400 decrypted.
+2. 800 runs, 2 in 3 passwords wrong → every right one decrypted, every wrong one null, no abort;
+   open streams and files back to the start after the runs.
+3. Forced abort (instance state broken) → the next right password decrypts.
+4. Forced OOM on every try → QPDF_OUT_OF_MEMORY; then the next valid file decrypts.
+5. After recovery: a wrong password → null (honest wrong-password); a right one → decrypted.
+6. A restricted PDF with no open password → decrypted by decryptOwnerOnly (not "needs password").
+7. Five abort–recovery cycles in a row, each followed by right and wrong passwords → all right.
+8. After a forced abort and recovery, the restricted file still decrypts.
+9. Unlock UI: after a forced abort, the right password gives the success card; a wrong password
+   gives "The password is incorrect".
+10. The same e2e against the build without the fix fails tests 2, 3 and 9 (the gate is
+    checked both ways).
+
+**Status:** `fixing`.

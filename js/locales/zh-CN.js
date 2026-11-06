@@ -264,6 +264,7 @@ window.PDFREE_LOCALE = {
   err_file_unreadable_marked: "无法读取“{name}”——请在列表中重新选择该文件（其他文件保持不变）。",
   err_worker_load: "工具无法启动——加载其代码时网络连接中断。请检查网络连接后再次点击按钮；您的文件仍在这里。",
   err_unlock_wrong_password: '密码不正确，请重试。',
+  err_unlock_failed: '无法在此解锁该 PDF，这不是密码的问题。请重试；如果再次出现，请刷新页面。',
   err_docx_legacy_or_encrypted: '此文件似乎已设置密码保护，或者是旧版 .doc 格式而非 .docx。Word→PDF 需要未加密的现代 .docx 文件——请在 Word 中移除密码（文件 → 信息 → 保护文档），或使用“文件 → 另存为 → Word 文档 (.docx)”重新保存后再试。',
   err_docx_parse_failed: '无法读取此 Word 文档——它可能已损坏、不完整，或以此工具无法识别的方式保存。请尝试在 Word（或您使用的文字处理软件）中另存为新的 .docx 文件后重试。',
   err_watermark_unsupported_chars: '此水印文字无法渲染 — 请尝试不含中文、日文或韩文字符的文字。',

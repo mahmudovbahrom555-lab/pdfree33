@@ -257,6 +257,7 @@ window.PDFREE_LOCALE = {
   err_file_unreadable_marked: "‘{name}’ kan niet worden gelezen — kies het opnieuw in de lijst (de andere bestanden blijven).",
   err_worker_load: "De tool kon niet starten — de verbinding viel weg voordat de code klaar was met laden. Controleer je internetverbinding en druk opnieuw op de knop; je bestanden staan er nog.",
   err_unlock_wrong_password: 'Het wachtwoord is onjuist. Probeer het opnieuw.',
+  err_unlock_failed: 'Deze pdf kon hier niet worden ontgrendeld, en het ligt niet aan het wachtwoord. Probeer het opnieuw; gebeurt het weer, laad de pagina dan opnieuw.',
   err_docx_legacy_or_encrypted: 'Dit bestand lijkt met een wachtwoord beveiligd te zijn, of staat in het oude .doc-formaat in plaats van .docx. Word→PDF heeft een onversleuteld, modern .docx-bestand nodig — verwijder in Word het wachtwoord (Bestand → Info → Document beveiligen) of gebruik Bestand → Opslaan als → Word-document (.docx), en probeer het opnieuw.',
   err_docx_parse_failed: 'Dit Word-document kon niet worden gelezen — het is mogelijk beschadigd, onvolledig, of opgeslagen op een manier die deze tool niet herkent. Probeer het opnieuw op te slaan vanuit Word (of je tekstverwerker) als een nieuw .docx-bestand en probeer het dan opnieuw.',
   err_watermark_unsupported_chars: 'Deze watermarktekst kan niet worden weergegeven — probeer tekst zonder Chinese, Japanse of Koreaanse tekens.',

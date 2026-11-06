@@ -221,6 +221,14 @@ jobs:
         # tests/e2e/unlock-unicode.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:unlock-unicode
 
+      - name: E2E — one qpdf abort doesn't break decryption for the tab (C33)
+        # After an abort the qpdf worker was rebuilt from URLs the 'run'
+        # messages don't carry, so every later decryption in the tab failed;
+        # a wrong-password exit left its input open (~320 of them aborted);
+        # and every failure was called a wrong password. Forced abort and OOM,
+        # 800 mixed passwords, the Unlock UI. See tests/e2e/qpdf-recovery.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:qpdf-recovery
+
       - name: E2E — selected files that change or disappear — named, or nothing run
         # Chrome refuses to read a selected file that changed on disk (saved
         # again, moved, cloud file not on the device); Merge showed its raw

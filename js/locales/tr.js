@@ -257,6 +257,7 @@ window.PDFREE_LOCALE = {
   err_file_unreadable_marked: "\"{name}\" okunamıyor — listede yeniden seçin (diğer dosyalar kalır).",
   err_worker_load: "Araç başlatılamadı — kodu yüklenmeden bağlantı kesildi. İnternet bağlantınızı kontrol edip düğmeye yeniden basın; dosyalarınız hâlâ burada.",
   err_unlock_wrong_password: 'Parola yanlış. Lütfen tekrar deneyin.',
+  err_unlock_failed: "Bu PDF'nin kilidi burada açılamadı ve sorun parolada değil. Yeniden deneyin; tekrar olursa sayfayı yenileyin.",
   err_docx_legacy_or_encrypted: 'Bu dosya parola korumalı görünüyor veya .docx yerine eski .doc biçiminde. Word→PDF, şifrelenmemiş, modern bir .docx dosyası gerektirir — Word\'de parolayı kaldırın (Dosya → Bilgi → Belgeyi Koru) veya Dosya → Farklı Kaydet → Word Belgesi (.docx) kullanın, ardından tekrar deneyin.',
   err_docx_parse_failed: 'Bu Word belgesi okunamadı — bozuk, eksik olabilir veya bu aracın tanımadığı bir biçimde kaydedilmiş olabilir. Word\'den (veya kullandığınız kelime işlemciden) yeni bir .docx dosyası olarak yeniden kaydetmeyi deneyin, ardından tekrar deneyin.',
   err_watermark_unsupported_chars: 'Bu filigran metni oluşturulamıyor — Çince, Japonca veya Korece karakter içermeyen bir metin deneyin.',
