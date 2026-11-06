@@ -1155,3 +1155,19 @@ built locally):
 Unit tests: dedup 5 cases. e2e: a soft mask stays DeviceGray with the same
 values; it fails on the build without the fix.
 **Status:** `verified` — #149 on pdfree.io (bc7ce5d6, 2026-11-05): compress e2e 14/14 against the live site incl. the mask case; 1369728 through the live site keeps each image's own DeviceGray mask.
+
+## C31 — Compress destroys grey JPEG scans (Standard and Maximum)
+
+Found 2026-11-06 on real scans (HOLD-R, addendum B): a grey JPEG (as office scanners write) that
+`_recompressImages` re-encodes through canvas comes out as an RGB JPEG, but its dictionary kept
+/DeviceGray — readers draw three channels as one: a page of overlapping ghost copies,
+unreadable. Whenever the new JPEG is smaller (any downsample, a lower quality) it is kept.
+- Reproduced on pdfree.io (Standard and Maximum) and on the 2026-11-04 build: older than the
+  2026-11-05 changes.
+- HOLD-R: 3 of 30 real scans (5 pages) destroyed on Standard and Maximum; OCR recall of the
+  page −48…−100 %.
+- Fix (worker.js, needs the owner's OK for this change): a grey source re-encoded as RGB says
+  /DeviceRGB; a grey JPEG with /Decode is left alone.
+- After the fix: those pages −0.1…−4.8 %; the real scan renders whole; e2e (channels match
+  the colour space) fails before, passes after; corpus gate 39/0 FAIL.
+**Status:** `fixing` — waiting for the owner's OK, then verified on pdfree.io.

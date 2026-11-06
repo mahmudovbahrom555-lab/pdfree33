@@ -1091,6 +1091,8 @@ async function _recompressImages(pdf, jpegQuality, targetDpi, medianPageSize) {
     if (colorSpace?.toString().includes('DeviceGray') && bpc === 1) { skipped++; continue; }  // 1-bit
     if (bpc === 1)                                    { skipped++; continue; }
     if (dict.get(PDFName.of('SMask')))                { skipped++; continue; }  // alpha
+    const isGraySrc = colorSpace?.toString() === '/DeviceGray' || iccComponents === 1;
+    if (isJPEG && isGraySrc && dict.get(PDFName.of('Decode'))) { skipped++; continue; }  // grey /Decode can't describe RGB (C31)
     if (dict.get(PDFName.of('Mask')))                 { skipped++; continue; }  // alpha
     if (w * h < 400)                                  { skipped++; continue; }  // too tiny
     if (!isJPEG && !isFlate)                          { skipped++; continue; }  // unsupported filter
@@ -1138,6 +1140,10 @@ async function _recompressImages(pdf, jpegQuality, targetDpi, medianPageSize) {
         bitmap.close();
         const outBlob = await canvas.convertToBlob({ type: 'image/jpeg', quality: jpegQuality });
         newBytes = new Uint8Array(await outBlob.arrayBuffer());
+        // canvas always writes an RGB JPEG: a grey source must say so, or readers
+        // draw three channels as grey — overlapping ghost copies of the page
+        // (C31, owner-approved worker.js change; real grey office scans).
+        if (isGraySrc) dict.set(PDFName.of('ColorSpace'), PDFName.of('DeviceRGB'));
         // Update Width/Height in dict when dimensions changed
         if (tw !== w || th !== h) {
           dict.set(PDFName.of('Width'),  PDFNumber.of(tw));
