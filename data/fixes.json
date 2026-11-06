@@ -91,66 +91,74 @@
   {
    "id": "C21",
    "tool": "ocr",
-   "status": "released",
+   "status": "fixed",
    "date": "2026-10-29",
    "title": "Contrast enhancement blurred Chinese and Japanese characters",
-   "summary": "Chinese and Japanese scans skip the contrast step that made thin strokes run together."
+   "summary": "Chinese and Japanese scans skip the contrast step that made thin strokes run together.",
+   "verified": "2026-11-05, code check: pdfree.io serves the same ocrEngine.js / ocrUI.js / ppocrEngine.js as the main build (the behaviour was measured before merge)"
   },
   {
    "id": "C20",
    "tool": "ocr",
-   "status": "released",
+   "status": "fixed",
    "date": "2026-10-29",
    "title": "Traditional Chinese scans were read as simplified Chinese",
-   "summary": "Traditional Chinese is now recognised with its own model."
+   "summary": "Traditional Chinese is now recognised with its own model.",
+   "verified": "2026-11-05, OCR of a traditional Chinese scan on pdfree.io (small-device path): traditional forms 136, simplified 2; forced simplified model 0 / 120"
   },
   {
    "id": "C19",
    "tool": "pdf-to-word",
-   "status": "released",
+   "status": "fixed",
    "date": "2026-10-28",
    "title": "A line repeated on every page disappeared from the Word body",
-   "summary": "Only lines at the page edges are moved to the header; a repeated line in the middle of the page stays in the text."
+   "summary": "Only lines at the page edges are moved to the header; a repeated line in the middle of the page stays in the text.",
+   "verified": "2026-11-05, PDF to Word on its documents: pdfree.io = the main build"
   },
   {
    "id": "C18",
    "tool": "pdf-to-word",
-   "status": "released",
+   "status": "fixed",
    "date": "2026-10-28",
    "title": "Word's symbol bullets came out as boxes",
-   "summary": "Bullets made with Symbol or Wingdings fonts are real list items in the Word file."
+   "summary": "Bullets made with Symbol or Wingdings fonts are real list items in the Word file.",
+   "verified": "2026-11-05, PDF to Word on its documents: pdfree.io = the main build"
   },
   {
    "id": "C17",
    "tool": "pdf-to-word",
-   "status": "released",
+   "status": "fixed",
    "date": "2026-10-28",
    "title": "Numbered section headings came out as body text",
-   "summary": "Numbered headings only a little larger than the text are recognised as headings."
+   "summary": "Numbered headings only a little larger than the text are recognised as headings.",
+   "verified": "2026-11-05, PDF to Word on its documents: pdfree.io = the main build"
   },
   {
    "id": "C16",
    "tool": "pdf-to-word",
-   "status": "released",
+   "status": "fixed",
    "date": "2026-10-28",
    "title": "Short stacked lines were merged into one paragraph",
-   "summary": "Lines stacked without a gap (addresses, lists) keep their own paragraphs."
+   "summary": "Lines stacked without a gap (addresses, lists) keep their own paragraphs.",
+   "verified": "2026-11-05, PDF to Word on its documents: pdfree.io = the main build"
   },
   {
    "id": "C15",
    "tool": "pdf-to-word",
-   "status": "released",
+   "status": "fixed",
    "date": "2026-10-25",
    "title": "Spaced-out Chinese and Japanese text had a space between every character",
-   "summary": "Letter-spaced CJK text is read as words."
+   "summary": "Letter-spaced CJK text is read as words.",
+   "verified": "2026-11-05, PDF to Word on its documents: pdfree.io = the main build"
   },
   {
    "id": "C14",
    "tool": "pdf-to-word",
-   "status": "released",
+   "status": "fixed",
    "date": "2026-10-24",
    "title": "Bold text drawn twice came out two to four times",
-   "summary": "Text drawn over itself to look bold is read once."
+   "summary": "Text drawn over itself to look bold is read once.",
+   "verified": "2026-11-05, PDF to Word on its documents: pdfree.io = the main build"
   },
   {
    "id": "C13",
@@ -164,10 +172,11 @@
   {
    "id": "C12",
    "tool": "pdf-to-word",
-   "status": "released",
+   "status": "fixed",
    "date": "2026-10-22",
    "title": "Urdu words ran together",
-   "summary": "Urdu Nastaleeq text keeps the spaces between words."
+   "summary": "Urdu Nastaleeq text keeps the spaces between words.",
+   "verified": "2026-11-05, PDF to Word on its documents: pdfree.io = the main build"
   },
   {
    "id": "C11",

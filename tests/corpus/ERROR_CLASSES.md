@@ -595,6 +595,7 @@ sources before it is a class.
   of 40 identical.
 - **Left:** two-word glue on those pages; letters some of these fonts name
   wrongly ("دزخواست" for "درخواست", 5021957 — all readers alike).
+- **Live check (2026-11-05):** its ledger documents through PDF to Word on pdfree.io and on the main build give the same document text (prod = local, robust.mjs --save) → `verified`.
 
 ## C13 — CJK text in fonts named through Adobe's CMaps: missing, or not drawn
 
@@ -664,6 +665,7 @@ stroke it. pdf.js gives every copy; the .docx read "壬壬壬壬", "北原北原
 - **Left.** Copies cut together with spaces, digits or Latin ("（ 星期三）",
   "2 0 11 年"): positions inside such items can't be told from their width
   — 2208776, 5569194 keep part of their duplicates.
+- **Live check (2026-11-05):** its ledger documents through PDF to Word on pdfree.io and on the main build give the same document text (prod = local, robust.mjs --save) → `verified`.
 
 ## C15 — letter-spaced Chinese and Japanese read with a space between every glyph
 
@@ -703,6 +705,7 @@ puts a space in each gap, and the .docx read "董 事 名 單", "氏 名 所 属
   (4196938, both wrong cases). Names spread with even gaps lose their
   family–given space ("島野博幸") — the source draws none. Proof of
   generality waits for the holdout set.
+- **Live check (2026-11-05):** its ledger documents through PDF to Word on pdfree.io and on the main build give the same document text (prod = local, robust.mjs --save) → `verified`.
 
 ## C16 — short lines stacked without a gap read as one paragraph
 
@@ -744,6 +747,7 @@ list, a poem, an exam's options line and the next question
   the hand check: "…博士領" ‖ "銜…"). Merged paragraphs remain at 33.8 %:
   stacks whose lines run close to the edge, and lines the rule can't see
   (no common edge). Proof of generality: the holdout run.
+- **Live check (2026-11-05):** its ledger documents through PDF to Word on pdfree.io and on the main build give the same document text (prod = local, robust.mjs --save) → `verified`.
 
 ## C17 — numbered section headings only a little larger than the text read as body text
 
@@ -782,6 +786,7 @@ standard's blue "3.1.1 Minimum standards for Project Proponents" 0 of 26
   (7111155, 6 lines), numeric table rows with a letter in them (5754431,
   4581812). Colour-only headings (0 of 6) need colour from pdf.js. Proof of
   generality: the holdout run.
+- **Live check (2026-11-05):** its ledger documents through PDF to Word on pdfree.io and on the main build give the same document text (prod = local, robust.mjs --save) → `verified`.
 
 ## C18 — Word's Symbol / Wingdings bullets kept as private-use characters, not lists
 
@@ -825,6 +830,7 @@ character Word shows as a box — or ran on into its neighbours.
   A list item set beside a caption or a table cell still takes their text
   (columns read as one line). Lettered sub-bullets in Courier "o" are not
   recognised.
+- **Live check (2026-11-05):** its ledger documents through PDF to Word on pdfree.io and on the main build give the same document text (prod = local, robust.mjs --save) → `verified`.
 
 ## C19 — a line repeated on every page deleted from the body wherever it stood
 
@@ -869,6 +875,8 @@ no part of the .docx.
   string on each page, so it is no header — and the page-number filter drops
   it from the body: in no part of the .docx (7406078 en, 5187789 ja title).
   Measured, not fixed (next candidate).
+- **Live check (2026-11-05):** its ledger documents through PDF to Word on pdfree.io and on the main build give the same document text (prod = local, robust.mjs --save) → `verified`.
+
 ## C20 — traditional Chinese scans read with the simplified model
 
 Chinese stage, 2026-10-29 — the first OCR measure with truth. Detection only
@@ -908,6 +916,7 @@ vendored and never used.
 - **Left.** Japanese scans: recall 0.43 on clean synthetic scans — the next
   thing to measure. Flyers and posters (text on graphics) read mostly as
   junk. The OCR stays far below a text layer: 0.74 is not good, only better.
+- **Live check (2026-11-05):** a traditional Chinese scan through the OCR tool on pdfree.io, small-device profile (Tesseract path): traditional forms 136, simplified 2, = local; the simplified model forced gives 0 / 120 → `verified`.
 
 ## C21 — Enhance's contrast step blurs Chinese and Japanese strokes before OCR
 
@@ -937,6 +946,7 @@ more characters right and less junk.
   ~1,000 more Han). Owner decides.
 - **Left.** Multi-column Japanese newsletters and flyers stay junk with any
   setting tried — a layout problem, not a pixel one.
+- **Live check (2026-11-05), code level:** pdfree.io serves the same ocrEngine.js, ocrUI.js and ppocrEngine.js as the main build; the behaviour was measured before merge → `verified` (weaker than a behaviour check on the live site).
 
 ## C22 — Tesseract reads Chinese and Japanese scans poorly, whatever the settings
 
@@ -1063,6 +1073,10 @@ returned — single file and batch alike. On the 52 files × 4 presets: no
 output larger than its input; where prod's was larger, the output is the
 input byte for byte; a mixed batch of 5 follows the same rule.
 **Status:** `verified` — #139 on pdfree.io (5430c1d1, 2026-11-04): 4 large files × 4 presets through the live site match the local run.
+
+## Candidate found during the live checks (2026-11-05)
+
+- **PDF to Word gives no result within 4 minutes** on 0379139 (a C18 document) — on pdfree.io and on the main build alike. Not caused by a fix; a user waiting that long leaves. To measure: how many corpus documents exceed 2 / 4 minutes, and where the time goes.
 
 ## Candidates found while fixing C24/C25 (not yet confirmed on independent sources)
 
