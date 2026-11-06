@@ -425,3 +425,21 @@ D200 results are reported apart.
   the same on that render upscaled 2× (nearest).
 - The QR sources are JPEG (CMYK, q95, made by ljtool), not Flate: a Flate QR is never replaced by D
   (JPEG is larger — the first run replaced 0 of 96). A QR inside a JPEG image is the case D touches.
+
+## Stage 4b RESULTS (2026-11-06)
+**(a) The 50-dpi cause, CONFIRMED.** Same area-average filter 300→50 dpi, worst-page |Δ| vs L:
+
+| Doc | D200 | D300 |
+|---|---|---|
+| 3184083 | 0.421 | 0.341 |
+| 6619605 | 0.070 | 0.061 |
+
+D300 is closer to L once the reduction is ours. The 50-dpi divergence came from the renderer's own reduction.
+
+**(b) QR control set, PASS for D300.**
+- 96 codes as CMYK JPEG q95: 67 decode in the original (≥ 20 required), 29 dropped (mostly 2-px modules at 600 ppi).
+- D300: 67/67 same text. Among the codes D300 actually re-encoded: 34/34.
+  - The pure-K guard kept 40 rich-black codes as they were.
+- D200: 55/67. Among re-encoded codes 25/37 — 12 broken: 2-px modules at 300 ppi (→ 1.33 px) and 4-px
+  modules at 600 ppi (→ 1.33 px).
+  - A real defect class of D200: modules under ~1.5 px after downsampling. D300 keeps them at ≥ 2 px here.
