@@ -536,3 +536,17 @@ Any failure: name the class first, never tune on these docs.
 
 **Firefox 153:** the same output bytes as Chromium and WebKit on the 600-ppi fixture.
 **Unlock-unicode:** 27/28 once (one transient failure), 28/28 on the rerun.
+
+## VERIFIED on pdfree.io (2026-11-06, d619b500, PR #166)
+compress.e2e against the live site: 18/18 on the rerun. The first run was 17/18: the readability-note test
+(#152), already known to be timing-sensitive, failed once. Every D300 test passed both times:
+- Standard 72-dpi photo → DeviceCMYK JPEG;
+- Maximum 600 → 300 ppi;
+- the guard keeps the image + lossless re-deflate;
+- trap cmyk-jpeg-by-ref → cmykKept.
+
+Compress technical part closed. Open, owner side:
+- the device limits (16/64 MP) on a real phone;
+- the new Compress screen (UI/UX);
+- Arabic copy after 2026-11-16 (#165 draft);
+- the pre-pass growth candidate (6015658).
