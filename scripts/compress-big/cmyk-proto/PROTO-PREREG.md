@@ -207,3 +207,47 @@ only) stands. Owner decisions due:
 - (a) no error guard beyond pure-K, or a new content-relative guard version;
 - (b) whether line-art/text-like raster images keep their resolution (needs a classifier + a count
   of such images in the 17 docs).
+
+## Owner decisions 2026-11-06 (after Stage 3)
+- (a) No G1/G2 error guard. The pure-K guard stays. 16 blind pairs are encouraging, not proof.
+- (b) Fine detail: RESEARCH ONLY on the 17 docs, no code change.
+- Stage 2 (≈310 MB) stays the baseline. Readability is not traded for a few MB.
+- Principles fixed now:
+  - text, diagrams, thin lines → protected from over-downsampling;
+  - photos → 200 dpi;
+  - unsure → the conservative choice;
+  - vector content untouched;
+  - small text inside scans must not slip through.
+
+## Stage 3b — fine-detail study (PRE-REGISTERED 2026-11-06, before any 3b measurement)
+**Population:** the images Stage 2's chain DOWNSAMPLED in the 17 docs (effective dpi > 220). Images
+only re-encoded at their own size are out of this question.
+
+**Ground truth by eye:** every downsampled image (or, if over 300, a random sample of 300, seed
+20261106) is labelled from a thumbnail plus a 1:1 crop of its busiest region:
+- PHOTO (continuous tone);
+- DETAIL (text, line art, diagrams, maps, scanned pages with text, screenshots with text);
+- MIXED (a photo with text in it);
+- UNSURE.
+Labelled by me, before any classifier is run on them; the label file is committed first. The
+owner may re-label; his labels win.
+
+**Classifier v0 (written before looking at its results on the labels):** features per image at
+source size:
+- share of near-flat 8×8 blocks;
+- share of strong edges (|∇| > 64);
+- number of distinct quantised colours (16 levels per ink).
+
+DETAIL if flat share ≥ 0.5 and edge share ≥ 0.02, or colours ≤ 64; PHOTO otherwise. Thresholds
+fixed now; v0 is judged, not tuned. A tuned v1 would be a new version judged on a held-out half.
+
+**Reported:**
+- (1) count and MB by label;
+- (2) the MB D saves on DETAIL+MIXED+UNSURE at 200 dpi, and what it would save at 300 dpi and
+  with no downsampling (re-encode only) — i.e. the MB lost by protecting them;
+- (3) quality per label at 200/300/none: G3 is not available on real images (no element boxes),
+  so the 99.5th-percentile ink of the busiest region, kept %, plus crops;
+- (4) classifier v0 confusion vs the labels. Misses (a DETAIL called PHOTO) are counted
+  separately and listed — small text in scans called PHOTO is the failure that matters.
+
+**Nothing is decided from 3b alone:** a new criteria version is written from it, for the owner.
