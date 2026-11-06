@@ -308,7 +308,8 @@ function _afterAdd(added) {
           // password — pdf.js gives it. Needing none, the file opens in pdf.js
           // as it is: tools that only read it go ahead, the rest say why they
           // can't (app.js). Else WASM init failure — keep flags as detected.
-          if (err?.message === 'QPDF_OUT_OF_MEMORY') {
+          // Any other qpdf failure (QPDF_FAILED, C33) is no verdict either.
+          if (err?.message === 'QPDF_OUT_OF_MEMORY' || err?.message === 'QPDF_FAILED') {
             if (await _pdfjsNeedsPassword(f)) f._needsPassword = true;
             else f._decryptFailed = true;
           }

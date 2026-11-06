@@ -258,6 +258,7 @@ window.PDFREE_LOCALE = {
   err_file_unreadable_marked: "„{name}“ kann nicht gelesen werden — wählen Sie sie in der Liste erneut aus (die anderen Dateien bleiben).",
   err_worker_load: "Das Werkzeug konnte nicht starten — die Verbindung brach ab, bevor sein Code geladen war. Prüfe deine Internetverbindung und drücke die Taste erneut; deine Dateien sind noch da.",
   err_unlock_wrong_password: 'Das Passwort ist falsch. Bitte versuche es erneut.',
+  err_unlock_failed: 'Diese PDF konnte hier nicht entsperrt werden – am Passwort liegt es nicht. Versuchen Sie es erneut; wenn es wieder passiert, laden Sie die Seite neu.',
   err_docx_legacy_or_encrypted: 'Diese Datei scheint passwortgeschützt zu sein oder liegt im alten .doc-Format statt .docx vor. Word→PDF benötigt eine unverschlüsselte, moderne .docx-Datei — entfernen Sie in Word das Passwort (Datei → Informationen → Dokument schützen) oder verwenden Sie Datei → Speichern unter → Word-Dokument (.docx) und versuchen Sie es erneut.',
   err_docx_parse_failed: 'Dieses Word-Dokument konnte nicht gelesen werden — es könnte beschädigt, unvollständig oder in einem nicht erkannten Format gespeichert sein. Speichern Sie es in Word (oder Ihrer Textverarbeitung) erneut als .docx-Datei und versuchen Sie es dann noch einmal.',
   err_watermark_unsupported_chars: 'Dieser Wasserzeichentext kann nicht dargestellt werden — versuche es ohne chinesische, japanische oder koreanische Zeichen.',

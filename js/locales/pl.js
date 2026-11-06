@@ -257,6 +257,7 @@ window.PDFREE_LOCALE = {
   err_file_unreadable_marked: "Nie można odczytać „{name}” — wybierz go ponownie na liście (pozostałe pliki zostają).",
   err_worker_load: "Narzędzie nie mogło się uruchomić — połączenie zerwało się, zanim załadował się jego kod. Sprawdź połączenie z internetem i naciśnij przycisk ponownie; Twoje pliki nadal tu są.",
   err_unlock_wrong_password: 'Nieprawidłowe hasło. Spróbuj ponownie.',
+  err_unlock_failed: 'Nie udało się tu odblokować tego pliku PDF, a przyczyną nie jest hasło. Spróbuj ponownie; jeśli to się powtórzy, odśwież stronę.',
   err_docx_legacy_or_encrypted: 'Ten plik wygląda na zabezpieczony hasłem lub jest w starym formacie .doc zamiast .docx. Word→PDF wymaga nowoczesnego, niezaszyfrowanego pliku .docx — w Wordzie usuń hasło (Plik → Informacje → Chroń dokument) lub użyj Plik → Zapisz jako → Dokument programu Word (.docx), a następnie spróbuj ponownie.',
   err_docx_parse_failed: 'Nie udało się odczytać tego dokumentu Word — może być uszkodzony, niekompletny lub zapisany w formacie, którego to narzędzie nie rozpoznaje. Spróbuj zapisać go ponownie w Wordzie (lub innym edytorze tekstu) jako nowy plik .docx, a następnie spróbuj jeszcze raz.',
   err_watermark_unsupported_chars: 'Tego tekstu znaku wodnego nie można wyświetlić — spróbuj tekstu bez chińskich, japońskich lub koreańskich znaków.',

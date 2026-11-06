@@ -43,7 +43,7 @@ function _ensureWorker() {
     if (!entry) return;
     _pending.delete(msg.id);
     if (msg.ok) entry.resolve(msg);
-    else        entry.reject(new Error(msg.message || 'qpdf failed'));
+    else        entry.reject(Object.assign(new Error(msg.message || 'qpdf failed'), { code: msg.code, exitCode: msg.exitCode }));
   };
 
   _worker.onerror = (e) => {
@@ -123,14 +123,30 @@ async function _qpdfRun(bytes, passwordArgs) {
     );
     return result.outputs['out.pdf'];  // Uint8Array
   } catch (err) {
-    // A PDF holding one stream over ~4.5 MB (a large scan or photo) aborted
-    // the fixed-heap build used before — "Aborted(OOM)" — whatever the
-    // password; reported as "password protected", a teacher's exam sheet with
-    // editing restrictions and an empty open password couldn't be converted
-    // at all (2026-10-25). Not a password verdict: the caller's to handle.
+    // Only qpdf saying "invalid password" is a password verdict (C33,
+    // 2026-11-06): every other failure was read as one — Unlock said
+    // "incorrect password" to a right one, and a restricted file with no open
+    // password was taken for a damaged one, for the rest of the tab once the
+    // worker broke.
+    if (err?.code === 'QPDF_WRONG_PASSWORD') return null;  // caller decides how to react
+    // The worker already retried an abort on a clean instance; still aborting
+    // is the file (out of memory — a stream over ~4.5 MB aborted the
+    // fixed-heap build before, 2026-10-25) or a runtime that won't recover:
+    // a fresh worker for the next call either way.
+    if (err?.code === 'QPDF_ABORTED' || !err?.code) _dropWorker();
     if (/Aborted|OOM/.test(String(err?.message ?? ''))) throw new Error('QPDF_OUT_OF_MEMORY', { cause: err });
-    return null;  // wrong/missing password → caller decides how to react
+    throw new Error('QPDF_FAILED', { cause: err });  // no verdict on the password
   }
+}
+
+// The next call starts a new worker (and qpdf in it) from scratch.
+function _dropWorker() {
+  try { _worker?.terminate(); } catch { /* gone */ }
+  const err = new Error('qpdf worker restarted');
+  _pending.forEach(entry => entry.reject(err));
+  _pending.clear();
+  _worker = null;
+  _initPromise = null;
 }
 
 // The revision (/R) of a Standard security handler's encryption dictionary,
@@ -217,7 +233,8 @@ export function passwordAttempts(password, revision) {
  * @param {Uint8Array} bytes - Raw PDF bytes
  * @returns {Promise<Uint8Array|null>}
  *   Decrypted bytes on success, null if a real user password is required.
- *   Throws QPDF_OUT_OF_MEMORY when qpdf ran out of memory (see _qpdfRun).
+ *   Throws QPDF_OUT_OF_MEMORY when qpdf ran out of memory, QPDF_FAILED when it
+ *   failed otherwise — neither is a password verdict (see _qpdfRun).
  */
 export async function decryptOwnerOnly(bytes) {
   return _qpdfRun(bytes, ['--password=']);
@@ -256,10 +273,10 @@ export async function preprocessPdfBuffer(buffer) {
   const bytes = new Uint8Array(buffer);
   if (!looksEncrypted(bytes)) return buffer;  // fast path — 99% of PDFs
 
-  // out of memory: the file as it is — pdf.js opens it itself when it needs no
+  // out of memory or another qpdf failure: the file as it is — pdf.js opens it itself when it needs no
   // password; tools that need it decrypted were stopped before (app.js)
   const decrypted = await decryptOwnerOnly(bytes).catch(err => {
-    if (err.message === 'QPDF_OUT_OF_MEMORY') return null;
+    if (err.message === 'QPDF_OUT_OF_MEMORY' || err.message === 'QPDF_FAILED') return null;
     throw err;
   });
   return decrypted ? decrypted.buffer : buffer;

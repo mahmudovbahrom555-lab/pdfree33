@@ -258,6 +258,7 @@ window.PDFREE_LOCALE = {
   err_file_unreadable_marked: "Không đọc được \"{name}\" — hãy chọn lại trong danh sách (các tệp khác vẫn giữ nguyên).",
   err_worker_load: "Công cụ không khởi động được — kết nối bị gián đoạn trước khi mã của nó tải xong. Hãy kiểm tra kết nối internet và nhấn nút lại; các tệp của bạn vẫn còn đây.",
   err_unlock_wrong_password: 'Mật khẩu không đúng. Vui lòng thử lại.',
+  err_unlock_failed: 'Không thể mở khóa PDF này ở đây, và không phải do mật khẩu. Hãy thử lại; nếu vẫn xảy ra, hãy tải lại trang.',
   err_docx_legacy_or_encrypted: 'Tệp này có vẻ được bảo vệ bằng mật khẩu, hoặc ở định dạng .doc cũ thay vì .docx. Word→PDF cần một tệp .docx hiện đại, không mã hóa — trong Word, hãy gỡ mật khẩu (File → Info → Protect Document) hoặc dùng File → Save As → Word Document (.docx), rồi thử lại.',
   err_docx_parse_failed: 'Không thể đọc tài liệu Word này — có thể tệp bị hỏng, chưa đầy đủ hoặc được lưu theo cách công cụ này không nhận dạng được. Hãy thử lưu lại tệp từ Word (hoặc trình xử lý văn bản của bạn) dưới dạng tệp .docx mới rồi thử lại.',
   err_watermark_unsupported_chars: 'Không thể hiển thị văn bản hình mờ này — hãy thử văn bản không có ký tự Trung, Nhật hoặc Hàn.',
