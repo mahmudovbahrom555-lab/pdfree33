@@ -39,3 +39,14 @@ the thresholds; then the owner's blind check (worse / same / can't tell) on D pa
 
 ## Not in this stage
 Browser code (decoder, 4-channel encoder, worker), presets, UI.
+
+## Scope extension — owner APPROVED 2026-11-06 (before the DEV run)
+1. **Images with an SMask:** the CMYK image itself is re-encoded; the SMask stream stays byte for byte.
+2. **/Decode [1 0 1 0 1 0 1 0] (inverted):** samples are read as a reader sees them and written
+   without the array. /Decode of any other form is skipped.
+
+First numbers (0486224, on top of our current output; the leader is a reference only):
+- D300q75: −68 %, SSIM min 1.000, ΔE76 0.03;
+- D200q75: −74 %, SSIM min 0.988, ΔE76 0.14;
+- the leader's recommended: −81 %, 0.966, 0.29.
+3778515: nothing (already at 150 dpi; q75 is no smaller). The leader's recommended: −1 %.
