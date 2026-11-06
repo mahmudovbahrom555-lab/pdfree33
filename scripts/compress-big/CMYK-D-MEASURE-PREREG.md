@@ -56,3 +56,9 @@ First numbers (0486224, on top of our current output; the leader is a reference 
 - D200q75: −74 %, SSIM min 0.988, ΔE76 0.14;
 - the leader's recommended: −81 %, 0.966, 0.29.
 3778515: nothing (already at 150 dpi; q75 is no smaller). The leader's recommended: −1 %.
+
+## Owner decision 2026-11-06 (after the D150 run)
+D150 gave 312 MB vs D200's 316 (−1 % more) with slightly larger texture ΔE → "1 % isn't worth it".
+**The 200 dpi floor stays. D = D200q75** (blind round 1: 16/16 "same" for D300q75/D200q75).
+Round 2 (D150) is not needed for the decision; its 2 hidden positive controls still tell whether
+round 1's method could see a difference at all.
