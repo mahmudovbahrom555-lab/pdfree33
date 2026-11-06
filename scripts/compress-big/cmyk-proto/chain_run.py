@@ -10,7 +10,8 @@ import fitz, pikepdf
 from pikepdf import Name
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-TARGET, THRESHOLD = 200, 220
+TARGET = int(os.environ.get('D_TARGET', '200'))   # dpi target; Stage 4 runs 300
+THRESHOLD = TARGET * 1.1                            # resample only above this effective dpi
 
 
 def filters(s):

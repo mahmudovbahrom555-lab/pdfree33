@@ -9,6 +9,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 D = sys.argv[1]
 man = json.load(open(f'{D}/manifest.json'))
 VARIANTS = {'good': (200, 75, 0), 'bad-q30': (200, 30, 0), 'bad-shift2': (200, 75, 2), 'bad-72dpi': (72, 75, 0)}
+if os.environ.get('S3_D300'):   # Stage 4: the same controls at 300 dpi (G3 only)
+    VARIANTS = {'good': (300, 75, 0)}
 
 
 def load(path, w, h, nc):

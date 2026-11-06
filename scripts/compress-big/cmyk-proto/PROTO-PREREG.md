@@ -335,3 +335,58 @@ approved for production; it must prove quality by tests, not by being more conse
 add independent control cases for it.
 
 **Results for D200 and D300 are kept apart:** a D200 defect is checked against D300, not assumed.
+
+## Stage 4 RESULTS — D300 (2026-11-06)
+**Size, 17 DEV docs:**
+- L 417.4 MB;
+- D200 310.1 MB;
+- **D300 318.5 MB measured** (+8.4 MB, +2.7 % over D200; the 3b forecast was +12).
+
+**Integrity (pre-registered check 3): all 17 docs OK.**
+- Same page count; the text layer identical on every page.
+- Same image uses; no /ColorSpace changed; every SMask byte-identical.
+- Each file opens in MuPDF, Ghostscript and pdf.js.
+
+**Worst-page |Δ| vs L (50-dpi render, the pre-registered method):**
+- D300 ≤ D200 on 15 docs;
+- higher on 2: 3184083 1.16 vs 0.99, 6619605 0.13 vs 0.08 → the rule says "explain".
+- Explained, not re-ruled:
+  - the same images were replaced in both;
+  - at a 100-dpi render they tie (1.25/1.26, 0.08/0.08);
+  - at 200 dpi D300 is closer to L (0.83 vs 1.47; 0.10 vs 0.12).
+  - Hypothesis, not verified: MuPDF's own reduction of a higher-resolution image to 50 dpi.
+- No damage found.
+
+**Colour (d_metrics vs L):** D300 equal to or better than D200 on every doc:
+- 0486224: texture ΔE p95 3.22 → 0.00, plates p99 1.18 → 0.39;
+- 3184083: 23.9 → 18.1, plates 9.8 → 6.7;
+- 2569172: 1.97 → 0.00;
+- V1 pure K ≤ D200.
+
+**QR (check 4):**
+- the pre-registered decoder (OpenCV QRCodeDetector, 300 dpi) reads the one QR code in NONE of L/D200/D300 → reported, not counted;
+- extra, beyond the prereg: OpenCV's WeChat decoder at 600 dpi reads the same URL in L, D200 and D300;
+- D300 does not downsample that image at all (314 dpi < 330).
+
+**G3 controls at 300 (check 6), ink kept, min:**
+
+| Element | D200 | D300 |
+|---|---|---|
+| 300-ppi sources (not downsampled by D300) | — | 95.6–100 % |
+| 600-ppi, 1-px lines | 33 % | 50 % |
+| 600-ppi, 2-px lines | 66 % | ≈100 % |
+| 600-ppi, CJK 5 pt | 68–71 % | 82–86 % |
+| 600-ppi, CJK 6 pt | 74–77 % | 86–88 % |
+| 600-ppi, CJK 8 pt | 82 % | 99 % |
+| 600-ppi, thin stamp border | 37 % | 99.6 % |
+
+The finest rasters (1-px lines and 5–6 pt CJK in 600-ppi images) still lose ink at D300 — a known,
+measured limit. They stay mandatory controls.
+
+**Crops (check 5):** 19 DETAIL/MIXED images + 4 largest-difference places in 0486224, today/D200/D300 at the
+same scale, rendered at 300 dpi:
+- ~/Desktop/d300-comparison.pdf (23 pages);
+- cb-data/dev-d/s4crops/c00–c22.png.
+
+**Blocking:** none triggered (integrity OK, the QR code not decodable in L by the pre-registered method,
+the two worst-page cases explained).
