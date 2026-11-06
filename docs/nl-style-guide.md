@@ -1,6 +1,8 @@
 # Dutch Style Guide — PDFree
 
 Reference glossary for all Dutch content, FAQ, UI strings, and future articles.
+> **Claims check:** Before publishing copy, verify current behavior in `js/fileLimits.js` and the project's README. PDF processing is local, but the site can request assets and send usage analytics or user-submitted feedback. File-size limits apply. Do not assert GDPR/RODO/KVKK/AVG compliance without a documented legal assessment.
+
 
 ## Tool Names
 
@@ -29,11 +31,11 @@ Reference glossary for all Dutch content, FAQ, UI strings, and future articles.
 | Free | Gratis | Same as IT/ES — never "kosteloos" in H1 |
 | No upload | Zonder uploaden | NOT "zonder upload" (noun); "uploaden" sounds more natural |
 | No registration | Zonder registratie | Also: "Geen registratie nodig" |
-| Without limits | Zonder beperkingen | Never "onbeperkt" (sounds like a pricing tier) |
+| File-size limits apply | Er gelden limieten voor de bestandsgrootte. | Check js/fileLimits.js; limits vary by tool and device |
 | Processed in browser | Wordt verwerkt in je browser. | Or: "Direct in je browser verwerkt." |
-| Files never leave your device | Je bestanden verlaten je apparaat nooit. | Natural, full sentence |
+| PDF processing stays on your device | PDF-bestanden worden op je apparaat verwerkt. | Describes PDF processing, not all website network traffic |
 | Also natural | Bestanden blijven op je apparaat. | Shorter alternative |
-| Processed locally | Alles wordt direct in je browser verwerkt. | NOT "Lokale verwerking" in SEO text |
+| Processed locally | PDF-bestanden worden direct in je browser verwerkt. | Do not imply the entire website makes no network requests |
 | Online | Online | Keep as-is |
 | Safe | Veilig | |
 | Fast | Snel | |
@@ -148,7 +150,7 @@ Short, natural Dutch questions (keep concise):
 - Blijft de opmaak bewaard?
 - Werkt het met beveiligde PDF's?
 - Is er een dagelijks limiet?
-- Is het AVG-conform?
+- Waar worden mijn PDF-bestanden verwerkt?
 
 ## Do Not Translate
 
@@ -211,6 +213,6 @@ Anonymous label (never name competitors):
 - **"comprimeren" is the standard term**: Dutch users search "PDF comprimeren". Use this in H1, slug, and content.
 - **"draaien" beats "roteren"**: For rotate, Dutch users say "PDF draaien" more naturally than "PDF roteren".
 - **Direct tone**: Dutch communication is direct and practical. No fluff. Get to the point.
-- **"onbeperkt" = pricing tier**: Like Korean 무제한, avoid "onbeperkt" for feature descriptions. Use "zonder beperkingen" instead.
+- **File-size wording**: Avoid "onbeperkt" and "zonder beperkingen" for file sizes. Use "Er gelden limieten voor de bestandsgrootte" and check the tool's current cap.
 - **"uploaden" not "upload"**: "Zonder uploaden" sounds more natural than "zonder upload" in flowing text.
-- **AVG/GDPR**: Netherlands is very GDPR-aware (AVG = Algemene Verordening Gegevensbescherming). "AVG-conform" resonates strongly.
+- **AVG/GDPR**: Do not claim legal compliance without a documented legal assessment. Describe local PDF processing instead.

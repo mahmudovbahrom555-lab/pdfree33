@@ -1,6 +1,8 @@
 # Italian Style Guide — PDFree
 
 Reference glossary for all Italian content, FAQ, UI strings, and future articles.
+> **Claims check:** Before publishing copy, verify current behavior in `js/fileLimits.js` and the project's README. PDF processing is local, but the site can request assets and send usage analytics or user-submitted feedback. File-size limits apply. Do not assert GDPR/RODO/KVKK/AVG compliance without a documented legal assessment.
+
 
 ## Tool Names
 
@@ -30,15 +32,13 @@ Reference glossary for all Italian content, FAQ, UI strings, and future articles
 | No upload | Senza Caricare i File | Standard; also "Senza Caricamento" |
 | No registration | Senza Registrazione | Never "Nessun Account" |
 | Processed in browser | Elaborato direttamente nel browser | Or: "Tutto avviene nel tuo browser" |
-| Files never leave your device | I tuoi file non lasciano mai il dispositivo. | Full sentence; or: "I file rimangono sempre sul tuo dispositivo." |
+| PDF processing stays on your device | I PDF vengono elaborati sul tuo dispositivo. | Describes PDF processing, not all website network traffic |
 | Private | I file rimangono sul tuo dispositivo | More natural than the word "Privato" alone |
 | Without uploading | Senza Caricare i File | e.g. "Unisci PDF Senza Caricare i File" |
-| Without limits | Senza limiti | |
+| File-size limits apply | Si applicano limiti di dimensione dei file | See js/fileLimits.js; limits vary by tool and device |
 | Online | Online | Keep as-is |
 | Safe | Sicuro | |
 | Fast | Veloce | |
-| No artificial limits | Nessun limite artificiale | |
-| GDPR compliant | Conforme al GDPR | Strong trust signal for Italian users |
 
 ## H1 Pattern
 
@@ -144,8 +144,8 @@ Conversational, natural Italian:
 - Funziona su iPhone?
 - Funziona su Mac?
 - Posso unire più di 100 PDF?
-- È conforme al GDPR?
-- C'è un limite giornaliero?
+- Come vengono elaborati i miei PDF?
+- C'è un limite alla dimensione dei file?
 
 ## Do Not Translate
 
@@ -205,6 +205,6 @@ Anonymous label (never name competitors):
 
 ## Special Notes for Italian Audience
 
-- **GDPR**: Italian users are very privacy-conscious. Always include "È conforme al GDPR?" in FAQ with answer: "Sì — i file non lasciano mai il browser."
+- **Privacy questions**: Explain that PDF processing takes place in the browser. Do not treat local processing as proof of GDPR compliance.
 - **Mac users**: Italy has higher Mac market share than EU average. Include "Funziona su Mac?" in FAQ.
-- **Trust signals**: "Conforme al GDPR | Nessun server" resonates strongly.
+- **Trust signals**: Prefer "Elaborazione nel browser" and "Nessun caricamento dei PDF" to legal guarantees or claims of zero network requests.
