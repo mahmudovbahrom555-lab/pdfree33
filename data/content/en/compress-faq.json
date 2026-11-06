@@ -86,5 +86,13 @@
       "@type": "Answer",
       "text": "Many online forms (job applications, USCIS and other government portals, university applications) cap uploads at 2-10MB and don't say so clearly until the upload fails. Compressing the PDF first — even a small reduction is usually enough — fixes this without changing what's in the document."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Do print-ready PDFs keep their CMYK colours?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. On Standard and Maximum, CMYK (print) images stay CMYK: they are re-encoded as CMYK JPEG, and only images finer than 300 dpi are reduced to 300 dpi; an image is replaced only when the new one is smaller. Black text inside an image keeps using black ink only, or the image is left as it was. Light leaves images untouched. Extremely fine detail inside a high-resolution image, such as hairlines, can come out lighter at 300 dpi."
+    }
   }
 ]
