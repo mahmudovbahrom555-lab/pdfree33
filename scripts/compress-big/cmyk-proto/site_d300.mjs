@@ -9,7 +9,7 @@ const PDFLib = require('pdf-lib');
 globalThis.PDFLib = PDFLib; globalThis.self = globalThis; globalThis.importScripts = () => {};
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'sd3-')); fs.writeFileSync(path.join(tmp, 'qpdf.cjs'), fs.readFileSync(path.join(repo, 'js/vendor/qpdf/lib/qpdf.js')));
 globalThis.Module = createRequire(import.meta.url)(path.join(tmp, 'qpdf.cjs'));
-const src = fs.readFileSync(path.join(repo, 'js/cmykD.js'), 'utf8');
+const src = fs.readFileSync(path.join(repo, 'js/cmykD.js'), 'utf8').replace(/^\(\(\) => \{$/m, '').replace(/^\}\)\(\);\s*$/m, '');
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 const { cmykD } = await new AsyncFunction(src + '\nreturn { cmykD };')();
 const pdf = await PDFLib.PDFDocument.load(fs.readFileSync(inp), { ignoreEncryption: true, updateMetadata: false });

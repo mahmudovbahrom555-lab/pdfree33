@@ -506,3 +506,22 @@ Approved:
 Order adjusted (the owner's no-dead-code rule): the decoder is not merged unused. All of it is built in
 one branch, verified (byte-identity vs chain.mjs, holdout, e2e, corpus gate), then ONE PR with the
 evidence; D300 goes live only when the owner approves that PR.
+
+## Stage 5 — browser path checks (2026-11-07)
+**§8.1 results:**
+- The 17 DEV docs through the REAL js/compressPrepWorker.js in Chromium (D300 q75): 812 images replaced, **812/812
+  byte-identical to the Node run of the same js/cmykD.js**.
+- The Node run vs the research prototype: 806/808 identical, 2 explained (min-axis, rotation), +4 tiny images.
+- Slowest doc 29 s, with progress messages keeping the 60 s watchdog from firing.
+
+**Holdout (PRE-REGISTERED before its run):**
+- The 35 docs of cb-data/all52.txt not in the 17 DEV docs (dev-d/holdout.txt), originals as input.
+- Run through the real prep worker in Chromium, Maximum (q75) and Standard (q82).
+
+**Pass:**
+- integrity on every doc (stage4_checks.py logic vs the input): page count, text layer, image uses, colour
+  spaces, SMasks byte-identical, opens in MuPDF / Ghostscript / pdf.js;
+- the same-filter worst-page |Δ| vs the input ≤ 0.51/255 on every doc (1.5 × the DEV maximum of 0.341);
+- docs without CMYK images come back byte-identical to the input.
+
+Any failure: name the class first, never tune on these docs.
