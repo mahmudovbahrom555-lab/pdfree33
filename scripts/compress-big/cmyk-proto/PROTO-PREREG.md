@@ -465,3 +465,34 @@ Same chain, D_TARGET=300, Q=82, on the 17 DEV docs. Reported next to D300 q75:
 - integrity OK on all docs;
 - worst-page |Δ| vs L ≤ q75's on every doc (Standard must be at least as close to today);
 - Maximum (q75) total ≤ Standard (q82) total.
+
+## Stage 4c RESULTS — D300 q82 (Standard), 2026-11-06
+**Size:**
+- L 417.4 MB;
+- D300 q75 318.5;
+- **D300 q82 324.5** (+6.0 MB over q75).
+- Maximum (q75) ≤ Standard (q82): **pass**.
+
+**Integrity (stage4_checks.py): OK on all 17 docs.**
+
+**Worst-page |Δ| vs L — the pre-registered method (renderer's own 50-dpi render) FAILS on 4 docs** by tiny margins.
+
+| Doc | q75 | q82 |
+|---|---|---|
+| 3184083 | 1.16218 | 1.16232 |
+| 5124666 | 0.00178 | 0.00182 |
+| 5722582 | 0.00178 | 0.00182 |
+| 6619605 | 0.12649 | 0.13196 |
+
+**The same comparison with one area-average filter for all (300→50 dpi, the method 4b showed to be
+valid):** q82 is closer to L on all 4.
+
+| Doc | q75 | q82 |
+|---|---|---|
+| 3184083 | 0.3413 | 0.3390 |
+| 5124666 | 0.00185 | 0.00161 |
+| 5722582 | 0.00181 | 0.00160 |
+| 6619605 | 0.06078 | 0.06062 |
+
+Not re-ruled here: whether the same-filter method replaces the renderer's 50-dpi render as THE
+comparison is the owner's call (a new criteria version).
