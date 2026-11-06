@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """CMYK mode D prototype (CMYK-D-MEASURE-PREREG.md): re-encode DeviceCMYK images as CMYK JPEG,
-downsampled to a target effective dpi (largest placement decides, never below 200), kept only
+downsampled to a target effective dpi (largest placement decides; v0.2 floor 200, D150 = owner test), kept only
 when smaller. Measurement only — not the browser implementation.
 
   python3 d_proto.py <in.pdf> <out-dir>   → <out-dir>/<doc>.<variant>.pdf for each grid point
@@ -10,7 +10,8 @@ import fitz, pikepdf
 from pikepdf import Name
 from PIL import Image
 
-GRID = [('D300q85', 300, 85), ('D300q75', 300, 75), ('D200q85', 200, 85), ('D200q75', 200, 75)]
+GRID = [('D300q85', 300, 85), ('D300q75', 300, 75), ('D200q85', 200, 85), ('D200q75', 200, 75),
+        ('D150q85', 150, 85), ('D150q75', 150, 75)]   # D150: owner request 2026-11-06, below the v0.2 floor
 
 
 def filters(s):
@@ -82,12 +83,26 @@ def encode(im, q):
     return b.getvalue()
 
 
+import numpy as np
+PURE_K_MAX_SHARE = float(os.environ.get('D_PURE_K_MAX', '0.001'))   # share of pure-K pixels allowed to gain C/M/Y > 2/255
+
+
+def pure_k_ok(src_im, jpeg):
+    """V1 per image: pixels with C = M = Y = 0 and K > 0 before must keep C, M, Y <= 2/255 after the re-encode."""
+    a = np.asarray(src_im)
+    pure = (a[..., 0] == 0) & (a[..., 1] == 0) & (a[..., 2] == 0) & (a[..., 3] > 0)
+    if pure.sum() < 50: return True
+    b = np.asarray(Image.eval(Image.open(io.BytesIO(jpeg)), lambda v: 255 - v))   # back to reader values
+    bad = pure & ((b[..., 0] > 2) | (b[..., 1] > 2) | (b[..., 2] > 2))
+    return bad.sum() / pure.sum() <= PURE_K_MAX_SHARE
+
+
 def run(src, out_dir, grid=GRID):
     doc = os.path.basename(src)[:-4]
     rects = max_rect_widths(src)
     for tag, dpi, q in grid:
         pdf = pikepdf.open(src)
-        changed = before = after = 0
+        changed = before = after = kept_k = 0
         for o in list(pdf.objects):
             if not is_target(o): continue
             im = samples(o)
@@ -103,15 +118,17 @@ def run(src, out_dir, grid=GRID):
             data = encode(im2, q)
             old = len(o.read_raw_bytes())
             if len(data) >= old: continue
+            if not pure_k_ok(im2, data): kept_k += 1; continue   # criteria v0.2 §6: V1 broken → the original image stays
             o.write(data, filter=Name.DCTDecode)
             if '/DecodeParms' in o: del o['/DecodeParms']
             if '/Decode' in o: del o['/Decode']   # the new samples are written as readers see them
             o.Width, o.Height = nw, nh
             changed += 1; before += old; after += len(data)
         pdf.save(f'{out_dir}/{doc}.{tag}.pdf')
-        print(doc, tag, 'images changed', changed, f'{before/1e6:.1f} → {after/1e6:.1f} MB', flush=True)
+        print(doc, tag, 'images changed', changed, f'{before/1e6:.1f} → {after/1e6:.1f} MB', '| kept for pure K', kept_k, flush=True)
 
 
 if __name__ == '__main__':
     os.makedirs(sys.argv[2], exist_ok=True)
-    run(sys.argv[1], sys.argv[2])
+    only = os.environ.get('D_ONLY')   # e.g. D150q85,D150q75
+    run(sys.argv[1], sys.argv[2], [g for g in GRID if not only or g[0] in only.split(',')])

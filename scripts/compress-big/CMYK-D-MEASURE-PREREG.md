@@ -45,6 +45,12 @@ Browser code (decoder, 4-channel encoder, worker), presets, UI.
 2. **/Decode [1 0 1 0 1 0 1 0] (inverted):** samples are read as a reader sees them and written
    without the array. /Decode of any other form is skipped.
 
+## Owner request 2026-11-06 (after the first blind page): test D at 150 dpi
+The owner saw no difference with the eye on L vs D300/D200 and asked to test 150 dpi. This is
+BELOW the v0.2 floor "never below 200 dpi" — an owner decision to explore, recorded before the
+run. Added grid points D150q85, D150q75; same method (smaller-only, pure-K guard, D vs L). The
+floor in criteria v0.2 is not changed by this run; the owner decides after the blind check.
+
 First numbers (0486224, on top of our current output; the leader is a reference only):
 - D300q75: −68 %, SSIM min 1.000, ΔE76 0.03;
 - D200q75: −74 %, SSIM min 0.988, ΔE76 0.14;
