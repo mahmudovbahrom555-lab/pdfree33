@@ -163,3 +163,10 @@ The "bad" set exists to prove the measure can see damage.
 
 **Blocking:** the guard must not reject more than half of the images Stage 2 replaced on any doc
 without a visible reason in its crops (a too-tight guard is a finding, not tuned away silently).
+
+**Amendment, 2026-11-06, BEFORE any Stage 3 run (nothing measured yet):**
+- G1/G2 compare the image before and after ENCODING at the same (already downsampled) size, so
+  they cannot see a resolution loss by design.
+- The known-bad set for the G1/G2 threshold is therefore q30 and the 2-px shift.
+- "72 dpi" is a known-bad case for G3 only.
+- The resolution itself is policy (the owner's 200 dpi floor), not the guard's job.
