@@ -151,7 +151,9 @@ export async function trapCases(browser) {
     { name: 'gray16-flate', expect: 'untouched',
       why: '16-bit samples read as 8-bit',
       bytes: await imagePdf(deflate(gray16), { Width: 800, Height: 1000, ColorSpace: 'DeviceGray', Filter: 'FlateDecode', BitsPerComponent: 16 }) },
-    { name: 'cmyk-jpeg-by-ref', expect: 'untouched',
+    // 'cmykKept', not 'untouched', since D300 (owner 2026-11-06): the image may now be
+    // re-encoded — as CMYK. What the trap guards is the label matching the samples.
+    { name: 'cmyk-jpeg-by-ref', expect: 'cmykKept',
       why: 'CMYK JPEG re-encoded as RGB but kept its CMYK label',
       bytes: await imagePdf(CMYK_JPEG, pdf => ({ Width: 800, Height: 1000, Filter: 'DCTDecode', Decode: [1, 0, 1, 0, 1, 0, 1, 0],
         ColorSpace: pdf.context.register(PDFName.of('DeviceCMYK')) })) },

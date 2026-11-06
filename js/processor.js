@@ -12,7 +12,7 @@ import { setProgress, hideProgress, setButtonProcessing, setButtonReady,
 import { selectedFiles, setFilesLocked, renderList, markUnreadable } from './files.js';
 import { trackToolError, trackBatchStart, trackBatchSuccess, trackRepair, trackFileUnreadable } from './analytics.js';
 import { TOOLS } from './config.js';
-import { maxFileMb } from './fileLimits.js';
+import { maxFileMb, isLargeDevice } from './fileLimits.js';
 import { getRunner, getWorkerTool } from './toolRegistry.js';
 import { loadJSZip, loadDocx, loadExcelJs, loadPptxGenJs } from './lazyLibs.js';
 import { repairSplitSurrogates } from './ooxmlRepair.js';
@@ -185,7 +185,7 @@ function _createWorker() {
 const _SHARED_WORKER = ['worker.js?v=__WORKER_HASH__', 'pdfEncrypt.js', 'watermarkImage.js'];
 const _RUNNER_SCRIPTS = {
   merge: ['mergeWorker.js'], split: ['splitWorker.js'], organize: ['organizeWorker.js'],
-  compress: [..._SHARED_WORKER, 'compressPrepWorker.js'], worker: _SHARED_WORKER,
+  compress: [..._SHARED_WORKER, 'compressPrepWorker.js', 'cmykD.js'], worker: _SHARED_WORKER,
   jpg2pdf: [..._SHARED_WORKER, 'tiffWorker.js', 'vendor/UTIF.js', 'vendor/pako_inflate.min.js'],
   resize: ['resizeWorker.js'], nup: ['nupWorker.js', 'nupLayout.js'], mangaSplit: ['mangaSplitWorker.js'],
   fillOrder: ['fillOrderWorker.js'], cleanScan: ['cleanScanWorker.js'], ereader: ['ereaderWorker.js'],
@@ -1810,7 +1810,25 @@ let _compressPrepSettle = null;
 const _COMPRESS_PREP_TIMEOUT_MS = 60_000;
 
 let _compressPrepXmp = 0;   // XMP streams the last pre-pass removed (0 on fallback)
-function _compressPrep(buffer, file, preset) {
+
+// Mode D300 for print (CMYK) images (js/cmykD.js), owner-approved 2026-11-06:
+// Standard 300 dpi q82, Maximum 300 dpi q75, Light never, a signed file
+// never. A manual setting never takes it below 300 dpi; a manual quality is
+// used only from 75 up. maxMegapixels: images larger than this are left as
+// they are — a first, unmeasured guard for small devices (BASE tier); to be
+// set from measurements on real phones.
+function _cmykDOptions(preset, file, manual = {}) {
+  if (preset === 'low' || file?._signed) return null;
+  const base = preset === 'high' ? 75 : 82;
+  const q = manual.quality ? Math.round(manual.quality * 100) : null;
+  return {
+    target: Math.max(300, manual.targetDpi || 0),
+    quality: q && q >= 75 ? q : base,
+    maxMegapixels: isLargeDevice() ? 64 : 16,
+  };
+}
+
+function _compressPrep(buffer, file, preset, manual) {
   _compressPrepXmp = 0;
   return new Promise(resolve => {
     let timer;
@@ -1823,15 +1841,20 @@ function _compressPrep(buffer, file, preset) {
     if (!_compressPrepWorker) {
       _compressPrepWorker = new Worker(new URL('./compressPrepWorker.js', import.meta.url));
     }
-    // the bytes, and how many objects' XMP the pass removed — for the result card
-    _compressPrepWorker.onmessage = (e) => { _compressPrepXmp = e.data.xmp || 0; settle(e.data.result); };
+    // the bytes, and how many objects' XMP the pass removed — for the result card;
+    // 'progress' while D300 works: each one restarts the watchdog (a big print
+    // file can take longer than one watchdog period as a whole)
+    _compressPrepWorker.onmessage = (e) => {
+      if (e.data.type === 'progress') { clearTimeout(timer); timer = setTimeout(fallback, _COMPRESS_PREP_TIMEOUT_MS); return; }
+      _compressPrepXmp = e.data.xmp || 0; settle(e.data.result);
+    };
     _compressPrepWorker.onerror   = fallback;
     timer = setTimeout(fallback, _COMPRESS_PREP_TIMEOUT_MS);
     _compressPrepSettle = settle;
     // Light keeps every XMP, as handleCompress keeps the catalog's on Light.
     // CMYK Flate images re-deflated (lossless) on Standard/Maximum — never on a
     // signed file: its original images stay byte for byte (criteria v0.2, T12)
-    _compressPrepWorker.postMessage({ file: buffer, stripXmp: preset !== 'low', cmykFlate: preset !== 'low' && !file?._signed }, [buffer]);
+    _compressPrepWorker.postMessage({ file: buffer, stripXmp: preset !== 'low', cmykFlate: preset !== 'low' && !file?._signed, cmykD: _cmykDOptions(preset, file, manual) }, [buffer]);
   });
 }
 
@@ -1845,7 +1868,8 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
   // reported against what the user actually uploaded.
   const originalSize = original.byteLength;
   setProgress(5, t('prog_loading_pdf'));
-  const buffer = await _compressPrep(original, file, preset);
+  // a target size works with the mode's own D300 settings (plan §7): not with the chips' dpi/quality
+  const buffer = await _compressPrep(original, file, preset, targetSizeMb ? {} : { targetDpi, quality });
   if (!buffer || !isProcessing) return;
   const prepXmp = _compressPrepXmp;
 
