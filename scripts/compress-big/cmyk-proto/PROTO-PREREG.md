@@ -102,3 +102,22 @@ decoder, MuPDF render, Ghostscript render; each within ±3 on patch centres; no 
 
 **Not in this stage:** K-only CMYK → grey, Flate around DCT, font dedup — measured separately later.
 **No js/ change, no site change, no PR to main.**
+
+## Stage 2 RESULTS (2026-11-06)
+**A/B/C on controls: PASS, no failure.**
+- A: sizes and channels right; flat patches ±1 after downsampling.
+- B: qpdf writes CMYK (APP14 transform 0, 4:4:4) for CMYK and YCCK input, grey 1 channel; patch centres ±1; pure-K patch interiors C/M/Y = 0.
+- C: libjpeg-turbo, pdf.js, MuPDF and Ghostscript read the same values, ±1, no inversion.
+
+**Bugs found and fixed in my chain before the 17-doc numbers:**
+- the JPEG was taken from the wrong object's /Length;
+- callMain exit codes were not handled the way js/qpdfWorker.js handles them;
+- **one qpdf WASM instance aborts on its 161st callMain whatever the input** ("table index is out of bounds" at calls 161, 322, …; the same images encode on a fresh instance) → fresh instance every 150 calls + one retry. HYPOTHESIS for the site: js/qpdfWorker.js reuses one instance across runs and could hit this after ~160 runs in one session — to be checked separately, not assumed;
+- the guard ran before the size check (d_proto checks size first) → aligned.
+
+**D, 17 DEV docs vs L (PDFree today):**
+- size: L 417 → chain ≈ 310 MB (Python D200q75 316);
+- 829 images replaced, 65 guard-rejected (pure K), 1042 not smaller; 0 qpdf aborts left;
+- **blocking rule (worst-page |Δ| vs L > Python D200's + 0.1): not triggered on any doc**;
+- colour (d_metrics vs L) equal to D200 within noise, except 0486224: chain 9.4 MB vs D200 11.9, texture ΔE p95 0 → 3.2, plates p99 1.18 (worst-page |Δ| still 0.00) → for the eye.
+- Skipped, fail-closed: ICCBased 596, Indexed 584, DeviceRGB 383, SMask streams 312, DeviceN 171, unfiltered 77, …

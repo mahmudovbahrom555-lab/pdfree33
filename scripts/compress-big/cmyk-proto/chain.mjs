@@ -16,7 +16,23 @@ const QUALITY = Number(process.env.Q || 75);
 const PURE_K_MAX_SHARE = 0.001;
 
 const { JpegImage } = await import(PDFJS);
-const qpdf = await require(path.join(QPDF_DIR, 'qpdf.cjs'))({ locateFile: f => path.join(QPDF_DIR, f), noInitialRun: true, print: () => {}, printErr: () => {} });
+const qpdfFactory = require(path.join(QPDF_DIR, 'qpdf.cjs'));
+const newQpdf = () => qpdfFactory({ locateFile: f => path.join(QPDF_DIR, f), noInitialRun: true, print: () => {}, printErr: () => {} });
+let qpdf = await newQpdf();
+let qpdfRestarts = 0, qpdfCalls = 0;
+const RESTART_EVERY = 150;
+
+/** callMain the way js/qpdfWorker.js does: an exit code comes back as a number, an abort throws. */
+function runQpdf(args) {
+  try {
+    const r = qpdf.callMain(args);
+    return Number.isFinite(r) ? r : 0;
+  } catch (e) {
+    if (Number.isFinite(e?.status)) return e.status;
+    if (Number.isFinite(e)) return e;
+    throw e;
+  }
+}
 
 /** Stored samples (= ink for CMYK in a PDF, = grey level for DeviceGray), or null when the JPEG is out of scope. */
 function decodeJpeg(bytes, nc) {
@@ -84,7 +100,8 @@ function tempPdf(samples, w, h, nc) {
 /** qpdf --optimize-images → the JPEG bytes it wrote, or null. */
 function qpdfEncode(samples, w, h, nc) {
   qpdf.FS.writeFile('/in.pdf', tempPdf(samples, w, h, nc));
-  const rc = qpdf.callMain(['--optimize-images', '--oi-min-width=0', '--oi-min-height=0', '--oi-min-area=0',
+  try { qpdf.FS.unlink('/out.pdf'); } catch { /* not there */ }
+  const rc = runQpdf(['--optimize-images', '--oi-min-width=0', '--oi-min-height=0', '--oi-min-area=0',
     `--jpeg-quality=${QUALITY}`, '--object-streams=disable', '--decode-level=none', '/in.pdf', '/out.pdf']);
   if (rc !== 0 && rc !== 3) return null;
   const out = Buffer.from(qpdf.FS.readFile("/out.pdf"));
@@ -144,7 +161,17 @@ for (const job of jobs) {
     if (job.invert) samples = samples.map(v => 255 - v);   // /Decode [1 0 …]: write what readers show
     if (job.nw < w || job.nh < h) { samples = downsample(samples, w, h, job.nc, job.nw, job.nh); w = job.nw; h = job.nh; }
     if (process.env.DUMP) fs.writeFileSync(path.join(outDir, `${job.id}.ds.raw`), samples);   // stage A check
-    const jpg = qpdfEncode(samples, w, h, job.nc);
+    // One qpdf instance aborts on its 161st callMain whatever the input (seen 2026-11-06: "table index
+    // is out of bounds" at calls 161, 322, …; the same images encode on a fresh instance). So: a fresh
+    // instance every RESTART_EVERY calls, and one retry on a clean instance after an abort.
+    if (++qpdfCalls % RESTART_EVERY === 0) { qpdf = await newQpdf(); qpdfRestarts++; }
+    let jpg;
+    try { jpg = qpdfEncode(samples, w, h, job.nc); }
+    catch (e) {
+      qpdf = await newQpdf(); qpdfRestarts++;
+      try { jpg = qpdfEncode(samples, w, h, job.nc); }
+      catch (e2) { qpdf = await newQpdf(); qpdfRestarts++; results.push({ ...r, skip: 'qpdf abort: ' + e2.message }); continue; }
+    }
     if (!jpg) { results.push({ ...r, skip: 'qpdf gave no DCT' }); continue; }
     const g = guard(samples, jpg, job.nc);
     fs.writeFileSync(path.join(outDir, `${job.id}.jpg`), jpg);
@@ -154,4 +181,4 @@ for (const job of jobs) {
   }
 }
 fs.writeFileSync(path.join(outDir, 'results.json'), JSON.stringify(results));
-console.log(`${results.filter(x => x.ok).length} encoded+guarded, ${results.filter(x => x.ok === false).length} guard-rejected, ${results.filter(x => x.skip).length} skipped`);
+console.log(`qpdf restarts ${qpdfRestarts}; ${results.filter(x => x.ok).length} encoded+guarded, ${results.filter(x => x.ok === false).length} guard-rejected, ${results.filter(x => x.skip).length} skipped`);

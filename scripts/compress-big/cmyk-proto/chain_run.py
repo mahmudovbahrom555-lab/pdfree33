@@ -104,10 +104,10 @@ def main(src, dst, work):
     for r in results:
         o = objs[r['id']]
         if r.get('skip'): skips['chain: ' + r['skip'].split(':')[0]] += 1; continue
-        if not r['ok']: c['guard rejected'] += 1; continue
         data = open(f"{work}/{r['id']}.jpg", 'rb').read()
         old = len(o.read_raw_bytes())
-        if len(data) >= old: c['not smaller'] += 1; continue
+        if len(data) >= old: c['not smaller'] += 1; continue   # size first, then the guard (as d_proto.py)
+        if not r['ok']: c['guard rejected'] += 1; continue
         o.write(data, filter=Name.DCTDecode)
         for k in ('/DecodeParms', '/Decode'):
             if k in o: del o[k]
