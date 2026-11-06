@@ -1,0 +1,55 @@
+name: Bug report
+description: Report a reproducible problem with a PDFree tool or interface.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug. Do not upload private PDFs or personal data.
+        For security vulnerabilities, follow SECURITY.md instead of filing a public bug.
+  - type: input
+    id: page
+    attributes:
+      label: Tool or page
+      description: Which PDFree tool or page is affected?
+      placeholder: "e.g. Compress PDF, /compress-pdf/"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Use synthetic or shareable files only.
+      placeholder: |
+        1. Open ...
+        2. Select ...
+        3. Click ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include an error message or screenshot only if it contains no sensitive data.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser, OS, and device
+      placeholder: "e.g. Chrome on Android; Firefox on Windows"
+    validations:
+      required: false
+  - type: textarea
+    id: extra
+    attributes:
+      label: Additional context
+      description: File type, approximate size, or a synthetic reproduction case (no confidential documents).
+    validations:
+      required: false
