@@ -496,3 +496,13 @@ valid):** q82 is closer to L on all 4.
 
 Not re-ruled here: whether the same-filter method replaces the renderer's 50-dpi render as THE
 comparison is the owner's call (a new criteria version).
+
+## Owner approval 2026-11-06: the browser plan (BROWSER-PLAN.md)
+Approved:
+- the plan;
+- the same-filter comparison (one area-average filter for all versions) as THE method from now on;
+  the renderer's own 50-dpi render is no longer used for D;
+- the UI rules in §7.
+Order adjusted (the owner's no-dead-code rule): the decoder is not merged unused. All of it is built in
+one branch, verified (byte-identity vs chain.mjs, holdout, e2e, corpus gate), then ONE PR with the
+evidence; D300 goes live only when the owner approves that PR.
