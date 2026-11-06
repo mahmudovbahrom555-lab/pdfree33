@@ -62,3 +62,43 @@ wrong "fix" was made and reverted the same hour, and no run used it.
 - Consequence to carry into Stage 3: two correct readers of the SAME file differ by up to 77/255
   at chroma edges, so a guard threshold must sit above the reader-to-reader spread, and the
   guard decodes with the same decoder for "before" and "after", plus a second decoder as a check.
+
+## Stage 2 — encoder via the chain "own worker + the site's qpdf WASM" (owner APPROVED 2026-11-06, PRE-REGISTERED before any run)
+Encoder alternatives (new library, own encoder) are deferred until this fails.
+
+**What encodes:** qpdf 12.2.0 WASM (js/vendor/qpdf/lib, the site's copy) run as
+`--optimize-images --oi-min-width=0 --oi-min-height=0 --oi-min-area=0 --jpeg-quality=75` on a
+one-image temp PDF whose image is stored UNCOMPRESSED (so DCT is always smaller). In qpdf's source
+this is QPDFJob ImageOptimizer → Pl_DCT (libjpeg, jpeg_set_defaults, in_color_space JCS_CMYK /
+JCS_GRAYSCALE). No wrapper of ours in between. The JPEG bytes are taken from qpdf's output.
+**What decodes / resamples (JS, as the browser would):** pdf.js JpegImage 4.10.38 for DCT inputs
+(CMYK, YCCK, grey); raw bytes for Flate inputs; downsampling = area average (box filter; chosen
+before the run: no ringing, so no ink appears where there was none — the Python prototype's
+Lanczos differs, reported).
+**Scope (fail-closed):**
+- in: DeviceCMYK or DeviceGray, 8-bit, single DCT or Flate filter (Flate: no /DecodeParms predictor);
+- /Decode absent or the full inverse;
+- SMask kept byte for byte;
+- skipped and counted: /Mask, ICCBased, Indexed, DeviceN, Separation, Lab, non-Adobe 4-channel JPEG,
+  progressive JPEG, anything a step fails on.
+- The image is replaced only if smaller. Effective dpi from the largest placement, resample only if > 220
+  (target 200).
+
+**A. decode + downsample** (controls): output size = round(w·s) × round(h·s); channels 4 / 1;
+flat-patch centres unchanged within ±1 after downsampling.
+**B. qpdf JPEG** (controls, q75):
+- SOF components 4 with APP14 transform 0 (CMYK), or 1 (grey);
+- patch centres within ±3 of the known inks;
+- pure-K patches and their interiors: C, M, Y <= 2.
+**C. in the PDF:** the same controls embedded; read by 4 decoders — libjpeg-turbo (ljtool, raw), pdf.js
+decoder, MuPDF render, Ghostscript render; each within ±3 on patch centres; no inversion.
+**D. 17 DEV docs** vs PDFree today (L):
+- size reported per doc and in total, next to the Python D200q75;
+- worst-page ink |Δ| vs L (50 dpi, 4 pages, the compare.py method) and d_metrics V1/V5/ΔE;
+- **blocking:** any doc whose worst-page |Δ| vs L exceeds the Python D200q75's by more than 0.1 →
+  stop and explain before going on.
+- Also recorded: per-image pure-K guard rejects (the guard compares source vs re-decoded
+  output with the SAME decoder, pdf.js).
+
+**Not in this stage:** K-only CMYK → grey, Flate around DCT, font dedup — measured separately later.
+**No js/ change, no site change, no PR to main.**
