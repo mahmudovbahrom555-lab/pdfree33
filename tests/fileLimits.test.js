@@ -39,6 +39,44 @@ test('an Android phone reporting 8 GB, a 4 GB desktop and Safari/Firefox stay on
   for (const nav of [android8, desktop4, safari]) assert.equal(maxFileMb('compress', nav), 150);
 });
 
+test('7.9 GB remains at BASE; 8 GB enables LARGE only for measured tools', () => {
+  const desktop79 = { deviceMemory: 7.9, userAgentData: { mobile: false } };
+  const base = { merge: 300, split: 200, extract: 200, compress: 150 };
+  for (const [tool, mb] of Object.entries(base)) {
+    assert.equal(maxFileMb(tool, desktop79), mb, `${tool}: below 8 GB`);
+    assert.equal(maxFileMb(tool, desktop8), 500, `${tool}: at 8 GB`);
+  }
+});
+
+test('a desktop reporting 16 GB gets the LARGE tier for measured tools', () => {
+  const desktop16 = { deviceMemory: 16, userAgentData: { mobile: false } };
+  for (const tool of ['merge', 'split', 'extract', 'compress']) {
+    assert.equal(maxFileMb(tool, desktop16), 500, tool);
+  }
+});
+
+test('8 GB without an explicit desktop mobile=false signal stays on BASE', () => {
+  const ambiguous = [
+    { deviceMemory: 8 },
+    { deviceMemory: 8, userAgentData: {} },
+    { deviceMemory: 8, userAgentData: { mobile: null } },
+  ];
+  for (const nav of ambiguous) {
+    assert.equal(maxFileMb('merge', nav), 300);
+    assert.equal(maxFileMb('compress', nav), 150);
+  }
+});
+
+test('a null navigator uses the BASE tier without throwing', () => {
+  assert.equal(maxFileMb('merge', null), 300);
+  assert.equal(maxFileMb('compress', null), 150);
+});
+
+test('an unmeasured nup tool keeps its BASE cap on a large desktop', () => {
+  const desktop16 = { deviceMemory: 16, userAgentData: { mobile: false } };
+  assert.equal(maxFileMb('nup', desktop16), 200);
+});
+
 test('an unknown tool falls back to 200 MB', () => {
   assert.equal(maxFileMb('someNewTool', safari), 200);
 });
