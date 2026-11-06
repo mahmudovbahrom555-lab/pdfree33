@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 check_vendor_sync.py — Validates the vendored copies in js/vendor/ (pdf-lib,
-JSZip, docx) match the pinned versions in node_modules.
+JSZip, docx, pdf.js image decoders) match the pinned versions in node_modules.
 
 Why this exists: pdf-lib is a devDependency (used only by the Node test
 suite via node_modules) — the file actually shipped to the browser/worker
@@ -49,6 +49,7 @@ PAIRS = [
     ('pdf-lib.min.js', 'pdf-lib/dist/pdf-lib.min.js'),
     ('jszip.min.js', 'jszip/dist/jszip.min.js'),
     ('docx.umd.js', 'docx/build/index.umd.js'),
+    ('pdfjs-4.10.38/pdf.image_decoders.min.mjs', 'pdfjs-dist/legacy/image_decoders/pdf.image_decoders.min.mjs'),
 ]
 
 

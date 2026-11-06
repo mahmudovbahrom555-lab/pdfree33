@@ -55,21 +55,30 @@
 //  is untouched (/DecodeParms too: the predicted rows are re-deflated as
 //  they are). Gate: scripts/cmyk-gate/l1_gate.py.
 //
+//  And (Standard/Maximum, not a signed file — `cmykD`): mode D300, print
+//  images re-encoded as CMYK JPEG at no more than 300 dpi — js/cmykD.js, see
+//  its header. It runs before the CMYK re-deflate above, which then sees only
+//  the CMYK images D300 left as they were. A failure of D300 leaves the
+//  document as the other steps made it.
+//
 //  Message contract:
-//   in  → { file: ArrayBuffer, stripXmp: boolean, cmykFlate: boolean } [transferred]
-//   out → { type: 'done', result: ArrayBuffer, encoded: number, resolved: number, xmp: number, cmyk: number } [transferred]
+//   in  → { file: ArrayBuffer, stripXmp: boolean, cmykFlate: boolean,
+//           cmykD: { target, quality, maxMegapixels } | null } [transferred]
+//   out → { type: 'progress', done, total } while D300 works (keeps the caller's watchdog awake)
+//         { type: 'done', result: ArrayBuffer, encoded: number, resolved: number, xmp: number, cmyk: number,
+//           d: { replaced, before, after, skipped } | null } [transferred]
 //         result is the original buffer when nothing was changed.
 //         Any failure also answers 'done' with the original buffer and
 //         encoded: 0 — this pass must never block a compression.
 // ============================================================
 
-importScripts('./vendor/pdf-lib.min.js');
+importScripts('./vendor/pdf-lib.min.js', './cmykD.js');   // cmykD.js sets self.cmykD
 
 self.onmessage = async (e) => {
   const buffer = e.data.file;
-  let out = { result: buffer, encoded: 0, resolved: 0, xmp: 0, cmyk: 0 };
+  let out = { result: buffer, encoded: 0, resolved: 0, xmp: 0, cmyk: 0, d: null };
   try {
-    out = await _encodeRawImages(buffer, !!e.data.stripXmp, !!e.data.cmykFlate);
+    out = await _encodeRawImages(buffer, !!e.data.stripXmp, !!e.data.cmykFlate, e.data.cmykD || null);
   } catch { /* fall through with the original buffer */ }
   self.postMessage({ type: 'done', ...out }, [out.result]);
 };
@@ -291,14 +300,15 @@ function _repackCmykFlate(pdf) {
   return repacked;
 }
 
-async function _encodeRawImages(buffer, stripXmp = false, cmykFlate = false) {
+async function _encodeRawImages(buffer, stripXmp = false, cmykFlate = false, dOpts = null) {
   const { PDFDocument, PDFName, PDFRawStream, PDFArray, PDFRef, ParseSpeeds } = PDFLib;
   const bytesIn = new Uint8Array(buffer);
   const rawImages = _mayHaveRawImage(bytesIn), dimRefs = _mayHaveIndirectDims(bytesIn);
   const objectXmp = stripXmp && _mayHaveObjectXmp(bytesIn);
-  const cmyk = cmykFlate && _mayHaveCmyk(bytesIn);
-  const none = { result: buffer, encoded: 0, resolved: 0, xmp: 0, cmyk: 0 };
-  if (!rawImages && !dimRefs && !objectXmp && !cmyk) return none;
+  const anyCmyk = (cmykFlate || dOpts) && _mayHaveCmyk(bytesIn);
+  const cmyk = cmykFlate && anyCmyk, wantD = !!dOpts && anyCmyk;
+  const none = { result: buffer, encoded: 0, resolved: 0, xmp: 0, cmyk: 0, d: null };
+  if (!rawImages && !dimRefs && !objectXmp && !cmyk && !wantD) return none;
   // No yielding while parsing or writing: pdf-lib pauses every 100 objects
   // (load) and 50 (save) to keep a page responsive, but this is a worker and
   // each pause is a timer — on ~14,000 objects that alone cost seconds. The
@@ -312,6 +322,20 @@ async function _encodeRawImages(buffer, stripXmp = false, cmykFlate = false) {
 
   const resolved = dimRefs ? _resolveImageDims(pdf) : 0;
   const xmp = objectXmp ? _stripObjectXmp(pdf) : 0;
+  let d = null;
+  if (wantD) {
+    try {
+      d = await self.cmykD(pdf, {
+        ...dOpts,
+        urls: {
+          decoders: new URL('./vendor/pdfjs-4.10.38/pdf.image_decoders.min.mjs', self.location.href).href,
+          qpdfJs:   new URL('./vendor/qpdf/lib/qpdf.js', self.location.href).href,
+          qpdfWasm: new URL('./vendor/qpdf/lib/qpdf.wasm', self.location.href).href,
+        },
+        onProgress: (done, total) => self.postMessage({ type: 'progress', done, total }),
+      });
+    } catch { d = null; }   // D300 failed as a whole: the document as the steps above left it
+  }
   const repacked = cmyk ? _repackCmykFlate(pdf) : 0;
   let encoded = 0;
   for (const [ref, obj] of rawImages ? pdf.context.enumerateIndirectObjects() : []) {
@@ -343,7 +367,7 @@ async function _encodeRawImages(buffer, stripXmp = false, cmykFlate = false) {
     encoded++;
   }
 
-  if (!encoded && !resolved && !xmp && !repacked) return none;
+  if (!encoded && !resolved && !xmp && !repacked && !d?.replaced) return { ...none, d };
   const bytes = await pdf.save({ useObjectStreams: false, addDefaultPage: false, updateFieldAppearances: false, objectsPerTick: Infinity });
-  return { result: bytes.buffer, encoded, resolved, xmp, cmyk: repacked };
+  return { result: bytes.buffer, encoded, resolved, xmp, cmyk: repacked, d };
 }

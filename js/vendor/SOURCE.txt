@@ -301,6 +301,18 @@ Used by:     js/qpdfWorker.js (importScripts) ← js/decryptPdf.js.
 
 ----------------------------------------------------------------
 
+Files:       pdfjs-4.10.38/pdf.image_decoders.min.mjs
+Source:      pdfjs-dist npm package v4.10.38 (a devDependency at that exact
+             version), legacy/image_decoders/pdf.image_decoders.min.mjs copied
+             as is. check_vendor_sync.py compares the two copies.
+             The legacy build, like the pdf.js files below. Its JpegImage gives
+             the same samples as the modern build's on 18 test JPEGs (CMYK,
+             YCCK, grey; 2026-11-06) — the research ran on the modern one.
+             sha384-9+UbFNmE7ObJWeB4MW6T/MYFi7EwaNLLOrw7Nl0XI9IfmePntmmHXfMs3pBtgl8Q
+Used by:     js/cmykD.js (dynamic import() from js/compressPrepWorker.js).
+
+----------------------------------------------------------------
+
 Files:       pdfjs-4.10.38/pdf.min.js, pdfjs-4.10.38/pdf.worker.min.js
 Source:      pdfjs-dist npm package v4.10.38, legacy/build/pdf.min.mjs and
              legacy/build/pdf.worker.min.mjs copied as is, renamed .js (both are

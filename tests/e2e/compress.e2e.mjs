@@ -9,10 +9,14 @@
 //     'recompressed' (savings that must not be lost). The worker.js fixes
 //     behind most of them are an owner-approved exception to its off-limits
 //     rule (CLAUDE.md).
-//  2. CMYK Flate images (criteria v0.2, owner 2026-11-05): re-deflated on
-//     Standard — the same decoded samples, the same dictionary, fewer bytes.
-//     (Light leaves them: tests/compressPrep.test.js.) A soft mask stays a
-//     DeviceGray mask (C30).
+//  2. Print (CMYK) images:
+//     - mode D300 (js/cmykD.js, owner 2026-11-06): on Standard (q82) and
+//       Maximum (q75) a CMYK photo becomes a DeviceCMYK JPEG — 4 channels,
+//       Adobe — downsampled only above 330 dpi, to 300; js/worker.js leaves
+//       it so (it skips CMYK). (Light never runs D300: tests/cmykD.test.js);
+//     - an image D300's pure-K guard keeps is still re-deflated losslessly
+//       (criteria v0.2, owner 2026-11-05): the same samples, fewer bytes.
+//     A soft mask stays a DeviceGray mask (C30).
 //  3. js/compressUI.js — the background pre-scan only covers
 //     selectedFiles[0], yet its recommended preset was applied to the whole
 //     batch: a plain-text first file flipped every file to Light (real
@@ -24,7 +28,7 @@
 // ============================================================
 
 import { chromium } from 'playwright';
-import { PDFDocument, PDFName } from 'pdf-lib';
+import { PDFDocument, PDFName, pushGraphicsState, popGraphicsState, concatTransformationMatrix, drawObject } from 'pdf-lib';
 import zlib from 'zlib';
 import fs from 'fs';
 import os from 'os';
@@ -126,13 +130,63 @@ const cmykBytes = await imagePdf(zlib.deflateSync(CMYK, { level: 1 }), { Width: 
 fs.writeFileSync(cmykFile, cmykBytes);
 const cmykBefore = firstImage(await PDFDocument.load(cmykBytes));
 
-await test('a CMYK Flate image on Standard: fewer bytes, the same samples, the same dictionary', async () => {
+// pdf.js's JPEG decoder — the same build the page uses (js/vendor/pdfjs-4.10.38)
+const { JpegImage } = await import('pdfjs-dist/legacy/image_decoders/pdf.image_decoders.mjs');
+function cmykJpegSamples(img) {
+  const j = new JpegImage({ decodeTransform: null, colorTransform: -1 });
+  j.parse(new Uint8Array(img.contents));
+  if (j.numComponents !== 4 || !j.adobe) throw new Error(`not an Adobe 4-channel JPEG (${j.numComponents} components)`);
+  return { data: j.getData({ width: j.width, height: j.height, forceRGB: false, isSourcePDF: true }), w: j.width, h: j.height };
+}
+const meanDiff = (a, b) => { let s = 0; for (let i = 0; i < a.length; i++) s += Math.abs(a[i] - b[i]); return s / a.length; };
+
+await test('D300 on Standard: a 72-dpi CMYK photo → a DeviceCMYK JPEG at its own size, close to the source, smaller', async () => {
   const after = firstImage(await PDFDocument.load(await compressViaUi(browser, cmykFile, 'medium')));
-  for (const key of ['ColorSpace', 'BitsPerComponent', 'Decode', 'Filter', 'Width', 'Height', 'DecodeParms']) {
-    expect(String(after.dict.get(PDFName.of(key)))).toBe(String(cmykBefore.dict.get(PDFName.of(key))));
-  }
+  expect(after.dict.get(PDFName.of('Filter'))?.toString()).toBe('/DCTDecode');
+  expect(after.dict.get(PDFName.of('ColorSpace'))?.toString()).toBe('/DeviceCMYK');
+  expect(`${after.dict.get(PDFName.of('Width'))}×${after.dict.get(PDFName.of('Height'))}`).toBe(`${CW}×${CH}`);
+  expect(after.dict.has(PDFName.of('Decode'))).toBe(false);
   if (!(after.contents.length < cmykBefore.contents.length)) throw new Error(`not smaller: ${after.contents.length} vs ${cmykBefore.contents.length}`);
-  expect(Buffer.compare(zlib.inflateSync(Buffer.from(after.contents)), CMYK)).toBe(0);
+  const d = meanDiff(cmykJpegSamples(after).data, CMYK);
+  if (!(d < 3)) throw new Error(`mean |Δ| ${d.toFixed(2)} of 255`);
+});
+
+// 1800×1200 drawn 3 × 2 in: 600 ppi → Maximum brings it to 300 (900×600)
+const BW = 1800, BH = 1200, BIG = Buffer.alloc(BW * BH * 4);
+for (let y = 0; y < BH; y++) for (let x = 0; x < BW; x++) {
+  const i = (y * BW + x) * 4, n = (x * 31 + y * 17) % 9;
+  BIG[i] = 120 + 90 * Math.sin(x / 70) + n; BIG[i + 1] = 110 + 70 * Math.cos(y / 45) + n;
+  BIG[i + 2] = 100 + 60 * Math.sin((x - y) / 90) + n; BIG[i + 3] = 30 + n;
+}
+const bigPdf = await PDFDocument.create();
+const bigImg = bigPdf.context.register(bigPdf.context.stream(zlib.deflateSync(BIG), { Type: 'XObject', Subtype: 'Image', Width: BW, Height: BH, ColorSpace: 'DeviceCMYK', BitsPerComponent: 8, Filter: 'FlateDecode' }));
+const bigPage = bigPdf.addPage([595, 842]);
+bigPage.node.setXObject(PDFName.of('Im0'), bigImg);
+bigPage.pushOperators(pushGraphicsState(), concatTransformationMatrix(216, 0, 0, 144, 100, 400), drawObject('Im0'), popGraphicsState());
+const bigFile = path.join(tmp, 'cmyk-600ppi.pdf');
+fs.writeFileSync(bigFile, await bigPdf.save({ useObjectStreams: false }));
+
+await test('D300 on Maximum: a 600-ppi CMYK photo → 300 ppi (900×600), still DeviceCMYK, 4 channels', async () => {
+  const after = firstImage(await PDFDocument.load(await compressViaUi(browser, bigFile, 'high')));
+  expect(after.dict.get(PDFName.of('ColorSpace'))?.toString()).toBe('/DeviceCMYK');
+  expect(`${after.dict.get(PDFName.of('Width'))}×${after.dict.get(PDFName.of('Height'))}`).toBe('900×600');
+  const { w, h } = cmykJpegSamples(after);
+  expect(`${w}×${h}`).toBe('900×600');
+});
+
+// Pure K right against colour: D300's guard keeps the original, so the
+// lossless CMYK re-deflate (owner 2026-11-05) still does its part.
+const KW = 600, KH = 800, KC = Buffer.from(CMYK);
+for (let y = 0; y < KH / 4; y++) for (let x = 0; x < KW / 4; x++) { const i = (y * KW + x) * 4; KC[i] = KC[i + 1] = KC[i + 2] = 0; KC[i + 3] = 220; }
+const kFile = path.join(tmp, 'cmyk-pure-k.pdf');
+const kBytes = await imagePdf(zlib.deflateSync(KC, { level: 1 }), { Width: KW, Height: KH, ColorSpace: 'DeviceCMYK', Filter: 'FlateDecode' });
+fs.writeFileSync(kFile, kBytes);
+await test('a CMYK image D300 keeps (pure K against colour): re-deflated losslessly, the same samples', async () => {
+  const before = firstImage(await PDFDocument.load(kBytes));
+  const after = firstImage(await PDFDocument.load(await compressViaUi(browser, kFile, 'medium')));
+  expect(after.dict.get(PDFName.of('Filter'))?.toString()).toBe('/FlateDecode');
+  if (!(after.contents.length < before.contents.length)) throw new Error(`not smaller: ${after.contents.length} vs ${before.contents.length}`);
+  expect(Buffer.compare(zlib.inflateSync(Buffer.from(after.contents)), KC)).toBe(0);
 });
 
 // C30 (owner-approved worker.js change 2026-11-05): an image's soft mask is a mask,
