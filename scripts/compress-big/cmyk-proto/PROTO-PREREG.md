@@ -525,3 +525,14 @@ evidence; D300 goes live only when the owner approves that PR.
 - docs without CMYK images come back byte-identical to the input.
 
 Any failure: name the class first, never tune on these docs.
+
+**Holdout RESULTS (35 docs, Maximum and Standard): PASS, no failure.**
+- 33 docs came back byte-identical: no CMYK image D300 takes.
+- D300 replaced an image in 1 doc only (2150699: 16.6 → 16.4 MB; same-filter |Δ| 0.015, integrity OK). A weak
+  holdout for D300 itself (the corpus has few print files); it mostly shows D300 leaves the rest alone.
+- 6015658 grew 10.5 → 11.7 MB in the pre-pass with OR without D300 (2 raw images Flate-encoded + the pdf-lib
+  re-save): pre-existing, not D300. C25 returns the original if the final file is larger. Candidate to look at
+  separately.
+
+**Firefox 153:** the same output bytes as Chromium and WebKit on the 600-ppi fixture.
+**Unlock-unicode:** 27/28 once (one transient failure), 28/28 on the rerun.
