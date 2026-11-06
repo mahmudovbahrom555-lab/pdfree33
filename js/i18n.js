@@ -1001,6 +1001,7 @@ export const EN = {
   cmp_quality_label:      'Image quality',
   cmp_quality_aria:       'JPEG image quality for recompression',
   cmp_quality_note:       '⚠️ Compressing images can make QR codes and fine photo detail harder to read. If your PDF has scannable codes or important photos, try Light or a higher quality value.',
+  cmp_scan_dpi_note:      '⚠️ This is a scan: at {dpi} dpi, small print and Chinese or Japanese characters can become hard to read. For a document you need to submit, choose 150 dpi or higher.',
   cmp_dpi_email:          'Email',
   cmp_dpi_email_hint:     '96 DPI',
   cmp_dpi_web:            'Web',

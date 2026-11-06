@@ -42,6 +42,10 @@ BLOCK = [
     (r'private by design|safe for confidential docs', 'an absolute promise: say the files stay on your device'),
     (r'100\s?%\s?(?:de\s)?(?:privacy|privacidad|privacidade|confidentialité)|privacy by design|(?:privasi|quyền riêng tư) 100%|100\s?%\s?の?プライバシー|100% 개인정보|%100 gizli', 'an absolute promise: say the files stay on your device'),
     (r'100\s?%\s?(?:的\s?)?隐私|从设计上|حریم خصوصی 100٪|פרטיות של 100%|100% رازدار|১০০%\s?গোপনীয়', 'an absolute promise: say the files stay on your device'),
+    # 96 dpi was promised to keep scans readable; measured 2026-11-05, small print and Chinese /
+    # Japanese characters can become hard to read (removed with the Maximum scan note). Arabic waits
+    # for its SEO re-check (2026-11-16), like the rules below.
+    (r'(?:no loss of readability|без потери читабельности|不影响可读性|読みやすさを損なわずに|tanpa kehilangan keterbacaan|mà không mất khả năng đọc)', 'a promise the measurement disproved: 96 dpi can make small print and CJK hard to read', r'^(?:ar/|data/content/ar/|js/locales/ar\.js)'),
     # competitors are compared, never named (owner, 2026-11-04); a viewer named as a format fact
     # ("opens in Adobe Acrobat") stays. Arabic pages wait for their own PR (SEO re-check until 2026-11-16).
     (r'\b(?:iLovePDF|Smallpdf|PDF24|Sejda|DocuSign|HelloSign|SignNow|pymupdf4llm|Docling)\b', 'a competitor named: say cloud PDF tools / other tools', r'^(?:ar/|data/content/ar/|js/locales/ar\.js)'),

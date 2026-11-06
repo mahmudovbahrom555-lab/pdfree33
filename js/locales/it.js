@@ -982,6 +982,7 @@ window.PDFREE_LOCALE = {
   cmp_quality_label:      'Qualità immagine',
   cmp_quality_aria:       'Qualità immagine JPEG per la ricompressione',
   cmp_quality_note:       '⚠️ La compressione delle immagini può rendere i codici QR e i dettagli fini delle foto più difficili da leggere. Se il tuo PDF contiene codici scansionabili o foto importanti, prova con Leggero o una qualità più alta.',
+  cmp_scan_dpi_note:      '⚠️ Questo è un documento scansionato: a {dpi} dpi il testo piccolo e i caratteri cinesi o giapponesi possono diventare difficili da leggere. Per un documento da presentare, scegli 150 dpi o più.',
   cmp_dpi_email:          'Email',
   cmp_dpi_email_hint:     '96 DPI',
   cmp_dpi_web:            'Web',
