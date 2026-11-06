@@ -170,3 +170,40 @@ without a visible reason in its crops (a too-tight guard is a finding, not tuned
 - The known-bad set for the G1/G2 threshold is therefore q30 and the 2-px shift.
 - "72 dpi" is a known-bad case for G3 only.
 - The resolution itself is policy (the owner's 200 dpi floor), not the guard's job.
+
+## Stage 3 RESULTS (2026-11-06)
+**G1/G2 FAIL the pre-registered rule: no single threshold lies above every known-good and below every
+known-bad control.**
+- good (q75): G1 up to 8.78 (small text), G2 up to 6.88;
+- bad q30: as low as 1.88 (ramps), 4.5 / 6.88 (photo);
+- bad 2-px shift: 6.02 on the 600-ppi photo, else 22–136.
+
+The error size depends on the content far more than on the damage. Not used, not tuned. Any new
+guard (e.g. content-relative) is a new pre-registered version for the owner.
+
+**G3 (ink kept, D = 200 dpi target, q75), reported per the prereg, no pass/fail:**
+
+| Element | 300 ppi source | 600 ppi source |
+|---|---|---|
+| 1-px lines, all inks | 33 % | 32–34 % |
+| 2-px lines | 99 % | 66–68 % |
+| 3-px lines | ≈100 % | ≈100 % |
+| Latin text >= 6 pt | 100 % | 100 % |
+| Latin text 5 pt | 94.5–100 % | 94.5–100 % |
+| CJK text 5 pt | 67–72 % | 67–72 % |
+| CJK text 6 pt | 71–77 % | 71–77 % |
+| CJK text 8 pt | 77–82 % | 77–82 % |
+| CJK text 10 pt | 82–90 % | 82–90 % |
+| Stamps' text >= 6 pt | 100 % | 100 % |
+| Thin stamp border | 68 % | 37 % |
+
+72 dpi (bad), for comparison: 1-px lines 13–25 %, CJK 5 pt 37–42 %.
+
+Visual: ~/Desktop/d-stage3-fine-detail.png. Strokes thinner than 1/200 inch in a RASTER image turn
+grey (CJK 5–6 pt and hairlines). Vector text and lines are not touched by D.
+
+**The 17-doc run with a guard: not done.** No G1/G2 guard was chosen; Stage 2's run (pure-K guard
+only) stands. Owner decisions due:
+- (a) no error guard beyond pure-K, or a new content-relative guard version;
+- (b) whether line-art/text-like raster images keep their resolution (needs a classifier + a count
+  of such images in the 17 docs).
