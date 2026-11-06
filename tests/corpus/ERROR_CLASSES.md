@@ -1184,4 +1184,4 @@ unreadable. Whenever the new JPEG is smaller (any downsample, a lower quality) i
   /DeviceRGB; a grey JPEG with /Decode is left alone.
 - After the fix: those pages −0.1…−4.8 %; the real scan renders whole; e2e (channels match
   the colour space) fails before, passes after; corpus gate 39/0 FAIL.
-**Status:** `fixing` — waiting for the owner's OK, then verified on pdfree.io.
+**Status:** `verified` — #153 on pdfree.io (482dba70, 2026-11-06): real-1361504 through the live site on Standard and Maximum renders whole (JPEG RGB ↔ /DeviceRGB); compress e2e on pdfree.io 16/16.

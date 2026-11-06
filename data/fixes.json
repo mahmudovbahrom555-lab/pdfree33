@@ -17,6 +17,15 @@
    "summary": "Today the 5 / 10 / 25 MB choices apply fixed settings and don't check the result. We measured it: the target was met for 13–50 % of large files. We are building a size check that keeps small print, stamps and Chinese text readable, and says so honestly when a size can't be reached."
   },
   {
+   "id": "C31",
+   "tool": "compress",
+   "status": "fixed",
+   "date": "2026-11-06",
+   "verified": "2026-11-06, a real grey scan through pdfree.io on Standard and Maximum renders whole; compress e2e on pdfree.io",
+   "title": "Compress destroyed some grey scans",
+   "summary": "A grey scan from an office scanner could come out as overlapping, unreadable copies of the page on Standard and Maximum. Fixed: the page now stays whole."
+  },
+  {
    "id": "C30",
    "tool": "compress",
    "status": "fixed",
