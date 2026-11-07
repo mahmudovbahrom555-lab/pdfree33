@@ -550,3 +550,17 @@ Compress technical part closed. Open, owner side:
 - the new Compress screen (UI/UX);
 - Arabic copy after 2026-11-16 (#165 draft);
 - the pre-pass growth candidate (6015658).
+
+## CORRECTION 2026-11-07 — the size numbers of Stages 2–4 were inflated by the measuring tool
+The prototype outputs (d_proto.py, chain_run.py) were saved with pikepdf, which Flate-compresses every
+UNCOMPRESSED stream on save. Several DEV docs carry megabytes of uncompressed content streams (2635275: 126
+streams, 7.96 MB; 6619605: ~30 MB). The site saves with pdf-lib and leaves them as they are.
+
+| 17 DEV docs | Size |
+|---|---|
+| L | 417.4 MB |
+| D300 through the site's own code (site300/, pdf-lib save) | **364.4 MB (−12.7 %)** |
+| D300 as reported before (pikepdf save) | 318.5 MB (−23.7 %) |
+
+D300's image bytes and every quality and integrity result stand. Only the size totals were wrong.
+A new, lossless candidate follows from this: compress the uncompressed streams.
