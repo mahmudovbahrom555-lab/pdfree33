@@ -26,6 +26,7 @@ import shutil
 import subprocess
 import sys
 from datetime import date
+from blog_hreflang import normalize_blog_hreflang
 
 try:
     from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -1578,6 +1579,10 @@ def main():
         # Generate sitemap
         print('Writing sitemap...')
         _write_sitemap(config, DIST)
+
+        # Reconcile existing blog translation groups in both output formats.
+        n_blog_alternates = normalize_blog_hreflang(DIST, BASE_URL)
+        print(f'  reciprocal blog hreflang: {n_blog_alternates} pages')
 
         # Write version manifest for production smoke testing
         print('Writing version manifest...')
