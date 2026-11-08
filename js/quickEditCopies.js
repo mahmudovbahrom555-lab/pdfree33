@@ -75,7 +75,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument) {
     for (const line of lines) {
       const next = lines.find(other => other.y === line.y && other.x > line.right);
       line.page = pageIndex;
-      line.maxRight = next ? next.x - 12 : line.right;
+      line.maxRight = next ? Math.max(line.right, next.x - 12) : line.right;
       const span = document.createElement('span');
       span.className = 'qe-original-line';
       span.textContent = line.text;

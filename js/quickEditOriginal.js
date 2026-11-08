@@ -25,11 +25,11 @@ export function originalLines(items) {
   for (const item of items) {
     if (!item.str?.trim() && item.str !== ' ') continue;
     const [size, skewX, skewY, height, x, y] = item.transform;
-    if (size <= 0 || skewX || skewY || Math.abs(size - height) > 0.01) continue;
+    if (size <= 0 || skewX || Math.abs(skewY) > size * 0.4 || Math.abs(size - height) > 0.01) continue;
     // PDF.js may represent a wide column gutter as one synthetic space.
     if (item.str === ' ' && item.width > Math.max(18, size * 2)) continue;
     const row = baselines.get(y) ?? [];
-    row.push({ ...item, x, y, size });
+    row.push({ ...item, x, y, size, skew: skewY / size });
     baselines.set(y, row);
   }
 
@@ -37,9 +37,10 @@ export function originalLines(items) {
   for (const row of baselines.values()) {
     let line;
     for (const item of row.sort((a, b) => a.x - b.x)) {
-      if (!line || item.x - line.right > Math.max(18, item.size * 2)) {
+      if (!line || item.x - line.right > Math.max(18, item.size * 2) ||
+          Math.abs(item.skew - line.skew) > 0.01) {
         line = { text: '', x: item.x, y: item.y, right: item.x, size: item.size,
-          fontName: item.fontName, mixed: false };
+          fontName: item.fontName, mixed: false, skew: item.skew };
         lines.push(line);
       }
       line.text += item.str;
@@ -105,17 +106,26 @@ function redactRect(sheet, line, pageHeight) {
     Math.max(...selected.map(glyph => glyph.bounds[2])) - 0.05,
     Math.max(...selected.map(glyph => glyph.bounds[3])) - 0.05,
   ];
-  if (rect[0] >= rect[2] || rect[1] >= rect[3] || glyphs.some(({ bounds }, index) =>
-    !selectedSet.has(glyphs[index]) &&
-    bounds[0] < rect[2] && rect[0] < bounds[2] && bounds[1] < rect[3] && rect[1] < bounds[3]
-  )) {
+  const safeRect = candidate => candidate[0] < candidate[2] && candidate[1] < candidate[3] &&
+    !glyphs.some(glyph => !selectedSet.has(glyph) &&
+      glyph.bounds[0] < candidate[2] && candidate[0] < glyph.bounds[2] &&
+      glyph.bounds[1] < candidate[3] && candidate[1] < glyph.bounds[3]);
+  // Italic overhang can make the union touch an adjacent upright glyph.
+  // Try a small rectangle inside each selected glyph instead. Verification
+  // still rejects the export if any unselected glyph was actually removed.
+  const rectangles = safeRect(rect) ? [rect] : selected.map(({ bounds }) => {
+    const x = (bounds[0] + bounds[2]) / 2;
+    const y = (bounds[1] + bounds[3]) / 2;
+    return [x - 0.1, y - 0.1, x + 0.1, y + 0.1];
+  });
+  if (!rectangles.every(safeRect)) {
     throw new Error(`Page ${line.page + 1}: replacing this line may remove nearby text.`);
   }
   const { font, color } = selected[0];
   if (selected.some(glyph => glyph.font !== font || glyph.color.some((value, index) => value !== color[index]))) {
     throw new Error(`Page ${line.page + 1}: the selected line has mixed text styling.`);
   }
-  return { rect, font, color };
+  return { rectangles, font, color };
 }
 
 async function removeOriginalLines(original, lines) {
@@ -136,12 +146,14 @@ async function removeOriginalLines(original, lines) {
             plan = redactRect(sheet, line, height);
             original.plans.set(line, plan);
           }
-          const mark = sheet.createAnnotation('Redact');
-          try {
-            mark.setRect(plan.rect);
-            mark.update();
-          } finally {
-            mark.destroy();
+          for (const rect of plan.rectangles) {
+            const mark = sheet.createAnnotation('Redact');
+            try {
+              mark.setRect(rect);
+              mark.update();
+            } finally {
+              mark.destroy();
+            }
           }
         }
         sheet.applyRedactions(false, engine.PDFPage.REDACT_IMAGE_NONE,
@@ -171,7 +183,11 @@ export async function prepareOriginalCopy(original, lines) {
     const page = input.getPage(line.page);
     const crop = page.getCropBox();
     const media = page.getMediaBox();
-    if (line.mixed || crop.x || crop.y || crop.width !== media.width || crop.height !== media.height) {
+    // WPS/OFD exports can write CropBox endpoints in reverse order.
+    const sameBox = Math.min(crop.x, crop.x + crop.width) === media.x &&
+      Math.min(crop.y, crop.y + crop.height) === media.y &&
+      Math.abs(crop.width) === media.width && Math.abs(crop.height) === media.height;
+    if (line.mixed || !sameBox) {
       throw new Error(`Page ${line.page + 1}: this line uses a layout the replacement cannot preserve.`);
     }
   }
@@ -190,12 +206,13 @@ export async function writeOriginalCopy(prepared, changes, allowSmallerText) {
   const fonts = new Map();
   async function embed(path) {
     if (!fonts.has(path)) {
-      const font = await doc.embedFont(await loadReplacementFont(path), { subset: true });
+      const font = await doc.embedFont(await loadReplacementFont(path), { subset: !path.includes('notosanssc') });
       fonts.set(path, { font, characters: new Set(font.getCharacterSet()) });
     }
     return fonts.get(path);
   }
 
+  let usedChinese = false;
   for (const { line, text } of changes) {
     const page = doc.getPage(line.page);
     const plan = prepared.plans.get(line);
@@ -203,6 +220,7 @@ export async function writeOriginalCopy(prepared, changes, allowSmallerText) {
     let selected = await embed(`./vendor/liberation-fonts/${plan.font}`);
     if (codepoints.some(point => !selected.characters.has(point)) && /\p{Script=Han}/u.test(text)) {
       selected = await embed('./vendor/noto/notosanssc-v40.ttf');
+      usedChinese = true;
     }
     if (codepoints.some(point => !selected.characters.has(point))) {
       throw new Error(`Page ${line.page + 1}: the replacement font does not contain every character.`);
@@ -215,10 +233,28 @@ export async function writeOriginalCopy(prepared, changes, allowSmallerText) {
       throw new Error(`Page ${line.page + 1}: this name does not fit the selected line.`);
     }
     const [r, g, b] = plan.color;
-    page.drawText(text, { x: line.x, y: line.y, size, font, color: window.PDFLib.rgb(r, g, b) });
+    page.drawText(text, { x: line.x, y: line.y, size, font,
+      ySkew: window.PDFLib.radians(Math.atan(line.skew)), color: window.PDFLib.rgb(r, g, b) });
   }
 
-  const bytes = await doc.save();
+  let bytes = await doc.save();
+  if (usedChinese) {
+    // fontkit's direct Noto SC subset can contain invisible glyphs even when
+    // ToUnicode is correct. Subset the valid, fully embedded PDF with MuPDF.
+    const engine = await loadOriginalEngine();
+    const output = engine.Document.openDocument(bytes, 'application/pdf');
+    try {
+      output.subsetFonts();
+      const buffer = output.saveToBuffer('garbage=4,compress');
+      try {
+        bytes = buffer.asUint8Array().slice();
+      } finally {
+        buffer.destroy();
+      }
+    } finally {
+      output.destroy();
+    }
+  }
   const check = await window.pdfjsLib.getDocument({ data: bytes.slice(), isEvalSupported: false }).promise;
   try {
     if (check.numPages !== prepared.pageCount) throw new Error('The page count changed. No file was exported.');

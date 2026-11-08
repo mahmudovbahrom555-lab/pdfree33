@@ -312,12 +312,13 @@ await test('personalized copies replace only selected text and export one PDF pe
 });
 
 await test('preserve original layout replaces separate columns on two original PDF pages', async () => {
-  const { PDFDocument, StandardFonts } = await import('pdf-lib');
+  const { PDFDocument, PDFName, StandardFonts, degrees } = await import('pdf-lib');
   const input = await PDFDocument.create();
   const font = await input.embedFont(StandardFonts.Helvetica);
   for (let index = 0; index < 2; index++) {
     const sheet = input.addPage([500, 600]);
-    sheet.drawText('1', { x: 50, y: 500, size: 12, font });
+    sheet.node.set(PDFName.of('CropBox'), input.context.obj([0, 600, 500, 0]));
+    sheet.drawText('1', { x: 50, y: 500, size: 12, font, ySkew: degrees(index ? 0 : 12) });
     sheet.drawText('Other party: 1', { x: 275, y: 500, size: 12, font });
     sheet.drawText('This paragraph remains unchanged.', { x: 50, y: 450, size: 12, font });
   }
@@ -360,7 +361,19 @@ await test('preserve original layout replaces separate columns on two original P
         for (let index = 1; index <= doc.numPages; index++) {
           const sheet = await doc.getPage(index);
           const items = (await sheet.getTextContent()).items.filter(item => item.str.trim());
-          pages.push(items.map(item => [item.str, item.transform[4], item.transform[5]]));
+          const viewport = sheet.getViewport({ scale: 2 });
+          const canvas = document.createElement('canvas');
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          const context = canvas.getContext('2d');
+          await sheet.render({ canvasContext: context, viewport }).promise;
+          // Each Han glyph should visibly paint inside its own advance.
+          // Text extraction alone passes even when the embedded outlines are missing.
+          const glyphsVisible = Array.from({ length: 3 }, (_, index) => {
+            const { data } = context.getImageData(100 + 24 * index, 173, 24, 31);
+            return data.some((value, offset) => offset % 4 === 0 && value < 120);
+          }).every(Boolean);
+          pages.push({ glyphsVisible, items: items.map(item => [item.str, item.transform[4], item.transform[5]]) });
         }
         return pages;
       } finally {
@@ -368,7 +381,8 @@ await test('preserve original layout replaces separate columns on two original P
       }
     }, Array.from(output));
     expect(text.length).toBe(2);
-    for (const items of text) {
+    for (const { items, glyphsVisible } of text) {
+      expect(glyphsVisible).toBeTruthy();
       expect(items.some(([str, x, y]) => str === '王小明' && x === 50 && y === 500)).toBeTruthy();
       expect(items.some(([str, x, y]) => str === 'Other party: 1' && x === 275 && y === 500)).toBeTruthy();
       expect(items.some(([str]) => str === '1')).toBeFalsy();
