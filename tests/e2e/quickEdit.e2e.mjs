@@ -77,7 +77,7 @@ async function captureDownload(page) {
 
 console.log(`Quick Edit PDF E2E — real end-to-end round trip (real browser, ${BASE_URL}):`);
 
-const browser = await chromium.launch();
+const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH });
 
 await test('Atlas gate blocks a text-extraction-failure document (no editor, #mergeBtn disabled)', async () => {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
@@ -230,6 +230,152 @@ await test('Save on a document with intact RTL text shows the same unsupported-s
   const sawWarning = toasts.some(t => /Chinese|Japanese|Korean|Arabic|Hebrew|Thai|emoji/i.test(t));
   if (!sawWarning) throw new Error(`Expected an unsupported-script warning toast, saw: ${JSON.stringify(toasts)}`);
   await page.close();
+});
+
+await test('personalized copies replace only selected text and export one PDF per recipient', async () => {
+  const page = await browser.newPage();
+  try {
+    await page.goto(`${BASE_URL}/quick-edit-pdf/`);
+    await page.setInputFiles('#fileInput', EXTRACTABLE_PDF);
+    await page.waitForSelector('.qe-modal--open .qe-editable-run');
+    await page.getByRole('button', { name: 'Create personalized copies' }).click();
+    expect(await page.locator('#qeModalSaveBtn').isVisible()).toBeFalsy();
+    expect(await page.locator('[data-download]').isEnabled()).toBeFalsy();
+    await page.locator('[data-recipient-file]').setInputFiles({
+      name: 'recipients.csv', mimeType: 'text/csv',
+      buffer: Buffer.from('Group,Full name\nA,Anna Example\nB,Boris Example'),
+    });
+    await page.locator('[data-import-column]').selectOption('1');
+    await page.getByRole('button', { name: 'Use this column' }).click();
+    expect(await page.locator('#qeCopies textarea').inputValue()).toBe('Anna Example\nBoris Example');
+    expect(await page.locator('[data-recipient-count]').innerText()).toBe('2 recipients');
+    expect(await page.locator('[data-download]').isEnabled()).toBeFalsy();
+    const originals = await page.evaluate(() => {
+      const spans = Array.from(document.querySelectorAll('.qe-editable-run'))
+        .filter(span => span.firstChild?.nodeType === Node.TEXT_NODE && /[a-z]{4}/i.test(span.textContent));
+      return spans.slice(0, 2).map(span => span.textContent.match(/[a-z]{4}/i)[0]);
+    });
+    expect(originals.length).toBe(2);
+    for (let index = 0; index < originals.length; index++) {
+      await page.evaluate(index => {
+        const spans = Array.from(document.querySelectorAll('.qe-editable-run'))
+          .filter(span => span.firstChild?.nodeType === Node.TEXT_NODE && /[a-z]{4}/i.test(span.textContent));
+        const span = spans[index];
+        const start = span.textContent.search(/[a-z]{4}/i);
+        const range = document.createRange();
+        range.setStart(span.firstChild, start);
+        range.setEnd(span.firstChild, start + 4);
+        const selection = getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }, index);
+      await page.getByRole('button', { name: 'Use selected text' }).click();
+      expect(await page.locator('[data-field-count]').innerText()).toBe(`${index + 1} ${index === 0 ? 'field' : 'fields'} selected`);
+    }
+    await page.locator('#qeCopyRecipient').selectOption('1');
+    const [sample] = await Promise.all([
+      page.waitForEvent('download'),
+      page.getByRole('button', { name: 'Download sample PDF' }).click(),
+    ]);
+    expect(sample.suggestedFilename()).toBe('2 - Boris Example.pdf');
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.getByRole('button', { name: 'Download ZIP' }).click(),
+    ]);
+    const { readFile } = await import('node:fs/promises');
+    const bytes = await readFile(await download.path());
+    const copies = await page.evaluate(async bytes => {
+      const zip = await window.JSZip.loadAsync(bytes);
+      const pdfjs = await import('/js/vendor/pdfjs-4.10.38/pdf.min.js');
+      pdfjs.GlobalWorkerOptions.workerSrc = '/js/vendor/pdfjs-4.10.38/pdf.worker.min.js';
+      const result = [];
+      for (const entry of Object.values(zip.files)) {
+        const doc = await pdfjs.getDocument({ data: await entry.async('uint8array') }).promise;
+        const content = await (await doc.getPage(1)).getTextContent();
+        result.push(content.items.map(item => item.str).join(' ').replace(/\s+/g, ' ').trim());
+        await doc.destroy();
+      }
+      return result;
+    }, Array.from(bytes));
+    expect(copies.length).toBe(2);
+    expect(copies[0].split('Anna Example').length).toBe(3);
+    expect(copies[1].split('Boris Example').length).toBe(3);
+    expect(copies[0].includes('Boris Example')).toBeFalsy();
+    expect(copies[0].includes('A second independent paragraph for testing purposes.')).toBeTruthy();
+    await page.locator('#qeCopies textarea').fill('王小明');
+    await page.getByRole('button', { name: 'Download ZIP' }).click();
+    await page.locator('#qeCopies [role=status]').filter({ hasText: 'cannot export safely' }).waitFor();
+    expect(await page.locator('.qe-editable-run').allTextContents().then(values => values.some(value => value.includes('Anna Example')))).toBeFalsy();
+  } finally {
+    await page.close();
+  }
+});
+
+await test('preserve original layout replaces separate columns on two original PDF pages', async () => {
+  const { PDFDocument, StandardFonts } = await import('pdf-lib');
+  const input = await PDFDocument.create();
+  const font = await input.embedFont(StandardFonts.Helvetica);
+  for (let index = 0; index < 2; index++) {
+    const sheet = input.addPage([500, 600]);
+    sheet.drawText('1', { x: 50, y: 500, size: 12, font });
+    sheet.drawText('Other party: 1', { x: 275, y: 500, size: 12, font });
+    sheet.drawText('This paragraph remains unchanged.', { x: 50, y: 450, size: 12, font });
+  }
+  const page = await browser.newPage();
+  try {
+    await page.goto(`${BASE_URL}/quick-edit-pdf/`);
+    await page.setInputFiles('#fileInput', {
+      name: 'layout-test.pdf', mimeType: 'application/pdf', buffer: Buffer.from(await input.save()),
+    });
+    await page.waitForSelector('.qe-modal--open');
+    await page.locator('[data-copies-toggle]').click();
+    await page.locator('#qeCopies textarea').fill('王小明');
+    await page.locator('[data-preserve-layout]').check();
+    await page.waitForFunction(() => !document.querySelector('[data-preserve-layout]').disabled);
+    if (!await page.locator('[data-preserve-layout]').isChecked()) {
+      throw new Error(await page.locator('#qeCopies [role=status]').innerText());
+    }
+    for (let index = 0; index < 2; index++) {
+      if (index) await page.locator('#qeOriginalPage').selectOption(String(index));
+      const field = page.locator('.qe-original-line').filter({ hasText: /^1$/ });
+      await field.evaluate(span => {
+        const range = document.createRange();
+        range.selectNodeContents(span.firstChild);
+        getSelection().removeAllRanges();
+        getSelection().addRange(range);
+      });
+      await page.locator('[data-bind]').click();
+      expect(await page.locator('#qeCopies [role=status]').innerText()).toBe('Name field added.');
+    }
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.locator('[data-preview]').click(),
+    ]);
+    const { readFile } = await import('node:fs/promises');
+    const output = await readFile(await download.path());
+    const text = await page.evaluate(async bytes => {
+      const doc = await window.pdfjsLib.getDocument({ data: Uint8Array.from(bytes) }).promise;
+      try {
+        const pages = [];
+        for (let index = 1; index <= doc.numPages; index++) {
+          const sheet = await doc.getPage(index);
+          const items = (await sheet.getTextContent()).items.filter(item => item.str.trim());
+          pages.push(items.map(item => [item.str, item.transform[4], item.transform[5]]));
+        }
+        return pages;
+      } finally {
+        await doc.destroy();
+      }
+    }, Array.from(output));
+    expect(text.length).toBe(2);
+    for (const items of text) {
+      expect(items.some(([str, x, y]) => str === '王小明' && x === 50 && y === 500)).toBeTruthy();
+      expect(items.some(([str, x, y]) => str === 'Other party: 1' && x === 275 && y === 500)).toBeTruthy();
+      expect(items.some(([str]) => str === '1')).toBeFalsy();
+    }
+  } finally {
+    await page.close();
+  }
 });
 
 await browser.close();

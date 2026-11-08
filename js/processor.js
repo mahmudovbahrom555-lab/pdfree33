@@ -2908,7 +2908,7 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
  * @returns {Promise<{ blob: Blob, atlasEri: object|null, confidence: object|null,
  *   effectivePages: number, totalPages: number }>}
  */
-export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, stripMetadata = true, onProgress, isCancelled } = {}) {
+export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, stripMetadata = true, preserveNumericFields = false, onProgress, isCancelled } = {}) {
   onProgress?.(5, 'Loading libraries…');
 
   try {
@@ -2981,7 +2981,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
     } finally {
       await ocr.close();
     }
-    ({ paragraphs, cs } = await _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { repeatPatternSet, isCancelled, onProgress }));
+    ({ paragraphs, cs } = await _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { repeatPatternSet, preserveNumericFields, isCancelled, onProgress }));
     confidence = _p2wConfidence(cs, median);
   } else {
     onProgress?.(10, 'Rendering pages…');
@@ -3059,7 +3059,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
       if (cs.totalTables > 0 && atlasEri.components.tables < _ERI_TABLE_RETRY_THRESHOLD) {
         onProgress?.(95, 'Verifying table structure…');
         const retry = await _p2wBuildParagraphs(
-          pdfDoc, pageData, median, repeatTextSet, cs, { useTables: false, repeatPatternSet, isCancelled, onProgress }
+          pdfDoc, pageData, median, repeatTextSet, cs, { useTables: false, repeatPatternSet, preserveNumericFields, isCancelled, onProgress }
         );
         const retryBlob = await repairSplitSurrogates(await Packer.toBlob(_buildDoc(retry.paragraphs)), window.JSZip);
         const retryEri = await evaluateStructural(await retryBlob.arrayBuffer());
@@ -4487,7 +4487,7 @@ async function _runUnlock(filesSnapshot, { password } = {}) {
 // useTables:false skips text-detected AND border-grid tables entirely (all
 // their lines flow through the normal paragraph path instead) — used as the
 // conservative fallback when the first attempt's tables look mis-detected.
-export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { useTables = true, repeatPatternSet = new Set(), isCancelled = () => !isProcessing, onProgress = setProgress } = {}) {
+export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { useTables = true, repeatPatternSet = new Set(), preserveNumericFields = false, isCancelled = () => !isProcessing, onProgress = setProgress } = {}) {
   // window.__pdfreeDocxBuilder — see the namespace-collision comment on
   // _buildPdf2WordDocxBlob's own window.__pdfreeDocxBuilder read, above.
   const { Paragraph, TextRun, HeadingLevel,
@@ -4973,7 +4973,8 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
           // (last 3 lines) that contains only a pure integer. Checking only the
           // very last line missed cases where the CamScanner watermark line is
           // below the page number, making the number the second-to-last line.
-          if (lineIdx >= lines.length - 3 && ln.items.length === 1 && !lineToTable.has(lineIdx)) {
+          // Quick Edit must keep standalone numeric fields (e.g. contract placeholders).
+          if (!preserveNumericFields && lineIdx >= lines.length - 3 && ln.items.length === 1 && !lineToTable.has(lineIdx)) {
             const t = ln.items[0].str.trim();
             if (/^\d+$/.test(t)) continue;
           }

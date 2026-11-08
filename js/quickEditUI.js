@@ -30,6 +30,8 @@ import { setButtonDisabled }            from './ui.js';
 import { loadPdfJs }                    from './pdf2jpgUI.js';
 import { renderDocxToDom }              from './docxToPdfCore.js';
 import { _buildPdf2WordDocxBlob }       from './processor.js';
+import { bindQuickEditCopies } from './quickEditCopies.js';
+import { RECIPIENT_LIMIT } from './quickEditRecipients.js';
 import { t }                            from './i18n.js';
 
 // Focus-trap selector — same standard set formFieldsUI.js uses.
@@ -41,9 +43,11 @@ let _loading    = false;
 let _generation = 0;    // staleness guard, same pattern as formFieldsUI.js
 let _container  = null; // the outer #quickEditOptions panel
 let _fileLabel  = '';
+let _sourceFile = null;
 let _docContainer = null; // the live docx-preview render target — lives INSIDE the modal while open
 let _atlasEri   = null; // {eri, components, findings} from _buildPdf2WordDocxBlob — pre-edit gate
 let _modal      = null;
+let _clearCopyFields = null;
 let _prevFocus  = null;
 let _inerted    = [];
 
@@ -71,6 +75,7 @@ export function hideQuickEditOptions() {
   _closeModal({ silent: true });
   _loading = false;
   _fileLabel = '';
+  _sourceFile = null;
   _docContainer = null;
   _atlasEri = null;
   _generation++;
@@ -191,6 +196,7 @@ async function _prepareAndRender(file, container) {
     // — real progress text, not a static spinner message.
     const { blob, atlasEri } = await _buildPdf2WordDocxBlob(file, {
       mode: 'text',
+      preserveNumericFields: true,
       onProgress:  (pct, label) => {
         if (myGen === _generation) container.innerHTML = _spinnerHTML(label || 'Converting to an editable form…');
       },
@@ -234,6 +240,7 @@ async function _prepareAndRender(file, container) {
 
     _loading    = false;
     _fileLabel  = file.name;
+    _sourceFile = file;
     _container  = container;
 
     container.innerHTML = _triggerHTML();
@@ -263,8 +270,68 @@ async function _openModal(docContainer) {
         <button type="button" class="qe-modal-close" id="qeModalClose" aria-label="${esc(t('quickedit_close_aria'))}">✕</button>
       </div>
       <p class="qe-modal__hint">${esc(t('quickedit_modal_hint'))}</p>
-      <div class="qe-modal__stage" id="qeModalStage"></div>
+      <div class="qe-workspace">
+        <div class="qe-modal__stage" id="qeModalStage"></div>
+        <section id="qeCopies" class="qe-copies" aria-labelledby="qeCopiesTitle" hidden>
+          <h2 id="qeCopiesTitle">Personalized copies</h2>
+          <p class="qe-copies__intro">Create one PDF for each recipient from this document.</p>
+
+          <div class="qe-copies__step">
+            <label><input type="checkbox" data-preserve-layout> Preserve original layout <small>(experimental)</small></label>
+            <p data-layout-hint>Quick Edit rebuilds the PDF. Check the sample for changes to page breaks or layout.</p>
+            <div data-original-options hidden>
+              <label for="qeOriginalPage">Original page</label>
+              <select id="qeOriginalPage"></select>
+              <label><input type="checkbox" data-smaller-text> Allow slightly smaller text when a name does not fit</label>
+              <p>Selected lines use an available replacement font. Changing modes clears selected fields.</p>
+            </div>
+          </div>
+
+          <div class="qe-copies__step">
+            <label for="qeCopyNames">1. Add recipients</label>
+            <p id="qeCopyNamesHint">Paste one full name per line or import a table. Up to ${RECIPIENT_LIMIT} recipients.</p>
+            <textarea id="qeCopyNames" rows="4" aria-describedby="qeCopyNamesHint"
+              placeholder="Anna Example&#10;Boris Example" spellcheck="false"></textarea>
+            <p data-recipient-count>0 recipients</p>
+            <label for="qeRecipientFile">Import Excel or CSV</label>
+            <input type="file" id="qeRecipientFile" data-recipient-file accept=".xlsx,.csv,.tsv">
+            <div data-import-options hidden>
+              <label for="qeRecipientSheet">Sheet</label>
+              <select id="qeRecipientSheet" data-import-sheet></select>
+              <label for="qeRecipientStart">First row with a name</label>
+              <input id="qeRecipientStart" data-import-start type="number" min="1" value="2">
+              <label for="qeRecipientColumn">Full name column</label>
+              <select id="qeRecipientColumn" data-import-column></select>
+              <p data-import-preview></p>
+              <button type="button" class="qe-copies__button" data-import-apply disabled>Use this column</button>
+            </div>
+          </div>
+
+          <div class="qe-copies__step">
+            <h3>2. Mark the name fields</h3>
+            <p>Select a name or placeholder in the document, then add it as a field. Repeat for each place to replace.</p>
+            <div class="qe-copies__actions">
+              <button type="button" class="qe-copies__button" data-bind>Use selected text</button>
+              <button type="button" class="qe-copies__button" data-reset disabled>Clear fields</button>
+            </div>
+            <p data-field-count>0 fields selected</p>
+          </div>
+
+          <div class="qe-copies__step">
+            <h3>3. Check and download</h3>
+            <p>Check a sample PDF before sharing the copies.</p>
+            <label for="qeCopyRecipient">Sample recipient</label>
+            <select id="qeCopyRecipient" disabled><option>Add names first</option></select>
+            <div class="qe-copies__actions">
+              <button type="button" class="qe-copies__button" data-preview disabled>Download sample PDF</button>
+              <button type="button" class="qe-copies__button qe-copies__button--primary" data-download disabled>Download ZIP</button>
+            </div>
+          </div>
+          <p class="qe-copies__status" role="status"></p>
+        </section>
+      </div>
       <div class="qe-modal__footer">
+        <button type="button" class="qe-copies__button" data-copies-toggle aria-expanded="false" aria-controls="qeCopies">Create personalized copies</button>
         <button type="button" class="merge-btn" id="qeModalSaveBtn" style="position:static;margin-top:0;">${esc(t('quickedit_save_btn'))}</button>
       </div>
     </div>`;
@@ -321,6 +388,7 @@ async function _openModal(docContainer) {
     // delegated listener + editable-run classes already applied the first
     // time are still intact on the same, never-torn-down DOM node.
     if (docContainer) _bindEditableSpans(target);
+    _clearCopyFields = bindQuickEditCopies(id('qeCopies'), target, _sourceFile, _fitDocContainerToStage);
   }
 
   id('qeModalClose')?.focus();
@@ -368,6 +436,7 @@ let _activeEditSpan = null; // the one span currently in edit mode, or null
 function _bindEditableSpans(container) {
   _markEditableSpans(container);
   container.addEventListener('click', e => {
+    if (id('qeCopies')?.hidden === false) return;
     const span = e.target.closest('span');
     if (!_isEditableSpan(span)) return;
     if (span === _activeEditSpan) return; // already editing this one
@@ -496,7 +565,7 @@ function _fitDocContainerToStage(container) {
   const section = container.querySelector('.docx-wrapper > section.docx');
   const stage   = id('qeModalStage');
   if (!section || !stage) return;
-  const sectionWidth = section.getBoundingClientRect().width;
+  const sectionWidth = section.offsetWidth;
   const stageWidth   = stage.getBoundingClientRect().width - 32; // minus .qe-modal__stage's own padding
   if (sectionWidth <= 0 || stageWidth <= 0) return;
   const scale = Math.min(1, stageWidth / sectionWidth);
@@ -504,6 +573,7 @@ function _fitDocContainerToStage(container) {
   if (!wrapper) return;
   wrapper.style.transform       = scale < 1 ? `scale(${scale})` : '';
   wrapper.style.transformOrigin = 'top center';
+  wrapper.style.marginBottom = '';
   // Scaling via CSS transform doesn't shrink the element's own layout box
   // (the stage would still reserve/scroll the UNSCALED height) — compensate
   // so the visible content doesn't leave a tall dead-space gap below it.
@@ -550,6 +620,8 @@ function _setBackgroundInert(on) {
 function _closeModal({ silent = false } = {}) {
   const wasOpen = !!_modal;
   if (_modal) {
+    _clearCopyFields?.();
+    _clearCopyFields = null;
     document.removeEventListener('keydown', _onModalKeydown);
     _modal.remove();
     _modal = null;

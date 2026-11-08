@@ -1190,6 +1190,21 @@ def _generate_search_keywords(config, dist_root):
 
 # ── Static asset copy ─────────────────────────────────────────────────────────
 
+def _copy_quick_edit_dependencies(out_dir):
+    packages = {
+        'mupdf-1.28.1': ('mupdf', ('LICENSE', 'dist/mupdf.js', 'dist/mupdf-wasm.js', 'dist/mupdf-wasm.wasm')),
+        'read-excel-file-9.3.14': ('read-excel-file', ('LICENSE', 'bundle/read-excel-file.min.js')),
+    }
+    for directory, (package, files) in packages.items():
+        target = os.path.join(out_dir, 'js', 'vendor', directory)
+        os.makedirs(target, exist_ok=True)
+        for name in files:
+            source = os.path.join(ROOT, 'node_modules', package, name)
+            if not os.path.isfile(source):
+                raise RuntimeError(f'Missing {package} build asset. Run npm ci before building.')
+            shutil.copyfile(source, os.path.join(target, os.path.basename(name)))
+
+
 def _should_skip(name, is_dir):
     if is_dir:
         return name in SKIP_DIRS
@@ -1535,6 +1550,7 @@ def main():
         # Copy static assets
         print('Copying static assets...')
         _copy_static(ROOT, DIST, tool_dirs)
+        _copy_quick_edit_dependencies(DIST)
         print('  done')
 
         if BASE_URL != 'https://pdfree.io':
