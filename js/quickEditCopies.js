@@ -1,6 +1,6 @@
 import { walkDomToPdfContent, pdfContentToBlob } from './docxToPdfCore.js';
 import { loadJSZip } from './lazyLibs.js';
-import { openOriginalPdf, originalLines, prepareOriginalCopy, writeOriginalCopy } from './quickEditOriginal.js';
+import { openOriginalPdf, originalLines, planOriginalCopies, prepareOriginalCopy, writeOriginalCopy } from './quickEditOriginal.js';
 import { bindRecipientImport, RECIPIENT_LIMIT } from './quickEditRecipients.js';
 
 export function substituteFields(text, fields, name) {
@@ -16,13 +16,21 @@ export function copyFilename(name, index) {
   return `${index + 1} - ${Array.from(safe).slice(0, 60).join('')}.pdf`;
 }
 
-export function bindQuickEditCopies(panel, source, file, fitDocument) {
+export function bindQuickEditCopies(panel, source, file, fitDocument, originalOnly = false) {
   const names = panel.querySelector('textarea');
   const status = panel.querySelector('[role="status"]');
   const bind = panel.querySelector('[data-bind]');
   const reset = panel.querySelector('[data-reset]');
   const preview = panel.querySelector('[data-preview]');
   const download = panel.querySelector('[data-download]');
+  const stop = panel.querySelector('[data-stop]');
+  let activeJob = null;
+  stop.addEventListener('click', () => {
+    if (!activeJob) return;
+    activeJob.cancelled = true;
+    stop.disabled = true;
+    status.textContent = 'Stopping after the current operation…';
+  });
   const recipient = panel.querySelector('#qeCopyRecipient');
   const dialog = panel.closest('[role="dialog"]');
   const toggle = dialog.querySelector('[data-copies-toggle]');
@@ -88,7 +96,8 @@ export function bindQuickEditCopies(panel, source, file, fitDocument) {
       originalRows.set(span, { key, line });
       originalView.appendChild(span);
     }
-    bind.disabled = false;
+    bind.disabled = !lines.length;
+    status.textContent = lines.length ? '' : 'This page has no selectable text. Choose another page.';
   }
 
   async function changeOriginalPage() {
@@ -134,7 +143,8 @@ export function bindQuickEditCopies(panel, source, file, fitDocument) {
       bind.disabled = false;
       status.textContent = error.message;
     } finally {
-      preserve.disabled = toggle.disabled = false;
+      preserve.disabled = originalOnly;
+      toggle.disabled = false;
     }
   });
   const readNames = () => names.value.split(/\r?\n/).map(name => name.trim()).filter(Boolean);
@@ -232,7 +242,12 @@ export function bindQuickEditCopies(panel, source, file, fitDocument) {
       return;
     }
 
+    if (busy) return;
     const sampleIndex = recipient.selectedIndex;
+    const job = { cancelled: false };
+    activeJob = job;
+    stop.hidden = false;
+    stop.disabled = false;
     const controls = [names, bind, reset, preview, download, toggle, recipient, preserve, pageSelect, smallerText];
     const importControls = Array.from(panel.querySelectorAll('[data-recipient-file], [data-import-options] input, [data-import-options] select, [data-import-options] button'))
       .filter(control => !control.disabled);
@@ -247,7 +262,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument) {
       clone.inert = true;
       panel.appendChild(clone);
     }
-    const cancelled = () => !panel.isConnected;
+    const cancelled = () => job.cancelled || !panel.isConnected;
 
     try {
       const copied = clone ? [...clone.querySelectorAll('.qe-editable-run')] : [];
@@ -255,9 +270,21 @@ export function bindQuickEditCopies(panel, source, file, fitDocument) {
       const count = batch ? recipients.length : 1;
       const assignments = [...fields.values()];
       let prepared;
+      let planned;
       if (preserve.checked) {
         status.textContent = 'Preparing the selected lines…';
         prepared = await prepareOriginalCopy(original, assignments.map(ranges => ranges[0].line));
+        if (cancelled()) return;
+        status.textContent = `Checking ${count} ${count === 1 ? 'recipient' : 'recipients'} before export…`;
+        const copies = Array.from({ length: count }, (_, index) => {
+          const recipientIndex = batch ? index : sampleIndex;
+          return { recipientIndex, changes: assignments.map(ranges => ({
+            line: ranges[0].line,
+            text: substituteFields(ranges[0].text, ranges, recipients[recipientIndex]),
+          })) };
+        });
+        planned = await planOriginalCopies(prepared, copies, smallerText.checked, cancelled);
+        if (cancelled()) return;
       }
       let result;
       let totalBytes = 0;
@@ -266,12 +293,8 @@ export function bindQuickEditCopies(panel, source, file, fitDocument) {
         const name = recipients[batch ? index : sampleIndex];
         status.textContent = `Building copy ${index + 1} of ${count}…`;
         if (preserve.checked) {
-          const changes = assignments.map(ranges => ({
-            line: ranges[0].line,
-            text: substituteFields(ranges[0].text, ranges, name),
-          }));
           try {
-            result = await writeOriginalCopy(prepared, changes, smallerText.checked);
+            result = await writeOriginalCopy(prepared, planned[index]);
           } catch (error) {
             throw new Error(`Recipient ${batch ? index + 1 : sampleIndex + 1}: ${error.message}`, { cause: error });
           }
@@ -289,6 +312,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument) {
           }
           result = await pdfContentToBlob(parsed, { isCancelled: cancelled });
         }
+        if (cancelled()) return;
         if (zip) {
           totalBytes += result.size;
           if (totalBytes > 100 * 1024 * 1024) throw new Error('The ZIP exceeds 100 MB. Split the list into smaller batches.');
@@ -308,6 +332,9 @@ export function bindQuickEditCopies(panel, source, file, fitDocument) {
       if (!cancelled()) status.textContent = error.message;
     } finally {
       clone?.remove();
+      if (job.cancelled && panel.isConnected) status.textContent = 'Export stopped. You can edit the list and try again.';
+      activeJob = null;
+      stop.hidden = true;
       busy = false;
       controls.forEach(control => { control.disabled = false; });
       refreshActions();
@@ -316,6 +343,13 @@ export function bindQuickEditCopies(panel, source, file, fitDocument) {
 
   preview.addEventListener('click', () => generate(false));
   download.addEventListener('click', () => generate(true));
+  if (originalOnly) {
+    toggle.click();
+    toggle.hidden = true;
+    preserve.closest('label').hidden = true;
+    preserve.checked = true;
+    preserve.dispatchEvent(new Event('change'));
+  }
   return () => {
     clearFields();
     renderVersion++;

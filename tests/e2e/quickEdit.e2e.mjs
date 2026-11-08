@@ -32,7 +32,7 @@
 //  Run: node tests/e2e/quickEdit.e2e.mjs
 // ============================================================
 
-import { chromium } from 'playwright';
+import { chromium, firefox, webkit } from 'playwright';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -77,7 +77,8 @@ async function captureDownload(page) {
 
 console.log(`Quick Edit PDF E2E — real end-to-end round trip (real browser, ${BASE_URL}):`);
 
-const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH });
+const engine = { chromium, firefox, webkit }[process.env.PDFREE_BROWSER || 'chromium'];
+const browser = await engine.launch({ executablePath: process.env.CHROME_PATH });
 
 await test('Atlas gate blocks a text-extraction-failure document (no editor, #mergeBtn disabled)', async () => {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
@@ -94,6 +95,12 @@ await test('Atlas gate blocks a text-extraction-failure document (no editor, #me
   expect(modalOpen).toBe(0);
   const disabled = await page.locator('#mergeBtn').isDisabled();
   expect(disabled).toBeTruthy();
+  await page.locator('#qeOpenOriginal').click();
+  await page.locator('#qeOriginalPage').waitFor({ state: 'visible' });
+  expect(await page.locator('#qeModalSaveBtn').isVisible()).toBeFalsy();
+  expect(await page.locator('[data-download]').isEnabled()).toBeFalsy();
+  await page.locator('#qeModalClose').click();
+  expect(await page.locator('#mergeBtn').isDisabled()).toBeTruthy();
   await page.close();
 });
 
@@ -243,11 +250,15 @@ await test('personalized copies replace only selected text and export one PDF pe
     expect(await page.locator('[data-download]').isEnabled()).toBeFalsy();
     await page.locator('[data-recipient-file]').setInputFiles({
       name: 'recipients.csv', mimeType: 'text/csv',
-      buffer: Buffer.from('Group,Full name\nA,Anna Example\nB,Boris Example'),
+      buffer: Buffer.from('Group,Full name\nA,Anna Example\nB,Boris Example\nC,Anna Example\nD,'),
     });
     await page.locator('[data-import-column]').selectOption('1');
+    const importSummary = await page.locator('[data-import-preview]').innerText();
+    expect(importSummary.includes('1 blank or non-text rows skipped')).toBeTruthy();
+    expect(importSummary.includes('1 repeated names kept as separate copies')).toBeTruthy();
     await page.getByRole('button', { name: 'Use this column' }).click();
-    expect(await page.locator('#qeCopies textarea').inputValue()).toBe('Anna Example\nBoris Example');
+    expect(await page.locator('#qeCopies textarea').inputValue()).toBe('Anna Example\nBoris Example\nAnna Example');
+    await page.locator('#qeCopies textarea').fill('Anna Example\nBoris Example');
     expect(await page.locator('[data-recipient-count]').innerText()).toBe('2 recipients');
     expect(await page.locator('[data-download]').isEnabled()).toBeFalsy();
     const originals = await page.evaluate(() => {
@@ -348,6 +359,22 @@ await test('preserve original layout replaces separate columns on two original P
       await page.locator('[data-bind]').click();
       expect(await page.locator('#qeCopies [role=status]').innerText()).toBe('Name field added.');
     }
+    const names = page.locator('#qeCopies textarea');
+    await names.fill('王小明\n' + '非常长的采购公司名称'.repeat(35));
+    let downloads = 0;
+    page.on('download', () => { downloads++; });
+    await page.locator('[data-download]').click();
+    await page.locator('#qeCopies [role=status]').filter({
+      hasText: 'Recipient 2, page 1: the name does not fit',
+    }).waitFor();
+    expect(downloads).toBe(0);
+
+    await names.fill(Array.from({ length: 30 }, () => '王小明').join('\n'));
+    await page.locator('[data-download]').click();
+    await page.locator('[data-stop]').click();
+    await page.locator('#qeCopies [role=status]').filter({ hasText: 'Export stopped' }).waitFor();
+    expect(downloads).toBe(0);
+    await names.fill('王小明');
     const [download] = await Promise.all([
       page.waitForEvent('download'),
       page.locator('[data-preview]').click(),

@@ -200,45 +200,67 @@ export async function prepareOriginalCopy(original, lines) {
   return { bytes, pages, plans: original.plans, pageCount: original.pdf.numPages };
 }
 
-export async function writeOriginalCopy(prepared, changes, allowSmallerText) {
-  const doc = await window.PDFLib.PDFDocument.load(prepared.bytes, { updateMetadata: false });
+const CHINESE_FONT = './vendor/noto/notosanssc-v40.ttf';
+
+function replacementFonts(doc) {
   doc.registerFontkit(window.fontkit);
   const fonts = new Map();
-  async function embed(path) {
+  return async path => {
     if (!fonts.has(path)) {
-      const font = await doc.embedFont(await loadReplacementFont(path), { subset: !path.includes('notosanssc') });
+      const font = await doc.embedFont(await loadReplacementFont(path), { subset: path !== CHINESE_FONT });
       fonts.set(path, { font, characters: new Set(font.getCharacterSet()) });
     }
     return fonts.get(path);
-  }
+  };
+}
 
-  let usedChinese = false;
-  for (const { line, text } of changes) {
-    const page = doc.getPage(line.page);
-    const plan = prepared.plans.get(line);
-    const codepoints = Array.from(text, char => char.codePointAt(0));
-    let selected = await embed(`./vendor/liberation-fonts/${plan.font}`);
-    if (codepoints.some(point => !selected.characters.has(point)) && /\p{Script=Han}/u.test(text)) {
-      selected = await embed('./vendor/noto/notosanssc-v40.ttf');
-      usedChinese = true;
+// Measure every recipient before generating the first PDF. Use the same
+// embedded font and width calculation as export, including CJK fallback.
+export async function planOriginalCopies(prepared, copies, allowSmallerText, isCancelled) {
+  const metricsDoc = await window.PDFLib.PDFDocument.create();
+  const loadFont = replacementFonts(metricsDoc);
+  const result = [];
+  for (const [index, { recipientIndex, changes }] of copies.entries()) {
+    if (index % 8 === 0) await new Promise(resolve => setTimeout(resolve, 0));
+    if (isCancelled()) return null;
+    const planned = [];
+    for (const { line, text } of changes) {
+      const { font, color } = prepared.plans.get(line);
+      const codepoints = Array.from(text, char => char.codePointAt(0));
+      let path = `./vendor/liberation-fonts/${font}`;
+      let selected = await loadFont(path);
+      if (codepoints.some(point => !selected.characters.has(point)) && /\p{Script=Han}/u.test(text)) {
+        path = CHINESE_FONT;
+        selected = await loadFont(path);
+      }
+      const page = line.page + 1;
+      if (codepoints.some(point => !selected.characters.has(point))) {
+        throw new Error(`Recipient ${recipientIndex + 1}, page ${page}: the replacement font does not contain every character.`);
+      }
+      const width = selected.font.widthOfTextAtSize(text, line.size);
+      const size = Math.min(line.size, line.size * (line.maxRight - line.x) / width);
+      if (!(size > 0) || (size < line.size - 0.01 && (!allowSmallerText || size < line.size * 0.85))) {
+        throw new Error(`Recipient ${recipientIndex + 1}, page ${page}: the name does not fit the selected line.`);
+      }
+      planned.push({ line, text, path, color, size });
     }
-    if (codepoints.some(point => !selected.characters.has(point))) {
-      throw new Error(`Page ${line.page + 1}: the replacement font does not contain every character.`);
-    }
-    const { font } = selected;
-    const maxWidth = line.maxRight - line.x;
-    const width = font.widthOfTextAtSize(text, line.size);
-    const size = Math.min(line.size, line.size * maxWidth / width);
-    if (size < line.size - 0.01 && (!allowSmallerText || size < line.size * 0.85)) {
-      throw new Error(`Page ${line.page + 1}: this name does not fit the selected line.`);
-    }
-    const [r, g, b] = plan.color;
-    page.drawText(text, { x: line.x, y: line.y, size, font,
+    result.push(planned);
+  }
+  return result;
+}
+
+export async function writeOriginalCopy(prepared, changes) {
+  const doc = await window.PDFLib.PDFDocument.load(prepared.bytes, { updateMetadata: false });
+  const loadFont = replacementFonts(doc);
+  for (const { line, text, path, color, size } of changes) {
+    const { font } = await loadFont(path);
+    const [r, g, b] = color;
+    doc.getPage(line.page).drawText(text, { x: line.x, y: line.y, size, font,
       ySkew: window.PDFLib.radians(Math.atan(line.skew)), color: window.PDFLib.rgb(r, g, b) });
   }
 
   let bytes = await doc.save();
-  if (usedChinese) {
+  if (changes.some(change => change.path === CHINESE_FONT)) {
     // fontkit's direct Noto SC subset can contain invisible glyphs even when
     // ToUnicode is correct. Subset the valid, fully embedded PDF with MuPDF.
     const engine = await loadOriginalEngine();

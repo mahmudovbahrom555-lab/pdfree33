@@ -95,11 +95,19 @@ export function bindRecipientImport(panel, names, status) {
 
   function refreshPreview() {
     const values = selectedNames();
+    const rows = selectedRows();
+    const first = Number(start.value);
+    const duplicates = values.length - new Set(values).size;
+    const skipped = Number.isInteger(first) && first > 0 ? Math.max(0, rows.length - first + 1 - values.length) : 0;
+    const notes = [
+      skipped ? `${skipped} blank or non-text rows skipped` : '',
+      duplicates ? `${duplicates} repeated names kept as separate copies` : '',
+    ].filter(Boolean);
     const multiline = values.some(value => /[\r\n]/.test(value));
     apply.disabled = !values.length || values.length > RECIPIENT_LIMIT || multiline;
     preview.textContent = multiline ? 'The selected column contains names on multiple lines.'
       : values.length > RECIPIENT_LIMIT ? `This column has ${values.length} names. The limit is ${RECIPIENT_LIMIT}.`
-      : values.length ? `${values.length} names · ${values.slice(0, 3).join(' · ')}`
+      : values.length ? `${values.length} names · ${[...values.slice(0, 3), ...notes].join(' · ')}`
       : 'No text values in this column from the selected row.';
   }
 
@@ -145,7 +153,9 @@ export function bindRecipientImport(panel, names, status) {
       }
       if (request !== generation || !panel.isConnected) return;
       show(data);
-      status.textContent = 'Choose the first data row and the column containing full names.';
+      status.textContent = /\.xlsx$/i.test(file.name)
+        ? 'Choose the first data row and the full-name column. Hidden rows can be included; review the resulting list.'
+        : 'Choose the first data row and the column containing full names.';
     } catch (error) {
       if (request === generation && panel.isConnected) status.textContent = error.message;
     }

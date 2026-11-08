@@ -125,13 +125,17 @@ function _atlasSummaryHTML(atlasEri) {
 
 function _spinnerHTML(msg) {
   return `<div style="padding:24px 16px;text-align:center;color:var(--text3);font-size:14px;">
-    <div style="font-size:24px;margin-bottom:8px;">⏳</div>${esc(msg)}</div>`;
+    <div style="font-size:24px;margin-bottom:8px;">⏳</div><span data-qe-progress>${esc(msg)}</span>${_sourceOnlyButton()}</div>`;
 }
 
 function _errorHTML(msg) {
   return `<div style="padding:16px;border:1px solid #fca5a5;border-radius:10px;background:#fff1f2;color:#dc2626;font-size:13px;">
     ${esc(msg)}
   </div>`;
+}
+
+function _sourceOnlyButton() {
+  return '<button type="button" class="qe-copies__button" id="qeOpenOriginal">Open original for personalized copies</button>';
 }
 
 // Shown when the source PDF's structure survived the PDF->DOCX step too
@@ -151,6 +155,7 @@ function _blockedHTML(atlasEri) {
       <p style="margin:0;font-size:13px;color:var(--text3);line-height:1.5;">
         ${esc(t('quickedit_blocked_body'))}<a href="/pdf-to-word/" style="color:var(--green-text);">${esc(t('quickedit_blocked_link'))}</a>${esc(t('quickedit_blocked_suffix'))}
       </p>
+      ${_sourceOnlyButton()}
     </div>`;
 }
 
@@ -169,6 +174,12 @@ function _triggerHTML() {
 
 function _bindTriggerEvents(container) {
   container.querySelector('#qeReopenBtn')?.addEventListener('click', () => _openModal());
+  container.querySelector('#qeOpenOriginal')?.addEventListener('click', () => {
+    _generation++;
+    _loading = false;
+    _openModal(null, true);
+    setButtonDisabled();
+  });
 }
 
 // ── Build: PDF -> DOCX blob (reusing pdf2word's own engine, text mode
@@ -179,7 +190,13 @@ async function _prepareAndRender(file, container) {
   _atlasEri = null;
   const myGen = ++_generation;
   _closeModal({ silent: true }); // a new file replaces any editor already open for a previous one
+  _sourceFile = file;
+  _fileLabel = file.name;
+  _container = container;
+  _docContainer = null;
   container.innerHTML = _spinnerHTML('Converting to an editable form…');
+  _bindTriggerEvents(container);
+  const progress = container.querySelector('[data-qe-progress]');
 
   try {
     // _buildPdf2WordDocxBlob expects window.pdfjsLib to already be loaded
@@ -198,7 +215,7 @@ async function _prepareAndRender(file, container) {
       mode: 'text',
       preserveNumericFields: true,
       onProgress:  (pct, label) => {
-        if (myGen === _generation) container.innerHTML = _spinnerHTML(label || 'Converting to an editable form…');
+        if (myGen === _generation) progress.textContent = label || 'Converting to an editable form…';
       },
       isCancelled: () => myGen !== _generation,
     });
@@ -213,11 +230,12 @@ async function _prepareAndRender(file, container) {
     if (atlasEri && !atlasEri.error && atlasEri.eri < _ATLAS_BLOCK_THRESHOLD) {
       _loading = false;
       container.innerHTML = _blockedHTML(atlasEri);
+      _bindTriggerEvents(container);
       setButtonDisabled();
       return;
     }
 
-    container.innerHTML = _spinnerHTML('Rendering preview…');
+    progress.textContent = 'Rendering preview…';
 
     // Off-screen render target, moved into the modal's stage once built —
     // same "caller owns the container" contract renderDocxToDom documents.
@@ -249,7 +267,8 @@ async function _prepareAndRender(file, container) {
   } catch (err) {
     if (myGen !== _generation) return;
     _loading = false;
-    container.innerHTML = _errorHTML(err.message);
+    container.innerHTML = _errorHTML(err.message) + _sourceOnlyButton();
+    _bindTriggerEvents(container);
     setButtonDisabled();
   }
 }
@@ -257,7 +276,7 @@ async function _prepareAndRender(file, container) {
 // ── Full-viewport modal (mirrors js/formFieldsUI.js's _openModal almost
 // line-for-line — see that file for the fuller rationale on each piece) ──
 
-async function _openModal(docContainer) {
+async function _openModal(docContainer, originalOnly = false) {
   if (_modal) return;
   const active = document.activeElement;
   _prevFocus = active && typeof active.focus === 'function' ? active : null;
@@ -325,6 +344,7 @@ async function _openModal(docContainer) {
             <div class="qe-copies__actions">
               <button type="button" class="qe-copies__button" data-preview disabled>Download sample PDF</button>
               <button type="button" class="qe-copies__button qe-copies__button--primary" data-download disabled>Download ZIP</button>
+              <button type="button" class="qe-copies__button" data-stop hidden>Stop export</button>
             </div>
           </div>
           <p class="qe-copies__status" role="status"></p>
@@ -361,7 +381,7 @@ async function _openModal(docContainer) {
   // saved in module state, so reopening resumes the SAME live DOM (and any
   // edits already made to it, once Stage 3 lands) rather than re-rendering
   // from scratch.
-  const target = docContainer || _docContainer;
+  const target = originalOnly ? document.createElement('div') : docContainer || _docContainer;
   if (target) {
     id('qeModalStage').appendChild(target);
     // Real bug, found via empirical click-testing (Stage 3): while
@@ -381,14 +401,14 @@ async function _openModal(docContainer) {
     // now that `target` genuinely IS inside the modal.
     target.removeAttribute('inert');
     target.removeAttribute('aria-hidden');
-    _docContainer = target;
+    if (!originalOnly) _docContainer = target;
     _fitDocContainerToStage(target);
     // Only bind once per container — reopening (docContainer===undefined,
     // falls back to _docContainer) must NOT re-run this, since the
     // delegated listener + editable-run classes already applied the first
     // time are still intact on the same, never-torn-down DOM node.
     if (docContainer) _bindEditableSpans(target);
-    _clearCopyFields = bindQuickEditCopies(id('qeCopies'), target, _sourceFile, _fitDocContainerToStage);
+    _clearCopyFields = bindQuickEditCopies(id('qeCopies'), target, _sourceFile, _fitDocContainerToStage, originalOnly);
   }
 
   id('qeModalClose')?.focus();
@@ -628,7 +648,8 @@ function _closeModal({ silent = false } = {}) {
   }
   _setBackgroundInert(false);
   if (!silent && _container) {
-    _container.innerHTML = _triggerHTML();
+    _container.innerHTML = _docContainer ? _triggerHTML()
+      : _atlasEri && !_atlasEri.error && _atlasEri.eri < _ATLAS_BLOCK_THRESHOLD ? _blockedHTML(_atlasEri) : _sourceOnlyButton();
     _bindTriggerEvents(_container);
   }
   if (wasOpen) _restoreFocus(silent);
@@ -636,7 +657,7 @@ function _closeModal({ silent = false } = {}) {
 
 function _restoreFocus(silent) {
   let target = null;
-  if (!silent && _container) target = _container.querySelector('#qeReopenBtn');
+  if (!silent && _container) target = _container.querySelector('#qeReopenBtn, #qeOpenOriginal');
   if (!target && _prevFocus && _prevFocus.isConnected) target = _prevFocus;
   _prevFocus = null;
   try { target?.focus(); } catch { /* element became unfocusable — nothing to restore to */ }
