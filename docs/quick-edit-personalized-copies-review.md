@@ -4,7 +4,7 @@
 
 Open **Personalized PDF copies** from PDFree search, from the Watermark page, or before choosing a file in Quick Edit PDF. All three open the existing editor in the original-layout mode. **Try an example** creates a fictional invitation and fills two fictional recipient names. Paste one full name per line, or import XLSX/CSV/TSV. A pasted tabular selection from Excel or WPS opens the same column picker. Choose the sheet, first row with a name, and full-name column. The list supports 100 recipients, with a 100 MiB limit on accumulated PDFs per ZIP.
 
-**Preserve original layout** opens the original page with selectable text. Mark each occurrence individually. The same name goes into all marked locations for a recipient. Choose a sample recipient and download a single PDF before generating the ZIP. The existing Quick Edit rebuild route remains available, with a warning that it can change layout.
+**Preserve original layout** opens the original page with selectable text. Mark each occurrence individually. The same name goes into all marked locations for a recipient. Choose a recipient to preview the generated PDF on the current page. Check all names for font and fit problems before downloading the ZIP, or download a single sample PDF. On a scan, the placement marker shows the selected name immediately. The existing Quick Edit rebuild route remains available, with a warning that it can change layout.
 
 ## Implementation
 

@@ -468,6 +468,7 @@ await test('original layout styles only the inserted name and can place a name o
     if (mobile) await preview.tap({ position });
     else await preview.click({ position });
     expect(await page.locator('[data-field-count]').innerText()).toBe('2 fields selected');
+    expect(await page.locator('.qe-scan-field').innerText()).toBe('Anna Example');
 
     await page.locator('[data-name-style] summary').click();
     const styleToggle = page.locator('[data-style-enable]');
@@ -554,7 +555,7 @@ await test('Simplified Chinese copies localizes import, overflow and cancellatio
     });
     await page.getByRole('button', { name: '使用选中的文字' }).click();
     await page.locator('#qeCopies textarea').fill('王小明\n' + '非常长的采购公司名称'.repeat(25));
-    await page.getByRole('button', { name: '下载 ZIP' }).click();
+    await page.getByRole('button', { name: '检查所有姓名' }).click();
     await status.filter({ hasText: '第 2 位收件人，第 1 页：姓名放不进选中的文本行。' }).waitFor();
     await page.locator('#qeCopies textarea').fill(Array.from({ length: 30 }, () => '王小明').join('\n'));
     await page.getByRole('button', { name: '下载 ZIP' }).click();
@@ -609,6 +610,14 @@ await test('example loads fictional recipients and exports a ZIP without a user 
       getSelection().addRange(range);
     });
     await page.locator('[data-bind]').click();
+    await page.getByRole('button', { name: 'Preview on page' }).click();
+    await page.getByRole('img', { name: 'Generated PDF preview' }).waitFor();
+    await page.locator('#qeCopyRecipient').selectOption('1');
+    await page.getByRole('img', { name: 'Generated PDF preview' }).waitFor();
+    await page.getByRole('button', { name: 'Back to field editing' }).click();
+    expect(await page.getByRole('img', { name: 'Generated PDF preview' }).count()).toBe(0);
+    await page.getByRole('button', { name: 'Check all names' }).click();
+    await page.locator('#qeCopies [role=status]').filter({ hasText: 'All names fit' }).waitFor();
     const [download] = await Promise.all([
       page.waitForEvent('download'),
       page.locator('[data-download]').click(),

@@ -376,10 +376,12 @@ async function _openModal(docContainer, originalOnly = false) {
 
           <div class="qe-copies__step">
             <h3>${copyText('3. Check and download', '3. 检查并下载')}</h3>
-            <p>${copyText('Check a sample PDF before sharing the copies.', '分享副本之前，请先检查一份样本 PDF。')}</p>
+            <p>${copyText('Preview a recipient and check that the names fit before downloading.', '下载前可预览收件人的副本，并检查姓名是否放得下。')}</p>
             <label for="qeCopyRecipient">${copyText('Sample recipient', '样本收件人')}</label>
             <select id="qeCopyRecipient" disabled><option>${copyText('Add names first', '请先添加姓名')}</option></select>
             <div class="qe-copies__actions">
+              <button type="button" class="qe-copies__button" data-view-sample hidden disabled>${copyText('Preview on page', '在当前页预览')}</button>
+              <button type="button" class="qe-copies__button" data-check-copies hidden disabled>${copyText('Check all names', '检查所有姓名')}</button>
               <button type="button" class="qe-copies__button" data-preview disabled>${copyText('Download sample PDF', '下载样本 PDF')}</button>
               <button type="button" class="qe-copies__button qe-copies__button--primary" data-download disabled>${copyText('Download ZIP', '下载 ZIP')}</button>
               <button type="button" class="qe-copies__button" data-stop hidden>${copyText('Stop export', '停止导出')}</button>

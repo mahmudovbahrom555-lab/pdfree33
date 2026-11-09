@@ -35,6 +35,8 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
   const bind = panel.querySelector('[data-bind]');
   const reset = panel.querySelector('[data-reset]');
   const preview = panel.querySelector('[data-preview]');
+  const viewSample = panel.querySelector('[data-view-sample]');
+  const checkCopies = panel.querySelector('[data-check-copies]');
   const download = panel.querySelector('[data-download]');
   const stop = panel.querySelector('[data-stop]');
   let activeJob = null;
@@ -88,7 +90,18 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
   const originalView = document.createElement('div');
   originalView.className = 'qe-original-page';
   originalView.hidden = true;
-  stage.appendChild(originalView);
+  const sampleView = document.createElement('div');
+  sampleView.className = 'qe-original-page';
+  sampleView.hidden = true;
+  stage.append(originalView, sampleView);
+
+  function closeSample() {
+    if (sampleView.hidden) return;
+    sampleView.hidden = true;
+    sampleView.replaceChildren();
+    originalView.hidden = false;
+    viewSample.textContent = copyText('Preview on page', '在当前页预览');
+  }
   let original = null;
   let originalRows = new Map();
   let renderVersion = 0;
@@ -101,6 +114,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
   }
 
   async function renderOriginal() {
+    closeSample();
     const version = ++renderVersion;
     stopPlacement();
     scannedPage = null;
@@ -157,7 +171,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
   function showPlacement(line) {
     const mark = document.createElement('span');
     mark.className = 'qe-scan-field';
-    mark.textContent = copyText('Name', "姓名");
+    mark.textContent = selectedName();
     mark.style.left = `${line.x / scannedPage.width * 100}%`;
     mark.style.top = `${(scannedPage.height - line.y - line.size) / scannedPage.height * 100}%`;
     mark.style.width = `${(line.maxRight - line.x) / scannedPage.width * 100}%`;
@@ -243,14 +257,17 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
       bind.disabled = false;
       status.textContent = error.message;
     } finally {
+      refreshActions();
       preserve.disabled = originalOnly;
       toggle.disabled = false;
     }
   });
   const readNames = () => names.value.split(/\r?\n/).map(name => name.trim()).filter(Boolean);
+  const selectedName = () => readNames()[recipient.selectedIndex] || copyText('Name', '姓名');
   let busy = false;
 
   function refreshActions() {
+    for (const mark of originalView.querySelectorAll('.qe-scan-field')) mark.textContent = selectedName();
     const count = readNames().length;
     const fieldCount = [...fields.values()].reduce((total, ranges) => total + ranges.length, 0);
     panel.querySelector('[data-recipient-count]').textContent = count > RECIPIENT_LIMIT
@@ -261,9 +278,19 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
     reset.disabled = busy || !fieldCount;
     recipient.disabled = busy || !count || count > RECIPIENT_LIMIT;
     preview.disabled = download.disabled = busy || !fieldCount || !count || count > RECIPIENT_LIMIT;
+    viewSample.hidden = checkCopies.hidden = !preserve.checked;
+    viewSample.disabled = checkCopies.disabled = download.disabled;
   }
 
+  recipient.addEventListener('change', () => {
+    refreshActions();
+    if (!sampleView.hidden) void generate(false, 'view');
+  });
+  styling.addEventListener('input', closeSample);
+  smallerText.addEventListener('change', closeSample);
+  place.addEventListener('click', closeSample);
   names.addEventListener('input', () => {
+    closeSample();
     const previous = recipient.selectedIndex;
     const entries = readNames();
     recipient.replaceChildren(...(entries.length && entries.length <= RECIPIENT_LIMIT
@@ -324,6 +351,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
   });
 
   function clearFields() {
+    closeSample();
     for (const span of stage.querySelectorAll('.qe-copy-field')) span.classList.remove('qe-copy-field');
     for (const mark of originalView.querySelectorAll('.qe-scan-field')) mark.remove();
     stopPlacement();
@@ -337,14 +365,15 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
     refreshActions();
   });
 
-  async function generate(batch) {
+  async function generate(batch, action = 'download') {
+    if (busy) return;
+    closeSample();
     const recipients = readNames();
     if (!recipients.length || !fields.size || recipients.length > RECIPIENT_LIMIT) {
       status.textContent = copyText(`Select at least one field and enter 1–${RECIPIENT_LIMIT} names.`, `请至少选中一个字段，并输入 1 至 ${RECIPIENT_LIMIT} 个姓名。`);
       return;
     }
 
-    if (busy) return;
     let custom;
     try {
       custom = preserve.checked ? appearance() : null;
@@ -354,11 +383,12 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
     }
     stopPlacement();
     const sampleIndex = recipient.selectedIndex;
+    const samplePage = Number(pageSelect.value);
     const job = { cancelled: false };
     activeJob = job;
     stop.hidden = false;
     stop.disabled = false;
-    const controls = [names, bind, reset, preview, download, toggle, recipient, preserve, pageSelect, smallerText, place, ...styling.querySelectorAll('input, select')].filter(control => !control.disabled);
+    const controls = [names, bind, reset, preview, download, viewSample, checkCopies, toggle, recipient, preserve, pageSelect, smallerText, place, ...styling.querySelectorAll('input, select')].filter(control => !control.disabled);
     const importControls = Array.from(panel.querySelectorAll('[data-recipient-file], [data-import-options] input, [data-import-options] select, [data-import-options] button'))
       .filter(control => !control.disabled);
     controls.push(...importControls);
@@ -376,7 +406,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
 
     try {
       const copied = clone ? [...clone.querySelectorAll('.qe-editable-run')] : [];
-      const zip = batch ? await loadJSZip().then(() => new window.JSZip()) : null;
+      const zip = batch && action === 'download' ? await loadJSZip().then(() => new window.JSZip()) : null;
       const count = batch ? recipients.length : 1;
       const assignments = [...fields.values()];
       let prepared;
@@ -397,6 +427,10 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
         });
         planned = await planOriginalCopies(prepared, copies, smallerText.checked, cancelled);
         if (cancelled()) return;
+      }
+      if (action === 'check') {
+        status.textContent = copyText('All names fit in the selected fields.', '所有姓名均可放入所选字段。');
+        return;
       }
       let result;
       let totalBytes = 0;
@@ -433,6 +467,32 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
       }
       if (zip) result = await zip.generateAsync({ type: 'blob' });
       if (cancelled()) return;
+      if (action === 'view') {
+        const pdf = await window.pdfjsLib.getDocument({
+          data: new Uint8Array(await result.arrayBuffer()), isEvalSupported: false,
+        }).promise;
+        try {
+          const page = await pdf.getPage(samplePage + 1);
+          const viewport = page.getViewport({ scale: 1.5 });
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.ceil(viewport.width);
+          canvas.height = Math.ceil(viewport.height);
+          canvas.setAttribute('role', 'img');
+          canvas.setAttribute('aria-label', copyText('Generated PDF preview', '生成的 PDF 预览'));
+          await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+          if (cancelled()) return;
+          sampleView.style.maxWidth = originalView.style.maxWidth;
+          sampleView.replaceChildren(canvas);
+          sampleView.hidden = false;
+          originalView.hidden = true;
+          sampleView.scrollIntoView({ block: 'nearest' });
+          viewSample.textContent = copyText('Back to field editing', '返回字段编辑');
+          status.textContent = copyText('Showing the generated PDF on the current page.', '正在显示生成的 PDF 当前页。');
+        } finally {
+          await pdf.destroy();
+        }
+        return;
+      }
       const url = URL.createObjectURL(result);
       const link = document.createElement('a');
       link.href = url;
@@ -453,6 +513,11 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
     }
   }
 
+  viewSample.addEventListener('click', () => {
+    if (sampleView.hidden) void generate(false, 'view');
+    else closeSample();
+  });
+  checkCopies.addEventListener('click', () => generate(true, 'check'));
   preview.addEventListener('click', () => generate(false));
   download.addEventListener('click', () => generate(true));
   if (originalOnly) {
