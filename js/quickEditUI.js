@@ -40,6 +40,8 @@ const FOCUSABLE_SEL = 'a[href], button:not([disabled]), input:not([disabled]), '
   'select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 // ── State ──────────────────────────────────────────────────────
+export const quickEditExamples = new WeakMap();
+
 let _loading    = false;
 let _generation = 0;    // staleness guard, same pattern as formFieldsUI.js
 let _container  = null; // the outer #quickEditOptions panel
@@ -54,11 +56,28 @@ let _inerted    = [];
 
 // ── Public API ────────────────────────────────────────────────
 
+export const COPY_MODE = 'personalized-copies';
+export const COPY_MODE_QUERY = `?mode=${COPY_MODE}`;
+
 export function initQuickEditOptions(file) {
   const el = id('quickEditOptions');
   if (!el) return;
   el.style.display = '';
   if (!file) { el.innerHTML = ''; _closeModal({ silent: true }); return; }
+  if (new URLSearchParams(location.search).get('mode') === COPY_MODE) {
+    _generation++;
+    _closeModal({ silent: true });
+    _loading = false;
+    _atlasEri = null;
+    _sourceFile = file;
+    _fileLabel = file.name;
+    _container = el;
+    _docContainer = null;
+    el.innerHTML = _sourceOnlyButton();
+    _bindTriggerEvents(el);
+    void _openModal(null, true);
+    return;
+  }
   _prepareAndRender(file, el);
 }
 
@@ -428,6 +447,12 @@ async function _openModal(docContainer, originalOnly = false) {
     // time are still intact on the same, never-torn-down DOM node.
     if (docContainer) _bindEditableSpans(target);
     _clearCopyFields = bindQuickEditCopies(id('qeCopies'), target, _sourceFile, _fitDocContainerToStage, originalOnly);
+    const exampleNames = quickEditExamples.get(_sourceFile);
+    if (exampleNames) {
+      const names = id('qeCopyNames');
+      names.value = exampleNames;
+      names.dispatchEvent(new Event('input'));
+    }
   }
 
   id('qeModalClose')?.focus();

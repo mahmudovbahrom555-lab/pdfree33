@@ -565,6 +565,60 @@ await test('Simplified Chinese copies localizes import, overflow and cancellatio
   }
 });
 
+await test('homepage search and Watermark open personalized copies in the existing editor', async () => {
+  const page = await browser.newPage();
+  try {
+    for (const [home, query, editor] of [
+      ['/', 'pdf mail merge', '/quick-edit-pdf/'],
+      ['/zh/', 'Excel名单生成PDF', '/zh/kuaisu-bianji-pdf/'],
+    ]) {
+      await page.goto(BASE_URL + home);
+      await page.locator('#toolSearch').fill(query);
+      const link = page.locator('#searchResult [role=link]');
+      await link.waitFor();
+      await link.press('Enter');
+      await page.waitForURL(BASE_URL + editor + '?mode=personalized-copies');
+      expect(await page.locator('[data-qe-mode=personalized-copies]').getAttribute('aria-pressed')).toBe('true');
+    }
+    await page.goto(BASE_URL + '/zh/shuiyin-pdf/');
+    await page.getByRole('link', { name: '批量生成个性化 PDF' }).click();
+    await page.waitForURL(BASE_URL + '/zh/kuaisu-bianji-pdf/?mode=personalized-copies');
+    await page.setInputFiles('#fileInput', EXTRACTABLE_PDF);
+    await page.getByRole('heading', { name: '个性化 PDF 副本' }).waitFor();
+    expect(await page.locator('#qeCopyNames').inputValue()).toBe('');
+  } finally {
+    await page.close();
+  }
+});
+
+await test('example loads fictional recipients and exports a ZIP without a user file', async () => {
+  const page = await browser.newPage({ acceptDownloads: true });
+  try {
+    await page.goto(BASE_URL + '/quick-edit-pdf/');
+    await page.getByRole('button', { name: 'Try an example' }).click();
+    await page.locator('#qeCopies').waitFor();
+    expect(await page.locator('#qeCopyNames').inputValue()).toBe('Alex Morgan\nJamie Chen');
+    const placeholder = page.locator('.qe-original-line').filter({ hasText: 'SAMPLE NAME' });
+    await placeholder.evaluate(span => {
+      const text = span.firstChild;
+      const start = text.textContent.indexOf('SAMPLE NAME');
+      const range = document.createRange();
+      range.setStart(text, start);
+      range.setEnd(text, start + 'SAMPLE NAME'.length);
+      getSelection().removeAllRanges();
+      getSelection().addRange(range);
+    });
+    await page.locator('[data-bind]').click();
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.locator('[data-download]').click(),
+    ]);
+    expect(download.suggestedFilename().endsWith('.zip')).toBeTruthy();
+  } finally {
+    await page.close();
+  }
+});
+
 await browser.close();
 
 console.log(`\n${'─'.repeat(40)}\nTests: ${passed + failed} | ✓ ${passed} | ${failed} failed`);

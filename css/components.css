@@ -6610,3 +6610,22 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 
 .qe-copies [data-style-options] { border: 0; margin: 0; min-inline-size: 0; padding: 0; }
 .qe-copies [data-style-options]:disabled { opacity: .6; }
+
+.qe-entry {
+  margin: 14px 0;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.qe-entry__choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.qe-entry p { margin: 8px 0; }
+.qe-entry [aria-pressed="true"] {
+  color: var(--green-text);
+  background: var(--green-light);
+  border-color: currentColor;
+}
+.qe-entry a { text-decoration: underline; }
