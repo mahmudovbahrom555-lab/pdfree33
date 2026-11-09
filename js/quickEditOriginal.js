@@ -217,6 +217,16 @@ function replacementFonts(doc) {
   };
 }
 
+// Keep words intact. Han names can break between adjacent ideographs.
+function twoLineName(text, font, size, available) {
+  const breaks = [...text.matchAll(/\s+|(?<=\p{Script=Han})(?=\p{Script=Han})/gu)];
+  for (const { index } of breaks.reverse()) {
+    const lines = [text.slice(0, index).trimEnd(), text.slice(index).trimStart()];
+    if (lines.every(line => line && font.widthOfTextAtSize(line, size) <= available)) return lines;
+  }
+  return null;
+}
+
 // Measure every recipient before generating the first PDF. Use the same
 // embedded font and width calculation as export, including CJK fallback.
 export async function planOriginalCopies(prepared, copies, allowSmallerText, isCancelled) {
@@ -259,6 +269,20 @@ export async function planOriginalCopies(prepared, copies, allowSmallerText, isC
       const fixed = runs.reduce((total, run) => total + (run.name ? 0 : run.width), 0);
       const flexible = runs.reduce((total, run) => total + (run.name ? run.width : 0), 0);
       const scale = flexible ? Math.min(1, (available - fixed) / flexible) : 1;
+      if (line.placed && line.wrap && scale < 0.999 && runs.length === 1 && runs[0].size <= 16) {
+        const run = runs[0];
+        const { font } = await loadFont(run.path);
+        const wrapped = twoLineName(run.text, font, run.size, available);
+        if (wrapped) {
+          for (const [row, value] of wrapped.entries()) {
+            const target = row ? { ...line, y: line.y - run.size * 1.25 } : line;
+            planned.push({ line: target, text: value, runs: [{
+              ...run, text: value, width: font.widthOfTextAtSize(value, run.size),
+            }] });
+          }
+          continue;
+        }
+      }
       if (!(scale > 0) || (scale < 0.999 && (!allowSmallerText || scale < 0.85))) {
         throw new Error(copyText(`${prefix}: the name does not fit the selected line.`, `${prefix}：姓名放不进选中的文本行。`));
       }

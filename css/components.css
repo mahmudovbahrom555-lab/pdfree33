@@ -6605,6 +6605,7 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   font-size: 12px;
   pointer-events: none;
 }
+.qe-scan-field--wrap { background: transparent; overflow: hidden; }
 .qe-copies [data-name-style] label { display: block; margin-block: 5px; }
 
 

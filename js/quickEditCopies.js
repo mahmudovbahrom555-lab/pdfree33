@@ -53,6 +53,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
   const hint = dialog.querySelector('.qe-modal__hint');
   const fields = new Map();
   const place = panel.querySelector('[data-place]');
+  const wrapName = panel.querySelector('[data-wrap-name]');
   const suggestions = panel.querySelector('[data-name-suggestions]');
   const suggestionList = suggestions.querySelector('[data-suggestion-list]');
   const suggestedFields = new Map();
@@ -122,7 +123,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
     const version = ++renderVersion;
     stopPlacement();
     scannedPage = null;
-    place.hidden = true;
+    place.hidden = wrapName.parentElement.hidden = true;
     pointerSelection = null;
     originalRows.clear();
     suggestedFields.clear();
@@ -183,7 +184,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
     refreshActions();
     if (!items.some(item => item.str?.trim())) {
       scannedPage = { page: pageIndex, width: viewport.width, height: viewport.height };
-      place.hidden = false;
+      place.hidden = wrapName.parentElement.hidden = false;
       for (const ranges of fields.values()) {
         const { line } = ranges[0];
         if (line.placed && line.page === pageIndex) showPlacement(line);
@@ -199,8 +200,12 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
     mark.className = 'qe-scan-field';
     mark.textContent = selectedName();
     mark.style.left = `${line.x / scannedPage.width * 100}%`;
-    mark.style.top = `${(scannedPage.height - line.y - line.size) / scannedPage.height * 100}%`;
+    mark.style.top = `${(scannedPage.height - line.y - (line.wrap ? 18 : line.size)) / scannedPage.height * 100}%`;
     mark.style.width = `${(line.maxRight - line.x) / scannedPage.width * 100}%`;
+    if (line.wrap) {
+      mark.classList.add('qe-scan-field--wrap');
+      mark.style.height = `${44 / scannedPage.height * 100}%`;
+    }
     originalView.appendChild(mark);
   }
 
@@ -210,20 +215,24 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
       stopPlacement();
       return;
     }
-    placement = scannedPage;
+    placement = { ...scannedPage, wrap: wrapName.checked };
     place.setAttribute('aria-pressed', 'true');
     originalView.classList.add('qe-original-page--placing');
+    if (placement.wrap) {
+      status.textContent = copyText('Click where the name should start. Leave the outlined area clear for two lines.', '点击姓名的起始位置，并为两行文字留出框内的空白区域。');
+      return;
+    }
     status.textContent = copyText('Click a blank area where the recipient’s name should start.', "点击空白处，设置收件人姓名的起始位置。");
   });
 
   originalView.addEventListener('click', event => {
     if (!placement || activeJob) return;
-    const { page, width, height } = placement;
+    const { page, width, height, wrap } = placement;
     const box = originalView.getBoundingClientRect();
     const x = Math.round((event.clientX - box.left) * width / box.width);
     const y = Math.round(height - (event.clientY - box.top) * height / box.height - 12);
     const maxRight = Math.min(width - 12, x + 180);
-    if (x < 12 || maxRight - x < 36 || y < 14 || y > height - 18) {
+    if (x < 12 || maxRight - x < 36 || y < (wrap ? 30 : 14) || y > height - 18) {
       status.textContent = copyText('Choose a blank area farther from the page edges.', "请选择离页边更远的空白位置。");
       return;
     }
@@ -232,7 +241,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
       status.textContent = copyText('Leave more space between name fields.', "请在姓名字段之间留出更多空间。");
       return;
     }
-    const line = { page, x, y, maxRight, pageHeight: height, size: 12, skew: 0, placed: true };
+    const line = { page, x, y, maxRight, pageHeight: height, size: 12, skew: 0, placed: true, wrap };
     fields.set(`placed:${page}:${x}:${y}`, [{ start: 0, end: 0, text: '', line }]);
     showPlacement(line);
     stopPlacement();
@@ -320,6 +329,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
   styling.addEventListener('input', closeSample);
   smallerText.addEventListener('change', closeSample);
   place.addEventListener('click', closeSample);
+  wrapName.addEventListener('change', stopPlacement);
   names.addEventListener('input', () => {
     closeSample();
     const previous = recipient.selectedIndex;
@@ -422,7 +432,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
     activeJob = job;
     stop.hidden = false;
     stop.disabled = false;
-    const controls = [names, bind, reset, preview, download, viewSample, checkCopies, toggle, recipient, preserve, pageSelect, smallerText, place, ...styling.querySelectorAll('input, select')].filter(control => !control.disabled);
+    const controls = [names, bind, reset, preview, download, viewSample, checkCopies, toggle, recipient, preserve, pageSelect, smallerText, place, wrapName, ...styling.querySelectorAll('input, select')].filter(control => !control.disabled);
     const importControls = Array.from(panel.querySelectorAll('[data-recipient-file], [data-import-options] input, [data-import-options] select, [data-import-options] button'))
       .filter(control => !control.disabled);
     controls.push(...importControls);

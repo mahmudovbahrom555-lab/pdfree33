@@ -621,6 +621,47 @@ await test('example loads fictional recipients and exports a ZIP without a user 
   }
 });
 
+await test('an explicitly reserved scan field wraps long names while retaining the font size', async () => {
+  const { PDFDocument } = await import('pdf-lib');
+  const { readFile } = await import('node:fs/promises');
+  const input = await PDFDocument.create();
+  input.addPage([500, 600]);
+  const page = await browser.newPage({ acceptDownloads: true });
+  try {
+    await page.goto(BASE_URL + '/quick-edit-pdf/?mode=personalized-copies');
+    await page.setInputFiles('#fileInput', {
+      name: 'blank.pdf', mimeType: 'application/pdf', buffer: Buffer.from(await input.save()),
+    });
+    await page.locator('#qeCopyNames').fill('Alexandria Montgomery Catherine Richardson');
+    await page.locator('[data-wrap-name]').check();
+    await page.locator('[data-place]').click();
+    await page.locator('.qe-original-page canvas').click({ position: { x: 80, y: 120 } });
+    await page.locator('.qe-scan-field--wrap').waitFor();
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.locator('[data-preview]').click(),
+    ]);
+    const bytes = await readFile(await download.path());
+    const lines = await page.evaluate(async data => {
+      const pdf = await window.pdfjsLib.getDocument({ data: Uint8Array.from(data) }).promise;
+      try {
+        const content = await (await pdf.getPage(1)).getTextContent();
+        return content.items.filter(item => item.str).map(item => ({
+          text: item.str, size: item.transform[0], y: item.transform[5],
+        }));
+      } finally {
+        await pdf.destroy();
+      }
+    }, Array.from(bytes));
+    expect(lines.length).toBe(2);
+    expect(lines.map(line => line.text).join(' ')).toBe('Alexandria Montgomery Catherine Richardson');
+    expect(lines.every(line => line.size === 12)).toBeTruthy();
+    expect(lines[0].y - lines[1].y).toBe(15);
+  } finally {
+    await page.close();
+  }
+});
+
 await browser.close();
 
 console.log(`\n${'─'.repeat(40)}\nTests: ${passed + failed} | ✓ ${passed} | ${failed} failed`);

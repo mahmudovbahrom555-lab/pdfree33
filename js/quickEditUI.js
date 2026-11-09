@@ -336,6 +336,7 @@ async function _openModal(docContainer, originalOnly = false) {
                   <label><input data-style-italic type="checkbox"> ${copyText('Italic', '斜体')}</label>
                 </fieldset>
               </details>
+              <label data-wrap-option hidden><input type="checkbox" data-wrap-name> ${copyText('Allow long names to wrap in this blank area (two lines)', '允许长姓名在此空白区域内换行（最多两行）')}</label>
               <button type="button" class="qe-copies__button" data-place aria-pressed="false" hidden>${copyText('Add name on scan', '在扫描页添加姓名')}</button>
               <p>${copyText('Original PDF engine', '原始 PDF 处理引擎')}
                 <a href="/js/vendor/mupdf-1.28.1/LICENSE" target="_blank" rel="noopener">${copyText('MuPDF license', 'MuPDF 许可证')}</a>
