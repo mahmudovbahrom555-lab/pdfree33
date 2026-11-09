@@ -45,3 +45,13 @@ The first Chinese quote demo exposed invisible glyphs despite correct Unicode ex
 - The [official MuPDF 1.28.1 WASM source tree](https://github.com/ArtifexSoftware/mupdf/tree/1.28.1/platform/wasm) matches the release version pinned in npm. Distribution compliance and a production source-disclosure mechanism are review items before deployment.
 A second batch test generated 100 one-page Chinese quotes (31.93 MB ZIP). Independent PDF extraction checked all 100 filenames and both placements per file, plus the unchanged total. Three fictional company names were repeated across the 100 rows. The large-document and maximum-recipient tests are separate; the existing 100 MiB ZIP cap still applies.
 
+
+## Name appearance and scanned pages
+
+Original-layout export now has a **Name appearance** section. Explicitly enabling customization applies family, size, color, bold and italic to the inserted name runs only. Surrounding runs keep their matched style, subject to the same substitute-font limitation as the earlier original-layout mode. If permitted, width correction in custom mode shrinks the name runs while retaining the surrounding sizes. The Chinese fallback is regular Noto Sans SC. Unsupported bold or italic Chinese names fail preflight with recipient and page.
+
+On a raster-only page, **Add name on scan** places a name field at a blank area selected by the user. The original image remains in the PDF, with a searchable text overlay. This flow does not erase or replace words printed in the image. Use the sample PDF to confirm visual placement. Geometry and field spacing are bounded. Files with both text and image-only pages can use both field types in one export.
+
+The E2E fixture verifies an inline red 14 pt bold/italic monospace name, unchanged 12 pt surrounding words, a searchable name on the raster page, and the presence of the original raster content. The eight tests passed in Chrome, Firefox and desktop WebKit. The scan-and-style test also passed at a 390 px touch viewport in Chrome emulation. Physical-device peak memory remains unmeasured.
+
+The original-layout panel links the distributed MuPDF license and the exact upstream source and build tree. Production distribution review still needs to verify the complete corresponding-source offering for the delivered binary.

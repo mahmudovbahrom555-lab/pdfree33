@@ -6593,3 +6593,16 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 }
 
 .qe-original-line::selection { color: #111; background: #bde2ff; }
+
+.qe-original-page--placing { cursor: crosshair; }
+.qe-scan-field {
+  position: absolute;
+  box-sizing: border-box;
+  padding-inline: 3px;
+  border: 1px dashed var(--green-text);
+  background: var(--surface);
+  color: var(--green-text);
+  font-size: 12px;
+  pointer-events: none;
+}
+.qe-copies [data-name-style] label { display: block; margin-block: 5px; }

@@ -303,6 +303,22 @@ async function _openModal(docContainer, originalOnly = false) {
               <select id="qeOriginalPage"></select>
               <label><input type="checkbox" data-smaller-text> Allow slightly smaller text when a name does not fit</label>
               <p>Selected lines use an available replacement font. Changing modes clears selected fields.</p>
+              <details data-name-style>
+                <summary>Name appearance</summary>
+                <label><input type="checkbox" data-style-enable> Customize inserted names</label>
+                <label>Font family
+                  <select data-style-font><option value="">Match source family</option><option>Sans</option><option>Serif</option><option>Mono</option></select>
+                </label>
+                <label>Size (pt) <input data-style-size type="number" min="6" max="48" placeholder="Auto"></label>
+                <label>Color <input data-style-color type="color" value="#000000"></label>
+                <label><input data-style-bold type="checkbox"> Bold</label>
+                <label><input data-style-italic type="checkbox"> Italic</label>
+              </details>
+              <button type="button" class="qe-copies__button" data-place aria-pressed="false" hidden>Add name on scan</button>
+              <p>Original PDF engine
+                <a href="/js/vendor/mupdf-1.28.1/LICENSE" target="_blank" rel="noopener">MuPDF license</a>
+                · <a href="https://github.com/ArtifexSoftware/mupdf/tree/1.28.1" target="_blank" rel="noopener">Source and build files</a>
+              </p>
             </div>
           </div>
 

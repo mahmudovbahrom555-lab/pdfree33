@@ -136,10 +136,7 @@ async function removeOriginalLines(original, lines) {
       const sheet = source.loadPage(index);
       try {
         const page = await original.pdf.getPage(index + 1);
-        const [x, y, , height] = page.view;
-        if (x || y || page.rotate || page.userUnit !== 1) {
-          throw new Error(`Page ${index + 1}: this page uses unsupported geometry.`);
-        }
+        const height = page.view[3];
         for (const line of lines.filter(line => line.page === index)) {
           let plan = original.plans.get(line);
           if (!plan) {
@@ -194,9 +191,14 @@ export async function prepareOriginalCopy(original, lines) {
   const pages = new Map();
   for (const pageIndex of new Set(lines.map(line => line.page))) {
     const page = await original.pdf.getPage(pageIndex + 1);
+    const [x, y] = page.view;
+    if (x || y || page.rotate || page.userUnit !== 1) {
+      throw new Error(`Page ${pageIndex + 1}: this page uses unsupported geometry.`);
+    }
     pages.set(pageIndex, originalLines((await page.getTextContent()).items));
   }
-  const bytes = await removeOriginalLines(original, lines);
+  const replaced = lines.filter(line => !line.placed);
+  const bytes = replaced.length ? await removeOriginalLines(original, replaced) : original.bytes;
   return { bytes, pages, plans: original.plans, pageCount: original.pdf.numPages };
 }
 
@@ -224,25 +226,48 @@ export async function planOriginalCopies(prepared, copies, allowSmallerText, isC
     if (index % 8 === 0) await new Promise(resolve => setTimeout(resolve, 0));
     if (isCancelled()) return null;
     const planned = [];
-    for (const { line, text } of changes) {
-      const { font, color } = prepared.plans.get(line);
-      const codepoints = Array.from(text, char => char.codePointAt(0));
-      let path = `./vendor/liberation-fonts/${font}`;
-      let selected = await loadFont(path);
-      if (codepoints.some(point => !selected.characters.has(point)) && /\p{Script=Han}/u.test(text)) {
-        path = CHINESE_FONT;
-        selected = await loadFont(path);
-      }
+    for (const { line, text, parts, appearance } of changes) {
+      const source = line.placed ? { font: 'LiberationSans-Regular.ttf', color: [0, 0, 0] } : prepared.plans.get(line);
       const page = line.page + 1;
-      if (codepoints.some(point => !selected.characters.has(point))) {
-        throw new Error(`Recipient ${recipientIndex + 1}, page ${page}: the replacement font does not contain every character.`);
+      const prefix = `Recipient ${recipientIndex + 1}, page ${page}`;
+      const runs = [];
+      for (const part of appearance ? parts : [{ text, name: true }]) {
+        if (!part.text) continue;
+        const style = part.name && appearance;
+        const family = style?.family || source.font.match(/^Liberation(Sans|Serif|Mono)-/)[1];
+        const weight = style ? (style.bold ? 'Bold' : '') + (style.italic ? 'Italic' : '') : null;
+        let path = `./vendor/liberation-fonts/${style ? `Liberation${family}-${weight || 'Regular'}.ttf` : source.font}`;
+        const size = style?.size ?? line.size;
+        if (line.placed && (line.y + size > line.pageHeight - 4 || line.y - size * 0.35 < 4)) {
+          throw new Error(`${prefix}: the field is too close to the page edge for this font size.`);
+        }
+        const points = Array.from(part.text, char => char.codePointAt(0));
+        let selected = await loadFont(path);
+        if (points.some(point => !selected.characters.has(point)) && /\p{Script=Han}/u.test(part.text)) {
+          if (style?.bold || style?.italic) throw new Error(`${prefix}: the Chinese fallback supports regular text only.`);
+          path = CHINESE_FONT;
+          selected = await loadFont(path);
+        }
+        if (points.some(point => !selected.characters.has(point))) {
+          throw new Error(`${prefix}: the replacement font does not contain every character.`);
+        }
+        const width = selected.font.widthOfTextAtSize(part.text, size);
+        runs.push({ ...part, path, size, width, color: style?.color ?? source.color });
       }
-      const width = selected.font.widthOfTextAtSize(text, line.size);
-      const size = Math.min(line.size, line.size * (line.maxRight - line.x) / width);
-      if (!(size > 0) || (size < line.size - 0.01 && (!allowSmallerText || size < line.size * 0.85))) {
-        throw new Error(`Recipient ${recipientIndex + 1}, page ${page}: the name does not fit the selected line.`);
+      const available = line.maxRight - line.x;
+      const fixed = runs.reduce((total, run) => total + (run.name ? 0 : run.width), 0);
+      const flexible = runs.reduce((total, run) => total + (run.name ? run.width : 0), 0);
+      const scale = flexible ? Math.min(1, (available - fixed) / flexible) : 1;
+      if (!(scale > 0) || (scale < 0.999 && (!allowSmallerText || scale < 0.85))) {
+        throw new Error(`${prefix}: the name does not fit the selected line.`);
       }
-      planned.push({ line, text, path, color, size });
+      for (const run of runs) {
+        if (run.name) {
+          run.size *= scale;
+          run.width *= scale;
+        }
+      }
+      planned.push({ line, text, runs });
     }
     result.push(planned);
   }
@@ -252,15 +277,19 @@ export async function planOriginalCopies(prepared, copies, allowSmallerText, isC
 export async function writeOriginalCopy(prepared, changes) {
   const doc = await window.PDFLib.PDFDocument.load(prepared.bytes, { updateMetadata: false });
   const loadFont = replacementFonts(doc);
-  for (const { line, text, path, color, size } of changes) {
-    const { font } = await loadFont(path);
-    const [r, g, b] = color;
-    doc.getPage(line.page).drawText(text, { x: line.x, y: line.y, size, font,
-      ySkew: window.PDFLib.radians(Math.atan(line.skew)), color: window.PDFLib.rgb(r, g, b) });
+  for (const { line, runs } of changes) {
+    let x = line.x;
+    for (const { text, path, color, size, width } of runs) {
+      const { font } = await loadFont(path);
+      const [r, g, b] = color;
+      doc.getPage(line.page).drawText(text, { x, y: line.y, size, font,
+        ySkew: window.PDFLib.radians(Math.atan(line.skew)), color: window.PDFLib.rgb(r, g, b) });
+      x += width;
+    }
   }
 
   let bytes = await doc.save();
-  if (changes.some(change => change.path === CHINESE_FONT)) {
+  if (changes.some(change => change.runs.some(run => run.path === CHINESE_FONT))) {
     // fontkit's direct Noto SC subset can contain invisible glyphs even when
     // ToUnicode is correct. Subset the valid, fully embedded PDF with MuPDF.
     const engine = await loadOriginalEngine();
@@ -288,9 +317,9 @@ export async function writeOriginalCopy(prepared, changes) {
         Math.round(line.x * 10), Math.round(line.y * 10), text.replace(/\s+/g, ' ').trim(),
       ]);
       const expected = before.map(line => {
-        const edit = pageChanges.find(change => change.line.x === line.x && change.line.y === line.y);
+        const edit = pageChanges.find(change => !change.line.placed && change.line.x === line.x && change.line.y === line.y);
         return signature(line, edit?.text ?? line.text);
-      }).sort();
+      }).concat(pageChanges.filter(change => change.line.placed).map(change => signature(change.line, change.text))).sort();
       const actual = after.map(line => signature(line, line.text)).sort();
       if (actual.length !== expected.length || actual.some((value, index) => value !== expected[index])) {
         throw new Error(`Page ${pageIndex + 1}: verification found an unexpected text change. No file was exported.`);

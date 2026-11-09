@@ -419,6 +419,103 @@ await test('preserve original layout replaces separate columns on two original P
   }
 });
 
+await test('original layout styles only the inserted name and can place a name on a scan', async () => {
+  const { PDFDocument, PDFDict, PDFName, StandardFonts } = await import('pdf-lib');
+  const input = await PDFDocument.create();
+  const textPage = input.addPage([500, 600]);
+  const font = await input.embedFont(StandardFonts.Helvetica);
+  textPage.drawText('Dear CUSTOMER PLACEHOLDER, welcome.', { x: 50, y: 500, size: 12, font });
+  const mobile = process.env.PDFREE_MOBILE_PREVIEW === '1';
+  const page = await browser.newPage(mobile
+    ? { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }
+    : {});
+  try {
+    const image = await page.evaluate(() => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 500;
+      canvas.height = 600;
+      const context = canvas.getContext('2d');
+      context.fillStyle = 'white';
+      context.fillRect(0, 0, 500, 600);
+      context.fillStyle = 'black';
+      context.font = '24px sans-serif';
+      context.fillText('Raster-only sample', 50, 75);
+      return canvas.toDataURL('image/png');
+    });
+    const scannedPage = input.addPage([500, 600]);
+    scannedPage.drawImage(await input.embedPng(image), { x: 0, y: 0, width: 500, height: 600 });
+    await page.goto(`${BASE_URL}/quick-edit-pdf/`);
+    await page.setInputFiles('#fileInput', {
+      name: 'text-and-scan.pdf', mimeType: 'application/pdf', buffer: Buffer.from(await input.save()),
+    });
+    await page.locator('#qeOpenOriginal').click();
+    await page.locator('#qeCopies textarea').fill('Anna Example');
+    const line = page.locator('.qe-original-line').filter({ hasText: 'CUSTOMER PLACEHOLDER' });
+    await line.evaluate(span => {
+      const range = document.createRange();
+      const start = span.textContent.indexOf('CUSTOMER');
+      range.setStart(span.firstChild, start);
+      range.setEnd(span.firstChild, start + 'CUSTOMER PLACEHOLDER'.length);
+      getSelection().removeAllRanges();
+      getSelection().addRange(range);
+    });
+    await page.locator('[data-bind]').click();
+    await page.locator('#qeOriginalPage').selectOption('1');
+    await page.locator('[data-place]').click();
+    const preview = page.locator('.qe-original-page canvas');
+    const box = await preview.boundingBox();
+    const position = { x: box.width * 0.16, y: box.height * 0.28 };
+    if (mobile) await preview.tap({ position });
+    else await preview.click({ position });
+    expect(await page.locator('[data-field-count]').innerText()).toBe('2 fields selected');
+
+    await page.locator('[data-name-style] summary').click();
+    await page.locator('[data-style-enable]').check();
+    await page.locator('[data-style-font]').selectOption('Mono');
+    await page.locator('[data-style-size]').fill('14');
+    await page.locator('[data-style-color]').fill('#b80000');
+    await page.locator('[data-style-bold]').check();
+    await page.locator('[data-style-italic]').check();
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.locator('[data-preview]').click(),
+    ]);
+    const { readFile } = await import('node:fs/promises');
+    const file = await readFile(await download.path());
+    const result = await page.evaluate(async bytes => {
+      const pdf = await window.pdfjsLib.getDocument({ data: Uint8Array.from(bytes) }).promise;
+      try {
+        const first = await (await pdf.getPage(1)).getTextContent();
+        const scan = await pdf.getPage(2);
+        const second = await scan.getTextContent();
+        const canvas = document.createElement('canvas');
+        canvas.width = 500;
+        canvas.height = 600;
+        const context = canvas.getContext('2d');
+        await scan.render({ canvasContext: context, viewport: scan.getViewport({ scale: 1 }) }).promise;
+        const pixels = context.getImageData(0, 0, 500, 600).data;
+        const red = pixels.some((value, i) => i % 4 === 0 && value > 120 && pixels[i + 1] < 70 && pixels[i + 2] < 70);
+        const rasterPreserved = context.getImageData(45, 45, 300, 35).data
+          .some((value, i) => i % 4 === 0 && value < 80);
+        return { first: first.items, second: second.items, red, rasterPreserved };
+      } finally {
+        await pdf.destroy();
+      }
+    }, Array.from(file));
+    const atSize = (items, size) => items.filter(item => item.transform[0] === size).map(item => item.str).join('');
+    expect(atSize(result.first, 14)).toBe('Anna Example');
+    expect(atSize(result.first, 12)).toBe('Dear , welcome.');
+    expect(atSize(result.second, 14)).toBe('Anna Example');
+    expect(result.red).toBeTruthy();
+    expect(result.rasterPreserved).toBeTruthy();
+    const output = await PDFDocument.load(file);
+    expect(output.context.enumerateIndirectObjects().some(([, object]) => object instanceof PDFDict &&
+      String(object.get(PDFName.of('BaseFont'))).includes('LiberationMono-BoldItalic'))).toBeTruthy();
+  } finally {
+    await page.close();
+  }
+});
+
 await browser.close();
 
 console.log(`\n${'─'.repeat(40)}\nTests: ${passed + failed} | ✓ ${passed} | ${failed} failed`);

@@ -10,6 +10,18 @@ export function substituteFields(text, fields, name) {
   return text;
 }
 
+function nameParts(text, ranges, name) {
+  const parts = [];
+  let offset = 0;
+  for (const { start, end } of [...ranges].sort((a, b) => a.start - b.start)) {
+    if (start > offset) parts.push({ text: text.slice(offset, start), name: false });
+    parts.push({ text: name, name: true });
+    offset = end;
+  }
+  if (offset < text.length) parts.push({ text: text.slice(offset), name: false });
+  return parts;
+}
+
 export function copyFilename(name, index) {
   const safe = Array.from(name, char => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127
     ? '_' : char).join('').replace(/[<>:"/\\|?*]/g, '_').trim();
@@ -37,6 +49,31 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
   const save = dialog.querySelector('#qeModalSaveBtn');
   const hint = dialog.querySelector('.qe-modal__hint');
   const fields = new Map();
+  const place = panel.querySelector('[data-place]');
+  const styling = panel.querySelector('[data-name-style]');
+  let placement = null;
+  let scannedPage = null;
+
+  function stopPlacement() {
+    placement = null;
+    place.setAttribute('aria-pressed', 'false');
+    originalView.classList.remove('qe-original-page--placing');
+  }
+
+  function appearance() {
+    if (!styling.querySelector('[data-style-enable]').checked) return null;
+    const sizeInput = styling.querySelector('[data-style-size]');
+    const size = sizeInput.value ? Number(sizeInput.value) : null;
+    if (!sizeInput.validity.valid) throw new Error('Choose a name size from 6 to 48 pt.');
+    const hex = styling.querySelector('[data-style-color]').value;
+    return {
+      family: styling.querySelector('[data-style-font]').value,
+      size,
+      color: [1, 3, 5].map(index => Number.parseInt(hex.slice(index, index + 2), 16) / 255),
+      bold: styling.querySelector('[data-style-bold]').checked,
+      italic: styling.querySelector('[data-style-italic]').checked,
+    };
+  }
   bindRecipientImport(panel, names, status);
   const preserve = panel.querySelector('[data-preserve-layout]');
   const originalOptions = panel.querySelector('[data-original-options]');
@@ -61,6 +98,9 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
 
   async function renderOriginal() {
     const version = ++renderVersion;
+    stopPlacement();
+    scannedPage = null;
+    place.hidden = true;
     pointerSelection = null;
     originalRows.clear();
     originalView.replaceChildren();
@@ -97,8 +137,64 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
       originalView.appendChild(span);
     }
     bind.disabled = !lines.length;
-    status.textContent = lines.length ? '' : 'This page has no selectable text. Choose another page.';
+    if (!items.some(item => item.str?.trim())) {
+      scannedPage = { page: pageIndex, width: viewport.width, height: viewport.height };
+      place.hidden = false;
+      for (const ranges of fields.values()) {
+        const { line } = ranges[0];
+        if (line.placed && line.page === pageIndex) showPlacement(line);
+      }
+    }
+    status.textContent = lines.length ? '' : scannedPage
+      ? 'No selectable text. Add a name in a blank area of the scan.'
+      : 'This page has no selectable horizontal text.';
   }
+
+  function showPlacement(line) {
+    const mark = document.createElement('span');
+    mark.className = 'qe-scan-field';
+    mark.textContent = 'Name';
+    mark.style.left = `${line.x / scannedPage.width * 100}%`;
+    mark.style.top = `${(scannedPage.height - line.y - line.size) / scannedPage.height * 100}%`;
+    mark.style.width = `${(line.maxRight - line.x) / scannedPage.width * 100}%`;
+    originalView.appendChild(mark);
+  }
+
+  place.addEventListener('click', () => {
+    if (!scannedPage || activeJob) return;
+    if (placement) {
+      stopPlacement();
+      return;
+    }
+    placement = scannedPage;
+    place.setAttribute('aria-pressed', 'true');
+    originalView.classList.add('qe-original-page--placing');
+    status.textContent = 'Click a blank area where the recipient’s name should start.';
+  });
+
+  originalView.addEventListener('click', event => {
+    if (!placement || activeJob) return;
+    const { page, width, height } = placement;
+    const box = originalView.getBoundingClientRect();
+    const x = Math.round((event.clientX - box.left) * width / box.width);
+    const y = Math.round(height - (event.clientY - box.top) * height / box.height - 12);
+    const maxRight = Math.min(width - 12, x + 180);
+    if (x < 12 || maxRight - x < 36 || y < 14 || y > height - 18) {
+      status.textContent = 'Choose a blank area farther from the page edges.';
+      return;
+    }
+    if ([...fields.values()].some(([{ line }]) => line.placed && line.page === page &&
+        Math.abs(line.y - y) < 55 && x < line.maxRight + 20 && line.x < maxRight + 20)) {
+      status.textContent = 'Leave more space between name fields.';
+      return;
+    }
+    const line = { page, x, y, maxRight, pageHeight: height, size: 12, skew: 0, placed: true };
+    fields.set(`placed:${page}:${x}:${y}`, [{ start: 0, end: 0, text: '', line }]);
+    showPlacement(line);
+    stopPlacement();
+    status.textContent = 'Name field added. Download a sample to check its placement.';
+    refreshActions();
+  });
 
   async function changeOriginalPage() {
     try {
@@ -225,6 +321,8 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
 
   function clearFields() {
     for (const span of stage.querySelectorAll('.qe-copy-field')) span.classList.remove('qe-copy-field');
+    for (const mark of originalView.querySelectorAll('.qe-scan-field')) mark.remove();
+    stopPlacement();
     fields.clear();
     pointerSelection = null;
   }
@@ -243,12 +341,20 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
     }
 
     if (busy) return;
+    let custom;
+    try {
+      custom = preserve.checked ? appearance() : null;
+    } catch (error) {
+      status.textContent = error.message;
+      return;
+    }
+    stopPlacement();
     const sampleIndex = recipient.selectedIndex;
     const job = { cancelled: false };
     activeJob = job;
     stop.hidden = false;
     stop.disabled = false;
-    const controls = [names, bind, reset, preview, download, toggle, recipient, preserve, pageSelect, smallerText];
+    const controls = [names, bind, reset, preview, download, toggle, recipient, preserve, pageSelect, smallerText, place, ...styling.querySelectorAll('input, select')].filter(control => !control.disabled);
     const importControls = Array.from(panel.querySelectorAll('[data-recipient-file], [data-import-options] input, [data-import-options] select, [data-import-options] button'))
       .filter(control => !control.disabled);
     controls.push(...importControls);
@@ -281,6 +387,8 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
           return { recipientIndex, changes: assignments.map(ranges => ({
             line: ranges[0].line,
             text: substituteFields(ranges[0].text, ranges, recipients[recipientIndex]),
+            parts: custom ? nameParts(ranges[0].text, ranges, recipients[recipientIndex]) : null,
+            appearance: custom,
           })) };
         });
         planned = await planOriginalCopies(prepared, copies, smallerText.checked, cancelled);
