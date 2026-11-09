@@ -470,7 +470,14 @@ await test('original layout styles only the inserted name and can place a name o
     expect(await page.locator('[data-field-count]').innerText()).toBe('2 fields selected');
 
     await page.locator('[data-name-style] summary').click();
-    await page.locator('[data-style-enable]').check();
+    const styleToggle = page.locator('[data-style-enable]');
+    const styleInputs = page.locator('[data-style-options] :is(input, select)');
+    for (const control of await styleInputs.all()) expect(await control.isEnabled()).toBeFalsy();
+    await styleToggle.check();
+    for (const control of await styleInputs.all()) expect(await control.isEnabled()).toBeTruthy();
+    await styleToggle.uncheck();
+    for (const control of await styleInputs.all()) expect(await control.isEnabled()).toBeFalsy();
+    await styleToggle.check();
     await page.locator('[data-style-font]').selectOption('Mono');
     await page.locator('[data-style-size]').fill('14');
     await page.locator('[data-style-color]').fill('#b80000');
@@ -511,6 +518,48 @@ await test('original layout styles only the inserted name and can place a name o
     const output = await PDFDocument.load(file);
     expect(output.context.enumerateIndirectObjects().some(([, object]) => object instanceof PDFDict &&
       String(object.get(PDFName.of('BaseFont'))).includes('LiberationMono-BoldItalic'))).toBeTruthy();
+  } finally {
+    await page.close();
+  }
+});
+
+await test('Simplified Chinese copies localizes import, overflow and cancellation', async () => {
+  const { PDFDocument, StandardFonts } = await import('pdf-lib');
+  const input = await PDFDocument.create();
+  const sheet = input.addPage([500, 600]);
+  const font = await input.embedFont(StandardFonts.Helvetica);
+  sheet.drawText('1', { x: 50, y: 500, size: 12, font });
+  sheet.drawText('Other party', { x: 275, y: 500, size: 12, font });
+  const page = await browser.newPage();
+  try {
+    await page.goto(`${BASE_URL}/zh/kuaisu-bianji-pdf/`);
+    await page.setInputFiles('#fileInput', {
+      name: 'layout-test.pdf', mimeType: 'application/pdf', buffer: Buffer.from(await input.save()),
+    });
+    await page.locator('#qeOpenOriginal').click();
+    await page.getByRole('heading', { name: '个性化 PDF 副本' }).waitFor();
+    await page.locator('[data-recipient-file]').setInputFiles({
+      name: 'recipients.csv', mimeType: 'text/csv', buffer: Buffer.from('姓名\n王小明'),
+    });
+    await page.locator('[data-import-column]').selectOption('0');
+    await page.getByRole('button', { name: '使用此列' }).click();
+    const status = page.locator('#qeCopies [role=status]');
+    expect(await status.innerText()).toBe('收件人列表已导入。');
+    const field = page.locator('.qe-original-line').filter({ hasText: /^1$/ });
+    await field.evaluate(span => {
+      const range = document.createRange();
+      range.selectNodeContents(span.firstChild);
+      getSelection().removeAllRanges();
+      getSelection().addRange(range);
+    });
+    await page.getByRole('button', { name: '使用选中的文字' }).click();
+    await page.locator('#qeCopies textarea').fill('王小明\n' + '非常长的采购公司名称'.repeat(25));
+    await page.getByRole('button', { name: '下载 ZIP' }).click();
+    await status.filter({ hasText: '第 2 位收件人，第 1 页：姓名放不进选中的文本行。' }).waitFor();
+    await page.locator('#qeCopies textarea').fill(Array.from({ length: 30 }, () => '王小明').join('\n'));
+    await page.getByRole('button', { name: '下载 ZIP' }).click();
+    await page.getByRole('button', { name: '停止导出' }).click();
+    await status.filter({ hasText: '已停止导出。可编辑列表后重试。' }).waitFor();
   } finally {
     await page.close();
   }

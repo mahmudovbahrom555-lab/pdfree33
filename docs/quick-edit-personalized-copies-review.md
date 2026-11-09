@@ -55,3 +55,9 @@ On a raster-only page, **Add name on scan** places a name field at a blank area 
 The E2E fixture verifies an inline red 14 pt bold/italic monospace name, unchanged 12 pt surrounding words, a searchable name on the raster page, and the presence of the original raster content. The eight tests passed in Chrome, Firefox and desktop WebKit. The scan-and-style test also passed at a 390 px touch viewport in Chrome emulation. Physical-device peak memory remains unmeasured.
 
 The original-layout panel links the distributed MuPDF license and the exact upstream source and build tree. Production distribution review still needs to verify the complete corresponding-source offering for the delivered binary.
+
+## Simplified Chinese and appearance controls
+
+The new panel, import feedback, recipient checks, export progress and cancellation have Simplified Chinese copy on the Chinese Quick Edit route. English remains the fallback for other locales. Font family, size, color, bold and italic are grouped in a disabled fieldset until **Customize inserted names** is enabled. Turning it off preserves the chosen values for a later re-enable.
+
+The Chrome suite passed 9/9. The new Chinese test uses the actual localized route and verifies the import confirmation, long-name error with recipient and page, and cancellation message. The appearance test toggles all five controls off, on, and off again before checking the exported PDF.

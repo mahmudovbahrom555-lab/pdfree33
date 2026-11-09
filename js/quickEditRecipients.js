@@ -1,3 +1,4 @@
+import { copyText } from './quickEditCopyText.js';
 import { loadExcelReader } from './lazyLibs.js';
 
 export const RECIPIENT_LIMIT = 100;
@@ -52,12 +53,12 @@ export function parseRecipientTable(input) {
     } else if (!cell && !closed && char === '"') {
       quoted = true;
     } else if (closed && char !== ' ') {
-      throw new Error('The table contains a malformed quoted value.');
+      throw new Error(copyText('The table contains a malformed quoted value.', "表格中有一处带引号的数据格式不正确。"));
     } else if (!closed) {
       cell += char;
     }
   }
-  if (quoted) throw new Error('The table contains an unclosed quoted value.');
+  if (quoted) throw new Error(copyText('The table contains an unclosed quoted value.', "表格中有一处引号未闭合。"));
   finishRow();
   return rows;
 }
@@ -100,15 +101,15 @@ export function bindRecipientImport(panel, names, status) {
     const duplicates = values.length - new Set(values).size;
     const skipped = Number.isInteger(first) && first > 0 ? Math.max(0, rows.length - first + 1 - values.length) : 0;
     const notes = [
-      skipped ? `${skipped} blank or non-text rows skipped` : '',
-      duplicates ? `${duplicates} repeated names kept as separate copies` : '',
+      skipped ? copyText(`${skipped} blank or non-text rows skipped`, `已跳过 ${skipped} 个空白或非文本行`) : '',
+      duplicates ? copyText(`${duplicates} repeated names kept as separate copies`, `保留 ${duplicates} 个重复姓名，每行生成一份副本`) : '',
     ].filter(Boolean);
     const multiline = values.some(value => /[\r\n]/.test(value));
     apply.disabled = !values.length || values.length > RECIPIENT_LIMIT || multiline;
-    preview.textContent = multiline ? 'The selected column contains names on multiple lines.'
-      : values.length > RECIPIENT_LIMIT ? `This column has ${values.length} names. The limit is ${RECIPIENT_LIMIT}.`
-      : values.length ? `${values.length} names · ${[...values.slice(0, 3), ...notes].join(' · ')}`
-      : 'No text values in this column from the selected row.';
+    preview.textContent = multiline ? copyText('The selected column contains names on multiple lines.', "所选列中有跨多行的姓名。")
+      : values.length > RECIPIENT_LIMIT ? copyText(`This column has ${values.length} names. The limit is ${RECIPIENT_LIMIT}.`, `此列有 ${values.length} 个姓名，最多支持 ${RECIPIENT_LIMIT} 个。`)
+      : values.length ? copyText(`${values.length} names · ${[...values.slice(0, 3), ...notes].join(' · ')}`, `${values.length} 个姓名 · ${[...values.slice(0, 3), ...notes].join(' · ')}`)
+      : copyText('No text values in this column from the selected row.', "从所选行开始，此列没有文本值。");
   }
 
   function refreshColumns() {
@@ -117,7 +118,7 @@ export function bindRecipientImport(panel, names, status) {
     const previous = column.value;
     const width = rows.reduce((max, row) => Math.max(max, row.length), 0);
     const header = rows[first - 2] ?? [];
-    column.replaceChildren(new window.Option('Choose a column', ''), ...Array.from({ length: width }, (_, index) =>
+    column.replaceChildren(new window.Option(copyText('Choose a column', "请选择一列"), ''), ...Array.from({ length: width }, (_, index) =>
       new window.Option(`${columnName(index)}${header[index] ? ' · ' + String(header[index]).slice(0, 80) : ''}`, String(index))));
     column.value = previous;
     refreshPreview();
@@ -125,7 +126,7 @@ export function bindRecipientImport(panel, names, status) {
 
   function show(data) {
     sheets = data.filter(entry => entry.data.some(row => row.some(value => value != null && value !== '')));
-    if (!sheets.length) throw new Error('The table is empty.');
+    if (!sheets.length) throw new Error(copyText('The table is empty.', "表格为空。"));
     sheet.replaceChildren(...sheets.map((entry, index) => new window.Option(entry.sheet, String(index))));
     options.hidden = false;
     column.value = '';
@@ -139,23 +140,23 @@ export function bindRecipientImport(panel, names, status) {
     const request = ++generation;
     fileInput.value = '';
     options.hidden = true;
-    status.textContent = 'Reading recipients locally…';
+    status.textContent = copyText('Reading recipients locally…', "正在本地读取收件人…");
     try {
-      if (file.size > 5 * 1024 * 1024) throw new Error('Choose a spreadsheet smaller than 5 MB.');
+      if (file.size > 5 * 1024 * 1024) throw new Error(copyText('Choose a spreadsheet smaller than 5 MB.', "请选择小于 5 MB 的表格。"));
       let data;
       if (/\.xlsx$/i.test(file.name)) {
         await loadExcelReader();
         data = await window.readXlsxFile(file);
       } else if (/\.(csv|tsv)$/i.test(file.name)) {
-        data = [{ sheet: 'Imported table', data: parseRecipientTable(await file.text()) }];
+        data = [{ sheet: copyText('Imported table', "导入的表格"), data: parseRecipientTable(await file.text()) }];
       } else {
-        throw new Error('Choose an XLSX, CSV, or TSV file.');
+        throw new Error(copyText('Choose an XLSX, CSV, or TSV file.', "请选择 XLSX、CSV 或 TSV 文件。"));
       }
       if (request !== generation || !panel.isConnected) return;
       show(data);
       status.textContent = /\.xlsx$/i.test(file.name)
-        ? 'Choose the first data row and the full-name column. Hidden rows can be included; review the resulting list.'
-        : 'Choose the first data row and the column containing full names.';
+        ? copyText('Choose the first data row and the full-name column. Hidden rows can be included; review the resulting list.', "请选择姓名起始行和所在列。隐藏行也可能被导入，请核对列表。")
+        : copyText('Choose the first data row and the column containing full names.', "请选择姓名起始行和所在列。");
     } catch (error) {
       if (request === generation && panel.isConnected) status.textContent = error.message;
     }
@@ -167,8 +168,8 @@ export function bindRecipientImport(panel, names, status) {
     event.preventDefault();
     generation++;
     try {
-      show([{ sheet: 'Pasted table', data: parseRecipientTable(text) }]);
-      status.textContent = 'Choose the first data row and the column containing full names.';
+      show([{ sheet: copyText('Pasted table', "粘贴的表格"), data: parseRecipientTable(text) }]);
+      status.textContent = copyText('Choose the first data row and the column containing full names.', "请选择姓名起始行和所在列。");
     } catch (error) {
       status.textContent = error.message;
     }
@@ -190,7 +191,7 @@ export function bindRecipientImport(panel, names, status) {
     preview.textContent = '';
     options.hidden = true;
     names.dispatchEvent(new Event('input'));
-    status.textContent = 'Recipient list imported.';
+    status.textContent = copyText('Recipient list imported.', "收件人列表已导入。");
     names.focus();
   });
 }

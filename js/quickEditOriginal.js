@@ -1,3 +1,4 @@
+import { copyText } from './quickEditCopyText.js';
 import { loadFontkit, loadPdfLib } from './lazyLibs.js';
 import { loadPdfJs } from './pdfjsLoader.js';
 
@@ -13,7 +14,7 @@ function loadReplacementFont(path) {
   if (!fontPromises.has(path)) {
     fontPromises.set(path, fetch(new URL(path, import.meta.url))
       .then(response => {
-        if (!response.ok) throw new Error('The replacement font could not be loaded.');
+        if (!response.ok) throw new Error(copyText('The replacement font could not be loaded.', "无法加载替代字体。"));
         return response.arrayBuffer();
       }).catch(error => { fontPromises.delete(path); throw error; }));
   }
@@ -58,7 +59,7 @@ export async function openOriginalPdf(file) {
   try {
     const { info } = await pdf.getMetadata();
     if (info?.IsAcroFormPresent || info?.IsXFAPresent || info?.IsSignaturesPresent) {
-      throw new Error('Preserve layout is unavailable for interactive forms or signed PDFs.');
+      throw new Error(copyText('Preserve layout is unavailable for interactive forms or signed PDFs.', "交互式表单或已签名的 PDF 暂不支持保留原始版式。"));
     }
     return { bytes, pdf, plans: new WeakMap() };
   } catch (error) {
@@ -97,7 +98,7 @@ function redactRect(sheet, line, pageHeight) {
   ).sort((a, b) => a.origin[0] - b.origin[0]);
   const normalized = value => value.normalize('NFKC').replace(/\s+/g, '');
   if (!selected.length || normalized(selected.map(glyph => glyph.character).join('')) !== normalized(line.text)) {
-    throw new Error(`Page ${line.page + 1}: the selected line could not be matched to the original text.`);
+    throw new Error(copyText(`Page ${line.page + 1}: the selected line could not be matched to the original text.`, `第 ${line.page + 1} 页：无法在原始 PDF 中匹配选中的文本行。`));
   }
   const selectedSet = new Set(selected);
   const rect = [
@@ -119,11 +120,11 @@ function redactRect(sheet, line, pageHeight) {
     return [x - 0.1, y - 0.1, x + 0.1, y + 0.1];
   });
   if (!rectangles.every(safeRect)) {
-    throw new Error(`Page ${line.page + 1}: replacing this line may remove nearby text.`);
+    throw new Error(copyText(`Page ${line.page + 1}: replacing this line may remove nearby text.`, `第 ${line.page + 1} 页：替换此行可能会误删附近的文字。`));
   }
   const { font, color } = selected[0];
   if (selected.some(glyph => glyph.font !== font || glyph.color.some((value, index) => value !== color[index]))) {
-    throw new Error(`Page ${line.page + 1}: the selected line has mixed text styling.`);
+    throw new Error(copyText(`Page ${line.page + 1}: the selected line has mixed text styling.`, `第 ${line.page + 1} 页：选中的文本行包含多种文字样式。`));
   }
   return { rectangles, font, color };
 }
@@ -174,7 +175,7 @@ export async function prepareOriginalCopy(original, lines) {
   await Promise.all([loadPdfLib(), loadFontkit()]);
   const input = await window.PDFLib.PDFDocument.load(original.bytes, { updateMetadata: false });
   if (input.getForm().getFields().some(field => field instanceof window.PDFLib.PDFSignature)) {
-    throw new Error('Preserve layout is unavailable for signed PDFs.');
+    throw new Error(copyText('Preserve layout is unavailable for signed PDFs.', "已签名的 PDF 暂不支持保留原始版式。"));
   }
   for (const line of lines) {
     const page = input.getPage(line.page);
@@ -185,7 +186,7 @@ export async function prepareOriginalCopy(original, lines) {
       Math.min(crop.y, crop.y + crop.height) === media.y &&
       Math.abs(crop.width) === media.width && Math.abs(crop.height) === media.height;
     if (line.mixed || !sameBox) {
-      throw new Error(`Page ${line.page + 1}: this line uses a layout the replacement cannot preserve.`);
+      throw new Error(copyText(`Page ${line.page + 1}: this line uses a layout the replacement cannot preserve.`, `第 ${line.page + 1} 页：无法在保留此行版式的情况下替换文字。`));
     }
   }
   const pages = new Map();
@@ -193,7 +194,7 @@ export async function prepareOriginalCopy(original, lines) {
     const page = await original.pdf.getPage(pageIndex + 1);
     const [x, y] = page.view;
     if (x || y || page.rotate || page.userUnit !== 1) {
-      throw new Error(`Page ${pageIndex + 1}: this page uses unsupported geometry.`);
+      throw new Error(copyText(`Page ${pageIndex + 1}: this page uses unsupported geometry.`, `第 ${pageIndex + 1} 页：此页的尺寸或坐标设置暂不受支持。`));
     }
     pages.set(pageIndex, originalLines((await page.getTextContent()).items));
   }
@@ -229,7 +230,7 @@ export async function planOriginalCopies(prepared, copies, allowSmallerText, isC
     for (const { line, text, parts, appearance } of changes) {
       const source = line.placed ? { font: 'LiberationSans-Regular.ttf', color: [0, 0, 0] } : prepared.plans.get(line);
       const page = line.page + 1;
-      const prefix = `Recipient ${recipientIndex + 1}, page ${page}`;
+      const prefix = copyText(`Recipient ${recipientIndex + 1}, page ${page}`, `第 ${recipientIndex + 1} 位收件人，第 ${page} 页`);
       const runs = [];
       for (const part of appearance ? parts : [{ text, name: true }]) {
         if (!part.text) continue;
@@ -239,17 +240,17 @@ export async function planOriginalCopies(prepared, copies, allowSmallerText, isC
         let path = `./vendor/liberation-fonts/${style ? `Liberation${family}-${weight || 'Regular'}.ttf` : source.font}`;
         const size = style?.size ?? line.size;
         if (line.placed && (line.y + size > line.pageHeight - 4 || line.y - size * 0.35 < 4)) {
-          throw new Error(`${prefix}: the field is too close to the page edge for this font size.`);
+          throw new Error(copyText(`${prefix}: the field is too close to the page edge for this font size.`, `${prefix}：当前字号下，字段离页边太近。`));
         }
         const points = Array.from(part.text, char => char.codePointAt(0));
         let selected = await loadFont(path);
         if (points.some(point => !selected.characters.has(point)) && /\p{Script=Han}/u.test(part.text)) {
-          if (style?.bold || style?.italic) throw new Error(`${prefix}: the Chinese fallback supports regular text only.`);
+          if (style?.bold || style?.italic) throw new Error(copyText(`${prefix}: the Chinese fallback supports regular text only.`, `${prefix}：中文替代字体仅支持常规字形。`));
           path = CHINESE_FONT;
           selected = await loadFont(path);
         }
         if (points.some(point => !selected.characters.has(point))) {
-          throw new Error(`${prefix}: the replacement font does not contain every character.`);
+          throw new Error(copyText(`${prefix}: the replacement font does not contain every character.`, `${prefix}：替代字体缺少部分字符。`));
         }
         const width = selected.font.widthOfTextAtSize(part.text, size);
         runs.push({ ...part, path, size, width, color: style?.color ?? source.color });
@@ -259,7 +260,7 @@ export async function planOriginalCopies(prepared, copies, allowSmallerText, isC
       const flexible = runs.reduce((total, run) => total + (run.name ? run.width : 0), 0);
       const scale = flexible ? Math.min(1, (available - fixed) / flexible) : 1;
       if (!(scale > 0) || (scale < 0.999 && (!allowSmallerText || scale < 0.85))) {
-        throw new Error(`${prefix}: the name does not fit the selected line.`);
+        throw new Error(copyText(`${prefix}: the name does not fit the selected line.`, `${prefix}：姓名放不进选中的文本行。`));
       }
       for (const run of runs) {
         if (run.name) {
@@ -308,7 +309,7 @@ export async function writeOriginalCopy(prepared, changes) {
   }
   const check = await window.pdfjsLib.getDocument({ data: bytes.slice(), isEvalSupported: false }).promise;
   try {
-    if (check.numPages !== prepared.pageCount) throw new Error('The page count changed. No file was exported.');
+    if (check.numPages !== prepared.pageCount) throw new Error(copyText('The page count changed. No file was exported.', "页数发生变化，未导出文件。"));
     for (const [pageIndex, before] of prepared.pages) {
       const outputPage = await check.getPage(pageIndex + 1);
       const after = originalLines((await outputPage.getTextContent()).items);
@@ -322,7 +323,7 @@ export async function writeOriginalCopy(prepared, changes) {
       }).concat(pageChanges.filter(change => change.line.placed).map(change => signature(change.line, change.text))).sort();
       const actual = after.map(line => signature(line, line.text)).sort();
       if (actual.length !== expected.length || actual.some((value, index) => value !== expected[index])) {
-        throw new Error(`Page ${pageIndex + 1}: verification found an unexpected text change. No file was exported.`);
+        throw new Error(copyText(`Page ${pageIndex + 1}: verification found an unexpected text change. No file was exported.`, `第 ${pageIndex + 1} 页：检查发现意外的文字变化，未导出文件。`));
       }
     }
   } finally {

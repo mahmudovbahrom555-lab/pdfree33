@@ -31,6 +31,7 @@ import { loadPdfJs }                    from './pdf2jpgUI.js';
 import { renderDocxToDom }              from './docxToPdfCore.js';
 import { _buildPdf2WordDocxBlob }       from './processor.js';
 import { bindQuickEditCopies } from './quickEditCopies.js';
+import { copyText } from './quickEditCopyText.js';
 import { RECIPIENT_LIMIT } from './quickEditRecipients.js';
 import { t }                            from './i18n.js';
 
@@ -135,7 +136,7 @@ function _errorHTML(msg) {
 }
 
 function _sourceOnlyButton() {
-  return '<button type="button" class="qe-copies__button" id="qeOpenOriginal">Open original for personalized copies</button>';
+  return `<button type="button" class="qe-copies__button" id="qeOpenOriginal">${copyText('Open original for personalized copies', '打开原始 PDF 并生成个性化副本')}</button>`;
 }
 
 // Shown when the source PDF's structure survived the PDF->DOCX step too
@@ -292,82 +293,84 @@ async function _openModal(docContainer, originalOnly = false) {
       <div class="qe-workspace">
         <div class="qe-modal__stage" id="qeModalStage"></div>
         <section id="qeCopies" class="qe-copies" aria-labelledby="qeCopiesTitle" hidden>
-          <h2 id="qeCopiesTitle">Personalized copies</h2>
-          <p class="qe-copies__intro">Create one PDF for each recipient from this document.</p>
+          <h2 id="qeCopiesTitle">${copyText('Personalized copies', '个性化 PDF 副本')}</h2>
+          <p class="qe-copies__intro">${copyText('Create one PDF for each recipient from this document.', '为每位收件人生成一份独立的 PDF。')}</p>
 
           <div class="qe-copies__step">
-            <label><input type="checkbox" data-preserve-layout> Preserve original layout <small>(experimental)</small></label>
-            <p data-layout-hint>Quick Edit rebuilds the PDF. Check the sample for changes to page breaks or layout.</p>
+            <label><input type="checkbox" data-preserve-layout> ${copyText('Preserve original layout', '保留原始版式')} <small>${copyText('(experimental)', '（实验功能）')}</small></label>
+            <p data-layout-hint>${copyText('Quick Edit rebuilds the PDF. Check the sample for changes to page breaks or layout.', '快速编辑会重新生成 PDF。请查看样本，确认分页和版式。')}</p>
             <div data-original-options hidden>
-              <label for="qeOriginalPage">Original page</label>
+              <label for="qeOriginalPage">${copyText('Original page', '原始 PDF 页码')}</label>
               <select id="qeOriginalPage"></select>
-              <label><input type="checkbox" data-smaller-text> Allow slightly smaller text when a name does not fit</label>
-              <p>Selected lines use an available replacement font. Changing modes clears selected fields.</p>
+              <label><input type="checkbox" data-smaller-text> ${copyText('Allow slightly smaller text when a name does not fit', '姓名放不下时允许适当缩小字号')}</label>
+              <p>${copyText('Selected lines use an available replacement font. Changing modes clears selected fields.', '选中的文本会使用可用的替代字体。切换模式会清除已选字段。')}</p>
               <details data-name-style>
-                <summary>Name appearance</summary>
-                <label><input type="checkbox" data-style-enable> Customize inserted names</label>
-                <label>Font family
-                  <select data-style-font><option value="">Match source family</option><option>Sans</option><option>Serif</option><option>Mono</option></select>
-                </label>
-                <label>Size (pt) <input data-style-size type="number" min="6" max="48" placeholder="Auto"></label>
-                <label>Color <input data-style-color type="color" value="#000000"></label>
-                <label><input data-style-bold type="checkbox"> Bold</label>
-                <label><input data-style-italic type="checkbox"> Italic</label>
+                <summary>${copyText('Name appearance', '姓名样式')}</summary>
+                <label><input type="checkbox" data-style-enable> ${copyText('Customize inserted names', '自定义插入的姓名样式')}</label>
+                <fieldset data-style-options disabled>
+                  <label>${copyText('Font family', '字体')}
+                    <select data-style-font><option value="">${copyText('Match source family', '匹配原字体类别')}</option><option value="Sans">${copyText('Sans', '无衬线')}</option><option value="Serif">${copyText('Serif', '衬线')}</option><option value="Mono">${copyText('Mono', '等宽')}</option></select>
+                  </label>
+                  <label>${copyText('Size (pt)', '字号（磅）')} <input data-style-size type="number" min="6" max="48" placeholder="${copyText('Auto', '自动')}"></label>
+                  <label>${copyText('Color', '颜色')} <input data-style-color type="color" value="#000000"></label>
+                  <label><input data-style-bold type="checkbox"> ${copyText('Bold', '粗体')}</label>
+                  <label><input data-style-italic type="checkbox"> ${copyText('Italic', '斜体')}</label>
+                </fieldset>
               </details>
-              <button type="button" class="qe-copies__button" data-place aria-pressed="false" hidden>Add name on scan</button>
-              <p>Original PDF engine
-                <a href="/js/vendor/mupdf-1.28.1/LICENSE" target="_blank" rel="noopener">MuPDF license</a>
-                · <a href="https://github.com/ArtifexSoftware/mupdf/tree/1.28.1" target="_blank" rel="noopener">Source and build files</a>
+              <button type="button" class="qe-copies__button" data-place aria-pressed="false" hidden>${copyText('Add name on scan', '在扫描页添加姓名')}</button>
+              <p>${copyText('Original PDF engine', '原始 PDF 处理引擎')}
+                <a href="/js/vendor/mupdf-1.28.1/LICENSE" target="_blank" rel="noopener">${copyText('MuPDF license', 'MuPDF 许可证')}</a>
+                · <a href="https://github.com/ArtifexSoftware/mupdf/tree/1.28.1" target="_blank" rel="noopener">${copyText('Source and build files', '源代码和构建文件')}</a>
               </p>
             </div>
           </div>
 
           <div class="qe-copies__step">
-            <label for="qeCopyNames">1. Add recipients</label>
-            <p id="qeCopyNamesHint">Paste one full name per line or import a table. Up to ${RECIPIENT_LIMIT} recipients.</p>
+            <label for="qeCopyNames">${copyText('1. Add recipients', '1. 添加收件人')}</label>
+            <p id="qeCopyNamesHint">${copyText(`Paste one full name per line or import a table. Up to ${RECIPIENT_LIMIT} recipients.`, `每行粘贴一个姓名，或导入表格。最多支持 ${RECIPIENT_LIMIT} 位收件人。`)}</p>
             <textarea id="qeCopyNames" rows="4" aria-describedby="qeCopyNamesHint"
-              placeholder="Anna Example&#10;Boris Example" spellcheck="false"></textarea>
-            <p data-recipient-count>0 recipients</p>
-            <label for="qeRecipientFile">Import Excel or CSV</label>
+              placeholder="${copyText('Anna Example&#10;Boris Example', '张小明&#10;李晓华')}" spellcheck="false"></textarea>
+            <p data-recipient-count>${copyText('0 recipients', '0 位收件人')}</p>
+            <label for="qeRecipientFile">${copyText('Import Excel or CSV', '导入 Excel 或 CSV')}</label>
             <input type="file" id="qeRecipientFile" data-recipient-file accept=".xlsx,.csv,.tsv">
             <div data-import-options hidden>
-              <label for="qeRecipientSheet">Sheet</label>
+              <label for="qeRecipientSheet">${copyText('Sheet', '工作表')}</label>
               <select id="qeRecipientSheet" data-import-sheet></select>
-              <label for="qeRecipientStart">First row with a name</label>
+              <label for="qeRecipientStart">${copyText('First row with a name', '姓名起始行')}</label>
               <input id="qeRecipientStart" data-import-start type="number" min="1" value="2">
-              <label for="qeRecipientColumn">Full name column</label>
+              <label for="qeRecipientColumn">${copyText('Full name column', '姓名所在列')}</label>
               <select id="qeRecipientColumn" data-import-column></select>
               <p data-import-preview></p>
-              <button type="button" class="qe-copies__button" data-import-apply disabled>Use this column</button>
+              <button type="button" class="qe-copies__button" data-import-apply disabled>${copyText('Use this column', '使用此列')}</button>
             </div>
           </div>
 
           <div class="qe-copies__step">
-            <h3>2. Mark the name fields</h3>
-            <p>Select a name or placeholder in the document, then add it as a field. Repeat for each place to replace.</p>
+            <h3>${copyText('2. Mark the name fields', '2. 标记姓名字段')}</h3>
+            <p>${copyText('Select a name or placeholder in the document, then add it as a field. Repeat for each place to replace.', '在文档中选中姓名或占位文字，再添加为字段。需要替换多处时，请逐一添加。')}</p>
             <div class="qe-copies__actions">
-              <button type="button" class="qe-copies__button" data-bind>Use selected text</button>
-              <button type="button" class="qe-copies__button" data-reset disabled>Clear fields</button>
+              <button type="button" class="qe-copies__button" data-bind>${copyText('Use selected text', '使用选中的文字')}</button>
+              <button type="button" class="qe-copies__button" data-reset disabled>${copyText('Clear fields', '清除字段')}</button>
             </div>
-            <p data-field-count>0 fields selected</p>
+            <p data-field-count>${copyText('0 fields selected', '已选 0 个字段')}</p>
           </div>
 
           <div class="qe-copies__step">
-            <h3>3. Check and download</h3>
-            <p>Check a sample PDF before sharing the copies.</p>
-            <label for="qeCopyRecipient">Sample recipient</label>
-            <select id="qeCopyRecipient" disabled><option>Add names first</option></select>
+            <h3>${copyText('3. Check and download', '3. 检查并下载')}</h3>
+            <p>${copyText('Check a sample PDF before sharing the copies.', '分享副本之前，请先检查一份样本 PDF。')}</p>
+            <label for="qeCopyRecipient">${copyText('Sample recipient', '样本收件人')}</label>
+            <select id="qeCopyRecipient" disabled><option>${copyText('Add names first', '请先添加姓名')}</option></select>
             <div class="qe-copies__actions">
-              <button type="button" class="qe-copies__button" data-preview disabled>Download sample PDF</button>
-              <button type="button" class="qe-copies__button qe-copies__button--primary" data-download disabled>Download ZIP</button>
-              <button type="button" class="qe-copies__button" data-stop hidden>Stop export</button>
+              <button type="button" class="qe-copies__button" data-preview disabled>${copyText('Download sample PDF', '下载样本 PDF')}</button>
+              <button type="button" class="qe-copies__button qe-copies__button--primary" data-download disabled>${copyText('Download ZIP', '下载 ZIP')}</button>
+              <button type="button" class="qe-copies__button" data-stop hidden>${copyText('Stop export', '停止导出')}</button>
             </div>
           </div>
           <p class="qe-copies__status" role="status"></p>
         </section>
       </div>
       <div class="qe-modal__footer">
-        <button type="button" class="qe-copies__button" data-copies-toggle aria-expanded="false" aria-controls="qeCopies">Create personalized copies</button>
+        <button type="button" class="qe-copies__button" data-copies-toggle aria-expanded="false" aria-controls="qeCopies">${copyText('Create personalized copies', '生成个性化副本')}</button>
         <button type="button" class="merge-btn" id="qeModalSaveBtn" style="position:static;margin-top:0;">${esc(t('quickedit_save_btn'))}</button>
       </div>
     </div>`;
