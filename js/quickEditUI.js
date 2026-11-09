@@ -371,6 +371,10 @@ async function _openModal(docContainer, originalOnly = false) {
               <button type="button" class="qe-copies__button" data-bind>${copyText('Use selected text', '使用选中的文字')}</button>
               <button type="button" class="qe-copies__button" data-reset disabled>${copyText('Clear fields', '清除字段')}</button>
             </div>
+              <details data-name-suggestions hidden>
+                <summary>${copyText('Suggested name fields on this page', '当前页建议的姓名字段')}</summary>
+                <div class="qe-copies__actions" data-suggestion-list></div>
+              </details>
             <p data-field-count>${copyText('0 fields selected', '已选 0 个字段')}</p>
           </div>
 

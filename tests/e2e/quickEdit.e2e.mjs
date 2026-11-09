@@ -599,17 +599,10 @@ await test('example loads fictional recipients and exports a ZIP without a user 
     await page.getByRole('button', { name: 'Try an example' }).click();
     await page.locator('#qeCopies').waitFor();
     expect(await page.locator('#qeCopyNames').inputValue()).toBe('Alex Morgan\nJamie Chen');
-    const placeholder = page.locator('.qe-original-line').filter({ hasText: 'SAMPLE NAME' });
-    await placeholder.evaluate(span => {
-      const text = span.firstChild;
-      const start = text.textContent.indexOf('SAMPLE NAME');
-      const range = document.createRange();
-      range.setStart(text, start);
-      range.setEnd(text, start + 'SAMPLE NAME'.length);
-      getSelection().removeAllRanges();
-      getSelection().addRange(range);
-    });
-    await page.locator('[data-bind]').click();
+    const suggestion = page.getByRole('button', { name: 'Recipient: SAMPLE NAME' });
+    await suggestion.click();
+    expect(await suggestion.isDisabled()).toBeTruthy();
+    expect(await page.locator('[data-field-count]').innerText()).toBe('1 field selected');
     await page.getByRole('button', { name: 'Preview on page' }).click();
     await page.getByRole('img', { name: 'Generated PDF preview' }).waitFor();
     await page.locator('#qeCopyRecipient').selectOption('1');

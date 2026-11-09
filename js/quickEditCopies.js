@@ -53,6 +53,9 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
   const hint = dialog.querySelector('.qe-modal__hint');
   const fields = new Map();
   const place = panel.querySelector('[data-place]');
+  const suggestions = panel.querySelector('[data-name-suggestions]');
+  const suggestionList = suggestions.querySelector('[data-suggestion-list]');
+  const suggestedFields = new Map();
   const styling = panel.querySelector('[data-name-style]');
   const styleEnabled = styling.querySelector('[data-style-enable]');
   const styleOptions = styling.querySelector('[data-style-options]');
@@ -101,6 +104,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
     sampleView.replaceChildren();
     originalView.hidden = false;
     viewSample.textContent = copyText('Preview on page', '在当前页预览');
+    refreshActions();
   }
   let original = null;
   let originalRows = new Map();
@@ -121,6 +125,9 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
     place.hidden = true;
     pointerSelection = null;
     originalRows.clear();
+    suggestedFields.clear();
+    suggestionList.replaceChildren();
+    suggestions.hidden = true;
     originalView.replaceChildren();
     bind.disabled = true;
     const pageIndex = Number(pageSelect.value);
@@ -153,8 +160,27 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
       if (fields.has(key)) span.classList.add('qe-copy-field');
       originalRows.set(span, { key, line });
       originalView.appendChild(span);
+      for (const match of line.text.matchAll(/\{\{\s*(?:recipient(?:[ _]name)?|full[ _]name|name|姓名|收件人姓名|фио)\s*\}\}|\b(?:sample name|name placeholder|customer placeholder)\b/giu)) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'qe-copies__button';
+        const range = { start: match.index, end: match.index + match[0].length };
+        const label = document.createElement('strong');
+        label.textContent = match[0];
+        button.append(line.text.slice(0, range.start), label, line.text.slice(range.end));
+        button.addEventListener('click', () => {
+          if (busy || !sampleView.hidden) return;
+          addTextField(span, { key, line }, range);
+          span.scrollIntoView({ block: 'nearest' });
+        });
+        suggestedFields.set(button, { key, ...range });
+        suggestionList.appendChild(button);
+      }
     }
     bind.disabled = !lines.length;
+    suggestions.hidden = !suggestedFields.size;
+    suggestions.open = !suggestions.hidden;
+    refreshActions();
     if (!items.some(item => item.str?.trim())) {
       scannedPage = { page: pageIndex, width: viewport.width, height: viewport.height };
       place.hidden = false;
@@ -278,8 +304,13 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
     reset.disabled = busy || !fieldCount;
     recipient.disabled = busy || !count || count > RECIPIENT_LIMIT;
     preview.disabled = download.disabled = busy || !fieldCount || !count || count > RECIPIENT_LIMIT;
+    suggestions.hidden = !preserve.checked || !suggestedFields.size;
     viewSample.hidden = checkCopies.hidden = !preserve.checked;
     viewSample.disabled = checkCopies.disabled = download.disabled;
+    for (const [button, { key, start, end }] of suggestedFields) {
+      const used = fields.get(key)?.some(field => start < field.end && end > field.start);
+      button.disabled = busy || !sampleView.hidden || !!used;
+    }
   }
 
   recipient.addEventListener('change', () => {
@@ -335,9 +366,12 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
       status.textContent = copyText('Select text within one editable part of a line.', "请在同一行的一个可编辑文本片段内选中文字。");
       return;
     }
+    addTextField(span, originalRow, { start: range.startOffset, end: range.endOffset });
+  });
+
+  function addTextField(span, originalRow, { start, end }) {
     const key = originalRow?.key ?? span;
     const existing = fields.get(key) ?? [];
-    const { startOffset: start, endOffset: end } = range;
     if (existing.some(field => start < field.end && end > field.start)) {
       status.textContent = copyText('This selection overlaps an existing field.', "所选文字与已有字段重叠。");
       return;
@@ -348,7 +382,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
     document.getSelection()?.removeAllRanges();
     status.textContent = copyText('Name field added.', "已添加姓名字段。");
     refreshActions();
-  });
+  }
 
   function clearFields() {
     closeSample();
@@ -393,6 +427,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
       .filter(control => !control.disabled);
     controls.push(...importControls);
     busy = true;
+    refreshActions();
     controls.forEach(control => { control.disabled = true; });
     const editable = [...source.querySelectorAll('.qe-editable-run')];
     const clone = preserve.checked ? null : source.cloneNode(true);
