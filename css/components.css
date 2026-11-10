@@ -6464,7 +6464,7 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 .qe-copies__step { padding-block: 12px; border-block-start: 1px solid var(--border); }
 .qe-copies__intro { padding-block-end: 8px; }
 
-.qe-copies textarea, .qe-copies select {
+.qe-copies textarea, .qe-copies select, .qe-copies [data-wm-text] {
   display: block;
   box-sizing: border-box;
   width: 100%;
@@ -6500,7 +6500,7 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 
 .qe-copies__button:disabled { opacity: .55; cursor: default; }
 .qe-copies__button:focus-visible,
-.qe-copies :is(textarea, select):focus-visible {
+.qe-copies :is(textarea, select, input[type="text"]):focus-visible {
   outline: 2px solid var(--green-text);
   outline-offset: 2px;
 }
@@ -6554,6 +6554,10 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 }
 .qe-scan-field--wrap { background: transparent; overflow: hidden; }
 .qe-copies [data-name-style] label { display: block; margin-block: 5px; }
+.qe-copies [data-copy-watermark] > label { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+.qe-copies [data-wm-options] { margin: 8px 0 0; padding: 0; border: 0; }
+.qe-copies [data-wm-options][hidden] { display: none; }
+.qe-copies [data-wm-options] label { display: block; margin-block-start: 8px; }
 
 
 .qe-copies [data-style-options] { border: 0; margin: 0; min-inline-size: 0; padding: 0; }
