@@ -14,6 +14,7 @@ import { trackToolError, trackBatchStart, trackBatchSuccess, trackRepair, trackF
 import { TOOLS } from './config.js';
 import { maxFileMb, isLargeDevice } from './fileLimits.js';
 import { getRunner, getWorkerTool } from './toolRegistry.js';
+import { copyText } from './quickEditCopyText.js';
 import { loadJSZip, loadDocx, loadExcelJs, loadPptxGenJs } from './lazyLibs.js';
 import { repairSplitSurrogates } from './ooxmlRepair.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
@@ -1269,6 +1270,63 @@ async function _watermarkTextRequest(fileBuffer, options, onProgress) {
   });
 }
 
+// Personalized copies (the users' "watermark-batch" request): one PDF per name,
+// {name} in the text replaced by it, through the same watermarkTextWorker as a
+// single run — so every option (position, tile, rotation, pages, layer) and
+// the raster fallback for scripts the font lacks (CJK) apply to each copy.
+// All-or-nothing: a failing copy stops the run and names it. ZIP up to 100 MiB.
+const _WM_COPIES_ZIP_CAP = 100 * 1024 * 1024;
+function _wmCopyFileName(base, name, used) {
+  // characters a file name can't hold, and control characters (char codes below 32)
+  const clean = [...name].map(c => (c.charCodeAt(0) < 32 || '\\/:*?"<>|'.includes(c) ? '_' : c)).join('').replace(/\s+/g, ' ').trim().slice(0, 80) || 'copy';
+  const stem = `${base}-${clean}`;
+  const n = (used.get(stem) || 0) + 1;
+  used.set(stem, n);
+  return n === 1 ? `${stem}.pdf` : `${stem} (${n}).pdf`;
+}
+
+async function _runWatermarkCopies(filesSnapshot, params) {
+  const file = filesSnapshot[0];
+  if (!_checkSize(file, maxFileMb('watermark'))) { _abortUI(); return; }
+  const source = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(file));
+  const names = params.copies;
+  const base = file.name.replace(/\.pdf$/i, '');
+  await loadJSZip();
+  const zip = new window.JSZip();
+  const used = new Map();
+  let total = 0, pages = 0;
+  for (let i = 0; i < names.length; i++) {
+    if (!isProcessing) return;   // cancelled between copies
+    setProgress(Math.round(5 + 88 * i / names.length), copyText(`Copy ${i + 1} of ${names.length}…`, `正在生成第 ${i + 1}/${names.length} 份…`));
+    let data;
+    try {
+      data = await _watermarkTextRequest(source.slice(0), { ...params, copies: null, text: params.text.replaceAll('{name}', names[i]) });
+    } catch (err) {
+      isProcessing = false; setFilesLocked(false); hideCancelBtn();
+      const why = err.code === 'unsupported-characters' ? t('err_watermark_unsupported_chars') : err.message;
+      _handleError('watermark', copyText(`Copy ${i + 1} (${names[i]}): ${why}`, `第 ${i + 1} 份（${names[i]}）：${why}`), 'watermark_copies_failed');
+      return;
+    }
+    total += data.result.byteLength;
+    if (total > _WM_COPIES_ZIP_CAP) {
+      isProcessing = false; setFilesLocked(false); hideCancelBtn();
+      _handleError('watermark', copyText(`The copies would exceed 100 MB after ${i + 1} names. Use fewer names per run.`, `生成到第 ${i + 1} 份时将超过 100 MB，请减少每次的姓名数量。`), 'watermark_copies_too_large');
+      return;
+    }
+    pages = data.pageCount;
+    zip.file(_wmCopyFileName(base, names[i], used), data.result);
+  }
+  if (!isProcessing) return;
+  setProgress(95, t('prog_zip'));
+  const blob = await zip.generateAsync({ type: 'blob', mimeType: 'application/zip' });
+  isProcessing = false; setFilesLocked(false); hideCancelBtn();
+  setProgress(100, t('prog_done'));
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: { tool: 'watermark', blob, filename: `${base}-personalized.zip`,
+              desc: copyText(`${names.length} personalized PDFs · ${pages} pages each · ${fmtSize(blob.size)}`, `${names.length} 份个性化 PDF · 每份 ${pages} 页 · ${fmtSize(blob.size)}`) },
+  }));
+}
+
 async function _runWatermarkText(filesSnapshot, params) {
   const file = filesSnapshot[0];
   if (!_checkSize(file, maxFileMb('watermark'))) { _abortUI(); return; }
@@ -2520,7 +2578,7 @@ async function _runWorkerTool(tool, filesSnapshot, params, bufferOverride) {
   // Text watermarks need a Unicode-capable font — see watermarkTextWorker.js.
   // Image watermarks (options.kind === 'image') don't and stay below unchanged.
   if (tool === 'watermark' && params.kind !== 'image') {
-    return _runWatermarkText(filesSnapshot, params);
+    return params.copies?.length ? _runWatermarkCopies(filesSnapshot, params) : _runWatermarkText(filesSnapshot, params);
   }
   // Page numbers with text around them, a colour or a font — pageNumWorker.js.
   if (tool === 'pagenum' && _pageNumNeedsOwnWorker(params)) {
@@ -2908,7 +2966,7 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
  * @returns {Promise<{ blob: Blob, atlasEri: object|null, confidence: object|null,
  *   effectivePages: number, totalPages: number }>}
  */
-export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, stripMetadata = true, onProgress, isCancelled } = {}) {
+export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, stripMetadata = true, preserveNumericFields = false, onProgress, isCancelled } = {}) {
   onProgress?.(5, 'Loading libraries…');
 
   try {
@@ -2981,7 +3039,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
     } finally {
       await ocr.close();
     }
-    ({ paragraphs, cs } = await _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { repeatPatternSet, isCancelled, onProgress }));
+    ({ paragraphs, cs } = await _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { repeatPatternSet, preserveNumericFields, isCancelled, onProgress }));
     confidence = _p2wConfidence(cs, median);
   } else {
     onProgress?.(10, 'Rendering pages…');
@@ -3059,7 +3117,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
       if (cs.totalTables > 0 && atlasEri.components.tables < _ERI_TABLE_RETRY_THRESHOLD) {
         onProgress?.(95, 'Verifying table structure…');
         const retry = await _p2wBuildParagraphs(
-          pdfDoc, pageData, median, repeatTextSet, cs, { useTables: false, repeatPatternSet, isCancelled, onProgress }
+          pdfDoc, pageData, median, repeatTextSet, cs, { useTables: false, repeatPatternSet, preserveNumericFields, isCancelled, onProgress }
         );
         const retryBlob = await repairSplitSurrogates(await Packer.toBlob(_buildDoc(retry.paragraphs)), window.JSZip);
         const retryEri = await evaluateStructural(await retryBlob.arrayBuffer());
@@ -4487,7 +4545,7 @@ async function _runUnlock(filesSnapshot, { password } = {}) {
 // useTables:false skips text-detected AND border-grid tables entirely (all
 // their lines flow through the normal paragraph path instead) — used as the
 // conservative fallback when the first attempt's tables look mis-detected.
-export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { useTables = true, repeatPatternSet = new Set(), isCancelled = () => !isProcessing, onProgress = setProgress } = {}) {
+export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { useTables = true, repeatPatternSet = new Set(), preserveNumericFields = false, isCancelled = () => !isProcessing, onProgress = setProgress } = {}) {
   // window.__pdfreeDocxBuilder — see the namespace-collision comment on
   // _buildPdf2WordDocxBlob's own window.__pdfreeDocxBuilder read, above.
   const { Paragraph, TextRun, HeadingLevel,
@@ -4973,7 +5031,8 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
           // (last 3 lines) that contains only a pure integer. Checking only the
           // very last line missed cases where the CamScanner watermark line is
           // below the page number, making the number the second-to-last line.
-          if (lineIdx >= lines.length - 3 && ln.items.length === 1 && !lineToTable.has(lineIdx)) {
+          // Quick Edit must keep standalone numeric fields (e.g. contract placeholders).
+          if (!preserveNumericFields && lineIdx >= lines.length - 3 && ln.items.length === 1 && !lineToTable.has(lineIdx)) {
             const t = ln.items[0].str.trim();
             if (/^\d+$/.test(t)) continue;
           }

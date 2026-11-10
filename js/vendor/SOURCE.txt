@@ -331,3 +331,16 @@ Checked:     OSV: 0 advisories for 4.10.38; 1 for the 3.11.174 it replaces
              font; fixed in 4.2.67).
 License:     Apache License 2.0 (Mozilla Foundation), notice at the top of both files.
 Used by:     js/pdfjsLoader.js (import()), js/pdfWorkerShim.js (module worker).
+
+MuPDF.js 1.28.1
+Source: https://registry.npmjs.org/mupdf/-/mupdf-1.28.1.tgz
+Project: https://github.com/ArtifexSoftware/mupdf.js
+Build output: mupdf-1.28.1/mupdf.js, mupdf-1.28.1/mupdf-wasm.js,
+       mupdf-1.28.1/mupdf-wasm.wasm, mupdf-1.28.1/LICENSE
+License: AGPL-3.0-or-later (see bundled LICENSE)
+
+read-excel-file 9.3.14
+Source: https://registry.npmjs.org/read-excel-file/-/read-excel-file-9.3.14.tgz
+Project: https://github.com/catamphetamine/read-excel-file
+Build output: read-excel-file-9.3.14/read-excel-file.min.js, read-excel-file-9.3.14/LICENSE
+License: MIT (see bundled LICENSE)

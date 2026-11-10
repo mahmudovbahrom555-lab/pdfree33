@@ -124,6 +124,11 @@ async function _loadDocxWithFallback() {
 
 // A two-URL fallback chain (jsdelivr → unpkg): if the first CDN is down or
 // slow, the second is tried; on total failure the cached promise is cleared.
+export function loadExcelReader() {
+  if (window.readXlsxFile) return Promise.resolve();
+  return _load('Excel reader', new URL('./vendor/read-excel-file-9.3.14/read-excel-file.min.js', import.meta.url).href);
+}
+
 export function loadExcelJs() {
   if (window.ExcelJS) return Promise.resolve();
   if (_promises['excelJs']) return _promises['excelJs'];

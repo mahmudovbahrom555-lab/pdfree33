@@ -32,7 +32,7 @@
 //  Run: node tests/e2e/quickEdit.e2e.mjs
 // ============================================================
 
-import { chromium } from 'playwright';
+import { chromium, firefox, webkit } from 'playwright';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -77,7 +77,8 @@ async function captureDownload(page) {
 
 console.log(`Quick Edit PDF E2E — real end-to-end round trip (real browser, ${BASE_URL}):`);
 
-const browser = await chromium.launch();
+const engine = { chromium, firefox, webkit }[process.env.PDFREE_BROWSER || 'chromium'];
+const browser = await engine.launch({ executablePath: process.env.CHROME_PATH });
 
 await test('Atlas gate blocks a text-extraction-failure document (no editor, #mergeBtn disabled)', async () => {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
@@ -94,6 +95,12 @@ await test('Atlas gate blocks a text-extraction-failure document (no editor, #me
   expect(modalOpen).toBe(0);
   const disabled = await page.locator('#mergeBtn').isDisabled();
   expect(disabled).toBeTruthy();
+  await page.locator('#qeOpenOriginal').click();
+  await page.locator('#qeOriginalPage').waitFor({ state: 'visible' });
+  expect(await page.locator('#qeModalSaveBtn').isVisible()).toBeFalsy();
+  expect(await page.locator('[data-download]').isEnabled()).toBeFalsy();
+  await page.locator('#qeModalClose').click();
+  expect(await page.locator('#mergeBtn').isDisabled()).toBeTruthy();
   await page.close();
 });
 
@@ -230,6 +237,500 @@ await test('Save on a document with intact RTL text shows the same unsupported-s
   const sawWarning = toasts.some(t => /Chinese|Japanese|Korean|Arabic|Hebrew|Thai|emoji/i.test(t));
   if (!sawWarning) throw new Error(`Expected an unsupported-script warning toast, saw: ${JSON.stringify(toasts)}`);
   await page.close();
+});
+
+await test('personalized copies replace only selected text and export one PDF per recipient', async () => {
+  const page = await browser.newPage();
+  try {
+    await page.goto(`${BASE_URL}/quick-edit-pdf/`);
+    await page.setInputFiles('#fileInput', EXTRACTABLE_PDF);
+    await page.waitForSelector('.qe-modal--open .qe-editable-run');
+    await page.getByRole('button', { name: 'Create personalized copies' }).click();
+    expect(await page.locator('#qeModalSaveBtn').isVisible()).toBeFalsy();
+    expect(await page.locator('[data-download]').isEnabled()).toBeFalsy();
+    await page.locator('[data-recipient-file]').setInputFiles({
+      name: 'recipients.csv', mimeType: 'text/csv',
+      buffer: Buffer.from('Group,Full name\nA,Anna Example\nB,Boris Example\nC,Anna Example\nD,'),
+    });
+    await page.locator('[data-import-column]').selectOption('1');
+    const importSummary = await page.locator('[data-import-preview]').innerText();
+    expect(importSummary.includes('1 blank or non-text rows skipped')).toBeTruthy();
+    expect(importSummary.includes('1 repeated names kept as separate copies')).toBeTruthy();
+    await page.getByRole('button', { name: 'Use this column' }).click();
+    expect(await page.locator('#qeCopies textarea').inputValue()).toBe('Anna Example\nBoris Example\nAnna Example');
+    await page.locator('#qeCopies textarea').fill('Anna Example\nBoris Example');
+    expect(await page.locator('[data-recipient-count]').innerText()).toBe('2 recipients');
+    expect(await page.locator('[data-download]').isEnabled()).toBeFalsy();
+    const originals = await page.evaluate(() => {
+      const spans = Array.from(document.querySelectorAll('.qe-editable-run'))
+        .filter(span => span.firstChild?.nodeType === Node.TEXT_NODE && /[a-z]{4}/i.test(span.textContent));
+      return spans.slice(0, 2).map(span => span.textContent.match(/[a-z]{4}/i)[0]);
+    });
+    expect(originals.length).toBe(2);
+    for (let index = 0; index < originals.length; index++) {
+      await page.evaluate(index => {
+        const spans = Array.from(document.querySelectorAll('.qe-editable-run'))
+          .filter(span => span.firstChild?.nodeType === Node.TEXT_NODE && /[a-z]{4}/i.test(span.textContent));
+        const span = spans[index];
+        const start = span.textContent.search(/[a-z]{4}/i);
+        const range = document.createRange();
+        range.setStart(span.firstChild, start);
+        range.setEnd(span.firstChild, start + 4);
+        const selection = getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }, index);
+      await page.getByRole('button', { name: 'Use selected text' }).click();
+      expect(await page.locator('[data-field-count]').innerText()).toBe(`${index + 1} ${index === 0 ? 'field' : 'fields'} selected`);
+    }
+    await page.locator('#qeCopyRecipient').selectOption('1');
+    const [sample] = await Promise.all([
+      page.waitForEvent('download'),
+      page.getByRole('button', { name: 'Download sample PDF' }).click(),
+    ]);
+    expect(sample.suggestedFilename()).toBe('2 - Boris Example.pdf');
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.getByRole('button', { name: 'Download ZIP' }).click(),
+    ]);
+    const { readFile } = await import('node:fs/promises');
+    const bytes = await readFile(await download.path());
+    const copies = await page.evaluate(async bytes => {
+      const zip = await window.JSZip.loadAsync(bytes);
+      const pdfjs = await import('/js/vendor/pdfjs-4.10.38/pdf.min.js');
+      pdfjs.GlobalWorkerOptions.workerSrc = '/js/vendor/pdfjs-4.10.38/pdf.worker.min.js';
+      const result = [];
+      for (const entry of Object.values(zip.files)) {
+        const doc = await pdfjs.getDocument({ data: await entry.async('uint8array') }).promise;
+        const content = await (await doc.getPage(1)).getTextContent();
+        result.push(content.items.map(item => item.str).join(' ').replace(/\s+/g, ' ').trim());
+        await doc.destroy();
+      }
+      return result;
+    }, Array.from(bytes));
+    expect(copies.length).toBe(2);
+    expect(copies[0].split('Anna Example').length).toBe(3);
+    expect(copies[1].split('Boris Example').length).toBe(3);
+    expect(copies[0].includes('Boris Example')).toBeFalsy();
+    expect(copies[0].includes('A second independent paragraph for testing purposes.')).toBeTruthy();
+    await page.locator('#qeCopies textarea').fill('王小明');
+    await page.getByRole('button', { name: 'Download ZIP' }).click();
+    await page.locator('#qeCopies [role=status]').filter({ hasText: 'cannot export safely' }).waitFor();
+    expect(await page.locator('.qe-editable-run').allTextContents().then(values => values.some(value => value.includes('Anna Example')))).toBeFalsy();
+  } finally {
+    await page.close();
+  }
+});
+
+await test('preserve original layout replaces separate columns on two original PDF pages', async () => {
+  const { PDFDocument, PDFName, StandardFonts, degrees } = await import('pdf-lib');
+  const input = await PDFDocument.create();
+  const font = await input.embedFont(StandardFonts.Helvetica);
+  for (let index = 0; index < 2; index++) {
+    const sheet = input.addPage([500, 600]);
+    sheet.node.set(PDFName.of('CropBox'), input.context.obj([0, 600, 500, 0]));
+    sheet.drawText('1', { x: 50, y: 500, size: 12, font, ySkew: degrees(index ? 0 : 12) });
+    sheet.drawText('Other party: 1', { x: 275, y: 500, size: 12, font });
+    sheet.drawText('This paragraph remains unchanged.', { x: 50, y: 450, size: 12, font });
+  }
+  const page = await browser.newPage();
+  try {
+    await page.goto(`${BASE_URL}/quick-edit-pdf/`);
+    await page.setInputFiles('#fileInput', {
+      name: 'layout-test.pdf', mimeType: 'application/pdf', buffer: Buffer.from(await input.save()),
+    });
+    await page.waitForSelector('.qe-modal--open');
+    await page.locator('[data-copies-toggle]').click();
+    await page.locator('#qeCopies textarea').fill('王小明');
+    await page.locator('[data-preserve-layout]').check();
+    await page.waitForFunction(() => !document.querySelector('[data-preserve-layout]').disabled);
+    if (!await page.locator('[data-preserve-layout]').isChecked()) {
+      throw new Error(await page.locator('#qeCopies [role=status]').innerText());
+    }
+    for (let index = 0; index < 2; index++) {
+      if (index) await page.locator('#qeOriginalPage').selectOption(String(index));
+      const field = page.locator('.qe-original-line').filter({ hasText: /^1$/ });
+      await field.evaluate(span => {
+        const range = document.createRange();
+        range.selectNodeContents(span.firstChild);
+        getSelection().removeAllRanges();
+        getSelection().addRange(range);
+      });
+      await page.locator('[data-bind]').click();
+      expect(await page.locator('#qeCopies [role=status]').innerText()).toBe('Name field added.');
+    }
+    const names = page.locator('#qeCopies textarea');
+    await names.fill('王小明\n' + '非常长的采购公司名称'.repeat(35));
+    let downloads = 0;
+    page.on('download', () => { downloads++; });
+    await page.locator('[data-download]').click();
+    await page.locator('#qeCopies [role=status]').filter({
+      hasText: 'Recipient 2, page 1: the name does not fit',
+    }).waitFor();
+    expect(downloads).toBe(0);
+
+    await names.fill(Array.from({ length: 30 }, () => '王小明').join('\n'));
+    await page.locator('[data-download]').click();
+    await page.locator('[data-stop]').click();
+    await page.locator('#qeCopies [role=status]').filter({ hasText: 'Export stopped' }).waitFor();
+    expect(downloads).toBe(0);
+    await names.fill('王小明');
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.locator('[data-preview]').click(),
+    ]);
+    const { readFile } = await import('node:fs/promises');
+    const output = await readFile(await download.path());
+    const text = await page.evaluate(async bytes => {
+      const doc = await window.pdfjsLib.getDocument({ data: Uint8Array.from(bytes) }).promise;
+      try {
+        const pages = [];
+        for (let index = 1; index <= doc.numPages; index++) {
+          const sheet = await doc.getPage(index);
+          const items = (await sheet.getTextContent()).items.filter(item => item.str.trim());
+          const viewport = sheet.getViewport({ scale: 2 });
+          const canvas = document.createElement('canvas');
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          const context = canvas.getContext('2d');
+          await sheet.render({ canvasContext: context, viewport }).promise;
+          // Each Han glyph should visibly paint inside its own advance.
+          // Text extraction alone passes even when the embedded outlines are missing.
+          const glyphsVisible = Array.from({ length: 3 }, (_, index) => {
+            const { data } = context.getImageData(100 + 24 * index, 173, 24, 31);
+            return data.some((value, offset) => offset % 4 === 0 && value < 120);
+          }).every(Boolean);
+          pages.push({ glyphsVisible, items: items.map(item => [item.str, item.transform[4], item.transform[5]]) });
+        }
+        return pages;
+      } finally {
+        await doc.destroy();
+      }
+    }, Array.from(output));
+    expect(text.length).toBe(2);
+    for (const { items, glyphsVisible } of text) {
+      expect(glyphsVisible).toBeTruthy();
+      expect(items.some(([str, x, y]) => str === '王小明' && x === 50 && y === 500)).toBeTruthy();
+      expect(items.some(([str, x, y]) => str === 'Other party: 1' && x === 275 && y === 500)).toBeTruthy();
+      expect(items.some(([str]) => str === '1')).toBeFalsy();
+    }
+  } finally {
+    await page.close();
+  }
+});
+
+await test('original layout styles only the inserted name and can place a name on a scan', async () => {
+  const { PDFDocument, PDFDict, PDFName, StandardFonts } = await import('pdf-lib');
+  const input = await PDFDocument.create();
+  const textPage = input.addPage([500, 600]);
+  const font = await input.embedFont(StandardFonts.Helvetica);
+  textPage.drawText('Dear CUSTOMER PLACEHOLDER, welcome.', { x: 50, y: 500, size: 12, font });
+  const mobile = process.env.PDFREE_MOBILE_PREVIEW === '1';
+  const page = await browser.newPage(mobile
+    ? { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }
+    : {});
+  try {
+    const image = await page.evaluate(() => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 500;
+      canvas.height = 600;
+      const context = canvas.getContext('2d');
+      context.fillStyle = 'white';
+      context.fillRect(0, 0, 500, 600);
+      context.fillStyle = 'black';
+      context.font = '24px sans-serif';
+      context.fillText('Raster-only sample', 50, 75);
+      return canvas.toDataURL('image/png');
+    });
+    const scannedPage = input.addPage([500, 600]);
+    scannedPage.drawImage(await input.embedPng(image), { x: 0, y: 0, width: 500, height: 600 });
+    await page.goto(`${BASE_URL}/quick-edit-pdf/`);
+    await page.setInputFiles('#fileInput', {
+      name: 'text-and-scan.pdf', mimeType: 'application/pdf', buffer: Buffer.from(await input.save()),
+    });
+    await page.locator('#qeOpenOriginal').click();
+    await page.locator('#qeCopies textarea').fill('Anna Example');
+    const line = page.locator('.qe-original-line').filter({ hasText: 'CUSTOMER PLACEHOLDER' });
+    await line.evaluate(span => {
+      const range = document.createRange();
+      const start = span.textContent.indexOf('CUSTOMER');
+      range.setStart(span.firstChild, start);
+      range.setEnd(span.firstChild, start + 'CUSTOMER PLACEHOLDER'.length);
+      getSelection().removeAllRanges();
+      getSelection().addRange(range);
+    });
+    await page.locator('[data-bind]').click();
+    await page.locator('#qeOriginalPage').selectOption('1');
+    await page.locator('[data-place]').click();
+    const preview = page.locator('.qe-original-page canvas');
+    const box = await preview.boundingBox();
+    const position = { x: box.width * 0.16, y: box.height * 0.28 };
+    if (mobile) await preview.tap({ position });
+    else await preview.click({ position });
+    expect(await page.locator('[data-field-count]').innerText()).toBe('2 fields selected');
+    expect(await page.locator('.qe-scan-field').innerText()).toBe('Anna Example');
+
+    await page.locator('[data-name-style] summary').click();
+    const styleToggle = page.locator('[data-style-enable]');
+    const styleInputs = page.locator('[data-style-options] :is(input, select)');
+    for (const control of await styleInputs.all()) expect(await control.isEnabled()).toBeFalsy();
+    await styleToggle.check();
+    for (const control of await styleInputs.all()) expect(await control.isEnabled()).toBeTruthy();
+    await styleToggle.uncheck();
+    for (const control of await styleInputs.all()) expect(await control.isEnabled()).toBeFalsy();
+    await styleToggle.check();
+    await page.locator('[data-style-font]').selectOption('Mono');
+    await page.locator('[data-style-size]').fill('14');
+    await page.locator('[data-style-color]').fill('#b80000');
+    await page.locator('[data-style-bold]').check();
+    await page.locator('[data-style-italic]').check();
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.locator('[data-preview]').click(),
+    ]);
+    const { readFile } = await import('node:fs/promises');
+    const file = await readFile(await download.path());
+    const result = await page.evaluate(async bytes => {
+      const pdf = await window.pdfjsLib.getDocument({ data: Uint8Array.from(bytes) }).promise;
+      try {
+        const first = await (await pdf.getPage(1)).getTextContent();
+        const scan = await pdf.getPage(2);
+        const second = await scan.getTextContent();
+        const canvas = document.createElement('canvas');
+        canvas.width = 500;
+        canvas.height = 600;
+        const context = canvas.getContext('2d');
+        await scan.render({ canvasContext: context, viewport: scan.getViewport({ scale: 1 }) }).promise;
+        const pixels = context.getImageData(0, 0, 500, 600).data;
+        const red = pixels.some((value, i) => i % 4 === 0 && value > 120 && pixels[i + 1] < 70 && pixels[i + 2] < 70);
+        const rasterPreserved = context.getImageData(45, 45, 300, 35).data
+          .some((value, i) => i % 4 === 0 && value < 80);
+        return { first: first.items, second: second.items, red, rasterPreserved };
+      } finally {
+        await pdf.destroy();
+      }
+    }, Array.from(file));
+    const atSize = (items, size) => items.filter(item => item.transform[0] === size).map(item => item.str).join('');
+    expect(atSize(result.first, 14)).toBe('Anna Example');
+    expect(atSize(result.first, 12)).toBe('Dear , welcome.');
+    expect(atSize(result.second, 14)).toBe('Anna Example');
+    expect(result.red).toBeTruthy();
+    expect(result.rasterPreserved).toBeTruthy();
+    const output = await PDFDocument.load(file);
+    expect(output.context.enumerateIndirectObjects().some(([, object]) => object instanceof PDFDict &&
+      String(object.get(PDFName.of('BaseFont'))).includes('LiberationMono-BoldItalic'))).toBeTruthy();
+  } finally {
+    await page.close();
+  }
+});
+
+await test('Simplified Chinese copies localizes import, overflow and cancellation', async () => {
+  const { PDFDocument, StandardFonts } = await import('pdf-lib');
+  const input = await PDFDocument.create();
+  const sheet = input.addPage([500, 600]);
+  const font = await input.embedFont(StandardFonts.Helvetica);
+  sheet.drawText('1', { x: 50, y: 500, size: 12, font });
+  sheet.drawText('Other party', { x: 275, y: 500, size: 12, font });
+  const page = await browser.newPage();
+  try {
+    await page.goto(`${BASE_URL}/zh/kuaisu-bianji-pdf/`);
+    await page.setInputFiles('#fileInput', {
+      name: 'layout-test.pdf', mimeType: 'application/pdf', buffer: Buffer.from(await input.save()),
+    });
+    await page.locator('#qeOpenOriginal').click();
+    await page.getByRole('heading', { name: '个性化 PDF 副本' }).waitFor();
+    await page.locator('[data-recipient-file]').setInputFiles({
+      name: 'recipients.csv', mimeType: 'text/csv', buffer: Buffer.from('姓名\n王小明'),
+    });
+    await page.locator('[data-import-column]').selectOption('0');
+    await page.getByRole('button', { name: '使用此列' }).click();
+    const status = page.locator('#qeCopies [role=status]');
+    expect(await status.innerText()).toBe('收件人列表已导入。');
+    const field = page.locator('.qe-original-line').filter({ hasText: /^1$/ });
+    await field.evaluate(span => {
+      const range = document.createRange();
+      range.selectNodeContents(span.firstChild);
+      getSelection().removeAllRanges();
+      getSelection().addRange(range);
+    });
+    await page.getByRole('button', { name: '使用选中的文字' }).click();
+    await page.locator('#qeCopies textarea').fill('王小明\n' + '非常长的采购公司名称'.repeat(25));
+    await page.getByRole('button', { name: '检查所有姓名' }).click();
+    await status.filter({ hasText: '第 2 位收件人，第 1 页：姓名放不进选中的文本行。' }).waitFor();
+    await page.locator('#qeCopies textarea').fill(Array.from({ length: 30 }, () => '王小明').join('\n'));
+    await page.getByRole('button', { name: '下载 ZIP' }).click();
+    await page.getByRole('button', { name: '停止导出' }).click();
+    await status.filter({ hasText: '已停止导出。可编辑列表后重试。' }).waitFor();
+  } finally {
+    await page.close();
+  }
+});
+
+await test('homepage search and Watermark open personalized copies in the existing editor', async () => {
+  const page = await browser.newPage();
+  try {
+    for (const [home, query, editor] of [
+      ['/', 'pdf mail merge', '/quick-edit-pdf/'],
+      ['/zh/', 'Excel名单生成PDF', '/zh/kuaisu-bianji-pdf/'],
+    ]) {
+      await page.goto(BASE_URL + home);
+      await page.locator('#toolSearch').fill(query);
+      const link = page.locator('#searchResult [role=link]');
+      await link.waitFor();
+      await link.press('Enter');
+      await page.waitForURL(BASE_URL + editor + '?mode=personalized-copies');
+      expect(await page.locator('[data-qe-mode=personalized-copies]').getAttribute('aria-pressed')).toBe('true');
+    }
+    await page.goto(BASE_URL + '/zh/shuiyin-pdf/');
+    await page.getByRole('link', { name: '在文档正文中替换为每个姓名' }).click();
+    await page.waitForURL(BASE_URL + '/zh/kuaisu-bianji-pdf/?mode=personalized-copies');
+    await page.setInputFiles('#fileInput', EXTRACTABLE_PDF);
+    await page.getByRole('heading', { name: '个性化 PDF 副本' }).waitFor();
+    expect(await page.locator('#qeCopyNames').inputValue()).toBe('');
+  } finally {
+    await page.close();
+  }
+});
+
+await test('example loads fictional recipients and exports a ZIP without a user file', async () => {
+  const page = await browser.newPage({ acceptDownloads: true });
+  try {
+    await page.goto(BASE_URL + '/quick-edit-pdf/');
+    await page.getByRole('button', { name: 'Try an example' }).click();
+    await page.locator('#qeCopies').waitFor();
+    expect(await page.locator('#qeCopyNames').inputValue()).toBe('Alex Morgan\nJamie Chen');
+    const suggestion = page.getByRole('button', { name: 'Recipient: SAMPLE NAME' });
+    await suggestion.click();
+    expect(await suggestion.isDisabled()).toBeTruthy();
+    expect(await page.locator('[data-field-count]').innerText()).toBe('1 field selected');
+    await page.getByRole('button', { name: 'Preview on page' }).click();
+    await page.getByRole('img', { name: 'Generated PDF preview' }).waitFor();
+    await page.locator('#qeCopyRecipient').selectOption('1');
+    await page.getByRole('img', { name: 'Generated PDF preview' }).waitFor();
+    await page.getByRole('button', { name: 'Back to field editing' }).click();
+    expect(await page.getByRole('img', { name: 'Generated PDF preview' }).count()).toBe(0);
+    await page.getByRole('button', { name: 'Check all names' }).click();
+    await page.locator('#qeCopies [role=status]').filter({ hasText: 'All names fit' }).waitFor();
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.locator('[data-download]').click(),
+    ]);
+    expect(download.suggestedFilename().endsWith('.zip')).toBeTruthy();
+  } finally {
+    await page.close();
+  }
+});
+
+await test('an explicitly reserved scan field wraps long names while retaining the font size', async () => {
+  const { PDFDocument } = await import('pdf-lib');
+  const { readFile } = await import('node:fs/promises');
+  const input = await PDFDocument.create();
+  input.addPage([500, 600]);
+  const page = await browser.newPage({ acceptDownloads: true });
+  try {
+    await page.goto(BASE_URL + '/quick-edit-pdf/?mode=personalized-copies');
+    await page.setInputFiles('#fileInput', {
+      name: 'blank.pdf', mimeType: 'application/pdf', buffer: Buffer.from(await input.save()),
+    });
+    await page.locator('#qeCopyNames').fill('Alexandria Montgomery Catherine Richardson');
+    await page.locator('[data-wrap-name]').check();
+    await page.locator('[data-place]').click();
+    await page.locator('.qe-original-page canvas').click({ position: { x: 80, y: 120 } });
+    await page.locator('.qe-scan-field--wrap').waitFor();
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.locator('[data-preview]').click(),
+    ]);
+    const bytes = await readFile(await download.path());
+    const lines = await page.evaluate(async data => {
+      const pdf = await window.pdfjsLib.getDocument({ data: Uint8Array.from(data) }).promise;
+      try {
+        const content = await (await pdf.getPage(1)).getTextContent();
+        return content.items.filter(item => item.str).map(item => ({
+          text: item.str, size: item.transform[0], y: item.transform[5],
+        }));
+      } finally {
+        await pdf.destroy();
+      }
+    }, Array.from(bytes));
+    expect(lines.length).toBe(2);
+    expect(lines.map(line => line.text).join(' ')).toBe('Alexandria Montgomery Catherine Richardson');
+    expect(lines.every(line => line.size === 12)).toBeTruthy();
+    expect(lines[0].y - lines[1].y).toBe(15);
+  } finally {
+    await page.close();
+  }
+});
+
+// The users' own request ("watermark-batch", 💬 2026-11-09/10): one PDF per
+// person with that person's name in the watermark — in the Watermark tool.
+await test('Watermark personalized copies: one PDF per name, the name in each watermark, any script', async () => {
+  const page = await browser.newPage();
+  try {
+    await page.addInitScript(() => {
+      window.__blob = null;
+      const original = URL.createObjectURL.bind(URL);
+      URL.createObjectURL = blob => { if (blob instanceof Blob && /zip/.test(blob.type)) window.__blob = blob; return original(blob); };
+    });
+    await page.goto(`${BASE_URL}/watermark-pdf/`);
+    await page.setInputFiles('#fileInput', EXTRACTABLE_PDF);
+    await page.locator('#wmCopies').waitFor();
+    // {name} without copies, and copies without {name}, are refused with a reason
+    await page.locator('#wmText').fill('Draft for {name}');
+    await page.click('#mergeBtn');
+    await page.locator('#toast').filter({ hasText: 'Turn on personalized copies' }).waitFor();
+    expect(await page.locator('#wmCopiesBody').isVisible()).toBeFalsy();
+    await page.locator('#wmCopies').check();
+    // the import settings appear only once a table is chosen
+    expect(await page.locator('#wmCopiesBody [data-import-options]').isVisible()).toBeFalsy();
+    await page.locator('#wmText').fill('Confidential');
+    await page.locator('#wmNames').fill('Anna Example');
+    await page.click('#mergeBtn');
+    await page.locator('#toast').filter({ hasText: 'Write {name}' }).waitFor();
+    // the template button, a CSV import, then Latin, Cyrillic, Chinese and a repeated name
+    await page.locator('#wmText').fill('Copy for ');
+    await page.locator('#wmText').press('End');
+    await page.click('#wmInsertName');
+    expect(await page.locator('#wmText').inputValue()).toBe('Copy for {name}');
+    await page.locator('#wmRecipientFile').setInputFiles({ name: 'people.csv', mimeType: 'text/csv',
+      buffer: Buffer.from('Group,Full name\nA,Anna Example\nB,Борис Пример\nC,张小明\nD,Anna Example') });
+    await page.locator('#wmRecipientColumn').selectOption('1');
+    await page.locator('#wmCopiesBody [data-import-apply]').click();
+    expect(await page.locator('#wmNames').inputValue()).toBe('Anna Example\nБорис Пример\n张小明\nAnna Example');
+    expect(await page.locator('#wmNamesCount').innerText()).toBe('4 copies');
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__blob, null, { timeout: 60000 });
+    const copies = await page.evaluate(async () => {
+      const zip = await window.JSZip.loadAsync(await window.__blob.arrayBuffer());
+      const pdfjs = await import('/js/vendor/pdfjs-4.10.38/pdf.min.js');
+      pdfjs.GlobalWorkerOptions.workerSrc = '/js/vendor/pdfjs-4.10.38/pdf.worker.min.js';
+      const out = [];
+      for (const name of Object.keys(zip.files).sort()) {
+        const doc = await pdfjs.getDocument({ data: await zip.files[name].async('uint8array') }).promise;
+        const page1 = await doc.getPage(1);
+        const text = (await page1.getTextContent()).items.map(i => i.str).join(' ');
+        const ops = await page1.getOperatorList();
+        const images = ops.fnArray.filter(f => f === pdfjs.OPS.paintImageXObject).length;
+        out.push({ name, pages: doc.numPages, text, images });
+        await doc.destroy();
+      }
+      return out;
+    });
+    expect(copies.map(c => c.name).join('|')).toBe(
+      'quickedit_extractable_text-Anna Example (2).pdf|quickedit_extractable_text-Anna Example.pdf|quickedit_extractable_text-Борис Пример.pdf|quickedit_extractable_text-张小明.pdf');
+    for (const c of copies) expect(c.pages >= 1).toBeTruthy();
+    const byName = Object.fromEntries(copies.map(c => [c.name, c]));
+    expect(byName['quickedit_extractable_text-Anna Example.pdf'].text.includes('Copy for Anna Example')).toBeTruthy();
+    expect(byName['quickedit_extractable_text-Борис Пример.pdf'].text.includes('Copy for Борис Пример')).toBeTruthy();
+    expect(byName['quickedit_extractable_text-Anna Example.pdf'].text.includes('Борис')).toBeFalsy();
+    // Chinese: the font has no Han glyphs, so the watermark is drawn as an image (watermarkTextWorker.js)
+    expect(byName['quickedit_extractable_text-张小明.pdf'].images >= 1).toBeTruthy();
+    expect(byName['quickedit_extractable_text-Anna Example.pdf'].images).toBe(0);
+    // the original text is still there under the watermark
+    expect(byName['quickedit_extractable_text-张小明.pdf'].text.length > 20).toBeTruthy();
+  } finally {
+    await page.close();
+  }
 });
 
 await browser.close();

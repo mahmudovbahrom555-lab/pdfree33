@@ -1,6 +1,14 @@
 [
   {
     "@type": "Question",
+    "name": "Can I create one PDF per recipient from a list of names?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Choose Personalized PDF copies in Quick Edit PDF before opening a file. Paste the names or import an Excel or CSV list, mark where the name goes, then download the PDFs as a ZIP. Try an example to follow the same steps with a sample PDF and two fictional recipients."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Is my PDF uploaded anywhere to edit it?",
     "acceptedAnswer": {
       "@type": "Answer",

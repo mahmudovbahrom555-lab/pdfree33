@@ -235,6 +235,29 @@
       {% endif %}
     </div>
 
+    {% set copies_title = '批量生成个性化 PDF' if lang == 'zh-CN' else 'Именные копии PDF' if lang == 'ru' else 'Personalized PDF copies' %}
+    {% set copies_desc = '上传一个 PDF，再导入 Excel 名单或粘贴姓名，为每人生成一份 PDF。' if lang == 'zh-CN' else 'Один PDF и список из Excel или вставленные имена → отдельный PDF для каждого получателя.' if lang == 'ru' else 'One PDF and a list from Excel or pasted names → a separate PDF for each recipient.' %}
+    {% if tool.id == 'quickEdit' %}
+    <div id="qeEntry" class="qe-entry">
+      <div class="qe-entry__choices" role="group" aria-label="{{ tool.cardNames[lang] }}">
+        <button type="button" class="qe-copies__button" data-qe-mode="edit" aria-pressed="true">{{ '修改文字' if lang == 'zh-CN' else 'Исправить текст' if lang == 'ru' else 'Fix text' }}</button>
+        <button type="button" class="qe-copies__button" data-qe-mode="personalized-copies" aria-pressed="false" aria-describedby="qeEntryDesc">{{ copies_title }}</button>
+      </div>
+      <p id="qeEntryDesc">{{ copies_desc }}</p>
+      <button type="button" id="qeTryExample" class="qe-copies__button">{{ '试用示例' if lang == 'zh-CN' else 'Попробовать на примере' if lang == 'ru' else 'Try an example' }}</button>
+    </div>
+    {% elif tool.id == 'watermark' %}
+    {# Watermark has its own personalized copies (a name in the watermark); this link is the other
+       way: each name put INTO the document's text, in Quick Edit #}
+    {% set text_copies_title = '在文档正文中替换为每个姓名' if lang == 'zh-CN' else 'Подставить имена в текст документа' if lang == 'ru' else 'Put each name into the document text instead' %}
+    {% for editor in all_tools if editor.id == 'quickEdit' %}
+    <div class="qe-entry">
+      <a href="{{ prefix }}{{ (lang_cfg.dir ~ '/') if lang != 'en' else '' }}{{ editor.slugs[lang] }}/?mode=personalized-copies">{{ text_copies_title }}</a>
+      <p>{{ copies_desc }}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
+
     <div id="dropZone" class="drop-zone" tabindex="0" role="button">
       <input type="file" id="fileInput" multiple accept=".pdf,application/pdf" aria-hidden="true">
       <span class="drop-icon" aria-hidden="true">📂</span>

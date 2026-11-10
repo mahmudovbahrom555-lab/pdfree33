@@ -77,9 +77,11 @@
     "eslint-plugin-compat": "^7.0.2",
     "husky": "^9.1.7",
     "jszip": "^3.10.1",
+    "mupdf": "1.28.1",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "4.10.38",
     "playwright": "^1.62.1",
+    "read-excel-file": "9.3.14",
     "terser": "^5.50.0",
     "vitest": "^4.1.6"
   }
