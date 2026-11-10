@@ -582,7 +582,7 @@ await test('homepage search and Watermark open personalized copies in the existi
       expect(await page.locator('[data-qe-mode=personalized-copies]').getAttribute('aria-pressed')).toBe('true');
     }
     await page.goto(BASE_URL + '/zh/shuiyin-pdf/');
-    await page.getByRole('link', { name: '批量生成个性化 PDF' }).click();
+    await page.getByRole('link', { name: '在文档正文中替换为每个姓名' }).click();
     await page.waitForURL(BASE_URL + '/zh/kuaisu-bianji-pdf/?mode=personalized-copies');
     await page.setInputFiles('#fileInput', EXTRACTABLE_PDF);
     await page.getByRole('heading', { name: '个性化 PDF 副本' }).waitFor();
@@ -657,6 +657,77 @@ await test('an explicitly reserved scan field wraps long names while retaining t
     expect(lines.map(line => line.text).join(' ')).toBe('Alexandria Montgomery Catherine Richardson');
     expect(lines.every(line => line.size === 12)).toBeTruthy();
     expect(lines[0].y - lines[1].y).toBe(15);
+  } finally {
+    await page.close();
+  }
+});
+
+// The users' own request ("watermark-batch", 💬 2026-11-09/10): one PDF per
+// person with that person's name in the watermark — in the Watermark tool.
+await test('Watermark personalized copies: one PDF per name, the name in each watermark, any script', async () => {
+  const page = await browser.newPage();
+  try {
+    await page.addInitScript(() => {
+      window.__blob = null;
+      const original = URL.createObjectURL.bind(URL);
+      URL.createObjectURL = blob => { if (blob instanceof Blob && /zip/.test(blob.type)) window.__blob = blob; return original(blob); };
+    });
+    await page.goto(`${BASE_URL}/watermark-pdf/`);
+    await page.setInputFiles('#fileInput', EXTRACTABLE_PDF);
+    await page.locator('#wmCopies').waitFor();
+    // {name} without copies, and copies without {name}, are refused with a reason
+    await page.locator('#wmText').fill('Draft for {name}');
+    await page.click('#mergeBtn');
+    await page.locator('#toast').filter({ hasText: 'Turn on personalized copies' }).waitFor();
+    expect(await page.locator('#wmCopiesBody').isVisible()).toBeFalsy();
+    await page.locator('#wmCopies').check();
+    // the import settings appear only once a table is chosen
+    expect(await page.locator('#wmCopiesBody [data-import-options]').isVisible()).toBeFalsy();
+    await page.locator('#wmText').fill('Confidential');
+    await page.locator('#wmNames').fill('Anna Example');
+    await page.click('#mergeBtn');
+    await page.locator('#toast').filter({ hasText: 'Write {name}' }).waitFor();
+    // the template button, a CSV import, then Latin, Cyrillic, Chinese and a repeated name
+    await page.locator('#wmText').fill('Copy for ');
+    await page.locator('#wmText').press('End');
+    await page.click('#wmInsertName');
+    expect(await page.locator('#wmText').inputValue()).toBe('Copy for {name}');
+    await page.locator('#wmRecipientFile').setInputFiles({ name: 'people.csv', mimeType: 'text/csv',
+      buffer: Buffer.from('Group,Full name\nA,Anna Example\nB,Борис Пример\nC,张小明\nD,Anna Example') });
+    await page.locator('#wmRecipientColumn').selectOption('1');
+    await page.locator('#wmCopiesBody [data-import-apply]').click();
+    expect(await page.locator('#wmNames').inputValue()).toBe('Anna Example\nБорис Пример\n张小明\nAnna Example');
+    expect(await page.locator('#wmNamesCount').innerText()).toBe('4 copies');
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__blob, null, { timeout: 60000 });
+    const copies = await page.evaluate(async () => {
+      const zip = await window.JSZip.loadAsync(await window.__blob.arrayBuffer());
+      const pdfjs = await import('/js/vendor/pdfjs-4.10.38/pdf.min.js');
+      pdfjs.GlobalWorkerOptions.workerSrc = '/js/vendor/pdfjs-4.10.38/pdf.worker.min.js';
+      const out = [];
+      for (const name of Object.keys(zip.files).sort()) {
+        const doc = await pdfjs.getDocument({ data: await zip.files[name].async('uint8array') }).promise;
+        const page1 = await doc.getPage(1);
+        const text = (await page1.getTextContent()).items.map(i => i.str).join(' ');
+        const ops = await page1.getOperatorList();
+        const images = ops.fnArray.filter(f => f === pdfjs.OPS.paintImageXObject).length;
+        out.push({ name, pages: doc.numPages, text, images });
+        await doc.destroy();
+      }
+      return out;
+    });
+    expect(copies.map(c => c.name).join('|')).toBe(
+      'quickedit_extractable_text-Anna Example (2).pdf|quickedit_extractable_text-Anna Example.pdf|quickedit_extractable_text-Борис Пример.pdf|quickedit_extractable_text-张小明.pdf');
+    for (const c of copies) expect(c.pages >= 1).toBeTruthy();
+    const byName = Object.fromEntries(copies.map(c => [c.name, c]));
+    expect(byName['quickedit_extractable_text-Anna Example.pdf'].text.includes('Copy for Anna Example')).toBeTruthy();
+    expect(byName['quickedit_extractable_text-Борис Пример.pdf'].text.includes('Copy for Борис Пример')).toBeTruthy();
+    expect(byName['quickedit_extractable_text-Anna Example.pdf'].text.includes('Борис')).toBeFalsy();
+    // Chinese: the font has no Han glyphs, so the watermark is drawn as an image (watermarkTextWorker.js)
+    expect(byName['quickedit_extractable_text-张小明.pdf'].images >= 1).toBeTruthy();
+    expect(byName['quickedit_extractable_text-Anna Example.pdf'].images).toBe(0);
+    // the original text is still there under the watermark
+    expect(byName['quickedit_extractable_text-张小明.pdf'].text.length > 20).toBeTruthy();
   } finally {
     await page.close();
   }

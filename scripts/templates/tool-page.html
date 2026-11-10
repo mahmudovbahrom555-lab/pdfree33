@@ -247,9 +247,12 @@
       <button type="button" id="qeTryExample" class="qe-copies__button">{{ '试用示例' if lang == 'zh-CN' else 'Попробовать на примере' if lang == 'ru' else 'Try an example' }}</button>
     </div>
     {% elif tool.id == 'watermark' %}
+    {# Watermark has its own personalized copies (a name in the watermark); this link is the other
+       way: each name put INTO the document's text, in Quick Edit #}
+    {% set text_copies_title = '在文档正文中替换为每个姓名' if lang == 'zh-CN' else 'Подставить имена в текст документа' if lang == 'ru' else 'Put each name into the document text instead' %}
     {% for editor in all_tools if editor.id == 'quickEdit' %}
     <div class="qe-entry">
-      <a href="{{ prefix }}{{ (lang_cfg.dir ~ '/') if lang != 'en' else '' }}{{ editor.slugs[lang] }}/?mode=personalized-copies">{{ copies_title }}</a>
+      <a href="{{ prefix }}{{ (lang_cfg.dir ~ '/') if lang != 'en' else '' }}{{ editor.slugs[lang] }}/?mode=personalized-copies">{{ text_copies_title }}</a>
       <p>{{ copies_desc }}</p>
     </div>
     {% endfor %}

@@ -21,27 +21,25 @@ import { computeWatermarkLayout } from './watermarkLayout.js';
 import { showToast } from './ui.js';
 import { t } from './i18n.js';
 import { loadPreset, clearPreset } from './presets.js';
-import { openFeedback } from './feedback.js';
-import { trackFeatureInterest } from './analytics.js';
+import { bindRecipientImport, RECIPIENT_LIMIT } from './quickEditRecipients.js';
+import { copyText } from './quickEditCopyText.js';
 
 const LOGO_MAX_MB = 10;
 
 // ── Constants ──────────────────────────────────────────────────
 const PREVIEW_W = 280;  // preview canvas CSS width in px
 
-// Fake-door demand signal for personalized/batch watermark copies (one
-// unique output per recipient) — see memory watermark_batch_interest_signal.
-// Soft, client-only de-dupe (annoyance prevention, not a security boundary —
-// same posture as /api/feedback's own honeypot, which is the real defense).
-const INTEREST_VOTED_KEY = 'pdfree_interest_watermark_batch';
-function _hasVotedInterest() {
-  try { return localStorage.getItem(INTEREST_VOTED_KEY) === '1'; }
-  catch { return false; }
-}
+// Personalized copies (the users' "watermark-batch" request, 2026-11): the
+// text may hold {name}; with copies on, one PDF per name from the list, the
+// name in place of {name}. The names live only in this tab's memory — never
+// in localStorage (presetFilter keeps style only) and never sent anywhere.
+const NAME_TOKEN = '{name}';
 
 // ── State ──────────────────────────────────────────────────────
 let _kind     = 'text';         // 'text' | 'image'
 let _text     = '';
+let _copies   = false;          // personalized copies on/off (not remembered)
+let _namesText = '';            // the pasted/imported list, one name per line (not remembered)
 let _opacity  = 0.3;
 let _position = 'center';       // 'center' | 'top' | 'bottom' | 'tile'
 let _fontSize = 40;
@@ -89,7 +87,7 @@ export function getWatermarkParams() {
               opacity: _logoOpacity, size: _logoSize, position: _position, ...common };
   }
   return { kind: 'text', text: _text, opacity: _opacity, position: _position,
-           fontSize: _fontSize, color: _color, ...common };
+           fontSize: _fontSize, color: _color, copies: _copies ? _names() : null, ...common };
 }
 
 // ── Public API ─────────────────────────────────────────────────
@@ -189,6 +187,7 @@ function _render() {
             <input type="text" id="wmText" class="wm-text-input"
                    value="${_escAttr(_text)}" maxlength="60"
                    placeholder="${_escAttr(t('wm_text_placeholder'))}" aria-label="${_escAttr(t('wm_text_label'))}">`)}
+          ${_copiesSection()}
         `}
 
         ${group(t('wm_position_label'), chipGroup('wmPos', [
@@ -257,8 +256,6 @@ function _render() {
           subtitle: t('preset_remember_sub'),
           ariaLabel: t('preset_remember_title'),
         }) : ''}
-
-        ${_interestCard()}
 
       </div>
 
@@ -530,46 +527,78 @@ function _bindEvents() {
     img.src = _rawObjectUrl;
   });
 
-  id('wmInterestVote')?.addEventListener('click', () => {
-    const card = id('wmInterestVote').closest('.wm-interest');
-    fetch('/api/feedback', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        type: 'idea',
-        tool: 'watermark-batch',
-        text: 'Interested: personalized/batch watermark copies (1-click vote)',
-        url: location.href,
-      }),
-    }).catch(() => { /* fake-door signal, fire-and-forget — never block the UI on it */ });
-    trackFeatureInterest('watermark-batch');
-    try { localStorage.setItem(INTEREST_VOTED_KEY, '1'); } catch { /* private-mode Safari etc — UI still swaps for this render */ }
-    if (card) card.outerHTML = _interestCard();
-  });
-
-  id('wmInterestDetail')?.addEventListener('click', () => {
-    openFeedback('idea', { tool: 'watermark-batch' });
-  });
+  _bindCopies();
 }
 
-// ── Interest card (fake-door demand signal) ─────────────────────
+// ── Personalized copies ──────────────────────────────────────────
 
-function _interestCard() {
-  if (_hasVotedInterest()) {
-    return `<div class="wm-interest wm-interest--voted">
-      <span class="wm-interest__text">✓ ${t('wm_interest_voted')}</span>
-    </div>`;
-  }
-  return `<div class="wm-interest">
-    <div class="wm-interest__text">
-      <strong>${t('wm_interest_title')}</strong>
-      <span>${t('wm_interest_desc')}</span>
-    </div>
-    <div class="wm-interest__actions">
-      <button type="button" id="wmInterestVote" class="wm-interest__vote">${t('wm_interest_vote_btn')}</button>
-      <button type="button" id="wmInterestDetail" class="wm-interest__detail">${t('wm_interest_detail_btn')}</button>
+function _names() {
+  return _namesText.split(/\r?\n/).map(n => n.trim()).filter(Boolean);
+}
+
+function _namesCountText() {
+  const n = _names().length;
+  return n > RECIPIENT_LIMIT
+    ? copyText(`${n} names — the limit is ${RECIPIENT_LIMIT}.`, `${n} 个姓名，最多支持 ${RECIPIENT_LIMIT} 个。`)
+    : copyText(`${n} ${n === 1 ? 'copy' : 'copies'}`, `${n} 份副本`);
+}
+
+function _copiesSection() {
+  return `<div class="wm-copies">
+    <label class="wm-copies__toggle">
+      <input type="checkbox" id="wmCopies" ${_copies ? 'checked' : ''}>
+      <span>${copyText('Personalized copies — one PDF per person', '个性化副本 — 每人一份 PDF')}</span>
+    </label>
+    <div id="wmCopiesBody" class="wm-copies__body" ${_copies ? '' : 'hidden'}>
+      <p id="wmNamesHint" class="wm-hint">${copyText(`Write ${NAME_TOKEN} in the watermark text: each copy gets one name from the list. Up to ${RECIPIENT_LIMIT} names; they stay on this device.`, `在水印文字中写入 ${NAME_TOKEN}：每份副本替换为名单中的一个姓名。最多 ${RECIPIENT_LIMIT} 个，姓名只保存在本设备。`)}</p>
+      <button type="button" id="wmInsertName" class="wm-copies__btn">${copyText(`Insert ${NAME_TOKEN}`, `插入 ${NAME_TOKEN}`)}</button>
+      <label for="wmNames" class="wm-copies__label">${copyText('Names, one per line', '姓名（每行一个）')}</label>
+      <textarea id="wmNames" class="wm-copies__names" rows="4" spellcheck="false" aria-describedby="wmNamesHint"
+        placeholder="${copyText('Anna Example&#10;Boris Example', '张小明&#10;李晓华')}">${_escAttr(_namesText)}</textarea>
+      <p id="wmNamesCount" class="wm-hint">${_namesCountText()}</p>
+      <label for="wmRecipientFile" class="wm-copies__label">${copyText('Import Excel or CSV', '导入 Excel 或 CSV')}</label>
+      <input type="file" id="wmRecipientFile" data-recipient-file accept=".xlsx,.csv,.tsv">
+      <div data-import-options hidden class="wm-copies__import">
+        <label for="wmRecipientSheet">${copyText('Sheet', '工作表')}</label>
+        <select id="wmRecipientSheet" data-import-sheet></select>
+        <label for="wmRecipientStart">${copyText('First row with a name', '姓名起始行')}</label>
+        <input id="wmRecipientStart" data-import-start type="number" min="1" value="2">
+        <label for="wmRecipientColumn">${copyText('Name column', '姓名所在列')}</label>
+        <select id="wmRecipientColumn" data-import-column></select>
+        <p data-import-preview class="wm-hint"></p>
+        <button type="button" class="wm-copies__btn" data-import-apply disabled>${copyText('Use this column', '使用此列')}</button>
+      </div>
+      <p id="wmImportStatus" class="wm-hint" role="status"></p>
     </div>
   </div>`;
+}
+
+function _bindCopies() {
+  const toggle = id('wmCopies');
+  if (!toggle) return;
+  const body = id('wmCopiesBody'), names = id('wmNames'), text = id('wmText');
+  toggle.addEventListener('change', () => {
+    _copies = toggle.checked;
+    body.hidden = !_copies;
+    if (_copies && !_text.includes(NAME_TOKEN)) {   // a ready template the user can edit
+      _text = `${_text || t('wm_default_text')} — ${NAME_TOKEN}`.slice(0, 60);
+      text.value = _text;
+    }
+    _schedulePreview();
+  });
+  id('wmInsertName').addEventListener('click', () => {
+    const at = text.selectionStart ?? _text.length, end = text.selectionEnd ?? at;
+    _text = (_text.slice(0, at) + NAME_TOKEN + _text.slice(end)).slice(0, 60);
+    text.value = _text;
+    text.focus();
+    _schedulePreview();
+  });
+  names.addEventListener('input', () => {
+    _namesText = names.value;
+    id('wmNamesCount').textContent = _namesCountText();
+    _schedulePreview();
+  });
+  bindRecipientImport(body, names, id('wmImportStatus'));
 }
 
 // ── Canvas size helper ─────────────────────────────────────────
@@ -697,7 +726,7 @@ function _drawWatermarkLayer(ctx, W, H) {
     return;
   }
 
-  const text     = _text || t('wm_default_text');
+  const text     = (_text || t('wm_default_text')).replaceAll(NAME_TOKEN, (_copies && _names()[0]) || copyText('Name', '姓名'));
   const scaleX   = W / _pageW;
   const scaleY   = H / _pageH;
   const colorStr = (COLOR_MAP[_color] || COLOR_MAP.gray) + _opacity + ')';

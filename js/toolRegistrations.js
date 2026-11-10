@@ -12,6 +12,8 @@
 import { registerTool } from './toolRegistry.js';
 import { id, esc }      from './utils.js';
 import { t }             from './i18n.js';
+import { copyText }      from './quickEditCopyText.js';
+import { RECIPIENT_LIMIT } from './quickEditRecipients.js';
 import { getWmRemove, wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
 import { checkbox, chipGroup } from './uiComponents.js';
 import { mergeOrderHtml, bindMergeOrder, getMergeOrder, resetMergeOrder } from './mergeOrderUI.js';
@@ -386,9 +388,20 @@ registerTool('watermark', {
   init:       initWatermarkOptions,
   hide:       hideWatermarkOptions,
   getParams:  getWatermarkParams,
-  validate:   p => p.kind === 'image'
-    ? (!p.bytes ? t('val_wm_upload_logo') : null)
-    : (!p.text?.trim() ? t('val_wm_enter_text') : null),
+  validate:   p => {
+    if (p.kind === 'image') return !p.bytes ? t('val_wm_upload_logo') : null;
+    if (!p.text?.trim()) return t('val_wm_enter_text');
+    // Personalized copies: a list within the limit and {name} in the text;
+    // {name} without copies would print the token itself
+    if (p.copies) {
+      if (!p.copies.length) return copyText('Add at least one name to the list.', '请至少在名单中添加一个姓名。');
+      if (p.copies.length > RECIPIENT_LIMIT) return copyText(`Up to ${RECIPIENT_LIMIT} names per run.`, `每次最多 ${RECIPIENT_LIMIT} 个姓名。`);
+      if (!p.text.includes('{name}')) return copyText('Write {name} in the watermark text — each copy puts one name there.', '请在水印文字中写入 {name}，每份副本会在此处填入一个姓名。');
+    } else if (p.text.includes('{name}')) {
+      return copyText('Turn on personalized copies, or remove {name} from the text.', '请开启个性化副本，或从文字中删除 {name}。');
+    }
+    return null;
+  },
   // Image-mode watermarks carry the logo's raw bytes — not practical to
   // persist in localStorage, so image mode simply isn't remembered.
   // fromPage/toPage deliberately excluded — a remembered page range is
