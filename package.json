@@ -83,6 +83,6 @@
     "playwright": "^1.62.1",
     "read-excel-file": "9.3.14",
     "terser": "^5.50.0",
-    "vitest": "^4.1.6"
+    "vitest": "^5.1.0"
   }
 }
