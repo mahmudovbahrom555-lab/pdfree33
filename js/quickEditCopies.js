@@ -3,6 +3,7 @@ import { walkDomToPdfContent, pdfContentToBlob } from './docxToPdfCore.js';
 import { loadJSZip } from './lazyLibs.js';
 import { openOriginalPdf, originalLines, planOriginalCopies, prepareOriginalCopy, writeOriginalCopy } from './quickEditOriginal.js';
 import { bindRecipientImport, RECIPIENT_LIMIT } from './quickEditRecipients.js';
+import { watermarkTextRequest } from './watermarkTextRequest.js';
 
 export function substituteFields(text, fields, name) {
   for (const { start, end } of [...fields].sort((a, b) => b.start - a.start)) {
@@ -61,6 +62,26 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
   const styleEnabled = styling.querySelector('[data-style-enable]');
   const styleOptions = styling.querySelector('[data-style-options]');
   styleEnabled.addEventListener('change', () => { styleOptions.disabled = !styleEnabled.checked; });
+  // Optional watermark on each copy, after the names are in: the Watermark
+  // tool's own worker, so {name} in its text gets the same recipient and any
+  // script draws (the raster fallback covers what the font lacks)
+  const wmEnabled = panel.querySelector('[data-wm-enable]');
+  const wmOptions = panel.querySelector('[data-wm-options]');
+  const wmText = panel.querySelector('[data-wm-text]');
+  const wmPosition = panel.querySelector('[data-wm-position]');
+  wmEnabled.addEventListener('change', () => {
+    wmOptions.disabled = wmOptions.hidden = !wmEnabled.checked;
+    closeSample();
+  });
+  wmOptions.addEventListener('input', closeSample);
+  async function addWatermark(pdf, name) {
+    const options = {
+      kind: 'text', text: wmText.value.trim().replaceAll('{name}', name), position: wmPosition.value,
+      opacity: 0.3, fontSize: 40, color: 'gray', rotation: 'auto', fromPage: 1, toPage: null, layer: 'front',
+    };
+    const data = await watermarkTextRequest(await pdf.arrayBuffer(), options);
+    return new Blob([data.result], { type: 'application/pdf' });
+  }
   let placement = null;
   let scannedPage = null;
 
@@ -425,6 +446,10 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
       status.textContent = error.message;
       return;
     }
+    if (wmEnabled.checked && !wmText.value.trim()) {
+      status.textContent = copyText('Write the watermark text, or turn the watermark off.', '请填写水印文字，或关闭水印。');
+      return;
+    }
     stopPlacement();
     const sampleIndex = recipient.selectedIndex;
     const samplePage = Number(pageSelect.value);
@@ -432,7 +457,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
     activeJob = job;
     stop.hidden = false;
     stop.disabled = false;
-    const controls = [names, bind, reset, preview, download, viewSample, checkCopies, toggle, recipient, preserve, pageSelect, smallerText, place, wrapName, ...styling.querySelectorAll('input, select')].filter(control => !control.disabled);
+    const controls = [names, bind, reset, preview, download, viewSample, checkCopies, toggle, recipient, preserve, pageSelect, smallerText, place, wrapName, ...styling.querySelectorAll('input, select'), wmEnabled, wmText, wmPosition].filter(control => !control.disabled);
     const importControls = Array.from(panel.querySelectorAll('[data-recipient-file], [data-import-options] input, [data-import-options] select, [data-import-options] button'))
       .filter(control => !control.disabled);
     controls.push(...importControls);
@@ -504,6 +529,14 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
           result = await pdfContentToBlob(parsed, { isCancelled: cancelled });
         }
         if (cancelled()) return;
+        if (wmEnabled.checked) {
+          try {
+            result = await addWatermark(result, name);
+          } catch (error) {
+            throw new Error(copyText(`Watermark, recipient ${batch ? index + 1 : sampleIndex + 1}: ${error.message}`, `第 ${batch ? index + 1 : sampleIndex + 1} 位收件人的水印：${error.message}`), { cause: error });
+          }
+          if (cancelled()) return;
+        }
         if (zip) {
           totalBytes += result.size;
           if (totalBytes > 100 * 1024 * 1024) throw new Error(copyText('The ZIP exceeds 100 MB. Split the list into smaller batches.', "ZIP 超过 100 MB。请将收件人分成较小的批次。"));

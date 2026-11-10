@@ -735,6 +735,67 @@ await test('Watermark personalized copies: one PDF per name, the name in each wa
   }
 });
 
+await test('Quick Edit copies with a watermark: the name in the text and in the watermark of each copy', async () => {
+  const page = await browser.newPage();
+  try {
+    await page.goto(`${BASE_URL}/quick-edit-pdf/`);
+    await page.setInputFiles('#fileInput', EXTRACTABLE_PDF);
+    await page.waitForSelector('.qe-modal--open .qe-editable-run');
+    await page.getByRole('button', { name: 'Create personalized copies' }).click();
+    await page.locator('#qeCopies textarea').fill('Anna Example\nBoris Example');
+    await page.evaluate(() => {
+      const span = Array.from(document.querySelectorAll('.qe-editable-run'))
+        .find(s => s.firstChild?.nodeType === Node.TEXT_NODE && /[a-z]{4}/i.test(s.textContent));
+      const start = span.textContent.search(/[a-z]{4}/i);
+      const range = document.createRange();
+      range.setStart(span.firstChild, start);
+      range.setEnd(span.firstChild, start + 4);
+      getSelection().removeAllRanges();
+      getSelection().addRange(range);
+    });
+    await page.getByRole('button', { name: 'Use selected text' }).click();
+    // the watermark settings appear only once it is turned on; empty text is refused with a reason
+    expect(await page.locator('[data-wm-options]').isVisible()).toBeFalsy();
+    await page.locator('#qeCopyWm').check();
+    expect(await page.locator('#qeCopyWmText').inputValue()).toBe('Copy for {name}');
+    await page.locator('#qeCopyWmText').fill('  ');
+    await page.getByRole('button', { name: 'Download ZIP' }).click();
+    await page.locator('#qeCopies [role=status]').filter({ hasText: 'Write the watermark text' }).waitFor();
+    await page.locator('#qeCopyWmText').fill('Copy for {name}');
+    await page.locator('#qeCopyWmPosition').selectOption('tile');
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.getByRole('button', { name: 'Download ZIP' }).click(),
+    ]);
+    const { readFile } = await import('node:fs/promises');
+    const bytes = await readFile(await download.path());
+    const copies = await page.evaluate(async bytes => {
+      const zip = await window.JSZip.loadAsync(new Uint8Array(bytes));
+      const pdfjs = await import('/js/vendor/pdfjs-4.10.38/pdf.min.js');
+      pdfjs.GlobalWorkerOptions.workerSrc = '/js/vendor/pdfjs-4.10.38/pdf.worker.min.js';
+      const out = [];
+      for (const name of Object.keys(zip.files).sort()) {
+        const doc = await pdfjs.getDocument({ data: await zip.files[name].async('uint8array') }).promise;
+        const text = (await (await doc.getPage(1)).getTextContent()).items.map(i => i.str).join(' ').replace(/\s+/g, ' ');
+        out.push({ name, text });
+        await doc.destroy();
+      }
+      return out;
+    }, Array.from(bytes));
+    expect(copies.map(c => c.name).join('|')).toBe('1 - Anna Example.pdf|2 - Boris Example.pdf');
+    const [anna, boris] = copies.map(c => c.text);
+    // tiled: the watermark repeats; the field holds the same name; nothing of the other recipient
+    expect(anna.split('Copy for Anna Example').length > 2).toBeTruthy();
+    expect(anna.replaceAll('Copy for Anna Example', '').includes('Anna Example')).toBeTruthy();
+    expect(anna.includes('Boris')).toBeFalsy();
+    expect(boris.includes('Copy for Boris Example')).toBeTruthy();
+    expect(boris.includes('Anna')).toBeFalsy();
+    expect(anna.includes('A second independent paragraph for testing purposes.')).toBeTruthy();
+  } finally {
+    await page.close();
+  }
+});
+
 await browser.close();
 
 console.log(`\n${'─'.repeat(40)}\nTests: ${passed + failed} | ✓ ${passed} | ${failed} failed`);

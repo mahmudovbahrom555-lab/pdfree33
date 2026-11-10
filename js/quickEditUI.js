@@ -379,6 +379,21 @@ async function _openModal(docContainer, originalOnly = false) {
             <p data-field-count>${copyText('0 fields selected', '已选 0 个字段')}</p>
           </div>
 
+          <div class="qe-copies__step" data-copy-watermark>
+            <label><input type="checkbox" id="qeCopyWm" data-wm-enable> ${copyText('Also add a watermark to each copy', '同时为每份副本添加水印')}</label>
+            <fieldset data-wm-options disabled hidden>
+              <label for="qeCopyWmText">${copyText('Watermark text — {name} becomes the recipient', '水印文字 — {name} 会替换为收件人姓名')}</label>
+              <input id="qeCopyWmText" data-wm-text type="text" maxlength="200" value="${esc(copyText('Copy for {name}', '{name} 专用副本'))}">
+              <label for="qeCopyWmPosition">${copyText('Position', '位置')}</label>
+              <select id="qeCopyWmPosition" data-wm-position>
+                <option value="center">${copyText('Diagonal, page centre', '页面中央（斜向）')}</option>
+                <option value="tile">${copyText('Tiled across the page', '平铺整页')}</option>
+                <option value="top">${copyText('Top of the page', '页面顶部')}</option>
+                <option value="bottom">${copyText('Bottom of the page', '页面底部')}</option>
+              </select>
+            </fieldset>
+          </div>
+
           <div class="qe-copies__step">
             <h3>${copyText('3. Check and download', '3. 检查并下载')}</h3>
             <p>${copyText('Preview a recipient and check that the names fit before downloading.', '下载前可预览收件人的副本，并检查姓名是否放得下。')}</p>

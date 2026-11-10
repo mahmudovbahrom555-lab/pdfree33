@@ -4,7 +4,7 @@
     "name": "Can I create one PDF per recipient from a list of names?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. Choose Personalized PDF copies in Quick Edit PDF before opening a file. Paste the names or import an Excel or CSV list, mark where the name goes, then download the PDFs as a ZIP. Try an example to follow the same steps with a sample PDF and two fictional recipients."
+      "text": "Yes. Choose Personalized PDF copies in Quick Edit PDF before opening a file. Paste the names or import an Excel or CSV list, mark where the name goes, then download the PDFs as a ZIP. To add a watermark as well, turn on Also add a watermark to each copy: write {name} in its text, such as Copy for {name}, and each copy gets its recipient's name there too. Try an example to follow the same steps with a sample PDF and two fictional recipients."
     }
   },
   {
