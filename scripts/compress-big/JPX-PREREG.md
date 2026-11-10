@@ -1,6 +1,6 @@
 # Class candidate: JPEG 2000 (JPX) images are never compressed — pre-registration DRAFT (2026-11-10)
 
-Status: **draft for the owner. Nothing below is measured as a fix yet; criteria are fixed before any fix run.**
+Status: **APPROVED by owner 2026-11-10. Nothing below is measured as a fix yet; criteria are fixed before any fix run.**
 
 ## Evidence so far (stage-0 corpus, 39 public PDFs, prod 2350e0c8/3e6dae7d, run_compress.mjs)
 
