@@ -533,11 +533,13 @@ await test('Simplified Chinese copies localizes import, overflow and cancellatio
   sheet.drawText('Other party', { x: 275, y: 500, size: 12, font });
   const page = await browser.newPage();
   try {
-    await page.goto(`${BASE_URL}/zh/kuaisu-bianji-pdf/`);
+    // The copies entry by its own link: the panel's "open original" button is replaced when the
+    // regular conversion finishes, and on a slow CI machine a click landed on it mid-replacement
+    // (deploy of #173, 2026-11-10). This test is about the Chinese copy, not that race.
+    await page.goto(`${BASE_URL}/zh/kuaisu-bianji-pdf/?mode=personalized-copies`);
     await page.setInputFiles('#fileInput', {
       name: 'layout-test.pdf', mimeType: 'application/pdf', buffer: Buffer.from(await input.save()),
     });
-    await page.locator('#qeOpenOriginal').click();
     await page.getByRole('heading', { name: '个性化 PDF 副本' }).waitFor();
     await page.locator('[data-recipient-file]').setInputFiles({
       name: 'recipients.csv', mimeType: 'text/csv', buffer: Buffer.from('姓名\n王小明'),
