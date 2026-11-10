@@ -1242,3 +1242,42 @@ through decryptPdf.js in Chromium, with a forced abort and a forced OOM:
 "Aborted(OOM)"), which tests the recovery, not every real way WASM runs out of memory.
 Also: the wrong-password verdict reads qpdf 12.2's "invalid password" message. A qpdf update must
 pass this e2e (tests 2, 5, 7 fail if the message changes).
+
+## C34 — Compress never touches JPEG 2000 (JPX) images
+
+Found 2026-11-10 in the Compress stage-0 baseline (39 public PDFs on pdfree.io): big image
+documents came out at 0.98–1.00 of their size even on Maximum. Cause: neither worker.js's
+`_recompressImages` nor the pre-pass reads /JPXDecode — such images left in every mode as they came.
+- report.pdf (USGS, 34 MB, 118 ICCBased-RGB JPX at 400 dpi) → 1.00 on Maximum;
+  ofr20191024_pamphlet (USGS, 14.4 MB, 9.1 MB of RGB JPX) → 0.99; Internet Archive book scans
+  (JPX colour layers) → 0.98–1.00.
+- Big-file corpus: 4 of 52 documents carry JPX (cloud corpus + two local sources). Sources:
+  USGS, Internet Archive, the cloud corpus — three independent.
+- Not every JPX gets smaller as JPEG: CMYK JPX and some old book scans came out larger in the
+  estimate — the fix keeps an image only when its JPEG is smaller.
+
+**Fix** (js/cmykD.js, the D300 pass in compressPrepWorker.js — worker.js untouched): on Standard and
+Maximum, JPX images of 8 bits in DeviceRGB, DeviceGray or ICCBased N=1/3, without a /Decode other
+than the identity, /SMaskInData or a mask, are decoded with pdf.js's JpxImage, downsampled
+(area average) to the dpi and quality worker.js uses for every other RGB image (the chosen
+resolution, else 150/96; the chosen quality, else 82/72), encoded by qpdf's libjpeg and kept only
+when smaller. The colour space stays as it was. Light, signed files: untouched. Own pixel cap
+(measured ~20 bytes per pixel while decoding): 24 MP on large devices, 4 MP elsewhere — not yet
+measured on real phones.
+
+**Acceptance, PRE-REGISTERED and approved by the owner (2026-11-10)** — research branch,
+scripts/compress-big/JPX-PREREG.md; measured on the site's full save path (run_compress.mjs) against
+pdfree.io 3e6dae7d, stage-0 39 + the 4 big JPX documents, Standard and Maximum:
+1. No document larger than production — met. 8 documents differ from production by +1…3 bytes:
+   only /ModDate (the time of the run) inside a compressed object stream; every other object identical.
+2. Page count and the text of every page identical — met (86 outputs).
+3. Corpus gate 39 inputs / 0 FAIL — met. Colour (pages whose images changed, 50 dpi, mean
+   CIEDE2000 ≤ 2) — **met on every page but one**: report.pdf Maximum page 4 (a 400-dpi map) 2.45;
+   the 96-dpi resolution alone measures 1.36 there, q72 the rest — Maximum's existing settings for
+   RGB images. Reported to the owner, the threshold unchanged.
+4. Result: Maximum 363.1 → 333.4 MB, Standard 365.8 → 353.4 MB over the 43 documents;
+   report.pdf 1.00 → 0.39 (Maximum) / 0.85 (Standard); ofr2019 0.99 → 0.41 / 0.48.
+5. e2e (tests/e2e/compress.e2e.mjs): a 300-dpi JPX → JPEG at 150/96 dpi, RGB, smaller, the text kept;
+   Light leaves it; against pdfree.io the two JPX tests fail (the gate checked both ways).
+
+**Status:** `fixing` — the colour point waits on the owner; then verified on pdfree.io.

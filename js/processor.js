@@ -1820,6 +1820,11 @@ let _compressPrepXmp = 0;   // XMP streams the last pre-pass removed (0 on fallb
 // used only from 75 up. maxMegapixels: images larger than this are left as
 // they are — a first, unmeasured guard for small devices (BASE tier); to be
 // set from measurements on real phones.
+//
+// jpx: JPEG 2000 images (class JPX, owner-approved criteria 2026-11-10),
+// which nothing else in Compress reads — the dpi and quality worker.js uses
+// for every other RGB/grey image: the chosen resolution (null = keep), else
+// the mode's 150/96; the chosen quality, else 82/72.
 function _cmykDOptions(preset, file, manual = {}) {
   if (preset === 'low' || file?._signed) return null;
   const base = preset === 'high' ? 75 : 82;
@@ -1828,6 +1833,14 @@ function _cmykDOptions(preset, file, manual = {}) {
     target: Math.max(300, manual.targetDpi || 0),
     quality: q && q >= 75 ? q : base,
     maxMegapixels: isLargeDevice() ? 64 : 16,
+    // JPX decoding (pdf.js's OpenJPEG) peaks at ~20 bytes per pixel (measured:
+    // 15.8 MP → ~310 MB, the same on every following image) against ~4 for a
+    // CMYK JPEG — so its own cap, from that measurement, not from real phones yet
+    jpx: {
+      target: 'targetDpi' in manual ? manual.targetDpi : (preset === 'high' ? 96 : 150),
+      quality: q || (preset === 'high' ? 72 : 82),
+      maxMegapixels: isLargeDevice() ? 24 : 4,
+    },
   };
 }
 
