@@ -1268,8 +1268,11 @@ measured on real phones.
 **Acceptance, PRE-REGISTERED and approved by the owner (2026-11-10)** — research branch,
 scripts/compress-big/JPX-PREREG.md; measured on the site's full save path (run_compress.mjs) against
 pdfree.io 3e6dae7d, stage-0 39 + the 4 big JPX documents, Standard and Maximum:
-1. No document larger than production — met. 8 documents differ from production by +1…3 bytes:
-   only /ModDate (the time of the run) inside a compressed object stream; every other object identical.
+1. No document larger than production — **not met as worded**: 8 documents came out +1…3 bytes
+   larger. Cause checked object by object: only /ModDate (the time of the run) inside a compressed
+   object stream differs, every other object identical; a second run of the same build gave +1…3 on
+   a *different* set of 7 documents — run-to-run noise, not this change. The owner decides how the
+   criterion reads such a difference. (Corrected after review: an earlier note called it "met".)
 2. Page count and the text of every page identical — met (86 outputs).
 3. Corpus gate 39 inputs / 0 FAIL — met. Colour (pages whose images changed, 50 dpi, mean
    CIEDE2000 ≤ 2) — **met on every page but one**: report.pdf Maximum page 4 (a 400-dpi map) 2.45;
@@ -1280,4 +1283,13 @@ pdfree.io 3e6dae7d, stage-0 39 + the 4 big JPX documents, Standard and Maximum:
 5. e2e (tests/e2e/compress.e2e.mjs): a 300-dpi JPX → JPEG at 150/96 dpi, RGB, smaller, the text kept;
    Light leaves it; against pdfree.io the two JPX tests fail (the gate checked both ways).
 
-**Status:** `fixing` — the colour point waits on the owner; then verified on pdfree.io.
+Hardening after an independent review (2026-11-11): the JPX header (SIZ) is checked against the PDF
+dictionary before decoding (the decoder allocates from the header, so a dictionary could hide a larger
+image from the pixel cap); encoded batch by batch as images are read (before, every downsampled image
+was held until the end — for report.pdf ~0.8 GB); a fresh qpdf instance after an encoder failure (the old
+one kept being used); a soft mask with /Matte keeps its image at full size (the two must match); a soft
+mask without /Matte does not stop either path (PDF lets it differ in size; D300 on pdfree.io compresses
+10.1 MB of such CMYK images in one corpus file). Re-measured on the 43 documents: the same bytes ±1, the
+same colour figures.
+
+**Status:** `fixing` — criterion 1 wording and the colour point wait on the owner; then verified on pdfree.io.

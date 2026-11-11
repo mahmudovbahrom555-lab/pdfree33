@@ -276,5 +276,30 @@ await test('JPX: "Original" resolution re-encodes at full size; an identity /Dec
   assert(r.replaced === 0 && dims(pdf, img)[2] === '/JPXDecode', JSON.stringify(r));
 });
 
+await test('JPX checks codestream dimensions before decoding; a soft mask with /Matte keeps its image at full size', async () => {
+  let { pdf, img } = await jpxPage('rgb-1200x800.jp2', 12, 8, 'DeviceRGB');
+  let r = await D.cmykD(pdf, JPX_OPTS);
+  assert(r.replaced === 0 && r.skipped['JPX: codestream does not match PDF image'] === 1, JSON.stringify(r));
+  assert(dims(pdf, img)[2] === '/JPXDecode', 'dictionary unchanged');
+
+  ({ pdf, img } = await jpxPage('rgb-1200x800.jp2', 1200, 800, 'DeviceRGB'));
+  const mask = pdf.context.register(PDFRawStream.of(pdf.context.obj({
+    Type: 'XObject', Subtype: 'Image', Width: 1, Height: 1, ColorSpace: 'DeviceGray', BitsPerComponent: 8,
+  }), new Uint8Array([255])));
+  pdf.context.lookup(img).dict.set(PDFName.of('SMask'), mask);
+  r = await D.cmykD(pdf, JPX_OPTS);
+  // a soft mask may differ in size from its image (PDF 1.4+; readers scale it): downsampled as usual
+  assert(r.jpx === 1 && dims(pdf, img).join() === '600,400,/DCTDecode', JSON.stringify(r));
+
+  ({ pdf, img } = await jpxPage('rgb-1200x800.jp2', 1200, 800, 'DeviceRGB'));
+  const matte = pdf.context.register(PDFRawStream.of(pdf.context.obj({
+    Type: 'XObject', Subtype: 'Image', Width: 1200, Height: 800, ColorSpace: 'DeviceGray', BitsPerComponent: 8, Matte: [0, 0, 0],
+  }), new Uint8Array(1200 * 800).fill(255)));
+  pdf.context.lookup(img).dict.set(PDFName.of('SMask'), matte);
+  r = await D.cmykD(pdf, JPX_OPTS);
+  // /Matte: the mask must keep the image's size — re-encoded at full size, never downsampled
+  assert(dims(pdf, img).join() === '1200,800,/DCTDecode' || dims(pdf, img).join() === '1200,800,/JPXDecode', JSON.stringify(r) + dims(pdf, img).join());
+});
+
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed ? 1 : 0);

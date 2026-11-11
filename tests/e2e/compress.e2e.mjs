@@ -218,8 +218,16 @@ for (const [preset, size] of [['medium', '600×400'], ['high', '384×256']]) {
   });
 }
 await test('JPX on Light: the JPEG 2000 image is left as it is', async () => {
-  const after = firstImage(await PDFDocument.load(await compressViaUi(browser, jpxFile, 'low').catch(() => jpxBytes)));
-  expect(after.dict.get(PDFName.of('Filter'))?.toString()).toBe('/JPXDecode');
+  // A thumbnail gives Light a real opportunity, so the UI does not refuse a no-op.
+  const lightPdf = await PDFDocument.load(jpxBytes);
+  const thumbnail = lightPdf.context.register(lightPdf.context.stream(new Uint8Array(4096), {
+    Type: 'XObject', Subtype: 'Image', Width: 64, Height: 64, ColorSpace: 'DeviceGray', BitsPerComponent: 8,
+  }));
+  lightPdf.getPage(0).node.set(PDFName.of('Thumb'), thumbnail);
+  const lightFile = path.join(tmp, 'jpx-with-thumbnail.pdf');
+  fs.writeFileSync(lightFile, await lightPdf.save());
+  const output = await PDFDocument.load(await compressViaUi(browser, lightFile, 'low'));
+  CHECKS.untouched(firstImage(jpxPdf), firstImage(output));
 });
 
 // Pure K right against colour: D300's guard keeps the original, so the
