@@ -1,0 +1,44 @@
+# Quick Edit stage — step 0: baseline measurement, criteria fixed before it runs (2026-11-12)
+
+Status: **written before the baseline run.** The baseline only measures today's Quick Edit; the thresholds
+below are the bar the NEW engine (in-place editing, step 2) must pass. They are not changed after a run;
+the owner may adjust them before step 2 starts, in writing.
+
+## Why
+- Demand (analytics 2026-11-11): on-site search "编辑" 41 people / 30 days (zh-CN), "删除" 6, "edit…" ~15 (en).
+- A zh user (2026-11-11/12): find & remove/replace a line repeated on every page of e-books; mainly on her
+  PHONE; files of tens to hundreds of pages; font after replacing.
+- Owner: "Quick Edit is raw, editing is weak" — do not point users to it until it is solid.
+
+## Corpus (fixed now; no user documents)
+- tests/corpus/real — 25 public PDFs: arXiv papers (9), Internet Archive scans (4), IRS forms (2),
+  Wikipedia en/ru/ar/fa/he/ja/ko/zh/tr/vi (10).
+- Stage-0 compress corpus (public, SHA-256 in corpus.csv): gip-31, ofr20251028 (USGS reports).
+- tests/corpus/groundtruth: en-web, ar-web, fa-web, zh/ja ones if present (synthetic, open text).
+- Phone case: a public 300-page book (to be chosen from open sources, SHA-256 recorded before the run).
+
+## What one run does (real browser, the site's own UI — scripts/quick-edit/run.mjs)
+1. Open /quick-edit-pdf/, add the file. Record: editor opened / refused (the gate's reason) / error; time.
+2. If opened: the first text run holding a word of ≥ 3 letters (any script); type " PDFREE" at its end; Save.
+   Record: a PDF came out / error text; time.
+3. Compare the output with the original (MuPDF):
+   - page count;
+   - text kept: share of the original's words found in the output (minus the edited run);
+   - the edit present: "PDFREE" in the output text;
+   - layout: each page rendered at 40 dpi; share of pixels differing by > 32 (any channel) — on the
+     edited page outside the edited line's box, and on every other page.
+4. Phone (390×664, mobile UA, Chromium device memory limit noted): the 300-page book — time to open,
+   time to save, JS heap peak (performance.memory), crash/freeze (no answer within 120 s).
+
+## Thresholds for the new engine (step 2) — the baseline is reported against them
+1. Editor opens on ≥ 90 % of documents with a text layer (scans: an honest "this is a picture" message, 100 %).
+2. Edit + save gives a PDF on ≥ 95 % of opened documents.
+3. Page count identical: 100 %.
+4. Text kept ≥ 99.5 % of the original's words on every document; the edit present: 100 %.
+5. Layout: pages not edited — differing pixels < 0.1 %; the edited page outside the edited line's box < 0.1 %.
+6. Phone, 300 pages: opens and saves without a crash or a 120-s silence; progress visible; Cancel works.
+   Time and memory: measured in the baseline, the bar set with the owner from those numbers.
+
+## Not in step 0
+Find & replace across pages, auto-detecting repeated lines, fonts for inserted text — steps 3–4, their own
+criteria, written before their runs.
