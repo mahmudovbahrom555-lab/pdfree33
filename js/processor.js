@@ -198,11 +198,10 @@ const _RUNNER_SCRIPTS = {
 // For every tool: pdf.js, its worker and their shims — almost every tool reads
 // the file with it as soon as one is added (pages, previews); not cached yet and
 // the connection gone, the tool said the PDF was damaged (Split, 2026-11-11).
-// And JSZip (~95 KB), loaded only when a result is zipped — Split's separate
-// files, batches, copies, Word/PowerPoint files ("Failed to load jsZip",
-// Split and PDF→Word, 2026-11-11).
+// Not JSZip or docx: they load only when a tool needs them, and a failed load
+// is retried on the next press (tests/e2e/cdn-fallback.e2e.mjs).
 const _ALWAYS = ['pdfjsLoader.js', 'atPolyfill.js', 'vendor/pdfjs-4.10.38/pdf.min.js', 'pdfWorkerModule.js',
-  'vendor/pdfjs-4.10.38/pdf.worker.min.js', 'vendor/jszip.min.js'];
+  'vendor/pdfjs-4.10.38/pdf.worker.min.js'];
 const _warmed = new Set();
 export function warmToolScripts(tool) {
   const own = _RUNNER_SCRIPTS[getRunner(tool)];
