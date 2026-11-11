@@ -2119,9 +2119,21 @@ function _trackUncaught(kind, message) {
   _trackedErrors.add(type);
   trackToolError(currentTool, type);
 }
+// A rejection with something other than an Error: its kind, the names of its
+// fields and an event-like `type` — never the other values (a file name could
+// be one). "[object Object]" alone was the top N-up error for a week
+// (10 people) and said nothing (2026-11-11).
+function _describeReason(reason) {
+  if (reason?.message) return reason.message;
+  if (reason === null || typeof reason !== 'object') return reason;
+  const kind = reason.constructor?.name || 'Object';
+  let keys = [];
+  try { keys = Object.keys(reason).slice(0, 6); } catch { /* exotic object */ }
+  return `${kind} {${keys.join(',')}}` + (reason.type ? ` type=${String(reason.type).slice(0, 20)}` : '');
+}
 window.addEventListener('unhandledrejection', event => {
   console.error('[PDFree] Unhandled rejection:', event.reason);
-  _trackUncaught('unhandled_rejection', event.reason?.message ?? event.reason);
+  _trackUncaught('unhandled_rejection', _describeReason(event.reason));
 });
 
 // Where an uncaught error came from: our own files (/js/, a worker's blob:)
