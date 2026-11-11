@@ -160,6 +160,28 @@ await test('add 2 files on a real mobile viewport, click #mergeBtn, get a real v
   if (!r.ok) throw new Error(report(r));
 });
 
+// The default file name is selected on entry, so typing replaces it (39 people in a
+// week clicked the field three times in a second to select it, Rage Click 2026-11-11);
+// once a name was typed, a tap only places the caret.
+await test('output file name: one tap selects the default, typing replaces it, a second tap keeps it', async () => {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 664 }, hasTouch: true, isMobile: true, serviceWorkers: 'block' });
+  const page = await ctx.newPage();
+  try {
+    await page.goto(`${BASE_URL}/merge-pdf/`, { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', [FILE_2, FILE_1]);
+    await page.locator('#mergeFilenameInput').waitFor();
+    await page.tap('#mergeFilenameInput');
+    await page.keyboard.type('Quarterly report');
+    if (await page.inputValue('#mergeFilenameInput') !== 'Quarterly report') throw new Error(`after typing: ${await page.inputValue('#mergeFilenameInput')}`);
+    await page.tap('#mergeFilenameInput');
+    await page.keyboard.press('End');
+    await page.keyboard.type(' v2');
+    if (await page.inputValue('#mergeFilenameInput') !== 'Quarterly report v2') throw new Error(`after the second tap: ${await page.inputValue('#mergeFilenameInput')}`);
+  } finally {
+    await ctx.close();
+  }
+});
+
 await browser.close();
 
 console.log(`\n${'─'.repeat(40)}`);
