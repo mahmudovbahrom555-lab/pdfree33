@@ -33,6 +33,9 @@
 //  progressive or non-Adobe CMYK JPEG, a /Decode other than [0 1…] or
 //  [1 0…], the SMask images themselves, an image used anywhere this pass
 //  doesn't read the size it is drawn at (patterns, annotation appearances…).
+//
+//  The same chain also re-encodes JPEG 2000 (JPX) RGB/grey images (class C34,
+//  2026-11-10) — see _cmykdJpxCandidate.
 // ============================================================
 
 // One function scope: this file shares the worker's global scope with
@@ -236,10 +239,12 @@ function _cmykdRun(q, args) {
   catch (e) { if (Number.isFinite(e?.status)) return e.status; if (Number.isFinite(e)) return e; throw e; }
 }
 
-// One temp PDF holding every image of the batch uncompressed (so DCT is
+// One temp PDF holding every image of the batch uncompressed (each in the
+// device space of its channel count) (so DCT is
 // always the smaller), each tagged /PDFreeID; qpdf --optimize-images encodes
 // them; → Map<id, jpeg bytes> for those it wrote as DCT.
 function _cmykdEncodeBatch(q, batch, quality) {
+  const csName = nc => (nc === 4 ? '/DeviceCMYK' : nc === 3 ? '/DeviceRGB' : '/DeviceGray');
   const enc = s => new TextEncoder().encode(s);
   const parts = [], offs = []; let len = 0;
   const push = b => { parts.push(b); len += b.length; };
@@ -254,7 +259,7 @@ function _cmykdEncodeBatch(q, batch, quality) {
   head.forEach((o, i) => { offs.push(len); push(enc(`${i + 1} 0 obj\n${o}\nendobj\n`)); });
   batch.forEach((b, i) => {
     offs.push(len);
-    push(enc(`${first + i} 0 obj\n<< /Type /XObject /Subtype /Image /Width ${b.w} /Height ${b.h} /ColorSpace /DeviceCMYK /BitsPerComponent 8 /PDFreeID ${i} /Length ${b.samples.length} >>\nstream\n`));
+    push(enc(`${first + i} 0 obj\n<< /Type /XObject /Subtype /Image /Width ${b.w} /Height ${b.h} /ColorSpace ${csName(b.nc)} /BitsPerComponent 8 /PDFreeID ${i} /Length ${b.samples.length} >>\nstream\n`));
     push(b.samples); push(enc('\nendstream\nendobj\n'));
   });
   const xref = len, size = first + n;
@@ -286,10 +291,74 @@ function _cmykdEncodeBatch(q, batch, quality) {
   return result;
 }
 
+// ── JPEG 2000 (JPX) images ───────────────────────────────────────────────────
+// Neither js/worker.js nor the steps above read JPX, so these images left
+// Compress as they came (class JPX, 2026-11-10; pre-registered criteria in
+// the research branch, JPX-PREREG.md). In scope: 8 bits, DeviceRGB,
+// DeviceGray or ICCBased with 1 or 3 components — the colour space stays as
+// it is (a JPEG of the same channel count under the same profile); no
+// /Decode but the identity one, no /SMaskInData, no mask. CMYK JPX stays out: on the documents
+// measured its JPEG came out larger.
+// Read SIZ from the raw codestream or its JP2 box before OpenJPEG allocates
+// memory. The PDF dictionary alone is not a bound on decoder allocations.
+function _cmykdJpxMatchesHeader(bytes, w, h, nc) {
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  let start = 0, end = view.byteLength;
+  if (end < 2) return false;
+  if (view.getUint16(0) !== 0xff4f) {
+    let found = false;
+    for (let offset = 0; offset + 8 <= end;) {
+      const length = view.getUint32(offset);
+      const boxEnd = length === 0 ? end : offset + length;
+      if (boxEnd < offset + 8 || boxEnd > end) return false;
+      if (view.getUint32(offset + 4) === 0x6a703263) { // jp2c
+        start = offset + 8;
+        end = boxEnd;
+        found = true;
+        break;
+      }
+      offset = boxEnd;
+    }
+    if (!found) return false;
+  }
+  if (end - start < 42 + 3 * nc ||
+      view.getUint32(start) !== 0xff4fff51 ||
+      view.getUint16(start + 4) !== 38 + 3 * nc ||
+      view.getUint16(start + 40) !== nc ||
+      view.getUint32(start + 8) - view.getUint32(start + 16) !== w ||
+      view.getUint32(start + 12) - view.getUint32(start + 20) !== h) return false;
+  for (let i = 0; i < nc; i++) {
+    if (view.getUint8(start + 42 + 3 * i) !== 7) return false; // unsigned 8-bit
+  }
+  return true;
+}
+
+function _cmykdJpxCandidate(d, lookup, isSMask, skip) {
+  const { PDFName, PDFArray, PDFNumber } = PDFLib;
+  if (isSMask) { skip('JPX: is an SMask'); return null; }
+  const cs = lookup(d.get(PDFName.of('ColorSpace')));
+  let nc = cs?.toString() === '/DeviceRGB' ? 3 : cs?.toString() === '/DeviceGray' ? 1 : 0;
+  if (cs instanceof PDFArray && cs.size() === 2 && lookup(cs.get(0))?.toString() === '/ICCBased') {
+    const n = lookup(cs.get(1))?.dict?.get(PDFName.of('N'));
+    const v = lookup(n) instanceof PDFNumber ? lookup(n).asNumber() : 0;
+    if (v === 1 || v === 3) nc = v;
+  }
+  if (!nc) { skip('JPX: colour space'); return null; }
+  if (lookup(d.get(PDFName.of('BitsPerComponent')))?.toString() !== '8') { skip('JPX: bpc'); return null; }
+  // a /Decode other than the identity [0 1 …] (which means the same as none) is out
+  const dec = lookup(d.get(PDFName.of('Decode')));
+  const identity = dec instanceof PDFArray && dec.size() === 2 * nc && dec.asArray().every((x, i) => lookup(x)?.asNumber?.() === i % 2);
+  const smid = lookup(d.get(PDFName.of('SMaskInData')));
+  if ((dec !== undefined && !identity) || (smid && smid.toString() !== '0')) { skip('JPX: /Decode or /SMaskInData'); return null; }
+  if (d.has(PDFName.of('Mask')) || lookup(d.get(PDFName.of('ImageMask')))?.toString() === 'true') { skip('JPX: mask'); return null; }
+  return { kind: 'jpx', nc, invert: false };
+}
+
 // ── The pass ─────────────────────────────────────────────────────────────────
 
-// opts: { target (dpi), quality, maxMegapixels, urls: { decoders, qpdfJs, qpdfWasm }, onProgress }
-// → { replaced, before, after, skipped: {reason: count} }
+// opts: { target (dpi), quality, maxMegapixels, jpx: { target (dpi) | null, quality, maxMegapixels } | null,
+//         urls: { decoders, qpdfJs, qpdfWasm }, onProgress }
+// → { replaced, jpx, before, after, skipped: {reason: count} }   (jpx: how many of `replaced` were JPX)
 async function cmykD(pdf, opts) {
   const { PDFName, PDFRawStream, PDFArray, PDFNumber, PDFRef, decodePDFRawStream } = PDFLib;
   const ctx = pdf.context;
@@ -308,6 +377,7 @@ async function cmykD(pdf, opts) {
     if (!(obj instanceof PDFRawStream)) continue;
     const d = obj.dict;
     if (d.get(PDFName.of('Subtype'))?.toString() !== '/Image') continue;
+    if (opts.jpx && filters(d).join() === '/JPXDecode') { const j = _cmykdJpxCandidate(d, lookup, smasks.has(ref.tag), skip); if (j) cands.set(ref.tag, { ref, obj, ...j }); continue; }
     if (lookup(d.get(PDFName.of('ColorSpace')))?.toString() !== '/DeviceCMYK') continue;
     if (smasks.has(ref.tag)) { skip('is an SMask'); continue; }
     if (lookup(d.get(PDFName.of('BitsPerComponent')))?.toString() !== '8') { skip('bpc'); continue; }
@@ -325,13 +395,13 @@ async function cmykD(pdf, opts) {
       const pred = dp?.get?.(PDFName.of('Predictor'));
       if (pred && lookup(pred)?.asNumber?.() > 1) { skip('flate predictor'); continue; }
     }
-    cands.set(ref.tag, { ref, obj, kind: f[0] === '/DCTDecode' ? 'dct' : 'raw', invert });
+    cands.set(ref.tag, { ref, obj, kind: f[0] === '/DCTDecode' ? 'dct' : 'raw', nc: 4, invert });
   }
-  if (!cands.size) return { replaced: 0, before: 0, after: 0, skipped };
+  if (!cands.size) return { replaced: 0, jpx: 0, before: 0, after: 0, skipped };
 
   const { minInch, xobjectDicts } = _cmykdPlacements(pdf);
   const elsewhere = _cmykdUsedElsewhere(pdf, new Set(cands.keys()), xobjectDicts);
-  const { JpegImage } = await import(opts.urls.decoders);
+  const { JpegImage, JpxImage } = await import(opts.urls.decoders);
   const decode = (bytes) => {
     const j = new JpegImage({ decodeTransform: null, colorTransform: -1 });
     j.parse(bytes);
@@ -341,8 +411,50 @@ async function cmykD(pdf, opts) {
   };
   const progressive = b => { for (let i = 2; i + 4 <= b.length && b[i] === 0xff;) { const m = b[i + 1]; if (m === 0xc2) return true; if (m === 0xda) return false; i += 2 + ((b[i + 2] << 8) | b[i + 3]); } return false; };
 
-  // pixels for every candidate that passes, then encode in batches
-  const work = [];
+  let replaced = 0, jpx = 0, before = 0, after = 0;
+  let pending = [], pendingBytes = 0;
+  async function flush() {
+    if (!pending.length) return;
+    const batch = pending;
+    pending = [];
+    pendingBytes = 0;
+    let jpegs;
+    try {
+      const q = await _cmykdQpdfInstance(opts.urls);
+      jpegs = _cmykdEncodeBatch(q, batch, batch[0].quality);
+    }
+    catch {
+      _cmykdQpdf = null;
+      for (const b of batch) skip('encoder failed');
+      return;
+    }
+    batch.forEach((b, k) => {
+      const jpg = jpegs.get(k);
+      if (!jpg) { skip('not encoded'); return; }
+      if (jpg.length >= b.old) { skip(b.c.kind === 'jpx' ? 'JPX: not smaller' : 'not smaller'); return; }
+      if (b.c.kind === 'jpx') {
+        // read back: the size qpdf wrote must be the size the dictionary will say
+        let ok = false;
+        try { const j = new JpegImage(); j.parse(jpg); ok = j.width === b.w && j.height === b.h && j.numComponents === b.nc; } catch { ok = false; }
+        if (!ok) { skip('JPX: JPEG read-back'); return; }
+      } else {
+        let back;
+        try { back = decode(jpg); } catch { back = null; }
+        if (!back || back.w !== b.w || back.h !== b.h || !_cmykdPureKOk(b.samples, back.data)) { skip('pure-K guard'); return; }
+      }
+      const dict = b.c.obj.dict;
+      dict.set(PDFName.of('Filter'), PDFName.of('DCTDecode'));
+      dict.delete(PDFName.of('DecodeParms'));
+      dict.delete(PDFName.of('Decode'));   // the new samples are what a reader shows
+      dict.set(PDFName.of('Width'), PDFNumber.of(b.w));
+      dict.set(PDFName.of('Height'), PDFNumber.of(b.h));
+      dict.delete(PDFName.of('SMaskInData'));   // a JPX-only key (always absent or 0 here)
+      ctx.assign(b.c.ref, PDFRawStream.of(dict, jpg));
+      replaced++; before += b.old; after += jpg.length;
+      if (b.c.kind === 'jpx') jpx++;
+    });
+  }
+
   let done = 0;
   for (const [tag, c] of cands) {
     opts.onProgress?.(++done, cands.size);
@@ -352,11 +464,19 @@ async function cmykD(pdf, opts) {
     const d = c.obj.dict;
     const w = lookup(d.get(PDFName.of('Width')))?.asNumber?.(), h = lookup(d.get(PDFName.of('Height')))?.asNumber?.();
     if (!(w > 0 && h > 0)) { skip('size'); continue; }
-    if (w * h > opts.maxMegapixels * 1e6) { skip('too large for this device'); continue; }
+    if (w * h > (c.kind === 'jpx' ? opts.jpx.maxMegapixels : opts.maxMegapixels) * 1e6) { skip('too large for this device'); continue; }
     const eff = Math.min(w / place.inchX, h / place.inchY);   // the smaller axis dpi: the conservative one
+    const { target, quality } = c.kind === 'jpx' ? opts.jpx : opts;
     let samples;
     try {
-      if (c.kind === 'dct') {
+      if (c.kind === 'jpx') {
+        if (!_cmykdJpxMatchesHeader(c.obj.contents, w, h, c.nc)) {
+          skip('JPX: codestream does not match PDF image');
+          continue;
+        }
+        samples = JpxImage.decode(c.obj.contents, { numComponents: c.nc, isIndexedColormap: false, smaskInData: false });
+        if (samples?.length !== w * h * c.nc) { skip('JPX: not decodable at its size'); continue; }
+      } else if (c.kind === 'dct') {
         if (progressive(c.obj.contents)) { skip('progressive JPEG'); continue; }
         const r = decode(c.obj.contents);
         if (!r || r.w !== w || r.h !== h) { skip('JPEG not decodable as Adobe CMYK at its size'); continue; }
@@ -368,43 +488,24 @@ async function cmykD(pdf, opts) {
     } catch { skip('decode error'); continue; }
     if (c.invert) for (let i = 0; i < samples.length; i++) samples[i] = 255 - samples[i];
     let nw = w, nh = h;
-    if (eff > opts.target * 1.1) {
-      const s = opts.target / eff;
+    // A soft mask may differ in size from its image (readers scale it), except one
+    // with /Matte: its samples are pre-multiplied against the image's own pixels,
+    // so the two must keep the same size — such an image is not downsampled.
+    const sm = lookup(d.get(PDFName.of('SMask')));
+    const matte = sm instanceof PDFRawStream && sm.dict.has(PDFName.of('Matte'));
+    if (target && eff > target * 1.1 && !matte) {
+      const s = target / eff;
       nw = Math.max(1, Math.round(w * s)); nh = Math.max(1, Math.round(h * s));
-      samples = _cmykdDownsample(samples, w, h, 4, nw, nh);
+      samples = _cmykdDownsample(samples, w, h, c.nc, nw, nh);
     }
-    work.push({ tag, c, w: nw, h: nh, samples, old: c.obj.contents.length });
+    if (pending.length && (pending[0].quality !== quality ||
+        pendingBytes + samples.length > CMYKD_BATCH_BYTES)) await flush();
+    pending.push({ c, nc: c.nc, quality, w: nw, h: nh, samples, old: c.obj.contents.length });
+    pendingBytes += samples.length;
+    if (pendingBytes >= CMYKD_BATCH_BYTES) await flush();
   }
-  if (!work.length) return { replaced: 0, before: 0, after: 0, skipped };
-
-  const q = await _cmykdQpdfInstance(opts.urls);
-  let replaced = 0, before = 0, after = 0;
-  for (let i = 0; i < work.length;) {
-    const batch = [];
-    let bytes = 0;
-    while (i < work.length && (batch.length === 0 || bytes + work[i].samples.length <= CMYKD_BATCH_BYTES)) { bytes += work[i].samples.length; batch.push(work[i++]); }
-    let jpegs;
-    try { jpegs = _cmykdEncodeBatch(q, batch, opts.quality); }
-    catch { _cmykdQpdf = null; batch.forEach(() => skip('encoder failed')); continue; }   // an abort: a fresh instance next batch
-    batch.forEach((b, k) => {
-      const jpg = jpegs.get(k);
-      if (!jpg) { skip('not encoded'); return; }
-      if (jpg.length >= b.old) { skip('not smaller'); return; }
-      let back;
-      try { back = decode(jpg); } catch { back = null; }
-      if (!back || back.w !== b.w || back.h !== b.h || !_cmykdPureKOk(b.samples, back.data)) { skip('pure-K guard'); return; }
-      const dict = b.c.obj.dict;
-      dict.set(PDFName.of('Filter'), PDFName.of('DCTDecode'));
-      dict.delete(PDFName.of('DecodeParms'));
-      dict.delete(PDFName.of('Decode'));   // the new samples are what a reader shows
-      dict.set(PDFName.of('Width'), PDFNumber.of(b.w));
-      dict.set(PDFName.of('Height'), PDFNumber.of(b.h));
-      ctx.assign(b.c.ref, PDFRawStream.of(dict, jpg));
-      replaced++; before += b.old; after += jpg.length;
-    });
-    for (const b of batch) b.samples = null;
-  }
-  return { replaced, before, after, skipped };
+  await flush();
+  return { replaced, jpx, before, after, skipped };
 }
 
 // Published on the worker's global, as pdfEncrypt.js does (an unexported function

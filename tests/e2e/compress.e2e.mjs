@@ -28,7 +28,7 @@
 // ============================================================
 
 import { chromium } from 'playwright';
-import { PDFDocument, PDFName, pushGraphicsState, popGraphicsState, concatTransformationMatrix, drawObject } from 'pdf-lib';
+import { PDFDocument, PDFName, StandardFonts, pushGraphicsState, popGraphicsState, concatTransformationMatrix, drawObject } from 'pdf-lib';
 import zlib from 'zlib';
 import fs from 'fs';
 import os from 'os';
@@ -185,6 +185,49 @@ await test('D300 on Maximum: a 600-ppi CMYK photo → 300 ppi (900×600), still 
   expect(`${after.dict.get(PDFName.of('Width'))}×${after.dict.get(PDFName.of('Height'))}`).toBe('900×600');
   const { w, h } = cmykJpegSamples(after);
   expect(`${w}×${h}`).toBe('900×600');
+});
+
+// JPEG 2000 (class JPX, 2026-11-10): a 1200×800 RGB JPX drawn 4 × 2.67 in
+// (300 dpi) under a line of text — before, no mode touched JPX at all
+const jpxPdf = await PDFDocument.create();
+const jpxImg = jpxPdf.context.register(jpxPdf.context.stream(fs.readFileSync(new URL('../fixtures/jpx/rgb-1200x800.jp2', import.meta.url)),
+  { Type: 'XObject', Subtype: 'Image', Width: 1200, Height: 800, ColorSpace: 'DeviceRGB', BitsPerComponent: 8, Filter: 'JPXDecode' }));
+const jpxPage = jpxPdf.addPage([595, 842]);
+jpxPage.node.setXObject(PDFName.of('Im0'), jpxImg);
+jpxPage.pushOperators(pushGraphicsState(), concatTransformationMatrix(288, 0, 0, 192, 100, 400), drawObject('Im0'), popGraphicsState());
+jpxPage.drawText('JPX survey page 7', { x: 100, y: 700, size: 14, font: await jpxPdf.embedFont(StandardFonts.Helvetica) });
+const jpxFile = path.join(tmp, 'jpx-300dpi.pdf');
+const jpxBytes = await jpxPdf.save({ useObjectStreams: false });
+fs.writeFileSync(jpxFile, jpxBytes);
+const pageText = async (bytes) => {
+  const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+  const doc = await pdfjs.getDocument({ data: new Uint8Array(bytes), isEvalSupported: false, standardFontDataUrl: new URL('../../node_modules/pdfjs-dist/standard_fonts/', import.meta.url).pathname }).promise;
+  const text = (await (await doc.getPage(1)).getTextContent()).items.map(i => i.str).join(' ');
+  await doc.destroy();
+  return text;
+};
+for (const [preset, size] of [['medium', '600×400'], ['high', '384×256']]) {
+  await test(`JPX on ${preset === 'high' ? 'Maximum' : 'Standard'}: a 300-dpi JPEG 2000 → a JPEG at ${size}, RGB, smaller, the text kept`, async () => {
+    const out = await compressViaUi(browser, jpxFile, preset);
+    const after = firstImage(await PDFDocument.load(out));
+    expect(after.dict.get(PDFName.of('Filter'))?.toString()).toBe('/DCTDecode');
+    expect(after.dict.get(PDFName.of('ColorSpace'))?.toString()).toBe('/DeviceRGB');
+    expect(`${after.dict.get(PDFName.of('Width'))}×${after.dict.get(PDFName.of('Height'))}`).toBe(size);
+    if (!(out.length < jpxBytes.length / 2)) throw new Error(`${jpxBytes.length} → ${out.length}`);
+    expect((await pageText(out)).includes('JPX survey page 7')).toBe(true);
+  });
+}
+await test('JPX on Light: the JPEG 2000 image is left as it is', async () => {
+  // A thumbnail gives Light a real opportunity, so the UI does not refuse a no-op.
+  const lightPdf = await PDFDocument.load(jpxBytes);
+  const thumbnail = lightPdf.context.register(lightPdf.context.stream(new Uint8Array(4096), {
+    Type: 'XObject', Subtype: 'Image', Width: 64, Height: 64, ColorSpace: 'DeviceGray', BitsPerComponent: 8,
+  }));
+  lightPdf.getPage(0).node.set(PDFName.of('Thumb'), thumbnail);
+  const lightFile = path.join(tmp, 'jpx-with-thumbnail.pdf');
+  fs.writeFileSync(lightFile, await lightPdf.save());
+  const output = await PDFDocument.load(await compressViaUi(browser, lightFile, 'low'));
+  CHECKS.untouched(firstImage(jpxPdf), firstImage(output));
 });
 
 // Pure K right against colour: D300's guard keeps the original, so the

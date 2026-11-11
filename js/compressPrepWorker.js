@@ -59,14 +59,16 @@
 //  images re-encoded as CMYK JPEG at no more than 300 dpi — js/cmykD.js, see
 //  its header. It runs before the CMYK re-deflate above, which then sees only
 //  the CMYK images D300 left as they were. A failure of D300 leaves the
-//  document as the other steps made it.
+//  document as the other steps made it. The same pass re-encodes JPEG 2000
+//  (JPX) RGB/grey images at the mode's own dpi and quality (`cmykD.jpx`) —
+//  nothing else in Compress reads JPX.
 //
 //  Message contract:
 //   in  → { file: ArrayBuffer, stripXmp: boolean, cmykFlate: boolean,
-//           cmykD: { target, quality, maxMegapixels } | null } [transferred]
+//           cmykD: { target, quality, maxMegapixels, jpx: { target, quality } | null } | null } [transferred]
 //   out → { type: 'progress', done, total } while D300 works (keeps the caller's watchdog awake)
 //         { type: 'done', result: ArrayBuffer, encoded: number, resolved: number, xmp: number, cmyk: number,
-//           d: { replaced, before, after, skipped } | null } [transferred]
+//           d: { replaced, jpx, before, after, skipped } | null } [transferred]
 //         result is the original buffer when nothing was changed.
 //         Any failure also answers 'done' with the original buffer and
 //         encoded: 0 — this pass must never block a compression.
@@ -217,13 +219,15 @@ function _dropUnreachable(pdf) {
   return dropped;
 }
 
-// Cheap scan: "/DeviceCMYK" anywhere in the plain text. An image's stream dict
-// is never in an object stream; a colour space given by reference to a
-// compressed object is missed — that only forgoes savings.
-function _mayHaveCmyk(bytes) {
+// Cheap scans: "/DeviceCMYK" or "/JPXDecode" anywhere in the plain text. An
+// image's stream dict is never in an object stream; a colour space given by
+// reference to a compressed object is missed — that only forgoes savings.
+function _mayHaveCmyk(bytes) { return _mayHaveName(bytes, '/DeviceCMYK'); }
+function _mayHaveJpx(bytes) { return _mayHaveName(bytes, '/JPXDecode'); }
+function _mayHaveName(bytes, name) {
   const CHUNK = 1 << 20, latin1 = new TextDecoder('latin1');
   for (let i = 0; i < bytes.length; i += CHUNK - 64) {
-    if (latin1.decode(bytes.subarray(i, Math.min(bytes.length, i + CHUNK))).includes('/DeviceCMYK')) return true;
+    if (latin1.decode(bytes.subarray(i, Math.min(bytes.length, i + CHUNK))).includes(name)) return true;
   }
   return false;
 }
@@ -306,7 +310,7 @@ async function _encodeRawImages(buffer, stripXmp = false, cmykFlate = false, dOp
   const rawImages = _mayHaveRawImage(bytesIn), dimRefs = _mayHaveIndirectDims(bytesIn);
   const objectXmp = stripXmp && _mayHaveObjectXmp(bytesIn);
   const anyCmyk = (cmykFlate || dOpts) && _mayHaveCmyk(bytesIn);
-  const cmyk = cmykFlate && anyCmyk, wantD = !!dOpts && anyCmyk;
+  const cmyk = cmykFlate && anyCmyk, wantD = !!dOpts && (anyCmyk || (!!dOpts.jpx && _mayHaveJpx(bytesIn)));
   const none = { result: buffer, encoded: 0, resolved: 0, xmp: 0, cmyk: 0, d: null };
   if (!rawImages && !dimRefs && !objectXmp && !cmyk && !wantD) return none;
   // No yielding while parsing or writing: pdf-lib pauses every 100 objects
