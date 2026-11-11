@@ -42,3 +42,20 @@ the owner may adjust them before step 2 starts, in writing.
 ## Not in step 0
 Find & replace across pages, auto-detecting repeated lines, fonts for inserted text — steps 3–4, their own
 criteria, written before their runs.
+
+## BASELINE — today's Quick Edit on pdfree.io (2dc4d02e), 2026-11-12, 32 documents
+(scripts/quick-edit/run.mjs + compare.py; outputs in baseline/. A first run pressed Escape after typing, which
+dropped the edit — the harness was fixed to press Enter, as the site's own e2e does, and the whole run repeated.)
+
+| # | Criterion (bar for the new engine) | Baseline |
+|---|---|---|
+| 1 | Editor opens ≥ 90 % | 32/32 (100 %) — scans open too, as reflowed text |
+| 2 | Edit + save gives a PDF ≥ 95 % of opened | **20/32 (63 %)** — refused on EVERY zh/ja/ko/ar/fa/he document and 3 arXiv papers: "characters can't be rendered by Word→PDF's current font" |
+| 3 | Page count identical 100 % | **3/20** (2→8 IRS form, 10→17 paper, 16→6 IA book) |
+| 4 | Text kept ≥ 99.5 %; edit present 100 % | kept on 14/20 (worst 89.9 %, IRS 1040); edit present 20/20 |
+| 5 | Layout: other pages < 0.1 % pixels changed | **0/20** — median 35 % of pixels differ on untouched pages (min 26 %) |
+| 6 | Phone, 300 pages | not yet run |
+
+Time: open median 2.8 s, save median 1.4 s (desktop).
+**Reading:** the rebuild path re-lays out every page; it cannot meet 3 and 5 by design and refuses non-Latin
+scripts — the zh user's files would not save at all. Step 2 = in-place editing (MuPDF) as the default path.
