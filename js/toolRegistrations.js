@@ -150,6 +150,11 @@ function _filenameHtml() {
 function _bindFilenameInput() {
   const input = document.getElementById('mergeFilenameInput');
   if (!input) return;
+  // The default name selected on entry, so typing replaces it: 39 people in a
+  // week clicked this field three times in a second (Rage Click, 2026-11-11) —
+  // a triple click is how a whole name gets selected to be retyped.
+  input.addEventListener('focus', () => { if (!_outputNameTouched) input.select(); });
+  input.addEventListener('mouseup', e => { if (!_outputNameTouched && input.selectionStart === 0 && input.selectionEnd === input.value.length) e.preventDefault(); });
   input.addEventListener('input', () => {
     _outputStem        = input.value;
     _outputNameTouched = input.value.trim().length > 0;
