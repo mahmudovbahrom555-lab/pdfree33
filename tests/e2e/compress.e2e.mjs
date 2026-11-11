@@ -230,6 +230,29 @@ await test('JPX on Light: the JPEG 2000 image is left as it is', async () => {
   CHECKS.untouched(firstImage(jpxPdf), firstImage(output));
 });
 
+// C35 (2026-11-11): a 1200×800 RGB JPEG drawn 2 in wide (600 dpi) — worker.js
+// judged its dpi from the page size and left it; now it follows where it is drawn
+const figPdf = await PDFDocument.create();
+const figImg = figPdf.context.register(figPdf.context.stream(fs.readFileSync(new URL('../fixtures/placed/rgb-1200x800.jpg', import.meta.url)),
+  { Type: 'XObject', Subtype: 'Image', Width: 1200, Height: 800, ColorSpace: 'DeviceRGB', BitsPerComponent: 8, Filter: 'DCTDecode' }));
+const figPage = figPdf.addPage([595, 842]);
+figPage.node.setXObject(PDFName.of('Im0'), figImg);
+figPage.pushOperators(pushGraphicsState(), concatTransformationMatrix(144, 0, 0, 96, 100, 500), drawObject('Im0'), popGraphicsState());
+figPage.drawText('Figure 3: placed small', { x: 100, y: 450, size: 12, font: await figPdf.embedFont(StandardFonts.Helvetica) });
+const figFile = path.join(tmp, 'figure-600dpi.pdf');
+const figBytes = await figPdf.save({ useObjectStreams: false });
+fs.writeFileSync(figFile, figBytes);
+for (const [preset, size] of [['medium', '300×200'], ['high', '192×128']]) {
+  await test(`C35 on ${preset === 'high' ? 'Maximum' : 'Standard'}: a figure drawn 2 in wide at 600 dpi → ${size}, RGB, smaller, the text kept`, async () => {
+    const out = await compressViaUi(browser, figFile, preset);
+    const after = firstImage(await PDFDocument.load(out));
+    expect(after.dict.get(PDFName.of('ColorSpace'))?.toString()).toBe('/DeviceRGB');
+    expect(`${after.dict.get(PDFName.of('Width'))}×${after.dict.get(PDFName.of('Height'))}`).toBe(size);
+    if (!(out.length < figBytes.length / 3)) throw new Error(`${figBytes.length} → ${out.length}`);
+    expect((await pageText(out)).includes('Figure 3: placed small')).toBe(true);
+  });
+}
+
 // Pure K right against colour: D300's guard keeps the original, so the
 // lossless CMYK re-deflate (owner 2026-11-05) still does its part.
 const KW = 600, KH = 800, KC = Buffer.from(CMYK);

@@ -1316,3 +1316,31 @@ accepted as "not larger"; colour — report.pdf Maximum page 4 (ΔE 2.45) accept
 **Status:** `verified` — #180 on pdfree.io (cf7082eb, 2026-11-11): tests/e2e/compress.e2e.mjs against the
 live site 21/21 (the JPX tests included); report.pdf 0.39 (Maximum) / 0.85 (Standard), ofr2019 0.41 / 0.48 —
 the same bytes as the pre-merge measurement. Still open: the JPX pixel cap on a real phone.
+
+## C35 — figures drawn smaller than the page are not downsampled
+
+Found 2026-11-11 comparing with leader A on 12 public PDFs (owner run): A was 3–4× smaller on scientific
+papers (0.14 vs 0.53, 0.08 vs 0.23) at min page SSIM ≥ 0.99. Cause, measured on our Maximum outputs:
+figures kept 290–510 dpi where they are drawn (target 96). worker.js's `_estimateDpi` judges an image's dpi
+against the PAGE size, and only for images of 600 px or more — a 1024-px figure drawn 2 in wide counts as
+~120 dpi, not 509. Seen on arXiv papers (5) and a USGS book (gip-31) — two independent sources.
+
+**Fix** (js/cmykD.js in the compressPrepWorker pass, worker.js untouched): on Standard and Maximum, an 8-bit
+RGB/grey (DeviceRGB, DeviceGray, ICCBased N=1|3) DCT or Flate image (no predictor, no /Decode but the
+identity, not a mask or an SMask) drawn above 1.1 × the mode's target is decoded (pdf.js), downsampled by
+where it is drawn (area average) to the dpi and quality worker.js uses (chosen, else 150/96 and 82/72),
+encoded by qpdf's libjpeg and kept only when smaller; the colour space stays. Images at or below the target
+are left to worker.js, never decoded. A cheap byte scan (an image of ≥ 250,000 px) gates the pass.
+
+**Acceptance, pre-registered before code** (research branch, PLACED-PREREG.md), 43 documents, full site path
+vs pdfree.io 2df485fe, Standard + Maximum:
+1. Not larger than production — met (10 outputs +1…4 bytes: save time only, accepted 2026-11-11).
+2. Page count and the text of every page identical — met.
+3. Corpus gate 39 / 0 FAIL; colour on every changed page mean ΔE2000 ≤ 2 — met (worst 1.38, gip-31 Maximum).
+4. arXiv papers −8…−50 % (36525 0.73 → 0.36 MB, 36658 0.97 → 0.59 MB on Maximum); gip-31 Maximum
+   1.96 → 1.05 MB; Maximum total 330.6 → 328.6 MB. Leader A still smaller on the papers (their fonts:
+   Type 1 → CFF, not in this class). Time: median unchanged, +7 s over 888 s, worst +4 s.
+5. e2e: a 1200-px figure drawn 2 in wide → 300×200 (Standard) / 192×128 (Maximum), RGB, text kept — 23/23;
+   against pdfree.io the two new tests fail. Unit tests 16/16. signed-pdf 9/9, npm test on Node 20.
+
+**Status:** `fixing` — merge, then verified on pdfree.io.
