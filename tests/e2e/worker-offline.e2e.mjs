@@ -86,6 +86,9 @@ try {
       await page.setInputFiles('#fileInput', files);
       await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 30000 });
       await page.waitForTimeout(2000);
+      // Split as one file: a ZIP needs JSZip, which by design loads only when a
+      // tool needs it, retried on the next press (cdn-fallback.e2e.mjs) — not here
+      if (tool === 'Split') await page.evaluate(() => { const r = document.querySelector('input[name="extMode"][value="single"]'); r.checked = true; r.dispatchEvent(new Event('change', { bubbles: true })); });
       await page.click('#mergeBtn');
       const error = await outcome(page);
       await ctx.close();
