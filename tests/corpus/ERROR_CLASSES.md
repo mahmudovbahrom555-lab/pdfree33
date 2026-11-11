@@ -1296,4 +1296,6 @@ same colour figures.
 accepted as "not larger"; colour — report.pdf Maximum page 4 (ΔE 2.45) accepted as Maximum's existing
 96-dpi trade-off; JPX is not held above 96 dpi on Maximum. Thresholds unchanged.
 
-**Status:** `fixing` — merged after the owner's decisions; verified on pdfree.io next.
+**Status:** `verified` — #180 on pdfree.io (cf7082eb, 2026-11-11): tests/e2e/compress.e2e.mjs against the
+live site 21/21 (the JPX tests included); report.pdf 0.39 (Maximum) / 0.85 (Standard), ofr2019 0.41 / 0.48 —
+the same bytes as the pre-merge measurement. Still open: the JPX pixel cap on a real phone.

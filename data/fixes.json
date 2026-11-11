@@ -17,6 +17,15 @@
    "summary": "Today the 5 / 10 / 25 MB choices apply fixed settings and don't check the result. We measured it: the target was met for 13–50 % of large files. We are building a size check that keeps small print, stamps and Chinese text readable, and says so honestly when a size can't be reached."
   },
   {
+   "id": "C34",
+   "tool": "compress",
+   "status": "fixed",
+   "date": "2026-11-11",
+   "verified": "2026-11-11, compress e2e on pdfree.io 21/21; a 34 MB USGS report 1.00 → 0.39 of its size on Maximum",
+   "title": "Images stored as JPEG 2000 were never compressed",
+   "summary": "Some PDFs (maps, scanned books, government reports) keep their pictures in the JPEG 2000 format, and Compress left them exactly as they were — even on Maximum such a file barely shrank. Now Standard and Maximum resize and recompress them like any other colour picture, and keep the original whenever the new one would not be smaller."
+  },
+  {
    "id": "C33",
    "tool": "all",
    "status": "fixed",
