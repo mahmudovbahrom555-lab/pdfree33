@@ -194,8 +194,17 @@ try {
   await test('the copy breaks midway and the file is gone: taken off the list at once, with why (not "damaged" later)', async () => {
     const page = await (await browser.newContext({ serviceWorkers: 'block' })).newPage();
     await page.goto(`${BASE_URL}/split-pdf/`, { waitUntil: 'load' });
+    // every toast text from the moment the file is added (a slow CI runner missed a one-off poll, 2026-11-12)
+    await page.evaluate(() => {
+      window.__toasts = new Set();
+      setInterval(() => { const t = document.querySelector('#toast')?.innerText; if (t) window.__toasts.add(t); }, 50);
+    });
     await addBroken(page, true);
-    await page.waitForFunction(() => /Couldn't read/.test(document.querySelector('#toast')?.innerText || ''), null, { timeout: 20000 });
+    // the outcome first: the file leaves the list
+    await page.waitForFunction(() => document.querySelectorAll('#fileList .file-item').length === 0 && window.__toasts.size > 0, null, { timeout: 30000 })
+      .catch(() => {});
+    const toasts = await page.evaluate(() => [...window.__toasts]);
+    if (!toasts.some(t => /Couldn't read/.test(t))) throw new Error('no "Couldn\'t read" toast; seen: ' + JSON.stringify(toasts));
     const listed = await page.evaluate(() => document.querySelectorAll('#fileList .file-item').length);
     const panel = await page.evaluate(() => document.querySelector('#splitOptions')?.innerText || '');
     await page.context().close();
