@@ -1063,6 +1063,23 @@ file was such XMP (5754431), 35 % (0486224).
   JPEGs), which is the next class. One competitor turns vector pages into
   pictures and another breaks CMYK colours; neither is a model.
 - **Status:** `verified` — #139 on pdfree.io (5430c1d1, 2026-11-04).
+- **Gap found 2026-11-11 (stage-0 baseline, public USGS files):** two ways the fix still left XMP.
+  1. The cheap pre-scan looked for "/Metadata n 0 R" in plain text; InDesign's marked-content
+     properties sit in compressed object streams, where it saw none — so the pass never ran:
+     1.28 MB of XMP (15 %) left in gip117_ebook's Maximum output, 0.84 MB in ofr20191024_pamphlet.
+     Now it counts the XMP streams themselves ("/Type /Metadata" — a stream dict is never in an
+     object stream).
+  2. The catalog's own XMP: handleCompress unhooks it on Standard/Maximum, but pdf-lib still wrote
+     the stream — 0.24–0.34 MB orphaned in three files. The pre-pass now removes it there too (the
+     same presets, the same meaning), and also runs for a single XMP stream of ≥ 64 KB.
+  Result on the 43 stage-0 + big documents (full site path, vs pdfree.io cf7082eb): gip117 −15.2 %,
+  ofr2019 −12…−14 %, ofr20251028 −4.9 %, gip135 −2.1 %; Maximum total 333.4 → 330.6 MB. Text, page
+  count, colour unchanged; 19 outputs a few bytes larger differ only in the save time
+  (/ModDate, /CreationDate where the original had none), checked object by object. On 84 local files
+  the new scan catches 5 more (2 with real XMP). Corpus gate 0 FAIL; tests: three new ones fail on the
+  old code.
+  Noticed, not changed (worker.js): Compress replaces the original /CreationDate with the save time
+  (gip-31: 2006 → today), on pdfree.io too — a candidate for the owner.
 
 ## C25 — Light can return a file larger than the one given
 
