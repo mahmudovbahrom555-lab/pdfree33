@@ -147,53 +147,63 @@ function _resolveImageDims(pdf) {
   return changed;
 }
 
-// Cheap scan: "/Metadata n 0 R" twice or more in the file's plain text — the
-// catalog's and another object's (a reference: the XMP stream's own
-// "/Type /Metadata" isn't one). Image dicts are stream dicts, never in
-// object streams, so an image's XMP is always seen; a false "no" (the
-// catalog's key compressed away) only forgoes savings.
-const _METADATA = /\/Metadata\s+\d+\s+\d+\s+R\b/g;
+// Cheap scan: two or more XMP streams ("/Type /Metadata") in the file's plain
+// text — then at least one isn't the catalog's. A stream's dictionary is
+// never inside an object stream, so every XMP stream is seen; the keys that
+// point at them may not be: InDesign's marked-content properties
+// (/Properties /MC0 << /Metadata … >>) sit in compressed object streams, and
+// a scan for "/Metadata n 0 R" missed them — 1.28 MB of XMP left in an
+// 8.4 MB Maximum output (C24, found 2026-11-11). Or one XMP stream of 64 KB
+// or more: the catalog's, which handleCompress unhooks on Standard/Maximum
+// but pdf-lib still writes — 0.24–0.34 MB left in three USGS outputs. Below
+// that, a full parse for a few KB isn't worth it. A false "yes" only costs
+// the parse.
+const _METADATA = /\/Type\s*\/Metadata\b/g;
+const _BIG_XMP = 64 * 1024;
 function _mayHaveObjectXmp(bytes) {
   const CHUNK = 1 << 20, latin1 = new TextDecoder('latin1');
   let seen = 0;
   for (let i = 0; i < bytes.length; i += CHUNK - 64) {
     const part = latin1.decode(bytes.subarray(i, Math.min(bytes.length, i + CHUNK)));
     // a match in the 64-byte overlap is seen twice — counted only in the chunk it starts in
-    for (const m of part.matchAll(_METADATA)) if (i === 0 || m.index >= 64) seen++;
-    if (seen >= 2) return true;
+    for (const m of part.matchAll(_METADATA)) {
+      if (i !== 0 && m.index < 64) continue;
+      if (++seen >= 2) return true;
+      // its own dictionary, around the match: a direct /Length that is big
+      const dict = part.slice(Math.max(0, part.lastIndexOf('<<', m.index)), part.indexOf('>>', m.index) + 1 || m.index + 512);
+      const len = /\/Length\s+(\d+)(?!\s+\d+\s+R)/.exec(dict);
+      if (len && Number(len[1]) >= _BIG_XMP) return true;
+    }
   }
   return false;
 }
 
-// Removes /Metadata from every object but the catalog, then every object
+// Removes /Metadata from every object, the catalog's too, then every object
 // the trailer no longer reaches. Returns how many XMP keys were removed.
+// Only on Standard/Maximum (stripXmp), where handleCompress removes the
+// catalog's key anyway — done here, its stream goes as well.
 function _stripObjectXmp(pdf) {
   const { PDFName, PDFDict, PDFArray, PDFRawStream, PDFRef } = PDFLib;
   const key = PDFName.of('Metadata');
-  const catalogXmp = pdf.catalog.get(key);
   const gone = new Set();
   // at any depth: InDesign hangs a placed image's XMP on the marked-content
   // properties inside a page's /Resources (/Properties /MC0 << /Metadata … >>)
-  const strip = (v, top) => {
+  const strip = (v) => {
     const dict = v instanceof PDFRawStream ? v.dict : v;
     if (dict instanceof PDFDict) {
-      if (!top && dict.has(key)) {
+      if (dict.has(key)) {
         const ref = dict.get(key);
         dict.delete(key);
-        if (ref instanceof PDFRef && ref !== catalogXmp) gone.add(ref);
+        if (ref instanceof PDFRef) gone.add(ref);
       }
-      for (const [, x] of dict.entries()) if (!(x instanceof PDFRef)) strip(x, false);
+      for (const [, x] of dict.entries()) if (!(x instanceof PDFRef)) strip(x);
     } else if (v instanceof PDFArray) {
-      for (const x of v.asArray()) if (!(x instanceof PDFRef)) strip(x, false);
+      for (const x of v.asArray()) if (!(x instanceof PDFRef)) strip(x);
     }
   };
   for (const [, obj] of pdf.context.enumerateIndirectObjects()) {
-    if (obj === pdf.catalog) {   // its own XMP stays (handleCompress's, by preset) — its nested dicts don't
-      for (const [, x] of obj.entries()) if (!(x instanceof PDFRef)) strip(x, false);
-      continue;
-    }
     if (obj instanceof PDFRawStream && obj.dict.get(PDFName.of('Type'))?.toString() === '/Metadata') continue;
-    strip(obj, false);
+    strip(obj);
   }
   for (const ref of gone) pdf.context.delete(ref);
   _dropUnreachable(pdf);
