@@ -2124,6 +2124,9 @@ function _trackUncaught(kind, message) {
 // be one). "[object Object]" alone was the top N-up error for a week
 // (10 people) and said nothing (2026-11-11).
 function _describeReason(reason) {
+  // a file that stopped being readable: where its private copy stood (files.js
+  // _copyState) — the only clue to which read failed (Split, Android, 2026-11-11)
+  if (reason?.name === 'NotReadableError') return `NotReadableError [copy=${selectedFiles.map(f => f._copyState || 'none').join(',')}]`;
   if (reason?.message) return reason.message;
   if (reason === null || typeof reason !== 'object') return reason;
   const kind = reason.constructor?.name || 'Object';

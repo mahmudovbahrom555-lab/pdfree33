@@ -19,7 +19,7 @@
 import { esc } from './utils.js';
 import { t } from './i18n.js';
 import { showToast } from './ui.js';
-import { wasRejectedAsNotPdf } from './files.js';
+import { wasRejectedAsNotPdf, isReadable } from './files.js';
 import { trackToolError } from './analytics.js';
 
 /**
@@ -34,6 +34,17 @@ export async function showDamaged(container, files, reopen, tool) {
   // and it wasn't cached yet): the file was never read, so it is not the
   // problem. "This PDF has an unusual or corrupted structure" blamed a good
   // file for it (reproduced on Split offline, 2026-11-11). Say why, try again.
+  // The file itself can't be read any more (an Android pick whose permission
+  // lapsed, a cloud file not on the device): it may be perfectly fine — say so.
+  const unreadable = [];
+  for (const f of files) if (f && typeof f.slice === 'function' && !f._decryptedBuffer && !(await isReadable(f))) unreadable.push(f);
+  if (unreadable.length) {
+    trackToolError(tool, 'file_unreadable');
+    container.style.display = '';
+    container.innerHTML = `
+      <div class="compress-scan compress-scan--found" role="alert">${esc(t('err_file_unreadable', { name: unreadable[0].name }))}</div>`;
+    return;
+  }
   if (typeof window !== 'undefined' && !window.pdfjsLib) {
     trackToolError(tool, 'pdfjs_load_failed');
     container.style.display = '';

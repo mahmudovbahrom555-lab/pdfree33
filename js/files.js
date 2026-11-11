@@ -358,6 +358,16 @@ const _copyBudget = () => (navigator.deviceMemory ?? 8) < 4 || /Android|iPhone|i
 // 2026-10-23: a file over 50 MB unreadable 12 s after it was added — past the
 // budget, still being copied, or changed while copied; nothing told which).
 // Only what the code knows: no state at all is reported as 'unknown'.
+// Whether the file can still be read at its start and its end — a cheap
+// question (two small reads), asked when a read has already failed.
+export async function isReadable(f) {
+  try {
+    await f.slice(0, 1).arrayBuffer();
+    if (f.size > 1) await f.slice(f.size - 1).arrayBuffer();
+    return true;
+  } catch { return false; }
+}
+
 async function _keepCopy(f) {
   if (typeof navigator === 'undefined' || typeof f.stream !== 'function' && typeof f.arrayBuffer !== 'function') return;
   const copied = selectedFiles.reduce((sum, x) => sum + (x !== f && x._copy ? x.size : 0), 0);
@@ -369,7 +379,13 @@ async function _keepCopy(f) {
     copy = f.stream ? await new Response(f.stream()).blob() : new Blob([await f.arrayBuffer()]);
   } catch (err) {
     f._copyState = `copy_failed:${err?.name || 'unknown'}`;
-    if (err?.name !== 'NotReadableError' && err?.name !== 'NotFoundError') return;
+    // A streamed copy reports a file that stops being readable midway as
+    // "TypeError: Failed to fetch", not NotReadableError (tested in Chromium):
+    // the file stayed on the list and failed later as "damaged" (Split and
+    // Compress, Android/Edge, files over 10 MB, 2026-11-11). Ask the file itself.
+    const gone = err?.name === 'NotReadableError' || err?.name === 'NotFoundError'
+      || (err?.name === 'TypeError' && !(await isReadable(f)));
+    if (!gone) return;
     const i = selectedFiles.indexOf(f);
     if (i === -1) return;
     selectedFiles.splice(i, 1);

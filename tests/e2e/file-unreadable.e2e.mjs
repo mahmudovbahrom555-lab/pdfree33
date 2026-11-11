@@ -28,7 +28,7 @@
 // ============================================================
 
 import { chromium } from 'playwright';
-import { appendFileSync, closeSync, copyFileSync, mkdtempSync, openSync, rmSync, writeSync } from 'fs';
+import { appendFileSync, readFileSync, closeSync, copyFileSync, mkdtempSync, openSync, rmSync, writeSync } from 'fs';
 import { tmpdir } from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -171,6 +171,47 @@ try {
     await page.waitForFunction(() => window.__result || window.__error, null, { timeout: 60000 });
     const after = await page.evaluate(() => window.__error);
     if (after) throw new Error(`the chosen-again file failed: ${after}`);
+  });
+  // The copy's stream breaks midway (a lapsed Android pick, a big file): a
+  // streamed copy reports it as "TypeError: Failed to fetch", not
+  // NotReadableError — the file stayed listed and failed later as "damaged"
+  // (Split and Compress, Android/Edge, analytics 2026-11-11).
+  const addBroken = (page, fileBroken) => page.evaluate(async ([b64, fileBroken]) => {
+    const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+    const f = new File([bytes], 'scan.pdf', { type: 'application/pdf' });
+    Object.defineProperty(f, 'stream', { configurable: true, value: () => new ReadableStream({ start(c) { c.enqueue(bytes.slice(0, 10)); }, pull(c) { c.error(new DOMException('x', 'NotReadableError')); } }) });
+    if (fileBroken) {
+      const err = () => Promise.reject(new DOMException('gone', 'NotReadableError'));
+      Object.defineProperty(f, 'arrayBuffer', { configurable: true, value: err });
+      const realSlice = f.slice.bind(f);
+      Object.defineProperty(f, 'slice', { configurable: true, value: (...a) => { const s = realSlice(...a); Object.defineProperty(s, 'arrayBuffer', { value: err }); return s; } });
+    }
+    const dt = new DataTransfer(); dt.items.add(f);
+    const input = document.getElementById('fileInput'); input.files = dt.files; input.dispatchEvent(new Event('change', { bubbles: true }));
+  }, [readFileSync(path.join(GT, 'en-web.pdf')).toString('base64'), fileBroken]);
+
+  await test('the copy breaks midway and the file is gone: taken off the list at once, with why (not "damaged" later)', async () => {
+    const page = await (await browser.newContext({ serviceWorkers: 'block' })).newPage();
+    await page.goto(`${BASE_URL}/split-pdf/`, { waitUntil: 'load' });
+    await addBroken(page, true);
+    await page.waitForFunction(() => /Couldn't read/.test(document.querySelector('#toast')?.innerText || ''), null, { timeout: 20000 });
+    const listed = await page.evaluate(() => document.querySelectorAll('#fileList .file-item').length);
+    const panel = await page.evaluate(() => document.querySelector('#splitOptions')?.innerText || '');
+    await page.context().close();
+    if (listed !== 0) throw new Error(`still listed: ${listed}`);
+    if (/corrupt|unusual/i.test(panel)) throw new Error(`called damaged: ${panel.slice(0, 120)}`);
+  });
+
+  await test('the copy breaks midway but the file reads fine: it stays and the tool works', async () => {
+    const page = await (await browser.newContext({ serviceWorkers: 'block' })).newPage();
+    await result(page, async () => {
+      await page.goto(`${BASE_URL}/split-pdf/`, { waitUntil: 'load' });
+      await addBroken(page, false);
+      await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 30000 });
+      await page.waitForTimeout(1000);
+      await page.click('#mergeBtn');
+    });
+    await page.context().close();
   });
 } finally {
   await browser.close();
