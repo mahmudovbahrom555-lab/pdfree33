@@ -182,6 +182,27 @@ await test('output file name: one tap selects the default, typing replaces it, a
   }
 });
 
+// A double or triple click on the drop zone (a folder habit) opens the file
+// picker once, not once per click (26 people rage-clicked it, analytics 2026-11-11).
+await test('drop zone: a double or triple click opens the file picker once', async () => {
+  const ctx = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await ctx.newPage();
+  try {
+    await page.goto(`${BASE_URL}/merge-pdf/`, { waitUntil: 'load' });
+    for (const clicks of [2, 3]) {
+      let opened = 0;
+      const count = () => opened++;
+      page.on('filechooser', count);
+      await page.locator('#dropZone .drop-title').click({ clickCount: clicks });
+      await page.waitForTimeout(800);
+      page.off('filechooser', count);
+      if (opened !== 1) throw new Error(`${clicks} clicks opened the picker ${opened} times`);
+    }
+  } finally {
+    await ctx.close();
+  }
+});
+
 await browser.close();
 
 console.log(`\n${'─'.repeat(40)}`);

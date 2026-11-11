@@ -36,6 +36,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE_URL = process.env.PDFREE_BASE_URL || 'http://localhost:8934';
 const GT = path.join(__dirname, '..', 'corpus', 'groundtruth');
+const JPG = path.join(__dirname, '..', 'fixtures', 'gray-scan.jpg');
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -209,6 +210,29 @@ try {
       await addBroken(page, false);
       await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 30000 });
       await page.waitForTimeout(1000);
+      await page.click('#mergeBtn');
+    });
+    await page.context().close();
+  });
+  // Pressed while the private copy is still being made (jpg2pdf, Android, analytics 2026-11-11:
+  // copy=copying, file_unreadable 3 s after adding): the tool waits for the copy, then uses it.
+  await test('pressed while the copy is still being made: the tool waits and uses the copy', async () => {
+    const page = await (await browser.newContext({ serviceWorkers: 'block' })).newPage();
+    await result(page, async () => {
+      await page.goto(`${BASE_URL}/jpg2pdf/`, { waitUntil: 'load' });
+      await page.evaluate(async b64 => {
+        const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+        const f = new File([bytes], 'photo.jpg', { type: 'image/jpeg' });
+        // the copy streams slowly; the file itself can no longer be read (a lapsed Android pick)
+        Object.defineProperty(f, 'stream', { configurable: true, value: () => new ReadableStream({ async start(c) { await new Promise(r => setTimeout(r, 3000)); c.enqueue(bytes); c.close(); } }) });
+        const err = () => Promise.reject(new DOMException('gone', 'NotReadableError'));
+        Object.defineProperty(f, 'arrayBuffer', { configurable: true, value: err });
+        const realSlice = f.slice.bind(f);
+        Object.defineProperty(f, 'slice', { configurable: true, value: (...a) => { const s = realSlice(...a); Object.defineProperty(s, 'arrayBuffer', { value: err }); return s; } });
+        const dt = new DataTransfer(); dt.items.add(f);
+        const input = document.getElementById('fileInput'); input.files = dt.files; input.dispatchEvent(new Event('change', { bubbles: true }));
+      }, readFileSync(JPG).toString('base64'));
+      await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 10000 });
       await page.click('#mergeBtn');
     });
     await page.context().close();

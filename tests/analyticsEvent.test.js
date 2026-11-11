@@ -142,6 +142,20 @@ test('index1 carries the event name', () => {
 });
 
 // ── Summary ────────────────────────────────────────────────────
+
+test('Tool Error with x_ context: country/device/browser/os/app keep blob5..9, the x_ fields come after', () => {
+  // the order js/analytics.js + the handler produce: client props, then the server's
+  const dp = _dataPointFromEvent('Tool Error', { locale: 'en', tool: 'compress', session: 's1', error_type: 'timeout',
+    x_size: '10–50 MB', x_hidden: 'yes', x_acted: 'yes', country: 'IN', device: 'desktop', browser: 'edge', os: 'windows', app: 'none' });
+  expect(dp.blobs).toEqual(['en', 'compress', 's1', 'error_type=timeout', 'country=IN', 'device=desktop', 'browser=edge',
+    'os=windows', 'app=none', 'x_size=10–50 MB', 'x_hidden=yes', 'x_acted=yes']);
+});
+
+test('Rage Click with a tool: the tool takes its fixed slot, target stays blob4', () => {
+  const dp = _dataPointFromEvent('Rage Click', { locale: 'en', tool: 'merge', session: 's2', target: '#dropZone', country: 'US', device: 'mobile', browser: 'chrome', os: 'android', app: 'none' });
+  expect(dp.blobs.slice(0, 5)).toEqual(['en', 'merge', 's2', 'target=#dropZone', 'country=US']);
+});
+
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);
 if (failed > 0) process.exit(1);

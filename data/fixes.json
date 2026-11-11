@@ -17,6 +17,15 @@
    "summary": "Today the 5 / 10 / 25 MB choices apply fixed settings and don't check the result. We measured it: the target was met for 13–50 % of large files. We are building a size check that keeps small print, stamps and Chinese text readable, and says so honestly when a size can't be reached."
   },
   {
+   "id": "C35",
+   "tool": "compress",
+   "status": "fixed",
+   "date": "2026-11-12",
+   "verified": "2026-11-12, compress e2e on pdfree.io 23/23; two scientific papers 0.73 → 0.36 MB and 0.97 → 0.59 MB on Maximum",
+   "title": "Figures smaller than the page were never made smaller",
+   "summary": "Compress judged a picture's resolution by the size of the page, so a chart or photo drawn a few inches wide kept 300–500 dpi even on Maximum. Now each picture is judged by the size it is actually drawn at, and made smaller when it's sharper than the chosen setting — scientific papers and reports come out up to half the size."
+  },
+  {
    "id": "C34",
    "tool": "compress",
    "status": "fixed",

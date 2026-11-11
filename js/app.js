@@ -19,7 +19,7 @@ import { wireShareButton, resetShareButton } from './shareButton.js';
 console.info(`[PDFree] v${APP_VERSION} loaded — rotate implemented: ${TOOLS.rotate?.implemented}`);
 import { looksEncrypted } from './decryptPdf.js';
 import { showHomePage, showToolPage,
-         renderToolHeader, setButtonReady,
+         renderToolHeader, setButtonReady, setButtonProcessing,
          setButtonDisabled, hideCancelBtn,
          showToast, setDropHint, setBatchHint, clearLongOpHint } from './ui.js';
 import { initFileListeners, setCurrentTool,
@@ -646,6 +646,20 @@ function _startWhenAnalysed(tool) {
   setTimeout(tick, 200);
 }
 
+// A wait before the tool starts (the files' copies, their encryption check)
+// shows on the button once it lasts past 150 ms: a press with no visible
+// answer gets pressed again (Rage Click on #mergeBtn, 21 people in a week,
+// analytics 2026-11-11). The tool sets its own state next; a stop before it
+// (a password needed…) gets the button back.
+async function _visiblyWait(promise) {
+  let shown = false;
+  const timer = setTimeout(() => { shown = true; setButtonProcessing(); }, 150);
+  try { await promise; } finally {
+    clearTimeout(timer);
+    if (shown) setButtonReady(getLocalizedTool(TOOLS[currentTool]).btn);
+  }
+}
+
 function _onMergeBtnClick() {
   const mode = id('mergeBtn').dataset.mode || 'process';
   if (mode === 'reset') {
@@ -671,6 +685,14 @@ function _onMergeBtnClick() {
     // its "choose again" in the list instead.
     const unreadable = selectedFiles.find(f => f._unreadable);
     if (unreadable) { showToast(t('err_file_unreadable_marked', { name: unreadable.name }), 8000); return; }
+    // The private copies still being made (files.js _keepCopy): a press right
+    // after adding read the file itself, which an Android pick may no longer
+    // give — "file_unreadable", copy=copying, 3 s after adding (jpg2pdf,
+    // analytics 2026-11-11). Wait for them (a copy that fails takes its file
+    // off the list with why); bounded, so a slow copy never blocks the tool.
+    const copying = selectedFiles.filter(f => f._copyState === 'copying').map(f => f._copyDone);
+    if (copying.length) await _visiblyWait(Promise.race([Promise.all(copying), new Promise(r => setTimeout(r, 15000))]));
+    if (!selectedFiles.length) return;
     // A PDF that still needs its user password can't be processed: every
     // pdf-lib tool loads with ignoreEncryption, so compress/watermark/page
     // numbers/metadata silently returned a corrupt file (0 pages even with
@@ -679,7 +701,7 @@ function _onMergeBtnClick() {
     // validation so that misleading message never shows. Unlock is the one
     // tool meant to receive it; it caches _decryptedBuffer, which clears this.
     if (currentTool !== 'unlock') {
-      await Promise.all(selectedFiles.map(f => f._encryptionCheck));
+      await _visiblyWait(Promise.all(selectedFiles.map(f => f._encryptionCheck)));
       if (selectedFiles.some(f => f._needsPassword && !f._decryptedBuffer)) {
         showToast(t('ocr_password_protected_inline'), 8000);
         return;
@@ -783,6 +805,10 @@ function initEvents() {
     // already activated the input; calling .click() again causes a double-open
     // that immediately closes the picker (invisible bug on iOS).
     if (e.target.closest('#chooseFilesBtn')) return;
+    // The 2nd and 3rd click of a double/triple click (a folder habit) opened
+    // the picker again after each choice — 26 people in a week clicked the
+    // zone three times in a second (Rage Click, analytics 2026-11-11).
+    if (e.detail > 1) return;
     id('fileInput').click();
   });
   id('dropZone').addEventListener('keydown', e => {

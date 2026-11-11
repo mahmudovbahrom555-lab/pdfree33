@@ -247,7 +247,8 @@ export function addFiles(files) {
 
 // What every newly added file goes through: its copy, then the preflight.
 function _afterAdd(added) {
-  for (const f of added) _keepCopy(f);
+  // kept on the file so the process button can wait for the copy (app.js)
+  for (const f of added) f._copyDone = _keepCopy(f).catch(() => {});
 
   // Run preflight on newly added PDFs — async, non-blocking.
   // Annotates file._pdfMeta. For AES- or RC4-encrypted files, tries QPDF

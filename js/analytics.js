@@ -89,7 +89,9 @@ const _inputs = {};   // tool → bytes in, from trackToolStart (no caller passe
  * Call when a tool becomes visible to the user (step 1 of the funnel).
  * Plausible funnel: Tool Open → File Added → Tool Start → Tool Success/Cancel/Error
  */
+let _lastTool = '';   // the tool whose page is open (Rage Click)
 export function trackToolOpen(tool) {
+  _lastTool = tool;
   _track('Tool Open', { tool });
 }
 
@@ -97,6 +99,7 @@ export function trackToolOpen(tool) {
 export function trackToolStart(tool, inputSize = 0) {
   _timers[tool] = performance.now();
   _inputs[tool] = inputSize;
+  _hiddenSinceStart = typeof document !== 'undefined' && document.hidden;
 }
 
 /**
@@ -167,10 +170,26 @@ export function trackFileAdded(tool, fileSize = 0) {
  *                         Tool Cancel, not an error)
  *   unknown             — unclassified
  */
+// Context for an error, after the fields saved queries read (src/index.js
+// puts x_… keys last): the file's size band; whether the tab was hidden at any
+// time since the run started (frozen background tabs — most Compress timeouts
+// were Edge on desktop, 2026-11-11); whether a person ever pressed or typed on
+// the page (an error with no one acting is an automated visit, as the N-up
+// "[object Object]" of 17 sessions was). Strings, so they stay blobs.
+let _acted = false;
+let _hiddenSinceStart = false;
+if (typeof document !== 'undefined') {
+  const acted = () => { _acted = true; };
+  for (const type of ['pointerdown', 'keydown', 'touchstart', 'drop']) document.addEventListener(type, acted, { capture: true, once: true, passive: true });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) _hiddenSinceStart = true; });
+}
+
 export function trackToolError(tool, errorType = 'unknown') {
+  const size = _inputs[tool];
   delete _timers[tool];
   delete _inputs[tool];
-  _track('Tool Error', { tool, error_type: errorType });
+  _track('Tool Error', { tool, error_type: errorType,
+    x_size: _sizeBucket(size), x_hidden: _hiddenSinceStart ? 'yes' : 'no', x_acted: _acted ? 'yes' : 'no' });
 }
 
 /**
@@ -405,7 +424,9 @@ export function trackHomepageScrollDepth(depth) {
  * @param {string} target — best-effort element descriptor (#id, tag.class, or bare tag)
  */
 export function trackRageClick(target) {
-  _track('Rage Click', { target });
+  // which tool's page (blob2, a fixed slot: nothing moves) — on the homepage none
+  const onTool = typeof document !== 'undefined' && document.getElementById('toolArea')?.offsetParent;
+  _track('Rage Click', { tool: onTool ? _lastTool : '', target });
 }
 
 // ── Manga Split post-use survey ──────────────────────────────────
