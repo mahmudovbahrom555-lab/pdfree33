@@ -1292,4 +1292,8 @@ mask without /Matte does not stop either path (PDF lets it differ in size; D300 
 10.1 MB of such CMYK images in one corpus file). Re-measured on the 43 documents: the same bytes ±1, the
 same colour figures.
 
-**Status:** `fixing` — criterion 1 wording and the colour point wait on the owner; then verified on pdfree.io.
+**Owner decisions (2026-11-11):** criterion 1 — a +1…3-byte difference that comes only from /ModDate is
+accepted as "not larger"; colour — report.pdf Maximum page 4 (ΔE 2.45) accepted as Maximum's existing
+96-dpi trade-off; JPX is not held above 96 dpi on Maximum. Thresholds unchanged.
+
+**Status:** `fixing` — merged after the owner's decisions; verified on pdfree.io next.
