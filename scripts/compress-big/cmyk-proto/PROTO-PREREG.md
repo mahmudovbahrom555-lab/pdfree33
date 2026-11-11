@@ -564,3 +564,20 @@ streams, 7.96 MB; 6619605: ~30 MB). The site saves with pdf-lib and leaves them 
 
 D300's image bytes and every quality and integrity result stand. Only the size totals were wrong.
 A new, lossless candidate follows from this: compress the uncompressed streams.
+
+## CORRECTION 2026-11-11 — ΔE2000 in d_metrics.py (V2/V3) read Lab a/b wrongly
+
+`d_metrics.to_lab` subtracted 128 from PIL's LAB a and b, but PIL stores them as SIGNED bytes (grey →
+0). Near-neutral colours (a, b ≈ 0) jumped by ~±128, so V2/V3 ΔE was overstated — the block max above
+30–70 on almost every document was this artefact. Found while measuring C34 (a page ΔE of 15 on
+pages that looked the same); reported to the owner first, then recomputed with `d_metrics_v2.py`
+(int8 reading; the only change) on the same 17 D300 pairs (chain300 vs L, 150 dpi, 6 pages):
+v1 → v2 in `metrics-chain300-vsL.v1.jsonl` / `.v2.jsonl`.
+- Texture mean: 2635275 23.1 → 2.5, 3184083 2.27 → 0.52, 1744868 0.97 → 0.29, others ≤ 0.15.
+- Texture p95: 2635275 42.5 → 3.9, 3184083 18.1 → 3.3, 1744868 7.2 → 2.1; flat p95 rises slightly on
+  three documents (2448448 0.37 → 0.63, 6619605 0.48 → 0.67, 1744868 0.30 → 0.51).
+- Block max: 30–74 → 1.8–11.2.
+**What it changes:** no decision. The v0.2 ΔE thresholds were hypotheses with no pass/fail; D300 was
+chosen by sizes, V1/V5 plates and the owner's blind check — none of which used this conversion. The
+reported colour differences of D300 were too high, not too low. compare_pack.py (ΔE76 of the leader
+comparison: 0.29 / 1.37 / 3.06) computes Lab analytically and is NOT affected.
