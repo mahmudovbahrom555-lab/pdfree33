@@ -1343,4 +1343,6 @@ vs pdfree.io 2df485fe, Standard + Maximum:
 5. e2e: a 1200-px figure drawn 2 in wide → 300×200 (Standard) / 192×128 (Maximum), RGB, text kept — 23/23;
    against pdfree.io the two new tests fail. Unit tests 16/16. signed-pdf 9/9, npm test on Node 20.
 
-**Status:** `fixing` — merge, then verified on pdfree.io.
+**Status:** `verified` — #183 on pdfree.io (deploy 2dc4d02e, 2026-11-12; the first three deploys stopped on a
+CI apt outage and on #185's JSZip warm-up, see #189): compress e2e against the live site 23/23 (C35 tests
+included); arXiv 36525 0.36 MB, 36658 0.59 MB, gip-31 1.05 MB on Maximum — the same bytes as before the merge.

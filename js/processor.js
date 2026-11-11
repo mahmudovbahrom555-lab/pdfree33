@@ -2476,7 +2476,9 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi }) {
   const successCount = streamZip ? streamCount : (singleResult ? 1 : 0);
   if (successCount === 0) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
-    _handleError('pdf2jpg', t('err_no_render'), 'render_all_failed'); return;
+    // with the first page's reason: "render_all_failed" alone, three times in a
+    // row for one person, said nothing about why (analytics 2026-11-11)
+    _handleError('pdf2jpg', t('err_no_render'), `render_all_failed: ${String(failures[0]?.msg || '').slice(0, 60)}`); return;
   }
 
   // Real bug fixed here: a partial failure (some pages rendered, some

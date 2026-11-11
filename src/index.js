@@ -617,8 +617,14 @@ export function _dataPointFromEvent(eventName, props) {
   const { locale = '', tool = '', session = '', ...rest } = props;
   const blobs = [String(locale).slice(0, 100), String(tool).slice(0, 100), String(session).slice(0, 100)];
   const doubles = [];
+  // Client keys named x_… go last, after the server's country/device/browser/
+  // os/app: an event can gain context (Tool Error's file size, hidden tab, a
+  // person acted — 2026-11-11) without moving those out of the blobs every
+  // saved query reads.
+  const entries = Object.entries(rest);
+  const ordered = [...entries.filter(([k]) => !k.startsWith('x_')), ...entries.filter(([k]) => k.startsWith('x_'))];
 
-  for (const [key, value] of Object.entries(rest)) {
+  for (const [key, value] of ordered) {
     const n = Number(value);
     if (value !== '' && value !== null && value !== undefined && Number.isFinite(n)) {
       doubles.push(n);
