@@ -60,15 +60,17 @@
 //  its header. It runs before the CMYK re-deflate above, which then sees only
 //  the CMYK images D300 left as they were. A failure of D300 leaves the
 //  document as the other steps made it. The same pass re-encodes JPEG 2000
-//  (JPX) RGB/grey images at the mode's own dpi and quality (`cmykD.jpx`) —
-//  nothing else in Compress reads JPX.
+//  (JPX) RGB/grey images at the mode's own dpi and quality (`cmykD.rgb`) —
+//  nothing else in Compress reads JPX — and downsamples RGB/grey figures drawn
+//  smaller than the page above that dpi (C35: handleCompress judges dpi by
+//  the page size, so it left them).
 //
 //  Message contract:
 //   in  → { file: ArrayBuffer, stripXmp: boolean, cmykFlate: boolean,
-//           cmykD: { target, quality, maxMegapixels, jpx: { target, quality } | null } | null } [transferred]
+//           cmykD: { target, quality, maxMegapixels, rgb: { target, quality, maxMegapixels } | null } | null } [transferred]
 //   out → { type: 'progress', done, total } while D300 works (keeps the caller's watchdog awake)
 //         { type: 'done', result: ArrayBuffer, encoded: number, resolved: number, xmp: number, cmyk: number,
-//           d: { replaced, jpx, before, after, skipped } | null } [transferred]
+//           d: { replaced, jpx, placed, before, after, skipped } | null } [transferred]
 //         result is the original buffer when nothing was changed.
 //         Any failure also answers 'done' with the original buffer and
 //         encoded: 0 — this pass must never block a compression.
@@ -233,6 +235,29 @@ function _dropUnreachable(pdf) {
 // image's stream dict is never in an object stream; a colour space given by
 // reference to a compressed object is missed — that only forgoes savings.
 function _mayHaveCmyk(bytes) { return _mayHaveName(bytes, '/DeviceCMYK'); }
+
+// Cheap scan for C35 (figures drawn smaller than the page): an image of
+// 250,000 pixels or more — below that, the bytes a downsample could save
+// don't pay for parsing the document. Same text-level window as
+// _mayHaveRawImage; a size given by reference counts as big (let the parse decide).
+const _BIG_IMAGE_PX = 250000;
+function _mayHaveBigImage(bytes) {
+  const n = bytes.length;
+  for (let i = bytes.indexOf(0x2f); i !== -1 && i <= n - 7; i = bytes.indexOf(0x2f, i + 1)) {
+    let hit = true;
+    for (let k = 1; k < 6; k++) if (bytes[i + k] !== _IMAGE[k]) { hit = false; break; }
+    if (!hit || !_DELIM.has(bytes[i + 6])) continue;
+    const from = Math.max(0, i - _WINDOW), to = Math.min(n, i + _WINDOW);
+    const text  = String.fromCharCode.apply(null, bytes.subarray(from, to));
+    const start = text.lastIndexOf('<<', i - from), end = text.indexOf('stream', i - from);
+    if (start === -1 || end === -1) return true;
+    const dict = text.slice(start, end);
+    const w = /\/Width\s+(\d+)(\s+\d+\s+R)?/.exec(dict), h = /\/Height\s+(\d+)(\s+\d+\s+R)?/.exec(dict);
+    if (!w || !h || w[2] || h[2]) return true;
+    if (Number(w[1]) * Number(h[1]) >= _BIG_IMAGE_PX) return true;
+  }
+  return false;
+}
 function _mayHaveJpx(bytes) { return _mayHaveName(bytes, '/JPXDecode'); }
 function _mayHaveName(bytes, name) {
   const CHUNK = 1 << 20, latin1 = new TextDecoder('latin1');
@@ -320,7 +345,7 @@ async function _encodeRawImages(buffer, stripXmp = false, cmykFlate = false, dOp
   const rawImages = _mayHaveRawImage(bytesIn), dimRefs = _mayHaveIndirectDims(bytesIn);
   const objectXmp = stripXmp && _mayHaveObjectXmp(bytesIn);
   const anyCmyk = (cmykFlate || dOpts) && _mayHaveCmyk(bytesIn);
-  const cmyk = cmykFlate && anyCmyk, wantD = !!dOpts && (anyCmyk || (!!dOpts.jpx && _mayHaveJpx(bytesIn)));
+  const cmyk = cmykFlate && anyCmyk, wantD = !!dOpts && (anyCmyk || (!!dOpts.rgb && (_mayHaveJpx(bytesIn) || (!!dOpts.rgb.target && _mayHaveBigImage(bytesIn)))));
   const none = { result: buffer, encoded: 0, resolved: 0, xmp: 0, cmyk: 0, d: null };
   if (!rawImages && !dimRefs && !objectXmp && !cmyk && !wantD) return none;
   // No yielding while parsing or writing: pdf-lib pauses every 100 objects

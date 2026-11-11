@@ -205,10 +205,10 @@ await test('options: Light and signed files never; manual dpi never below 300; m
   const isLargeDevice = () => false;
   const f = new Function('isLargeDevice', body + '\nreturn _cmykDOptions;')(isLargeDevice);
   assert(f('low', {}) === null && f('medium', { _signed: true }) === null, 'Light/signed');
-  assert(JSON.stringify(f('medium', {}, {})) === JSON.stringify({ target: 300, quality: 82, maxMegapixels: 16, jpx: { target: 150, quality: 82, maxMegapixels: 4 } }), 'Standard');
-  assert(JSON.stringify(f('high', {}, { targetDpi: 96, quality: 0.72 })) === JSON.stringify({ target: 300, quality: 75, maxMegapixels: 16, jpx: { target: 96, quality: 72, maxMegapixels: 4 } }), 'Maximum defaults');
+  assert(JSON.stringify(f('medium', {}, {})) === JSON.stringify({ target: 300, quality: 82, maxMegapixels: 16, rgb: { target: 150, quality: 82, maxMegapixels: 4 } }), 'Standard');
+  assert(JSON.stringify(f('high', {}, { targetDpi: 96, quality: 0.72 })) === JSON.stringify({ target: 300, quality: 75, maxMegapixels: 16, rgb: { target: 96, quality: 72, maxMegapixels: 4 } }), 'Maximum defaults');
   // JPX follows the chosen resolution and quality, as worker.js does for RGB; "Original" (null) keeps its pixels
-  assert(f('medium', {}, { targetDpi: null, quality: 0.9 }).jpx.target === null && f('medium', {}, { targetDpi: null, quality: 0.9 }).jpx.quality === 90, 'JPX manual');
+  assert(f('medium', {}, { targetDpi: null, quality: 0.9 }).rgb.target === null && f('medium', {}, { targetDpi: null, quality: 0.9 }).rgb.quality === 90, 'JPX manual');
   assert(f('high', {}, { targetDpi: 400, quality: 0.8 }).target === 400 && f('high', {}, { quality: 0.8 }).quality === 80, 'manual above the floor');
 });
 
@@ -222,7 +222,7 @@ async function jpxPage(name, w, h, colorSpace, extra = {}) {
   page.node.set(PDFName.of('Contents'), content(pdf, 'q 288 0 0 192 0 0 cm /Im0 Do Q'));   // 4 × 2.67 in → 300 dpi
   return { pdf, img };
 }
-const JPX_OPTS = { target: 300, quality: 82, maxMegapixels: 64, jpx: { target: 150, quality: 82, maxMegapixels: 24 }, urls: URLS };
+const JPX_OPTS = { target: 300, quality: 82, maxMegapixels: 64, rgb: { target: 150, quality: 82, maxMegapixels: 24 }, urls: URLS };
 const dims = (pdf, img) => { const d = pdf.context.lookup(img).dict; return [d.get(PDFName.of('Width')).asNumber(), d.get(PDFName.of('Height')).asNumber(), d.get(PDFName.of('Filter')).toString()]; };
 
 await test('JPX RGB at 300 dpi → a JPEG at 150 dpi, DeviceRGB kept, smaller', async () => {
@@ -257,7 +257,7 @@ await test('JPX grey under an ICC profile (N 1): the profile stays the colour sp
 
 await test('JPX: "Original" resolution re-encodes at full size; an identity /Decode is as none; another /Decode, CMYK JPX or no jpx option leave it alone', async () => {
   let { pdf, img } = await jpxPage('rgb-1200x800.jp2', 1200, 800, 'DeviceRGB');
-  let r = await D.cmykD(pdf, { ...JPX_OPTS, jpx: { target: null, quality: 82, maxMegapixels: 24 } });
+  let r = await D.cmykD(pdf, { ...JPX_OPTS, rgb: { target: null, quality: 82, maxMegapixels: 24 } });
   assert(r.jpx === 1 && dims(pdf, img).join() === '1200,800,/DCTDecode', JSON.stringify(r));
   ({ pdf, img } = await jpxPage('rgb-1200x800.jp2', 1200, 800, 'DeviceRGB', { Decode: [1, 0, 1, 0, 1, 0] }));
   r = await D.cmykD(pdf, JPX_OPTS);
@@ -269,10 +269,10 @@ await test('JPX: "Original" resolution re-encodes at full size; an identity /Dec
   r = await D.cmykD(pdf, JPX_OPTS);
   assert(r.replaced === 0 && dims(pdf, img)[2] === '/JPXDecode', JSON.stringify(r));
   ({ pdf, img } = await jpxPage('rgb-1200x800.jp2', 1200, 800, 'DeviceRGB'));   // its own device cap (0.96 MP here)
-  r = await D.cmykD(pdf, { ...JPX_OPTS, jpx: { ...JPX_OPTS.jpx, maxMegapixels: 0.9 } });
+  r = await D.cmykD(pdf, { ...JPX_OPTS, rgb: { ...JPX_OPTS.rgb, maxMegapixels: 0.9 } });
   assert(r.replaced === 0 && r.skipped['too large for this device'] === 1, JSON.stringify(r));
   ({ pdf, img } = await jpxPage('rgb-1200x800.jp2', 1200, 800, 'DeviceRGB'));
-  r = await D.cmykD(pdf, { ...JPX_OPTS, jpx: null });
+  r = await D.cmykD(pdf, { ...JPX_OPTS, rgb: null });
   assert(r.replaced === 0 && dims(pdf, img)[2] === '/JPXDecode', JSON.stringify(r));
 });
 
@@ -299,6 +299,59 @@ await test('JPX checks codestream dimensions before decoding; a soft mask with /
   r = await D.cmykD(pdf, JPX_OPTS);
   // /Matte: the mask must keep the image's size — re-encoded at full size, never downsampled
   assert(dims(pdf, img).join() === '1200,800,/DCTDecode' || dims(pdf, img).join() === '1200,800,/JPXDecode', JSON.stringify(r) + dims(pdf, img).join());
+});
+
+// ── C35: RGB/grey figures drawn smaller than the page ────────────────────────
+const FIG = readFileSync(join(ROOT, 'tests/fixtures/placed/rgb-1200x800.jpg'));
+async function figurePage({ inches = 2, extra = {}, raw = null } = {}) {
+  const pdf = await PDFDocument.create();
+  const dict = raw ? { Type: 'XObject', Subtype: 'Image', Width: raw.w, Height: raw.h, ColorSpace: 'DeviceGray', BitsPerComponent: 8, Filter: 'FlateDecode', ...extra }
+    : { Type: 'XObject', Subtype: 'Image', Width: 1200, Height: 800, ColorSpace: 'DeviceRGB', BitsPerComponent: 8, Filter: 'DCTDecode', ...extra };
+  const img = pdf.context.register(PDFRawStream.of(pdf.context.obj(dict), raw ? deflateSync(raw.samples) : FIG));
+  const page = pdf.addPage([612, 792]);
+  page.node.set(PDFName.of('Resources'), pdf.context.obj({ XObject: { Im0: img } }));
+  const w = inches * 72, h = raw ? w * raw.h / raw.w : w * 800 / 1200;
+  page.node.set(PDFName.of('Contents'), content(pdf, `q ${w} 0 0 ${h} 36 36 cm /Im0 Do Q`));
+  return { pdf, img };
+}
+const RGB_OPTS = { target: 300, quality: 82, maxMegapixels: 64, rgb: { target: 150, quality: 82, maxMegapixels: 24 }, urls: URLS };
+
+await test('C35: a 1200-px RGB JPEG drawn 2 in wide (600 dpi) → 300×200 at 150 dpi, DeviceRGB kept, the same picture', async () => {
+  const { pdf, img } = await figurePage();
+  const r = await D.cmykD(pdf, RGB_OPTS);
+  assert(r.placed === 1 && r.replaced === 1 && r.after < r.before, JSON.stringify(r));
+  assert(dims(pdf, img).join() === '300,200,/DCTDecode', dims(pdf, img).join());
+  assert(pdf.context.lookup(img).dict.get(PDFName.of('ColorSpace')).toString() === '/DeviceRGB', 'colour space');
+  const { JpegImage } = await import(URLS.decoders);
+  const a = new JpegImage(); a.parse(new Uint8Array(FIG));
+  const src = D._cmykdDownsample(a.getData({ width: 1200, height: 800, forceRGB: true, isSourcePDF: true }), 1200, 800, 3, 300, 200);
+  const b = new JpegImage(); b.parse(pdf.context.lookup(img).contents);
+  const back = b.getData({ width: 300, height: 200, forceRGB: true, isSourcePDF: true });
+  // the noisy fixture measures ~6.7 of 255 here with no bias per channel (≤ 0.2); swapped R/B measure ~50
+  let diff = 0; for (let i = 0; i < src.length; i++) diff += Math.abs(src[i] - back[i]);
+  assert(diff / src.length < 12, `mean difference ${(diff / src.length).toFixed(2)} of 255`);
+});
+
+await test('C35: the same image drawn 8 in wide (150 dpi) is left to worker.js, not decoded; no rgb option → untouched', async () => {
+  let { pdf, img } = await figurePage({ inches: 8 });
+  let r = await D.cmykD(pdf, RGB_OPTS);
+  assert(r.replaced === 0 && r.skipped['placed: at or below the target'] === 1 && dims(pdf, img)[0] === 1200, JSON.stringify(r));
+  ({ pdf, img } = await figurePage());
+  r = await D.cmykD(pdf, { ...RGB_OPTS, rgb: { ...RGB_OPTS.rgb, target: null } });   // "Original" resolution
+  assert(r.replaced === 0 && dims(pdf, img)[0] === 1200, JSON.stringify(r));
+});
+
+await test('C35: a grey Flate image drawn small → downsampled; an inverted /Decode or an image mask → left alone', async () => {
+  const gw = 900, gh = 600, samples = new Uint8Array(gw * gh).map((_, i) => 128 + 100 * Math.sin((i % gw) / 23) * Math.cos(Math.floor(i / gw) / 31));
+  let { pdf, img } = await figurePage({ inches: 1.5, raw: { w: gw, h: gh, samples } });   // 600 dpi
+  let r = await D.cmykD(pdf, RGB_OPTS);
+  assert(r.placed === 1 && dims(pdf, img).join() === '225,150,/DCTDecode', JSON.stringify(r) + dims(pdf, img).join());
+  ({ pdf, img } = await figurePage({ extra: { Decode: [1, 0, 1, 0, 1, 0] } }));
+  r = await D.cmykD(pdf, RGB_OPTS);
+  assert(r.replaced === 0 && dims(pdf, img)[2] === '/DCTDecode' && dims(pdf, img)[0] === 1200, JSON.stringify(r));
+  ({ pdf, img } = await figurePage({ extra: { Mask: [0, 10, 0, 10, 0, 10] } }));
+  r = await D.cmykD(pdf, RGB_OPTS);
+  assert(r.replaced === 0 && dims(pdf, img)[0] === 1200, JSON.stringify(r));
 });
 
 console.log(`\n${passed} passed, ${failed} failed`);
