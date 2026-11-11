@@ -186,18 +186,27 @@ function _createWorker() {
 // background when the tool opens, they're in the cache by then.
 const _SHARED_WORKER = ['worker.js?v=__WORKER_HASH__', 'pdfEncrypt.js', 'watermarkImage.js'];
 const _RUNNER_SCRIPTS = {
-  merge: ['mergeWorker.js'], split: ['splitWorker.js'], organize: ['organizeWorker.js'],
+  // Merge: adding files starts its page-count scan in the shared worker
+  // ("importScripts failed: /js/watermarkImage.js", 3 people, 2026-11-11)
+  merge: ['mergeWorker.js', ..._SHARED_WORKER], split: ['splitWorker.js', 'pageTreeCounts.js'], organize: ['organizeWorker.js'],
   compress: [..._SHARED_WORKER, 'compressPrepWorker.js', 'cmykD.js'], worker: _SHARED_WORKER,
   jpg2pdf: [..._SHARED_WORKER, 'tiffWorker.js', 'vendor/UTIF.js', 'vendor/pako_inflate.min.js'],
   resize: ['resizeWorker.js'], nup: ['nupWorker.js', 'nupLayout.js'], mangaSplit: ['mangaSplitWorker.js'],
   fillOrder: ['fillOrderWorker.js'], cleanScan: ['cleanScanWorker.js'], ereader: ['ereaderWorker.js'],
   glossary: ['glossaryWorker.js'],
 };
+// For every tool: pdf.js, its worker and their shims — almost every tool reads
+// the file with it as soon as one is added (pages, previews); not cached yet and
+// the connection gone, the tool said the PDF was damaged (Split, 2026-11-11).
+// And JSZip (~95 KB), loaded only when a result is zipped — Split's separate
+// files, batches, copies, Word/PowerPoint files ("Failed to load jsZip",
+// Split and PDF→Word, 2026-11-11).
+const _ALWAYS = ['pdfjsLoader.js', 'atPolyfill.js', 'vendor/pdfjs-4.10.38/pdf.min.js', 'pdfWorkerModule.js',
+  'vendor/pdfjs-4.10.38/pdf.worker.min.js', 'vendor/jszip.min.js'];
 const _warmed = new Set();
 export function warmToolScripts(tool) {
   const own = _RUNNER_SCRIPTS[getRunner(tool)];
-  if (!own) return;
-  for (const path of ['vendor/pdf-lib.min.js', ...own]) {
+  for (const path of [..._ALWAYS, ...(own ? ['vendor/pdf-lib.min.js', ...own] : [])]) {
     const url = new URL('./' + path, import.meta.url).href;
     if (_warmed.has(url)) continue;
     _warmed.add(url);
