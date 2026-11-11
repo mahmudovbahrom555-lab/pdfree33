@@ -61,6 +61,56 @@ try {
     });
   }
 
+  // The connection drops BEFORE the files are added (analytics 2026-11-11: "importScripts failed:
+  // /js/watermarkImage.js" on Merge, 3 people; "/js/pageTreeCounts.js" on Split): adding files starts
+  // Merge's page-count scan in the shared worker, and Split's worker imports pageTreeCounts.js —
+  // neither was fetched when the tool opened.
+  for (const [tool, url, files] of [
+    ['Merge', '/merge-pdf/', [path.join(FIX, 'normal-3page.pdf'), path.join(FIX, 'normal-1page.pdf')]],
+    ['Split', '/split-pdf/', [path.join(FIX, 'normal-3page.pdf')]],
+  ]) {
+    await test(`${tool}: the connection drops before the files are added — no script fails to load, the tool runs`, async () => {
+      const ctx = await browser.newContext();
+      const page = await ctx.newPage();
+      const failures = [];
+      page.on('console', m => { if (/importScripts|NetworkError|Failed to fetch/i.test(m.text())) failures.push(m.text().slice(0, 140)); });
+      page.on('pageerror', e => failures.push(e.message.slice(0, 140)));
+      await page.addInitScript(() => {
+        const o = URL.createObjectURL.bind(URL);
+        URL.createObjectURL = x => { if (x instanceof Blob && x.size > 500 && /pdf|zip/.test(x.type)) window.__result = x; return o(x); };
+        document.addEventListener('pdfree:error', e => { window.__error = e.detail; });
+      });
+      await page.goto(BASE_URL + url, { waitUntil: 'load' });
+      await page.waitForTimeout(3500);           // the page idles: its tool's scripts are fetched
+      await ctx.setOffline(true);
+      await page.setInputFiles('#fileInput', files);
+      await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 30000 });
+      await page.waitForTimeout(2000);
+      await page.click('#mergeBtn');
+      const error = await outcome(page);
+      await ctx.close();
+      if (error) throw new Error(JSON.stringify(error));
+      if (failures.length) throw new Error(failures.join(' | '));
+    });
+  }
+
+  await test('pdf.js does not load: Split says the connection dropped (not "damaged"), and Try again works', async () => {
+    const ctx = await browser.newContext({ serviceWorkers: 'block' });
+    let block = true;
+    await ctx.route('**/vendor/pdfjs-4.10.38/pdf.min.js*', r => (block ? r.abort() : r.continue()));   // its retry URLs too
+    const page = await ctx.newPage();
+    await page.goto(BASE_URL + '/split-pdf/', { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', path.join(FIX, 'normal-3page.pdf'));
+    const panel = page.locator('#splitOptions [role=alert]');
+    await panel.waitFor({ timeout: 30000 });
+    const text = await panel.innerText();
+    if (!/connection/i.test(text) || /corrupt|unusual/i.test(text)) throw new Error(`panel: ${text.slice(0, 160)}`);
+    block = false;
+    await panel.locator('button').click();
+    await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled && document.querySelector('#splitOptions .split-range, #splitOptions input'), null, { timeout: 30000 });
+    await ctx.close();
+  });
+
   await test('a worker whose script does not load says so, as worker_load_failed', async () => {
     // no service worker, the worker's own script refused: the case warming can't save
     const ctx = await browser.newContext({ serviceWorkers: 'block' });

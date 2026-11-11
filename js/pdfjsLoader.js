@@ -19,6 +19,12 @@ import './atPolyfill.js';
 
 let   _pdfJsLoading     = null;
 const PDFJS_MAX_RETRIES = 2;
+// A module import that failed once fails again at the same URL for the life of
+// the page — the browser keeps the failure, even after the connection is back
+// (tested in Chromium, 2026-11-11): the retries below never loaded anything,
+// and a page that lost its connection could not read a PDF until reloaded.
+// Each new attempt asks for the same file at a URL of its own.
+let   _pdfJsFailures    = 0;
 
 async function _ensurePdfJs() {
   if (window.pdfjsLib) return;
@@ -29,7 +35,9 @@ async function _ensurePdfJs() {
 
 async function _loadWithRetry(retriesLeft) {
   try {
-    const lib = await import('./vendor/pdfjs-4.10.38/pdf.min.js');
+    const lib = await (_pdfJsFailures
+      ? import(`./vendor/pdfjs-4.10.38/pdf.min.js?retry=${_pdfJsFailures}`)
+      : import('./vendor/pdfjs-4.10.38/pdf.min.js'));
     // a module worker (pdf.js 4 starts it with { type: 'module' })
     lib.GlobalWorkerOptions.workerSrc = new URL('./pdfWorkerModule.js', import.meta.url).toString();
     // Adobe's predefined CMaps, for every getDocument() on the site: without
@@ -45,6 +53,7 @@ async function _loadWithRetry(retriesLeft) {
       getDocument: { value: src => lib.getDocument({ cMapUrl, cMapPacked: true, ...src }) },
     });
   } catch (err) {
+    _pdfJsFailures++;
     if (retriesLeft > 0) {
       await new Promise(r => setTimeout(r, 1000 * (PDFJS_MAX_RETRIES - retriesLeft + 1)));
       return _loadWithRetry(retriesLeft - 1);
