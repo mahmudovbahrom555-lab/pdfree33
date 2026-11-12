@@ -72,3 +72,18 @@ zh-book-300.pdf, 390×664 mobile, CPU 4×: editor opened in 21 s (6,961 editable
 "characters can't be rendered by Word→PDF's current font". No crash. JS heap of the page ≤ 10 MB (performance.memory
 sees only the page's main heap, not pdf.js's worker — a lower bound, not the total).
 → Criterion 6 not met: the zh user's case can't be saved at all today. Step 0 complete.
+
+## Step 3 — the save off the main thread (criteria fixed 2026-11-12, BEFORE the candidate is built)
+Why: on the phone case the tab is frozen during Save; Android may offer to kill an unresponsive page.
+Measured on main bb88baa8 (phone.mjs + long-task observer, zh-book-300, 1 Latin edit, CPU 4×, 2 runs):
+save 15 s / 15 s; main thread blocked 12.6 s / 12.5 s in total; **longest single block 4.7 s / 4.7 s**.
+Phases (phases.mjs, 1 Han edit): MuPDF open+redact+save 3.6 s; pdf-lib save with the full Noto SC 5.8 s (12.6 MB);
+MuPDF subset 1.4 s + save 2.8 s.
+| # | Criterion | Bar |
+|---|---|---|
+| S1 | longest main-thread long task during Save, phone case, both runs | ≤ 250 ms |
+| S2 | Save time, phone case | ≤ 1.2 × baseline (≤ 18 s) |
+| S3 | same results: quickEdit e2e + skeleton all pass; UI corpus run (run.mjs/compare.py) saved count ≥ 22/33 with every layout criterion as before | no regression |
+| S4 | error messages still in the page's language (zh/ru checked) | yes |
+| S5 | open: longest long task while the editor opens, phone case | ≤ 250 ms (baseline 237 / 113) |
+Time reduction is NOT a criterion of this step (worker first; less work later, measured separately).

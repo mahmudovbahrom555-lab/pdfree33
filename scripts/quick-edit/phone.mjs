@@ -14,20 +14,28 @@ await page.addInitScript(() => {
   const o = URL.createObjectURL.bind(URL);
   URL.createObjectURL = x => { if (x instanceof Blob && x.type === 'application/pdf') window.__pdf = x; return o(x); };
   setInterval(() => { const m = performance.memory?.usedJSHeapSize || 0; if (m > window.__heap) window.__heap = m; }, 1000);
+  // main-thread long tasks (> 50 ms): the tab can't answer a tap while one runs
+  window.__long = [];
+  try { new PerformanceObserver(list => { for (const e of list.getEntries()) window.__long.push([e.startTime, e.duration]); })
+    .observe({ type: 'longtask', buffered: true }); } catch {}
 });
 const row = { file: file.split('/').pop(), cpu: rate };
 await page.goto(base + '/quick-edit-pdf/', { waitUntil: 'load', timeout: 120000 });
 let t = Date.now();
 await page.setInputFiles('#fileInput', file);
-row.open = await page.waitForFunction(() => !!document.querySelector('.qe-modal--open .qe-editable-run'), null, { timeout: 300000 }).then(() => 'opened', () => crashed ? 'crashed' : 'timeout');
+row.open = await page.waitForFunction(() => !!document.querySelector('.qe-modal--open .qe-editable-run, .qe-page-line'), null, { timeout: 300000 }).then(() => 'opened', () => crashed ? 'crashed' : 'timeout');
 row.openS = Math.round((Date.now() - t) / 1000);
+const longIn = (from, to) => page.evaluate(([f, t]) => { const l = window.__long.filter(([s]) => s >= f && s <= t);
+  return { maxMs: Math.round(Math.max(0, ...l.map(x => x[1]))), sumMs: Math.round(l.reduce((a, x) => a + x[1], 0)), n: l.length }; }, [from, to]);
+row.openLong = await longIn(0, await page.evaluate(() => performance.now()));
 row.heapAfterOpenMB = Math.round((await page.evaluate(() => window.__heap).catch(() => 0)) / 1e6);
 if (row.open === 'opened') {
-  row.runs = await page.locator('.qe-editable-run').count();
-  const target = page.locator('.qe-editable-run').nth(await page.evaluate(() => [...document.querySelectorAll('.qe-editable-run')].findIndex(s => /\p{L}{2}/u.test(s.textContent))));
+  row.runs = await page.locator('.qe-editable-run, .qe-page-line').count();
+  const target = page.locator('.qe-editable-run, .qe-page-line').nth(await page.evaluate(() => [...document.querySelectorAll('.qe-editable-run, .qe-page-line')].findIndex(s => /\p{L}{2}/u.test(s.textContent))));
   await target.tap(); await page.waitForTimeout(300);
   await page.keyboard.press('End'); await page.keyboard.type(' PDFREE'); await page.keyboard.press('Enter');
   t = Date.now();
+  const saveFrom = await page.evaluate(() => performance.now());
   await page.click('#qeModalSaveBtn');
   row.save = await page.waitForFunction(() => {
     if (window.__pdf) return 'saved';
@@ -35,6 +43,7 @@ if (row.open === 'opened') {
     return /error|fail|couldn|cannot|can't|unsupported/i.test(txt) ? 'error: ' + txt.slice(0, 120) : false;
   }, null, { timeout: 300000 }).then(h => h.jsonValue(), () => crashed ? 'crashed' : 'timeout');
   row.saveS = Math.round((Date.now() - t) / 1000);
+  row.saveLong = await longIn(saveFrom, await page.evaluate(() => performance.now()));
 }
 row.heapPeakMB = Math.round((await page.evaluate(() => window.__heap).catch(() => 0)) / 1e6);
 if (errors.length) row.pageErrors = errors.slice(0, 3);
