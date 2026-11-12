@@ -81,6 +81,28 @@ await test('a file removed while waiting: nothing starts', async () => {
   if (started) throw new Error('a conversion started for a file no longer there');
 });
 
+// A file chosen or dropped before the tool page's first frame (a slow phone
+// draws it late) was added, then wiped by the tool's deferred setup — no
+// file, no message (pdfree.io, 2026-11-13: 3 of ~60 fresh loads in a row).
+for (const tool of ['merge-pdf', 'quick-edit-pdf']) {
+  await test(`${tool}: a file added before the first frame is kept`, async () => {
+    const ctx = await browser.newContext();
+    const page = await ctx.newPage();
+    await page.addInitScript(() => {
+      const start = performance.now(), raf = window.requestAnimationFrame.bind(window);
+      window.requestAnimationFrame = cb => performance.now() - start < 1500
+        ? setTimeout(() => raf(cb), 1500 - (performance.now() - start)) : raf(cb);
+    });
+    await page.goto(`${BASE_URL}/${tool}/`, { waitUntil: 'domcontentloaded' });
+    await page.setInputFiles('#fileInput', file);
+    await page.waitForTimeout(3000);
+    const kept = await page.evaluate(async () => (await import('/js/files.js')).selectedFiles.length);
+    const shown = await page.locator('#fileList > *').count();
+    await ctx.close();
+    if (kept !== 1 || shown !== 1) throw new Error(`${kept} files kept, ${shown} shown after the page finished setting up`);
+  });
+}
+
 await browser.close();
 fs.unlinkSync(file);
 console.log(`\nTests: ${passed + failed} | ✓ ${passed} | ${failed} failed`);
