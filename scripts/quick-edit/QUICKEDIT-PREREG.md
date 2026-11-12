@@ -66,3 +66,9 @@ Noto Sans SC (js/vendor/noto, OFL) embedded as a subset, a promo line at the foo
 zh-book-300.pdf — sha256 83d238fb759ee222508d56f341f2fc495a48317baba304a8e39b42601be1de8f, 1.33 MB.
 Run: Chromium, 390×664, mobile + touch, CPU throttled 4× (CDP), the same open → edit → save as run.mjs;
 JS heap (performance.memory) sampled every second; give up after 300 s for either step.
+
+## Phone case — BASELINE (pdfree.io e0491bf6, 2026-11-12)
+zh-book-300.pdf, 390×664 mobile, CPU 4×: editor opened in 21 s (6,961 editable runs); Save **refused** after 6 s —
+"characters can't be rendered by Word→PDF's current font". No crash. JS heap of the page ≤ 10 MB (performance.memory
+sees only the page's main heap, not pdf.js's worker — a lower bound, not the total).
+→ Criterion 6 not met: the zh user's case can't be saved at all today. Step 0 complete.
