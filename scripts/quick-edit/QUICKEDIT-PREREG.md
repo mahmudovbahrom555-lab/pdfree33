@@ -87,3 +87,14 @@ MuPDF subset 1.4 s + save 2.8 s.
 | S4 | error messages still in the page's language (zh/ru checked) | yes |
 | S5 | open: longest long task while the editor opens, phone case | ≤ 250 ms (baseline 237 / 113) |
 Time reduction is NOT a criterion of this step (worker first; less work later, measured separately).
+
+## Step 3 — RESULT (branch feat/quick-edit-worker, js/quickEditWorker.js, 2026-11-12)
+| # | Bar | Before (main) | After |
+|---|---|---|---|
+| S1 longest main-thread block during Save (phone, 2 runs) | ≤ 250 ms | 4,715 / 4,699 ms | **153 / 155 ms** (after the i18n follow-up: 177 / 154) — met |
+| S2 Save time phone | ≤ 18 s | 15 / 15 s | 5 / 5 s — met (hypothesis: CDP CPU throttling may not slow worker threads; the drop is partly the measurement, not claimed as a speed-up) |
+| S3 same results, 32 docs main vs branch, same harness | no regression | — | **0 per-document differences** (open, save, pages, text kept, edit present, layout); desktop save median 586 → 632 ms — met |
+| S4 messages in the page's language | yes | engine refusals en/zh only | ru/zh/en checked: worker refusals now i18n keys in all 15 locales — met |
+| S5 open longest block | ≤ 250 ms | 237 / 113 | 217 / 148, 229 / 105 — met |
+Corpus note: 32 of the 33 documents (gip-31's original was deleted from scratch with old compress outputs; dropped from BOTH runs).
+The harness waits for editable lines, so Internet Archive scans (hidden OCR layer → honest "scan" note) count as "timeout" in both.
