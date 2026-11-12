@@ -282,8 +282,13 @@ function showTool(tool, pushHistory = true, preFiles = null) {
     history.pushState({ tool }, lt.title, TOOL_SLUGS[tool] || `/${tool}-pdf/`);
   }
 
-  // Heavy DOM work deferred to after first paint — keeps INP under 200ms
+  // Heavy DOM work deferred to after first paint — keeps INP under 200ms.
+  // A file chosen or dropped before that frame (a slow phone draws the tool
+  // page late) is added again after the reset below instead of being wiped
+  // with no message (2026-11-13).
+  const before = [...selectedFiles];
   requestAnimationFrame(() => {
+    const early = selectedFiles.filter(f => !before.includes(f));
     renderToolHeader(lt);
     setCurrentTool(tool, lt.accept);
     setDropHint(lt.accept);
@@ -291,7 +296,7 @@ function showTool(tool, pushHistory = true, preFiles = null) {
     id('fileInput').multiple = lt.multi;
     id('fileInput').accept   = lt.accept;
     resetState();   // already calls hideAllToolOptions internally
-    if (preFiles) addFiles(preFiles);
+    if (preFiles || early.length) addFiles([...(preFiles || []), ...early]);
   });
 }
 
