@@ -59,3 +59,10 @@ dropped the edit — the harness was fixed to press Enter, as the site's own e2e
 Time: open median 2.8 s, save median 1.4 s (desktop).
 **Reading:** the rebuild path re-lays out every page; it cannot meet 3 and 5 by design and refuses non-Latin
 scripts — the zh user's files would not save at all. Step 2 = in-place editing (MuPDF) as the default path.
+
+## Phone case — the book, fixed before its run (2026-11-12)
+scripts/quick-edit/make_book.py: 300 pages, A5, body text from tests/corpus/real/wikipedia-zh-pdf.pdf (CC BY-SA),
+Noto Sans SC (js/vendor/noto, OFL) embedded as a subset, a promo line at the foot of every page.
+zh-book-300.pdf — sha256 83d238fb759ee222508d56f341f2fc495a48317baba304a8e39b42601be1de8f, 1.33 MB.
+Run: Chromium, 390×664, mobile + touch, CPU throttled 4× (CDP), the same open → edit → save as run.mjs;
+JS heap (performance.memory) sampled every second; give up after 300 s for either step.
