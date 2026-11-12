@@ -19,7 +19,7 @@
 // ============================================================
 
 import { originalLines } from './quickEditOriginal.js';
-import { copyText } from './quickEditCopyText.js';
+import { t } from './i18n.js';
 
 // → { edits(): [{ line, text }], count(): number, destroy() }
 export function createPageEditor(stage, original, { onChange } = {}) {
@@ -31,12 +31,12 @@ export function createPageEditor(stage, original, { onChange } = {}) {
   root.className = 'qe-page-editor';
   root.innerHTML = `
     <div class="qe-page-nav">
-      <button type="button" class="qe-copies__button" data-prev aria-label="${copyText('Previous page', '上一页')}">‹</button>
+      <button type="button" class="qe-copies__button" data-prev aria-label="${t('quickedit_prev_page')}">‹</button>
       <span data-page-label role="status"></span>
-      <button type="button" class="qe-copies__button" data-next aria-label="${copyText('Next page', '下一页')}">›</button>
-      <button type="button" class="qe-copies__button" data-zoom aria-label="${copyText('Zoom', '缩放')}">100%</button>
+      <button type="button" class="qe-copies__button" data-next aria-label="${t('quickedit_next_page')}">›</button>
+      <button type="button" class="qe-copies__button" data-zoom aria-label="${t('quickedit_zoom')}">100%</button>
     </div>
-    <p class="qe-page-hint">${copyText('Tap a line to change its text. Everything else on the page stays exactly as it is.', '点按一行即可修改文字，页面上的其他内容保持不变。')}</p>
+    <p class="qe-page-hint">${t('quickedit_page_hint')}</p>
     <div class="qe-original-page" data-page></div>`;
   stage.appendChild(root);
   const view = root.querySelector('[data-page]');
@@ -91,7 +91,7 @@ export function createPageEditor(stage, original, { onChange } = {}) {
 
   async function render() {
     const mine = ++version;
-    label.textContent = copyText(`Page ${pageIndex + 1} of ${total}`, `第 ${pageIndex + 1} / ${total} 页`);
+    label.textContent = t('quickedit_page_of', { n: pageIndex + 1, total });
     prev.disabled = pageIndex === 0;
     next.disabled = pageIndex >= total - 1;
     const page = await original.pdf.getPage(pageIndex + 1);
@@ -121,8 +121,8 @@ export function createPageEditor(stage, original, { onChange } = {}) {
       const note = document.createElement('p');
       note.className = 'qe-page-empty';
       note.textContent = hiddenOnly
-        ? copyText('This page is a scan: its text is hidden under the picture, so changing it would not change what you see.', '此页是扫描件：文字隐藏在图片下方，修改它不会改变看到的内容。')
-        : copyText('This page has no text to edit — it is a picture (a scan). OCR can turn it into text first.', '此页没有可编辑的文字（是图片或扫描件）。可先用 OCR 识别成文字。');
+        ? t('quickedit_page_scan_hidden')
+        : t('quickedit_page_no_text');
       view.appendChild(note);
     }
     for (const line of lines) {

@@ -224,16 +224,22 @@ function _dropPageEditor() {
 }
 
 // In place when the file has a text layer on its first pages and isn't a form
-// or signed (openOriginalPdf refuses those): nothing else in the file changes
+// or signed (openOriginalPdf refuses those): nothing else in the file changes.
+// Arabic, Persian and Hebrew can't be written in place yet (no shaping), so a
+// mostly right-to-left file keeps the previous editor and its script warning
+// rather than failing only after the edit
 async function _openInPlace(file, container, myGen) {
   let original;
   try { original = await openOriginalPdf(file); } catch { return false; }
   try {
-    let text = false;
-    for (let i = 1; i <= Math.min(3, original.pdf.numPages) && !text; i++) {
-      text = originalLines((await (await original.pdf.getPage(i)).getTextContent()).items).length > 0;
+    let letters = 0, rtl = 0;
+    for (let i = 1; i <= Math.min(3, original.pdf.numPages); i++) {
+      for (const line of originalLines((await (await original.pdf.getPage(i)).getTextContent()).items)) {
+        letters += (line.text.match(/\p{L}/gu) || []).length;
+        rtl += (line.text.match(/[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/gu) || []).length;
+      }
     }
-    if (!text || myGen !== _generation) { await original.pdf.destroy(); return myGen !== _generation; }
+    if (!letters || rtl > letters * 0.3 || myGen !== _generation) { await original.pdf.destroy(); return myGen !== _generation; }
   } catch { await original.pdf.destroy().catch(() => {}); return false; }
   _pageOriginal = original;
   _loading = false;
@@ -502,8 +508,8 @@ async function _openModal(docContainer, originalOnly = false) {
     rebuild.type = 'button';
     rebuild.id = 'qeUseRebuild';
     rebuild.className = 'qe-copies__button';
-    rebuild.textContent = copyText('Use the previous editor', '使用旧版编辑器');
-    rebuild.title = copyText('Rebuilds the document as editable text — for files the page editor can\'t change', '将文档重建为可编辑文本 — 适用于页面编辑器无法修改的文件');
+    rebuild.textContent = t('quickedit_use_rebuild');
+    rebuild.title = t('quickedit_use_rebuild_title');
     rebuild.addEventListener('click', () => void _switchToRebuild());
     toggle?.before(rebuild);
     const stage = id('qeModalStage');

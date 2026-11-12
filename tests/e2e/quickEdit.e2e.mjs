@@ -240,8 +240,9 @@ await test('Save on a document with intact RTL text shows the same unsupported-s
   });
   await page.waitForSelector('#fileInput', { state: 'attached' });
   await page.setInputFiles('#fileInput', UNSUPPORTED_SCRIPT_PDF);
-  await useRebuildEditor(page);
+  // a mostly right-to-left file can't be written in place yet: it opens the previous editor directly
   await page.waitForSelector('.qe-modal--open .qe-editable-run', { timeout: 20000 });
+  expect(await page.locator('#qeUseRebuild').count()).toBe(0);
   await page.click('#qeModalSaveBtn');
   await page.waitForSelector('#successCard', { timeout: 20000 });
   await page.waitForTimeout(300);
@@ -901,6 +902,20 @@ await test('in place: Chinese text can be typed into a Latin-font line and is sa
     expect(pages.length).toBe(3);
     expect(pages[0].replace(/\s/g, '').includes('第一章王小明')).toBeTruthy();
     expect(pages[0].includes('Chapter 1')).toBeFalsy();
+  } finally {
+    await page.close();
+  }
+});
+
+await test('in place in another language: the page editor speaks it (Russian page)', async () => {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  try {
+    await page.goto(`${BASE_URL}/ru/redaktirovat-tekst-pdf/`);
+    await page.setInputFiles('#fileInput', { name: 'book.pdf', mimeType: 'application/pdf', buffer: await inPlaceDoc() });
+    await page.waitForSelector('.qe-modal--open .qe-page-line', { timeout: 20000 });
+    expect(await page.locator('.qe-page-hint').innerText()).toBe('Нажмите на строку, чтобы изменить её текст. Всё остальное на странице останется как есть.');
+    expect(await page.locator('[data-page-label]').innerText()).toBe('Страница 1 из 3');
+    expect(await page.locator('#qeUseRebuild').innerText()).toBe('Использовать прежний редактор');
   } finally {
     await page.close();
   }

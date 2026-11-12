@@ -4436,17 +4436,17 @@ async function _runQuickEditInPlace(file, { original, edits }) {
   const done = () => { isProcessing = false; setFilesLocked(false); hideCancelBtn(); };
   if (!edits.length) {
     done();
-    _handleError('quickEdit', copyText('Change at least one line first: tap a line in the editor and type.', '请先修改至少一行：在编辑器中点按一行并输入。'), 'no_edits');
+    _handleError('quickEdit', t('quickedit_no_edits'), 'no_edits');
     return;
   }
-  setProgress(30, copyText('Replacing the edited lines…', '正在替换修改的文本行…'));
+  setProgress(30, t('quickedit_replacing'));
   let blob;
   try {
     const engine = await import('./quickEditOriginal.js');
     const lines = edits.map(e => e.line);
     const prepared = await engine.prepareOriginalCopy(original, lines);
     if (!isProcessing) return;
-    setProgress(60, copyText('Checking every changed page…', '正在检查每个修改过的页面…'));
+    setProgress(60, t('quickedit_checking_pages'));
     const planned = await engine.planOriginalCopies(prepared,
       [{ recipientIndex: null, changes: edits.map(({ line, text }) => ({ line, text, parts: null, appearance: null })) }],
       true, () => !isProcessing);

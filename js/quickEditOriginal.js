@@ -1,4 +1,5 @@
 import { copyText } from './quickEditCopyText.js';
+import { t } from './i18n.js';
 import { loadFontkit, loadPdfLib } from './lazyLibs.js';
 import { loadPdfJs } from './pdfjsLoader.js';
 
@@ -269,7 +270,8 @@ export async function planOriginalCopies(prepared, copies, allowSmallerText, isC
           selected = await loadFont(path);
         }
         if (points.some(point => !selected.characters.has(point))) {
-          throw new Error(copyText(`${prefix}: the replacement font does not contain every character.`, `${prefix}：替代字体缺少部分字符。`));
+          throw new Error(recipientIndex == null ? t('quickedit_missing_chars', { page })
+            : copyText(`${prefix}: the replacement font does not contain every character.`, `${prefix}：替代字体缺少部分字符。`));
         }
         const width = selected.font.widthOfTextAtSize(part.text, size);
         runs.push({ ...part, path, size, width, color: style?.color ?? source.color });
@@ -294,7 +296,7 @@ export async function planOriginalCopies(prepared, copies, allowSmallerText, isC
       }
       if (!(scale > 0) || (scale < 0.999 && (!allowSmallerText || scale < 0.85))) {
         throw new Error(recipientIndex == null
-          ? copyText(`${prefix}: the new text is too long for its line — shorten it a little.`, `${prefix}：新文字超出了这一行的宽度，请稍微缩短。`)
+          ? t('quickedit_line_too_long', { page })
           : copyText(`${prefix}: the name does not fit the selected line.`, `${prefix}：姓名放不进选中的文本行。`));
       }
       for (const run of runs) {
