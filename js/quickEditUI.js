@@ -31,6 +31,8 @@ import { loadPdfJs }                    from './pdf2jpgUI.js';
 import { renderDocxToDom }              from './docxToPdfCore.js';
 import { _buildPdf2WordDocxBlob }       from './processor.js';
 import { bindQuickEditCopies } from './quickEditCopies.js';
+import { openOriginalPdf, originalLines } from './quickEditOriginal.js';
+import { createPageEditor } from './quickEditPage.js';
 import { copyText } from './quickEditCopyText.js';
 import { RECIPIENT_LIMIT } from './quickEditRecipients.js';
 import { t }                            from './i18n.js';
@@ -48,6 +50,11 @@ let _container  = null; // the outer #quickEditOptions panel
 let _fileLabel  = '';
 let _sourceFile = null;
 let _docContainer = null; // the live docx-preview render target — lives INSIDE the modal while open
+// In-place editing (quickEditPage.js), tried first: the PDF itself, edited line
+// by line; the rebuild editor above only when a file can't be edited in place
+let _pageOriginal = null;
+let _pageEditor   = null;
+let _forceRebuild = false;   // the person chose the rebuild editor for this file
 let _atlasEri   = null; // {eri, components, findings} from _buildPdf2WordDocxBlob — pre-edit gate
 let _modal      = null;
 let _clearCopyFields = null;
@@ -78,14 +85,16 @@ export function initQuickEditOptions(file) {
     void _openModal(null, true);
     return;
   }
+  _forceRebuild = false;
   _prepareAndRender(file, el);
 }
 
 export function getQuickEditParams() {
   return {
     loading:        _loading,
-    hasOpened:      !!_docContainer,
+    hasOpened:      !!_docContainer || !!_pageEditor,
     editedContainer: _docContainer,
+    pageEdit:        _pageEditor ? { original: _pageOriginal, edits: _pageEditor.edits() } : null,
   };
 }
 
@@ -93,6 +102,8 @@ export function hideQuickEditOptions() {
   const el = id('quickEditOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
   _closeModal({ silent: true });
+  _dropPageEditor();
+  _forceRebuild = false;
   _loading = false;
   _fileLabel = '';
   _sourceFile = null;
@@ -205,11 +216,49 @@ function _bindTriggerEvents(container) {
 // ── Build: PDF -> DOCX blob (reusing pdf2word's own engine, text mode
 // only — image mode has no text runs to click-edit) -> render for preview ──
 
+function _dropPageEditor() {
+  _pageEditor?.destroy();
+  _pageEditor = null;
+  void _pageOriginal?.pdf.destroy().catch(() => {});
+  _pageOriginal = null;
+}
+
+// In place when the file has a text layer on its first pages and isn't a form
+// or signed (openOriginalPdf refuses those): nothing else in the file changes
+async function _openInPlace(file, container, myGen) {
+  let original;
+  try { original = await openOriginalPdf(file); } catch { return false; }
+  try {
+    let text = false;
+    for (let i = 1; i <= Math.min(3, original.pdf.numPages) && !text; i++) {
+      text = originalLines((await (await original.pdf.getPage(i)).getTextContent()).items).length > 0;
+    }
+    if (!text || myGen !== _generation) { await original.pdf.destroy(); return myGen !== _generation; }
+  } catch { await original.pdf.destroy().catch(() => {}); return false; }
+  _pageOriginal = original;
+  _loading = false;
+  container.innerHTML = _triggerHTML();
+  _bindTriggerEvents(container);
+  await _openModal();
+  return true;
+}
+
+// From the in-place editor to the rebuild one, for a file the page editor
+// can't change: the same file, rebuilt once (until another file is chosen)
+async function _switchToRebuild() {
+  const file = _sourceFile, container = _container;
+  _closeModal({ silent: true });
+  _dropPageEditor();
+  _forceRebuild = true;
+  await _prepareAndRender(file, container);
+}
+
 async function _prepareAndRender(file, container) {
   _loading = true;
   _atlasEri = null;
   const myGen = ++_generation;
   _closeModal({ silent: true }); // a new file replaces any editor already open for a previous one
+  _dropPageEditor();
   _sourceFile = file;
   _fileLabel = file.name;
   _container = container;
@@ -224,6 +273,7 @@ async function _prepareAndRender(file, container) {
     // follows) — it only checks for it, doesn't load it itself.
     await loadPdfJs();
     if (myGen !== _generation) return;
+    if (!_forceRebuild && await _openInPlace(file, container, myGen)) return;
 
     // Reuses pdf2word's own conversion engine — text mode only, since
     // image mode produces no text runs to click-edit at all (Atlas ERI
@@ -298,6 +348,7 @@ async function _prepareAndRender(file, container) {
 
 async function _openModal(docContainer, originalOnly = false) {
   if (_modal) return;
+  const pageMode = !!_pageOriginal && !originalOnly;
   const active = document.activeElement;
   _prevFocus = active && typeof active.focus === 'function' ? active : null;
   _modal = document.createElement('div');
@@ -441,6 +492,27 @@ async function _openModal(docContainer, originalOnly = false) {
   // saved in module state, so reopening resumes the SAME live DOM (and any
   // edits already made to it, once Stage 3 lands) rather than re-rendering
   // from scratch.
+  // In place: the page editor (kept between openings, its edits too). Personalized
+  // copies open on the original layout (the same engine); the rebuild editor
+  // stays one press away for a file the page editor can't change
+  if (pageMode) {
+    const toggle = _modal.querySelector('[data-copies-toggle]');
+    toggle?.addEventListener('click', () => { _closeModal({ silent: true }); void _openModal(null, true); });
+    const rebuild = document.createElement('button');
+    rebuild.type = 'button';
+    rebuild.id = 'qeUseRebuild';
+    rebuild.className = 'qe-copies__button';
+    rebuild.textContent = copyText('Use the previous editor', '使用旧版编辑器');
+    rebuild.title = copyText('Rebuilds the document as editable text — for files the page editor can\'t change', '将文档重建为可编辑文本 — 适用于页面编辑器无法修改的文件');
+    rebuild.addEventListener('click', () => void _switchToRebuild());
+    toggle?.before(rebuild);
+    const stage = id('qeModalStage');
+    if (_pageEditor) stage.appendChild(_pageEditor.root);
+    else _pageEditor = createPageEditor(stage, _pageOriginal);
+    id('qeModalClose')?.focus();
+    return;
+  }
+
   const target = originalOnly ? document.createElement('div') : docContainer || _docContainer;
   if (target) {
     id('qeModalStage').appendChild(target);
@@ -714,7 +786,7 @@ function _closeModal({ silent = false } = {}) {
   }
   _setBackgroundInert(false);
   if (!silent && _container) {
-    _container.innerHTML = _docContainer ? _triggerHTML()
+    _container.innerHTML = (_docContainer || _pageEditor) ? _triggerHTML()
       : _atlasEri && !_atlasEri.error && _atlasEri.eri < _ATLAS_BLOCK_THRESHOLD ? _blockedHTML(_atlasEri) : _sourceOnlyButton();
     _bindTriggerEvents(_container);
   }

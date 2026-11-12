@@ -4374,8 +4374,9 @@ async function _runDocx2Pdf(filesSnapshot, _extraParams) {
 // container element straight through extraParams — safe specifically
 // because this tool runs entirely main-thread, no postMessage/structured-
 // clone boundary to survive.
-async function _runQuickEdit(filesSnapshot, { editedContainer } = {}) {
+async function _runQuickEdit(filesSnapshot, { editedContainer, pageEdit } = {}) {
   const file = filesSnapshot[0];
+  if (pageEdit) { await _runQuickEditInPlace(file, pageEdit); return; }
   if (!editedContainer) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
     _handleError('quickEdit', 'Open the editor first.');
@@ -4425,6 +4426,42 @@ async function _runQuickEdit(filesSnapshot, { editedContainer } = {}) {
 
   document.dispatchEvent(new CustomEvent('pdfree:success', {
     detail: { tool: 'quickEdit', blob, desc, filename }
+  }));
+}
+
+// In place (quickEditPage.js): the edited lines' glyphs removed by MuPDF, the new
+// text drawn where they were, every changed page read back before the file is
+// given (quickEditOriginal.js) — the rest of the PDF is the original's.
+async function _runQuickEditInPlace(file, { original, edits }) {
+  const done = () => { isProcessing = false; setFilesLocked(false); hideCancelBtn(); };
+  if (!edits.length) {
+    done();
+    _handleError('quickEdit', copyText('Change at least one line first: tap a line in the editor and type.', '请先修改至少一行：在编辑器中点按一行并输入。'), 'no_edits');
+    return;
+  }
+  setProgress(30, copyText('Replacing the edited lines…', '正在替换修改的文本行…'));
+  let blob;
+  try {
+    const engine = await import('./quickEditOriginal.js');
+    const lines = edits.map(e => e.line);
+    const prepared = await engine.prepareOriginalCopy(original, lines);
+    if (!isProcessing) return;
+    setProgress(60, copyText('Checking every changed page…', '正在检查每个修改过的页面…'));
+    const planned = await engine.planOriginalCopies(prepared,
+      [{ recipientIndex: null, changes: edits.map(({ line, text }) => ({ line, text, parts: null, appearance: null })) }],
+      true, () => !isProcessing);
+    if (!isProcessing || !planned) return;
+    blob = await engine.writeOriginalCopy(prepared, planned[0]);
+  } catch (err) {
+    done();
+    _handleError('quickEdit', err.message, 'inplace_failed');
+    return;
+  }
+  if (!isProcessing) return;
+  done();
+  setProgress(100, t('prog_done'));
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: { tool: 'quickEdit', blob, desc: fmtSize(blob.size), filename: file.name.replace(/\.pdf$/i, '-edited.pdf') },
   }));
 }
 

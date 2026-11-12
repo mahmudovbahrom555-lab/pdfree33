@@ -143,7 +143,9 @@ await test('Quick Edit PDF opens the editor on the skeleton PDF (Atlas gate not 
   await page.goto(`${BASE_URL}/quick-edit-pdf/`, { waitUntil: 'load' });
   await page.waitForSelector('#fileInput', { state: 'attached' });
   await page.setInputFiles('#fileInput', { name: 'skeleton.pdf', mimeType: 'application/pdf', buffer: skeletonPdfBuf });
-  await page.waitForSelector('.qe-modal--open', { timeout: 20000 });
+  // a text layer opens the page editor (in place); this file tests the rebuild editor behind it
+  await page.locator('.qe-modal--open #qeUseRebuild').click({ timeout: 20000 });
+  await page.waitForSelector('.qe-modal--open .qe-editable-run', { timeout: 20000 });
   quickEditPage = page;
 });
 
