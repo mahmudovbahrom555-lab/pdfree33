@@ -93,9 +93,12 @@ function redactRect(sheet, line, pageHeight) {
     text.destroy();
   }
   const baseline = pageHeight - line.y;
+  // In MuPDF's reading order, not sorted by x: a ligature's parts share one
+  // origin ("ff" + "e" in "difference" all at one x) and a sort mixed them up —
+  // "difefrence" no longer matched the line (2026-11-12).
   const selected = glyphs.filter(({ origin }) =>
     Math.abs(origin[1] - baseline) <= 0.5 && origin[0] >= line.x - 0.3 && origin[0] < line.right - 0.1
-  ).sort((a, b) => a.origin[0] - b.origin[0]);
+  );
   const normalized = value => value.normalize('NFKC').replace(/\s+/g, '');
   if (!selected.length || normalized(selected.map(glyph => glyph.character).join('')) !== normalized(line.text)) {
     throw new Error(copyText(`Page ${line.page + 1}: the selected line could not be matched to the original text.`, `第 ${line.page + 1} 页：无法在原始 PDF 中匹配选中的文本行。`));
@@ -338,14 +341,26 @@ export async function writeOriginalCopy(prepared, changes) {
       const outputPage = await check.getPage(pageIndex + 1);
       const after = originalLines((await outputPage.getTextContent()).items);
       const pageChanges = changes.filter(({ line }) => line.page === pageIndex);
-      const signature = (line, text) => JSON.stringify([
-        Math.round(line.x * 10), Math.round(line.y * 10), text.replace(/\s+/g, ' ').trim(),
-      ]);
-      const expected = before.map(line => {
+      // Per baseline, its text with every space removed: MuPDF rewrites the page's
+      // numbers to a tenth of a point (a whole line can move 0.1 pt) and pdf.js may
+      // split a line into pieces differently once a gap changes by a fraction of a
+      // point — neither is a change a reader sees, and both failed the check on 8 of
+      // 31 corpus documents (2026-11-12). A word gained, lost or changed still does.
+      const byBaseline = entries => {
+        const rows = [];
+        for (const { y, x, text } of entries.sort((a, b) => b.y - a.y || a.x - b.x)) {
+          let row = rows.find(r => Math.abs(r.y - y) <= 0.5);
+          if (!row) rows.push(row = { y, parts: [] });
+          row.parts.push({ x, text });
+        }
+        return rows.map(r => r.parts.sort((a, b) => a.x - b.x).map(p => p.text).join('').replace(/\s+/g, ''))
+          .filter(Boolean).sort();
+      };
+      const expected = byBaseline(before.map(line => {
         const edit = pageChanges.find(change => !change.line.placed && change.line.x === line.x && change.line.y === line.y);
-        return signature(line, edit?.text ?? line.text);
-      }).concat(pageChanges.filter(change => change.line.placed).map(change => signature(change.line, change.text))).sort();
-      const actual = after.map(line => signature(line, line.text)).sort();
+        return { y: line.y, x: line.x, text: edit?.text ?? line.text };
+      }).concat(pageChanges.filter(change => change.line.placed).map(change => ({ y: change.line.y, x: change.line.x, text: change.text }))));
+      const actual = byBaseline(after.map(line => ({ y: line.y, x: line.x, text: line.text })));
       if (actual.length !== expected.length || actual.some((value, index) => value !== expected[index])) {
         throw new Error(copyText(`Page ${pageIndex + 1}: verification found an unexpected text change. No file was exported.`, `第 ${pageIndex + 1} 页：检查发现意外的文字变化，未导出文件。`));
       }
