@@ -79,3 +79,17 @@ FROM pdfree_events
 WHERE timestamp > NOW() - INTERVAL '15' DAY
   AND (blob3 = '<session-1>' OR blob3 = '<session-2>' OR blob3 = '<session-3>')
 ORDER BY session, timestamp LIMIT 300;
+
+
+-- 8. Growth week over week — people (page loads with a tool open), all countries
+--    and Ethiopia apart (one organization's batch work, 2026-10-28 on: it swings
+--    the total both ways). Keep the numbers week by week; one week is not a trend.
+SELECT if(timestamp > NOW() - INTERVAL '7' DAY, 'this', 'prev') AS period,
+  if(blob4 = 'country=ET', 'ET', 'rest') AS part, COUNT(DISTINCT blob3) AS people
+FROM pdfree_events
+WHERE timestamp > NOW() - INTERVAL '14' DAY AND index1 = 'Tool Open'
+GROUP BY period, part ORDER BY part, period;
+--    Baseline 2026-11-12: prev 10,055 → this 11,091 (ET 1,224 → 653).
+--    With it, read the Workers daily request peak in the Cloudflare dashboard
+--    (Workers → Metrics): at 50,000 a day (half the free 100,000; past it the
+--    whole site errors until 00:00 UTC) the owner moves to the paid plan.
