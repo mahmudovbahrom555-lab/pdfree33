@@ -26,6 +26,7 @@
 // ============================================================
 
 import { readFileSync, readdirSync, statSync, existsSync } from 'fs';
+import './toolPageTitle.test.js';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
