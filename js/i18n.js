@@ -1316,6 +1316,15 @@ export const EN = {
   quickedit_checking_pages:      'Checking every changed page…',
   quickedit_line_too_long:       'Page {page}: the new text is too long for its line — shorten it a little.',
   quickedit_missing_chars:       'Page {page}: the replacement font does not contain every character of the new text.',
+  quickedit_err_font:            'The replacement font could not be loaded.',
+  quickedit_err_signed:          'Preserve layout is unavailable for signed PDFs.',
+  quickedit_err_layout:          'Page {page}: this line uses a layout the replacement cannot preserve.',
+  quickedit_err_no_match:        'Page {page}: the selected line could not be matched to the original text.',
+  quickedit_err_nearby:          'Page {page}: replacing this line may remove nearby text.',
+  quickedit_err_mixed_style:     'Page {page}: the selected line has mixed text styling.',
+  quickedit_err_geometry:        'Page {page}: this page uses unsupported geometry.',
+  quickedit_err_page_count:      'The page count changed. No file was exported.',
+  quickedit_err_verify:          'Page {page}: verification found an unexpected text change. No file was exported.',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'Failed to load PDF renderer. Check your internet connection.',
