@@ -1,4 +1,5 @@
 import { copyText } from './quickEditCopyText.js';
+import { t } from './i18n.js';
 import { loadFontkit, loadPdfLib } from './lazyLibs.js';
 import { loadPdfJs } from './pdfjsLoader.js';
 
@@ -21,7 +22,10 @@ function loadReplacementFont(path) {
   return fontPromises.get(path);
 }
 
-export function originalLines(items) {
+// splitFonts: a line keeps one font and size per piece (the in-place editor:
+// a mixed line — a bold word in a sentence — is edited piece by piece, since
+// the replacement can't keep two styles in one run)
+export function originalLines(items, { splitFonts = false } = {}) {
   const baselines = new Map();
   for (const item of items) {
     if (!item.str?.trim() && item.str !== ' ') continue;
@@ -39,7 +43,8 @@ export function originalLines(items) {
     let line;
     for (const item of row.sort((a, b) => a.x - b.x)) {
       if (!line || item.x - line.right > Math.max(18, item.size * 2) ||
-          Math.abs(item.skew - line.skew) > 0.01) {
+          Math.abs(item.skew - line.skew) > 0.01 ||
+          (splitFonts && (item.fontName !== line.fontName || Math.abs(item.size - line.size) > 0.01))) {
         line = { text: '', x: item.x, y: item.y, right: item.x, size: item.size,
           fontName: item.fontName, mixed: false, skew: item.skew };
         lines.push(line);
@@ -93,9 +98,12 @@ function redactRect(sheet, line, pageHeight) {
     text.destroy();
   }
   const baseline = pageHeight - line.y;
+  // In MuPDF's reading order, not sorted by x: a ligature's parts share one
+  // origin ("ff" + "e" in "difference" all at one x) and a sort mixed them up —
+  // "difefrence" no longer matched the line (2026-11-12).
   const selected = glyphs.filter(({ origin }) =>
     Math.abs(origin[1] - baseline) <= 0.5 && origin[0] >= line.x - 0.3 && origin[0] < line.right - 0.1
-  ).sort((a, b) => a.origin[0] - b.origin[0]);
+  );
   const normalized = value => value.normalize('NFKC').replace(/\s+/g, '');
   if (!selected.length || normalized(selected.map(glyph => glyph.character).join('')) !== normalized(line.text)) {
     throw new Error(copyText(`Page ${line.page + 1}: the selected line could not be matched to the original text.`, `第 ${line.page + 1} 页：无法在原始 PDF 中匹配选中的文本行。`));
@@ -240,7 +248,9 @@ export async function planOriginalCopies(prepared, copies, allowSmallerText, isC
     for (const { line, text, parts, appearance } of changes) {
       const source = line.placed ? { font: 'LiberationSans-Regular.ttf', color: [0, 0, 0] } : prepared.plans.get(line);
       const page = line.page + 1;
-      const prefix = copyText(`Recipient ${recipientIndex + 1}, page ${page}`, `第 ${recipientIndex + 1} 位收件人，第 ${page} 页`);
+      // recipientIndex null: an in-place edit (quickEditPage.js), no recipients
+      const prefix = recipientIndex == null ? copyText(`Page ${page}`, `第 ${page} 页`)
+        : copyText(`Recipient ${recipientIndex + 1}, page ${page}`, `第 ${recipientIndex + 1} 位收件人，第 ${page} 页`);
       const runs = [];
       for (const part of appearance ? parts : [{ text, name: true }]) {
         if (!part.text) continue;
@@ -260,7 +270,8 @@ export async function planOriginalCopies(prepared, copies, allowSmallerText, isC
           selected = await loadFont(path);
         }
         if (points.some(point => !selected.characters.has(point))) {
-          throw new Error(copyText(`${prefix}: the replacement font does not contain every character.`, `${prefix}：替代字体缺少部分字符。`));
+          throw new Error(recipientIndex == null ? t('quickedit_missing_chars', { page })
+            : copyText(`${prefix}: the replacement font does not contain every character.`, `${prefix}：替代字体缺少部分字符。`));
         }
         const width = selected.font.widthOfTextAtSize(part.text, size);
         runs.push({ ...part, path, size, width, color: style?.color ?? source.color });
@@ -284,7 +295,9 @@ export async function planOriginalCopies(prepared, copies, allowSmallerText, isC
         }
       }
       if (!(scale > 0) || (scale < 0.999 && (!allowSmallerText || scale < 0.85))) {
-        throw new Error(copyText(`${prefix}: the name does not fit the selected line.`, `${prefix}：姓名放不进选中的文本行。`));
+        throw new Error(recipientIndex == null
+          ? t('quickedit_line_too_long', { page })
+          : copyText(`${prefix}: the name does not fit the selected line.`, `${prefix}：姓名放不进选中的文本行。`));
       }
       for (const run of runs) {
         if (run.name) {
@@ -338,14 +351,26 @@ export async function writeOriginalCopy(prepared, changes) {
       const outputPage = await check.getPage(pageIndex + 1);
       const after = originalLines((await outputPage.getTextContent()).items);
       const pageChanges = changes.filter(({ line }) => line.page === pageIndex);
-      const signature = (line, text) => JSON.stringify([
-        Math.round(line.x * 10), Math.round(line.y * 10), text.replace(/\s+/g, ' ').trim(),
-      ]);
-      const expected = before.map(line => {
+      // Per baseline, its text with every space removed: MuPDF rewrites the page's
+      // numbers to a tenth of a point (a whole line can move 0.1 pt) and pdf.js may
+      // split a line into pieces differently once a gap changes by a fraction of a
+      // point — neither is a change a reader sees, and both failed the check on 8 of
+      // 31 corpus documents (2026-11-12). A word gained, lost or changed still does.
+      const byBaseline = entries => {
+        const rows = [];
+        for (const { y, x, text } of entries.sort((a, b) => b.y - a.y || a.x - b.x)) {
+          let row = rows.find(r => Math.abs(r.y - y) <= 0.5);
+          if (!row) rows.push(row = { y, parts: [] });
+          row.parts.push({ x, text });
+        }
+        return rows.map(r => r.parts.sort((a, b) => a.x - b.x).map(p => p.text).join('').replace(/\s+/g, ''))
+          .filter(Boolean).sort();
+      };
+      const expected = byBaseline(before.map(line => {
         const edit = pageChanges.find(change => !change.line.placed && change.line.x === line.x && change.line.y === line.y);
-        return signature(line, edit?.text ?? line.text);
-      }).concat(pageChanges.filter(change => change.line.placed).map(change => signature(change.line, change.text))).sort();
-      const actual = after.map(line => signature(line, line.text)).sort();
+        return { y: line.y, x: line.x, text: edit?.text ?? line.text };
+      }).concat(pageChanges.filter(change => change.line.placed).map(change => ({ y: change.line.y, x: change.line.x, text: change.text }))));
+      const actual = byBaseline(after.map(line => ({ y: line.y, x: line.x, text: line.text })));
       if (actual.length !== expected.length || actual.some((value, index) => value !== expected[index])) {
         throw new Error(copyText(`Page ${pageIndex + 1}: verification found an unexpected text change. No file was exported.`, `第 ${pageIndex + 1} 页：检查发现意外的文字变化，未导出文件。`));
       }

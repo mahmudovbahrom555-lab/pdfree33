@@ -6542,6 +6542,17 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 .qe-original-line::selection { color: #111; background: #bde2ff; }
 
 .qe-original-page--placing { cursor: crosshair; }
+.qe-page-editor { width: 100%; overflow-x: auto; }
+.qe-page-nav { display: flex; align-items: center; justify-content: center; gap: 12px; margin-block-end: 8px; color: var(--text); }
+.qe-page-nav .qe-copies__button { min-width: 44px; }
+.qe-page-hint { margin: 0 0 8px; text-align: center; color: var(--text2); font-size: 13px; }
+.qe-page-line { border-radius: 2px; outline: 1px dashed transparent; }
+.qe-page-line:hover, .qe-page-line:focus-visible { outline-color: var(--green-text); }
+/* while typing and once edited, the new text shows over the old on a white ground */
+.qe-page-line--active, .qe-page-line--edited { color: #111; background: #fff; font-family: sans-serif; }
+.qe-page-line--active { outline: 2px solid var(--green-text); }
+.qe-page-line--edited { box-shadow: 0 0 0 2px #f5c542; }
+.qe-page-empty { position: absolute; inset: auto 8px 8px; margin: 0; padding: 8px; border-radius: 6px; background: var(--surface); color: var(--text); font-size: 13px; }
 .qe-scan-field {
   position: absolute;
   box-sizing: border-box;

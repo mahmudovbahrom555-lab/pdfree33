@@ -57,6 +57,12 @@ function expect(actual) {
 
 const norm = s => s.replace(/\s+/g, ' ').trim();
 
+// A file with a text layer opens in the page editor (in place); the rebuild
+// editor these older flows test is one press away from it
+async function useRebuildEditor(page) {
+  await page.locator('.qe-modal--open #qeUseRebuild').click({ timeout: 20000 });
+}
+
 async function captureDownload(page) {
   let buf = null;
   await page.exposeFunction('__qeCapture', (b64) => { buf = Buffer.from(b64, 'base64'); });
@@ -65,8 +71,11 @@ async function captureDownload(page) {
     URL.createObjectURL = function (blob) {
       if (blob instanceof Blob) {
         blob.arrayBuffer().then(ab => {
-          const b64 = btoa(String.fromCharCode(...new Uint8Array(ab)));
-          window.__qeCapture(b64);
+          // in chunks: a spread of a multi-MB file (an embedded CJK font) overflows the stack
+          const u = new Uint8Array(ab);
+          let s = '';
+          for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode(...u.subarray(i, i + 0x8000));
+          window.__qeCapture(btoa(s));
         });
       }
       return orig.call(URL, blob);
@@ -86,6 +95,7 @@ await test('Atlas gate blocks a text-extraction-failure document (no editor, #me
   await page.waitForSelector('#fileInput', { state: 'attached' });
   const input = await page.$('#fileInput');
   await input.setInputFiles([HEAVY_PDF]);
+  await useRebuildEditor(page);
   await page.waitForTimeout(3000);
 
   const html = await page.locator('#quickEditOptions').innerHTML();
@@ -114,7 +124,8 @@ await test('a clean document opens the editor, click-to-edit changes only the cl
   await page.waitForSelector('#fileInput', { state: 'attached' });
   const input = await page.$('#fileInput');
   await input.setInputFiles([EXTRACTABLE_PDF]);
-  await page.waitForSelector('.qe-modal--open', { timeout: 20000 });
+  await useRebuildEditor(page);
+  await page.waitForSelector('.qe-modal--open .qe-editable-run', { timeout: 20000 });
   await page.waitForTimeout(300);
 
   const badge = await page.locator('.atlas-check__badge').first().innerText();
@@ -229,7 +240,9 @@ await test('Save on a document with intact RTL text shows the same unsupported-s
   });
   await page.waitForSelector('#fileInput', { state: 'attached' });
   await page.setInputFiles('#fileInput', UNSUPPORTED_SCRIPT_PDF);
-  await page.waitForSelector('.qe-modal--open', { timeout: 20000 });
+  // a mostly right-to-left file can't be written in place yet: it opens the previous editor directly
+  await page.waitForSelector('.qe-modal--open .qe-editable-run', { timeout: 20000 });
+  expect(await page.locator('#qeUseRebuild').count()).toBe(0);
   await page.click('#qeModalSaveBtn');
   await page.waitForSelector('#successCard', { timeout: 20000 });
   await page.waitForTimeout(300);
@@ -244,6 +257,7 @@ await test('personalized copies replace only selected text and export one PDF pe
   try {
     await page.goto(`${BASE_URL}/quick-edit-pdf/`);
     await page.setInputFiles('#fileInput', EXTRACTABLE_PDF);
+    await useRebuildEditor(page);
     await page.waitForSelector('.qe-modal--open .qe-editable-run');
     await page.getByRole('button', { name: 'Create personalized copies' }).click();
     expect(await page.locator('#qeModalSaveBtn').isVisible()).toBeFalsy();
@@ -339,7 +353,8 @@ await test('preserve original layout replaces separate columns on two original P
     await page.setInputFiles('#fileInput', {
       name: 'layout-test.pdf', mimeType: 'application/pdf', buffer: Buffer.from(await input.save()),
     });
-    await page.waitForSelector('.qe-modal--open');
+    await useRebuildEditor(page);
+    await page.waitForSelector('.qe-modal--open .qe-editable-run');
     await page.locator('[data-copies-toggle]').click();
     await page.locator('#qeCopies textarea').fill('王小明');
     await page.locator('[data-preserve-layout]').check();
@@ -448,7 +463,7 @@ await test('original layout styles only the inserted name and can place a name o
     await page.setInputFiles('#fileInput', {
       name: 'text-and-scan.pdf', mimeType: 'application/pdf', buffer: Buffer.from(await input.save()),
     });
-    await page.locator('#qeOpenOriginal').click();
+    await page.locator('.qe-modal--open [data-copies-toggle]').click();
     await page.locator('#qeCopies textarea').fill('Anna Example');
     const line = page.locator('.qe-original-line').filter({ hasText: 'CUSTOMER PLACEHOLDER' });
     await line.evaluate(span => {
@@ -740,6 +755,7 @@ await test('Quick Edit copies with a watermark: the name in the text and in the 
   try {
     await page.goto(`${BASE_URL}/quick-edit-pdf/`);
     await page.setInputFiles('#fileInput', EXTRACTABLE_PDF);
+    await useRebuildEditor(page);
     await page.waitForSelector('.qe-modal--open .qe-editable-run');
     await page.getByRole('button', { name: 'Create personalized copies' }).click();
     await page.locator('#qeCopies textarea').fill('Anna Example\nBoris Example');
@@ -791,6 +807,146 @@ await test('Quick Edit copies with a watermark: the name in the text and in the 
     expect(boris.includes('Copy for Boris Example')).toBeTruthy();
     expect(boris.includes('Anna')).toBeFalsy();
     expect(anna.includes('A second independent paragraph for testing purposes.')).toBeTruthy();
+  } finally {
+    await page.close();
+  }
+});
+
+// ── In place (the default for a file with a text layer): only the edited line
+// changes; the page count, the other lines and the other pages stay as they were
+
+async function inPlaceDoc() {
+  const { PDFDocument, StandardFonts } = await import('pdf-lib');
+  const doc = await PDFDocument.create();
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  for (let i = 1; i <= 3; i++) {
+    const sheet = doc.addPage([420, 595]);
+    sheet.drawText(`Chapter ${i} heading`, { x: 40, y: 540, size: 16, font });
+    sheet.drawText(`Body text on page ${i} stays exactly as written.`, { x: 40, y: 500, size: 11, font });
+    sheet.drawText('Join our group for more books: example0001', { x: 40, y: 40, size: 8, font });
+  }
+  return Buffer.from(await doc.save());
+}
+
+async function pagesText(page, buf) {
+  return page.evaluate(async (b64) => {
+    const pdf2jpgUI = await import('/js/pdf2jpgUI.js');
+    await pdf2jpgUI.loadPdfJs();
+    const doc = await window.pdfjsLib.getDocument({ data: Uint8Array.from(atob(b64), c => c.charCodeAt(0)) }).promise;
+    const out = [];
+    for (let i = 1; i <= doc.numPages; i++) {
+      out.push((await (await doc.getPage(i)).getTextContent()).items.map(item => item.str).join(' ').replace(/\s+/g, ' ').trim());
+    }
+    return out;
+  }, buf.toString('base64'));
+}
+
+async function editLine(page, from, to) {
+  const line = page.locator('.qe-page-line').filter({ hasText: from });
+  await line.click();
+  await page.keyboard.press(process.platform === 'darwin' ? 'Meta+A' : 'Control+A');
+  await page.keyboard.type(to);
+  await page.keyboard.press('Enter');
+}
+
+await test('in place: a file with text opens the page editor; only the edited line changes, pages and other text kept', async () => {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  const getDownload = await captureDownload(page);
+  try {
+    await page.goto(`${BASE_URL}/quick-edit-pdf/`);
+    await page.setInputFiles('#fileInput', { name: 'book.pdf', mimeType: 'application/pdf', buffer: await inPlaceDoc() });
+    await page.waitForSelector('.qe-modal--open .qe-page-line', { timeout: 20000 });
+    expect(await page.locator('.qe-editable-run').count()).toBe(0);
+    await page.locator('[data-next]').click();
+    await page.waitForSelector('.qe-page-line:has-text("page 2")');
+    await editLine(page, 'Join our group', 'Visit pdfree.io');
+    expect(await page.locator('.qe-page-line--edited').count()).toBe(1);
+    // Escape on another line drops that edit, keeps the first
+    await page.locator('.qe-page-line').filter({ hasText: 'Chapter 2' }).click();
+    await page.keyboard.type(' DROPPED');
+    await page.keyboard.press('Escape');
+    expect(await page.locator('.qe-modal--open').count()).toBe(1);
+    expect(await page.locator('.qe-page-line--edited').count()).toBe(1);
+    await page.click('#qeModalSaveBtn');
+    await page.waitForSelector('#successCard', { timeout: 30000 });
+    for (let i = 0; i < 50 && !getDownload(); i++) await page.waitForTimeout(100);
+    const buf = getDownload();
+    expect(!!buf).toBeTruthy();
+    const pages = await pagesText(page, buf);
+    expect(pages.length).toBe(3);
+    expect(pages[1].includes('Visit pdfree.io')).toBeTruthy();
+    expect(pages[1].includes('example0001')).toBeFalsy();
+    expect(pages[1].includes('DROPPED')).toBeFalsy();
+    expect(pages[1].includes('Body text on page 2 stays exactly as written.')).toBeTruthy();
+    expect(pages[0]).toBe('Chapter 1 heading Body text on page 1 stays exactly as written. Join our group for more books: example0001');
+    expect(pages[2].includes('example0001')).toBeTruthy();
+  } finally {
+    await page.close();
+  }
+});
+
+await test('in place: Chinese text can be typed into a Latin-font line and is saved as text', async () => {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  const getDownload = await captureDownload(page);
+  try {
+    await page.goto(`${BASE_URL}/quick-edit-pdf/`);
+    await page.setInputFiles('#fileInput', { name: 'book.pdf', mimeType: 'application/pdf', buffer: await inPlaceDoc() });
+    await page.waitForSelector('.qe-modal--open .qe-page-line', { timeout: 20000 });
+    await editLine(page, 'Chapter 1', '第一章 王小明');
+    await page.click('#qeModalSaveBtn');
+    await page.waitForSelector('#successCard', { timeout: 30000 });
+    for (let i = 0; i < 50 && !getDownload(); i++) await page.waitForTimeout(100);
+    const buf = getDownload();
+    expect(!!buf).toBeTruthy();
+    const pages = await pagesText(page, buf);
+    expect(pages.length).toBe(3);
+    expect(pages[0].replace(/\s/g, '').includes('第一章王小明')).toBeTruthy();
+    expect(pages[0].includes('Chapter 1')).toBeFalsy();
+  } finally {
+    await page.close();
+  }
+});
+
+await test('in place in another language: the page editor speaks it (Russian page)', async () => {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  try {
+    await page.goto(`${BASE_URL}/ru/redaktirovat-tekst-pdf/`);
+    await page.setInputFiles('#fileInput', { name: 'book.pdf', mimeType: 'application/pdf', buffer: await inPlaceDoc() });
+    await page.waitForSelector('.qe-modal--open .qe-page-line', { timeout: 20000 });
+    expect(await page.locator('.qe-page-hint').innerText()).toBe('Нажмите на строку, чтобы изменить её текст. Всё остальное на странице останется как есть.');
+    expect(await page.locator('[data-page-label]').innerText()).toBe('Страница 1 из 3');
+    expect(await page.locator('#qeUseRebuild').innerText()).toBe('Использовать прежний редактор');
+  } finally {
+    await page.close();
+  }
+});
+
+await test('in place on a phone: no sideways page scroll, a tap reaches the line, copies and the previous editor one press away', async () => {
+  const page = await browser.newPage({ viewport: { width: 390, height: 664 }, isMobile: true, hasTouch: true });
+  try {
+    await page.goto(`${BASE_URL}/quick-edit-pdf/`);
+    await page.setInputFiles('#fileInput', { name: 'book.pdf', mimeType: 'application/pdf', buffer: await inPlaceDoc() });
+    await page.waitForSelector('.qe-modal--open .qe-page-line', { timeout: 20000 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
+    for (const sel of ['[data-prev]', '[data-next]', '[data-zoom]']) {
+      const box = await page.locator(sel).boundingBox();
+      if (Math.round(box.height) < 44 || Math.round(box.width) < 44) throw new Error(`${sel} is ${box.width}×${box.height}, under 44 px`);
+    }
+    await page.locator('[data-zoom]').click();
+    const line = page.locator('.qe-page-line').filter({ hasText: 'Chapter 1' });
+    await line.scrollIntoViewIfNeeded();
+    const hit = await line.evaluate(el => {
+      const r = el.getBoundingClientRect();
+      return el.contains(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2));
+    });
+    expect(hit).toBeTruthy();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
+    expect(await page.locator('#qeUseRebuild').isVisible()).toBeTruthy();
+    await page.locator('.qe-modal--open [data-copies-toggle]').click();
+    await page.locator('#qeOriginalPage').waitFor({ state: 'visible' });
+    await page.locator('#qeModalClose').click();
+    await page.locator('#qeReopenBtn').click();
+    await page.waitForSelector('.qe-modal--open .qe-page-line');
   } finally {
     await page.close();
   }
