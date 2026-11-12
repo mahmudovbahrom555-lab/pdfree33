@@ -3,19 +3,47 @@ import { t } from './i18n.js';
 import { loadFontkit, loadPdfLib } from './lazyLibs.js';
 import { loadPdfJs } from './pdfjsLoader.js';
 
-let enginePromise;
 const fontPromises = new Map();
-function loadOriginalEngine() {
-  enginePromise ??= import('./vendor/mupdf-1.28.1/mupdf.js').then(module => module.default)
-    .catch(error => { enginePromise = null; throw error; });
-  return enginePromise;
+
+// The heavy half of the save — MuPDF redaction, pdf-lib drawing and saving —
+// runs in js/quickEditWorker.js so the page keeps answering taps (a 300-page
+// book froze a phone's tab for 4.7 s at a time, 2026-11-12).
+let worker = null;
+let nextId = 0;
+const pending = new Map();
+function inWorker(type, payload) {
+  if (!worker) {
+    worker = new Worker(new URL('./quickEditWorker.js', import.meta.url), { type: 'module' });
+    worker.onmessage = ({ data }) => {
+      const request = pending.get(data.id);
+      pending.delete(data.id);
+      if (data.result) request.resolve(data.result);
+      else request.reject(data.refusal ? refusalError(data.refusal) : new Error(data.message));
+    };
+    worker.onerror = event => {
+      event.preventDefault();
+      for (const request of pending.values()) request.reject(new Error(event.message || 'Quick Edit worker failed to load'));
+      pending.clear();
+      worker.terminate();
+      worker = null;
+    };
+  }
+  const id = ++nextId;
+  return new Promise((resolve, reject) => {
+    pending.set(id, { resolve, reject });
+    worker.postMessage({ id, type, payload }, [payload.bytes]);
+  });
+}
+
+function refusalError({ code, page }) {
+  return new Error(t(`quickedit_err_${code}`, { page }));
 }
 
 function loadReplacementFont(path) {
   if (!fontPromises.has(path)) {
     fontPromises.set(path, fetch(new URL(path, import.meta.url))
       .then(response => {
-        if (!response.ok) throw new Error(copyText('The replacement font could not be loaded.', "无法加载替代字体。"));
+        if (!response.ok) throw new Error(t('quickedit_err_font'));
         return response.arrayBuffer();
       }).catch(error => { fontPromises.delete(path); throw error; }));
   }
@@ -73,141 +101,24 @@ export async function openOriginalPdf(file) {
   }
 }
 
-function redactRect(sheet, line, pageHeight) {
-  const text = sheet.toStructuredText('preserve-whitespace');
-  const glyphs = [];
-  try {
-    text.walk({
-      onChar(character, origin, font, size, quad, color) {
-        try {
-          if (!character.trim()) return;
-          const xs = [quad[0], quad[2], quad[4], quad[6]];
-          const ys = [quad[1], quad[3], quad[5], quad[7]];
-          const family = font.isMono() ? 'Mono' : font.isSerif() ? 'Serif' : 'Sans';
-          const style = (font.isBold() ? 'Bold' : '') + (font.isItalic() ? 'Italic' : '');
-          glyphs.push({
-            character, origin, color, font: `Liberation${family}-${style || 'Regular'}.ttf`,
-            bounds: [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)],
-          });
-        } finally {
-          font.destroy();
-        }
-      },
-    });
-  } finally {
-    text.destroy();
-  }
-  const baseline = pageHeight - line.y;
-  // In MuPDF's reading order, not sorted by x: a ligature's parts share one
-  // origin ("ff" + "e" in "difference" all at one x) and a sort mixed them up —
-  // "difefrence" no longer matched the line (2026-11-12).
-  const selected = glyphs.filter(({ origin }) =>
-    Math.abs(origin[1] - baseline) <= 0.5 && origin[0] >= line.x - 0.3 && origin[0] < line.right - 0.1
-  );
-  const normalized = value => value.normalize('NFKC').replace(/\s+/g, '');
-  if (!selected.length || normalized(selected.map(glyph => glyph.character).join('')) !== normalized(line.text)) {
-    throw new Error(copyText(`Page ${line.page + 1}: the selected line could not be matched to the original text.`, `第 ${line.page + 1} 页：无法在原始 PDF 中匹配选中的文本行。`));
-  }
-  const selectedSet = new Set(selected);
-  const rect = [
-    Math.min(...selected.map(glyph => glyph.bounds[0])) + 0.05,
-    Math.min(...selected.map(glyph => glyph.bounds[1])) + 0.05,
-    Math.max(...selected.map(glyph => glyph.bounds[2])) - 0.05,
-    Math.max(...selected.map(glyph => glyph.bounds[3])) - 0.05,
-  ];
-  const safeRect = candidate => candidate[0] < candidate[2] && candidate[1] < candidate[3] &&
-    !glyphs.some(glyph => !selectedSet.has(glyph) &&
-      glyph.bounds[0] < candidate[2] && candidate[0] < glyph.bounds[2] &&
-      glyph.bounds[1] < candidate[3] && candidate[1] < glyph.bounds[3]);
-  // Italic overhang can make the union touch an adjacent upright glyph.
-  // Try a small rectangle inside each selected glyph instead. Verification
-  // still rejects the export if any unselected glyph was actually removed.
-  const rectangles = safeRect(rect) ? [rect] : selected.map(({ bounds }) => {
-    const x = (bounds[0] + bounds[2]) / 2;
-    const y = (bounds[1] + bounds[3]) / 2;
-    return [x - 0.1, y - 0.1, x + 0.1, y + 0.1];
-  });
-  if (!rectangles.every(safeRect)) {
-    throw new Error(copyText(`Page ${line.page + 1}: replacing this line may remove nearby text.`, `第 ${line.page + 1} 页：替换此行可能会误删附近的文字。`));
-  }
-  const { font, color } = selected[0];
-  if (selected.some(glyph => glyph.font !== font || glyph.color.some((value, index) => value !== color[index]))) {
-    throw new Error(copyText(`Page ${line.page + 1}: the selected line has mixed text styling.`, `第 ${line.page + 1} 页：选中的文本行包含多种文字样式。`));
-  }
-  return { rectangles, font, color };
-}
-
-async function removeOriginalLines(original, lines) {
-  const engine = await loadOriginalEngine();
-  const source = engine.Document.openDocument(new Uint8Array(original.bytes), 'application/pdf');
-  try {
-    for (const index of new Set(lines.map(line => line.page))) {
-      const sheet = source.loadPage(index);
-      try {
-        const page = await original.pdf.getPage(index + 1);
-        const height = page.view[3];
-        for (const line of lines.filter(line => line.page === index)) {
-          let plan = original.plans.get(line);
-          if (!plan) {
-            plan = redactRect(sheet, line, height);
-            original.plans.set(line, plan);
-          }
-          for (const rect of plan.rectangles) {
-            const mark = sheet.createAnnotation('Redact');
-            try {
-              mark.setRect(rect);
-              mark.update();
-            } finally {
-              mark.destroy();
-            }
-          }
-        }
-        sheet.applyRedactions(false, engine.PDFPage.REDACT_IMAGE_NONE,
-          engine.PDFPage.REDACT_LINE_ART_NONE, engine.PDFPage.REDACT_TEXT_REMOVE);
-      } finally {
-        sheet.destroy();
-      }
-    }
-    const output = source.saveToBuffer('garbage=4,compress');
-    try {
-      return output.asUint8Array().slice();
-    } finally {
-      output.destroy();
-    }
-  } finally {
-    source.destroy();
-  }
-}
-
 export async function prepareOriginalCopy(original, lines) {
-  await Promise.all([loadPdfLib(), loadFontkit()]);
-  const input = await window.PDFLib.PDFDocument.load(original.bytes, { updateMetadata: false });
-  if (input.getForm().getFields().some(field => field instanceof window.PDFLib.PDFSignature)) {
-    throw new Error(copyText('Preserve layout is unavailable for signed PDFs.', "已签名的 PDF 暂不支持保留原始版式。"));
-  }
-  for (const line of lines) {
-    const page = input.getPage(line.page);
-    const crop = page.getCropBox();
-    const media = page.getMediaBox();
-    // WPS/OFD exports can write CropBox endpoints in reverse order.
-    const sameBox = Math.min(crop.x, crop.x + crop.width) === media.x &&
-      Math.min(crop.y, crop.y + crop.height) === media.y &&
-      Math.abs(crop.width) === media.width && Math.abs(crop.height) === media.height;
-    if (line.mixed || !sameBox) {
-      throw new Error(copyText(`Page ${line.page + 1}: this line uses a layout the replacement cannot preserve.`, `第 ${line.page + 1} 页：无法在保留此行版式的情况下替换文字。`));
-    }
-  }
   const pages = new Map();
+  const heights = {};
   for (const pageIndex of new Set(lines.map(line => line.page))) {
     const page = await original.pdf.getPage(pageIndex + 1);
     const [x, y] = page.view;
     if (x || y || page.rotate || page.userUnit !== 1) {
-      throw new Error(copyText(`Page ${pageIndex + 1}: this page uses unsupported geometry.`, `第 ${pageIndex + 1} 页：此页的尺寸或坐标设置暂不受支持。`));
+      throw new Error(t('quickedit_err_geometry', { page: pageIndex + 1 }));
     }
+    heights[pageIndex] = page.view[3];
     pages.set(pageIndex, originalLines((await page.getTextContent()).items));
   }
-  const replaced = lines.filter(line => !line.placed);
-  const bytes = replaced.length ? await removeOriginalLines(original, replaced) : original.bytes;
+  const { bytes, plans } = await inWorker('prepare', {
+    bytes: original.bytes.slice(0),
+    lines: lines.map(({ page, x, y, right, text, mixed, placed }) => ({ page, x, y, right, text, mixed, placed })),
+    heights,
+  });
+  lines.filter(line => !line.placed).forEach((line, index) => original.plans.set(line, plans[index]));
   return { bytes, pages, plans: original.plans, pageCount: original.pdf.numPages };
 }
 
@@ -238,6 +149,7 @@ function twoLineName(text, font, size, available) {
 // Measure every recipient before generating the first PDF. Use the same
 // embedded font and width calculation as export, including CJK fallback.
 export async function planOriginalCopies(prepared, copies, allowSmallerText, isCancelled) {
+  await Promise.all([loadPdfLib(), loadFontkit()]);
   const metricsDoc = await window.PDFLib.PDFDocument.create();
   const loadFont = replacementFonts(metricsDoc);
   const result = [];
@@ -313,40 +225,14 @@ export async function planOriginalCopies(prepared, copies, allowSmallerText, isC
 }
 
 export async function writeOriginalCopy(prepared, changes) {
-  const doc = await window.PDFLib.PDFDocument.load(prepared.bytes, { updateMetadata: false });
-  const loadFont = replacementFonts(doc);
-  for (const { line, runs } of changes) {
-    let x = line.x;
-    for (const { text, path, color, size, width } of runs) {
-      const { font } = await loadFont(path);
-      const [r, g, b] = color;
-      doc.getPage(line.page).drawText(text, { x, y: line.y, size, font,
-        ySkew: window.PDFLib.radians(Math.atan(line.skew)), color: window.PDFLib.rgb(r, g, b) });
-      x += width;
-    }
-  }
-
-  let bytes = await doc.save();
-  if (changes.some(change => change.runs.some(run => run.path === CHINESE_FONT))) {
-    // fontkit's direct Noto SC subset can contain invisible glyphs even when
-    // ToUnicode is correct. Subset the valid, fully embedded PDF with MuPDF.
-    const engine = await loadOriginalEngine();
-    const output = engine.Document.openDocument(bytes, 'application/pdf');
-    try {
-      output.subsetFonts();
-      const buffer = output.saveToBuffer('garbage=4,compress');
-      try {
-        bytes = buffer.asUint8Array().slice();
-      } finally {
-        buffer.destroy();
-      }
-    } finally {
-      output.destroy();
-    }
-  }
+  const bytes = new Uint8Array((await inWorker('write', {
+    bytes: prepared.bytes.slice(0),
+    changes: changes.map(({ line, runs }) => ({ page: line.page, x: line.x, y: line.y, skew: line.skew,
+      runs: runs.map(({ text, path, color, size, width }) => ({ text, path, color, size, width })) })),
+  })).bytes);
   const check = await window.pdfjsLib.getDocument({ data: bytes.slice(), isEvalSupported: false }).promise;
   try {
-    if (check.numPages !== prepared.pageCount) throw new Error(copyText('The page count changed. No file was exported.', "页数发生变化，未导出文件。"));
+    if (check.numPages !== prepared.pageCount) throw new Error(t('quickedit_err_page_count'));
     for (const [pageIndex, before] of prepared.pages) {
       const outputPage = await check.getPage(pageIndex + 1);
       const after = originalLines((await outputPage.getTextContent()).items);
@@ -372,7 +258,7 @@ export async function writeOriginalCopy(prepared, changes) {
       }).concat(pageChanges.filter(change => change.line.placed).map(change => ({ y: change.line.y, x: change.line.x, text: change.text }))));
       const actual = byBaseline(after.map(line => ({ y: line.y, x: line.x, text: line.text })));
       if (actual.length !== expected.length || actual.some((value, index) => value !== expected[index])) {
-        throw new Error(copyText(`Page ${pageIndex + 1}: verification found an unexpected text change. No file was exported.`, `第 ${pageIndex + 1} 页：检查发现意外的文字变化，未导出文件。`));
+        throw new Error(t('quickedit_err_verify', { page: pageIndex + 1 }));
       }
     }
   } finally {
