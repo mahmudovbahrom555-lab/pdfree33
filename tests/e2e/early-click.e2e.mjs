@@ -81,6 +81,32 @@ await test('a file removed while waiting: nothing starts', async () => {
   if (started) throw new Error('a conversion started for a file no longer there');
 });
 
+// A range typed and run at once (within the field's 400 ms settle): the run
+// used the previous selection — a ZIP of every page instead of a PDF of the
+// range (user journey 2026-11-13; the same field drew rage clicks 2026-10-21..27).
+await test('split: a range typed and run at once uses that range', async () => {
+  const ctx = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await ctx.newPage();
+  try {
+    await page.goto(`${BASE_URL}/split-pdf/`, { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', file);
+    const range = page.locator('#extRangeInput');
+    await range.waitFor({ timeout: 20000 });
+    const download = page.waitForEvent('download', { timeout: 30000 });
+    await range.evaluate(input => {   // the edit and the press in one task: the 400 ms can't pass
+      input.value = '2-3';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      document.getElementById('mergeBtn').click();
+    });
+    const got = await download;
+    if (!/\.pdf$/.test(got.suggestedFilename())) throw new Error(`got ${got.suggestedFilename()}`);
+    const pages = (await PDFDocument.load(fs.readFileSync(await got.path()))).getPageCount();
+    if (pages !== 2) throw new Error(`${pages} pages`);
+  } finally {
+    await ctx.close();
+  }
+});
+
 // A file chosen or dropped before the tool page's first frame (a slow phone
 // draws it late) was added, then wiped by the tool's deferred setup — no
 // file, no message (pdfree.io, 2026-11-13: 3 of ~60 fresh loads in a row).

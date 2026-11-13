@@ -47,10 +47,12 @@ let _pdfDoc        = null;
 let _thumbsCache   = new Map(); // pageNum → canvas
 let _container     = null;
 let _renderGen     = 0;
+let _rangeTimer;
 
 // ── Public API ────────────────────────────────────────────────
 
 export function getExtractParams() {
+  if (_rangeTimer !== undefined) _applyRange();
   const pages = [..._selectedPages].sort((a, b) => a - b);
   return {
     pages:            _reverse ? [...pages].reverse() : pages,
@@ -60,6 +62,7 @@ export function getExtractParams() {
 }
 
 export async function initExtractOptions(file, defaultMode = 'single') {
+  _clearPendingRange();
   _container = document.getElementById('splitOptions');
   if (!_container) return;
 
@@ -136,6 +139,7 @@ export async function initExtractOptions(file, defaultMode = 'single') {
 }
 
 export function hideExtractOptions() {
+  _clearPendingRange();
   ++_renderGen;
   if (_pdfDoc) { _pdfDoc.destroy(); _pdfDoc = null; }
   _thumbsCache.clear();
@@ -248,14 +252,13 @@ function _bindEvents() {
   // China in a month). Not mid-composition — a Chinese/Japanese keyboard's
   // Enter commits the characters being typed.
   const rangeInput = document.getElementById('extRangeInput');
-  let rangeTimer;
   rangeInput?.addEventListener('input', e => {
     if (e.isComposing) return;
-    clearTimeout(rangeTimer);
-    rangeTimer = setTimeout(_applyRange, 400);
+    _clearPendingRange();
+    _rangeTimer = setTimeout(_applyRange, 400);
   });
   rangeInput?.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.isComposing) { clearTimeout(rangeTimer); _applyRange(); }
+    if (e.key === 'Enter' && !e.isComposing) _applyRange();
   });
 
   _container.querySelectorAll('.ext-quick-btn').forEach(btn => {
@@ -391,6 +394,7 @@ function _updateSelCount() {
 }
 
 function _updateRangeInput() {
+  _clearPendingRange();
   const inp = document.getElementById('extRangeInput');
   if (inp) inp.value = pagesToRangeString([..._selectedPages].sort((a, b) => a - b));
 }
@@ -466,12 +470,18 @@ function _maybeSuggestMode() {
   }
 }
 
+function _clearPendingRange() {
+  clearTimeout(_rangeTimer);
+  _rangeTimer = undefined;
+}
+
 // Applying a range showed nothing next to the field: the count sits under the
 // thumbnails (on a phone, under the sticky button) and the thumbnails stayed
 // on pages 1–16 when the range was "30-35" — Apply drew rage clicks from 8
 // people in each of two 3-day windows (2026-10-21..27). The count now shows
 // under the field too, and the thumbnails move to the first selected page.
 function _applyRange() {
+  _clearPendingRange();
   const inp = document.getElementById('extRangeInput');
   if (!inp) return;
   _selectedPages = new Set(parseRange(inp.value, _pageCount));

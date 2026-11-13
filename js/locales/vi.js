@@ -254,6 +254,8 @@ window.PDFREE_LOCALE = {
   err_file_unreadable_any: "Không thể đọc một trong các tệp của bạn. Tệp đã thay đổi hoặc không còn truy cập được sau khi bạn chọn: đã được lưu lại, bị di chuyển hoặc xóa, hoặc là tệp trên đám mây không có trên thiết bị này. Hãy xóa các tệp khỏi danh sách và thêm lại.",
   err_file_unreadable_added: "Không đọc được \"{name}\" — tệp chưa nằm hoàn toàn trên thiết bị này (tệp đám mây OneDrive, iCloud hoặc Google Drive) hoặc vừa bị di chuyển hay thay đổi. Hãy mở tệp một lần trong thư mục hoặc ứng dụng để tệp được tải về, rồi thêm lại. Các tệp khác của bạn vẫn ổn.",
   file_unreadable_badge: "không đọc được",
+  j2p_remove_image: "Xóa {name}",
+  merge_add_one_more: "Thêm một tệp PDF nữa để ghép các tệp.",
   file_choose_again: "Chọn lại",
   err_file_unreadable_marked: "Không đọc được \"{name}\" — hãy chọn lại trong danh sách (các tệp khác vẫn giữ nguyên).",
   err_worker_load: "Công cụ không khởi động được — kết nối bị gián đoạn trước khi mã của nó tải xong. Hãy kiểm tra kết nối internet và nhấn nút lại; các tệp của bạn vẫn còn đây.",

@@ -253,6 +253,8 @@ window.PDFREE_LOCALE = {
   err_file_unreadable_any: "Não foi possível ler um dos seus arquivos. Ele mudou ou ficou indisponível depois que você o selecionou: foi salvo novamente, movido ou excluído, ou é um arquivo na nuvem que não está neste dispositivo. Remova os arquivos da lista e adicione-os de novo.",
   err_file_unreadable_added: "Não foi possível ler \"{name}\" — ele não está todo neste dispositivo (um arquivo na nuvem do OneDrive, iCloud ou Google Drive) ou acabou de ser movido ou alterado. Abra-o uma vez na pasta ou no app para que seja baixado e adicione-o novamente. Seus outros arquivos estão bem.",
   file_unreadable_badge: "não pode ser lido",
+  j2p_remove_image: "Remover {name}",
+  merge_add_one_more: "Adicione mais um PDF para juntar os ficheiros.",
   file_choose_again: "Escolher de novo",
   err_file_unreadable_marked: "Não é possível ler \"{name}\" — escolha-o de novo na lista (os outros arquivos continuam).",
   err_worker_load: "A ferramenta não conseguiu iniciar — a conexão caiu antes de o código terminar de carregar. Verifique sua conexão com a internet e pressione o botão de novo; seus arquivos continuam aqui.",

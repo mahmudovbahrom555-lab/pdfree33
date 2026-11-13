@@ -253,6 +253,8 @@ window.PDFREE_LOCALE = {
   err_file_unreadable_any: "Dosyalarınızdan biri okunamadı. Siz seçtikten sonra değişti veya erişilemez hale geldi: yeniden kaydedildi, taşındı ya da silindi veya bu cihazda bulunmayan bir bulut dosyası. Dosyaları listeden kaldırıp yeniden ekleyin.",
   err_file_unreadable_added: "\"{name}\" okunamadı — dosya bu cihazda tam olarak yok (OneDrive, iCloud veya Google Drive bulut dosyası) ya da az önce taşındı veya değiştirildi. İndirilmesi için klasöründe veya uygulamasında bir kez açın, sonra yeniden ekleyin. Diğer dosyalarınızda sorun yok.",
   file_unreadable_badge: "okunamıyor",
+  j2p_remove_image: "{name} dosyasını kaldır",
+  merge_add_one_more: "Birleştirmek için bir PDF daha ekleyin.",
   file_choose_again: "Yeniden seç",
   err_file_unreadable_marked: "\"{name}\" okunamıyor — listede yeniden seçin (diğer dosyalar kalır).",
   err_worker_load: "Araç başlatılamadı — kodu yüklenmeden bağlantı kesildi. İnternet bağlantınızı kontrol edip düğmeye yeniden basın; dosyalarınız hâlâ burada.",

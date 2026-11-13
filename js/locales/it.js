@@ -253,6 +253,8 @@ window.PDFREE_LOCALE = {
   err_file_unreadable_any: "Impossibile leggere uno dei tuoi file. È cambiato o non è più disponibile da quando l'hai selezionato: salvato di nuovo, spostato o eliminato, oppure un file sul cloud non presente su questo dispositivo. Rimuovi i file dall'elenco e aggiungili di nuovo.",
   err_file_unreadable_added: "Impossibile leggere «{name}»: non è interamente su questo dispositivo (un file cloud di OneDrive, iCloud o Google Drive) oppure è stato appena spostato o modificato. Aprilo una volta nella sua cartella o app perché venga scaricato, poi aggiungilo di nuovo. Gli altri file sono a posto.",
   file_unreadable_badge: "non leggibile",
+  j2p_remove_image: "Rimuovi {name}",
+  merge_add_one_more: "Aggiungi un altro PDF per unire i file.",
   file_choose_again: "Sceglilo di nuovo",
   err_file_unreadable_marked: "«{name}» non è leggibile: sceglilo di nuovo nell'elenco (gli altri file restano).",
   err_worker_load: "Lo strumento non è riuscito ad avviarsi: la connessione si è interrotta prima che il suo codice finisse di caricarsi. Controlla la connessione a internet e premi di nuovo il pulsante; i tuoi file sono ancora qui.",

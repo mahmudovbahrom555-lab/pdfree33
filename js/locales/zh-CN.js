@@ -260,6 +260,8 @@ window.PDFREE_LOCALE = {
   err_file_unreadable_any: "无法读取其中一个文件。选择后它已被更改或无法访问：重新保存、被移动或删除，或者是不在本设备上的云端文件。请将文件从列表中移除后重新添加。",
   err_file_unreadable_added: "无法读取“{name}”——该文件尚未完整保存在此设备上（OneDrive、iCloud 或 Google Drive 云端文件），或刚刚被移动或更改。请在其文件夹或应用中打开一次以完成下载，然后重新添加。您的其他文件不受影响。",
   file_unreadable_badge: "无法读取",
+  j2p_remove_image: "移除 {name}",
+  merge_add_one_more: "再添加一个 PDF 文件即可合并。",
   file_choose_again: "重新选择",
   err_file_unreadable_marked: "无法读取“{name}”——请在列表中重新选择该文件（其他文件保持不变）。",
   err_worker_load: "工具无法启动——加载其代码时网络连接中断。请检查网络连接后再次点击按钮；您的文件仍在这里。",
