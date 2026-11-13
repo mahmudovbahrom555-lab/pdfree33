@@ -1369,6 +1369,9 @@ window.PDFREE_LOCALE = {
   quickedit_found_none:     'لم يُعثر على شيء — قد يكون النص صورة (مسحًا ضوئيًا) أو مقسومًا على سطرين.',
   quickedit_replaced:       'تم تغيير {n} أسطر. اضغط حفظ للحصول على ملف PDF.',
   quickedit_pages_left:     'تم الحفظ. بقيت الصفحات التالية كما هي — فيها سطر لا يمكن تغييره في مكانه: {pages}.',
+  quickedit_repeat_found:   'في {pages} من {total} صفحة:',
+  quickedit_repeat_remove:  'إزالة من كل الصفحات',
+  quickedit_repeat_removed: 'أُزيل من {pages} صفحة. اضغط حفظ للحصول على ملف PDF.',
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'فشل تحميل عارض PDF. تحقق من اتصالك بالإنترنت.',
   draw_read_file_failed:       'تعذّرت قراءة الملف.',

@@ -1320,6 +1320,9 @@ window.PDFREE_LOCALE = {
   quickedit_found_none:     '0 trouvé — le texte est peut-être une image (scan) ou coupé sur deux lignes.',
   quickedit_replaced:       '{n} lignes modifiées. Appuyez sur Enregistrer pour obtenir le PDF.',
   quickedit_pages_left:     'Enregistré. Pages laissées telles quelles — une ligne n\'y peut pas être modifiée sur place : {pages}.',
+  quickedit_repeat_found:   'Sur {pages} pages sur {total} :',
+  quickedit_repeat_remove:  'Supprimer partout',
+  quickedit_repeat_removed: 'Supprimé sur {pages} pages. Appuyez sur Enregistrer pour obtenir le PDF.',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Échec du chargement du moteur de rendu PDF. Vérifiez votre connexion internet.',
   draw_read_file_failed:       'Impossible de lire le fichier.',

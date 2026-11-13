@@ -1367,6 +1367,9 @@ window.PDFREE_LOCALE = {
   quickedit_found_none:     '找到 0 处 — 文字可能是图片（扫描件），或被分在两行。',
   quickedit_replaced:       '已修改 {n} 行。点击保存即可得到 PDF。',
   quickedit_pages_left:     '已保存。以下页面保持原样（其中有一行无法在原位置修改）：第 {pages} 页。',
+  quickedit_repeat_found:   '在 {total} 页中的 {pages} 页出现：',
+  quickedit_repeat_remove:  '全部删除',
+  quickedit_repeat_removed: '已从 {pages} 页删除。点击保存即可得到 PDF。',
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'PDF 渲染器加载失败。请检查您的网络连接。',
   draw_read_file_failed:       '无法读取此文件。',

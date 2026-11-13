@@ -1318,6 +1318,9 @@ window.PDFREE_LOCALE = {
   quickedit_found_none:     '0 sonuç — metin bir resim (tarama) olabilir ya da iki satıra bölünmüş olabilir.',
   quickedit_replaced:       '{n} satır değişti. PDF’i almak için Kaydet’e basın.',
   quickedit_pages_left:     'Kaydedildi. Şu sayfalar olduğu gibi kaldı — orada yerinde değiştirilemeyen bir satır var: {pages}.',
+  quickedit_repeat_found:   '{total} sayfanın {pages} tanesinde:',
+  quickedit_repeat_remove:  'Her yerden kaldır',
+  quickedit_repeat_removed: '{pages} sayfadan kaldırıldı. PDF’i almak için Kaydet’e basın.',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF işleyicisi yüklenemedi. İnternet bağlantınızı kontrol edin.',
   draw_read_file_failed:       'Dosya okunamadı.',

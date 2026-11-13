@@ -1319,6 +1319,9 @@ window.PDFREE_LOCALE = {
   quickedit_found_none:     'Tìm thấy 0 — văn bản có thể là hình ảnh (bản quét) hoặc bị tách thành hai dòng.',
   quickedit_replaced:       'Đã đổi {n} dòng. Nhấn Lưu để nhận PDF.',
   quickedit_pages_left:     'Đã lưu. Các trang sau giữ nguyên — có một dòng không thể sửa trực tiếp: {pages}.',
+  quickedit_repeat_found:   'Trên {pages} / {total} trang:',
+  quickedit_repeat_remove:  'Xóa ở mọi trang',
+  quickedit_repeat_removed: 'Đã xóa trên {pages} trang. Nhấn Lưu để nhận PDF.',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Không thể tải trình kết xuất PDF. Kiểm tra kết nối internet của bạn.',
   draw_read_file_failed:       'Không thể đọc tệp.',

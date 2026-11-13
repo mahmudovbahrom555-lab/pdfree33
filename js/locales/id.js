@@ -1319,6 +1319,9 @@ window.PDFREE_LOCALE = {
   quickedit_found_none:     'Ditemukan 0 — teks mungkin berupa gambar (pindaian) atau terpecah di dua baris.',
   quickedit_replaced:       '{n} baris diubah. Tekan Simpan untuk mendapatkan PDF.',
   quickedit_pages_left:     'Disimpan. Halaman berikut tetap seperti semula — ada baris yang tidak bisa diubah langsung: {pages}.',
+  quickedit_repeat_found:   'Di {pages} dari {total} halaman:',
+  quickedit_repeat_remove:  'Hapus di semua halaman',
+  quickedit_repeat_removed: 'Dihapus dari {pages} halaman. Tekan Simpan untuk mendapatkan PDF.',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Gagal memuat perender PDF. Periksa koneksi internet Anda.',
   draw_read_file_failed:       'Tidak dapat membaca file.',

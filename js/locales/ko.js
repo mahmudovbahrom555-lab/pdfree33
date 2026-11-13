@@ -1320,6 +1320,9 @@ window.PDFREE_LOCALE = {
   quickedit_found_none:     '0개 — 텍스트가 이미지(스캔본)이거나 두 줄로 나뉘어 있을 수 있습니다.',
   quickedit_replaced:       '{n}줄을 바꿨습니다. 저장을 누르면 PDF가 만들어집니다.',
   quickedit_pages_left:     '저장했습니다. 다음 페이지는 그대로 두었습니다(제자리에서 바꿀 수 없는 줄이 있음): {pages}.',
+  quickedit_repeat_found:   '{total}페이지 중 {pages}페이지에 있는 줄:',
+  quickedit_repeat_remove:  '모두 삭제',
+  quickedit_repeat_removed: '{pages}페이지에서 삭제했습니다. 저장을 누르면 PDF가 만들어집니다.',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF 렌더러를 불러오지 못했습니다. 인터넷 연결을 확인하세요.',
   draw_read_file_failed:       '파일을 읽을 수 없습니다.',

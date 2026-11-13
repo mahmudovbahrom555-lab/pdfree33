@@ -1320,6 +1320,9 @@ window.PDFREE_LOCALE = {
   quickedit_found_none:     '0 encontrados — o texto pode ser uma imagem (escaneamento) ou estar dividido em duas linhas.',
   quickedit_replaced:       '{n} linhas alteradas. Toque em Salvar para obter o PDF.',
   quickedit_pages_left:     'Salvo. Ficaram como estavam as páginas {pages} — há uma linha que não pode ser alterada no lugar.',
+  quickedit_repeat_found:   'Em {pages} de {total} páginas:',
+  quickedit_repeat_remove:  'Remover em todas',
+  quickedit_repeat_removed: 'Removido de {pages} páginas. Toque em Salvar para obter o PDF.',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Falha ao carregar o renderizador de PDF. Verifique sua conexão com a internet.',
   draw_read_file_failed:       'Não foi possível ler o arquivo.',

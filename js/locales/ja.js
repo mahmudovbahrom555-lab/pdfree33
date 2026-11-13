@@ -1321,6 +1321,9 @@ window.PDFREE_LOCALE = {
   quickedit_found_none:     '0 件 — 文字が画像（スキャン）か、2 行に分かれている可能性があります。',
   quickedit_replaced:       '{n} 行を変更しました。保存を押すと PDF ができます。',
   quickedit_pages_left:     '保存しました。次のページはそのままです（その場で変更できない行があります）：{pages}。',
+  quickedit_repeat_found:   '{total} ページ中 {pages} ページにある行:',
+  quickedit_repeat_remove:  'すべて削除',
+  quickedit_repeat_removed: '{pages} ページから削除しました。保存を押すと PDF ができます。',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDFレンダラーの読み込みに失敗しました。インターネット接続を確認してください。',
   draw_read_file_failed:       'ファイルを読み込めませんでした。',

@@ -47,6 +47,7 @@ export function createPageEditor(stage, original, { onChange } = {}) {
       <button type="button" class="qe-copies__button" data-replace-all disabled>${t('quickedit_replace_all')}</button>
       <p class="qe-find__status" data-find-status role="status"></p>
     </form>
+    <div class="qe-repeats" data-repeats hidden></div>
     <div class="qe-page-nav">
       <button type="button" class="qe-copies__button" data-prev aria-label="${t('quickedit_prev_page')}">‹</button>
       <span data-page-label role="status"></span>
@@ -269,9 +270,84 @@ export function createPageEditor(stage, original, { onChange } = {}) {
     void render();
   });
 
+  // ── Lines repeated on most pages, offered for removal (2026-11-13) ──
+  // The person who asked for Find & replace couldn't even select the promo
+  // line at the foot of every page of her e-books. Grouped by text with digits
+  // ignored ("Page 3 of 10"), at about the same height (±15 pt of the group's
+  // median), on at least half the pages; bare numbers (page numbers) aren't
+  // offered, and a line whose numbers change must stand on 80 % of the
+  // pages. Removing one is the same in-place edit as any other, checked on
+  // save.
+  const repeatsBox = root.querySelector('[data-repeats]');
+  async function findRepeats() {
+    if (total < 3 || total > 1000) return;
+    const need = Math.max(3, Math.ceil(total / 2));
+    const groups = new Map();
+    for (let index = 0; index < total; index++) {
+      if (!root.isConnected) return;
+      const { lines } = await readPage(index);
+      for (const line of lines) {
+        const text = plain(line.text).replace(/\s+/g, ' ').trim();
+        if ((text.match(/\p{L}/gu) || []).length < 2) continue;
+        const key = text.toLowerCase().replace(/\d+/g, '#');
+        let group = groups.get(key);
+        if (!group) groups.set(key, group = { text, texts: new Set(), lines: [], pages: new Set() });
+        group.texts.add(text);
+        group.lines.push(line);
+        group.pages.add(index);
+      }
+      if (index % 20 === 19) await new Promise(resolve => setTimeout(resolve, 0));
+    }
+    const offers = [];
+    for (const group of groups.values()) {
+      if (group.pages.size < need) continue;
+      const heights = group.lines.map(line => line.y).sort((a, b) => a - b);
+      const median = heights[heights.length >> 1];
+      const near = group.lines.filter(line => Math.abs(line.y - median) <= 15);
+      const pages = new Set(near.map(line => line.page)).size;
+      // a line whose numbers change (a page or chapter line) stands on nearly
+      // every page: "Table 1: … Table 3:" captions at one height, on 3 of 5
+      // pages of a paper, are not one (2026-11-13)
+      if (group.texts.size > 1 && pages < Math.max(3, Math.ceil(total * 0.8))) continue;
+      // numbers that change (chapters, pages) shown as first … last
+      const texts = near.map(line => plain(line.text).replace(/\s+/g, ' ').trim());
+      const text = group.texts.size > 1 ? `${texts[0]} … ${texts[texts.length - 1]}` : group.text;
+      if (pages >= need) offers.push({ text, lines: near, pages, varies: group.texts.size > 1 });
+    }
+    if (!offers.length || !root.isConnected) return;
+    // most pages first; a line repeated word for word (a promo, a watermark)
+    // before one whose numbers change (a running chapter or page line)
+    offers.sort((a, b) => b.pages - a.pages || a.varies - b.varies);
+    repeatsBox.replaceChildren(...offers.slice(0, 3).map(offer => {
+      const row = document.createElement('div');
+      row.className = 'qe-repeat';
+      const say = document.createElement('p');
+      say.className = 'qe-repeat__text';
+      say.textContent = t('quickedit_repeat_found', { pages: offer.pages, total });
+      const quote = document.createElement('q');
+      quote.textContent = offer.text.length > 90 ? `${offer.text.slice(0, 88)}…` : offer.text;
+      say.append(' ', quote);
+      const remove = document.createElement('button');
+      remove.type = 'button';
+      remove.className = 'qe-copies__button';
+      remove.textContent = t('quickedit_repeat_remove');
+      remove.addEventListener('click', () => {
+        active?.blur();
+        for (const line of offer.lines) edits.set(keyOf(line), { line, text: '' });
+        say.textContent = t('quickedit_repeat_removed', { pages: offer.pages });
+        remove.remove();
+        onChange?.(edits.size);
+        void render();
+      });
+      row.append(say, remove);
+      return row;
+    }));
+    repeatsBox.hidden = false;
+  }
+
   prev.addEventListener('click', () => { if (pageIndex > 0) { active?.blur(); pageIndex--; void render(); } });
   next.addEventListener('click', () => { if (pageIndex < total - 1) { active?.blur(); pageIndex++; void render(); } });
-  void render();
+  void render().then(() => findRepeats()).catch(() => {});
 
   return {
     root,
