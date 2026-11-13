@@ -1883,6 +1883,154 @@ function _compressPrep(buffer, file, preset, manual) {
   });
 }
 
+// The result card for a compressed file whose bytes are final
+function _compressSucceeded(file, originalSize, final, data, prepXmp, toolKey, extra) {
+  isProcessing = false;
+  setFilesLocked(false);
+  hideCancelBtn();
+  setProgress(100, t('prog_done'));
+  const blob = new Blob([final.result], { type: 'application/pdf' });
+
+  // Build filename: "report.pdf" → "report-compressed.pdf"
+  const baseName = file.name.replace(/\.pdf$/i, '');
+  const filename  = `${baseName}-compressed.pdf`;
+
+  const savedBytes = originalSize - final.compressedSize;
+  const savedPct  = originalSize > 0
+    ? Math.round((savedBytes / originalSize) * 100)
+    : 0;
+  const desc = savedPct > 0
+    ? t('desc_compress_saved', { pct: savedPct })
+    : t('desc_compress_optimized');
+
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: {
+      tool: toolKey,  // actual tool key (compress or compress-email) for registry dispatch
+      blob,
+      desc,
+      filename,
+      // Extra data for compression report UI (beyond standard ТЗ)
+      compressionReport: {
+        originalSize,
+        compressedSize: final.compressedSize,
+        savedBytes,
+        // XMP removed from images/pages by the pre-pass is listed like the catalog's
+        report:         prepXmp && data.report ? { ...data.report, hasXMP: true } : data.report,
+        ...extra,
+      },
+    }
+  }));
+
+  if (data.report?.wasEncrypted) {
+    showToast(t('warn_encrypted_pdf'), 5000);
+  }
+}
+
+// ── Compress to a size: the least loss that fits (2026-11-13) ──
+// A person asked for "4 MB" (zh, a portal's limit). The old chips only set
+// Maximum + 96 dpi + one quality and hoped. Here the real compression runs
+// (pre-pass + worker, worker.js untouched) on a ladder from no loss to the
+// most, and the gentlest step whose file fits is kept. Halving 11 places
+// (no step fits … every step fits) pins that step in at most 4 runs, each
+// one proven: the step just gentler was run and didn't fit. Guessing the
+// first step from the size ratio or predicting steps from measured sizes
+// left a gentler step unrun on 2 of 7 fits (2026-11-13). When nothing fits,
+// the halving has run the strongest step, and that is said plainly.
+const _TARGET_LADDER = [
+  { preset: 'low' },                                   // lossless: structure only
+  { preset: 'medium', targetDpi: 300, quality: 0.85 },
+  { preset: 'medium', targetDpi: 200, quality: 0.80 },
+  { preset: 'medium', targetDpi: 150, quality: 0.75 },
+  { preset: 'medium', targetDpi: 150, quality: 0.65 },
+  { preset: 'medium', targetDpi: 120, quality: 0.60 },
+  { preset: 'medium', targetDpi: 96,  quality: 0.55 },
+  { preset: 'medium', targetDpi: 96,  quality: 0.45 },
+  { preset: 'medium', targetDpi: 72,  quality: 0.40 },
+  { preset: 'medium', targetDpi: 72,  quality: 0.30 },
+];
+
+// One full compression at one ladder step → the worker's 'done' data (null if cancelled)
+async function _compressAttempt(original, file, step, { preserveText, removeWatermarks }, onProgress) {
+  const manual = step.preset === 'low' ? {} : { targetDpi: step.targetDpi, quality: step.quality };
+  const buffer = await _compressPrep(original.slice(0), file, step.preset, manual);
+  if (!buffer || !isProcessing) return null;
+  return new Promise((resolve, reject) => {
+    let watchdog;
+    const arm = () => {
+      clearTimeout(watchdog);
+      watchdog = setTimeout(() => reject(Object.assign(new Error(t('err_compress_timeout')), { type: 'timeout' })), 45_000);
+    };
+    arm();
+    _shared().onmessage = (e) => {
+      const data = e.data;
+      if (data.type === 'progress') { arm(); onProgress(data.value); }
+      else if (data.type === 'scan-report') arm();
+      else if (data.type === 'done') {
+        clearTimeout(watchdog);
+        if (data.result instanceof ArrayBuffer) resolve(data); else reject(new Error('Unexpected result type from worker'));
+      } else if (data.type === 'error') { clearTimeout(watchdog); reject(new Error(data.message)); }
+    };
+    _shared().onerror = (e) => { clearTimeout(watchdog); reject(new Error(e.message || 'Worker error')); };
+    _shared().postMessage({ tool: 'compress', file: buffer, options: {
+      preset: step.preset, preserveText, removeWatermarks,
+      targetDpi: step.targetDpi ?? null, quality: step.quality ?? null,
+    } }, [buffer]);
+  });
+}
+
+async function _runCompressToTarget(file, original, originalSize, targetSizeMb, opts, toolKey) {
+  const target = targetSizeMb * 1024 * 1024;
+  const steps = _TARGET_LADDER.length;
+  // lo: the strongest step known NOT to fit; hi: the gentlest known to fit
+  let lo = -1, hi = steps, run = 0;
+  const results = new Map();
+  const attempt = async index => {
+    setProgress(5 + run * 23, t('prog_target_try', { n: run + 1 }));
+    const tryNumber = run;
+    const data = await _compressAttempt(original, file, _TARGET_LADDER[index], opts,
+      value => setProgress(5 + tryNumber * 23 + Math.round(value * 0.22), t('prog_target_try', { n: tryNumber + 1 })));
+    run++;
+    if (data) results.set(index, data);
+    return data;
+  };
+  try {
+    // a file already within the size needs no loss at all: one lossless run
+    // (never a bigger file — _notLarger below gives its own bytes back)
+    if (originalSize <= target) {
+      if (!await attempt(0) || !isProcessing) return;
+      hi = 0;
+    }
+    while (hi - lo > 1) {
+      const step = Math.floor((lo + hi) / 2);
+      const data = await attempt(step);
+      if (!data || !isProcessing) return;
+      if (data.compressedSize <= target) hi = step; else lo = step;
+    }
+  } catch (err) {
+    isProcessing = false;
+    setFilesLocked(false);
+    hideCancelBtn();
+    _handleError('compress', err.message, err.type);
+    return;
+  }
+  // Nothing fits: the gentlest step within 3 % of the smallest file — the
+  // strongest step bought 1 % on a book of vector pages and blurred every
+  // picture for it (8.6 MB → 7.16 MB at 150 dpi, 7.07 MB at 72 dpi, 2026-11-13)
+  const smallest = Math.min(...[...results.values()].map(result => result.compressedSize));
+  const chosen = hi < steps ? hi
+    : Math.min(...[...results.keys()].filter(index => results.get(index).compressedSize <= smallest * 1.03));
+  const data = results.get(chosen);
+  const final = await _notLarger(data, originalSize, file);
+  const { targetDpi = null, quality = null } = _TARGET_LADDER[chosen];
+  _compressSucceeded(file, originalSize, final, data, 0, toolKey, {
+    targetSizeMb,
+    // tried: each step run and its size — whether the gentler step was really
+    // tried and missed (the measure of "least loss", scripts in wip-bench)
+    target: { met: final.compressedSize <= target, lossless: chosen === 0, dpi: targetDpi, quality, heavy: chosen >= 7,
+      step: chosen, tried: [...results].map(([index, result]) => [index, result.compressedSize]) },
+  });
+}
+
 async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = true, removeWatermarks = false, targetDpi = null, quality = null, targetSizeMb = null } = {}, toolKey = 'compress') {
   if (!_checkSize(filesSnapshot[0], maxFileMb('compress'))) { _abortUI(); return; }
 
@@ -1892,9 +2040,12 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
   // the worker then only sees the pre-passed bytes — savings must be
   // reported against what the user actually uploaded.
   const originalSize = original.byteLength;
+  if (targetSizeMb) {
+    await _runCompressToTarget(file, original, originalSize, targetSizeMb, { preserveText, removeWatermarks }, toolKey);
+    return;
+  }
   setProgress(5, t('prog_loading_pdf'));
-  // a target size works with the mode's own D300 settings (plan §7): not with the chips' dpi/quality
-  const buffer = await _compressPrep(original, file, preset, targetSizeMb ? {} : { targetDpi, quality });
+  const buffer = await _compressPrep(original, file, preset, { targetDpi, quality });
   if (!buffer || !isProcessing) return;
   const prepXmp = _compressPrepXmp;
 
@@ -1921,51 +2072,12 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
 
   // The result card, once the bytes are final: never a bigger file (see _notLarger).
   const _finishCompress = async (data) => {
-    const final = await _notLarger(data, originalSize, file);
-    isProcessing = false;
-    setFilesLocked(false);
-    hideCancelBtn();
-    setProgress(100, t('prog_done'));
-    const blob = new Blob([final.result], { type: 'application/pdf' });
-
-    // Build filename: "report.pdf" → "report-compressed.pdf"
-    const baseName = file.name.replace(/\.pdf$/i, '');
-    const filename  = `${baseName}-compressed.pdf`;
-
-    const savedBytes = originalSize - final.compressedSize;
-    const savedPct  = originalSize > 0
-      ? Math.round((savedBytes / originalSize) * 100)
-      : 0;
-    const desc = savedPct > 0
-      ? t('desc_compress_saved', { pct: savedPct })
-      : t('desc_compress_optimized');
-
-    document.dispatchEvent(new CustomEvent('pdfree:success', {
-      detail: {
-        tool: toolKey,  // actual tool key (compress or compress-email) for registry dispatch
-        blob,
-        desc,
-        filename,
-        // Extra data for compression report UI (beyond standard ТЗ)
-        compressionReport: {
-          originalSize,
-          compressedSize: final.compressedSize,
-          savedBytes,
-          // XMP removed from images/pages by the pre-pass is listed like the catalog's
-          report:         prepXmp && data.report ? { ...data.report, hasXMP: true } : data.report,
-          targetSizeMb,
-        },
-      }
-    }));
-
-    if (data.report?.wasEncrypted) {
-      showToast(t('warn_encrypted_pdf'), 5000);
-    }
+    _compressSucceeded(file, originalSize, await _notLarger(data, originalSize, file), data, prepXmp, toolKey, {});
   };
 
   // ⚠️  TRANSFERABLE: buffer detached after this call — worker owns it until done.
   _shared().postMessage(
-    { tool: 'compress', file: buffer, options: { preset, preserveText, removeWatermarks, targetDpi, quality, targetSizeMb } },
+    { tool: 'compress', file: buffer, options: { preset, preserveText, removeWatermarks, targetDpi, quality } },
     [buffer]
   );
 

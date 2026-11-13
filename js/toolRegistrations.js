@@ -328,7 +328,8 @@ registerTool('compress', {
     // found zero removable items the operation will produce negligible results.
     // Single file only: the scan covers selectedFiles[0] alone, so for a batch
     // it can't vouch for the other files (see compressUI.js's auto-select).
-    if (scan && p.preset === 'low' && scan.opportunities === 0 && selectedFiles.length === 1) {
+    if (p.targetMissing) return t('compress_target_enter');
+    if (scan && p.preset === 'low' && scan.opportunities === 0 && selectedFiles.length === 1 && !p.targetSizeMb) {
       return t('val_light_no_savings');
     }
     return null;

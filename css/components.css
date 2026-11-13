@@ -1606,6 +1606,10 @@ button,
   flex-wrap: wrap;
 }
 
+.compress-target__custom { display: flex; gap: 8px; margin-top: 8px; }
+.compress-target__custom input { flex: 1 1 auto; min-width: 0; min-height: 44px; padding: 0 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); font-size: 16px; }
+.compress-target__custom select { min-height: 44px; padding: 0 8px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); font-size: 16px; }
+.compress-target__hint { margin: 6px 0 0; color: var(--text2); font-size: 13px; }
 .compress-dpi__chip {
   display: flex;
   flex-direction: column;

@@ -363,6 +363,52 @@ await test('a clean text PDF compresses on the first click — the starred prese
   expect(out.length > 0).toBe(true);
 });
 
+// "Fit into N MB/KB" (a person asked for 4 MB, 2026-11-13): the gentlest
+// setting whose file fits, the cost said; an unreachable size said plainly
+async function compressToSize(file, kb) {
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    await page.addInitScript(BLOB_HOOK);
+    await page.goto(`${BASE_URL}/compress-pdf/`, { waitUntil: 'load', timeout: 30000 });
+    await page.setInputFiles('#fileInput', file);
+    await page.waitForTimeout(3000);
+    await page.click('.compress-target [data-target="custom"]');
+    await page.selectOption('#compressTargetUnit', 'KB');
+    await page.fill('#compressTargetValue', String(kb));
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__blob, null, { timeout: 120000 });
+    const size = await page.evaluate(() => window.__blob.size);
+    const verdict = await page.locator('#targetVerdict').innerText();
+    return { size, verdict };
+  } finally {
+    await context.close();
+  }
+}
+
+await test('fit into a size: an image PDF fits 40 % of its size, and the cost is said', async () => {
+  const W = 1600, H = 1200, rgb = Buffer.alloc(W * H * 3);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const i = (y * W + x) * 3, n = (x * 31 + y * 17) % 23;
+    rgb[i] = 128 + 90 * Math.sin(x / 37) + n; rgb[i + 1] = 120 + 80 * Math.cos(y / 29) + n; rgb[i + 2] = 110 + 70 * Math.sin((x - y) / 41) + n;
+  }
+  const bytes = await imagePdf(zlib.deflateSync(rgb), { Width: W, Height: H, ColorSpace: 'DeviceRGB', Filter: 'FlateDecode' });
+  const file = path.join(tmp, 'photo-size.pdf');
+  fs.writeFileSync(file, bytes);
+  const kb = Math.floor(bytes.length * 0.4 / 1024);
+  const { size, verdict } = await compressToSize(file, kb);
+  if (!(size <= kb * 1024)) throw new Error(`${size} bytes over ${kb} KB`);
+  if (!/fits/.test(verdict) || !/dpi|No quality lost/.test(verdict)) throw new Error(verdict);
+});
+
+await test('fit into a size: an unreachable size is said plainly and a file is still given', async () => {
+  const file = path.join(tmp, 'text-size.pdf');
+  fs.writeFileSync(file, await textPdf());
+  const { size, verdict } = await compressToSize(file, 0.2);   // the text PDF is ~1 KB already
+  expect(size > 0).toBe(true);
+  if (!/Couldn't get under/.test(verdict)) throw new Error(verdict);
+});
+
 await browser.close();
 fs.rmSync(tmp, { recursive: true, force: true });
 
