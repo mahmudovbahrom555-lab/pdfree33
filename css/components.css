@@ -6577,6 +6577,10 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 .qe-find .qe-copies__button { min-height: 44px; }
 .qe-find__status { flex-basis: 100%; margin: 0; min-height: 1.2em; text-align: center; color: var(--text2); font-size: 13px; }
 .qe-page-line--removed { color: #a00000; background: #fff; font-family: sans-serif; text-decoration: line-through; box-shadow: 0 0 0 2px #f5c542; }
+.qe-repeats { display: flex; flex-direction: column; gap: 8px; margin-block-end: 8px; }
+.qe-repeat { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
+.qe-repeat__text { flex: 1 1 240px; margin: 0; color: var(--text); font-size: 14px; overflow-wrap: anywhere; }
+.qe-repeat .qe-copies__button { min-height: 44px; }
 .qe-page-empty { position: absolute; inset: auto 8px 8px; margin: 0; padding: 8px; border-radius: 6px; background: var(--surface); color: var(--text); font-size: 13px; }
 .qe-scan-field {
   position: absolute;

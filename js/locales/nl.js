@@ -1318,6 +1318,9 @@ window.PDFREE_LOCALE = {
   quickedit_found_none:     '0 gevonden — de tekst is misschien een afbeelding (scan) of over twee regels verdeeld.',
   quickedit_replaced:       '{n} regels gewijzigd. Tik op Opslaan om de PDF te krijgen.',
   quickedit_pages_left:     'Opgeslagen. Ongewijzigd gebleven pagina\'s — daar staat een regel die niet ter plekke kan worden gewijzigd: {pages}.',
+  quickedit_repeat_found:   'Op {pages} van {total} pagina’s:',
+  quickedit_repeat_remove:  'Overal verwijderen',
+  quickedit_repeat_removed: 'Verwijderd van {pages} pagina’s. Tik op Opslaan om de PDF te krijgen.',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Laden van PDF-renderer mislukt. Controleer je internetverbinding.',
   draw_read_file_failed:       'Kan het bestand niet lezen.',

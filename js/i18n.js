@@ -1344,6 +1344,9 @@ export const EN = {
   quickedit_found_none:          '0 found — the text may be a picture (a scan) or split across two lines.',
   quickedit_replaced:            'Changed {n} lines. Press Save to get the PDF.',
   quickedit_pages_left:          'Saved. Left as they were — a line there can\'t be changed in place: pages {pages}.',
+  quickedit_repeat_found:        'On {pages} of {total} pages:',
+  quickedit_repeat_remove:       'Remove everywhere',
+  quickedit_repeat_removed:      'Removed from {pages} pages. Press Save to get the PDF.',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'Failed to load PDF renderer. Check your internet connection.',

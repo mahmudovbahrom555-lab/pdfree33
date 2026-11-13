@@ -1318,6 +1318,9 @@ window.PDFREE_LOCALE = {
   quickedit_found_none:     '0 trovati: il testo potrebbe essere un’immagine (scansione) o diviso su due righe.',
   quickedit_replaced:       '{n} righe modificate. Premi Salva per ottenere il PDF.',
   quickedit_pages_left:     'Salvato. Pagine lasciate com\'erano — c\'è una riga che non si può modificare sul posto: {pages}.',
+  quickedit_repeat_found:   'In {pages} pagine su {total}:',
+  quickedit_repeat_remove:  'Rimuovi ovunque',
+  quickedit_repeat_removed: 'Rimosso da {pages} pagine. Premi Salva per ottenere il PDF.',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Impossibile caricare il motore di rendering PDF. Controlla la tua connessione internet.',
   draw_read_file_failed:       'Impossibile leggere il file.',

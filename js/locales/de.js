@@ -1321,6 +1321,9 @@ window.PDFREE_LOCALE = {
   quickedit_found_none:     '0 gefunden – der Text ist vielleicht ein Bild (Scan) oder auf zwei Zeilen verteilt.',
   quickedit_replaced:       '{n} Zeilen geändert. Tippe auf Speichern, um das PDF zu erhalten.',
   quickedit_pages_left:     'Gespeichert. Unverändert blieben die Seiten {pages} – dort lässt sich eine Zeile nicht direkt ändern.',
+  quickedit_repeat_found:   'Auf {pages} von {total} Seiten:',
+  quickedit_repeat_remove:  'Überall entfernen',
+  quickedit_repeat_removed: 'Auf {pages} Seiten entfernt. Tippe auf Speichern, um das PDF zu erhalten.',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF-Renderer konnte nicht geladen werden. Überprüfe deine Internetverbindung.',
   draw_read_file_failed:       'Datei konnte nicht gelesen werden.',

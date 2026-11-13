@@ -959,6 +959,30 @@ await test('Find & replace: a line on every page removed, a word replaced, nothi
   }
 });
 
+await test('repeated lines: the promo on every page is offered first and removed everywhere with one press', async () => {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  const getDownload = await captureDownload(page);
+  try {
+    await page.goto(`${BASE_URL}/quick-edit-pdf/`);
+    await page.setInputFiles('#fileInput', { name: 'book.pdf', mimeType: 'application/pdf', buffer: await inPlaceDoc() });
+    await page.waitForSelector('[data-repeats]:not([hidden]) .qe-repeat', { timeout: 20000 });
+    const first = page.locator('.qe-repeat').first();
+    expect(/On 3 of 3 pages:/.test(await first.innerText()) && /Join our group for more books: example0001/.test(await first.innerText())).toBeTruthy();
+    await first.locator('button').click();
+    expect(/Removed from 3 pages/.test(await first.innerText())).toBeTruthy();
+    await page.click('#qeModalSaveBtn');
+    await page.waitForSelector('#successCard', { timeout: 30000 });
+    for (let i = 0; i < 50 && !getDownload(); i++) await page.waitForTimeout(100);
+    const pages = await pagesText(page, getDownload());
+    expect(pages.length).toBe(3);
+    for (const [i, text] of pages.entries()) {
+      expect(text).toBe(`Chapter ${i + 1} heading Body text on page ${i + 1} stays exactly as written.`);
+    }
+  } finally {
+    await page.close();
+  }
+});
+
 await test('in place on a phone: no sideways page scroll, a tap reaches the line, copies and the previous editor one press away', async () => {
   const page = await browser.newPage({ viewport: { width: 390, height: 664 }, isMobile: true, hasTouch: true });
   try {

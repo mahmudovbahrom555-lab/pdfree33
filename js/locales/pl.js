@@ -1318,6 +1318,9 @@ window.PDFREE_LOCALE = {
   quickedit_found_none:     'Znaleziono 0 — tekst może być obrazem (skanem) lub być podzielony na dwie linie.',
   quickedit_replaced:       'Zmieniono linii: {n}. Naciśnij Zapisz, aby otrzymać PDF.',
   quickedit_pages_left:     'Zapisano. Bez zmian zostały strony {pages} — jest tam linia, której nie da się zmienić w miejscu.',
+  quickedit_repeat_found:   'Na {pages} z {total} stron:',
+  quickedit_repeat_remove:  'Usuń wszędzie',
+  quickedit_repeat_removed: 'Usunięto z {pages} stron. Naciśnij Zapisz, aby otrzymać PDF.',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Nie udało się załadować renderera PDF. Sprawdź połączenie internetowe.',
   draw_read_file_failed:       'Nie można odczytać pliku.',

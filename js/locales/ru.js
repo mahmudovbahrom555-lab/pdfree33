@@ -1319,6 +1319,9 @@ window.PDFREE_LOCALE = {
   quickedit_found_none:     'Найдено 0 — текст может быть картинкой (скан) или разбит на две строки.',
   quickedit_replaced:       'Изменено строк: {n}. Нажмите «Сохранить», чтобы получить PDF.',
   quickedit_pages_left:     'Сохранено. Без изменений остались страницы {pages} — там есть строка, которую нельзя изменить на месте.',
+  quickedit_repeat_found:   'На {pages} из {total} страниц:',
+  quickedit_repeat_remove:  'Удалить везде',
+  quickedit_repeat_removed: 'Удалено на {pages} страницах. Нажмите «Сохранить», чтобы получить PDF.',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Не удалось загрузить рендерер PDF. Проверьте подключение к интернету.',
   draw_read_file_failed:       'Не удалось прочитать файл.',
