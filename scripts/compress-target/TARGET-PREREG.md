@@ -48,3 +48,17 @@ chip; when nothing fits the gentlest step within 3 % of the smallest file is kep
 halving's runs, so a vector book keeps 150 dpi/65 % even if its pictures bought nothing. Batch compress still uses
 worker.js's one-pass formula for a size. 23 of 30 targets were unreachable — most documents here are vector/text-heavy
 (the same files are over the 5 MB chip on prod too).
+
+## Step 2 — faster: estimate first (criteria fixed 2026-11-13, BEFORE building; owner: speed up 4–5.5 min, say "can't" honestly)
+Candidate: the pages holding the heaviest images are copied into a small sample PDF; the SAME compression code runs on it
+at every step (cheap: small file); the full file's size per step is predicted as non-image bytes + image bytes × the
+sample's ratio for that step. Then the full file runs only at the predicted gentlest fitting step s and at s − 1 (the
+proof for least loss); more runs only when the prediction was wrong. An unreachable size is said before any full run when
+even step 9 is predicted to stay over by a clear margin.
+| # | Criterion | Bar |
+|---|---|---|
+| E1 | prediction: predicted vs actual full size per (document, step) on the 12 documents | within ±15 % on ≥ 90 % of pairs |
+| E2 | upfront "can't": unreachable targets said before full runs | ≥ 80 % of unreachable targets; **0** said "can't" where some step really fits |
+| E3 | time: report.pdf (34 MB) to 16 MB and 8 MB | ≤ 50 % of v3's time (v3: 272 s / 258 s) |
+| E4 | T1 (fits ≤ target 100 %), T2 (least loss proven by runs ≥ 90 %), T3 (unreachable said, a file given) of the fit-size criteria | still met on the same 30 targets |
+| E5 | phone 17 MB → 4 MB | not slower than v3 (27 s); longest main-thread block ≤ 250 ms |
