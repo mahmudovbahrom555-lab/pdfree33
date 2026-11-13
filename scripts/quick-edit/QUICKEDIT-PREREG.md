@@ -145,3 +145,13 @@ everywhere". Removing uses the in-place edits (each occurrence → empty), verif
 | R3 | silence: a document whose pages share no such line gets no offer | 0 offers on single-page docs and on docs with no repeated header/footer (judged by hand) |
 | R4 | phone 390×664 CPU 4×, zh-book-300: offer shown | ≤ 5 s after the editor opens; longest main-thread block ≤ 250 ms |
 | R5 | languages / regressions | 16 locales; Quick Edit e2e + all CI e2e + npm test |
+
+## Step 5 — RESULT (branch feat/quick-edit-repeated-lines, 2026-11-14)
+| # | Bar | Result |
+|---|---|---|
+| R1 | promo first, 300/300, clean removal | **met** — offered first (after a tie-break added on the first run: word-for-word lines before number-changing ones; "第 N 章" came first before it), removal check_removed.py 300→300, 0 left, 0 other text, 0 pixels outside the band |
+| R2 | precision ≥ 90 % | first candidate on the corpus (43 page-mode docs): **2/3 = 67 % — not met** ("Table 1: … Table 3:" captions on 3 of 5 pages). Rule added after seeing it: a number-changing line must stand on ≥ 80 % of the pages (a "page margin" rule was tried first and did not remove it — tables float to the top). Because that rule was made on the same corpus, it was judged on NEW documents: 42 worksheets (independent sources, collected for the worksheet tool) + 7 compress-pack PDFs → 28 page-mode, 12 with offers, **24/24 offers are running headers/footers** (copyright lines, course headers, exam page codes, "Page 1 … Page 6") — met on the holdout |
+| R3 | silence | met: no body-text offer on either set after the rule |
+| R4 | phone ≤ 5 s, block ≤ 250 ms | **met**: 0.8 s, 0 ms |
+| R5 | 16 locales; tests | 16 locales; Quick Edit e2e 20/20 (+1), skeleton 5/5; all CI e2e — see PR |
+Recall not measured (no pre-registered bar): some long reports with headers got no offer.
