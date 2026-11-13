@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Yes. PDFree is completely free — no sign up, no account, no installation. Open the tool, load your PDF, click the text you want to fix, and download the result."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I find and replace text on every page?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Type the text in Find and what should stand there in Replace with — leave it empty to remove the text, such as a line repeated at the foot of every page. PDFree shows how many it found and on how many pages, and Replace all changes them in the original PDF. A match has to sit within one line, and the new text has to fit the space of its line; a line that can't be changed in place is left as it was, and its page is named."
+    }
   }
 ]

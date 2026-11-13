@@ -921,6 +921,44 @@ await test('in place in another language: the page editor speaks it (Russian pag
   }
 });
 
+await test('Find & replace: a line on every page removed, a word replaced, nothing else changes', async () => {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  const getDownload = await captureDownload(page);
+  try {
+    await page.goto(`${BASE_URL}/quick-edit-pdf/`);
+    await page.setInputFiles('#fileInput', { name: 'book.pdf', mimeType: 'application/pdf', buffer: await inPlaceDoc() });
+    await page.waitForSelector('.qe-modal--open .qe-page-line', { timeout: 20000 });
+    // nothing found says why, never silence
+    await page.fill('[data-find-text]', 'not in this book');
+    await page.click('.qe-find button[type=submit]');
+    await page.waitForFunction(() => /^0 found/.test(document.querySelector('[data-find-status]').textContent));
+    expect(await page.locator('[data-replace-all]').isDisabled()).toBeTruthy();
+    // the promo line on every page, removed (replace with nothing); case ignored
+    await page.fill('[data-find-text]', 'join our group for more books: EXAMPLE0001');
+    await page.click('.qe-find button[type=submit]');
+    await page.waitForFunction(() => /^Found 3 on 3 pages/.test(document.querySelector('[data-find-status]').textContent));
+    await page.click('[data-replace-all]');
+    await page.waitForSelector('.qe-page-line--removed');
+    expect(await page.locator('.qe-page-line--removed').count()).toBe(1);
+    // a word, replaced wherever it stands
+    await page.fill('[data-find-text]', 'stays');
+    await page.fill('[data-replace-text]', 'remains');
+    await page.click('.qe-find button[type=submit]');
+    await page.waitForFunction(() => /^Found 3 on 3 pages/.test(document.querySelector('[data-find-status]').textContent));
+    await page.click('[data-replace-all]');
+    await page.click('#qeModalSaveBtn');
+    await page.waitForSelector('#successCard', { timeout: 30000 });
+    for (let i = 0; i < 50 && !getDownload(); i++) await page.waitForTimeout(100);
+    const pages = await pagesText(page, getDownload());
+    expect(pages.length).toBe(3);
+    for (const [i, text] of pages.entries()) {
+      expect(text).toBe(`Chapter ${i + 1} heading Body text on page ${i + 1} remains exactly as written.`);
+    }
+  } finally {
+    await page.close();
+  }
+});
+
 await test('in place on a phone: no sideways page scroll, a tap reaches the line, copies and the previous editor one press away', async () => {
   const page = await browser.newPage({ viewport: { width: 390, height: 664 }, isMobile: true, hasTouch: true });
   try {

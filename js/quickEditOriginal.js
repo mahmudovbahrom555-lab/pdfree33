@@ -11,14 +11,14 @@ const fontPromises = new Map();
 let worker = null;
 let nextId = 0;
 const pending = new Map();
-function inWorker(type, payload) {
+function inWorker(type, payload, lines) {
   if (!worker) {
     worker = new Worker(new URL('./quickEditWorker.js', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
       const request = pending.get(data.id);
       pending.delete(data.id);
       if (data.result) request.resolve(data.result);
-      else request.reject(data.refusal ? refusalError(data.refusal) : new Error(data.message));
+      else request.reject(data.refusal ? refusalError(data.refusal, request.lines?.[data.refusal.line]) : new Error(data.message));
     };
     worker.onerror = event => {
       event.preventDefault();
@@ -30,13 +30,20 @@ function inWorker(type, payload) {
   }
   const id = ++nextId;
   return new Promise((resolve, reject) => {
-    pending.set(id, { resolve, reject });
+    pending.set(id, { resolve, reject, lines });
     worker.postMessage({ id, type, payload }, [payload.bytes]);
   });
 }
 
-function refusalError({ code, page }) {
-  return new Error(t(`quickedit_err_${code}`, { page }));
+// An error that belongs to one page carries it, and its line when one line is
+// the cause: Replace all leaves that line (or page) as it was and saves the
+// rest (js/processor.js)
+function pageError(message, page, line) {
+  return Object.assign(new Error(message), { page, line });
+}
+
+function refusalError({ code, page }, line) {
+  return pageError(t(`quickedit_err_${code}`, { page }), page, line);
 }
 
 function loadReplacementFont(path) {
@@ -52,8 +59,11 @@ function loadReplacementFont(path) {
 
 // splitFonts: a line keeps one font and size per piece (the in-place editor:
 // a mixed line — a bold word in a sentence — is edited piece by piece, since
-// the replacement can't keep two styles in one run)
-export function originalLines(items, { splitFonts = false } = {}) {
+// the replacement can't keep two styles in one run). fontKey: the font a
+// pdf.js font id stands for — Chrome's print splits one font into many
+// subsets (a Chinese line of NotoSerifCJKsc came as one id per character,
+// 2026-11-13), and those are one font, not a change of style.
+export function originalLines(items, { splitFonts = false, fontKey = id => id } = {}) {
   const baselines = new Map();
   for (const item of items) {
     if (!item.str?.trim() && item.str !== ' ') continue;
@@ -62,7 +72,7 @@ export function originalLines(items, { splitFonts = false } = {}) {
     // PDF.js may represent a wide column gutter as one synthetic space.
     if (item.str === ' ' && item.width > Math.max(18, size * 2)) continue;
     const row = baselines.get(y) ?? [];
-    row.push({ ...item, x, y, size, skew: skewY / size });
+    row.push({ ...item, x, y, size, skew: skewY / size, font: fontKey(item.fontName) });
     baselines.set(y, row);
   }
 
@@ -72,14 +82,14 @@ export function originalLines(items, { splitFonts = false } = {}) {
     for (const item of row.sort((a, b) => a.x - b.x)) {
       if (!line || item.x - line.right > Math.max(18, item.size * 2) ||
           Math.abs(item.skew - line.skew) > 0.01 ||
-          (splitFonts && (item.fontName !== line.fontName || Math.abs(item.size - line.size) > 0.01))) {
+          (splitFonts && (item.font !== line.font || Math.abs(item.size - line.size) > 0.01))) {
         line = { text: '', x: item.x, y: item.y, right: item.x, size: item.size,
-          fontName: item.fontName, mixed: false, skew: item.skew };
+          font: item.font, mixed: false, skew: item.skew };
         lines.push(line);
       }
       line.text += item.str;
       line.right = Math.max(line.right, item.x + item.width);
-      line.mixed ||= line.fontName !== item.fontName || Math.abs(line.size - item.size) > 0.01;
+      line.mixed ||= line.font !== item.font || Math.abs(line.size - item.size) > 0.01;
     }
   }
   return lines.filter(line => line.text.trim()).sort((a, b) => b.y - a.y || a.x - b.x);
@@ -101,6 +111,12 @@ export async function openOriginalPdf(file) {
   }
 }
 
+// The check after a save reads pdf.js's own pieces, not joined lines: a row is
+// ordered piece by piece, so a subscript stays where it stands in a formula
+// (joined lines put "2" after "β‖δ‖, (3)" on one side only, 2026-11-13).
+const textPieces = items => items.filter(item => item.str?.trim())
+  .map(item => ({ x: item.transform[4], y: item.transform[5], text: item.str }));
+
 export async function prepareOriginalCopy(original, lines) {
   const pages = new Map();
   const heights = {};
@@ -108,16 +124,16 @@ export async function prepareOriginalCopy(original, lines) {
     const page = await original.pdf.getPage(pageIndex + 1);
     const [x, y] = page.view;
     if (x || y || page.rotate || page.userUnit !== 1) {
-      throw new Error(t('quickedit_err_geometry', { page: pageIndex + 1 }));
+      throw pageError(t('quickedit_err_geometry', { page: pageIndex + 1 }), pageIndex + 1);
     }
     heights[pageIndex] = page.view[3];
-    pages.set(pageIndex, originalLines((await page.getTextContent()).items));
+    pages.set(pageIndex, textPieces((await page.getTextContent()).items));
   }
   const { bytes, plans } = await inWorker('prepare', {
     bytes: original.bytes.slice(0),
-    lines: lines.map(({ page, x, y, right, text, mixed, placed }) => ({ page, x, y, right, text, mixed, placed })),
+    lines: lines.map(({ page, x, y, right, size, text, mixed, placed }) => ({ page, x, y, right, size, text, mixed, placed })),
     heights,
-  });
+  }, lines);
   lines.filter(line => !line.placed).forEach((line, index) => original.plans.set(line, plans[index]));
   return { bytes, pages, plans: original.plans, pageCount: original.pdf.numPages };
 }
@@ -182,8 +198,8 @@ export async function planOriginalCopies(prepared, copies, allowSmallerText, isC
           selected = await loadFont(path);
         }
         if (points.some(point => !selected.characters.has(point))) {
-          throw new Error(recipientIndex == null ? t('quickedit_missing_chars', { page })
-            : copyText(`${prefix}: the replacement font does not contain every character.`, `${prefix}：替代字体缺少部分字符。`));
+          throw pageError(recipientIndex == null ? t('quickedit_missing_chars', { page })
+            : copyText(`${prefix}: the replacement font does not contain every character.`, `${prefix}：替代字体缺少部分字符。`), page, line);
         }
         const width = selected.font.widthOfTextAtSize(part.text, size);
         runs.push({ ...part, path, size, width, color: style?.color ?? source.color });
@@ -207,9 +223,9 @@ export async function planOriginalCopies(prepared, copies, allowSmallerText, isC
         }
       }
       if (!(scale > 0) || (scale < 0.999 && (!allowSmallerText || scale < 0.85))) {
-        throw new Error(recipientIndex == null
+        throw pageError(recipientIndex == null
           ? t('quickedit_line_too_long', { page })
-          : copyText(`${prefix}: the name does not fit the selected line.`, `${prefix}：姓名放不进选中的文本行。`));
+          : copyText(`${prefix}: the name does not fit the selected line.`, `${prefix}：姓名放不进选中的文本行。`), page, line);
       }
       for (const run of runs) {
         if (run.name) {
@@ -235,30 +251,38 @@ export async function writeOriginalCopy(prepared, changes) {
     if (check.numPages !== prepared.pageCount) throw new Error(t('quickedit_err_page_count'));
     for (const [pageIndex, before] of prepared.pages) {
       const outputPage = await check.getPage(pageIndex + 1);
-      const after = originalLines((await outputPage.getTextContent()).items);
+      const after = textPieces((await outputPage.getTextContent()).items);
       const pageChanges = changes.filter(({ line }) => line.page === pageIndex);
-      // Per baseline, its text with every space removed: MuPDF rewrites the page's
-      // numbers to a tenth of a point (a whole line can move 0.1 pt) and pdf.js may
-      // split a line into pieces differently once a gap changes by a fraction of a
-      // point — neither is a change a reader sees, and both failed the check on 8 of
-      // 31 corpus documents (2026-11-12). A word gained, lost or changed still does.
-      const byBaseline = entries => {
+      // Per row, its text with every space removed. MuPDF rewrites the page's
+      // numbers to a tenth of a point and pdf.js may split a line into pieces
+      // differently once a gap changes by a fraction of a point — neither is a
+      // change a reader sees (8 of 31 corpus documents failed on them,
+      // 2026-11-12). Rows chain pieces whose baselines are within 1.5 pt: two
+      // pieces 0.6 pt apart (a formula next to its words) were two rows before
+      // the save and one after (2026-11-13). The edit is put into its row's
+      // text where the old piece stood — it can sit mid-row, after an italic
+      // word. A word gained, lost or changed still fails the check.
+      const squash = value => value.replace(/\s+/g, '');
+      const rowsOf = entries => {
         const rows = [];
-        for (const { y, x, text } of entries.sort((a, b) => b.y - a.y || a.x - b.x)) {
-          let row = rows.find(r => Math.abs(r.y - y) <= 0.5);
-          if (!row) rows.push(row = { y, parts: [] });
-          row.parts.push({ x, text });
+        for (const { y, x, text } of [...entries].sort((a, b) => b.y - a.y || a.x - b.x)) {
+          const row = rows[rows.length - 1];
+          if (row && row.y - y <= 1.5) { row.y = y; row.parts.push({ x, text }); } else rows.push({ y, top: y, parts: [{ x, text }] });
         }
-        return rows.map(r => r.parts.sort((a, b) => a.x - b.x).map(p => p.text).join('').replace(/\s+/g, ''))
-          .filter(Boolean).sort();
+        return rows.map(row => ({ top: row.top, y: row.y, text: squash(row.parts.sort((a, b) => a.x - b.x).map(part => part.text).join('')) }));
       };
-      const expected = byBaseline(before.map(line => {
-        const edit = pageChanges.find(change => !change.line.placed && change.line.x === line.x && change.line.y === line.y);
-        return { y: line.y, x: line.x, text: edit?.text ?? line.text };
-      }).concat(pageChanges.filter(change => change.line.placed).map(change => ({ y: change.line.y, x: change.line.x, text: change.text }))));
-      const actual = byBaseline(after.map(line => ({ y: line.y, x: line.x, text: line.text })));
+      const expectedRows = rowsOf(before
+        .concat(pageChanges.filter(change => change.line.placed).map(change => ({ y: change.line.y, x: change.line.x, text: change.text }))));
+      for (const change of pageChanges.filter(change => !change.line.placed)) {
+        const row = expectedRows.find(candidate => change.line.y <= candidate.top + 0.5 && change.line.y >= candidate.y - 0.5);
+        const old = squash(change.line.text);
+        const at = row ? row.text.indexOf(old) : -1;
+        if (at >= 0) row.text = row.text.slice(0, at) + squash(change.text) + row.text.slice(at + old.length);
+      }
+      const expected = expectedRows.map(row => row.text).filter(Boolean).sort();
+      const actual = rowsOf(after).map(row => row.text).filter(Boolean).sort();
       if (actual.length !== expected.length || actual.some((value, index) => value !== expected[index])) {
-        throw new Error(t('quickedit_err_verify', { page: pageIndex + 1 }));
+        throw pageError(t('quickedit_err_verify', { page: pageIndex + 1 }), pageIndex + 1);
       }
     }
   } finally {
