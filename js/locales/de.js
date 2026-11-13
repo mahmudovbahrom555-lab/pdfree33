@@ -1162,6 +1162,7 @@ window.PDFREE_LOCALE = {
   p2p_slide_one:         '{n} Folie',
   p2p_slide_many:        '{n} Folien',
   p2p_quality_label:     'Folienqualität',
+  p2p_worksheet:             "Eine Aufgabe pro Folie",
   p2p_output_mode:          'Ausgabe',
   p2p_conversion_mode_aria: 'PowerPoint-Konvertierungsmodus',
   p2p_mode_image:           '🖼️ Bild',

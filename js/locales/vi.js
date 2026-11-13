@@ -1160,6 +1160,7 @@ window.PDFREE_LOCALE = {
   p2p_slide_one:         '{n} trang chiếu',
   p2p_slide_many:        '{n} trang chiếu',
   p2p_quality_label:     'Chất lượng trang chiếu',
+  p2p_worksheet:             "Một câu hỏi mỗi trang chiếu",
   p2p_output_mode:          'Đầu ra',
   p2p_conversion_mode_aria: 'Chế độ chuyển đổi PowerPoint',
   p2p_mode_image:           '🖼️ Hình ảnh',

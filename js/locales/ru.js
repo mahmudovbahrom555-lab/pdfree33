@@ -1160,6 +1160,7 @@ window.PDFREE_LOCALE = {
   p2p_slide_one:         '{n} слайд',
   p2p_slide_many:        '{n} слайдов',
   p2p_quality_label:     'Качество слайдов',
+  p2p_worksheet:             "Одно задание на слайд",
   p2p_output_mode:          'Результат',
   p2p_conversion_mode_aria: 'Режим конвертации в PowerPoint',
   p2p_mode_image:           '🖼️ Изображение',

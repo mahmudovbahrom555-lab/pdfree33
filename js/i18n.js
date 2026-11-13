@@ -1183,6 +1183,7 @@ export const EN = {
   p2p_slide_many:     '{n} slides',
   p2p_quality_label:  'Slide quality',
   p2p_quality_aria:   'Slide image quality',
+  p2p_worksheet:             "One question per slide",
   p2p_output_mode:         'Output',
   p2p_conversion_mode_aria: 'PowerPoint conversion mode',
   p2p_mode_image:          '🖼️ Image',

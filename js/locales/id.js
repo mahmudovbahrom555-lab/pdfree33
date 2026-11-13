@@ -1160,6 +1160,7 @@ window.PDFREE_LOCALE = {
   p2p_slide_one:         '{n} slide',
   p2p_slide_many:        '{n} slide',
   p2p_quality_label:     'Kualitas slide',
+  p2p_worksheet:             "Satu soal per slide",
   p2p_output_mode:          'Keluaran',
   p2p_conversion_mode_aria: 'Mode konversi PowerPoint',
   p2p_mode_image:           '🖼️ Gambar',

@@ -1159,6 +1159,7 @@ window.PDFREE_LOCALE = {
   p2p_slide_one:         '{n} dia',
   p2p_slide_many:        '{n} dia\'s',
   p2p_quality_label:     'Diakwaliteit',
+  p2p_worksheet:             "Eén vraag per dia",
   p2p_output_mode:          'Uitvoer',
   p2p_conversion_mode_aria: 'PowerPoint-conversiemodus',
   p2p_mode_image:           '🖼️ Afbeelding',

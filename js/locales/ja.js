@@ -1162,6 +1162,7 @@ window.PDFREE_LOCALE = {
   p2p_slide_one:         '{n}枚のスライド',
   p2p_slide_many:        '{n}枚のスライド',
   p2p_quality_label:     'スライド品質',
+  p2p_worksheet:             "1スライドに1問",
   p2p_output_mode:          '出力',
   p2p_conversion_mode_aria: 'PowerPoint変換モード',
   p2p_mode_image:           '🖼️ 画像',

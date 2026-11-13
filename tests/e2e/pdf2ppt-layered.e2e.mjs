@@ -16,6 +16,10 @@
 import { chromium } from 'playwright';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
+import assert from 'node:assert/strict';
+import { PDFDocument, StandardFonts } from 'pdf-lib';
+import JSZip from 'jszip';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE_URL = process.env.PDFREE_BASE_URL || 'http://localhost:8934';
@@ -111,6 +115,113 @@ try {
   });
 } finally {
   await browser.close();
+}
+
+// ── "One question per slide" (/worksheet-slides/ in a same-site frame, 2026-11-14) ──
+// A teacher frames each question; the PowerPoint has one question per slide,
+// with clickable A–E answers that jump to "Correct!" / "Try again" slides.
+async function worksheetPdf() {
+  const pdf = await PDFDocument.create();
+  const page = pdf.addPage([612, 792]);
+  const font = await pdf.embedFont(StandardFonts.Helvetica);
+  for (const [index, question] of ['1. What is 3 × 4?', '2. How many sides does this figure have?', '3. What is 15 / 3?'].entries()) {
+    const y = 690 - index * 170;
+    page.drawText(question, { x: 65, y, font, size: 17 });
+    page.drawText(index === 2 ? 'A) 1    B) 2    C) 3    D) 4    E) 5' : 'A) 12    B) 3    C) 4    D) 5', { x: 65, y: y - 32, font, size: 15 });
+  }
+  page.drawLine({ start: { x: 450, y: 490 }, end: { x: 500, y: 490 } });
+  page.drawLine({ start: { x: 500, y: 490 }, end: { x: 475, y: 535 } });
+  page.drawLine({ start: { x: 475, y: 535 }, end: { x: 450, y: 490 } });
+  return Buffer.from(await pdf.save());
+}
+async function verifyDeck(archive) {
+  assert.match(await archive.file('ppt/presProps.xml').async('string'), /<p:present\b/);
+  assert.equal(archive.file(/^ppt\/slides\/slide\d+\.xml$/).length, 10);
+  for (const [slide, destinations] of Object.entries({
+    1: [4, 5, 6, 6, 6], 2: [4, 8, 7, 8, 8], 3: [4, 10, 10, 10, 10, 9],
+    4: [1], 5: [2, 4], 6: [1, 4], 7: [3, 4], 8: [2, 4], 9: [4, 4], 10: [3, 4],
+  })) {
+    const rels = await archive.file(`ppt/slides/_rels/slide${slide}.xml.rels`).async('string');
+    const content = await archive.file(`ppt/slides/slide${slide}.xml`).async('string');
+    assert.match(content, /<p:transition advClick="0"/);
+    const targets = new Map([...rels.matchAll(/Id="([^"]+)"[^>]*Target="[^"]*slide(\d+)\.xml"/g)].map(m => [m[1], Number(m[2])]));
+    const links = [...content.matchAll(/<p:sp>[\s\S]*?<\/p:sp>/g)].flatMap(([shape]) => {
+      const ids = [...shape.matchAll(/<a:hlinkClick[^>]*r:id="([^"]+)"/g)].map(m => targets.get(m[1]));
+      if (!ids.length) return [];
+      assert.ok(ids.every(id => id === ids[0] && Number.isInteger(id)));
+      return [ids[0]];
+    });
+    assert.deepEqual(links, destinations, `answer destinations on slide ${slide}`);
+    if (slide === '4') assert.match(content, /<a:hlinkClick[^>]*r:id=""[^>]*action="ppaction:\/\/hlinkshowjump\?jump=endshow"/);
+    assert.doesNotMatch(rels, /jump=endshow/);
+  }
+}
+
+const browser2 = await chromium.launch();
+console.log(`\npdf2ppt — one question per slide (${BASE_URL}):`);
+try {
+  await test('a teacher frames 3 questions, marks the answers, previews them and gets a quiz PowerPoint with working answer links', async () => {
+    const page = await browser2.newPage({ viewport: { width: 1440, height: 1180 }, serviceWorkers: 'block' });
+    const model = [];
+    page.on('request', r => { if (r.url().endsWith('.onnx')) model.push(r.url()); });
+    await page.goto(`${BASE_URL}/pdf-to-powerpoint/`);
+    const fixture = { name: 'interactive-test.pdf', mimeType: 'application/pdf', buffer: await worksheetPdf() };
+    await page.locator('#fileInput').setInputFiles(fixture);
+    await page.locator('#p2pWorksheet').click({ timeout: 20000 });
+    const editor = page.frameLocator('#pdf2pptOptions dialog iframe');
+    await editor.locator('#workspace:enabled').waitFor({ timeout: 30000 });
+    assert.equal(await editor.locator('#document-name').innerText(), fixture.name);
+    const overlay = editor.locator('#overlay');
+    for (let index = 0; index < 3; index++) {
+      if (index) await editor.locator('#add-task').click();
+      const top = 76 + index * 170;
+      await overlay.scrollIntoViewIfNeeded();
+      const local = await overlay.evaluate((svg, y) => {
+        const bounds = svg.getBoundingClientRect();
+        return [[55, y], [530, y + 83]].map(([x, v]) => {
+          const point = new DOMPoint(x, v).matrixTransform(svg.getScreenCTM());
+          return [point.x - bounds.x, point.y - bounds.y];
+        });
+      }, top);
+      const box = await overlay.boundingBox();
+      const [start, end] = local.map(([x, y]) => [x + box.x, y + box.y]);
+      await page.mouse.move(...start); await page.mouse.down(); await page.mouse.move(...end, { steps: 5 }); await page.mouse.up();
+      if (!index) await editor.getByText('Interactive answer', { exact: true }).click();
+      await editor.locator('#quiz-enabled').check();
+      if (!index) {
+        await editor.locator('#export-pptx').click();
+        assert.match(await editor.locator('#status').innerText(), /Mark the correct answer/);
+      }
+      if (index === 2) await editor.locator('#quiz-count').selectOption('5');
+      await editor.locator('#quiz-correct').selectOption(['A', 'B', 'E'][index]);
+      await editor.locator('#quiz-explanation').fill(['3 × 4 = 12.', 'A triangle has three sides.', '15 ÷ 3 = 5.'][index]);
+      await editor.locator('#quiz-explanation').press('Tab');
+    }
+    await editor.locator('#preview').click();
+    await editor.locator('#expand-preview').click();
+    await editor.locator('#quiz-answers button').first().click();
+    assert.equal(await editor.locator('#quiz-feedback').innerText(), 'Try again');
+    await editor.locator('#quiz-answers button').last().click();
+    assert.match(await editor.locator('#quiz-feedback').innerText(), /Correct!/);
+    await editor.getByRole('button', { name: 'Close', exact: true }).click();
+    await editor.locator('#review-summary').click();
+    await editor.locator('#reviewed').check();
+    const downloading = page.waitForEvent('download');
+    await editor.locator('#export-pptx').click();
+    const result = await downloading;
+    assert.equal(result.suggestedFilename(), 'worksheet-quiz.pptx');
+    await verifyDeck(await JSZip.loadAsync(fs.readFileSync(await result.path())));
+    assert.deepEqual(model, []);
+    // closing returns to the normal conversion; reopening keeps the frames
+    await page.locator('#pdf2pptOptions dialog header > button').click();
+    await page.locator('#pdf2pptOptions dialog').waitFor({ state: 'detached' });
+    await page.locator('#p2pWorksheet').click();
+    await editor.locator('#workspace:enabled').waitFor();
+    assert.equal(await editor.locator('#task-list button').count(), 3);
+    await page.close();
+  });
+} finally {
+  await browser2.close();
 }
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed} failed`);
