@@ -4439,19 +4439,37 @@ async function _runQuickEditInPlace(file, { original, edits }) {
     _handleError('quickEdit', t('quickedit_no_edits'), 'no_edits');
     return;
   }
-  setProgress(30, t('quickedit_replacing'));
   let blob;
+  // A line the engine refuses (one it can't match, a text too long for it) —
+  // or the page, when the check after the save fails there — is left as it
+  // was and the rest is saved:
+  // one odd line must not undo a Replace all over hundreds of pages. The
+  // pages left alone are named; with nothing left to change, the refusal is
+  // the error, as before.
+  let remaining = edits;
+  const skipped = [];
   try {
     const engine = await import('./quickEditOriginal.js');
-    const lines = edits.map(e => e.line);
-    const prepared = await engine.prepareOriginalCopy(original, lines);
-    if (!isProcessing) return;
-    setProgress(60, t('quickedit_checking_pages'));
-    const planned = await engine.planOriginalCopies(prepared,
-      [{ recipientIndex: null, changes: edits.map(({ line, text }) => ({ line, text, parts: null, appearance: null })) }],
-      true, () => !isProcessing);
-    if (!isProcessing || !planned) return;
-    blob = await engine.writeOriginalCopy(prepared, planned[0]);
+    for (;;) {
+      setProgress(30, t('quickedit_replacing'));
+      try {
+        const prepared = await engine.prepareOriginalCopy(original, remaining.map(e => e.line));
+        if (!isProcessing) return;
+        setProgress(60, t('quickedit_checking_pages'));
+        const planned = await engine.planOriginalCopies(prepared,
+          [{ recipientIndex: null, changes: remaining.map(({ line, text }) => ({ line, text, parts: null, appearance: null })) }],
+          true, () => !isProcessing);
+        if (!isProcessing || !planned) return;
+        blob = await engine.writeOriginalCopy(prepared, planned[0]);
+        break;
+      } catch (err) {
+        const rest = err.line ? remaining.filter(e => e.line !== err.line)
+          : err.page ? remaining.filter(e => e.line.page + 1 !== err.page) : remaining;
+        if (!isProcessing || rest.length === remaining.length || !rest.length) throw err;
+        skipped.push(err.page);
+        remaining = rest;
+      }
+    }
   } catch (err) {
     done();
     _handleError('quickEdit', err.message, 'inplace_failed');
@@ -4463,6 +4481,7 @@ async function _runQuickEditInPlace(file, { original, edits }) {
   document.dispatchEvent(new CustomEvent('pdfree:success', {
     detail: { tool: 'quickEdit', blob, desc: fmtSize(blob.size), filename: file.name.replace(/\.pdf$/i, '-edited.pdf') },
   }));
+  if (skipped.length) showToast(t('quickedit_pages_left', { pages: [...new Set(skipped)].sort((x, y) => x - y).join(', ') }), 8000);
 }
 
 // pdf2md's extraction/render core (_detectPageImages/_p2mdExtractImageBlob/

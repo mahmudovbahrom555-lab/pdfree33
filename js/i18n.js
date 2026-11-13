@@ -1325,6 +1325,15 @@ export const EN = {
   quickedit_err_geometry:        'Page {page}: this page uses unsupported geometry.',
   quickedit_err_page_count:      'The page count changed. No file was exported.',
   quickedit_err_verify:          'Page {page}: verification found an unexpected text change. No file was exported.',
+  quickedit_find:                'Find',
+  quickedit_replace_with:        'Replace with (empty = remove)',
+  quickedit_find_btn:            'Find',
+  quickedit_replace_all:         'Replace all',
+  quickedit_searching:           'Searching page {n} of {total}…',
+  quickedit_found:               'Found {n} on {pages} pages',
+  quickedit_found_none:          '0 found — the text may be a picture (a scan) or split across two lines.',
+  quickedit_replaced:            'Changed {n} lines. Press Save to get the PDF.',
+  quickedit_pages_left:          'Saved. Left as they were — a line there can\'t be changed in place: pages {pages}.',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'Failed to load PDF renderer. Check your internet connection.',

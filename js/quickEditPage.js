@@ -20,6 +20,16 @@
 
 import { originalLines } from './quickEditOriginal.js';
 import { t } from './i18n.js';
+import { RADICAL_IDEOGRAPH } from './cjkRadicals.js';
+
+// What a person types for what a PDF stores: NFC turns a CJK compatibility
+// ideograph (更 U+F901) into the ordinary one; a Kangxi radical (⽂ U+2F42 for
+// 文) only NFKC maps, applied to it alone so full-width punctuation (，) stays;
+// a CJK Radicals Supplement character (⻚ for 页) no normalization maps — the
+// table from Noto SC's glyphs does (Chrome-printed Chinese, 2026-11-13).
+const plain = value => value.normalize('NFC')
+  .replace(/[\u2F00-\u2FDF]/g, c => c.normalize('NFKC'))
+  .replace(/[\u2E80-\u2EFF]/g, c => RADICAL_IDEOGRAPH.get(c) ?? c);
 
 // → { edits(): [{ line, text }], count(): number, destroy() }
 export function createPageEditor(stage, original, { onChange } = {}) {
@@ -30,6 +40,13 @@ export function createPageEditor(stage, original, { onChange } = {}) {
   const root = document.createElement('div');
   root.className = 'qe-page-editor';
   root.innerHTML = `
+    <form class="qe-find" data-find>
+      <input type="text" data-find-text aria-label="${t('quickedit_find')}" placeholder="${t('quickedit_find')}" enterkeyhint="search">
+      <input type="text" data-replace-text aria-label="${t('quickedit_replace_with')}" placeholder="${t('quickedit_replace_with')}">
+      <button type="submit" class="qe-copies__button">${t('quickedit_find_btn')}</button>
+      <button type="button" class="qe-copies__button" data-replace-all disabled>${t('quickedit_replace_all')}</button>
+      <p class="qe-find__status" data-find-status role="status"></p>
+    </form>
     <div class="qe-page-nav">
       <button type="button" class="qe-copies__button" data-prev aria-label="${t('quickedit_prev_page')}">‹</button>
       <span data-page-label role="status"></span>
@@ -61,8 +78,8 @@ export function createPageEditor(stage, original, { onChange } = {}) {
     active = null;
     span.contentEditable = 'false';
     span.classList.remove('qe-page-line--active');
-    const text = span.textContent.replace(/\s+/g, ' ').trim();
-    if (!text || text === entry.line.text.replace(/\s+/g, ' ').trim()) {
+    const text = plain(span.textContent).replace(/\s+/g, ' ').trim();
+    if (!text || text === plain(entry.line.text).replace(/\s+/g, ' ').trim()) {
       edits.delete(entry.key);
       span.textContent = entry.line.text;
       span.classList.remove('qe-page-line--edited');
@@ -89,30 +106,47 @@ export function createPageEditor(stage, original, { onChange } = {}) {
     span.addEventListener('blur', () => commit(span, entry), { once: true });
   }
 
-  async function render() {
-    const mine = ++version;
-    label.textContent = t('quickedit_page_of', { n: pageIndex + 1, total });
-    prev.disabled = pageIndex === 0;
-    next.disabled = pageIndex >= total - 1;
-    const page = await original.pdf.getPage(pageIndex + 1);
+  // One page's editable lines — the same for drawing it and for Find, so a
+  // match is always a line the person could also tap
+  async function readPage(index) {
+    const page = await original.pdf.getPage(index + 1);
     const viewport = page.getViewport({ scale: 1 });
-    const scale = Math.min(2, (window.devicePixelRatio || 1) * Math.max(1, (view.clientWidth || viewport.width) / viewport.width));
-    const canvas = document.createElement('canvas');
-    canvas.width = Math.ceil(viewport.width * scale);
-    canvas.height = Math.ceil(viewport.height * scale);
-    const [{ items }, ops] = await Promise.all([
-      page.getTextContent(),
-      page.getOperatorList(),
-      page.render({ canvasContext: canvas.getContext('2d'), viewport: page.getViewport({ scale }) }).promise,
-    ]);
-    if (mine !== version || !root.isConnected) return;
+    const [{ items }, ops] = await Promise.all([page.getTextContent(), page.getOperatorList()]);
     // A scan with an OCR layer: its text is drawn invisible (render mode 3)
     // under the page picture — an edit would change only hidden text, never
     // what a reader sees (Internet Archive books, 2026-11-12)
     const { OPS } = window.pdfjsLib;
     const modes = ops.fnArray.map((fn, i) => (fn === OPS.setTextRenderingMode ? ops.argsArray[i][0] : null)).filter(m => m !== null);
     const hiddenOnly = modes.length > 0 && modes.every(m => m === 3 || m === 7);
-    const lines = hiddenOnly ? [] : originalLines(items, { splitFonts: true });
+    // the font a pdf.js id stands for, its subset tag (ABCDEF+) dropped;
+    // fonts are known once the operator list above has been read
+    const fontKey = id => {
+      try { return page.commonObjs.get(id)?.name?.replace(/^[A-Z]{6}\+/, '') || id; } catch { return id; }
+    };
+    const lines = hiddenOnly ? [] : originalLines(items, { splitFonts: true, fontKey });
+    for (const line of lines) {
+      const right = lines.find(other => other.y === line.y && other.x > line.right);
+      line.page = index;
+      // free space to the next piece on the line, else to the page margin
+      line.maxRight = right ? Math.max(line.right, right.x - 12) : Math.max(line.right, viewport.width - 36);
+    }
+    return { page, viewport, lines, hiddenOnly };
+  }
+  const keyOf = line => `${line.page}:${line.x}:${line.y}`;
+
+  async function render() {
+    const mine = ++version;
+    label.textContent = t('quickedit_page_of', { n: pageIndex + 1, total });
+    prev.disabled = pageIndex === 0;
+    next.disabled = pageIndex >= total - 1;
+    const { page, viewport, lines, hiddenOnly } = await readPage(pageIndex);
+    if (mine !== version || !root.isConnected) return;
+    const scale = Math.min(2, (window.devicePixelRatio || 1) * Math.max(1, (view.clientWidth || viewport.width) / viewport.width));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.ceil(viewport.width * scale);
+    canvas.height = Math.ceil(viewport.height * scale);
+    await page.render({ canvasContext: canvas.getContext('2d'), viewport: page.getViewport({ scale }) }).promise;
+    if (mine !== version || !root.isConnected) return;
     view.style.aspectRatio = `${viewport.width} / ${viewport.height}`;
     view.dataset.maxWidth = `${viewport.width * 1.5}px`;
     if (ZOOMS[zoom] === 1) view.style.maxWidth = view.dataset.maxWidth;
@@ -126,15 +160,12 @@ export function createPageEditor(stage, original, { onChange } = {}) {
       view.appendChild(note);
     }
     for (const line of lines) {
-      const right = lines.find(other => other.y === line.y && other.x > line.right);
-      line.page = pageIndex;
-      // free space to the next piece on the line, else to the page margin
-      line.maxRight = right ? Math.max(line.right, right.x - 12) : Math.max(line.right, viewport.width - 36);
-      const key = `${pageIndex}:${line.x}:${line.y}`;
+      const key = keyOf(line);
       const span = document.createElement('span');
       span.className = 'qe-original-line qe-page-line';
-      span.textContent = edits.get(key)?.text ?? line.text;
-      if (edits.has(key)) span.classList.add('qe-page-line--edited');
+      // a removed line (Find, nothing to replace with) shows struck through
+      span.textContent = edits.get(key)?.text || line.text;
+      if (edits.has(key)) span.classList.add(edits.get(key).text ? 'qe-page-line--edited' : 'qe-page-line--removed');
       span.style.left = `${line.x / viewport.width * 100}%`;
       span.style.top = `${(viewport.height - line.y - line.size) / viewport.height * 100}%`;
       span.style.minWidth = `${(line.right - line.x) / viewport.width * 100}%`;
@@ -146,12 +177,97 @@ export function createPageEditor(stage, original, { onChange } = {}) {
       span.addEventListener('keydown', e => {
         if (active === span) {
           if (e.key === 'Enter') { e.preventDefault(); span.blur(); }
-          if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); span.textContent = edits.get(key)?.text ?? line.text; span.blur(); }
+          if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); span.textContent = edits.get(key)?.text || line.text; span.blur(); }
         } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); edit(span, entry); }
       });
       view.appendChild(span);
     }
   }
+
+  // ── Find & replace on every page (like a word processor's Replace all) ──
+  // A match lies inside one line: a phrase broken across two lines isn't
+  // found, and the status says so when nothing is. Latin case is ignored,
+  // as a word processor does by default.
+  const findForm = root.querySelector('[data-find]');
+  const findText = root.querySelector('[data-find-text]');
+  const replaceText = root.querySelector('[data-replace-text]');
+  const replaceAll = root.querySelector('[data-replace-all]');
+  const findStatus = root.querySelector('[data-find-status]');
+  let found = [], search = 0;
+
+  // Compared after NFC + lower case, per character so a match maps back to
+  // the line: Chinese PDFs often map a glyph to a CJK compatibility
+  // ideograph (更 as U+F901 in a Noto subset, 2026-11-13) — it looks the same
+  // as the 更 a person types (U+66F4) and NFC makes them equal, while
+  // full-width punctuation (，) stays as it is.
+  const segmenter = typeof Intl.Segmenter === 'function' ? new Intl.Segmenter() : null;
+  const fold = value => plain(value).toLowerCase().replace(/\s+/g, ' ');
+  function occurrences(text, query) {
+    const parts = segmenter ? [...segmenter.segment(text)].map(({ segment, index }) => ({ segment, index }))
+      : Array.from(text, (segment, i, all) => ({ segment, index: all.slice(0, i).join('').length }));
+    let haystack = '';
+    const from = [];   // haystack position → [start, end) in the line's own text
+    for (const { segment, index } of parts) {
+      // any space (a no-break space too) is one space; a run of them counts once
+      const folded = /^\s+$/.test(segment) ? ' ' : fold(segment);
+      if (folded === ' ' && haystack.endsWith(' ')) continue;
+      for (let k = 0; k < folded.length; k++) from.push([index, index + segment.length]);
+      haystack += folded;
+    }
+    const target = fold(query);
+    const at = [];
+    for (let i = haystack.indexOf(target); i >= 0 && target; i = haystack.indexOf(target, i + target.length)) {
+      at.push([from[i][0], from[i + target.length - 1][1]]);
+    }
+    return at;
+  }
+
+  findForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    const query = findText.value.replace(/\s+/g, ' ').trim();
+    const mine = ++search;
+    found = [];
+    replaceAll.disabled = true;
+    if (!query) { findStatus.textContent = ''; return; }
+    let count = 0;
+    const pages = new Set();
+    for (let index = 0; index < total; index++) {
+      if (mine !== search || !root.isConnected) return;
+      findStatus.textContent = t('quickedit_searching', { n: index + 1, total });
+      const { lines } = await readPage(index);
+      for (const line of lines) {
+        const at = occurrences(line.text, query);
+        if (!at.length) continue;
+        found.push({ line, at });
+        count += at.length;
+        pages.add(index);
+      }
+    }
+    if (mine !== search) return;
+    findStatus.textContent = count ? t('quickedit_found', { n: count, pages: pages.size }) : t('quickedit_found_none');
+    replaceAll.disabled = !count;
+  });
+
+  replaceAll.addEventListener('click', () => {
+    active?.blur();
+    const replacement = replaceText.value;
+    let lines = 0;
+    for (const { line, at } of found) {
+      let text = line.text;
+      for (const [start, end] of [...at].reverse()) text = text.slice(0, start) + replacement + text.slice(end);
+      // NFC: a compatibility ideograph left in the line is written as the
+      // ordinary one, which the replacement font has
+      text = plain(text).replace(/\s+/g, ' ').trim();
+      if (text === plain(line.text).replace(/\s+/g, ' ').trim()) continue;
+      edits.set(keyOf(line), { line, text });
+      lines++;
+    }
+    found = [];
+    replaceAll.disabled = true;
+    findStatus.textContent = t('quickedit_replaced', { n: lines });
+    onChange?.(edits.size);
+    void render();
+  });
 
   prev.addEventListener('click', () => { if (pageIndex > 0) { active?.blur(); pageIndex--; void render(); } });
   next.addEventListener('click', () => { if (pageIndex < total - 1) { active?.blur(); pageIndex++; void render(); } });

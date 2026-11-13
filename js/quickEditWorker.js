@@ -31,8 +31,9 @@ const ready = Promise.all([
 ]).then(([, , engine]) => { ({ PDFLib, fontkit } = self); mupdf = engine.default; });
 const CHINESE_FONT = './vendor/noto/notosanssc-v40.ttf';
 
+// line: the refused line's place in the request, when one line is the cause
 class Refusal extends Error {
-  constructor(code, page) { super(code); this.code = code; this.page = page; }
+  constructor(code, page, line) { super(code); this.code = code; this.page = page; this.line = line; }
 }
 
 const fontBytes = new Map();
@@ -74,11 +75,25 @@ function redactRect(sheet, line, pageHeight) {
   // In MuPDF's reading order, not sorted by x: a ligature's parts share one
   // origin ("ff" + "e" in "difference" all at one x) and a sort mixed them up —
   // "difefrence" no longer matched the line (2026-11-12).
+  // The line's last glyph starts at least ~2 pt before its right edge; a glyph
+  // of the next piece set tight against it (a Latin "A" after Chinese text)
+  // starts a hair before it in MuPDF's numbers (2026-11-13)
+  const end = line.right - Math.max(0.1, Math.min(1, line.size * 0.08));
   const selected = glyphs.filter(({ origin }) =>
-    Math.abs(origin[1] - baseline) <= 0.5 && origin[0] >= line.x - 0.3 && origin[0] < line.right - 0.1
+    Math.abs(origin[1] - baseline) <= 0.5 && origin[0] >= line.x - 0.3 && origin[0] < end
   );
-  const normalized = value => value.normalize('NFKC').replace(/\s+/g, '');
-  if (!selected.length || normalized(selected.map(glyph => glyph.character).join('')) !== normalized(line.text)) {
+  // pdf.js and MuPDF can name one glyph differently: a radical (⻚, ⽂) for an
+  // ideograph (页, 文), one dash for another (— U+2014 / ― U+2015) — the same
+  // glyph either way (Chinese and Japanese pages, 2026-11-13)
+  const normalized = value => Array.from(value.normalize('NFKC').replace(/\s+/g, ''));
+  const dash = /[\u2010-\u2015\u2212\uFE58\uFE63\uFF0D-]/;
+  const radical = /[\u2E80-\u2FDF]/;
+  const ideograph = /\p{Ideographic}/u;
+  const same = (a, b) => a === b || (dash.test(a) && dash.test(b)) ||
+    (radical.test(a) && ideograph.test(b)) || (radical.test(b) && ideograph.test(a));
+  const found = normalized(selected.map(glyph => glyph.character).join(''));
+  const wanted = normalized(line.text);
+  if (!selected.length || found.length !== wanted.length || found.some((c, i) => !same(c, wanted[i]))) {
     throw new Refusal('no_match', line.page + 1);
   }
   const selectedSet = new Set(selected);
@@ -108,7 +123,7 @@ function redactRect(sheet, line, pageHeight) {
   return { rectangles, font, color };
 }
 
-// lines: [{ page, x, y, right, text, mixed, placed }], heights: { [page]: height }
+// lines: [{ page, x, y, right, size, text, mixed, placed }], heights: { [page]: height }
 async function prepare({ bytes, lines, heights }) {
   const input = await PDFLib.PDFDocument.load(bytes, { updateMetadata: false });
   if (input.getForm().getFields().some(field => field instanceof PDFLib.PDFSignature)) throw new Refusal('signed');
@@ -120,7 +135,7 @@ async function prepare({ bytes, lines, heights }) {
     const sameBox = Math.min(crop.x, crop.x + crop.width) === media.x &&
       Math.min(crop.y, crop.y + crop.height) === media.y &&
       Math.abs(crop.width) === media.width && Math.abs(crop.height) === media.height;
-    if (line.mixed || !sameBox) throw new Refusal('layout', line.page + 1);
+    if (line.mixed || !sameBox) throw new Refusal('layout', line.page + 1, lines.indexOf(line));
   }
   const replaced = lines.filter(line => !line.placed);
   if (!replaced.length) return { bytes, plans: [] };
@@ -131,7 +146,13 @@ async function prepare({ bytes, lines, heights }) {
       const sheet = source.loadPage(index);
       try {
         for (const line of replaced.filter(line => line.page === index)) {
-          const plan = redactRect(sheet, line, heights[index]);
+          let plan;
+          try {
+            plan = redactRect(sheet, line, heights[index]);
+          } catch (error) {
+            if (error instanceof Refusal) error.line = lines.indexOf(line);
+            throw error;
+          }
           plans[replaced.indexOf(line)] = plan;
           for (const rect of plan.rectangles) {
             const mark = sheet.createAnnotation('Redact');
@@ -201,7 +222,7 @@ self.onmessage = async ({ data: { id, type, payload } }) => {
     const result = await (type === 'prepare' ? prepare(payload) : write(payload));
     self.postMessage({ id, result }, [result.bytes]);
   } catch (error) {
-    self.postMessage({ id, refusal: error instanceof Refusal ? { code: error.code, page: error.page } : null,
+    self.postMessage({ id, refusal: error instanceof Refusal ? { code: error.code, page: error.page, line: error.line } : null,
       message: String(error?.message || error) });
   }
 };

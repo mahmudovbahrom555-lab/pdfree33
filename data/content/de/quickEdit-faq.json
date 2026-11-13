@@ -46,5 +46,13 @@
       "@type": "Answer",
       "text": "Ja. PDFree ist vollkommen kostenlos — keine Registrierung, kein Konto, keine Installation. Tool öffnen, PDF laden, auf den zu korrigierenden Text klicken und das Ergebnis herunterladen."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich Text auf jeder Seite suchen und ersetzen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Gib den Text bei Suchen ein und bei Ersetzen durch, was dort stehen soll – leer lassen entfernt den Text, etwa eine Zeile, die am Fuß jeder Seite wiederkehrt. PDFree zeigt, wie viele Treffer es auf wie vielen Seiten gibt, und Alle ersetzen ändert sie im Original-PDF. Ein Treffer muss innerhalb einer Zeile liegen, und der neue Text muss in den Platz seiner Zeile passen; eine Zeile, die sich nicht direkt ändern lässt, bleibt, wie sie war, und ihre Seite wird genannt."
+    }
   }
 ]
