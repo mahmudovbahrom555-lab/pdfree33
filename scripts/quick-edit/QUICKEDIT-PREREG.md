@@ -131,3 +131,17 @@ Found along the way (each fixed test-first or checked both ways):
 - MuPDF vs pdf.js name some glyphs differently (radical vs ideograph, — vs ―), and a glyph set tight after the line was taken in → tolerant per-character compare, end bound by size.
 - One refused line no longer undoes a Replace all: that line is left and named.
 Not met / known: wikipedia-zh 13 occurrences left (6 pages), wikipedia-en 6 (2 pages); each skip costs a full pass (wikipedia-zh save 18.6 s desktop). Phrases across two lines not found (stated in the UI).
+
+## Step 5 — repeated lines found for the person (criteria fixed 2026-11-13 night, BEFORE building)
+Design: after the page editor opens, every page's lines are read in the background (the same readPage as Find). Lines are
+grouped by their text with digits ignored ("Page 3 of 10" = "Page # of #"), NFC/radicals/spaces as Find; a group is
+offered when it stands on ≥ 50 % of the pages (≥ 3 pages), within 15 pt of the group's median height, and has ≥ 2
+letters (bare page numbers are not offered). Up to 3 offers, most pages first: "On 298 of 300 pages: «…» — Remove
+everywhere". Removing uses the in-place edits (each occurrence → empty), verified as every save is.
+| # | Criterion | Bar |
+|---|---|---|
+| R1 | zh-book-300: the promo line offered first, on 300 of 300 pages; removing it leaves every other line and the pictures outside its band unchanged (check_removed.py) | yes |
+| R2 | precision on the corpus (tests/corpus/real 25 + groundtruth web pages): every offered line judged by hand — a running header/footer/watermark text, not body text | ≥ 90 % of offers |
+| R3 | silence: a document whose pages share no such line gets no offer | 0 offers on single-page docs and on docs with no repeated header/footer (judged by hand) |
+| R4 | phone 390×664 CPU 4×, zh-book-300: offer shown | ≤ 5 s after the editor opens; longest main-thread block ≤ 250 ms |
+| R5 | languages / regressions | 16 locales; Quick Edit e2e + all CI e2e + npm test |
