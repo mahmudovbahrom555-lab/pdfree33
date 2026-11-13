@@ -1161,6 +1161,7 @@ window.PDFREE_LOCALE = {
   p2p_slide_one:         '슬라이드 {n}개',
   p2p_slide_many:        '슬라이드 {n}개',
   p2p_quality_label:     '슬라이드 품질',
+  p2p_worksheet:             "슬라이드당 한 문제",
   p2p_output_mode:          '출력',
   p2p_conversion_mode_aria: 'PowerPoint 변환 모드',
   p2p_mode_image:           '🖼️ 이미지',

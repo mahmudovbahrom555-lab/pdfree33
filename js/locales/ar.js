@@ -1207,6 +1207,7 @@ window.PDFREE_LOCALE = {
   p2p_slide_many:     '{n} شريحة',
   p2p_quality_label:  'جودة الشرائح',
   p2p_quality_aria:   'جودة صورة الشرائح',
+  p2p_worksheet:             "سؤال واحد لكل شريحة",
   p2p_output_mode:         'المخرجات',
   p2p_conversion_mode_aria: 'نمط تحويل PowerPoint',
   p2p_mode_image:          '🖼️ صورة',

@@ -1159,6 +1159,7 @@ window.PDFREE_LOCALE = {
   p2p_slide_one:         '{n} slayt',
   p2p_slide_many:        '{n} slayt',
   p2p_quality_label:     'Slayt kalitesi',
+  p2p_worksheet:             "Slayt başına bir soru",
   p2p_output_mode:          'Çıktı',
   p2p_conversion_mode_aria: 'PowerPoint dönüştürme modu',
   p2p_mode_image:           '🖼️ Görüntü',

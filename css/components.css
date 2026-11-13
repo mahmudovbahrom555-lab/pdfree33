@@ -6621,3 +6621,42 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   border-color: currentColor;
 }
 .qe-entry a { text-decoration: underline; }
+/* Opt-in PDF to PowerPoint worksheet editor. */
+.p2p-worksheet-launch {
+  margin-top: 12px;
+  background: var(--green-light);
+  color: var(--green-text);
+  border-color: var(--green);
+}
+.p2p-worksheet-dialog {
+  width: min(1480px, calc(100vw - 32px));
+  max-width: none;
+  height: calc(100dvh - 32px);
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  overflow: hidden;
+}
+.p2p-worksheet-dialog[open] {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+.p2p-worksheet-dialog::backdrop { background: rgb(17 24 39 / 60%); }
+.p2p-worksheet-dialog > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-strong);
+}
+.p2p-worksheet-dialog h2 { font-size: 1rem; margin: 0; }
+.p2p-worksheet-dialog iframe { display: block; border: 0; width: 100%; height: 100%; }
+@media (max-width: 740px) {
+  .p2p-worksheet-dialog { width: 100vw; height: 100dvh; border: 0; border-radius: 0; }
+}
+.p2p-worksheet-dialog > header button { color: var(--text); font-weight: 600; }

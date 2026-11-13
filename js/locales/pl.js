@@ -1159,6 +1159,7 @@ window.PDFREE_LOCALE = {
   p2p_slide_one:         '{n} slajd',
   p2p_slide_many:        '{n} slajdów',
   p2p_quality_label:     'Jakość slajdów',
+  p2p_worksheet:             "Jedno zadanie na slajd",
   p2p_output_mode:          'Wynik',
   p2p_conversion_mode_aria: 'Tryb konwersji do PowerPoint',
   p2p_mode_image:           '🖼️ Obraz',

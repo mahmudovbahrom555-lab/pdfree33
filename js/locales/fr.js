@@ -1161,6 +1161,7 @@ window.PDFREE_LOCALE = {
   p2p_slide_one:         '{n} diapositive',
   p2p_slide_many:        '{n} diapositives',
   p2p_quality_label:     'Qualité des diapositives',
+  p2p_worksheet:             "Une question par diapositive",
   p2p_output_mode:          'Sortie',
   p2p_conversion_mode_aria: 'Mode de conversion PowerPoint',
   p2p_mode_image:           '🖼️ Image',

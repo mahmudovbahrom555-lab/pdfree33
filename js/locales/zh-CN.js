@@ -1205,6 +1205,7 @@ window.PDFREE_LOCALE = {
   p2p_slide_many:     '{n} 张幻灯片',
   p2p_quality_label:  '幻灯片质量',
   p2p_quality_aria:   '幻灯片图片质量',
+  p2p_worksheet:             "每张幻灯片一道题",
   p2p_output_mode:         '输出',
   p2p_conversion_mode_aria: 'PowerPoint 转换模式',
   p2p_mode_image:          '🖼️ 图片',
