@@ -26,7 +26,8 @@ for (const f of files) {
     await page.setInputFiles('#fileInput', f);
     // opened, refused by the gate, or an error toast
     const state = await page.waitForFunction(() => {
-      if (document.querySelector('.qe-modal--open .qe-editable-run')) return 'opened';
+      if (document.querySelector('.qe-modal--open .qe-page-line')) return 'opened';
+      if (document.querySelector('.qe-modal--open .qe-editable-run')) return 'opened (rebuild)';
       const opts = document.querySelector('#quickEditOptions');
       const toast = document.querySelector('#toast');
       const txt = (opts?.innerText || '') + ' ' + (toast && !toast.hidden ? toast.innerText : '');
@@ -35,13 +36,15 @@ for (const f of files) {
     }, null, { timeout: 120000 }).then(h => h.jsonValue()).catch(() => 'timeout');
     row.openMs = Date.now() - t0;
     row.open = state;
-    if (state === 'opened') {
-      const runs = await page.locator('.qe-editable-run').count();
+    if (String(state).startsWith('opened')) {
+      const SEL = await page.locator('.qe-modal--open .qe-page-line').count() ? '.qe-page-line' : '.qe-editable-run';
+      row.mode = SEL === '.qe-page-line' ? 'in-place' : 'rebuild';
+      const runs = await page.locator(SEL).count();
       row.runs = runs;
-      const idx = await page.evaluate(() => [...document.querySelectorAll('.qe-editable-run')].findIndex(s => /\p{L}{3}/u.test(s.textContent)));
+      const idx = await page.evaluate(sel => [...document.querySelectorAll(sel)].findIndex(s => /\p{L}{3}/u.test(s.textContent)), SEL);
       row.editedRun = idx;
       if (idx >= 0) {
-        const target = page.locator('.qe-editable-run').nth(idx);
+        const target = page.locator(SEL).nth(idx);
         row.editedText = (await target.innerText()).slice(0, 80);
         await target.click();
         await page.waitForTimeout(150);

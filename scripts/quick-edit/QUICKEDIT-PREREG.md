@@ -112,3 +112,22 @@ Repeated-line auto-detection is the NEXT step, not this one.
 | F5 | nothing found | a specific message ("0 found — the text may be a picture or split across lines"), never silence |
 | F6 | languages | every new UI string in all 15 full locales; zh + ru checked in a browser |
 | F7 | regressions | Quick Edit e2e + skeleton all pass; all 37 CI e2e + npm test |
+
+## Step 4 — RESULT (branch feat/quick-edit-find-replace, 2026-11-13)
+| # | Bar | Result |
+|---|---|---|
+| F1 | zh-book-300 promo removed everywhere, nothing else | **met**: 300 found on 300 pages; check_removed.py (PyMuPDF): 300→300 pages, promo left on 0, other text changed on 0, pixels changed outside the line's band on 0 (desktop + 2 phone runs) |
+| F2 | count = MuPDF per page (5 docs) | **met**: wikipedia-en "Adobe" 154/22, arxiv "model" 94/10, en-web "PDF" 2/1, wikipedia-zh "文件" 106/14, ja-web "モード" 4/1; replaced + left per page = MuPDF on every page |
+| F3 | every occurrence replaced or named | **met**: replaced 148/154, 94/94, 2/2, 93/106, 4/4; the rest left with their pages named in a message |
+| F4 | phone: ≤ 60 s, block ≤ 250 ms, progress, Cancel | **met**: find 1.1–1.3 s, save 1.9–2.2 s, longest block 148–150 ms; progress 5 % → 30 %; Cancel: no file, no success card |
+| F5 | nothing found → specific message | **met** (e2e) |
+| F6 | 15 locales, zh + ru in a browser | **met**: zh/ru placeholders, buttons, status; 44 px controls, no sideways scroll at 390 px |
+| F7 | regressions | see the PR (all CI e2e + npm test) |
+Found along the way (each fixed test-first or checked both ways):
+- Chinese PDFs store 更 as U+F901 (compatibility ideograph), 文 as ⽂ (Kangxi radical), 页 as ⻚ (radicals supplement): matched via NFC, NFKC for Kangxi only, and a table from Noto SC's own glyphs (scripts/gen_cjk_radicals.py).
+- pdf.js reads MuPDF's spaces as ordinary spaces, MuPDF as U+00A0 — any space counts as one (site + checker).
+- Chrome-printed Chinese: one font split into a subset per character → lines grouped by the real font name, so whole lines are editable (page editor too).
+- The save check after writing was itself wrong in two ways (an edited piece mid-row; pieces 0.6 pt apart) → rows chained within 1.5 pt, built from pdf.js pieces, the edit put into its row. Negative tests (neighbour removed, text tampered) still caught on en-web and arxiv; honest edits pass.
+- MuPDF vs pdf.js name some glyphs differently (radical vs ideograph, — vs ―), and a glyph set tight after the line was taken in → tolerant per-character compare, end bound by size.
+- One refused line no longer undoes a Replace all: that line is left and named.
+Not met / known: wikipedia-zh 13 occurrences left (6 pages), wikipedia-en 6 (2 pages); each skip costs a full pass (wikipedia-zh save 18.6 s desktop). Phrases across two lines not found (stated in the UI).
