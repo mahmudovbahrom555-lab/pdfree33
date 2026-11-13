@@ -98,3 +98,17 @@ Time reduction is NOT a criterion of this step (worker first; less work later, m
 | S5 open longest block | ≤ 250 ms | 237 / 113 | 217 / 148, 229 / 105 — met |
 Corpus note: 32 of the 33 documents (gip-31's original was deleted from scratch with old compress outputs; dropped from BOTH runs).
 The harness waits for editable lines, so Internet Archive scans (hidden OCR layer → honest "scan" note) count as "timeout" in both.
+
+## Step 4 — Find & replace on every page (criteria fixed 2026-11-13, BEFORE building; owner: "like Word's auto-replace")
+Scope: in the page editor, "Find" + "Replace with" (empty = remove) → count of matches and pages → "Replace all".
+A match lies inside one text line (a phrase broken across two lines is NOT found — a stated limit, shown to the user).
+Repeated-line auto-detection is the NEXT step, not this one.
+| # | Criterion | Bar |
+|---|---|---|
+| F1 | zh-book-300: find the promo line, remove all | 300 matches on 300 pages; output: promo gone from every page; every other line identical (per-page verification); page count same; untouched pages' pixels < 0.1 % changed; the edited band only changes |
+| F2 | count vs an independent reader (PyMuPDF search_for, per page, matches inside one line) on 3 Latin + 2 CJK corpus docs, 1 word/phrase each | equal on every page |
+| F3 | replace a Latin word on wikipedia-en (all its occurrences that fit) | every occurrence replaced or named with its page ("too long"); nothing else changes (verification) |
+| F4 | phone 390×664, CPU 4×, zh-book-300 remove-all | done ≤ 60 s; longest main-thread block ≤ 250 ms; progress moves; Cancel stops it and no file is offered |
+| F5 | nothing found | a specific message ("0 found — the text may be a picture or split across lines"), never silence |
+| F6 | languages | every new UI string in all 15 full locales; zh + ru checked in a browser |
+| F7 | regressions | Quick Edit e2e + skeleton all pass; all 37 CI e2e + npm test |
