@@ -25,3 +25,26 @@ Targets per document: 50 % and 25 % of its size; and 4 MB where the original is 
 | T6 | phone (390×664, CPU 4×): a 17 MB file → 4 MB | done; longest main-thread block ≤ 250 ms; progress moves |
 | T7 | UI: MB/KB field, 44 px targets, all 16 locales, zh + ru checked | yes |
 | T8 | regressions: compress e2e + all CI e2e + npm test; the corpus diff gate (default modes unchanged) | pass |
+
+## RESULT (branch feat/compress-fit-size, 2026-11-13) — 12 documents × (50 %, 25 %, 4 MB if larger) = 30 runs
+Three candidates were measured; the criteria did not move.
+- v1 (first step guessed from size ratio, then halving): T2 **6/7** — on report.pdf (34 MB → 16 MB) the budget ran out with a
+  gentler step unrun; and when nothing fit it kept a lossy step where lossless gave the same size (A4 file, 0.38 MB).
+- v2 (steps predicted from measured sizes; lossless tried when unreachable): T2 **5/7** — worse; two fits left the step
+  just gentler unrun.
+- v3 (pure halving over 11 places: none fits … all fit) — shipped candidate:
+| # | Bar | v3 result |
+|---|---|---|
+| T1 | "fits" ≤ target, 100 % | **met** 7/7 |
+| T2 | least loss proven ≥ 90 % | **met 7/7** (the step just gentler was run and missed, or the step is lossless) |
+| T3 | unreachable → message, smallest reached, file given | **met** 23/23; the strongest step ran in all 23 |
+| T4 | ≤ 4 full runs, Cancel | **met** (max 4) |
+| T5 | not worse than today's 5 MB chip | **met**: pamphlet — chip 4.77 MB at 96 dpi q≤0.42, new 5.12 MB at 120 dpi q0.60 (fits, gentler); report.pdf — chip 8.4 MB (over), new 4.88 MB (fits); 4 others unreachable both ways |
+| T6 | phone 17 MB → 4 MB | **met**: 27 s, 4 runs, longest block 0 ms, progress moved 4×; pamphlet 14 MB → 6 MB in 7 s (200 dpi q0.80) |
+| T7 | UI | ru checked at 390 px (44 px field/unit, empty size blocked with a message); 16 locales |
+| T8 | regressions | compress e2e 25/25 (2 new); see PR for all CI e2e |
+Known costs/limits (said, not hidden): up to 4 full runs — report.pdf (34 MB) 4.3–5.5 min on desktop vs 1.4 min for today's
+chip; when nothing fits the gentlest step within 3 % of the smallest file is kept, but lossless (step 0) is not among the
+halving's runs, so a vector book keeps 150 dpi/65 % even if its pictures bought nothing. Batch compress still uses
+worker.js's one-pass formula for a size. 23 of 30 targets were unreachable — most documents here are vector/text-heavy
+(the same files are over the 5 MB chip on prod too).
