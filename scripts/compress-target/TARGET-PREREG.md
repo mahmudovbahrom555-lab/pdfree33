@@ -62,3 +62,15 @@ even step 9 is predicted to stay over by a clear margin.
 | E3 | time: report.pdf (34 MB) to 16 MB and 8 MB | ≤ 50 % of v3's time (v3: 272 s / 258 s) |
 | E4 | T1 (fits ≤ target 100 %), T2 (least loss proven by runs ≥ 90 %), T3 (unreachable said, a file given) of the fit-size criteria | still met on the same 30 targets |
 | E5 | phone 17 MB → 4 MB | not slower than v3 (27 s); longest main-thread block ≤ 250 ms |
+
+## Step 2 — RESULT 2026-11-13: the sample estimator does NOT meet its criteria; stopped
+Ground truth: steps.mjs, 12 docs × 10 steps through the site's own workers (matches the UI path to a few bytes).
+- Pre-registered predictor (sample only: non-image bytes kept, image bytes × the sample's image ratio): **E1 51/90 = 57 %**
+  within ±15 % (bar 90 %). Text-heavy docs +83…+165 % (the full file's non-image part shrinks, a 1-page sample can't show it);
+  pamphlet −45…−65 %; report −18…−23 %. The image counter also missed images inside Form XObjects (both arXiv papers: 0 bytes).
+- Exploratory, NOT counted (chosen after seeing the same data — selection bias): one full anchor run + sample deltas;
+  best of 6 variants 75/81 = 93 %. Even so E3 can't be met: anchor (~80 s) + sample at 10 steps (~49 s) + 1–2 proving
+  runs ≈ 210–290 s on report.pdf vs v3's 258–272 s (bar ≤ 50 %).
+Conclusion: not built. Next candidate for speed (to pre-register separately): parallel probes on desktop — the halving's
+runs in rounds of 2–3 workers at once (same proofs, ~half the rounds; more memory; phones stay sequential), and step 9
+in the first round so an unreachable size is said after one round.
