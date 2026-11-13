@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Nhiều biểu mẫu trực tuyến (cổng dịch vụ công, trang nộp hồ sơ xin việc, website cơ quan nhà nước) giới hạn dung lượng tải lên chỉ 2-10 MB, và thường không thông báo rõ cho đến khi tải lên bị lỗi. Nén file PDF trước thường khắc phục được vấn đề này, chỉ cần giảm dung lượng một chút, mà không làm thay đổi nội dung tài liệu."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Tôi có thể nén PDF xuống đúng một kích thước, như 4 MB hay 500 KB không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Trong mục “Nén xuống”, chọn một kích thước hoặc “Kích thước khác” rồi nhập theo MB hoặc KB. PDFree thử các cài đặt từ nhẹ nhất và giữ cài đặt nhẹ nhất giúp file vừa kích thước, rồi cho biết cái giá phải trả — ví dụ hình ảnh 150 dpi, chất lượng 75 %, hoặc không giảm chất lượng chút nào. Quá trình nén thật chạy tối đa bốn lần, nên file lớn sẽ lâu hơn. Nếu ngay cả cài đặt mạnh nhất cũng không đủ, PDFree nói thẳng là không thể nén xuống kích thước đó và đưa bạn file gần nhất; tách PDF có thể giúp."
+    }
   }
 ]

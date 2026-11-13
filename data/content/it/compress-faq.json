@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Molti moduli online (concorsi pubblici, portali di candidatura, siti della pubblica amministrazione) limitano i caricamenti a 2-10 MB, spesso senza indicarlo chiaramente finché il caricamento non fallisce. Comprimere prima il PDF di solito risolve il problema anche con una riduzione minima, senza modificare il contenuto del documento."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso comprimere un PDF a una dimensione precisa, come 4 MB o 500 KB?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. In «Comprimi a» scegli una dimensione o «Altra dimensione» e scrivila in MB o KB. PDFree prova le impostazioni dalla più delicata e tiene la più delicata con cui il file ci sta, poi ti dice quanto è costato: ad esempio immagini a 150 dpi e qualità 75 %, oppure nessuna perdita di qualità. La compressione vera viene eseguita fino a quattro volte, quindi un file grande richiede più tempo. Se nemmeno l'impostazione più forte basta, PDFree dice chiaramente che quella dimensione non si può raggiungere e ti dà il file più vicino; dividere il PDF può aiutare."
+    }
   }
 ]
