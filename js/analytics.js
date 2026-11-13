@@ -137,6 +137,22 @@ export function trackToolSuccess(tool, { inputSize = 0, outputSize = 0, requeste
   _track('Tool Success', props);
 }
 
+// Compress "fit into a size" (2026-11-13): which sizes people ask for, how
+// often they're reached and what reaching them cost — numbers only, never the
+// file (privacy page: "for Compress's fit into a size"). The size asked for is
+// kept as typed (a portal's limit — "4 MB", "500 KB" — names no one).
+export function compressTargetProps({ targetBytes, inputSize, outputSize, met, step, runs }) {
+  const mb = targetBytes / 1048576;
+  const target = mb >= 1 ? `${+mb.toFixed(1)} MB` : `${Math.round(targetBytes / 1024)} KB`;
+  const ratio = outputSize / targetBytes;
+  const result = met ? 'fits' : ratio <= 1.1 ? 'over ≤10%' : ratio <= 1.5 ? 'over 10–50%' : ratio <= 2 ? 'over 50–100%' : 'over >2×';
+  return { tool: 'compress', target, input_size: _sizeBucket(inputSize), result, step, runs };
+}
+
+export function trackCompressTarget(details) {
+  _track('Compress Target', compressTargetProps(details));
+}
+
 /** Track tool cancellations — useful for UX insight */
 export function trackToolCancel(tool) {
   delete _timers[tool];

@@ -93,3 +93,15 @@ GROUP BY period, part ORDER BY part, period;
 --    With it, read the Workers daily request peak in the Cloudflare dashboard
 --    (Workers → Metrics): at 50,000 a day (half the free 100,000; past it the
 --    whole site errors until 00:00 UTC) the owner moves to the paid plan.
+
+
+-- 9. Compress "fit into a size" (from 2026-11-13): which sizes people ask for, how often
+--    they fit, at which setting (0 lossless … 9 72 dpi q0.30), in how many tries.
+--    Columns: blob4 target ("4 MB", "500 KB"), blob5 input_size, blob6 result
+--    ("fits" | "over ≤10%" | "over 10–50%" | "over 50–100%" | "over >2×"),
+--    double1 step, double2 runs.
+SELECT blob4 AS target, blob6 AS result, COUNT(DISTINCT blob3) AS people,
+  avg(double1) AS avg_step, avg(double2) AS avg_runs
+FROM pdfree_events
+WHERE timestamp > NOW() - INTERVAL '30' DAY AND index1 = 'Compress Target'
+GROUP BY target, result ORDER BY people DESC LIMIT 60;

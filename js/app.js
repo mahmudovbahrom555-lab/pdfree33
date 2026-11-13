@@ -35,7 +35,7 @@ import { hideAllToolOptions, initToolOptions,
 import { savePreset } from './presets.js';
 import { updateMergeDefaultFilename } from './toolRegistrations.js';
 import { renderWorkerScanReport }               from './compressUI.js';
-import { trackToolStart, trackToolSuccess,
+import { trackToolStart, trackToolSuccess, trackCompressTarget,
          trackToolCancel, trackFileAdded,
          trackToolOpen, trackInstallPrompt,
          trackToolError, trackDownload,
@@ -395,6 +395,11 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
   // for pdf2ppt, how many use "Editable text" (a Chinese user's report on it,
   // 2026-10-15, couldn't be told apart from Image mode).
   trackToolSuccess(tool, { outputSize: blob.size, requestedCount, successCount, mode });
+  if (compressionReport?.target) {
+    const { originalSize, compressedSize, targetSizeMb, target } = compressionReport;
+    trackCompressTarget({ targetBytes: targetSizeMb * 1048576, inputSize: originalSize, outputSize: compressedSize,
+      met: target.met, step: target.step, runs: target.tried.length });
+  }
   _fileAddedThisAttempt = false;   // the attempt is done: the next file starts another
 
   const card = id('successCard');
