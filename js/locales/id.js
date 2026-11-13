@@ -254,6 +254,8 @@ window.PDFREE_LOCALE = {
   err_file_unreadable_any: "Salah satu file Anda tidak dapat dibaca. File berubah atau tidak lagi tersedia setelah Anda memilihnya — disimpan ulang, dipindahkan atau dihapus, atau file cloud yang tidak ada di perangkat ini. Hapus file dari daftar lalu tambahkan lagi.",
   err_file_unreadable_added: "Tidak dapat membaca \"{name}\" — file belum sepenuhnya ada di perangkat ini (file cloud OneDrive, iCloud, atau Google Drive) atau baru saja dipindahkan atau diubah. Buka sekali di folder atau aplikasinya agar terunduh, lalu tambahkan lagi. File Anda yang lain tidak bermasalah.",
   file_unreadable_badge: "tidak bisa dibaca",
+  j2p_remove_image: "Hapus {name}",
+  merge_add_one_more: "Tambahkan satu PDF lagi untuk menggabungkan file.",
   file_choose_again: "Pilih lagi",
   err_file_unreadable_marked: "\"{name}\" tidak bisa dibaca — pilih lagi di daftar (file lain tetap ada).",
   err_worker_load: "Alat tidak dapat dimulai — koneksi terputus sebelum kodenya selesai dimuat. Periksa koneksi internet Anda lalu tekan tombolnya lagi; file Anda masih ada di sini.",

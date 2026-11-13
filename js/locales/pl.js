@@ -253,6 +253,8 @@ window.PDFREE_LOCALE = {
   err_file_unreadable_any: "Nie udało się odczytać jednego z plików. Zmienił się lub przestał być dostępny po jego wybraniu: zapisano go ponownie, przeniesiono lub usunięto albo to plik z chmury, którego nie ma na tym urządzeniu. Usuń pliki z listy i dodaj je ponownie.",
   err_file_unreadable_added: "Nie udało się odczytać „{name}” — plik nie jest w całości na tym urządzeniu (plik w chmurze OneDrive, iCloud lub Google Drive) albo właśnie go przeniesiono lub zmieniono. Otwórz go raz w folderze lub aplikacji, aby się pobrał, i dodaj ponownie. Pozostałe pliki są w porządku.",
   file_unreadable_badge: "nie można odczytać",
+  j2p_remove_image: "Usuń {name}",
+  merge_add_one_more: "Dodaj jeszcze jeden plik PDF, aby połączyć pliki.",
   file_choose_again: "Wybierz ponownie",
   err_file_unreadable_marked: "Nie można odczytać „{name}” — wybierz go ponownie na liście (pozostałe pliki zostają).",
   err_worker_load: "Narzędzie nie mogło się uruchomić — połączenie zerwało się, zanim załadował się jego kod. Sprawdź połączenie z internetem i naciśnij przycisk ponownie; Twoje pliki nadal tu są.",

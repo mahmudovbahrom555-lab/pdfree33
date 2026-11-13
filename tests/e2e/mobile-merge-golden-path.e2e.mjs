@@ -203,6 +203,24 @@ await test('drop zone: a double or triple click opens the file picker once', asy
   }
 });
 
+// One PDF chosen: the list says what's missing instead of a silently grey
+// button (user journey 2026-11-13); a second file clears it and enables Merge.
+await test('merge with one PDF: the list says to add one more; a second removes the hint and enables Merge', async () => {
+  const ctx = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await ctx.newPage();
+  try {
+    await page.goto(`${BASE_URL}/merge-pdf/`, { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', [FILE_1]);
+    await page.waitForFunction(() => /Add one more PDF/.test(document.getElementById('fileCount')?.textContent || ''), null, { timeout: 10000 });
+    if (!await page.locator('#mergeBtn').isDisabled()) throw new Error('Merge enabled with one file');
+    await page.setInputFiles('#fileInput', [FILE_2]);
+    await page.waitForFunction(() => !/Add one more PDF/.test(document.getElementById('fileCount')?.textContent || ''), null, { timeout: 10000 });
+    if (await page.locator('#mergeBtn').isDisabled()) throw new Error('Merge still disabled with two files');
+  } finally {
+    await ctx.close();
+  }
+});
+
 await browser.close();
 
 console.log(`\n${'─'.repeat(40)}`);

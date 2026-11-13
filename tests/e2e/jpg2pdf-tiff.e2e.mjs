@@ -289,6 +289,22 @@ try {
     if (pages.length !== 3) throw new Error(`${pages.length} pages`);
     await done(page);
   });
+
+  // Several pictures chosen at once: one can be taken out again without
+  // starting over (user journey 2026-11-13 — only the thumbnails were shown)
+  await test('a picture removed from the list is not in the PDF', async () => {
+    const { page, errors } = await newPage();
+    await page.goto(BASE_URL + '/jpg2pdf/', { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', ['lzw-rgb.tif', 'palette.tif', 'rgba.tif'].map(f => path.join(FIX, f)));
+    await page.waitForFunction(() => document.querySelectorAll('.j2p-thumb').length === 3, null, { timeout: 20000 });
+    await page.locator('[data-remove-image="1"]').click({ timeout: 5000 });
+    await page.waitForFunction(() => document.querySelectorAll('.j2p-thumb').length === 2, null, { timeout: 10000 });
+    await page.click('#mergeBtn');
+    const { pages } = await readPdf(page);
+    if (pages.length !== 2) throw new Error(`${pages.length} pages`);
+    if (errors.length) throw new Error(errors.join('; '));
+    await done(page);
+  });
 } finally {
   await browser.close();
 }

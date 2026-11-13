@@ -255,6 +255,8 @@ window.PDFREE_LOCALE = {
   err_file_unreadable_any: "파일 중 하나를 읽을 수 없습니다. 선택한 뒤 변경되었거나 사용할 수 없게 되었습니다(다시 저장, 이동 또는 삭제, 또는 이 기기에 없는 클라우드 파일). 파일을 목록에서 제거한 뒤 다시 추가해 주세요.",
   err_file_unreadable_added: "\"{name}\"을(를) 읽을 수 없습니다 — 이 기기에 파일이 완전히 있지 않거나(OneDrive, iCloud, Google Drive 클라우드 파일) 방금 이동되거나 변경되었습니다. 폴더나 앱에서 한 번 열어 다운로드한 뒤 다시 추가하세요. 다른 파일은 문제없습니다.",
   file_unreadable_badge: "읽을 수 없음",
+  j2p_remove_image: "{name} 삭제",
+  merge_add_one_more: "병합하려면 PDF를 하나 더 추가하세요.",
   file_choose_again: "다시 선택",
   err_file_unreadable_marked: "\"{name}\"을(를) 읽을 수 없습니다. 목록에서 다시 선택하세요(다른 파일은 그대로 유지됩니다).",
   err_worker_load: "도구를 시작할 수 없습니다 — 코드를 불러오는 중에 연결이 끊겼습니다. 인터넷 연결을 확인하고 버튼을 다시 누르세요. 파일은 그대로 남아 있습니다.",

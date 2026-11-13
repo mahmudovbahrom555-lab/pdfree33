@@ -233,6 +233,8 @@ export const EN = {
   err_file_unreadable_any: "One of your files couldn't be read. It changed or became unavailable after you selected it — saved again in another app, moved or deleted, or a cloud-drive file that isn't on this device. Remove your files from the list and add them again.",
   err_file_unreadable_added: "Couldn't read \"{name}\" — it isn't fully on this device (a cloud-drive file such as OneDrive, iCloud or Google Drive), or it was moved or changed just now. Open it once in its folder or app so it downloads, then add it again. Your other files are fine.",
   file_unreadable_badge: "can't be read",
+  j2p_remove_image: "Remove {name}",
+  merge_add_one_more: "Add one more PDF to merge.",
   file_choose_again: "Choose it again",
   err_file_unreadable_marked: "\"{name}\" can't be read — choose it again in the list (the other files stay).",
   err_restrictions_unremovable: "🔒 This PDF has editing restrictions that couldn't be removed here — the file may be damaged. PDF→Word, PDF→Excel, PDF→PowerPoint, PDF→JPG and PDF→Markdown still work with it; for this tool, re-save it first (open it in your browser → Print → Save as PDF) and try again.",

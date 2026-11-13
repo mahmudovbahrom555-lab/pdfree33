@@ -253,6 +253,8 @@ window.PDFREE_LOCALE = {
   err_file_unreadable_any: "Een van je bestanden kon niet worden gelezen. Het is gewijzigd of niet meer beschikbaar sinds je het selecteerde: opnieuw opgeslagen, verplaatst of verwijderd, of een cloudbestand dat niet op dit apparaat staat. Verwijder de bestanden uit de lijst en voeg ze opnieuw toe.",
   err_file_unreadable_added: "Kan \"{name}\" niet lezen — het staat niet volledig op dit apparaat (een cloudbestand van OneDrive, iCloud of Google Drive) of is net verplaatst of gewijzigd. Open het één keer in de map of app zodat het wordt gedownload en voeg het daarna opnieuw toe. Je andere bestanden zijn in orde.",
   file_unreadable_badge: "kan niet worden gelezen",
+  j2p_remove_image: "{name} verwijderen",
+  merge_add_one_more: "Voeg nog een PDF toe om de bestanden samen te voegen.",
   file_choose_again: "Opnieuw kiezen",
   err_file_unreadable_marked: "‘{name}’ kan niet worden gelezen — kies het opnieuw in de lijst (de andere bestanden blijven).",
   err_worker_load: "De tool kon niet starten — de verbinding viel weg voordat de code klaar was met laden. Controleer je internetverbinding en druk opnieuw op de knop; je bestanden staan er nog.",

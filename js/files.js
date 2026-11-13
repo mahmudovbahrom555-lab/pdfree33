@@ -613,23 +613,16 @@ function _updateMeta() {
       if (scanned.length > 0) metaStr += ` · ${pageTotal} page${pageTotal !== 1 ? 's' : ''}`;
     }
     metaStr += ` · ${fmtSize(total)}`;
+    // Watermark removal and alternating the two halves of one scan accept one PDF.
+    const mergeMin = _currentTool === 'merge' && !getWmRemove() && getMergeOrder().order !== 'alternate' ? 2 : 1;
+    if (!_locked && count < mergeMin) metaStr += ` · ${t('merge_add_one_more')}`;
     countEl.textContent = metaStr;
 
     const showHint = count > 1 && _currentTool === 'merge' && !_locked;
     const hint = id('reorderHint');
     if (hint) hint.hidden = !showHint;
 
-    // Не снимаем disabled если идёт обработка
-    if (!_locked) {
-      // Merge normally needs 2+ files, but a single file is a valid input when the
-      // user just wants to strip watermarks (handleMerge in worker.js runs fine on
-      // one file) — the watermark-removal toggle is visible and interactive at
-      // count===1, so requiring 2 files unconditionally made that toggle a dead end.
-      // Same for Alternate pages: one scan holding fronts then backs is alternated
-      // by its own halves.
-      const mergeMin = _currentTool === 'merge' && !getWmRemove() && getMergeOrder().order !== 'alternate' ? 2 : 1;
-      btn.disabled = count < mergeMin;
-    }
+    if (!_locked) btn.disabled = count < mergeMin;
   } else {
     hide('fileCount');
     hide('reorderHint');
