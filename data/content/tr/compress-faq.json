@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Birçok çevrimiçi form (e-Devlet, iş başvuru siteleri, kurum web siteleri) yüklemeleri 2-10 MB ile sınırlar ve bunu genellikle yükleme başarısız olana kadar açıkça belirtmez. PDF'i önceden sıkıştırmak, belgenin içeriğini değiştirmeden, küçük bir küçültmeyle bile bu sorunu genellikle çözer."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bir PDF'i 4 MB veya 500 KB gibi tam bir boyuta sıkıştırabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. “Sıkıştırma hedefi” bölümünde bir boyut ya da “Başka boyut” seçin ve MB veya KB olarak yazın. PDFree ayarları en yumuşaktan başlayarak dener, dosyanın sığdığı en yumuşak ayarı tutar ve bunun bedelini söyler — örneğin 150 dpi ve %75 kalitede görseller ya da hiç kalite kaybı olmadığı. Gerçek sıkıştırma dört kereye kadar çalışır, bu yüzden büyük bir dosya daha uzun sürer. En güçlü ayar bile yetmezse PDFree bu boyuta inilemeyeceğini açıkça söyler ve en yakın dosyayı verir; PDF'i bölmek yardımcı olabilir."
+    }
   }
 ]

@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Muitos formulários on-line (concursos via Cebraspe, FGV, VUNESP, portais de órgãos públicos) limitam os envios a 2-10 MB, muitas vezes sem avisar claramente até o envio falhar. Comprimir o PDF antes costuma resolver isso mesmo com uma redução pequena, sem alterar o conteúdo do documento."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso comprimir um PDF para um tamanho exato, como 4 MB ou 500 KB?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Em “Comprimir para”, escolha um tamanho ou “Outro tamanho” e digite-o em MB ou KB. O PDFree testa as configurações da mais suave para a mais forte e fica com a mais suave em que o arquivo cabe; depois diz o que isso custou — por exemplo, imagens a 150 dpi e qualidade de 75 %, ou nenhuma perda de qualidade. A compressão real roda até quatro vezes, então um arquivo grande demora mais. Se nem a configuração mais forte for suficiente, o PDFree diz claramente que esse tamanho não pode ser alcançado e entrega o arquivo mais próximo; dividir o PDF pode ajudar."
+    }
   }
 ]
