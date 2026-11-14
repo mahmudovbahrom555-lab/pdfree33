@@ -14,6 +14,9 @@
 --      blob10 x_size (size band), blob11 x_hidden (tab hidden since the run
 --      started), blob12 x_acted (a person pressed or typed on the page).
 --    Rage Click: blob2 tool (from 2026-11-11; '' on the homepage), blob4 target.
+--    Tool Success, pdf2word: blob4 input_size, blob5 output_size, blob6 mode,
+--      from 2026-11-14 blob7 pages (1–5/6–20/21–100/> 100), blob8 ocr (yes/no),
+--      then country (blob9 — was blob7 before); double1 duration_s.
 --
 --  Analytics Engine SQL limits (checked 2026-11-11): no subqueries
 --  ("IN (SELECT …)"), no max()/min() on strings; for a list of sessions use

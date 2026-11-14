@@ -379,7 +379,7 @@ async function _successUnlessLocked(detail) {
   _handleSuccess(detail);
 }
 
-function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCompressSummary, pageCounts, confidence, atlasEri, requestedCount, successCount, mode }) {
+function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCompressSummary, pageCounts, confidence, atlasEri, requestedCount, successCount, mode, pages, ocrPages }) {
   _freeResultUrl();
   _resultUrl      = URL.createObjectURL(blob);
   _resultBlob     = blob;
@@ -394,7 +394,7 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
   // measures whether the Text/Image relabel (js/pdf2wordUI.js) shifted usage;
   // for pdf2ppt, how many use "Editable text" (a Chinese user's report on it,
   // 2026-10-15, couldn't be told apart from Image mode).
-  trackToolSuccess(tool, { outputSize: blob.size, requestedCount, successCount, mode });
+  trackToolSuccess(tool, { outputSize: blob.size, requestedCount, successCount, mode, pages, ocrPages });
   if (compressionReport?.target) {
     const { originalSize, compressedSize, targetSizeMb, target } = compressionReport;
     trackCompressTarget({ targetBytes: targetSizeMb * 1048576, inputSize: originalSize, outputSize: compressedSize,
