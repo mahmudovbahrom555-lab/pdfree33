@@ -30,12 +30,23 @@ function _describeElement(el) {
   return cls ? `${el.tagName.toLowerCase()}.${cls}` : el.tagName.toLowerCase();
 }
 
+// Controls people press again and again on purpose: undo/redo, next/prev,
+// size and zoom steppers, and drawing canvases. In the 2026-11-14 review they
+// were half of all Rage Clicks (#drawCanvas 32 people, #btnUndo 22, #btnNext,
+// #selSizeUp …) and buried the real ones (the Merge file name, #mergeBtn).
+// Matched by the camelCase ending of the id, so a new stepper is covered too.
+const _REPEAT_ID = /(?:^|[a-z])(?:Undo|Redo|Next|Prev|Up|Down|ZoomIn|ZoomOut)(?:Btn|Thumb|Page)?$/;
+export function isRepeatControl(el) {
+  return el?.tagName === 'CANVAS' || _REPEAT_ID.test(el?.id || '');
+}
+
 export function initRageClickDetection() {
   const _clickLog        = new WeakMap(); // element -> recent click timestamps
   const _rageFiredRecently = new WeakMap(); // element -> last-fired timestamp
 
   document.addEventListener('click', (e) => {
     const el = e.target.closest('button, a, [role="button"], input[type="submit"]') || e.target;
+    if (isRepeatControl(el)) return;
 
     const now = Date.now();
     const timestamps = (_clickLog.get(el) || []).filter(t => now - t < RAGE_WINDOW_MS);
