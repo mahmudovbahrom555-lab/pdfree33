@@ -9,7 +9,7 @@ import { fmtSize } from './utils.js';
 import { t, tp } from './i18n.js';
 import { setProgress, hideProgress, setButtonProcessing, setButtonReady,
          showCancelBtn, hideCancelBtn, showToast, startLongOpHint, clearLongOpHint } from './ui.js';
-import { selectedFiles, setFilesLocked, renderList, markUnreadable } from './files.js';
+import { selectedFiles, setFilesLocked, renderList, markUnreadable, removeFile } from './files.js';
 import { trackToolError, trackBatchStart, trackBatchSuccess, trackRepair, trackFileUnreadable } from './analytics.js';
 import { TOOLS } from './config.js';
 import { maxFileMb, isLargeDevice } from './fileLimits.js';
@@ -4466,8 +4466,16 @@ async function _runDocx2Pdf(filesSnapshot, _extraParams) {
     // docxToPdfCore.js's own two sentinels (see _rejectIfOleCfbf /
     // renderAsync's catch there) — already-classified, friendly-translated
     // messages, same pattern as unlock's 'wrong_password' below.
-    if (err.message === 'DOCX_LEGACY_OR_ENCRYPTED') {
-      _handleError('docx2pdf', t('err_docx_legacy_or_encrypted'), 'docx_legacy_or_encrypted'); return;
+    // A file this tool can't take at all: off the list too, so a second press
+    // can't repeat the same error (13 presses on one file, 2026-11-14).
+    const known = { DOCX_ENCRYPTED: ['err_docx_encrypted', 'docx_encrypted'],
+      DOCX_LEGACY_DOC: ['err_docx_legacy_doc', 'docx_legacy_doc'],
+      DOCX_LEGACY_OR_ENCRYPTED: ['err_docx_legacy_or_encrypted', 'docx_legacy_or_encrypted'] }[err.message];
+    if (known) {
+      _handleError('docx2pdf', t(known[0]), known[1]);
+      const i = selectedFiles.indexOf(file);
+      if (i !== -1) removeFile(i);
+      return;
     }
     if (err.message === 'DOCX_PARSE_FAILED') {
       _handleError('docx2pdf', t('err_docx_parse_failed'), 'docx_parse_failed'); return;

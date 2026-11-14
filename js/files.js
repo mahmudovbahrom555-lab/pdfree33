@@ -229,12 +229,7 @@ export function addFiles(files) {
     added.push(f);
   });
 
-  if (invalid > 0) {
-    const msg = _currentAccept.startsWith('.pdf')
-      ? t('invalid_pdf')
-      : t('invalid_img');
-    showToast(msg, 5000);
-  }
+  if (invalid > 0) showToast(_invalidMessage(files), 5000);
   if (dupes > 0) showToast(tp(dupes, 'dupe_skip_one', 'dupe_skip_many'));
 
   if (selectedFiles.length > 0) {
@@ -404,6 +399,16 @@ async function _keepCopy(f) {
   }
 }
 
+// What a file this tool doesn't take was. Word→PDF said "Please select a JPG or
+// PNG image" to an old .doc (2026-11-14): only PDF and images had a message.
+function _invalidMessage(files) {
+  if (_currentAccept.startsWith('.pdf')) return t('invalid_pdf');
+  if (_currentAccept.startsWith('.docx')) {
+    return files.some(f => /\.doc$/i.test(f?.name || '')) ? t('err_docx_legacy_doc') : t('invalid_docx');
+  }
+  return t('invalid_img');
+}
+
 /**
  * A file the browser refused to read when the tool ran (js/processor.js):
  * marked in the list with a button to choose it again, in its place — the
@@ -426,7 +431,7 @@ export function markUnreadable(name) {
 export function replaceFile(index, file) {
   if (_locked || !file || !selectedFiles[index]) return;
   if (!isFileAccepted(file, _currentAccept, ACCEPTED_MIME)) {
-    showToast(_currentAccept.startsWith('.pdf') ? t('invalid_pdf') : t('invalid_img'), 5000);
+    showToast(_invalidMessage([file]), 5000);
     return;
   }
   selectedFiles.splice(index, 1, file);
