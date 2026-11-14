@@ -2,6 +2,9 @@ import * as pdfjs from '../js/vendor/pdfjs-4.10.38/pdf.min.js';
 import { suggestPageFrames } from './suggest-frames.js';
 import { answerOptions, makeQuizFile } from './quiz-pptx.js';
 import { loadJSZip, loadPptxGenJs } from '../js/lazyLibs.js';
+import { tr, localizeDom } from './i18n.js';
+
+localizeDom();
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL('../js/vendor/pdfjs-4.10.38/pdf.worker.min.js', import.meta.url).href;
 const $ = id => document.getElementById(id);
@@ -24,9 +27,9 @@ function saveDraft() {
   if (!storageKey) return;
   try {
     localStorage.setItem(storageKey, JSON.stringify({ tasks, frames, taskId, space: $('space').value, reviewedPages: [...reviewedPages] }));
-    $('saved').textContent = 'The frames are saved in this browser.';
+    $('saved').textContent = tr('The frames are saved in this browser.');
   } catch {
-    $('saved').textContent = 'The browser didn\'t save the frames. Keep this tab open.';
+    $('saved').textContent = tr('The browser didn\'t save the frames. Keep this tab open.');
   }
 }
 function changed() {
@@ -180,8 +183,8 @@ function refresh() {
     button.dataset.task = task.id;
     button.setAttribute('aria-current', String(task.id === taskId));
     const count = document.createElement('small');
-    count.textContent = task.frames.length ? String(task.frames.length) : 'Empty';
-    button.append(task.anchor && !ready(task) ? `Frame No. ${task.anchor.number}` : `Question ${task.number}`, count);
+    count.textContent = task.frames.length ? String(task.frames.length) : tr('Empty');
+    button.append(task.anchor && !ready(task) ? tr('Frame No. {n}', { n: task.anchor.number }) : tr('Question {n}', { n: task.number }), count);
     button.onclick = () => {
       selectTask(task.id);
       const first = task.frames.map(id => frames.find(frame => frame.id === id)).find(frame => frame?.kind === 'task');
@@ -202,8 +205,8 @@ function refresh() {
   $('frame-up').disabled = frameIndex <= 0;
   $('frame-down').disabled = frameIndex < 0 || frameIndex >= current().frames.length - 1;
   const moveTarget = $('move-target');
-  moveTarget.replaceChildren(new Option('Choose a question', ''),
-    ...tasks.filter(task => task !== current()).map(task => new Option(`Question ${task.number}`, task.id)));
+  moveTarget.replaceChildren(new Option(tr('Choose a question'), ''),
+    ...tasks.filter(task => task !== current()).map(task => new Option(tr('Question {n}', { n: task.number }), task.id)));
   moveTarget.disabled = frameIndex < 0 || selected()?.kind !== 'task' || tasks.length < 2;
   $('cut-frame').disabled = frameIndex < 0 || selected()?.kind !== 'task' ||
     selected().page !== pageNumber || selected().rect[3] - selected().rect[1] < 10;
@@ -217,7 +220,7 @@ function refresh() {
   const linked = current().frames.map(id => frames.find(frame => frame.id === id));
   if (!linked.length) {
     const hint = document.createElement('p');
-    hint.textContent = 'No frames yet. Draw one around a question on the page.';
+    hint.textContent = tr('No frames yet. Draw one around a question on the page.');
     $('fragments').append(hint);
   }
   const available = frames.filter(frame => frame.kind === 'shared' && !current().frames.includes(frame.id));
@@ -226,7 +229,7 @@ function refresh() {
     row.className = 'fragment';
     const open = document.createElement('button');
     open.type = 'button';
-    open.textContent = `${frame.kind === 'shared' ? 'Shared' : 'Part'} · p. ${frame.page}`;
+    open.textContent = (frame.kind === 'shared' ? tr('Shared · p. {page}', { page: frame.page }) : tr('Part · p. {page}', { page: frame.page }));
     open.setAttribute('aria-pressed', String(frame.id === frameId));
     open.onclick = () => { frameId = frame.id; void showPage(frame.page); };
     row.append(open);
@@ -241,16 +244,16 @@ function refresh() {
         task.frames = checkbox.checked ? [frame.id, ...task.frames] : task.frames.filter(id => id !== frame.id);
         changed();
       };
-      label.append(checkbox, ' Add to question');
+      label.append(checkbox, ' ' + tr('Add to question'));
       row.append(label);
       const links = document.createElement('small');
       const linkedTasks = tasks.filter(task => task.frames.includes(frame.id)).map(task => task.number);
-      links.textContent = linkedTasks.length ? `Questions: ${linkedTasks.join(', ')}` : 'Not attached';
+      links.textContent = linkedTasks.length ? tr('Questions: {list}', { list: linkedTasks.join(', ') }) : tr('Not attached');
       row.append(links);
       if (linkedTasks.length < tasks.length) {
         const attachAll = document.createElement('button');
         attachAll.type = 'button';
-        attachAll.textContent = 'Attach to all questions';
+        attachAll.textContent = tr('Attach to all questions');
         attachAll.onclick = () => {
           remember();
           for (const task of tasks) {
@@ -281,16 +284,16 @@ function refreshReview() {
   const select = $('review-page');
   const options = document.createDocumentFragment();
   for (let page = 1; page <= pdf.numPages; page++) {
-    options.append(new Option(`P. ${page} · questions: ${byPage.get(page) ?? 0}${reviewedPages.has(page) ? ' · checked' : ''}`, page));
+    options.append(new Option(tr('P. {page} · questions: {n}', { page, n: byPage.get(page) ?? 0 }) + (reviewedPages.has(page) ? ' ' + tr('· checked') : ''), page));
   }
   select.replaceChildren(options);
   select.value = pageNumber;
   $('reviewed').checked = reviewedPages.has(pageNumber);
-  $('review-current').textContent = byPage.has(pageNumber) ? '' : 'This page has no question frames.';
+  $('review-current').textContent = byPage.has(pageNumber) ? '' : tr('This page has no question frames.');
   const unlinked = unlinkedShared();
-  $('review-summary').textContent = `Check · ${reviewedPages.size} of ${pdf.numPages} pages${unlinked.length ? ` · not attached: ${unlinked.length}` : ''}`;
+  $('review-summary').textContent = tr('Check · {done} of {total} pages', { done: reviewedPages.size, total: pdf.numPages }) + (unlinked.length ? ' ' + tr('· not attached: {n}', { n: unlinked.length }) : '');
   $('review-shared').textContent = unlinked.length
-    ? `Shared frames not attached on p. ${[...new Set(unlinked.map(frame => frame.page))].join(', ')}.` : '';
+    ? tr('Shared frames not attached on p. {pages}.', { pages: [...new Set(unlinked.map(frame => frame.page))].join(', ') }) : '';
 }
 $('review-page').onchange = () => showPage($('review-page').value);
 $('reviewed').onchange = () => {
@@ -340,7 +343,7 @@ async function openDocument(file, decryptedBuffer) {
   $('file').disabled = true;
   $('welcome-file').disabled = true;
   $('workspace').disabled = true;
-  status('Opening the PDF…');
+  status(tr('Opening the PDF…'));
   try {
     const bytes = await file.arrayBuffer();
     const hash = new Uint8Array(await crypto.subtle.digest('SHA-256', bytes));
@@ -367,12 +370,12 @@ async function openDocument(file, decryptedBuffer) {
       addTask();
       $('space').value = 'more';
     }
-    $('saved').textContent = draft?.tasks?.length ? 'Your saved frames are back.' : '';
+    $('saved').textContent = draft?.tasks?.length ? tr('Your saved frames are back.') : '';
     $('page').max = pdf.numPages;
     $('slide').hidden = true;
     $('expand-preview').hidden = true;
     $('document-name').textContent = file.name;
-    $('document-pages').textContent = `Pages in the original: ${pdf.numPages}`;
+    $('document-pages').textContent = tr('Pages in the original: {n}', { n: pdf.numPages });
     $('page-total').textContent = `/ ${pdf.numPages}`;
     $('preview-placeholder').hidden = false;
     $('welcome').hidden = true;
@@ -380,7 +383,7 @@ async function openDocument(file, decryptedBuffer) {
     status('');
     await showPage(1);
   } catch (error) {
-    status(`Couldn't open the PDF. ${error.message}`);
+    status(tr('Couldn\'t open the PDF.') + ' ' + error.message);
   } finally {
     busy = false;
     $('workspace').disabled = !pdf;
@@ -438,18 +441,18 @@ function cutAt(x, y) {
   });
   original.frames = original.frames.filter((id, position) => shared.has(id) || position <= index);
   frameId = lower.id;
-  status('The frame is split into two questions.');
+  status(tr('The frame is split into two questions.'));
   changed();
 }
 $('cut-frame').onclick = () => {
-  if (cutFrameId) { cancelCut(); status('Cut cancelled.'); return; }
+  if (cutFrameId) { cancelCut(); status(tr('Cut cancelled.')); return; }
   cutFrameId = frameId;
   $('cut-frame').setAttribute('aria-pressed', 'true');
   overlay.classList.add('cutting');
-  status('Pick a horizontal line inside the frame. Escape cancels the cut.');
+  status(tr('Pick a horizontal line inside the frame. Escape cancels the cut.'));
 };
 document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && cutFrameId) { cancelCut(); status('Cut cancelled.'); }
+  if (event.key === 'Escape' && cutFrameId) { cancelCut(); status(tr('Cut cancelled.')); }
 });
 overlay.onpointerdown = event => {
   if (busy || !viewport || event.button !== 0 || drag) return;
@@ -625,7 +628,7 @@ $('undo').onclick = () => {
   if (!previous) return;
   ({ tasks, frames, taskId, frameId } = previous);
   changed();
-  status('The last frame change was undone.');
+  status(tr('The last frame change was undone.'));
 };
 
 async function renderSlide(task, width, height) {
@@ -640,7 +643,7 @@ async function renderSlide(task, width, height) {
   const budget = height * ($('space').value === 'more' ? 0.52 : 0.8);
   const sizes = ordered.map(({ rect: [x, y, right, bottom] }) => [right - x, bottom - y]);
   const available = budget - margin - gap * (ordered.length - 1);
-  if (available <= 0) throw new Error(`Too many parts in question ${task.number}.`);
+  if (available <= 0) throw new Error(tr('Too many parts in question {n}.', { n: task.number }));
   const scale = Math.min((width - 2 * margin) / Math.max(...sizes.map(size => size[0])),
     available / sizes.reduce((sum, size) => sum + size[1], 0));
   let offset = margin;
@@ -689,7 +692,7 @@ function refreshSuggestions() {
   const existing = hasPageFrames(pageNumber);
   $('suggestion-page').value = pageNumber;
   $('suggestions-message').textContent = existing
-    ? 'This page already has question frames.'
+    ? tr('This page already has question frames.')
     : result?.reason ?? '';
   $('apply-suggestions').disabled = existing || !result?.bands.length;
   $('suggest-shared-label').hidden = existing || !result?.shared;
@@ -700,11 +703,11 @@ function refreshSuggestions() {
 }
 $('suggest-tasks').onclick = () => run(async () => {
   const results = new Map();
-  status('Looking for where questions start…');
+  status(tr('Looking for where questions start…'));
   // Two columns: the site has no layout model, so such a page is left to the
   // teacher's own frames (a prototype loaded one, 2026-11-12; its weights'
   // licence and size are open)
-  const suggestTwoColumns = async () => ({ reason: 'Two columns: draw the frames on this page yourself.', bands: [] });
+  const suggestTwoColumns = async () => ({ reason: tr('Two columns: draw the frames on this page yourself.'), bands: [] });
   try {
     for (let page = 1; page <= pdf.numPages; page++) {
       if (hasPageFrames(page)) {
@@ -713,7 +716,7 @@ $('suggest-tasks').onclick = () => run(async () => {
         try {
           results.set(page, await suggestPageFrames(await pdf.getPage(page), suggestTwoColumns));
         } catch {
-          results.set(page, { reason: 'Couldn\'t read this page. Check it yourself.', bands: [] });
+          results.set(page, { reason: tr('Couldn\'t read this page. Check it yourself.'), bands: [] });
         }
       }
     }
@@ -723,11 +726,11 @@ $('suggest-tasks').onclick = () => run(async () => {
   $('suggest-shared').checked = false;
   const options = document.createDocumentFragment();
   for (const [page, { bands }] of results) {
-    options.append(new Option(`P. ${page} · ${bands.length ? `frames: ${bands.length}` : 'check'}`, page));
+    options.append(new Option(bands.length ? tr('P. {page} · frames: {n}', { page, n: bands.length }) : tr('P. {page} · check', { page }), page));
   }
   $('suggestion-page').replaceChildren(options);
   refresh();
-  status('Look at the dashed frames on the pages and add the right ones.');
+  status(tr('Look at the dashed frames on the pages and add the right ones.'));
 });
 $('suggestion-page').onchange = () => showPage($('suggestion-page').value);
 $('close-suggestions').onclick = () => { pageSuggestions = undefined; refresh(); };
@@ -762,8 +765,8 @@ $('apply-suggestions').onclick = () => {
   frameId = undefined;
   changed();
   status(missingTask
-    ? `Draw a frame around question No. ${missingTask.anchor.number}. Its place in the list is already made.`
-    : 'Draft frames added. Check the questions and pictures before you download.');
+    ? tr('Draw a frame around question No. {n}. Its place in the list is already made.', { n: missingTask.anchor.number })
+    : tr('Draft frames added. Check the questions and pictures before you download.'));
 };
 
 function clearBoundaryProposal() {
@@ -813,7 +816,7 @@ $('suggest-boundary').onclick = () => run(async () => {
   const edgePixel = clamp(Math.round((edge - low) * scale), 0, occupied.length - 1);
   const message = $('boundary-message');
   if (!occupied[edgePixel]) {
-    message.textContent = 'Nothing found at this edge.';
+    message.textContent = tr('Nothing found at this edge.');
     return;
   }
   const minGap = Math.round(2 * scale);
@@ -825,15 +828,15 @@ $('suggest-boundary').onclick = () => run(async () => {
     if ((value - edge) * direction <= 0) continue;
     boundaryProposal = { frame, side, value };
     $('boundary-actions').hidden = false;
-    message.textContent = 'The dashed line is the suggested edge. Check it before accepting.';
+    message.textContent = tr('The dashed line is the suggested edge. Check it before accepting.');
     drawOverlay();
     return;
   }
-  message.textContent = 'No free space found next to this edge.';
+  message.textContent = tr('No free space found next to this edge.');
 });
 
 $('preview').onclick = () => run(async () => {
-  if (!ready(current())) throw new Error('Add a frame to the question before the preview.');
+  if (!ready(current())) throw new Error(tr('Add a frame to the question before the preview.'));
   const canvas = await renderSlide(current(), 1280, 720);
   const slide = $('slide');
   slide.width = canvas.width;
@@ -842,7 +845,7 @@ $('preview').onclick = () => run(async () => {
   slide.hidden = false;
   $('expand-preview').hidden = false;
   $('preview-placeholder').hidden = true;
-  status(`Preview of question ${current().number}.`);
+  status(tr('Preview of question {n}.', { n: current().number }));
 });
 function zoomSlideContent(canvas) {
   const { width, height } = canvas;
@@ -873,14 +876,14 @@ function updateSlideReview() {
   return run(async () => {
     const task = tasks[slideReviewIndex];
     const hasFrame = ready(task);
-    $('preview-title').textContent = slideReviewZoom ? 'Question enlarged' : 'Whole slide';
+    $('preview-title').textContent = slideReviewZoom ? tr('Question enlarged') : tr('Whole slide');
     $('preview-image').hidden = !hasFrame;
     $('preview-empty').hidden = hasFrame;
     $('preview-fix').disabled = !hasFrame;
     $('preview-zoom').disabled = !hasFrame;
     if (hasFrame) {
       const canvas = await renderSlide(task, 1280, 720);
-      $('preview-image').alt = `Question ${task.number}`;
+      $('preview-image').alt = tr('Question {n}', { n: task.number });
       $('preview-image').src = (slideReviewZoom ? zoomSlideContent(canvas) : canvas).toDataURL();
     }
     const quiz = task.quiz;
@@ -895,18 +898,18 @@ function updateSlideReview() {
         choice.disabled = !quiz.correct;
         choice.onclick = () => {
           $('quiz-feedback').textContent = answer === quiz.correct
-            ? ['Correct!', quiz.explanation].filter(Boolean).join(' ')
-            : 'Try again';
+            ? [tr('Correct!'), quiz.explanation].filter(Boolean).join(' ')
+            : tr('Try again');
         };
         $('quiz-answers').append(choice);
       }
-      if (!quiz.correct) $('quiz-feedback').textContent = 'Mark the correct answer first.';
+      if (!quiz.correct) $('quiz-feedback').textContent = tr('Mark the correct answer first.');
     }
     $('slide-review-tools').hidden = false;
     $('preview-position').textContent = `${slideReviewIndex + 1} / ${tasks.length}`;
     $('preview-previous').disabled = slideReviewIndex === 0;
     $('preview-next').disabled = slideReviewIndex === tasks.length - 1;
-    $('preview-zoom').textContent = slideReviewZoom ? 'Whole slide' : 'Enlarge question';
+    $('preview-zoom').textContent = slideReviewZoom ? tr('Whole slide') : tr('Enlarge question');
     $('preview-zoom').setAttribute('aria-pressed', String(slideReviewZoom));
     if (!$('preview-dialog').open) $('preview-dialog').showModal();
   });
@@ -964,8 +967,8 @@ $('expand-frame').onclick = () => run(async () => {
   $('quiz-preview').hidden = true;
   $('preview-empty').hidden = true;
   $('preview-image').hidden = false;
-  $('preview-title').textContent = 'Check the cut-out';
-  $('preview-image').alt = 'The chosen part of the page';
+  $('preview-title').textContent = tr('Check the cut-out');
+  $('preview-image').alt = tr('The chosen part of the page');
   $('preview-image').src = crop.toDataURL();
   $('preview-dialog').showModal();
 });
@@ -981,8 +984,8 @@ function download(bytes, type, name) {
 }
 function checkExport() {
   const missing = tasks.filter(task => !ready(task)).map(task => task.number);
-  if (missing.length) throw new Error(`Add frames to questions ${missing.join(', ')}, or delete the empty questions.`);
-  status('Making the file…');
+  if (missing.length) throw new Error(tr('Add frames to questions {list}, or delete the empty questions.', { list: missing.join(', ') }));
+  status(tr('Making the file…'));
 }
 const exportPdf = () => run(async () => {
   checkExport();
@@ -994,7 +997,7 @@ const exportPdf = () => run(async () => {
     page.drawImage(image, { x: 0, y: 0, width: page.getWidth(), height: page.getHeight() });
   }
   download(await output.save(), 'application/pdf', 'worksheet.pdf');
-  status('The PDF for printing is ready.');
+  status(tr('The PDF for printing is ready.'));
 });
 const exportPptx = () => run(async () => {
   checkExport();
@@ -1005,7 +1008,7 @@ const exportPptx = () => run(async () => {
     await loadJSZip();
     const file = await makeQuizFile(output, tasks, task => renderSlide(task, 1280, 720), window.JSZip);
     download(file, file.type, 'worksheet-quiz.pptx');
-    status('The interactive PowerPoint is ready.');
+    status(tr('The interactive PowerPoint is ready.'));
     return;
   }
   for (const task of tasks) {
@@ -1013,7 +1016,7 @@ const exportPptx = () => run(async () => {
     output.addSlide().addImage({ data: canvas.toDataURL(), x: 0, y: 0, w: 40 / 3, h: 7.5 });
   }
   await output.writeFile({ fileName: 'worksheet.pptx' });
-  status('The PowerPoint is ready.');
+  status(tr('The PowerPoint is ready.'));
 });
 
 function requestExport(action) {
@@ -1022,7 +1025,7 @@ function requestExport(action) {
     checkExport();
     if (action === exportPptx) {
       const invalid = tasks.filter(({ quiz }) => quiz && (!quiz.correct || !answerOptions(quiz.count).includes(quiz.correct)));
-      if (invalid.length) throw new Error(`Mark the correct answer for questions ${invalid.map(task => task.number).join(', ')}.`);
+      if (invalid.length) throw new Error(tr('Mark the correct answer for questions {list}.', { list: invalid.map(task => task.number).join(', ') }));
     }
   } catch (error) { status(error.message); return; }
   const remaining = pdf.numPages - reviewedPages.size;
@@ -1030,8 +1033,8 @@ function requestExport(action) {
   if (!remaining && !unlinked) { void action(); return; }
   pendingExport = action;
   $('export-review-message').textContent = [
-    remaining ? `Pages not marked as checked: ${remaining}.` : '',
-    unlinked ? `Shared frames not attached to any question: ${unlinked}.` : '',
+    remaining ? tr('Pages not marked as checked: {n}.', { n: remaining }) : '',
+    unlinked ? tr('Shared frames not attached to any question: {n}.', { n: unlinked }) : '',
   ].filter(Boolean).join(' ');
   status('');
   $('export-review').showModal();

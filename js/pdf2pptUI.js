@@ -6,6 +6,7 @@ import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
 import { chipGroup, group } from './uiComponents.js';
 import { t, tp } from './i18n.js';
+import { getLang } from './config.js';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 // JPEG compression ratio at quality 0.85 over typical PDF content — same
@@ -149,7 +150,7 @@ function _openWorksheet(file, url) {
       type: 'pdfree-worksheet-file', file, decryptedBuffer: file._decryptedBuffer,
     }, location.origin);
   };
-  frame.src = url + '?embedded=1';
+  frame.src = `${url}?embedded=1&lang=${encodeURIComponent(getLang())}`;
   header.append(title, close);
   dialog.append(header, frame);
   id('pdf2pptOptions').append(dialog);

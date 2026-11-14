@@ -1,3 +1,5 @@
+import { tr } from './i18n.js';
+
 const pptxType = 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
 const presentationNs = 'http://schemas.openxmlformats.org/presentationml/2006/main';
 const drawingNs = 'http://schemas.openxmlformats.org/drawingml/2006/main';
@@ -11,13 +13,13 @@ export function answerOptions(count) {
 function button(slide, label, target, x, y, w) {
   slide.addText(label, {
     x, y, w, h: 0.55, margin: 0, align: 'center', valign: 'mid',
-    fontSize: 20, bold: true, color: 'FFFFFF', fill: { color: target === endShow ? '344054' : '166447' },
+    fontSize: 20, fit: 'shrink', bold: true, color: 'FFFFFF', fill: { color: target === endShow ? '344054' : '166447' },
     hyperlink: typeof target === 'number' ? { slide: target } : { url: target },
   });
 }
 
 function exitButton(slide, endSlide) {
-  button(slide, 'Exit', endSlide, 10.05, 6.65, 2.95);
+  button(slide, tr('Exit'), endSlide, 10.05, 6.65, 2.95);
 }
 
 async function finalizeQuiz(deck, zipApi, endSlide, slideCount) {
@@ -61,7 +63,7 @@ async function finalizeQuiz(deck, zipApi, endSlide, slideCount) {
         link.setAttribute('action', endShow);
         exitConfigured = true;
       }
-      if (!exitConfigured) throw new Error(`Couldn't add the exit from the show to slide ${index}.`);
+      if (!exitConfigured) throw new Error(tr('Couldn\'t add the exit from the show to slide {n}.', { n: index }));
       for (const rel of exitLinks) rel.remove();
       zip.file(relsPath, serializer.serializeToString(rels));
     }
@@ -83,7 +85,7 @@ export async function makeQuizFile(deck, tasks, render, zipApi) {
     exitButton(question, endSlide);
 
     if (!task.quiz) {
-      button(question, 'Next →', next, 0.34, 6.65, 2.3);
+      button(question, tr('Next →'), next, 0.34, 6.65, 2.3);
       continue;
     }
     const correctSlide = endSlide + feedback.length * 2 + 1;
@@ -95,24 +97,24 @@ export async function makeQuizFile(deck, tasks, render, zipApi) {
   }
 
   const end = deck.addSlide();
-  end.addText('Quiz finished', { x: 0.65, y: 0.8, w: 12, h: 0.8, fontSize: 36, bold: true });
-  button(end, 'Start again', 1, 0.65, 6.65, 2.7);
-  button(end, 'End show', endShow, 3.65, 6.65, 3);
+  end.addText(tr('Quiz finished'), { x: 0.65, y: 0.8, w: 12, h: 0.8, fontSize: 36, bold: true });
+  button(end, tr('Start again'), 1, 0.65, 6.65, 2.7);
+  button(end, tr('End show'), endShow, 3.65, 6.65, 3);
 
   for (const { task, start, next } of feedback) {
     const correct = deck.addSlide();
-    correct.addText('Correct!', { x: 0.65, y: 0.8, w: 12, h: 0.8, fontSize: 36, bold: true, color: '166447' });
+    correct.addText(tr('Correct!'), { x: 0.65, y: 0.8, w: 12, h: 0.8, fontSize: 36, bold: true, color: '166447' });
     if (task.quiz.explanation) {
       correct.addText(task.quiz.explanation, {
         x: 0.65, y: 2, w: 12, h: 3.8, fontSize: 24, fit: 'shrink', valign: 'top',
       });
     }
-    button(correct, 'Next →', next, 0.65, 6.65, 2.3);
+    button(correct, tr('Next →'), next, 0.65, 6.65, 2.3);
     exitButton(correct, endSlide);
 
     const incorrect = deck.addSlide();
-    incorrect.addText('Try again', { x: 0.65, y: 0.8, w: 12, h: 0.8, fontSize: 36, bold: true });
-    button(incorrect, 'Back to the question', start, 0.65, 6.65, 2.3);
+    incorrect.addText(tr('Try again'), { x: 0.65, y: 0.8, w: 12, h: 0.8, fontSize: 36, bold: true });
+    button(incorrect, tr('Back to the question'), start, 0.65, 6.65, 2.3);
     exitButton(incorrect, endSlide);
   }
 

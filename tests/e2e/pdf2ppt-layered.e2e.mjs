@@ -220,6 +220,29 @@ try {
     assert.equal(await editor.locator('#task-list button').count(), 3);
     await page.close();
   });
+
+  // The editor speaks the page's language (2026-11-14): labels, the messages
+  // it writes later, right to left for Arabic.
+  for (const [lang, slug, title, dir] of [['ru', 'pdf-v-powerpoint', 'Один вопрос на слайд', 'ltr'],
+    ['ar', 'pdf-ila-ppt', 'سؤال واحد لكل شريحة', 'rtl']]) {
+    await test(`${lang}: the editor opens in the page's language (${dir})`, async () => {
+      const page = await browser2.newPage({ viewport: { width: 1440, height: 1000 }, serviceWorkers: 'block' });
+      try {
+        await page.goto(`${BASE_URL}/${lang}/${slug}/`);
+        await page.locator('#fileInput').setInputFiles({ name: 'q.pdf', mimeType: 'application/pdf', buffer: await worksheetPdf() });
+        await page.locator('#p2pWorksheet').click({ timeout: 20000 });
+        const editor = page.frameLocator('#pdf2pptOptions dialog iframe');
+        await editor.locator('#workspace:enabled').waitFor({ timeout: 30000 });
+        assert.equal(await editor.locator('h1').innerText(), title);
+        assert.equal(await editor.locator('html').getAttribute('dir'), dir);
+        await editor.locator('#export-pptx').click();
+        const status = await editor.locator('#status').innerText();
+        assert.ok(status && !/[A-Za-z]{4}/.test(status.replace(/PowerPoint|PDF/g, '')), `status not translated: ${status}`);
+      } finally {
+        await page.close();
+      }
+    });
+  }
 } finally {
   await browser2.close();
 }
