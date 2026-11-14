@@ -272,6 +272,10 @@
     <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Is there a PDF to Word converter that doesn't upload files?</h3>
     <p style="margin:0;font-size:14px;">Yes — PDFree. The entire conversion runs inside your browser using PDF.js and WebAssembly. Your PDF is never sent to any server. You can verify this by opening DevTools → Network tab and watching that no file upload request is made during conversion. Most online converters do upload your file; PDFree does not.</p>
   </div>
+  <div style="border:1px solid var(--border);border-radius:12px;padding:20px;">
+    <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Does the converted Word file keep my PDF's author or other metadata?</h3>
+    <p style="margin:0;font-size:14px;">By default, yes — the output .docx keeps your original PDF's author and title, the same way other PDF-to-Word converters handle it. If you'd rather the result carry only generic PDFree file info instead (useful when redistributing a document and you don't want your own identifying details attached), check "Delete original file info" in the tool's options before converting.</p>
+  </div>
 </div>
 
 <!-- Related tools -->

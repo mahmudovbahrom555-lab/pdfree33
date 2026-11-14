@@ -52,7 +52,7 @@
     "name": "Czy spłaszczenie PDF zmniejsza rozmiar pliku?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Często nieznacznie. Spłaszczanie usuwa dane interaktywnych widżetów formularza i JavaScript, co zmniejsza rozmiar pliku dla formularzy z wieloma polami. Jednak obrazy i osadzone czcionki nie są dotknięte spłaszczaniem. Aby znacząco zmniejszyć rozmiar, użyj narzędzia do kompresji PDF po spłaszczeniu."
+      "text": "Często nieznacznie. Spłaszczanie usuwa dane interaktywnych widżetów formularza i JavaScript, co zmniejsza rozmiar pliku dla formularzy z wieloma polami. Jednak obrazy i osadzone czcionki nie są dotknięte. Aby znacząco zmniejszyć rozmiar, przepuść spłaszczony wynik przez narzędzie <a href=\"/pl/kompresuj-pdf/\" style=\"color:var(--green-text);\">Kompresuj PDF</a>."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Jaka jest różnica między spłaszczeniem PDF a zabezpieczeniem go hasłem?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Rozwiązują różne problemy. Spłaszczanie całkowicie usuwa interaktywną strukturę formularza — nie ma pól do edycji, niezależnie od uprawnień. Zabezpieczenie hasłem ogranicza dostęp lub prawa do edycji, ale pozostawia pola formularza nienaruszone; ktoś znający hasło nadal może zmodyfikować wypełnialny formularz. Dla maksymalnego bezpieczeństwa najpierw spłaszcz, aby zablokować treść, a następnie dodaj hasło."
+      "text": "Rozwiązują różne problemy. Spłaszczanie całkowicie usuwa interaktywną strukturę formularza — nie ma pól do edycji, niezależnie od uprawnień. Zabezpieczenie hasłem ogranicza dostęp lub prawa do edycji, ale pozostawia pola formularza nienaruszone; ktoś znający hasło nadal może zmodyfikować wypełnialny formularz. Dla maksymalnego bezpieczeństwa najpierw spłaszcz, aby zablokować treść, a następnie dodaj hasło za pomocą <a href=\"/pl/zabezpiecz-pdf/\" style=\"color:var(--green-text);\">Zabezpiecz PDF</a>."
     }
   },
   {

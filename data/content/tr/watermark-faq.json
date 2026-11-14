@@ -60,7 +60,7 @@
     "name": "Saydamlık (opacity) neyi kontrol eder?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "%100 saydamlık filigranı tamamen opak (koyu, dolgun) yapar. %20–%30 saydamlık ise içeriği kapatmadan görünür kalan klasik 'hayalet' filigran etkisini oluşturur. Çoğu kullanım senaryosu %20–%40 aralığında iyi sonuç verir."
+      "text": "%100 saydamlık filigranı tamamen opak (koyu, dolgun) yapar. %20–%30 saydamlık ise içeriği kapatmadan görünür kalan klasik \"hayalet\" filigran etkisini oluşturur. Çoğu kullanım senaryosu %20–%40 aralığında iyi sonuç verir."
     }
   },
   {

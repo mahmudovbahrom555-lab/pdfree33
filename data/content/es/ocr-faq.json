@@ -44,7 +44,7 @@
     "name": "¿El PDF se verá diferente después del OCR?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree añade una capa de texto invisible sobre tus páginas escaneadas originales. El aspecto no cambia — imágenes, diseño y formato se mantienen exactamente igual."
+      "text": "No. PDFree añade una capa de texto invisible sobre tus páginas escaneadas originales. El aspecto no cambia — imágenes, diseño y formato se mantienen exactamente igual. Ganas la capacidad de buscar, seleccionar y copiar texto en cualquier lector de PDF."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "¿Por qué mi calidad de OCR se califica como Aceptable o Baja?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "La precisión del OCR depende de la calidad del escaneo original. Baja resolución (menos de 150 DPI), páginas borrosas o torcidas, fondos de color y texto manuscrito reducen la puntuación de confianza. Para mejores resultados: escanea a 300 DPI o más, con buena iluminación."
+      "text": "La precisión del OCR depende de la calidad del escaneo original. Baja resolución (menos de 150 DPI), páginas borrosas o torcidas, fondos de color y texto manuscrito reducen la puntuación de confianza. Para mejores resultados: escanea a 300 DPI o más, con buena iluminación y alineación recta."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "¿Cuál es la diferencia entre un PDF buscable y un archivo .txt?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "El PDF buscable conserva tus imágenes escaneadas y añade una capa de texto invisible encima. El archivo .txt contiene solo el texto plano con separadores de página. Descarga ambos a la vez con la casilla \"También descargar copia .txt\"."
+      "text": "El PDF buscable conserva tus imágenes escaneadas y añade una capa de texto invisible encima — útil para archivar, buscar dentro de un lector de PDF o compartir. El archivo .txt contiene solo el texto plano con separadores de página — útil para editar en Word o importar a otra herramienta. Descarga ambos a la vez con la casilla \"También descargar copia .txt\"."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "¿Funciona sin conexión?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. Una vez que el motor Tesseract.js se descarga en tu primer uso, PDFree funciona completamente sin conexión como Progressive Web App."
+      "text": "Sí. Una vez que el motor Tesseract.js se descarga en tu primer uso, PDFree funciona completamente sin conexión como Progressive Web App — no necesitas internet para procesar más documentos."
     }
   }
 ]

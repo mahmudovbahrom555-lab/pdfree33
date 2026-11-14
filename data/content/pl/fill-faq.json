@@ -4,7 +4,7 @@
     "name": "Czy mój wypełniony PDF jest gdzieś przesyłany?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. Cały proces wypełniania odbywa się w Twojej przeglądarce dzięki pdf-lib i pdf.js. Twój dokument nigdy nie opuszcza urządzenia — PDFree nie ma dostępu ani do pliku, ani do danych, które wpisujesz."
+      "text": "Nie. Wszystko odbywa się w Twojej przeglądarce z użyciem pdf-lib i pdf.js. Ani oryginalny PDF, ani wypełniona wersja nigdy nie są wysyłane na serwer. PDFree nie ma dostępu do Twojego dokumentu."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Czy narysowany podpis jest ważny prawnie?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Obraz podpisu wstawiony do PDF to podpis elektroniczny. Jego moc prawna zależy od jurysdykcji i rodzaju dokumentu. W przypadku wielu codziennych dokumentów — formularzy zgody, wewnętrznych akceptacji, umów najmu — jest zwykle wystarczający. W regulowanych kontekstach prawnych skorzystaj z certyfikowanej usługi podpisu elektronicznego ze śladem audytowym."
+      "text": "Obraz podpisu wstawiony do PDF to podpis elektroniczny. Jego moc prawna zależy od jurysdykcji i rodzaju dokumentu — w przypadku wielu codziennych dokumentów (formularzy zgody, wewnętrznych akceptacji, umów najmu) jest zwykle wystarczający. W regulowanych kontekstach prawnych rozważ certyfikowaną usługę podpisu elektronicznego ze śladem audytowym."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Czy to narzędzie naprawdę wypełnia rzeczywiste pola mojego formularza, czy muszę umieszczać tekst ręcznie?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree wykrywa rzeczywiste pola AcroForm w Twoim PDF i wyświetla je jako naprawdę wypełnialny formularz, bez ręcznego rysowania pól tekstowych. Jeśli Twój PDF nie ma osadzonych pól, PDFree poinformuje Cię o tym wprost."
+      "text": "PDFree wykrywa rzeczywiste pola AcroForm w Twoim PDF — pola tekstowe, checkboxy, przyciski opcji, listy rozwijane i pola podpisu — i wyświetla je jako naprawdę wypełnialny formularz. Nie rysujesz pól tekstowych ręcznie ani nie zgadujesz ich pozycji. Jeśli Twój PDF nie ma osadzonych pól, PDFree poinformuje Cię o tym wprost, zamiast udawać, że wykrywa pola, których nie ma."
     }
   },
   {

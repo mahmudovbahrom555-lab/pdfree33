@@ -28,7 +28,7 @@
     "name": "Apakah bisa untuk PDF yang dipindai?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak. PDF yang dipindai adalah gambar tanpa teks yang dapat dibaca."
+      "text": "Tidak. PDF yang dipindai adalah gambar tanpa teks yang dapat dibaca. Jalankan OCR terlebih dahulu, lalu konversi hasilnya."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Aplikasi apa yang membuka file .md?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "VS Code, Obsidian, Notion, Zettlr, dan editor teks apapun."
+      "text": "VS Code, Obsidian, Notion, Zettlr, dan editor teks apa pun."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Apakah gratis?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ya, sepenuhnya gratis selamanya."
+      "text": "Ya, sepenuhnya gratis selamanya — tanpa pendaftaran, tanpa akun."
     }
   },
   {

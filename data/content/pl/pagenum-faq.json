@@ -4,7 +4,7 @@
     "name": "Czy mogę rozpocząć numerację od liczby innej niż 1?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tak. Wpisz dowolny numer początkowy w polu 'Numer początkowy'. Przydatne w dokumentach, w których strona tytułowa liczy się jako strona 0, lub w rozdziałach kontynuujących numerację z poprzedniej sekcji."
+      "text": "Tak. Wpisz dowolny numer początkowy w polu \"Numer początkowy\". Przydatne w dokumentach, w których strona tytułowa liczy się jako strona 0."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Jakie formaty numerów są dostępne?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Cyfry arabskie (1, 2, 3), małe cyfry rzymskie (i, ii, iii), wielkie cyfry rzymskie (I, II, III), małe litery (a, b, c) i wielkie litery (A, B, C)."
+      "text": "Cyfry arabskie (1, 2, 3), małe cyfry rzymskie (i, ii, iii), wielkie cyfry rzymskie (I, II, III), małe i wielkie litery."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Czy mogę dodać format \"Strona 1 z 20\"?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tak. Użyj pola prefiksu, aby wstawić tekst przed numerem (np. 'Strona '), oraz pola sufiksu dla tekstu po nim (np. ' z 20'). Tworzy to popularny format 'Strona 1 z 20' stosowany w profesjonalnych dokumentach drukowanych."
+      "text": "Tak. Użyj pola prefiksu dla tekstu przed numerem (np. \"Strona \") oraz pola sufiksu dla tekstu po nim (np. \" z 20\")."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Czy mogę wykluczyć okładkę z numeracji?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tak. Włącz opcję 'Pomiń pierwszą stronę'. Strona 1 (okładka) nie otrzyma numeru, a numeracja rozpocznie się od drugiej strony."
+      "text": "Tak. Ustaw „Od strony” na 2: okładka nie dostanie numeru, a strona 2 pokaże 1. Jeśli strona 2 ma pokazywać 2, ustaw też „Numer startowy” na 2."
     }
   },
   {

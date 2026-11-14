@@ -20,7 +20,7 @@
     "name": "Qual è la differenza tra Estrai e Dividi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Estrai ti permette di scegliere pagine specifiche (es. pagine 2, 5, 8) e salvarle come un nuovo PDF. Dividi separa l'intero documento in file individuali."
+      "text": "<a href='/it/dividi-pdf/' style='color:var(--green-text)'>Dividi</a> ha opzioni di selezione più ricche (pagine dispari, pari, metà, selezione visiva delle miniature) e può produrre più file separati. Estrai è più semplice — inserisci un intervallo, ottieni un PDF. Usa quello più adatto al tuo flusso di lavoro."
     }
   },
   {

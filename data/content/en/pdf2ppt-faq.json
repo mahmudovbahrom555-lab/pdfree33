@@ -28,7 +28,7 @@
     "name": "What size will my slides be?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "The deck's slide size matches your PDF's first-page dimensions and aspect ratio. If every page is the same size, slides fill edge-to-edge with no letterboxing. PowerPoint only supports one slide size per deck, so if your PDF mixes page sizes or orientations, those pages are scaled to fit and centered instead of being stretched or distorted."
+      "text": "The deck's slide size matches your PDF's first-page dimensions and aspect ratio. If every page is the same size, slides fill edge-to-edge with no letterboxing — unlike forcing a portrait PDF onto a standard widescreen slide. PowerPoint only supports one slide size per deck, so if your PDF mixes page sizes or orientations, those pages are scaled to fit and centered instead of being stretched or distorted."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Which quality setting should I choose?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Balanced (150 dpi) is a good default for most decks. Choose High quality for dense text or fine print; choose Compact if you're emailing the file and want a smaller size."
+      "text": "Balanced (150 dpi) is a good default for most decks. Choose High quality for dense text or fine print you'll zoom into; choose Compact if you're emailing the file and want a smaller size."
     }
   },
   {

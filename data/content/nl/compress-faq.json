@@ -4,7 +4,7 @@
     "name": "Hoeveel wordt het bestand kleiner?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDF's met veel afbeeldingen worden typisch 30–70% kleiner. Alleen-tekst PDF's 5–15%. PDFree toont een schatting voor het comprimeren."
+      "text": "Hangt af van de inhoud. PDF's met veel afbeeldingen worden typisch 30–70% kleiner. Alleen-tekst PDF's worden weinig kleiner (5–15%) — ze zijn al geoptimaliseerd. PDFree toont een schatting voor het comprimeren."
     }
   },
   {
@@ -12,7 +12,7 @@
     "name": "Verlies ik kwaliteit bij het comprimeren?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Comprimeren verlaagt de resolutie van ingesloten afbeeldingen. Tekst en vectorafbeeldingen blijven scherp."
+      "text": "Comprimeren verlaagt de resolutie van ingesloten afbeeldingen. Tekst en vectorafbeeldingen blijven scherp. Gebruik de instelling 'Beste kwaliteit' voor printen, 'E-mail' of 'Web' voor digitaal gebruik."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Worden mijn bestanden geüpload?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nee. Het comprimeren vindt volledig plaats in het browsergeheugen. Geen bestanden worden naar een server gestuurd."
+      "text": "Nee. Het comprimeren vindt volledig plaats in het browsergeheugen. Er worden geen bestanden naar een server gestuurd."
     }
   },
   {

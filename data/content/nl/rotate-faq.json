@@ -4,7 +4,7 @@
     "name": "Wordt mijn bestand geüpload naar een server als ik een PDF draai?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nee. Het draaien wordt volledig in je browser verwerkt. Je bestanden worden nooit ergens naartoe gestuurd."
+      "text": "Nee. Alle verwerking gebeurt in je browser. Je bestanden worden nooit ergens naartoe gestuurd."
     }
   },
   {
@@ -12,7 +12,7 @@
     "name": "Kan ik alleen specifieke pagina's draaien?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Je kunt alle pagina's draaien of individuele pagina's selecteren om te draaien."
+      "text": "Ja. Klik op de miniaturen van afzonderlijke pagina's om te selecteren welke je wilt draaien. Niet-geselecteerde pagina's blijven ongewijzigd."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Vermindert draaien de beeldkwaliteit?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nee. Rotatie verandert alleen de oriëntatiemetadata van de pagina. De inhoud (afbeeldingen, tekst, vectorafbeeldingen) wordt niet opnieuw gerenderd of gecomprimeerd."
+      "text": "Nee. Rotatie verandert alleen de oriëntatiemetadata — de inhoud (tekst, afbeeldingen, vectorafbeeldingen) blijft identiek en wordt niet opnieuw gecomprimeerd."
     }
   },
   {

@@ -28,7 +28,7 @@
     "name": "Apa perbedaan Mode Teks dan Mode Gambar?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Mode Teks mengekstrak teks dari PDF dan membuat dokumen Word yang dapat diedit dengan paragraf, judul, tebal, miring, dan tabel. Mode Gambar merender setiap halaman sebagai gambar beresolusi tinggi — tata letak visual dipertahankan persis tetapi teks tidak bisa diedit."
+      "text": "Mode Teks mengekstrak teks dari PDF dan membuat dokumen Word yang dapat diedit dengan paragraf, judul, tebal, miring, dan tabel. Mode Gambar merender setiap halaman sebagai gambar beresolusi tinggi dan menempatkannya di dokumen Word — tata letak visual dipertahankan persis tetapi teks tidak bisa diedit."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Apakah saya perlu Microsoft Word untuk membuka file yang dikonversi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak. Format .docx didukung oleh Microsoft Word, Google Docs, LibreOffice Writer (gratis), dan Apple Pages. Anda tidak perlu langganan Microsoft 365 berbayar untuk membuka file."
+      "text": "Tidak. Format .docx didukung oleh Microsoft Word, Google Docs (unggah ke Drive dan buka), LibreOffice Writer (gratis, sumber terbuka), dan Apple Pages. Anda tidak perlu langganan Microsoft 365 berbayar untuk membuka file."
     }
   },
   {

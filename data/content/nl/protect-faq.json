@@ -36,7 +36,7 @@
     "name": "Kan ik het wachtwoord later verwijderen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja — de functie om wachtwoorden te verwijderen is binnenkort beschikbaar in PDFree."
+      "text": "Ja. Open de PDF in <a href='/nl/pdf-ontgrendelen/' style='color:var(--green-text)'>PDF ontgrendelen</a>, voer het wachtwoord in en download een kopie zonder wachtwoord. Ook dat gebeurt volledig in je browser."
     }
   },
   {

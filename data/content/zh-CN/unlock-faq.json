@@ -52,7 +52,7 @@
     "name": "之后可以重新添加密码吗？",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "可以 —— 使用保护 PDF 工具为解锁后的文件添加新密码或限制。"
+      "text": "可以 —— 使用<a href=\"/protect-pdf/\" style=\"color:var(--green-text)\">保护 PDF</a>为解锁后的文件添加新密码或限制。"
     }
   }
 ]

@@ -4,7 +4,7 @@
     "name": "¿Se sube mi PDF rellenado a algún sitio?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Todo el proceso de relleno se ejecuta en tu navegador con pdf-lib y pdf.js. Tu documento nunca sale de tu dispositivo — PDFree no tiene acceso a tu archivo ni a los datos que introduces."
+      "text": "No. Todo se ejecuta en tu navegador usando pdf-lib y pdf.js. Ni tu PDF original ni la versión rellenada se envían nunca a un servidor. PDFree no tiene acceso a tu documento."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "¿Qué pasa si mi PDF no tiene campos rellenables?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree detecta campos interactivos AcroForm. Si el PDF es una imagen escaneada o un documento sin campos incrustados, verás el mensaje 'No se encontraron campos rellenables'. Para PDFs planos, puedes usar las herramientas de anotación o marca de agua para añadir texto encima."
+      "text": "PDFree detecta campos interactivos AcroForm. Si el PDF es una imagen escaneada o un documento sin campos incrustados, verás el mensaje \"No se encontraron campos rellenables\". Para PDFs planos, puedes usar las herramientas de anotación o marca de agua para añadir texto encima."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "¿Rellena de verdad los campos reales de mi formulario, o tengo que colocar el texto manualmente?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree detecta los campos AcroForm reales de tu PDF — cuadros de texto, casillas, botones de opción, listas desplegables y campos de firma — y los muestra como un formulario realmente rellenable. No dibujas cuadros de texto a mano. Si tu PDF no tiene campos incrustados, PDFree te lo indica directamente."
+      "text": "PDFree detecta los campos AcroForm reales de tu PDF — cuadros de texto, casillas, botones de opción, listas desplegables y campos de firma — y los muestra como un formulario realmente rellenable. No dibujas cuadros de texto a mano ni adivinas la posición. Si tu PDF no tiene campos incrustados, PDFree te lo indica directamente en lugar de simular que detecta campos que no existen."
     }
   },
   {

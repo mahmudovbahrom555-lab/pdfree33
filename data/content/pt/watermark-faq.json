@@ -4,7 +4,7 @@
     "name": "É completamente gratuito?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. O PDFree é totalmente gratuito — sem assinatura, sem cadastro, sem limite diário. Você pode adicionar marcas d'água em quantos PDFs precisar, sem nenhum custo."
+      "text": "Sim. O PDFree é totalmente gratuito — sem assinatura, sem cadastro, sem limite diário. Você pode adicionar marcas d'água em quantos PDFs precisar."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Posso controlar a opacidade da marca d'água?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. A opacidade é ajustável de 0 a 100%. Uma opacidade de 20–30% cria uma marca d'água discreta que não obstrui o conteúdo principal do documento."
+      "text": "Sim. A opacidade é ajustável de 0 a 100%. Uma opacidade de 20–30% cria uma marca d'água discreta que não obstrui o conteúdo principal."
     }
   },
   {

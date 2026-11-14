@@ -4,7 +4,7 @@
     "name": "Est-ce complètement gratuit ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Oui. PDFree est entièrement gratuit — sans abonnement, sans inscription, sans limite quotidienne. Vous pouvez ajouter des filigranes à autant de PDF que vous le souhaitez, sans aucun coût."
+      "text": "Oui. PDFree est entièrement gratuit — sans abonnement, sans inscription, sans limite quotidienne. Vous pouvez ajouter des filigranes à autant de PDF que vous le souhaitez."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Puis-je contrôler l'opacité du filigrane ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Oui. L'opacité est réglable de 0 à 100 %. Une opacité de 20–30 % donne un filigrane discret qui n'obstrue pas le contenu principal du document."
+      "text": "Oui. L'opacité est réglable de 0 à 100 %. Une opacité de 20–30 % donne un filigrane discret qui n'obstrue pas le contenu principal."
     }
   },
   {

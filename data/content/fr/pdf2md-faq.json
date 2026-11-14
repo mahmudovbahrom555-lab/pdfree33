@@ -20,7 +20,7 @@
     "name": "Les tableaux et les images sont-ils convertis ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Les tableaux simples sont détectés automatiquement et convertis en syntaxe de tableau Markdown. Les images sont également extraites — le téléchargement devient un fichier .zip (document.md + un dossier images) dès que le PDF contient des images extractibles, ou reste un simple .md sinon. Pour une extraction de tableaux plus fiable, utilisez PDF en Excel ; pour les documents complets, utilisez PDF en Word."
+      "text": "Les tableaux simples sont détectés automatiquement et convertis en syntaxe de tableau Markdown. Les images sont également extraites — le téléchargement devient un fichier .zip (document.md + un dossier images) dès que le PDF contient des images extractibles, ou reste un simple .md sinon. Pour une extraction de tableaux plus fiable, utilisez PDF en Excel ; pour un document entièrement modifiable, utilisez PDF en Word."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Quels types de listes sont reconnus ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Les lignes à puces (•, ◦, ▪ et marqueurs similaires) et les lignes numérotées (1., 2.) sont converties en syntaxe de liste Markdown. Les listes avec lettres ou chiffres romains (a., iv.) sont laissées en texte normal, car ces marqueurs sont trop facilement confondus avec du vrai contenu."
+      "text": "Les lignes à puces (•, ◦, ▪ et marqueurs similaires) et les lignes numérotées (1., 2.) sont converties en syntaxe de liste Markdown. Les listes avec lettres ou chiffres romains (a., iv.) sont laissées en texte normal."
     }
   },
   {

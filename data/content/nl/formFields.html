@@ -97,4 +97,51 @@
 
         <p style="font-size:14px;margin:0;">Heb je al een PDF met velden die je wilt invullen in plaats van aanmaken? Gebruik dan <a href="/nl/pdf-invullen/" style="color:var(--green-text);">PDF-formulier invullen</a>.</p>
 
+        <!-- FAQ -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">Veelgestelde vragen</h2>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Wordt mijn PDF ergens geüpload als ik formuliervelden toevoeg?</h3>
+          <p style="margin:0;font-size:14px;">Nee. Alles draait in je browser met pdf.js (om de pagina weer te geven waarop je klikt) en pdf-lib (om de echte AcroForm-velden weg te schrijven). Noch je oorspronkelijke PDF, noch de versie met de toegevoegde velden wordt ooit naar een server gestuurd. PDFree heeft geen toegang tot je document.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Wat is het verschil tussen deze tool en PDF invullen?</h3>
+          <p style="margin:0;font-size:14px;">PDF invullen is bedoeld voor documenten die al interactieve formuliervelden hebben — het herkent ze en laat je er waarden in typen. Formuliervelden toevoegen is voor het omgekeerde geval: een plat of gescand PDF dat nog GEEN enkel interactief veld heeft. Je plaatst de velden zelf door op de pagina te klikken en downloadt daarna een PDF dat voor het eerst echte, invulbare velden bevat. Merkt PDFree dat je bestand al velden heeft, dan verwijst het je door naar PDF invullen.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Zijn de velden die deze tool maakt 'echte' formuliervelden, of alleen vakjes die op de pagina getekend zijn?</h3>
+          <p style="margin:0;font-size:14px;">Echte velden. Elk geplaatst vak wordt met pdf-lib een werkelijk AcroForm-tekstveld dat in de structuur van het PDF wordt geschreven — dezelfde techniek waarmee interactieve formulieren in Acrobat en andere PDF-authoringtools worden gebouwd. Open het resultaat in een willekeurige standaardconforme PDF-lezer: je kunt in het veld klikken en typen, met Tab tussen velden springen, en de waarden worden opgeslagen als echte formuliergegevens, niet als afbeelding.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Welke veldtypen kan ik toevoegen?</h3>
+          <p style="margin:0;font-size:14px;">Vier typen: tekstvelden, selectievakjes, groepen keuzerondjes en keuzelijsten. Kies het type met de knoppen boven de pagina en klik om het te plaatsen. Tekstvelden zijn geschikt voor namen, datums, adressen en vrije antwoorden; selectievakjes voor losse ja/nee-vinkjes; een keuzerondjesgroep is een set knoppen waarvan er maar één tegelijk gekozen kan worden; een keuzelijst biedt de opties die je zelf intypt. Handtekeningvelden worden nog niet ondersteund — gebruik Tekenen op PDF om een document te ondertekenen.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Hoe plaats en verstel ik een veld?</h3>
+          <p style="margin:0;font-size:14px;">Kies een veldtype en klik daarna ergens op de weergegeven pagina om er een neer te zetten. Sleep het veld aan de ronde greep om het te verplaatsen, sleep de rechteronderhoek om het formaat te wijzigen, en typ rechtstreeks in het label van het veld om het een naam te geven (handig als jij of iemand anders die veldnamen later ziet in het formulierpaneel van een PDF-lezer). Klik op de kleine ×-knop om een veld te verwijderen dat je niet wilt.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Hoe maak ik een groep keuzerondjes waarvan er maar één geselecteerd kan worden?</h3>
+          <p style="margin:0;font-size:14px;">Kies het veldtype Keuzerondje en geef de groep een naam in het vak voor de groepsnaam; klik daarna om elke optie te plaatsen. Elk rondje dat je plaatst terwijl die naam is ingesteld, hoort bij dezelfde groep, dus er kan er altijd maar één geselecteerd zijn — en juist dat onderscheidt keuzerondjes van een rij selectievakjes. Typ in elk rondje zijn eigen waarde (bijvoorbeeld Ja en Nee). Wil je een tweede, losstaande groep beginnen, klik dan op 'Nieuwe groep' en geef die een andere naam. Pas je de naam aan terwijl een geplaatst rondje geselecteerd is, dan hernoem je juist die hele groep.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Hoe stel ik de opties van een keuzelijst in?</h3>
+          <p style="margin:0;font-size:14px;">Kies het veldtype Keuzelijst en typ de opties in het optievak, gescheiden door komma's — bijvoorbeeld Klein, Middel, Groot. Klik op de pagina om de keuzelijst te plaatsen; die opties worden als een echte, uitklapbare lijst in het PDF geschreven. Klik op een al geplaatste keuzelijst om de opties terug in het vak te laden en te bewerken.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Werkt dit bij PDF's met meerdere pagina's?</h3>
+          <p style="margin:0;font-size:14px;">Ja. Gebruik de paginanavigatie boven het voorbeeld om tussen pagina's te wisselen — velden kunnen op elke pagina geplaatst worden en elke pagina onthoudt zijn eigen set. De lijst 'Geplaatste velden' naast de pagina toont elk veld dat je in het hele document hebt toegevoegd, met paginanummer; klik je op een regel, dan spring je naar die pagina en wordt het veld gemarkeerd, zodat je niet het hele document hoeft door te bladeren.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Kan ik inzoomen om een veld nauwkeurig te plaatsen?</h3>
+          <p style="margin:0;font-size:14px;">Ja. De zoomknoppen staan naast de paginanavigatie: in stappen in- of uitzoomen tot 400 %, met een knop om terug te keren naar de standaardweergave. Zoomen verandert alleen hoe groot de pagina op het scherm wordt getekend — velden worden opgeslagen als posities ten opzichte van de pagina zelf, dus alles wat je al hebt geplaatst blijft in het uiteindelijke PDF precies staan waar het staat, ongeacht het zoomniveau waarop je het plaatst of nakijkt.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Kan ik velden toevoegen aan een gescand PDF (een foto of scan van een papieren formulier)?</h3>
+          <p style="margin:0;font-size:14px;">Ja — precies daarvoor is deze tool gebouwd. Een gescand PDF is niet meer dan een afbeelding zonder enige interactieve laag, dus met klikken-om-te-plaatsen zet je echte tekstvelden direct over de gedrukte invulruimtes en maak je van een scan een invulbaar digitaal formulier.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Is dit een gratis PDF-formulierbouwer zonder registratie?</h3>
+          <p style="margin:0;font-size:14px;">Ja. Formuliervelden toevoegen is volledig gratis, zonder account, zonder registratie en zonder installatie. Open de tool, laad je PDF, klik om velden te plaatsen en download — een e-mailadres is niet nodig.</p>
+        </div>
+
 </div>

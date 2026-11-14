@@ -28,7 +28,7 @@
     "name": "Czy działa ze zeskanowanymi PDF-ami?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. Zeskanowane PDF-y to obrazy bez czytelnego tekstu."
+      "text": "Nie. Zeskanowane PDF-y to obrazy bez czytelnego tekstu. Najpierw uruchom OCR, a następnie przekonwertuj wynik."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Czy to narzędzie jest darmowe?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tak, całkowicie darmowe na zawsze."
+      "text": "Tak, całkowicie darmowe na zawsze — bez rejestracji, bez konta."
     }
   },
   {

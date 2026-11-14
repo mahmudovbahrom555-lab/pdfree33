@@ -4,7 +4,7 @@
     "name": "Doldurulmuş PDF'im bir yere yükleniyor mu?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Hayır. Tüm doldurma işlemi pdf-lib ve pdf.js kullanılarak tarayıcınızda gerçekleşir. Belgeniz cihazınızdan asla ayrılmaz — PDFree'nin dosyanıza veya girdiğiniz verilere erişimi yoktur."
+      "text": "Hayır. Her şey pdf-lib ve pdf.js kullanılarak tarayıcınızda gerçekleşir. Ne orijinal PDF'niz ne de doldurulmuş sürüm hiçbir zaman bir sunucuya gönderilmez. PDFree'nin belgenize erişimi yoktur."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Çizilen imza yasal olarak geçerli mi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Bir PDF'ye eklenen imza görseli, elektronik bir imzadır. Yasal geçerliliği yargı bölgenize ve belge türüne bağlıdır. Onay formları, dahili onaylar veya kira sözleşmeleri gibi günlük belgeler için genellikle yeterlidir. Düzenlemeye tabi hukuki bağlamlarda, denetim izi bulunan sertifikalı bir e-imza hizmeti kullanın."
+      "text": "Bir PDF'ye eklenen imza görseli, elektronik bir imzadır. Yasal geçerliliği yargı bölgenize ve belge türüne bağlıdır — onay formları, dahili onaylar veya kira sözleşmeleri gibi günlük belgeler için genellikle yeterlidir. Düzenlemeye tabi hukuki bağlamlarda, denetim izi bulunan sertifikalı bir e-imza hizmeti kullanmayı düşünün."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Bu araç gerçekten formumun gerçek alanlarını mı dolduruyor, yoksa metni elle mi yerleştirmem gerekiyor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree, PDF'nizin gerçek AcroForm alanlarını algılar ve bunları gerçekten doldurulabilir bir form olarak gösterir; metin kutularını elle çizmez. PDF'nizde gömülü alan yoksa, PDFree bunu doğrudan size bildirir."
+      "text": "PDFree, PDF'nizin gerçek AcroForm alanlarını — metin kutuları, onay kutuları, radyo düğmeleri, açılır menüler ve imza alanları — algılar ve bunları gerçekten doldurulabilir bir form olarak gösterir. Metin kutularını elle çizmez veya konumlarını tahmin etmezsiniz. PDF'nizde gömülü alan yoksa, PDFree var olmayan alanları algılıyormuş gibi davranmak yerine bunu doğrudan size bildirir."
     }
   },
   {

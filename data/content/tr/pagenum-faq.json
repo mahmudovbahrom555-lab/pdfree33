@@ -36,7 +36,7 @@
     "name": "Kapak sayfasını numaralandırma dışında bırakabilir miyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Evet. \"İlk sayfayı atla\" seçeneğini etkinleştirin. 1. sayfa (kapak) numara almaz ve numaralandırma ikinci sayfadan başlar."
+      "text": "Evet. \"Başlangıç sayfası\"nı 2 yapın: kapak numara almaz ve 2. sayfada 1 görünür. 2. sayfada 2 görünmesi gerekiyorsa \"Başlangıç numarası\"nı da 2 yapın."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "PDF'yi sayfalandırmak (paginate) ne anlama gelir?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDF'yi sayfalandırmak, belgenin her sayfasına görünür sayfa numarası eklemek anlamına gelir. Sayfalandırma, uzun belgelerde gezinmeyi, referans vermeyi ve baskı almayı kolaylaştırır. PDFree PDF'leri ücretsiz olarak çevrimiçi sayfalandırır — numara formatını, konumu ve başlangıç numarasını seçin, ardından sayfalandırılmış PDF'yi anında indirin."
+      "text": "PDF'yi sayfalandırmak, belgenin her sayfasına görünür sayfa numarası eklemek anlamına gelir. Sayfalandırma, uzun belgelerde gezinmeyi, referans vermeyi ve baskı almayı kolaylaştırır. PDFree PDF'leri ücretsiz olarak çevrimiçi sayfalandırır — numara formatını, konumu (üst bilgi veya alt bilgi) ve başlangıç numarasını seçin, ardından sayfalandırılmış PDF'yi anında indirin."
     }
   },
   {

@@ -28,7 +28,7 @@
     "name": "How many PDF files can I merge at once?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "As many as you like — there is no file-count limit and no daily limit, so you can merge 2, 50, or 100+ files in one go. The files in a single merge can add up to 500 MB on a computer (Chrome/Edge, 8 GB+ RAM) or 300 MB on phones. Everything runs in your browser's memory, so very large batches are faster on a computer than on an older phone — close other tabs if it struggles."
+      "text": "As many as you like — there is no file-count limit and no daily limit, so you can merge 2, 50, or 100+ files in one go. The files in a single merge can add up to 500 MB on a computer (Chrome/Edge, 8 GB+ RAM) or 300 MB on phones. Everything runs in your browser's memory, so very large batches are faster on a computer than on an older phone — close other tabs if it struggles. The tool was built by someone who needed to merge 83 PDFs at once — that's exactly the use case it's designed for."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "Is there a daily limit on how many merges I can do?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree has no daily usage cap. Merge as many PDFs as you want, as often as you need — no task limits, no file count limits."
+      "text": "No. PDFree has no usage caps. Merge as many PDFs as you want, as often as you need. There is no daily limit, no task limit, and no file count limit."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Does merging upload my files to a server?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree merges PDF files entirely in your browser using pdf-lib. Your files never leave your device and are never sent to any server."
+      "text": "No. Your files are processed entirely in your browser's memory. Your file is not uploaded to any server. Close the tab and the files are gone from memory — no trace on any server."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Can I merge PDFs on a phone or tablet?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. PDFree works in mobile browsers — Chrome for Android and Safari for iOS. File selection uses the native file picker, and you can reorder files using the on-screen buttons."
+      "text": "Yes. PDFree works in mobile browsers (Chrome for Android, Safari for iOS). Drag and drop is replaced by a file picker, and reordering works by tapping the up/down buttons."
     }
   },
   {

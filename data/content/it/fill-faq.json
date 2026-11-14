@@ -4,7 +4,7 @@
     "name": "Il mio PDF compilato viene caricato da qualche parte?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. L'intero processo di compilazione avviene nel tuo browser con pdf-lib e pdf.js. Il tuo documento non lascia mai il tuo dispositivo — PDFree non ha accesso al tuo file né ai dati che inserisci."
+      "text": "No. Tutto avviene nel tuo browser usando pdf-lib e pdf.js. Né il PDF originale né la versione compilata vengono mai inviati a un server. PDFree non ha accesso al tuo documento."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "La firma disegnata ha validità legale?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Un'immagine di firma inserita in un PDF è una firma elettronica. La sua validità legale dipende dalla giurisdizione e dal tipo di documento. Per molti documenti quotidiani — moduli di consenso, approvazioni interne, contratti d'affitto — è generalmente sufficiente. Per contesti legali regolamentati, usa un servizio di firma elettronica certificata con audit trail."
+      "text": "Un'immagine di firma inserita in un PDF è una firma elettronica. La sua validità legale dipende dalla tua giurisdizione e dal tipo di documento — per molti documenti quotidiani (moduli di consenso, approvazioni interne, contratti d'affitto) è generalmente sufficiente. Per contesti legali regolamentati, valuta un servizio di firma elettronica certificata con audit trail."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Questo strumento compila davvero i campi reali del mio modulo, o devo posizionare il testo manualmente?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree rileva i campi AcroForm reali del tuo PDF e li visualizza come un modulo realmente compilabile, senza disegnare campi di testo a mano. Se il tuo PDF non ha campi incorporati, PDFree te lo dice direttamente."
+      "text": "PDFree rileva i campi AcroForm reali del tuo PDF — campi di testo, caselle di controllo, pulsanti di opzione, menu a tendina e campi firma — e li visualizza come un modulo realmente compilabile. Non disegni campi di testo a mano né indovini la posizione. Se il tuo PDF non ha campi incorporati, PDFree te lo dice direttamente invece di fingere di rilevare campi inesistenti."
     }
   },
   {

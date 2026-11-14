@@ -36,7 +36,7 @@
     "name": "Mengapa meratakan daripada hanya menyimpan PDF yang sudah diisi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDF yang disimpan masih berisi bidang yang bisa diedit — penerima bisa menghapus nilai Anda dan mengisi ulang. Perataan mengunci konten secara permanen, mencegah pengeditan, memastikan rendering konsisten di semua pembaca PDF, dan menghapus metadata formulir tersembunyi dari file."
+      "text": "PDF yang disimpan masih berisi bidang yang bisa diedit — penerima bisa menghapus nilai Anda dan mengisi ulang. Perataan mengunci konten secara permanen ke halaman, mencegah pengeditan, memastikan rendering konsisten di semua pembaca PDF, dan menghapus metadata formulir tersembunyi dari file."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Apakah meratakan mengurangi ukuran file?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sering sedikit berkurang. Perataan menghapus data widget formulir interaktif dan JavaScript, yang mengurangi ukuran file untuk formulir dengan banyak bidang. Gambar dan font tertanam tidak terpengaruh."
+      "text": "Sering sedikit berkurang. Perataan menghapus data widget formulir interaktif dan JavaScript, yang mengurangi ukuran file untuk formulir dengan banyak bidang. Namun gambar dan font tertanam tidak terpengaruh oleh perataan."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "Apa perbedaan meratakan PDF dan melindunginya dengan kata sandi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Perataan menghapus struktur formulir interaktif sepenuhnya — tidak ada bidang yang bisa diedit. Proteksi kata sandi membatasi akses tetapi membiarkan bidang formulir tetap ada. Untuk keamanan maksimal, ratakan dulu lalu tambahkan kata sandi."
+      "text": "Keduanya memecahkan masalah yang berbeda. Perataan menghapus struktur formulir interaktif sepenuhnya — tidak ada bidang yang bisa diedit, terlepas dari izin. Proteksi kata sandi membatasi akses atau hak pengeditan tetapi membiarkan bidang formulir tetap ada. Untuk keamanan maksimal, ratakan dulu lalu tambahkan kata sandi."
     }
   },
   {

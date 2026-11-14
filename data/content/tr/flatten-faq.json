@@ -60,7 +60,7 @@
     "name": "Düzleştirme PDF dosya boyutunu küçültür mü?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Genellikle biraz küçültür. Düzleştirme, etkileşimli form bileşen verilerini ve JavaScript'i kaldırır; bu da çok alanlı formlarda dosya boyutunu azaltır. Ancak görseller ve gömülü fontlar etkilenmez. Belirgin bir boyut küçültme için, düzleştirilmiş çıktıyı bir PDF sıkıştırma aracından geçirin."
+      "text": "Genellikle biraz küçültür. Düzleştirme, etkileşimli form bileşen verilerini ve JavaScript'i kaldırır; bu da çok alanlı formlarda dosya boyutunu azaltır. Ancak görseller ve gömülü fontlar etkilenmez. Belirgin bir boyut küçültme için, düzleştirilmiş çıktıyı <a href=\"/tr/pdf-sikistir/\" style=\"color:var(--green-text);\">PDF Sıkıştır</a> aracından geçirin."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "PDF'yi düzleştirmek ile parolayla korumak arasındaki fark nedir?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Bunlar farklı sorunları çözer. Düzleştirme, etkileşimli form yapısını tamamen kaldırır — izinlerden bağımsız olarak düzenlenecek alan kalmaz. Parola koruması ise erişimi veya düzenleme haklarını kısıtlar ama form alanlarını olduğu gibi bırakır; parolaya sahip biri doldurulabilir bir formu yine de değiştirebilir. En yüksek güvenlik için önce düzleştirerek içeriği sabitleyin, ardından parola ekleyin."
+      "text": "Bunlar farklı sorunları çözer. Düzleştirme, etkileşimli form yapısını tamamen kaldırır — izinlerden bağımsız olarak düzenlenecek alan kalmaz. Parola koruması ise erişimi veya düzenleme haklarını kısıtlar ama form alanlarını olduğu gibi bırakır; parolaya sahip biri doldurulabilir bir formu yine de değiştirebilir. En yüksek güvenlik için önce düzleştirerek içeriği sabitleyin, ardından <a href=\"/tr/pdf-koru/\" style=\"color:var(--green-text);\">PDF'yi Parolayla Koru</a> ile parola ekleyin."
     }
   },
   {

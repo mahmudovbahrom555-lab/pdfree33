@@ -28,7 +28,7 @@
     "name": "Werkt het met gescande PDF's?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nee. Gescande PDF's zijn afbeeldingen zonder leesbare tekst."
+      "text": "Nee. Gescande PDF's zijn afbeeldingen zonder leesbare tekst. Voer eerst OCR uit en converteer daarna het resultaat."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Is dit hulpmiddel gratis?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja, volledig gratis voor altijd."
+      "text": "Ja, volledig gratis voor altijd — geen registratie, geen account."
     }
   },
   {

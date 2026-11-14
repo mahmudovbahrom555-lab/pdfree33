@@ -20,7 +20,7 @@
     "name": "Wat is het verschil tussen Extraheren en Splitsen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Met Extraheren kies je specifieke pagina's (bijv. pagina 2, 5, 8) en sla je die op als één nieuwe PDF. Splitsen verdeelt het hele document in losse bestanden."
+      "text": "<a href='/nl/pdf-splitsen/' style='color:var(--green-text)'>Splitsen</a> heeft rijkere selectieopties (oneven pagina's, even pagina's, helften, visuele miniatuurselectie) en kan meerdere losse bestanden produceren. Extraheren is eenvoudiger — voer een bereik in, krijg één PDF. Gebruik wat past bij je workflow."
     }
   },
   {
