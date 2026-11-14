@@ -30,16 +30,19 @@
 // ============================================================
 
 import { id, esc as _esc } from './utils.js';
+import { OCR_LANGUAGES } from './ocrUI.js';
+import { ocrLangForLocale } from './ocrEngine.js';
+import { getLang } from './config.js';
 import { t } from './i18n.js';
 import { showToast } from './ui.js';
-import { selectedFiles, isFilesLocked, addFiles } from './files.js';
+import { selectedFiles, isFilesLocked, addFiles, removeFile } from './files.js';
 import { bindDragReorder } from './dragReorder.js';
 import { presetRememberCard } from './uiComponents.js';
 import { loadPreset, clearPreset } from './presets.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
 import { filterScanPhoto } from './scanFilter.js';
 import { openScanCamera, openCropReview } from './scanCameraUI.js';
-import { detectDocumentQuad, defaultInsetQuad, warpToRectAsync } from './scanGeometry.js';
+import { detectDocumentQuad, fullFrameQuad, warpToRectAsync } from './scanGeometry.js';
 import { loadOpenCv } from './lazyLibs.js';
 import { SCAN_MAX_LONG_EDGE } from './scanConstants.js';
 
@@ -96,16 +99,38 @@ let _settingsRendered = false;
 let _reviewQueue  = [];   // File[] waiting to go through openCropReview
 let _reviewingNow = false; // guards against starting a 2nd review modal while one is open
 
+let _cropProcessing = null;
+let _optionsGeneration = 0;
+const _originalPhotos = new WeakMap();
+const _pageFilters = new WeakMap();
+const _pageCrops = new WeakMap();
+const SCAN_FILTERS = ['original', 'grayscale', 'faded', 'color', 'bw'];
+
+async function _makeScanPage(canvas, name, original, settings = { mode: _scanFilterMode, ..._scanAdjust() }) {
+  const { mode, brightness, contrast } = settings;
+  const adjust = { brightness, contrast };
+  // Keep a compact unfiltered crop so repeated edits never compound a filter.
+  const source = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.96));
+  const blob = await filterScanPhoto(canvas, mode, adjust);
+  const file = new File([blob], name, { type: blob.type });
+  file._scanReviewed = true;
+  if (source) _pageFilters.set(file, { source, mode, ...adjust });
+  if (original) _originalPhotos.set(file, original);
+  return file;
+}
+
 function _scanAdjust() {
   return { brightness: _scanBrightness, contrast: _scanContrast };
 }
 
 export function getScanDocumentParams() {
-  return { pageSize: _pageSize, orientation: _orientation,
+  return { ocrLanguage: id('sdRecognizeText')?.checked ? id('sdOcrLanguage').value : null,
+           pageSize: _pageSize, orientation: _orientation,
            compress: _compress, quality: _quality, exifAngles: _exifAngles,
            // Not a real assembly param — read by toolRegistrations.js's
            // validate() to block submitting while a review modal is
            // still queued/open, so a page can't slip through unreviewed.
+           cropProcessing: _cropProcessing,
            reviewPending: _reviewingNow || _reviewQueue.length > 0,
            hasFiles: selectedFiles.length > 0 };
 }
@@ -116,7 +141,8 @@ export async function initScanDocumentOptions(files) {
   const container = id('scanDocumentOptions');
   if (!container) return;
 
-  if (files.length === 0) { container.style.display = 'none'; return; }
+  if (files.length === 0) { hideScanDocumentOptions(); return; }
+  const generation = ++_optionsGeneration;
 
   if (!_rememberLoaded) {
     _rememberLoaded = true;
@@ -139,7 +165,9 @@ export async function initScanDocumentOptions(files) {
   }
   container.style.display = 'block';
 
-  _exifAngles = await Promise.all(files.map(_readExifAngle));
+  const angles = await Promise.all(files.map(_readExifAngle));
+  if (generation !== _optionsGeneration) return;
+  _exifAngles = angles;
 
   if (files.length > _MANY_IMAGES_WARN_THRESHOLD && !_warnedManyImages) {
     _warnedManyImages = true;
@@ -152,6 +180,7 @@ export async function initScanDocumentOptions(files) {
 }
 
 export function hideScanDocumentOptions() {
+  ++_optionsGeneration;
   const container = id('scanDocumentOptions');
   if (!container) return;
   container.style.display = 'none';
@@ -160,7 +189,7 @@ export function hideScanDocumentOptions() {
   _scanBrightness = 0; _scanContrast = 0;
   _compress = true; _quality = 0.82; _exifAngles = [];
   _warnedManyImages = false; _rememberLoaded = false; _settingsRendered = false;
-  _reviewQueue = []; _reviewingNow = false;
+  _reviewQueue = []; _reviewingNow = false; _cropProcessing = null;
 }
 
 // ── Review-gating queue ───────────────────────────────────────
@@ -179,7 +208,7 @@ function _queueUnreviewedFiles(files) {
   // records). Only offered on a genuinely fresh batch (idle queue, 2+
   // photos) — a single photo, or more arriving mid-review, just joins the
   // queue as before; the choice would be noise there.
-  if (unreviewed.length > 1 && !_reviewingNow && _reviewQueue.length === 0) {
+  if (unreviewed.length > 1 && !_reviewingNow && !_cropProcessing && _reviewQueue.length === 0) {
     _promptBatchMode(unreviewed);
     return;
   }
@@ -189,14 +218,14 @@ function _queueUnreviewedFiles(files) {
 }
 
 // Auto-crop path deliberately reuses the exact same real functions the
-// interactive review modal calls (detectDocumentQuad/defaultInsetQuad/
+// interactive review modal calls (detectDocumentQuad/fullFrameQuad/
 // warpToRect/filterScanPhoto) — same detection, same fallback, same
 // filter pipeline, just without stopping for a human to look at each
 // one. Single-page only (book-spread's gutter split needs the user's own
 // adjustment — no reasonable default exists there, so that mode is
 // simply not offered for batch auto-apply).
 async function _promptBatchMode(files) {
-  await loadOpenCv().catch(() => {}); // best-effort warmup; a failure just means defaultInsetQuad is used for every photo below
+  await loadOpenCv().catch(() => {}); // best-effort warmup; a failure just means fullFrameQuad is used for every photo below
   const modal = document.createElement('div');
   modal.className = 'scan-cam-modal scan-cam-modal--open';
   modal.innerHTML = `
@@ -217,26 +246,33 @@ async function _promptBatchMode(files) {
   });
   id('sdBatchAutoAll').addEventListener('click', () => {
     modal.remove();
-    _autoProcessAll(files);
+    const status = id('sdCropStatus');
+    if (status) status.textContent = t('scan_cam_processing');
+    const processing = _autoProcessAll(files).finally(() => {
+      if (_cropProcessing !== processing) return;
+      _cropProcessing = null;
+      if (status) status.textContent = '';
+      _drainReviewQueue();
+    });
+    _cropProcessing = processing;
   });
 }
 
 async function _autoProcessAll(files) {
+  let applied = true;
   for (const file of files) {
     // Same "removed while queued" escape hatch _drainReviewQueue already has.
     if (!selectedFiles.includes(file)) continue;
     try {
       const sourceCanvas = await _decodeSourcePhoto(file);
       let quad = null;
-      try { quad = detectDocumentQuad(sourceCanvas); } catch { /* falls through to defaultInsetQuad below */ }
-      quad = quad || defaultInsetQuad(sourceCanvas.width, sourceCanvas.height);
+      try { quad = detectDocumentQuad(sourceCanvas); } catch { /* falls through to fullFrameQuad below */ }
+      quad = quad || fullFrameQuad(sourceCanvas.width, sourceCanvas.height);
       const warped = await warpToRectAsync(sourceCanvas, quad);
-      const blob = await filterScanPhoto(warped, _scanFilterMode, _scanAdjust());
-
-      const idx = selectedFiles.indexOf(file);
       const baseName = file.name.replace(/\.\w+$/, '');
-      const reviewedFile = new File([blob], baseName + '-scan.jpg', { type: 'image/jpeg' });
-      reviewedFile._scanReviewed = true;
+      const reviewedFile = await _makeScanPage(warped, baseName + '-scan.jpg', file);
+      _pageCrops.set(reviewedFile, { frame: file, quad });
+      const idx = selectedFiles.indexOf(file);
       if (idx !== -1) {
         selectedFiles.splice(idx, 1, reviewedFile);
         _exifAngles.splice(idx, 1, 0); // baked into the warp already, same as the reviewed-confirm path
@@ -244,15 +280,17 @@ async function _autoProcessAll(files) {
     } catch {
       // Same recovery as _drainReviewQueue's catch: tag reviewed so it's
       // never retried in a loop, leave the file as-is, surface a toast.
+      applied = false;
       file._scanReviewed = true;
       showToast(t('sd_review_decode_failed', { name: file.name }));
     }
     _render(selectedFiles); // per-photo, not just at the end — batch progress stays visible
   }
+  return applied;
 }
 
 async function _drainReviewQueue() {
-  if (_reviewingNow || _reviewQueue.length === 0) return;
+  if (_reviewingNow || _cropProcessing || _reviewQueue.length === 0) return;
   _reviewingNow = true;
   const file = _reviewQueue.shift();
 
@@ -268,26 +306,9 @@ async function _drainReviewQueue() {
       // mode (left/right page, already split — see scanCameraUI.js's
       // _startSpineAdjust). Either way, replace the one queued `file`
       // with however many reviewed pages came out of it.
-      onConfirm: async warpedCanvases => {
-        const idx = selectedFiles.indexOf(file);
-        const baseName = file.name.replace(/\.\w+$/, '');
-        const newFiles = [];
-        for (let i = 0; i < warpedCanvases.length; i++) {
-          const blob = await filterScanPhoto(warpedCanvases[i], _scanFilterMode, _scanAdjust());
-          const suffix = warpedCanvases.length > 1 ? `-scan-${i + 1}` : '-scan';
-          const reviewedFile = new File([blob], baseName + suffix + '.jpg', { type: 'image/jpeg' });
-          reviewedFile._scanReviewed = true;
-          newFiles.push(reviewedFile);
-        }
-        if (idx !== -1) {
-          // Baked into the warp already — no rotation left to apply at assembly time.
-          selectedFiles.splice(idx, 1, ...newFiles);
-          _exifAngles.splice(idx, 1, ...newFiles.map(() => 0));
-        }
-        _reviewingNow = false;
-        _render(selectedFiles);
-        _drainReviewQueue();
-      },
+      onConfirm: (warpedCanvases, crop) => _applyReviewedCrop(file, warpedCanvases, {
+        ...crop, originalFrame: crop.frame === sourceCanvas ? file : null,
+      }, _drainReviewQueue),
       onSkip: () => {
         file._scanReviewed = true; // leave the original file + its real EXIF angle untouched
         _reviewingNow = false;
@@ -377,17 +398,17 @@ function _bindTakePhotoButton() {
       openScanCamera({
         // canvases: 1 for single-page, 2 for book-spread mode (already
         // split left/right — see scanCameraUI.js's _startSpineAdjust).
-        onConfirm: async canvases => {
+        onConfirm: async (canvases, isCurrent, crop) => {
+          const frame = await _encodeCropFrame(crop.frame);
           const stamp = Date.now();
           const files = [];
           for (let i = 0; i < canvases.length; i++) {
-            const blob = await filterScanPhoto(canvases[i], _scanFilterMode, _scanAdjust());
             const suffix = canvases.length > 1 ? `-${i + 1}` : '';
-            const file = new File([blob], `scan-${stamp}${suffix}.jpg`, { type: 'image/jpeg' });
-            file._scanReviewed = true;
+            const file = await _makeScanPage(canvases[i], `scan-${stamp}${suffix}.jpg`);
+            if (frame && crop.quad) _pageCrops.set(file, { frame, quad: crop.quad });
             files.push(file);
           }
-          addFiles(files);
+          if (isCurrent()) addFiles(files);
         },
         onFallback: () => input.click(),
       });
@@ -413,9 +434,8 @@ function _bindTakePhotoButton() {
       // when getUserMedia isn't available) — cap resolution here directly,
       // same as _decodeSourcePhoto does for the gallery/review path.
       const capped = _capLongEdge(img);
-      const blob = await filterScanPhoto(capped, _scanFilterMode, _scanAdjust());
-      const scanFile = new File([blob], `scan-${Date.now()}.jpg`, { type: 'image/jpeg' });
-      scanFile._scanReviewed = true;
+      const scanFile = await _makeScanPage(capped, `scan-${Date.now()}.jpg`, file);
+      _pageCrops.set(scanFile, { frame: file });
       addFiles([scanFile]);
     } catch {
       showToast(t('sd_capture_failed'));
@@ -433,6 +453,9 @@ _bindTakePhotoButton(); // module-load time — see comment block above
 //    is replaced on later calls. ──
 
 function _settingsHtml() {
+  const languages = [...OCR_LANGUAGES.european, ...OCR_LANGUAGES.complex];
+  const preferred = ocrLangForLocale(getLang());
+  const defaultLanguage = languages.some(lang => lang.code === preferred) ? preferred : 'eng';
   return `
     <div class="j2p-row">
       <div class="j2p-group">
@@ -441,6 +464,7 @@ function _settingsHtml() {
           ${[
             { value: 'original',  label: t('j2p_scan_filter_original') },
             { value: 'grayscale', label: t('j2p_scan_filter_grayscale') },
+            { value: 'faded', label: t('j2p_scan_filter_faded') },
             { value: 'color',     label: t('j2p_scan_filter_color') },
             { value: 'bw',        label: t('j2p_scan_filter_bw') },
           ].map(o => `
@@ -547,6 +571,18 @@ function _settingsHtml() {
       subtitle: t('preset_remember_sub'),
       ariaLabel: t('preset_remember_title'),
     })}
+    <div class="j2p-compress-block">
+      <label class="sd-ocr-toggle">
+        <input type="checkbox" id="sdRecognizeText" aria-controls="sdOcrLanguageRow">
+        ${t('sd_ocr_enable')}
+      </label>
+      <div id="sdOcrLanguageRow" hidden>
+        <label for="sdOcrLanguage">${t('ocr_lang_doc')}</label>
+        <select id="sdOcrLanguage">
+          ${languages.map(lang => `<option value="${lang.code}"${lang.code === defaultLanguage ? ' selected' : ''}>${_esc(lang.name)}</option>`).join('')}
+        </select>
+      </div>
+    </div>
   `;
 }
 
@@ -565,9 +601,12 @@ function _previewsHtml(files) {
   return `
     <div class="j2p-previews" aria-label="${t('j2p_image_preview')}" role="list">
       ${files.map((f, i) => `
-        <div class="j2p-thumb" role="listitem" data-index="${i}" data-i="${i}" title="${_esc(f.name)}">
+        <div class="j2p-thumb" role="listitem" data-index="${i}" data-i="${i}" title="${_esc(f.name).replaceAll('"', '&quot;')}">
           <canvas class="j2p-thumb__canvas" data-index="${i}" width="${_THUMB_RASTER_SIZE}" height="${_THUMB_RASTER_SIZE}" aria-hidden="true"></canvas>
           <span class="j2p-thumb__name">${_esc(_truncName(f.name, 12))}</span>
+          ${_pageFilters.has(f) ? `<button type="button" class="split-action-btn sd-compare-button" data-sd-edit-filter>${t('j2p_scan_filter')}</button>` : ''}
+          ${_originalPhotos.has(f) ? `<button type="button" class="split-action-btn sd-compare-button" data-sd-compare>${t('cs_before')} / ${t('cs_after')}</button>` : ''}
+          ${f._scanReviewed ? '<button type="button" class="j2p-thumb__remove" data-sd-remove>×</button>' : ''}
           ${!f._scanReviewed ? `<span class="j2p-thumb__badge" aria-label="${t('sd_pending_review')}">⏳</span>` : ''}
         </div>
       `).join('')}
@@ -581,13 +620,13 @@ function _render(files) {
 
   if (!_settingsRendered) {
     _settingsRendered = true;
-    container.innerHTML = `<div id="sdPreviewsWrap">${_previewsHtml(files)}</div>${_settingsHtml()}`;
+    container.innerHTML = `<div id="sdPreviewsWrap">${_previewsHtml(files)}</div><div id="sdCropStatus" role="status"></div>${_settingsHtml()}`;
     _bindSettingsEvents();
   } else {
     const wrap = id('sdPreviewsWrap');
     if (wrap) wrap.innerHTML = _previewsHtml(files);
   }
-  _bindThumbGridEvents();
+  _bindThumbGridEvents(files);
   _renderThumbnails(files);
 }
 
@@ -624,6 +663,7 @@ function _bindSettingsEvents() {
   const container = id('scanDocumentOptions');
 
   container.addEventListener('change', e => {
+    if (e.target.id === 'sdRecognizeText') id('sdOcrLanguageRow').hidden = !e.target.checked;
     if (e.target.name === 'sdSize') {
       _pageSize = e.target.value;
       container.querySelectorAll('[data-name="sdSize"]').forEach(el => {
@@ -690,11 +730,28 @@ function _bindAdjustSlider(idPrefix, setValue) {
   });
 }
 
-function _bindThumbGridEvents() {
+function _bindThumbGridEvents(files) {
   const container = id('scanDocumentOptions');
   if (!container) return;
   const previews = container.querySelector('.j2p-previews');
   if (previews) {
+    previews.querySelectorAll('[data-sd-remove]').forEach(button => {
+      const file = files[Number(button.closest('.j2p-thumb').dataset.index)];
+      button.setAttribute('aria-label', t('j2p_remove_image', { name: file.name }));
+      button.addEventListener('touchstart', event => event.stopPropagation());
+      button.addEventListener('click', event => {
+        event.stopPropagation();
+        if (isFilesLocked() || _reviewingNow || _cropProcessing) return;
+        const index = selectedFiles.indexOf(file);
+        if (index < 0) return;
+        _exifAngles.splice(index, 1);
+        removeFile(index);
+        if (!selectedFiles.length) hideScanDocumentOptions();
+      });
+    });
+    previews.querySelectorAll('[data-sd-compare], [data-sd-edit-filter]').forEach(button => {
+      button.addEventListener('touchstart', event => event.stopPropagation());
+    });
     bindDragReorder({
       container:    previews,
       itemSelector: '.j2p-thumb',
@@ -711,8 +768,152 @@ function _bindThumbGridEvents() {
     previews.addEventListener('click', e => {
       const thumb = e.target.closest('.j2p-thumb');
       if (!thumb) return;
+      if (e.target.closest('[data-sd-edit-filter]')) {
+        _openPageFilter(files[Number(thumb.dataset.index)]);
+        return;
+      }
+      if (e.target.closest('[data-sd-compare]')) {
+        _openScanComparison(files[Number(thumb.dataset.index)]);
+        return;
+      }
       _openThumbPreview(+thumb.dataset.index);
     });
+  }
+}
+
+function _openPageFilter(file) {
+  const settings = _pageFilters.get(file);
+  if (!settings || isFilesLocked() || _reviewingNow || _cropProcessing ||
+      !selectedFiles.includes(file) || id('sdPageFilter')) return;
+
+  const dialog = document.createElement('dialog');
+  dialog.id = 'sdPageFilter';
+  dialog.className = 'sd-comparison sd-page-filter';
+  dialog.setAttribute('aria-label', t('j2p_scan_filter'));
+  dialog.innerHTML = `
+    <img alt="${t('cs_preview_page')}">
+    <form>
+      <fieldset>
+        <label>${t('j2p_scan_filter')}
+          <select name="mode">${SCAN_FILTERS.map(mode =>
+            `<option value="${mode}"${mode === settings.mode ? ' selected' : ''}>${t('j2p_scan_filter_' + mode)}</option>`).join('')}</select>
+        </label>
+        <label>${t('j2p_scan_brightness')} <input name="brightness" type="range" min="-50" max="50" value="${settings.brightness}"></label>
+        <label>${t('j2p_scan_contrast')} <input name="contrast" type="range" min="-50" max="50" value="${settings.contrast}"></label>
+      </fieldset>
+      <p role="status"></p>
+      <button type="button" class="split-action-btn">${t('scan_cam_close')}</button>
+      <button type="submit" class="split-action-btn">${t('ext_apply')}</button>
+    </form>`;
+  const form = dialog.querySelector('form');
+  const status = dialog.querySelector('[role="status"]');
+  const apply = form.querySelector('[type="submit"]');
+  const img = dialog.querySelector('img');
+  const controls = form.elements;
+  let url = URL.createObjectURL(file);
+  img.src = url;
+  let blob = file;
+  let chosen = settings;
+  let updating = false;
+  const setAdjustable = () => {
+    controls.brightness.disabled = controls.contrast.disabled = controls.mode.value === 'original';
+  };
+  setAdjustable();
+
+  form.addEventListener('change', async () => {
+    if (updating) return;
+    updating = true;
+    dialog.querySelector('fieldset').disabled = true;
+    apply.disabled = true;
+    status.textContent = t('scan_cam_processing');
+    const next = {
+      source: settings.source,
+      mode: controls.mode.value,
+      brightness: Number(controls.brightness.value),
+      contrast: Number(controls.contrast.value),
+    };
+    let bitmap;
+    try {
+      bitmap = await createImageBitmap(settings.source);
+      const processed = await filterScanPhoto(bitmap, next.mode, next);
+      if (!dialog.open) return;
+      blob = processed;
+      chosen = next;
+      URL.revokeObjectURL(url);
+      url = URL.createObjectURL(blob);
+      img.src = url;
+      status.textContent = '';
+      apply.disabled = false;
+    } catch {
+      status.textContent = t('scan_cam_processing_failed');
+    } finally {
+      bitmap?.close();
+      updating = false;
+      dialog.querySelector('fieldset').disabled = false;
+      setAdjustable();
+    }
+  });
+  dialog.addEventListener('cancel', event => { if (updating) event.preventDefault(); });
+  form.querySelector('[type="button"]').addEventListener('click', () => { if (!updating) dialog.close(); });
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    const index = selectedFiles.indexOf(file);
+    if (updating || index < 0 || isFilesLocked()) return;
+    if (blob !== file) {
+      const updated = new File([blob], file.name, { type: blob.type });
+      updated._scanReviewed = true;
+      _pageFilters.set(updated, chosen);
+      if (_pageCrops.has(file)) _pageCrops.set(updated, _pageCrops.get(file));
+      if (_originalPhotos.has(file)) _originalPhotos.set(updated, _originalPhotos.get(file));
+      selectedFiles.splice(index, 1, updated);
+      _render(selectedFiles);
+    }
+    dialog.close();
+  });
+  dialog.addEventListener('close', () => {
+    URL.revokeObjectURL(url);
+    dialog.remove();
+  }, { once: true });
+  document.body.append(dialog);
+  dialog.showModal();
+}
+
+async function _openScanComparison(file) {
+  const original = _originalPhotos.get(file);
+  if (!original || !selectedFiles.includes(file) || id('sdComparison')) return;
+
+  const dialog = document.createElement('dialog');
+  dialog.id = 'sdComparison';
+  dialog.className = 'sd-comparison';
+  dialog.setAttribute('aria-label', `${t('cs_before')} / ${t('cs_after')}`);
+  const urls = [];
+  dialog.addEventListener('close', () => {
+    urls.forEach(url => URL.revokeObjectURL(url));
+    dialog.remove();
+  }, { once: true });
+  dialog.innerHTML = `
+    <form method="dialog"><button class="split-action-btn">${t('scan_cam_close')}</button></form>
+    <div class="sd-comparison__pages"></div>`;
+  document.body.append(dialog);
+  dialog.showModal();
+  const before = isHeicFile(original) ? await decodeHeicToJpegBlob(original).catch(() => null) : original;
+  if (!dialog.open) return;
+  for (const [label, photo] of [[t('cs_before'), before], [t('cs_after'), file]]) {
+    const figure = document.createElement('figure');
+    const caption = document.createElement('figcaption');
+    caption.textContent = label;
+    figure.append(caption);
+    if (photo) {
+      const img = new Image();
+      const url = URL.createObjectURL(photo);
+      urls.push(url);
+      img.src = url;
+      img.alt = label;
+      figure.append(img);
+    } else {
+      figure.append(t('rdct_no_preview'));
+    }
+    dialog.querySelector('.sd-comparison__pages').append(figure);
   }
 }
 
@@ -722,39 +923,69 @@ function _bindThumbGridEvents() {
 // re-opened on demand. Shares _reviewingNow with _drainReviewQueue so the
 // two can never both have a modal open at once.
 async function _openThumbPreview(idx) {
-  if (isFilesLocked() || _reviewingNow) return;
+  if (isFilesLocked() || _reviewingNow || _cropProcessing) return;
   const file = selectedFiles[idx];
   if (!file || !file._scanReviewed) return;
 
   _reviewingNow = true;
   try {
-    const sourceCanvas = await _decodeSourcePhoto(file);
+    const crop = _pageCrops.get(file);
+    const frame = crop?.frame ?? file;
+    const sourceCanvas = await _decodeSourcePhoto(frame);
+    if (!selectedFiles.includes(file)) { _reviewingNow = false; return; }
     openCropReview({
       sourceCanvas,
-      onConfirm: async warpedCanvases => {
-        const curIdx = selectedFiles.indexOf(file);
-        const baseName = file.name.replace(/\.\w+$/, '');
-        const newFiles = [];
-        for (let i = 0; i < warpedCanvases.length; i++) {
-          const blob = await filterScanPhoto(warpedCanvases[i], _scanFilterMode, _scanAdjust());
-          const suffix = warpedCanvases.length > 1 ? `-scan-${i + 1}` : '-scan';
-          const reviewedFile = new File([blob], baseName + suffix + '.jpg', { type: 'image/jpeg' });
-          reviewedFile._scanReviewed = true;
-          newFiles.push(reviewedFile);
-        }
-        if (curIdx !== -1) {
-          selectedFiles.splice(curIdx, 1, ...newFiles);
-          _exifAngles.splice(curIdx, 1, ...newFiles.map(() => 0));
-        }
-        _reviewingNow = false;
-        _render(selectedFiles);
-      },
+      initialQuad: crop?.quad,
+      onConfirm: (warpedCanvases, updatedCrop) => _applyReviewedCrop(file, warpedCanvases, {
+        ...updatedCrop, originalFrame: updatedCrop.frame === sourceCanvas ? frame : null,
+      }),
       onSkip: () => { _reviewingNow = false; }, // no changes — file stays exactly as it was
     });
   } catch {
     _reviewingNow = false;
     showToast(t('sd_review_decode_failed', { name: file.name }));
   }
+}
+
+// Keep the user's export request waiting for the actual cropped bytes.
+function _encodeCropFrame(canvas) {
+  return new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.96));
+}
+
+function _applyReviewedCrop(file, canvases, crop, next) {
+  const status = id('sdCropStatus');
+  if (status) status.textContent = t('scan_cam_processing');
+  const processing = (async () => {
+    try {
+      const baseName = file.name.replace(/(?:-scan(?:-\d+)?)?\.\w+$/, '');
+      const frame = crop.quad ? crop.originalFrame ?? await _encodeCropFrame(crop.frame) : null;
+      const reviewed = [];
+      for (const [i, canvas] of canvases.entries()) {
+        const suffix = canvases.length > 1 ? `-scan-${i + 1}` : '-scan';
+        const original = _originalPhotos.get(file) ?? (_pageCrops.has(file) ? null : file);
+        const page = await _makeScanPage(canvas, baseName + suffix + '.jpg', original, _pageFilters.get(file));
+        if (frame) _pageCrops.set(page, { frame, quad: crop.quad });
+        reviewed.push(page);
+      }
+      const index = selectedFiles.indexOf(file);
+      if (_cropProcessing !== processing || index < 0) return false;
+      selectedFiles.splice(index, 1, ...reviewed);
+      _exifAngles.splice(index, 1, ...reviewed.map(() => 0));
+      return true;
+    } catch {
+      if (_cropProcessing === processing) showToast(t('sd_capture_failed'));
+      return false;
+    } finally {
+      if (_cropProcessing === processing) {
+        _cropProcessing = null;
+        _reviewingNow = false;
+        if (status) status.textContent = '';
+        _render(selectedFiles);
+        next?.();
+      }
+    }
+  })();
+  _cropProcessing = processing;
 }
 
 function _truncName(name, max) {

@@ -900,6 +900,7 @@ window.PDFREE_LOCALE = {
   j2p_scan_filter_color:     '彩色',
   j2p_scan_filter_original:  '原图',
   j2p_scan_filter_bw:        '黑白',
+  j2p_scan_filter_faded: "浅色文字",
   j2p_scan_brightness:       '亮度',
   j2p_scan_contrast:         '对比度',
   j2p_scan_reset:            '重置',
@@ -911,9 +912,11 @@ window.PDFREE_LOCALE = {
   scan_cam_permission_denied: '相机访问被拒绝 — 已改用文件选择器',
   scan_cam_retake:           '重拍',
   scan_cam_skip:             '跳过 — 按原样使用',
+  scan_cam_add_next: "应用裁剪并拍摄下一张",
   scan_cam_use_crop:         '使用此裁剪',
   scan_cam_rotate_left:      '向左旋转',
   scan_cam_rotate_right:     '向右旋转',
+  scan_cam_full_frame: "整张图片",
   scan_cam_reset_crop:       '重置裁剪',
   scan_cam_erase:            '擦除',
   scan_cam_erase_brush:      '画笔',
@@ -934,6 +937,8 @@ window.PDFREE_LOCALE = {
   scan_cam_processing_failed: '无法处理此照片 — 请重试',
 
   // ── scanDocumentUI.js — Document Scanner tool ──
+  sd_ocr_enable: "识别文字",
+  sd_ocr_fallback: "无法识别文字，已保存为普通 PDF。",
   sd_loading:              '正在加载图片…',
   sd_take_photo:           '📷 拍照',
   sd_pending_review:       '待审阅',

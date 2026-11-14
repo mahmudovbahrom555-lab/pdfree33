@@ -317,9 +317,11 @@ export function cancelMergeScan() {
 // awaiting a postMessage round-trip. Lets cancelProcess() unstick the
 // sequential await loop instead of leaving it hung on a terminated worker.
 let _batchCancelReject = null;
+let _scanOcrAbort = null;
 
 export function cancelProcess(currentTool) {
   if (!isProcessing) return;
+  _scanOcrAbort?.abort();
   if (_batchCancelReject) {
     const reject = _batchCancelReject;
     _batchCancelReject = null;
@@ -2167,7 +2169,7 @@ async function _runJpg2Pdf(filesSnapshot, params, toolKey = 'jpg2pdf') {
       if (!(data.result instanceof ArrayBuffer)) {
         _handleError(toolKey, 'Unexpected result from worker'); return;
       }
-      _finishJpg2Pdf(filesSnapshot, data.result, data.pageCount, data.skipped, toolKey);
+      void _finishJpg2Pdf(filesSnapshot, data.result, data.pageCount, data.skipped, toolKey, params.ocrLanguage);
     } else if (data.type === 'error') {
       isProcessing = false; setFilesLocked(false); hideCancelBtn();
       _handleError(toolKey, data.message);
@@ -2205,20 +2207,43 @@ function _jpg2pdfShared(buffers, options) {
   });
 }
 
-function _finishJpg2Pdf(filesSnapshot, result, pageCount, skipped, toolKey) {
+async function _finishJpg2Pdf(filesSnapshot, result, pageCount, skipped, toolKey, ocrLanguage) {
+  let blob = new Blob([result], { type: 'application/pdf' });
+  let searchable = false;
+  if (toolKey === 'scanDocument' && ocrLanguage) {
+    const controller = new AbortController();
+    _scanOcrAbort = controller;
+    const { signal } = controller;
+    try {
+      const { recognizeScanPdf } = await import('./ocrUI.js');
+      signal.throwIfAborted();
+      const bytes = await recognizeScanPdf(blob, ocrLanguage, {
+        signal,
+        progress: (pct, label) => { if (!signal.aborted) setProgress(pct, label); },
+      });
+      if (signal.aborted) return;
+      if (bytes) {
+        blob = new Blob([bytes], { type: 'application/pdf' });
+        searchable = true;
+      }
+    } catch {
+      if (signal.aborted) return;
+    } finally {
+      if (_scanOcrAbort === controller) _scanOcrAbort = null;
+    }
+  }
   isProcessing = false;
   setFilesLocked(false);
   hideCancelBtn();
   setProgress(100, t('prog_done'));
 
-  const blob     = new Blob([result], { type: 'application/pdf' });
   const baseName = filesSnapshot.length === 1
     ? filesSnapshot[0].name.replace(/\.[^.]+$/, '')
     : 'converted';
-  const filename = `${baseName}.pdf`;
+  const filename = `${baseName}${searchable ? '-searchable' : ''}.pdf`;
   const pagesWord  = tp(pageCount, 'word_page', 'word_pages');
   const imagesWord = tp(filesSnapshot.length, 'word_image', 'word_images');
-  const desc       = `${pageCount} ${pagesWord} · ${filesSnapshot.length} ${imagesWord} · ${fmtSize(blob.size)}`;
+  const desc       = `${pageCount} ${pagesWord} · ${filesSnapshot.length} ${imagesWord} · ${fmtSize(blob.size)}${ocrLanguage && !searchable ? ` · ${t('sd_ocr_fallback')}` : ''}`;
 
   // Warn user about any images that couldn't be processed
   if (skipped?.length > 0) {
@@ -2321,7 +2346,7 @@ async function _runJpg2PdfTiff(filesSnapshot, params, toolKey) {
     }
     result = merged.pdfs[0];
   }
-  _finishJpg2Pdf(filesSnapshot, result, pageCount, skipped, toolKey);
+  await _finishJpg2Pdf(filesSnapshot, result, pageCount, skipped, toolKey, params.ocrLanguage);
 }
 
 // "Separate PDFs" mode (one PDF per image instead of one merged PDF) —

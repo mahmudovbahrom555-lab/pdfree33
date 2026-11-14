@@ -12,7 +12,7 @@
 //  showed it doing the same; throttled to ~5fps, non-interactive, just
 //  a framing guide) → freeze frame → 'review' (frozen frame + 4
 //  draggable corner handles, auto-detected via js/scanGeometry.js's
-//  detectDocumentQuad, falling back to defaultInsetQuad if nothing
+//  detectDocumentQuad, falling back to fullFrameQuad if nothing
 //  confident was found) → confirm → js/scanGeometry.js's warpToRect()
 //  → callback with the corrected canvas. The live overlay is purely a
 //  visual guide during framing — the actual quad used for the warp is
@@ -43,7 +43,7 @@
 
 import { t } from './i18n.js';
 import { loadOpenCv } from './lazyLibs.js';
-import { detectDocumentQuad, defaultInsetQuad, warpToRectAsync, detectSpineX, DETECT_LONG_EDGE,
+import { detectDocumentQuad, fullFrameQuad, warpToRectAsync, detectSpineX, DETECT_LONG_EDGE,
          chooseCropViewLayout, unrotatedImagePoint, isValidQuadShape } from './scanGeometry.js';
 import { SCAN_MAX_LONG_EDGE } from './scanConstants.js';
 
@@ -109,14 +109,14 @@ export function openScanCamera({ onConfirm, onFallback }) {
  *   decides this photo doesn't need cropping — resolves with nothing;
  *   caller is responsible for using the original, unprocessed image.
  */
-export function openCropReview({ sourceCanvas, onConfirm, onSkip }) {
+export function openCropReview({ sourceCanvas, onConfirm, onSkip, initialQuad }) {
   _reviewMode      = 'gallery';
   _capturedCanvas  = sourceCanvas;
   _onConfirm       = onConfirm;
   _onSkip          = onSkip;
   _onFallback      = null;
   _buildModal();
-  _startReview();
+  _startReview(initialQuad);
 }
 
 function _stopStream() {
@@ -231,11 +231,20 @@ async function _startLiveView() {
   loadOpenCv().catch(() => {});
   _ensureDetectWorker(); // pre-create so its own OpenCV load can start now too, not on the live overlay's first tick
 
+  const modal = _modal;
+  const fallback = _onFallback;
   try {
-    _stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    if (_modal !== modal) { stream.getTracks().forEach(track => track.stop()); return; }
+    _stream = stream;
   } catch {
+    if (_modal !== modal) return;
     status.textContent = t('scan_cam_permission_denied');
-    setTimeout(() => { _closeModal(); _onFallback?.(); }, 1800);
+    setTimeout(() => {
+      if (_modal !== modal) return;
+      _closeModal();
+      fallback?.();
+    }, 1800);
     return;
   }
 
@@ -542,7 +551,7 @@ function _capture(video) {
 
 // ── 'review' stage — frozen frame + draggable corner handles ────
 
-async function _startReview() {
+async function _startReview(initialQuad) {
   const myGen   = ++_reviewGen;  // see _closeModal — bailed out if the modal closes mid-await below
   const stage   = document.getElementById('scanCamStage');
   const status  = document.getElementById('scanCamStatus');
@@ -592,6 +601,7 @@ async function _startReview() {
     : `
       <button type="button" class="split-action-btn" id="scanCamRetakeBtn">${t('scan_cam_retake')}</button>
       <button type="button" class="split-action-btn" id="scanCamConfirmBtn" disabled>${t('scan_cam_use_crop')}</button>
+      <button type="button" class="split-action-btn" id="scanCamNextBtn" disabled>${t('scan_cam_add_next')}</button>
     `;
   document.getElementById('scanCamRetakeBtn')?.addEventListener('click', () => {
     URL.revokeObjectURL(_frameUrl);
@@ -600,6 +610,7 @@ async function _startReview() {
   });
   document.getElementById('scanCamSkipBtn')?.addEventListener('click', () => _skip());
   document.getElementById('scanCamConfirmBtn').addEventListener('click', () => _confirm());
+  document.getElementById('scanCamNextBtn')?.addEventListener('click', () => _confirm(true));
 
   status.textContent = t('scan_cam_detecting');
 
@@ -607,7 +618,12 @@ async function _startReview() {
   await new Promise(res => { img.onload = res; img.onerror = res; });
   if (myGen !== _reviewGen) { return; }  // modal closed while the frame image loaded
 
-  await _detectAndSetQuad();
+  if (initialQuad) {
+    _quad = Object.fromEntries(Object.entries(initialQuad).map(([key, point]) => [key, { ...point }]));
+    status.textContent = '';
+  } else {
+    await _detectAndSetQuad();
+  }
   if (myGen !== _reviewGen) { return; }  // modal closed while detecting the quad
 
   _computeFrameLayout();
@@ -615,7 +631,7 @@ async function _startReview() {
   window.addEventListener('resize', _resizeHandler);
   // _renderHandles() (below) already sets scanCamConfirmBtn.disabled based
   // on the initial quad's validity (isValidQuadShape) — both
-  // detectDocumentQuad and defaultInsetQuad always produce a valid shape,
+  // detectDocumentQuad and fullFrameQuad always produce a valid shape,
   // so this naturally clears the template's initial `disabled` attribute
   // without a separate unconditional enable here that could mask an
   // invalid state.
@@ -635,9 +651,9 @@ async function _detectAndSetQuad() {
     await loadOpenCv();
     detected = detectDocumentQuad(_capturedCanvas);
   } catch {
-    // CDN failure or detection error — defaultInsetQuad below covers it
+    // CDN failure or detection error — fullFrameQuad below covers it
   }
-  _quad = detected || defaultInsetQuad(_capturedCanvas.width, _capturedCanvas.height);
+  _quad = detected || fullFrameQuad(_capturedCanvas.width, _capturedCanvas.height);
 
   // Detection fallback is the more actionable message (affects the crop
   // itself) — only show the blur warning when detection succeeded, so the
@@ -723,6 +739,7 @@ function _eraseToolRowHtml() {
   return `
     <button type="button" class="scan-cam-tool-btn" id="scanCamRotateLeft" aria-label="${t('scan_cam_rotate_left')}">↺</button>
     <button type="button" class="scan-cam-tool-btn" id="scanCamResetCrop" aria-label="${t('scan_cam_reset_crop')}">${t('scan_cam_reset_crop')}</button>
+    <button type="button" class="scan-cam-tool-btn" id="scanCamFullFrame">${t('scan_cam_full_frame')}</button>
     <button type="button" class="scan-cam-tool-btn" id="scanCamErase" aria-label="${t('scan_cam_erase')}">🧹</button>
     <button type="button" class="scan-cam-tool-btn" id="scanCamRotateRight" aria-label="${t('scan_cam_rotate_right')}">↻</button>
   `;
@@ -732,6 +749,12 @@ function _bindEraseToolRow() {
   document.getElementById('scanCamRotateLeft')?.addEventListener('click', () => _rotateCapturedImage(-1));
   document.getElementById('scanCamRotateRight')?.addEventListener('click', () => _rotateCapturedImage(1));
   document.getElementById('scanCamResetCrop')?.addEventListener('click', () => _resetCrop());
+  document.getElementById('scanCamFullFrame')?.addEventListener('click', () => {
+    if (!_quad) return;
+    const { width, height } = _capturedCanvas;
+    _quad = fullFrameQuad(width, height);
+    _renderHandles();
+  });
   document.getElementById('scanCamErase')?.addEventListener('click', () => _setEraseMode(true));
   document.getElementById('scanCamEraseDone')?.addEventListener('click', () => _setEraseMode(false));
   document.querySelectorAll('.scan-cam-brush-btn').forEach(btn => {
@@ -759,11 +782,15 @@ function _setEraseMode(on) {
     // "disable, don't hide" reasoning as the slider reset buttons.
     document.querySelectorAll('.scan-cam-handle').forEach(h => h.style.pointerEvents = 'none');
     if (confirmBtn) confirmBtn.disabled = true;
+    const nextBtn = document.getElementById('scanCamNextBtn');
+    if (nextBtn) nextBtn.disabled = true;
     if (skipOrRetakeBtn) skipOrRetakeBtn.disabled = true;
   } else {
     _commitErase(overlay);
     document.querySelectorAll('.scan-cam-handle').forEach(h => h.style.pointerEvents = '');
     if (confirmBtn) confirmBtn.disabled = false;
+    const nextBtn = document.getElementById('scanCamNextBtn');
+    if (nextBtn) nextBtn.disabled = false;
     if (skipOrRetakeBtn) skipOrRetakeBtn.disabled = false;
   }
 }
@@ -966,6 +993,8 @@ function _renderHandles() {
   if (!_eraseMode) {
     const confirmBtn = document.getElementById('scanCamConfirmBtn');
     if (confirmBtn) confirmBtn.disabled = !valid;
+    const nextBtn = document.getElementById('scanCamNextBtn');
+    if (nextBtn) nextBtn.disabled = !valid;
   }
 
   // Mid-edge handles — positioned at the midpoint between their two corners'
@@ -1202,7 +1231,23 @@ function _setScanSubMode(mode) {
   document.getElementById('scanCamModeBook')?.classList.toggle('scan-cam-mode-chip--active', mode === 'book');
 }
 
-async function _confirm() {
+async function _acceptCapture(canvases, continueScanning) {
+  const cb = _onConfirm;
+  const crop = { frame: _capturedCanvas, quad: canvases.length === 1 ? _quad : null };
+  if (_reviewMode === 'gallery') {
+    _closeModal({ suppressOnSkip: true });
+    cb?.(canvases, crop);
+    return;
+  }
+
+  const modal = _modal;
+  await cb?.(canvases, () => _modal === modal, crop);
+  if (_modal !== modal) return;
+  if (continueScanning) await _startLiveView();
+  else _closeModal({ suppressOnSkip: true });
+}
+
+async function _confirm(continueScanning = false) {
   const myGen = _reviewGen;
   const status = document.getElementById('scanCamStatus');
   const confirmBtn = document.getElementById('scanCamConfirmBtn');
@@ -1211,7 +1256,10 @@ async function _confirm() {
   // immediately) — a second click could otherwise interleave and call
   // _confirm() again mid-flight. Disabling here is new specifically
   // because of that, not a pre-existing gap the sync version already had.
-  if (confirmBtn) confirmBtn.disabled = true;
+  if (!confirmBtn || confirmBtn.disabled) return;
+  const buttons = [...document.querySelectorAll('#scanCamActions button')];
+  const enabled = buttons.filter(button => !button.disabled);
+  enabled.forEach(button => { button.disabled = true; });
   status.textContent = t('scan_cam_processing');
   try {
     const warped = await warpToRectAsync(_capturedCanvas, _quad);
@@ -1219,16 +1267,14 @@ async function _confirm() {
     URL.revokeObjectURL(_frameUrl);
     _frameUrl = null;
     if (_scanSubMode === 'book') {
-      _startSpineAdjust(warped);
+      await _startSpineAdjust(warped, continueScanning);
       return;
     }
-    const cb = _onConfirm;
-    _closeModal({ suppressOnSkip: true });  // resolved via Confirm, not Skip
-    cb?.([warped]);
+    await _acceptCapture([warped], continueScanning);
   } catch {
     if (myGen !== _reviewGen) return;
     status.textContent = t('scan_cam_processing_failed');
-    if (confirmBtn) confirmBtn.disabled = false;
+    enabled.forEach(button => { button.disabled = false; });
   }
 }
 
@@ -1243,7 +1289,7 @@ async function _confirm() {
 // detectSpineX's own simple check, no live recovery for asymmetric/
 // border-filling spreads — the user's own draggable adjustment is the
 // safety net here instead.
-async function _startSpineAdjust(warped) {
+async function _startSpineAdjust(warped, continueScanning) {
   const myGen   = _reviewGen; // still valid — _confirm didn't bump it (only _closeModal/openX do)
   const stage   = document.getElementById('scanCamStage');
   const status  = document.getElementById('scanCamStatus');
@@ -1307,7 +1353,9 @@ async function _startSpineAdjust(warped) {
     line.addEventListener('pointercancel', onUp);
   });
 
-  document.getElementById('scanCamSpineConfirmBtn').addEventListener('click', () => {
+  document.getElementById('scanCamSpineConfirmBtn').addEventListener('click', async event => {
+    const button = event.currentTarget;
+    button.disabled = true;
     window.removeEventListener('resize', _spineResizeHandler);
     _spineResizeHandler = null;
     URL.revokeObjectURL(_spineUrl);
@@ -1323,9 +1371,13 @@ async function _startSpineAdjust(warped) {
     right.height = warped.height;
     right.getContext('2d').drawImage(warped, -splitX, 0);
 
-    const cb = _onConfirm;
-    _closeModal({ suppressOnSkip: true });
-    cb?.([left, right]);
+    try {
+      await _acceptCapture([left, right], continueScanning);
+    } catch {
+      if (myGen !== _reviewGen) return;
+      status.textContent = t('scan_cam_processing_failed');
+      button.disabled = false;
+    }
   });
 }
 

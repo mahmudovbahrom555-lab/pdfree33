@@ -5,8 +5,7 @@
 //  scanFilterWorker.js — Dedicated Web Worker for Document Scanner's
 //  photo filter pipeline (grayscale → background-estimate →
 //  flat-field-correct → unsharp-mask → enhance — no median filter for the
-//  default Document/grayscale mode, see the comment at its call site for
-//  why; 'bw' mode still uses one).
+//  Document/grayscale and B&W modes so thin ink survives).
 //
 //  Moved off the main thread 2026-08-26 after a real, measured finding:
 //  on a throttled/weak CPU (6x, proxying a real low-end device), this
@@ -25,7 +24,7 @@
 //  following that file's own proven OffscreenCanvas pattern exactly).
 //
 //  Message contract:
-//    in  → { type: 'filterPhoto', bitmap: ImageBitmap, mode: 'grayscale'|'color'|'bw'|'original' }
+//    in  → { type: 'filterPhoto', bitmap: ImageBitmap, mode: 'grayscale'|'faded'|'color'|'bw'|'original' }
 //    out → { type: 'filtered', bytes: ArrayBuffer } | { type: 'error', message }
 //
 //  'bw' and 'original' added after a live competitor comparison (a
@@ -78,35 +77,30 @@ async function handleFilterPhoto(bitmap, mode, adjust) {
     const gray = _toGrayscaleCanvas(src);
     const bg   = _estimateBackground(gray);
     _flatFieldCorrect(gray, bg);
-    _applyMedianFilter(gray);
+    // Despeckle after thresholding so connected one-pixel strokes survive.
     _unsharpMask(gray, 2, 2.0);
     _applyBw(gray, _STRENGTH, adjust);
     blob = await gray.convertToBlob({ type: 'image/png' });
   } else {
-    // No _applyMedianFilter here (unlike 'bw' above) — a real user photo
-    // comparison (a document with two QR codes of different module density)
-    // found the 3x3 median filter destroying the finer/denser QR into pure
-    // noise while the coarser one survived: an isolated 1-2px dark QR module
-    // surrounded by white pixels reads as "noise" to a median filter and
-    // gets erased, exactly like camera sensor grain would. Cross-checked
-    // against CleanSCAN (github.com/clean-apps/CleanSCAN, a real reference
-    // scanner app's native OpenCV pipeline) — its own Document-equivalent
-    // mode (getGrayBitmap) is a bare grayscale conversion with NO denoising
-    // step at all, and its B&W mode's only cleanup is Otsu thresholding, no
-    // median filter either. flatFieldCorrect (shadow/lighting correction,
-    // divides against a heavily downscaled 64px background estimate) and
-    // unsharpMask (edge-enhancing, the opposite direction from a median
-    // filter) don't share this failure mode — only the median filter step
-    // targeted fine-detail-sized features specifically. Verified live: the
-    // same real photo now decodes/renders the previously-destroyed QR code
-    // correctly. 'bw' mode above keeps its own median-filter pre-pass —
-    // out of scope here, and _applyBw already does its own dedicated
-    // despeckle step, so it isn't relying on this one for its only cleanup.
+    // No median filter (removed from 'bw' too, 2026-11-14 — it turned
+    // one-pixel ink strokes into paper). A real user photo comparison (a
+    // document with two QR codes of different module density) found the 3x3
+    // median filter destroying the finer QR into noise: an isolated 1-2px
+    // dark module surrounded by white reads as "noise" to it, exactly like
+    // sensor grain. CleanSCAN (github.com/clean-apps/CleanSCAN, a reference
+    // scanner app's native OpenCV pipeline) has no denoising in its Document
+    // mode either. flatFieldCorrect and unsharpMask don't share this failure
+    // mode — only the median step targeted fine-detail-sized features.
     const gray = _toGrayscaleCanvas(src);
     const bg   = _estimateBackground(gray);
     _flatFieldCorrect(gray, bg);
     _unsharpMask(gray, 2, 2.0);
-    _applyEnhance(gray, _STRENGTH, adjust);
+    // Reduce highlight clipping on faint strokes after lighting correction.
+    const textAdjust = mode === 'faded' ? {
+      brightness: (adjust?.brightness ?? 0) - 30,
+      contrast: (adjust?.contrast ?? 0) - 20,
+    } : adjust;
+    _applyEnhance(gray, _STRENGTH, textAdjust);
     blob = await gray.convertToBlob({ type: 'image/jpeg', quality: 0.87 });
   }
 
@@ -172,45 +166,6 @@ function _flatFieldCorrect(gray, bg) {
     gd[i] = gd[i + 1] = gd[i + 2] = v;
   }
   gctx.putImageData(gImg, 0, 0);
-  return gray;
-}
-
-function _medianFilterGray(data, w, h) {
-  const out = new Uint8ClampedArray(w * h);
-  const win = new Uint8Array(9);
-  for (let y = 0; y < h; y++) {
-    for (let x = 0; x < w; x++) {
-      let n = 0;
-      for (let dy = -1; dy <= 1; dy++) {
-        const ny = y + dy;
-        if (ny < 0 || ny >= h) continue;
-        const rowBase = ny * w;
-        for (let dx = -1; dx <= 1; dx++) {
-          const nx = x + dx;
-          if (nx < 0 || nx >= w) continue;
-          win[n++] = data[(rowBase + nx) * 4];
-        }
-      }
-      for (let a = 1; a < n; a++) {
-        const key = win[a];
-        let b = a - 1;
-        while (b >= 0 && win[b] > key) { win[b + 1] = win[b]; b--; }
-        win[b + 1] = key;
-      }
-      out[y * w + x] = win[n >> 1];
-    }
-  }
-  return out;
-}
-
-function _applyMedianFilter(gray) {
-  const w = gray.width, h = gray.height;
-  const ctx = gray.getContext('2d');
-  const img = ctx.getImageData(0, 0, w, h);
-  const d = img.data;
-  const med = _medianFilterGray(d, w, h);
-  for (let i = 0, p = 0; i < d.length; i += 4, p++) d[i] = d[i + 1] = d[i + 2] = med[p];
-  ctx.putImageData(img, 0, 0);
   return gray;
 }
 
@@ -383,7 +338,7 @@ function _applyBw(canvas, strength, adjust) {
 
   const n = w * h;
   let mask = new Uint8Array(n);
-  for (let p = 0, i = 0; p < n; p++, i += 4) mask[p] = d[i] < t ? 1 : 0;
+  for (let p = 0, i = 0; p < n; p++, i += 4) mask[p] = d[i] <= t ? 1 : 0;
   mask = _despeckleMask(mask, w, h, _BW_MIN_DARK_NEIGHBORS);
 
   for (let p = 0, i = 0; p < n; p++, i += 4) {

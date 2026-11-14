@@ -874,6 +874,7 @@ export const EN = {
   j2p_scan_filter_color:     'Color',
   j2p_scan_filter_original:  'Original',
   j2p_scan_filter_bw:        'B&W',
+  j2p_scan_filter_faded: "Faded text",
   j2p_scan_brightness:       'Brightness',
   j2p_scan_contrast:         'Contrast',
   j2p_scan_reset:            'Reset',
@@ -885,9 +886,11 @@ export const EN = {
   scan_cam_permission_denied: 'Camera access denied — falling back to file picker',
   scan_cam_retake:           'Retake',
   scan_cam_skip:             'Skip — use as-is',
+  scan_cam_add_next: "Use crop and take next photo",
   scan_cam_use_crop:         'Use this crop',
   scan_cam_rotate_left:      'Rotate left',
   scan_cam_rotate_right:     'Rotate right',
+  scan_cam_full_frame: "Full frame",
   scan_cam_reset_crop:       'Reset crop',
   scan_cam_erase:            'Erase',
   scan_cam_erase_brush:      'Brush',
@@ -908,6 +911,8 @@ export const EN = {
   scan_cam_processing_failed: 'Could not process this photo — try again',
 
   // ── scanDocumentUI.js — Document Scanner tool ──
+  sd_ocr_enable: "Recognize text for a searchable PDF",
+  sd_ocr_fallback: "Text recognition was unavailable. Saved a regular PDF.",
   sd_loading:              'Loading images…',
   sd_take_photo:           '📷 Take Photo',
   sd_pending_review:       'Needs review',

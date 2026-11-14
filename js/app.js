@@ -324,6 +324,7 @@ function _openToolWithFiles(key, files) {
 function resetState() {
   if (isProcessing) return;
 
+  ++_pressTicket;
   ++_successGen;   // invalidate any in-flight 1500ms download timeout
   clearFiles();
   _freeResultUrl();
@@ -690,6 +691,7 @@ function _onMergeBtnClick() {
   // other tested interaction), the only one in the app not already using
   // this pattern.
   requestAnimationFrame(async () => {
+    if (isProcessing || id('mergeBtn').classList.contains('merge-btn--processing')) return;
     // A file the browser already refused to read: the same press would only
     // repeat the error (SPLIT-DFCC: 15 times in 3 s) — point to the file and
     // its "choose again" in the list instead.
@@ -742,7 +744,19 @@ function _onMergeBtnClick() {
       }
     }
     // Registry dispatch — no more if-else per tool
-    const { params, error } = collectToolParams(currentTool);
+    const tool = currentTool;
+    let { params, error } = collectToolParams(tool);
+    if (params?.cropProcessing) {
+      const ticket = ++_pressTicket;
+      const button = id('mergeBtn');
+      setButtonProcessing();
+      const applied = await params.cropProcessing;
+      if (ticket !== _pressTicket || tool !== currentTool) return;
+      setButtonReady(getLocalizedTool(TOOLS[tool]).btn);
+      button.disabled = selectedFiles.length === 0;
+      if (!applied || !selectedFiles.length) return;
+      ({ params, error } = collectToolParams(tool));
+    }
     if (error) {
       // still reading the file ("Analysing PDF…"): the press is kept, not lost
       if (params?.loading) _startWhenAnalysed(currentTool);
