@@ -127,48 +127,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Do I have to use two separate tools for this?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. PDFree's Fill tool (/fill/) fills the form, places your signature, and flattens the result into a locked, non-editable PDF — all in one download. The separate Flatten tool (/flatten-pdf/) only exists for the rare case where you already have a filled PDF from somewhere else and need to lock it after the fact."
+        {
+            "@type": "Question",
+            "name": "Do I have to use two separate tools for this?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. PDFree's Fill tool fills the form, places your signature, and flattens the result into a locked, non-editable PDF — all in one download. The separate Flatten tool only exists for the rare case where you already have a filled PDF from somewhere else and need to lock it after the fact."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Why flatten a PDF after filling and signing it?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Without flattening, a filled-in form's fields are still editable — anyone who opens it can change what you typed or move your signature, even after saving. Flattening bakes every value into permanent page content and removes the interactive form structure."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I keep an editable copy instead of flattening?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. The Fill tool shows a \"Flatten fields\" checkbox, checked by default. Uncheck it before downloading if you want the output to remain an editable form — useful if you need to come back and adjust an answer later."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is flattening reversible if I made a mistake?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No — once flattened, the original interactive fields are gone from that file. If you're not sure everything is correct yet, uncheck \"Flatten fields\" first and review the editable download before locking it in."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does this workflow require uploading my document anywhere?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. The Fill tool runs entirely in your browser — your document never leaves your device at any step of filling, signing, or flattening."
+            }
         }
-      },
-      {
-        "@type": "Question",
-        "name": "Why flatten a PDF after filling and signing it?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Without flattening, a filled-in PDF form technically still has editable fields — anyone who opens it can change the text you typed or move your signature, even after you've saved it. Flattening converts every field's current value into permanent page content and removes the interactive form structure, so the document you send is locked exactly as you left it."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I keep an editable copy instead of flattening?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. The Fill tool shows a 'Flatten fields' checkbox, checked by default. Uncheck it before downloading if you want the output to remain an editable form — useful if you need to come back and adjust an answer later, or if the recipient needs to fill in their own portion afterward."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is flattening reversible if I made a mistake?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No — once a PDF is flattened, the original interactive fields are gone from that specific file. If you're not sure everything is correct yet, uncheck 'Flatten fields' first, review the editable download, then run it through the Fill tool again (or the standalone Flatten tool) once you're satisfied."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Does this workflow require uploading my document anywhere?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. The Fill tool runs entirely in your browser. Your document never leaves your device at any point — filling, signing, and flattening all happen locally in a single pass."
-        }
-      }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">

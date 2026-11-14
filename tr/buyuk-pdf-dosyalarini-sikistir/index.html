@@ -124,33 +124,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "100 MB'den büyük bir PDF dosyasını ücretsiz sıkıştırabilir miyim?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Evet — 8 GB+ belleğe sahip bir bilgisayarda Chrome veya Edge ile 500 MB'a, telefonlarda, Safari'de ve Firefox'ta 150 MB'a kadar. İşlem tamamen tarayıcınızda gerçekleştiği için bu sınır bir sunucunun bant genişliğini değil, cihazınızın belleğini korur — testlerimizde 8 GB'lık bir dizüstü bilgisayarda 500 MB'lık bir tarama yaklaşık 30 saniyede sıkıştırıldı." }
-      },
-      {
-        "@type": "Question",
-        "name": "Bulut araçları neden ücretsiz sıkıştırmayı sınırlıyor?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Bulut araçları dosyaları kendi sunucularında sıkıştırır; bu da bant genişliği ve depolama maliyeti anlamına gelir. Ücretsiz kullanıcılar için bu maliyetleri kontrol altında tutmak amacıyla dosya boyutu sınırları ve günlük limitler uygularlar. PDFree, her şeyi tarayıcınızda yerel olarak sıkıştırır; bu nedenle sunucu maliyeti yoktur — dolayısıyla günlük limit ve 25 MB sınırı da yoktur; dosyalar bilgisayarda 500 MB'a kadar çıkabilir ve bu sınır yalnızca cihazınızın belleğini korumak içindir." }
-      },
-      {
-        "@type": "Question",
-        "name": "PDFree büyük bir PDF'yi ne kadar sıkıştırabilir?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sonuç içeriğe göre değişir. Çok sayıda gömülü görsel içeren PDF'ler genellikle %40-80 küçülür. Çoğunlukla metinden oluşan PDF'ler daha az sıkışır — genellikle %10-30. PDFree, masaüstü araçlarıyla aynı sıkıştırma algoritmalarını kullanır, ancak tamamen tarayıcınızda çalışır." }
-      },
-      {
-        "@type": "Question",
-        "name": "Kaç PDF sıkıştırabileceğime dair günlük bir limit var mı?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Hayır. PDFree'de günlük kullanım limiti yoktur. ücretsiz planda günlük sınırı olan bulut araçlarının aksine, PDFree ile ihtiyacınız kadar, istediğiniz sıklıkta PDF sıkıştırabilirsiniz — ücretsiz olarak." }
-      },
-      {
-        "@type": "Question",
-        "name": "Sıkıştırma PDF'imin kalitesini düşürür mü?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Çoğunlukla metinden oluşan belgelerde sıkıştırmanın kalite üzerinde görünür bir etkisi yoktur — metin keskin kalır. Fotoğraf içeren PDF'lerde daha yüksek sıkıştırma seviyeleri görüntü çözünürlüğünü düşürür; bu, yakından bakıldığında fark edilebilir. Boyut küçültme ile görüntü kalitesi arasında denge kurmak için orta düzey bir sıkıştırma seçin." }
-      }
+        {
+            "@type": "Question",
+            "name": "100 MB'den büyük bir PDF dosyasını ücretsiz sıkıştırabilir miyim?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Evet — 8 GB+ belleğe sahip bir bilgisayarda Chrome veya Edge ile 500 MB'a, telefonlarda, Safari'de ve Firefox'ta 150 MB'a kadar. İşlem tamamen tarayıcınızda gerçekleştiği için bu sınır bir sunucunun bant genişliğini değil, cihazınızın belleğini korur — testlerimizde 8 GB'lık bir dizüstü bilgisayarda 500 MB'lık bir tarama yaklaşık 30 saniyede sıkıştırıldı."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Bulut araçları neden ücretsiz sıkıştırmayı sınırlıyor, PDFree'de neden bu sınır yok?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Bulut araçları dosyaları kendi sunucularında işler; bu da gerçek bant genişliği ve işlem maliyeti yaratır. PDFree, dosyaları tarayıcınızda yerel olarak işler — sunucu maliyeti olmadığından dolayısıyla günlük limit ve 25 MB sınırı da yoktur; dosyalar bilgisayarda 500 MB'a kadar çıkabilir ve bu sınır yalnızca cihazınızın belleğini korumak içindir."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "PDFree büyük bir PDF'yi ne kadar sıkıştırabilir?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sonuç içeriğe göre değişir. Çok sayıda gömülü görsel içeren PDF'ler genellikle %40-80 küçülür. Çoğunlukla metinden oluşan PDF'ler daha az sıkışır — genellikle %10-30. PDFree, masaüstü araçlarıyla aynı sıkıştırma algoritmalarını kullanır, ancak tamamen tarayıcınızda çalışır."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "PDF sıkıştırmalarında günlük bir sınır var mı?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Hayır. ücretsiz planda günlük sınırı olan bulut araçlarının aksine, PDFree'de günlük limit yoktur. İhtiyacınız kadar, istediğiniz sıklıkta PDF sıkıştırın."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Sıkıştırma PDF'imin kalitesini düşürür mü?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Çoğunlukla metinden oluşan belgelerde sıkıştırmanın kalite üzerinde görünür bir etkisi yoktur — metin keskin kalır. Fotoğraf içeren PDF'lerde daha yüksek sıkıştırma seviyeleri görüntü çözünürlüğünü düşürür; bu, yakından bakıldığında fark edilebilir. Boyut küçültme ile görüntü kalitesi arasında denge kurmak için orta düzey bir sıkıştırma seçin."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -418,6 +433,14 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Sıkıştırırken dosyam sunucuya yükleniyor mu?</h3>
             <p style="margin:0;font-size:14px;">Hayır. PDFree dosyanızı asla yüklemez. Tüm sıkıştırma işlemi, cihazınızdaki tarayıcı içinde JavaScript ile gerçekleşir. Belgeniz tamamen gizli kalır — hiçbir sunucuya ulaşmaz.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFree büyük bir PDF'yi ne kadar sıkıştırabilir?</h3>
+            <p style="margin:0;font-size:14px;">Sonuç içeriğe göre değişir. Çok sayıda gömülü görsel içeren PDF'ler genellikle %40-80 küçülür. Çoğunlukla metinden oluşan PDF'ler daha az sıkışır — genellikle %10-30. PDFree, masaüstü araçlarıyla aynı sıkıştırma algoritmalarını kullanır, ancak tamamen tarayıcınızda çalışır.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Sıkıştırma PDF'imin kalitesini düşürür mü?</h3>
+            <p style="margin:0;font-size:14px;">Çoğunlukla metinden oluşan belgelerde sıkıştırmanın kalite üzerinde görünür bir etkisi yoktur — metin keskin kalır. Fotoğraf içeren PDF'lerde daha yüksek sıkıştırma seviyeleri görüntü çözünürlüğünü düşürür; bu, yakından bakıldığında fark edilebilir. Boyut küçültme ile görüntü kalitesi arasında denge kurmak için orta düzey bir sıkıştırma seçin.</p>
           </div>
         </div>
 

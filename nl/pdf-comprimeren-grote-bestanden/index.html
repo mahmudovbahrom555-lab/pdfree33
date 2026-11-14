@@ -124,33 +124,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Kan ik gratis een PDF-bestand groter dan 100 MB comprimeren?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Ja — tot 500 MB in Chrome of Edge op een computer met 8 GB+ geheugen, en tot 150 MB op telefoons, in Safari en in Firefox. De verwerking gebeurt volledig in je browser, dus de limiet beschermt het geheugen van je apparaat, niet de bandbreedte van een server — in onze tests duurde een scan van 500 MB ongeveer 30 seconden op een laptop met 8 GB." }
-      },
-      {
-        "@type": "Question",
-        "name": "Waarom beperken cloudtools gratis compressie?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Cloudtools comprimeren bestanden op hun servers, wat bandbreedte- en opslagkosten met zich meebrengt. Om die kosten voor gratis gebruikers te beperken, hanteren zij limieten op bestandsgrootte en dagelijkse limieten. PDFree comprimeert alles lokaal in je browser, dus er zijn geen serverkosten — en daarom ook geen dagelijkse limiet en geen limiet van 25 MB; bestanden mogen op een computer tot 500 MB groot zijn, alleen begrensd om het geheugen van je apparaat te beschermen." }
-      },
-      {
-        "@type": "Question",
-        "name": "Hoeveel kan PDFree een grote PDF comprimeren?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Het resultaat hangt af van de inhoud. PDF's met veel ingesloten afbeeldingen krimpen vaak 40–80%. PDF's die vooral uit tekst bestaan, comprimeren minder — meestal 10–30%. PDFree gebruikt dezelfde compressiealgoritmes als desktoptools, maar draait volledig in je browser." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is er een dagelijkse limiet op het aantal compressies?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Nee. PDFree heeft geen dagelijkse gebruikslimieten. In tegenstelling tot cloudtools met daglimieten in het gratis plan kun je met PDFree zoveel PDF's comprimeren als nodig, zo vaak als je wilt — gratis." }
-      },
-      {
-        "@type": "Question",
-        "name": "Vermindert compressie de kwaliteit van mijn PDF?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Bij documenten die vooral uit tekst bestaan, heeft compressie geen zichtbare invloed op de kwaliteit — de tekst blijft scherp. Bij PDF's met foto's verlagen hogere compressieniveaus de beeldresolutie, wat bij nauwkeurige inspectie zichtbaar kan zijn. Kies een gematigd compressieniveau om groottereductie en beeldkwaliteit in balans te houden." }
-      }
+        {
+            "@type": "Question",
+            "name": "Kan ik gratis een PDF-bestand groter dan 100 MB comprimeren?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ja — tot 500 MB in Chrome of Edge op een computer met 8 GB+ geheugen, en tot 150 MB op telefoons, in Safari en in Firefox. De verwerking gebeurt volledig in je browser, dus de limiet beschermt het geheugen van je apparaat, niet de bandbreedte van een server — in onze tests duurde een scan van 500 MB ongeveer 30 seconden op een laptop met 8 GB."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Waarom beperken cloudtools gratis compressie, en PDFree niet?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Cloudtools verwerken bestanden op hun servers, wat echte bandbreedte- en rekenkosten met zich meebrengt. PDFree verwerkt bestanden lokaal in je browser — er zijn geen serverkosten, dus er is geen dagelijkse limiet en geen limiet van 25 MB; bestanden mogen op een computer tot 500 MB groot zijn, alleen begrensd om het geheugen van je apparaat te beschermen."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Hoeveel kan PDFree een grote PDF comprimeren?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Het resultaat hangt af van de inhoud. PDF's met veel ingesloten afbeeldingen krimpen vaak 40–80%. PDF's die vooral uit tekst bestaan, comprimeren minder — meestal 10–30%. PDFree gebruikt dezelfde compressiealgoritmes als desktoptools, maar draait volledig in je browser."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is er een dagelijkse limiet op PDF-compressies?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Nee. In tegenstelling tot cloudtools met daglimieten in het gratis plan heeft PDFree geen dagelijkse limiet. Comprimeer zoveel PDF's als nodig, zo vaak als je wilt."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Vermindert compressie de kwaliteit van mijn PDF?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Bij documenten die vooral uit tekst bestaan, heeft compressie geen zichtbare invloed op de kwaliteit — de tekst blijft scherp. Bij PDF's met foto's verlagen hogere compressieniveaus de beeldresolutie, wat bij nauwkeurige inspectie zichtbaar kan zijn. Kies een gematigd compressieniveau om groottereductie en beeldkwaliteit in balans te houden."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -418,6 +433,14 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Wordt mijn bestand geüpload naar een server als ik het comprimeer?</h3>
             <p style="margin:0;font-size:14px;">Nee. PDFree uploadt je bestand nooit. De volledige compressiebewerking gebeurt in JavaScript in je browser, op je eigen apparaat. Je document blijft volledig privé — het bereikt nooit een server.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Hoeveel kan PDFree een grote PDF comprimeren?</h3>
+            <p style="margin:0;font-size:14px;">Het resultaat hangt af van de inhoud. PDF's met veel ingesloten afbeeldingen krimpen vaak 40–80%. PDF's die vooral uit tekst bestaan, comprimeren minder — meestal 10–30%. PDFree gebruikt dezelfde compressiealgoritmes als desktoptools, maar draait volledig in je browser.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Vermindert compressie de kwaliteit van mijn PDF?</h3>
+            <p style="margin:0;font-size:14px;">Bij documenten die vooral uit tekst bestaan, heeft compressie geen zichtbare invloed op de kwaliteit — de tekst blijft scherp. Bij PDF's met foto's verlagen hogere compressieniveaus de beeldresolutie, wat bij nauwkeurige inspectie zichtbaar kan zijn. Kies een gematigd compressieniveau om groottereductie en beeldkwaliteit in balans te houden.</p>
           </div>
         </div>
 

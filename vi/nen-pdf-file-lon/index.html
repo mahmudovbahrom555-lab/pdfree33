@@ -124,33 +124,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Tôi có thể nén file PDF lớn hơn 100MB miễn phí không?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Có — đến 500 MB trong Chrome hoặc Edge trên máy tính có bộ nhớ từ 8 GB trở lên, và đến 150 MB trên điện thoại, Safari và Firefox. Quá trình xử lý diễn ra hoàn toàn trong trình duyệt của bạn, nên mức trần này để bảo vệ bộ nhớ thiết bị chứ không phải băng thông server — trong thử nghiệm của chúng tôi, nén một bản scan 500 MB mất khoảng 30 giây trên laptop RAM 8 GB." }
-      },
-      {
-        "@type": "Question",
-        "name": "Tại sao công cụ đám mây giới hạn nén miễn phí?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Các công cụ đám mây nén file trên server của họ, điều này phát sinh chi phí băng thông và lưu trữ. Để kiểm soát chi phí cho người dùng miễn phí, họ áp giới hạn dung lượng file và giới hạn theo ngày. PDFree nén mọi thứ ngay trong trình duyệt của bạn nên không có chi phí server, nên không có giới hạn hàng ngày và không có mức trần 25MB; mỗi file có thể lên đến 500 MB trên máy tính, giới hạn chỉ để bảo vệ bộ nhớ thiết bị của bạn." }
-      },
-      {
-        "@type": "Question",
-        "name": "PDFree có thể nén file PDF lớn giảm được bao nhiêu?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Kết quả nén tùy thuộc vào nội dung file. PDF có nhiều ảnh nhúng thường giảm được 40–80%. PDF chủ yếu là văn bản nén ít hơn — thường 10–30%. PDFree sử dụng cùng thuật toán nén PDF như các công cụ desktop, chỉ khác là chạy hoàn toàn trong trình duyệt của bạn." }
-      },
-      {
-        "@type": "Question",
-        "name": "Có giới hạn số lần nén PDF mỗi ngày không?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Không. PDFree không giới hạn lượt dùng mỗi ngày. Khác với các công cụ đám mây giới hạn số lần mỗi ngày ở gói miễn phí, PDFree cho phép bạn nén bao nhiêu file PDF tùy thích, bất kỳ lúc nào, hoàn toàn miễn phí." }
-      },
-      {
-        "@type": "Question",
-        "name": "Việc nén có làm giảm chất lượng file PDF của tôi không?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Với tài liệu chủ yếu là văn bản, việc nén không ảnh hưởng gì đến chất lượng hiển thị — văn bản vẫn sắc nét. Với PDF có ảnh, mức nén cao hơn sẽ giảm độ phân giải ảnh, điều này có thể nhận thấy khi phóng to xem kỹ. Hãy chọn mức nén vừa phải để cân bằng giữa giảm dung lượng và giữ chất lượng ảnh." }
-      }
+        {
+            "@type": "Question",
+            "name": "Tôi có thể nén file PDF lớn hơn 100MB miễn phí không?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Có — đến 500 MB trong Chrome hoặc Edge trên máy tính có bộ nhớ từ 8 GB trở lên, và đến 150 MB trên điện thoại, Safari và Firefox. Quá trình xử lý diễn ra hoàn toàn trong trình duyệt của bạn, nên mức trần này để bảo vệ bộ nhớ thiết bị chứ không phải băng thông server — trong thử nghiệm của chúng tôi, nén một bản scan 500 MB mất khoảng 30 giây trên laptop RAM 8 GB."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Tại sao công cụ đám mây giới hạn nén miễn phí còn PDFree cho phép file lớn hơn nhiều?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Các công cụ đám mây xử lý file trên server của họ, gây ra chi phí băng thông và tính toán thực tế. PDFree xử lý file ngay trong trình duyệt của bạn — không có chi phí server, nên không có giới hạn hàng ngày và không có mức trần 25MB; mỗi file có thể lên đến 500 MB trên máy tính, giới hạn chỉ để bảo vệ bộ nhớ thiết bị của bạn."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "PDFree có thể nén file PDF lớn giảm được bao nhiêu?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Kết quả nén tùy thuộc vào nội dung file. PDF có nhiều ảnh nhúng thường giảm được 40–80%. PDF chủ yếu là văn bản nén ít hơn — thường 10–30%. PDFree sử dụng cùng thuật toán nén PDF như các công cụ desktop, chỉ khác là chạy hoàn toàn trong trình duyệt của bạn."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Có giới hạn số lần nén PDF mỗi ngày không?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Không. Khác với các công cụ đám mây giới hạn số lần mỗi ngày ở gói miễn phí, PDFree không giới hạn theo ngày. Nén bao nhiêu PDF tùy thích, bất kỳ lúc nào."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Việc nén sẽ giảm dung lượng file PDF của tôi bao nhiêu?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Kết quả phụ thuộc vào nội dung file. PDF nhiều ảnh thường giảm 40–80%. PDF chủ yếu văn bản giảm 10–30%. PDFree sử dụng cùng thuật toán nén như các công cụ desktop."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -418,6 +433,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">File của tôi có bị tải lên server khi nén không?</h3>
             <p style="margin:0;font-size:14px;">Không. PDFree không bao giờ tải file của bạn lên. Toàn bộ thao tác nén chạy bằng JavaScript ngay trong trình duyệt, trên thiết bị của bạn. Tài liệu của bạn hoàn toàn riêng tư — nó không bao giờ chạm đến bất kỳ server nào.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFree có thể nén file PDF lớn giảm được bao nhiêu?</h3>
+            <p style="margin:0;font-size:14px;">Kết quả nén tùy thuộc vào nội dung file. PDF có nhiều ảnh nhúng thường giảm được 40–80%. PDF chủ yếu là văn bản nén ít hơn — thường 10–30%. PDFree sử dụng cùng thuật toán nén PDF như các công cụ desktop, chỉ khác là chạy hoàn toàn trong trình duyệt của bạn.</p>
           </div>
         </div>
 

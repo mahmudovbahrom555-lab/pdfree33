@@ -116,33 +116,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Can I use PDFree PDF tools without an internet connection?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. After your first visit, PDFree works fully offline. A service worker caches all the JavaScript, WebAssembly modules, and fonts needed to run the tools. On subsequent visits — even with no internet — the tools load and process PDFs from cache. This makes PDFree useful on planes, in areas with poor connectivity, or on locked-down corporate networks." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is my PDF actually uploaded when I use PDFree?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. Your PDF is never sent to any server. When you drop a file into PDFree, the browser reads it from your local disk using the File API. All processing — merging, compressing, splitting, converting — happens in your browser using WebAssembly (pdf-lib and PDF.js). The result is downloaded directly from memory to your device. No bytes of your file touch any server." }
-      },
-      {
-        "@type": "Question",
-        "name": "How is this different from cloud-based PDF tools?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Cloud-based PDF tools upload your file to their servers, process it there, and send the result back to you. This means your document travels across the internet, gets stored on third-party infrastructure (even if temporarily), and is subject to their data handling policies. PDFree is the opposite: your file never leaves your device. The processing engine runs inside your browser. There is no server involved in handling your document." }
-      },
-      {
-        "@type": "Question",
-        "name": "Does PDFree work on mobile without uploading?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree works on iOS Safari, Android Chrome, and all modern mobile browsers — without uploading. The same WebAssembly-based processing runs on mobile devices. You can also install PDFree as a PWA from your browser's 'Add to Home Screen' option, giving you app-like offline access." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is PDFree really free with no hidden limits?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree is completely free with no daily task limits, no account requirements, and no watermarks on output. There is no paid plan to unlock — all tools are free forever. The project is open source under GNU AGPLv3." }
-      }
+        {
+            "@type": "Question",
+            "name": "Can I use these PDF tools without an internet connection?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. After your first visit, PDFree works fully offline. A service worker caches the entire application — scripts, WebAssembly modules, and fonts. On any subsequent visit, even with no internet, all tools load from cache and process PDFs without needing a network connection."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is my PDF actually uploaded when I use PDFree?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Your PDF is read from your local disk by the browser's File API and processed in browser memory. No bytes of your file are sent over a network connection. You can verify this yourself by opening your browser's DevTools → Network tab and watching for any file upload requests — there are none."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How is this different from cloud-based PDF tools?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Cloud-based tools upload your file to their servers, process it remotely, and send the result back. Your document is temporarily on their infrastructure. PDFree is the opposite — the processing engine lives in your browser. Your file never leaves your device. This makes PDFree fundamentally safer for sensitive documents and usable without internet after the first load."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does PDFree work on mobile without uploading?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. PDFree works on iOS Safari, Android Chrome, and all modern mobile browsers. The WebAssembly-based processing works the same on mobile — no upload, no server. You can also install PDFree as a PWA from your browser's menu for quick offline access from your home screen."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is it really free with no hidden catches?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. PDFree has no paid plan, no daily limits, no watermarks on output, and no account required. All tools are free forever. The project is open source under GNU AGPLv3 — you can inspect the source code to verify exactly how it works."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">

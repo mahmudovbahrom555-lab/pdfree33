@@ -82,28 +82,40 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Does OCR on scanned medical records count as a HIPAA disclosure risk?",
-        "acceptedAnswer": { "@type": "Answer", "text": "It can, if the OCR tool uploads the document to a server to process it — that transmission of PHI to a third party is exactly the kind of event HIPAA's Security Rule is concerned with, and typically requires a Business Associate Agreement (BAA) with the vendor. Browser-based OCR avoids the question because there is no transmission: recognition happens locally on the healthcare worker's own device." }
-      },
-      {
-        "@type": "Question",
-        "name": "Do I need a BAA to use PDFree's OCR on patient records?",
-        "acceptedAnswer": { "@type": "Answer", "text": "We do not sign BAAs. PDFree never receives your files — OCR runs in your browser via WebAssembly — but whether your use requires a BAA is a legal question for your organization, not something we can decide for you." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is browser-based OCR accurate enough for medical records?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Accuracy depends primarily on scan quality, not on whether recognition runs locally or on a server — both use comparable OCR engines. A clean 300 DPI scan of a typed medical record typically recognizes with high accuracy. Handwritten clinical notes remain harder to OCR reliably regardless of which tool is used, and should be reviewed rather than trusted blindly." }
-      },
-      {
-        "@type": "Question",
-        "name": "What happens to the scanned file after OCR?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Nothing — because the file was never sent anywhere. It exists only in your browser's memory for the duration of the session and is cleared when you close the tab. There is no server-side copy to delete because one was never created." }
-      }
+        {
+            "@type": "Question",
+            "name": "Does OCR on scanned medical records count as a HIPAA disclosure risk?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "It can, if the OCR tool uploads the document to a server to process it — that transmission of PHI to a third party is exactly the kind of event HIPAA's Security Rule is concerned with, and typically requires a Business Associate Agreement (BAA) with the vendor. Browser-based OCR avoids the question because there is no transmission: recognition happens locally on the healthcare worker's own device."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Do I need a BAA to use PDFree's OCR on patient records?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We do not sign BAAs. PDFree never receives your files — OCR runs in your browser via WebAssembly — but whether your use requires a BAA is a legal question for your organization, not something we can decide for you."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is browser-based OCR accurate enough for medical records?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Accuracy depends primarily on scan quality, not on whether recognition runs locally or on a server — both use comparable OCR engines. A clean 300 DPI scan of a typed medical record typically recognizes with high accuracy. Handwritten clinical notes remain harder to OCR reliably regardless of which tool is used, and should be reviewed rather than trusted blindly."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What happens to the scanned file after OCR?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Nothing — because the file was never sent anywhere. It exists only in your browser's memory for the duration of the session and is cleared when you close the tab. There is no server-side copy to delete because one was never created."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">

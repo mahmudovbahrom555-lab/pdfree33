@@ -138,28 +138,40 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Czy jakiekolwiek narzędzia PDFree przesyłają pliki na serwer?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Nie. Każde narzędzie PDFree przetwarza pliki całkowicie w Twojej przeglądarce za pomocą JavaScript. Twoje pliki nigdy nie opuszczają Twojego urządzenia, nigdy nie są przesyłane na żaden serwer i nigdy nie są przechowywane poza tymczasową pamięcią Twojej przeglądarki." }
-      },
-      {
-        "@type": "Question",
-        "name": "Jak mogę sprawdzić, że moje pliki nie są przesyłane?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Otwórz narzędzia deweloperskie przeglądarki (F12), przejdź do zakładki Sieć, a następnie użyj dowolnego narzędzia PDFree. Nie zobaczysz żadnych żądań zawierających dane Twojego pliku PDF — jedynie żądania dotyczące plików JavaScript i CSS aplikacji." }
-      },
-      {
-        "@type": "Question",
-        "name": "Co PDFree robi z moimi danymi w świetle RODO?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Twoje pliki PDF są przetwarzane w przeglądarce i nie trafiają na nasze serwery, więc nigdy nie mamy ich treści. Serwis zbiera ograniczone informacje techniczne o użyciu i błędach, bez plików cookie i stałych identyfikatorów, jak opisano w Polityce prywatności. Nie certyfikujemy zgodności: czy dany sposób pracy spełnia Twoje obowiązki wynikające z RODO, ocenia Twoja organizacja." }
-      },
-      {
-        "@type": "Question",
-        "name": "Czy mogę używać PDFree do dokumentów medycznych wymagających ścisłej ochrony?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Twoje pliki PDF są przetwarzane w przeglądarce i nie trafiają na nasze serwery. Nie certyfikujemy zgodności z HIPAA i nie podpisujemy umów BAA; czy używanie PDFree do dokumentacji pacjentów pasuje do Twoich obowiązków, decyduje Twoja organizacja." }
-      }
+        {
+            "@type": "Question",
+            "name": "Czy jakiekolwiek narzędzia PDFree przesyłają pliki na serwer?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Nie. Każde narzędzie PDFree przetwarza pliki całkowicie w Twojej przeglądarce. Twoje pliki nigdy nie są wysyłane na żaden serwer, nigdzie przechowywane ani w żaden sposób rejestrowane."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Jak mogę sprawdzić, że moje pliki nie są przesyłane?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Otwórz narzędzia deweloperskie przeglądarki (F12), przejdź do zakładki Sieć, a następnie użyj dowolnego narzędzia PDFree. Nie zobaczysz żadnych żądań zawierających dane Twojego pliku PDF — jedynie żądania dotyczące plików JavaScript i CSS aplikacji."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Co PDFree robi z moimi danymi w świetle RODO?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Twoje pliki PDF są przetwarzane w przeglądarce i nie trafiają na nasze serwery, więc nigdy nie mamy ich treści. Serwis zbiera ograniczone informacje techniczne o użyciu i błędach, bez plików cookie i stałych identyfikatorów, jak opisano w Polityce prywatności. Nie certyfikujemy zgodności: czy dany sposób pracy spełnia Twoje obowiązki wynikające z RODO, ocenia Twoja organizacja."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Czy mogę używać PDFree do dokumentacji medycznej wymagającej ścisłej ochrony?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Twoje pliki PDF są przetwarzane w przeglądarce i nie trafiają na nasze serwery. Nie certyfikujemy zgodności z HIPAA i nie podpisujemy umów BAA; czy używanie PDFree do dokumentacji pacjentów pasuje do Twoich obowiązków, decyduje Twoja organizacja."
+            }
+        }
     ]
-  }
+}
   </script>
   <script type="application/ld+json">
   {
@@ -348,11 +360,15 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Czy mogę używać PDFree do dokumentacji medycznej wymagającej ścisłej ochrony?</h3>
-            <p style="margin:0;font-size:14px;">Tak. Architektura PDFree gwarantuje, że żadne chronione informacje zdrowotne (PHI) nigdy nie są przesyłane na zewnątrz. Pracownicy służby zdrowia mogą przetwarzać dokumentację pacjentów całkowicie w przeglądarce.</p>
+            <p style="margin:0;font-size:14px;">Twoje pliki PDF są przetwarzane w przeglądarce i nie trafiają na nasze serwery. Nie certyfikujemy zgodności z HIPAA i nie podpisujemy umów BAA; czy używanie PDFree do dokumentacji pacjentów pasuje do Twoich obowiązków, decyduje Twoja organizacja.</p>
           </div>
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Czym PDFree różni się od narzędzi PDF w chmurze?</h3>
             <p style="margin:0;font-size:14px;">Narzędzia PDF w chmurze przesyłają Twoje pliki na swoje serwery w celu przetworzenia. PDFree działa całkowicie w Twojej przeglądarce — Twoje pliki nigdy nie opuszczają Twojego urządzenia. PDFree nie ma też dziennych limitów użycia.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Jak mogę sprawdzić, że moje pliki nie są przesyłane?</h3>
+            <p style="margin:0;font-size:14px;">Otwórz narzędzia deweloperskie przeglądarki (F12), przejdź do zakładki Sieć, a następnie użyj dowolnego narzędzia PDFree. Nie zobaczysz żadnych żądań zawierających dane Twojego pliku PDF — jedynie żądania dotyczące plików JavaScript i CSS aplikacji.</p>
           </div>
         </div>
 

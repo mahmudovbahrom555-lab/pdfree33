@@ -124,48 +124,72 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "100MB보다 큰 PDF 파일도 무료로 합칠 수 있나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "네 — RAM 8GB 이상인 컴퓨터의 Chrome·Edge에서는 한 번에 최대 500MB, 휴대폰과 Safari·Firefox에서는 최대 300MB까지 합칠 수 있습니다. 처리가 완전히 브라우저에서 이루어지므로 이 제한은 서버 대역폭이 아니라 기기의 메모리를 보호하기 위한 것입니다 — 저희 테스트에서 500MB 합치기는 RAM 8GB 노트북에서 약 5초가 걸렸습니다." }
-      },
-      {
-        "@type": "Question",
-        "name": "iLovePDF는 왜 25MB 파일 용량 제한이 있나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF는 파일을 자체 서버에서 처리하기 때문에 대역폭과 저장 비용이 발생합니다. 무료 사용자에 대한 이런 비용을 통제하기 위해 파일 용량 제한을 둡니다. PDFree는 모든 처리를 브라우저에서 로컬로 수행하므로 서버 비용이 없고, 따라서 일일 제한도 25MB 제한도 없습니다. 한 번에 컴퓨터에서 최대 500MB까지 합칠 수 있으며, 이 한도는 기기의 메모리를 보호하기 위한 것입니다." }
-      },
-      {
-        "@type": "Question",
-        "name": "PDFree는 얼마나 큰 PDF를 합칠 수 있나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "RAM 8GB 이상인 컴퓨터의 Chrome·Edge에서는 한 번에 최대 500MB, 휴대폰과 Safari·Firefox에서는 최대 300MB입니다 — 이들 브라우저는 기기 메모리를 알려주지 않으므로 안전한 한도가 적용됩니다. 저희 테스트에서는 800MB 합치기도 브라우저 메모리 약 1.5GB로 완료되었으므로, 500MB는 다른 탭을 위한 여유를 남겨 둡니다." }
-      },
-      {
-        "@type": "Question",
-        "name": "매우 큰 파일을 합치는 중 브라우저가 다운되면 어떻게 해야 하나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "다른 브라우저 탭을 닫아 메모리를 확보한 후 다시 시도하세요 — 열려 있는 탭마다 합치기에 사용할 수 없는 RAM을 차지합니다. 더 작은 단위로 나눠서 합치는 것(한 번에 5~10개 파일씩 합친 후 결과를 다시 합치기)도 한 번에 사용하는 메모리를 줄여줍니다. PDF 압축 도구로 각 파일을 먼저 압축하여 합치기 전에 전체 크기를 줄일 수도 있습니다." }
-      },
-      {
-        "@type": "Question",
-        "name": "합칠 수 있는 PDF 개수에 일일 제한이 있나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "아니요. PDFree는 일일 사용 제한이 없습니다. 무료 플랜에 일일 제한이 있는 클라우드 도구와 달리, PDFree는 필요한 만큼, 원하는 만큼 자주 무료로 PDF를 합칠 수 있게 해줍니다." }
-      },
-      {
-        "@type": "Question",
-        "name": "한 번에 몇 개의 PDF 파일을 합칠 수 있나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "파일 개수에는 제한이 없습니다. 합치는 파일의 총용량이 컴퓨터(Chrome·Edge, RAM 8GB 이상)에서 500MB, 휴대폰과 다른 브라우저에서 300MB를 넘지 않는 한, 한 번의 작업으로 2개, 50개, 100개 이상의 PDF 파일을 합칠 수 있습니다." }
-      },
-      {
-        "@type": "Question",
-        "name": "50개나 100개의 PDF 파일을 한 번에 무료로 합칠 수 있나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "네. PDFree는 한 번의 합치기 작업에서 파일 개수 제한이 없고 일일 사용 제한도 없습니다. 모든 파일을 한 번에 드롭하고 순서를 정한 다음 합치기를 클릭하세요. 결과물은 바로 기기에 다운로드됩니다 — 어떤 서버에도 업로드할 필요가 없습니다." }
-      },
-      {
-        "@type": "Question",
-        "name": "대용량 PDF 합치기가 iLovePDF에서는 느리고 PDFree에서는 빠른 이유는 무엇인가요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF는 파일을 서버에 업로드하고, 그곳에서 처리한 다음, 결과를 다운로드해야 합니다 — 이 세 번의 네트워크 왕복이 대용량 파일에서 상당한 시간을 추가합니다. PDFree는 네트워크 전송 없이 모든 처리를 브라우저에서 로컬로 수행하므로 속도는 인터넷 연결이 아니라 기기의 CPU에만 좌우됩니다." }
-      }
+        {
+            "@type": "Question",
+            "name": "100MB보다 큰 PDF 파일도 무료로 합칠 수 있나요?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "네 — RAM 8GB 이상인 컴퓨터의 Chrome·Edge에서는 한 번에 최대 500MB, 휴대폰과 Safari·Firefox에서는 최대 300MB까지 합칠 수 있습니다. 처리가 완전히 브라우저에서 이루어지므로 이 제한은 서버 대역폭이 아니라 기기의 메모리를 보호하기 위한 것입니다 — 저희 테스트에서 500MB 합치기는 RAM 8GB 노트북에서 약 5초가 걸렸습니다."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "iLovePDF는 25MB 제한이 있는데 PDFree는 왜 없나요?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "iLovePDF는 파일을 자체 서버에서 처리하기 때문에 대역폭과 저장 비용이 발생합니다. 무료 사용자에 대한 이런 비용을 통제하기 위해 파일 용량 제한을 둡니다. PDFree는 모든 처리를 브라우저에서 로컬로 수행하므로 서버 비용이 없고, 따라서 일일 제한도 25MB 제한도 없습니다. 한 번에 컴퓨터에서 최대 500MB까지 합칠 수 있으며, 이 한도는 기기의 메모리를 보호하기 위한 것입니다."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "얼마나 큰 PDF를 합칠 수 있나요?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "RAM 8GB 이상인 컴퓨터의 Chrome·Edge에서는 한 번에 최대 500MB, 휴대폰과 Safari·Firefox에서는 최대 300MB입니다 — 이들 브라우저는 기기 메모리를 알려주지 않으므로 안전한 한도가 적용됩니다. 저희 테스트에서는 800MB 합치기도 브라우저 메모리 약 1.5GB로 완료되었으므로, 500MB는 다른 탭을 위한 여유를 남겨 둡니다."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "매우 큰 파일을 합치는 중 브라우저가 다운되면 어떻게 해야 하나요?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "다른 탭을 닫아 메모리를 확보한 후 다시 시도하세요 — 더 작은 단위로 나눠서 합치는 것(한 번에 5~10개 파일씩 합친 후 결과를 다시 합치기)도 한 번에 사용하는 메모리를 줄여줍니다. PDF 압축 도구로 각 파일을 먼저 압축하여 합치기 전에 전체 크기를 줄일 수도 있습니다."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "합치기에 일일 제한이 있나요?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "아니요. 무료 플랜에 일일 제한이 있는 클라우드 도구와 달리 PDFree는 일일 제한이 없습니다. 필요한 만큼, 원하는 만큼 자주 PDF를 합치세요."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "한 번에 몇 개의 PDF 파일을 합칠 수 있나요?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "파일 개수에는 제한이 없습니다. 합치는 파일의 총용량이 컴퓨터(Chrome·Edge, RAM 8GB 이상)에서 500MB, 휴대폰과 다른 브라우저에서 300MB를 넘지 않는 한, 한 번의 작업으로 2개, 50개, 100개 이상의 PDF 파일을 합칠 수 있습니다."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "50개나 100개의 PDF 파일을 한 번에 무료로 합칠 수 있나요?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "네, 일일 제한 없이 완전 무료입니다. 무료 플랜에 일일 제한이 있는 클라우드 도구와 달리 PDFree는 사용 제한이 없습니다. 50개나 100개의 파일을 한 번에 드롭하고 순서를 정한 다음 합치기를 클릭하세요 — 결과물은 어떤 서버에도 업로드하지 않고 바로 기기에 다운로드됩니다."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "대용량 PDF 합치기가 iLovePDF에서는 느리고 PDFree에서는 빠른 이유는 무엇인가요?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "iLovePDF는 파일을 서버에 업로드하고, 그곳에서 처리한 다음, 결과를 다운로드해야 합니다 — 이 세 번의 네트워크 왕복이 대용량 파일에서 상당한 시간을 추가합니다. PDFree는 네트워크 전송 없이 모든 처리를 브라우저에서 로컬로 수행하므로 속도는 인터넷 연결이 아니라 기기의 CPU에만 좌우됩니다."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -506,6 +530,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">계정을 만들어야 하나요?</h3>
             <p style="margin:0;font-size:14px;">아니요. PDFree는 계정, 이메일, 등록이 전혀 필요하지 않습니다. 도구를 열고 바로 합치기를 시작하세요.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">대용량 PDF 합치기가 iLovePDF에서는 느리고 PDFree에서는 빠른 이유는 무엇인가요?</h3>
+            <p style="margin:0;font-size:14px;">iLovePDF는 파일을 서버에 업로드하고, 그곳에서 처리한 다음, 결과를 다운로드해야 합니다 — 이 세 번의 네트워크 왕복이 대용량 파일에서 상당한 시간을 추가합니다. PDFree는 네트워크 전송 없이 모든 처리를 브라우저에서 로컬로 수행하므로 속도는 인터넷 연결이 아니라 기기의 CPU에만 좌우됩니다.</p>
           </div>
         </div>
 

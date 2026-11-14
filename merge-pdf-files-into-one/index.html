@@ -99,33 +99,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How many PDF files can I merge into one?",
-        "acceptedAnswer": { "@type": "Answer", "text": "There is no limit on the number of files. PDFree merges PDFs entirely in your browser using available RAM, so the practical limit is determined by your device's memory. Most users successfully merge 20–50 files. For very large batches, merge in groups if you encounter performance issues." }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I change the order of pages before merging?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. After adding files, drag and drop them in the file list to reorder them before merging. The merged PDF will follow the order shown in the list. On mobile, use touch drag to reorder." }
-      },
-      {
-        "@type": "Question",
-        "name": "Does merging affect PDF quality?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. PDFree's merge operation assembles PDF pages without re-encoding them. Images, fonts, vector graphics, and text remain at their original quality — merging is lossless." }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I merge PDFs with different page sizes?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree merges PDFs regardless of page size (A4, Letter, A3, custom). Each page retains its original dimensions. If you want a uniform page size, you would need to resize pages before merging, which is not currently supported in the merge tool." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is my data private when merging PDFs?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. All processing happens in your browser using JavaScript. No file is ever transmitted to a PDFree server. Confidential documents stay on your device throughout the merge process." }
-      }
+        {
+            "@type": "Question",
+            "name": "How many PDF files can I merge at once?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "There is no limit. PDFree merges entirely in your browser — the practical limit is your device's RAM. Most users successfully merge 20–50 files without issues."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I reorder files before merging?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Drag and drop files in the list to reorder them. The merged PDF will follow the order shown. Touch drag is also supported on mobile."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does merging reduce PDF quality?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Merging is lossless — images, fonts, and vector graphics are preserved at original quality. No re-encoding happens."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I merge PDFs with different page sizes?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. A4, Letter, A3, and custom sizes all merge correctly. Each page retains its original dimensions in the output."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is my data private?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Completely. All processing happens in your browser. No file is ever transmitted to a server — your documents never leave your device."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">

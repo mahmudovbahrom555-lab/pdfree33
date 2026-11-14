@@ -124,33 +124,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "100MB보다 큰 PDF도 무료로 압축할 수 있나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "네 — RAM 8GB 이상인 컴퓨터의 Chrome·Edge에서는 최대 500MB, 휴대폰과 Safari·Firefox에서는 최대 150MB까지 압축할 수 있습니다. 처리가 완전히 브라우저에서 이루어지므로 이 제한은 서버 대역폭이 아니라 기기의 메모리를 보호하기 위한 것입니다 — 저희 테스트에서 500MB 스캔본은 RAM 8GB 노트북에서 약 30초 만에 압축되었습니다." }
-      },
-      {
-        "@type": "Question",
-        "name": "iLovePDF는 왜 무료 압축을 25MB로 제한하나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "iLovePDF는 파일을 자체 서버에서 압축하기 때문에 대역폭과 저장 비용이 발생합니다. 무료 사용자에 대한 이런 비용을 통제하기 위해 파일 용량 제한과 일일 제한을 둡니다. PDFree는 모든 처리를 브라우저에서 로컬로 수행하므로 서버 비용이 없고, 따라서 일일 제한도 25MB 제한도 없습니다. 컴퓨터에서는 최대 500MB까지 압축할 수 있으며, 이 한도는 기기의 메모리를 보호하기 위한 것입니다." }
-      },
-      {
-        "@type": "Question",
-        "name": "PDFree는 대용량 PDF를 얼마나 압축할 수 있나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "결과는 콘텐츠에 따라 다릅니다. 이미지가 많이 포함된 PDF는 보통 40~80% 줄어듭니다. 텍스트 위주의 PDF는 압축률이 낮은 편으로, 일반적으로 10~30%입니다. PDFree는 데스크톱 도구와 동일한 PDF 압축 알고리즘을 브라우저에서 그대로 사용합니다." }
-      },
-      {
-        "@type": "Question",
-        "name": "압축할 수 있는 PDF 개수에 일일 제한이 있나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "아니요. PDFree는 일일 사용 제한이 없습니다. 무료 플랜에 일일 제한이 있는 클라우드 도구와 달리, PDFree는 필요한 만큼, 원하는 만큼 자주 무료로 PDF를 압축할 수 있게 해줍니다." }
-      },
-      {
-        "@type": "Question",
-        "name": "압축하면 PDF 품질이 떨어지나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "대부분 텍스트로 구성된 문서는 압축해도 품질에 눈에 띄는 영향이 없습니다 — 텍스트는 선명하게 유지됩니다. 사진이 포함된 PDF는 압축 수준이 높을수록 이미지 해상도가 줄어들며, 자세히 보면 차이가 느껴질 수 있습니다. 용량 감소와 이미지 품질의 균형을 맞추려면 중간 정도의 압축 수준을 선택하세요." }
-      }
+        {
+            "@type": "Question",
+            "name": "100MB보다 큰 PDF도 무료로 압축할 수 있나요?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "네 — RAM 8GB 이상인 컴퓨터의 Chrome·Edge에서는 최대 500MB, 휴대폰과 Safari·Firefox에서는 최대 150MB까지 압축할 수 있습니다. 처리가 완전히 브라우저에서 이루어지므로 이 제한은 서버 대역폭이 아니라 기기의 메모리를 보호하기 위한 것입니다 — 저희 테스트에서 500MB 스캔본은 RAM 8GB 노트북에서 약 30초 만에 압축되었습니다."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "iLovePDF는 무료 압축을 25MB로 제한하는데 PDFree는 왜 아닌가요?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "iLovePDF는 파일을 자체 서버에서 압축하기 때문에 대역폭과 저장 비용이 발생합니다. 무료 사용자에 대한 이런 비용을 통제하기 위해 파일 용량 제한과 일일 제한을 둡니다. PDFree는 모든 처리를 브라우저에서 로컬로 수행하므로 서버 비용이 없고, 따라서 일일 제한도 25MB 제한도 없습니다. 컴퓨터에서는 최대 500MB까지 압축할 수 있으며, 이 한도는 기기의 메모리를 보호하기 위한 것입니다."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "PDFree는 대용량 PDF를 얼마나 압축할 수 있나요?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "결과는 콘텐츠에 따라 다릅니다. 이미지가 많이 포함된 PDF는 보통 40~80% 줄어듭니다. 텍스트 위주의 PDF는 압축률이 낮은 편으로, 일반적으로 10~30%입니다. PDFree는 데스크톱 도구와 동일한 PDF 압축 알고리즘을 브라우저에서 그대로 사용합니다."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "PDF 압축에 일일 제한이 있나요?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "아니요. 무료 플랜에 일일 제한이 있는 클라우드 도구와 달리 PDFree는 일일 제한이 없습니다. 필요한 만큼, 원하는 만큼 자주 PDF를 압축하세요."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "압축하면 내 PDF의 용량이 얼마나 줄어드나요?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "결과는 콘텐츠에 따라 다릅니다. 이미지가 많은 PDF는 보통 40~80% 줄어듭니다. 텍스트 위주의 PDF는 10~30% 줄어듭니다. PDFree는 데스크톱 도구와 동일한 압축 알고리즘을 사용합니다."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -418,6 +433,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">압축할 때 파일이 서버에 업로드되나요?</h3>
             <p style="margin:0;font-size:14px;">아니요. PDFree는 파일을 절대 업로드하지 않습니다. 압축 작업 전체가 기기의 브라우저 안에서 자바스크립트로 실행됩니다. 문서는 완전히 비공개로 유지되며 어떤 서버에도 도달하지 않습니다.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFree는 대용량 PDF를 얼마나 압축할 수 있나요?</h3>
+            <p style="margin:0;font-size:14px;">결과는 콘텐츠에 따라 다릅니다. 이미지가 많이 포함된 PDF는 보통 40~80% 줄어듭니다. 텍스트 위주의 PDF는 압축률이 낮은 편으로, 일반적으로 10~30%입니다. PDFree는 데스크톱 도구와 동일한 PDF 압축 알고리즘을 브라우저에서 그대로 사용합니다.</p>
           </div>
         </div>
 

@@ -156,56 +156,56 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "PDFree envoie-t-il mes fichiers PDF à un serveur ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Non. PDFree fusionne les fichiers PDF entièrement dans votre navigateur avec pdf-lib — une bibliothèque JavaScript qui s'exécute localement. Vos fichiers ne sont jamais envoyés sur internet. Vous pouvez le vérifier en ouvrant les DevTools de votre navigateur (F12), en allant dans l'onglet Réseau, puis en fusionnant un fichier — vous ne verrez aucune requête contenant vos données PDF."
+        {
+            "@type": "Question",
+            "name": "PDFree envoie-t-il mes fichiers PDF à un serveur ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Non. PDFree fusionne les PDF entièrement dans votre navigateur avec pdf-lib. Vos fichiers ne sont jamais envoyés sur internet. Vous pouvez le vérifier en ouvrant DevTools → Réseau — vous verrez zéro requête contenant vos données PDF."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Est-ce sûr pour les dossiers médicaux et documents juridiques ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Oui. Comme les fichiers ne quittent jamais votre appareil, PDFree est sûr pour les dossiers médicaux protégés, les documents juridiques confidentiels et tout autre contenu sensible. Il n'y a aucun serveur qui pourrait être compromis."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "En quoi est-ce différent des outils PDF cloud ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Les outils PDF cloud envoient vos fichiers sur leurs serveurs, les traitent là-bas, puis les suppriment plus tard ; la durée de conservation varie. PDFree traite tout localement — vos fichiers ne voyagent jamais vers un serveur. Vous n'avez pas non plus de limite d'utilisation quotidienne."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Y a-t-il une limite de taille de fichier ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Le traitement est local, il n'y a donc aucun plafond d'envoi — jusqu'à 500 Mo par fusion sur ordinateur, 300 Mo sur téléphone."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Puis-je fusionner des PDF complètement hors ligne ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Oui. Après votre première visite, PDFree est mis en cache en tant que PWA et fonctionne entièrement hors ligne — aucune connexion internet n'est nécessaire pour le traitement."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "PDFree est-il conforme à HIPAA ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Vos fichiers PDF sont traités dans votre navigateur et ne sont pas envoyés sur nos serveurs. Nous ne certifions pas la conformité HIPAA et ne signons pas de BAA ; c'est à votre organisation de décider si l'utilisation de PDFree pour des dossiers patients correspond à ses obligations."
+            }
         }
-      },
-      {
-        "@type": "Question",
-        "name": "Est-ce sûr pour des documents confidentiels comme des dossiers médicaux ou des contrats juridiques ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Oui. Comme PDFree n'envoie jamais vos fichiers, il est sûr pour les documents confidentiels. Dossiers médicaux, contrats juridiques, relevés financiers et pièces d'identité sont traités entièrement sur votre appareil et ne sont jamais transmis à un serveur. Les fichiers n'existent que dans la mémoire vive de votre navigateur et disparaissent à la fermeture de l'onglet."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "En quoi PDFree diffère-t-il des outils PDF cloud ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Les outils PDF cloud envoient vos fichiers sur leurs serveurs pour les traiter, puis les suppriment plus tard ; la durée de conservation varie. PDFree traite tout localement dans votre navigateur — vos fichiers ne quittent jamais votre appareil. Cela rend PDFree intrinsèquement plus sûr pour les documents sensibles et utilisable sans connexion internet une fois chargé."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Y a-t-il une limite de taille de fichier pour fusionner des PDF sans les envoyer ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "PDFree n'a pas de plafond d'envoi à 25 Mo, car le traitement se fait localement — une fusion peut atteindre 500 Mo sur ordinateur (Chrome/Edge, 8 Go de RAM ou plus) ou 300 Mo sur téléphone, une limite qui protège la mémoire de votre appareil. La plupart des appareils modernes gèrent sans problème des PDF de plusieurs centaines de mégaoctets."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Puis-je fusionner des PDF hors ligne, sans les envoyer ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Oui. PDFree est une Progressive Web App (PWA). Après votre première visite, l'application est mise en cache dans votre navigateur et fonctionne entièrement hors ligne. Vous pouvez fusionner des PDF sans aucune connexion internet."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "PDFree est-il conforme à HIPAA ?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Vos fichiers PDF sont traités dans votre navigateur et ne sont pas envoyés sur nos serveurs. Nous ne certifions pas la conformité HIPAA et ne signons pas de BAA ; c'est à votre organisation de décider si l'utilisation de PDFree pour des dossiers patients correspond à ses obligations."
-        }
-      }
     ]
-  }
+}
   </script>
 
   <!-- BreadcrumbList schema -->

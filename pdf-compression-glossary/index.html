@@ -222,7 +222,39 @@
     </div>
   </section>
 
-    </main>
+      <section style="max-width:800px;margin:40px auto;padding:0 24px;" aria-label="Frequently asked questions">
+    <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">Frequently Asked Questions</h2>
+      <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+        <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">What is XMP metadata in a PDF?</h3>
+        <p style="margin:0;font-size:14px;color:var(--text2);line-height:1.7;">XMP (Extensible Metadata Platform) is an XML-based metadata stream embedded inside the PDF file. It stores information like the document title, author, creation date, software used to create the PDF, and copyright strings. Adobe applications automatically add XMP streams when saving PDFs. The stream can range from 2 KB to 50 KB in size — invisible to the reader but adding weight to the file. Removing it does not affect any visible content.</p>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+        <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Why do PDFs contain embedded page thumbnails?</h3>
+        <p style="margin:0;font-size:14px;color:var(--text2);line-height:1.7;">Adobe Acrobat and Reader generate small preview images (thumbnails) of each page and store them inside the PDF file itself. These thumbnails are used for the page panel in Acrobat but are unnecessary in most other PDF viewers, which render their own previews. Each thumbnail is typically 2–10 KB; a 200-page document can have 400–2000 KB of thumbnail data. Removing them does not affect how the document displays or prints.</p>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+        <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">What is Adobe PieceInfo metadata?</h3>
+        <p style="margin:0;font-size:14px;color:var(--text2);line-height:1.7;">PieceInfo is a private metadata dictionary added by Adobe applications (InDesign, Illustrator, Photoshop) to store application-specific data about the document's last edit session. It may include layer information, placed image paths, or editorial notes used internally by the application. This data is meaningless outside the originating application and adds file size without any benefit to readers of the final PDF.</p>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+        <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">What are duplicate images in a PDF?</h3>
+        <p style="margin:0;font-size:14px;color:var(--text2);line-height:1.7;">When a PDF is created or assembled from multiple sources, the same image (like a logo or watermark) can be embedded multiple times as separate objects, even though the visual output is identical. For example, a 200-page report with a logo on every page may contain 200 copies of the same image object instead of one shared reference. PDFree identifies duplicate images by fingerprint and replaces all copies with a single shared reference, reducing size proportionally.</p>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+        <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">What happens when PDFree recompresses images?</h3>
+        <p style="margin:0;font-size:14px;color:var(--text2);line-height:1.7;">PDF files often contain images at higher resolution than needed for screen viewing or printing. A scanned document at 300 DPI may contain images that are 5–10 MB each. PDFree recompresses JPEG images using a lower JPEG quality setting (82% for Standard preset, 72% for Maximum) and optionally downsamples images to a lower DPI (150 DPI for Web, 96 DPI for Email). The visible difference is minimal — JPEG quality loss at 82% is not detectable by the human eye in standard reading conditions.</p>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+        <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">What is font and content stream repacking?</h3>
+        <p style="margin:0;font-size:14px;color:var(--text2);line-height:1.7;">PDF content streams (which describe page layout, text positions, and drawing instructions) and font data are compressed using the DEFLATE algorithm. Many PDF generators use a low compression level for speed, leaving the data more compressible than necessary. PDFree uses the browser's built-in CompressionStream API to repack these streams at a higher compression level, extracting additional savings without any change to the document content.</p>
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+        <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">What are object streams in a PDF?</h3>
+        <p style="margin:0;font-size:14px;color:var(--text2);line-height:1.7;">A PDF file is made up of objects (fonts, images, page descriptions, metadata) that are normally stored with a cross-reference table listing each object's byte position. Object streams (a PDF 1.5 feature) pack multiple objects together and compress them as a group, replacing the per-object overhead with a more efficient indexed structure. Enabling object streams typically saves 10–30% on text-heavy documents where there are many small objects.</p>
+      </div>
+  </section>
+
+</main>
 
 <footer style="text-align:center;padding:24px;border-top:1px solid var(--border);font-size:13px;color:var(--text3);">
     PDFree · <strong>100% free, no limits</strong> · No upload, no account<br>

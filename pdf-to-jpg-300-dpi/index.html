@@ -112,33 +112,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What is the image size when converting PDF to JPG at 300 DPI?",
-        "acceptedAnswer": { "@type": "Answer", "text": "An A4 PDF page at 300 DPI exports as 2480 × 3508 pixels. A US Letter page (8.5 × 11 in) exports as 2550 × 3300 pixels. The pixel count scales proportionally with the DPI setting." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is 300 DPI better than 150 DPI for PDF conversion?",
-        "acceptedAnswer": { "@type": "Answer", "text": "For print or editing, yes. For screen viewing or sharing, 150 DPI is almost always sufficient and produces smaller files. 300 DPI is the professional standard for print-ready work." }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I convert only one page at 300 DPI?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes — load your PDF, select 300 DPI, and all pages will be exported at that resolution. If you only want specific pages, use pdfree.io/extract-pdf/ to extract those pages first, then convert." }
-      },
-      {
-        "@type": "Question",
-        "name": "How large is a 300 DPI JPG file?",
-        "acceptedAnswer": { "@type": "Answer", "text": "For an A4 page, typically 0.5–2 MB per page as a JPG at standard quality. For PNG at 300 DPI, sizes are larger: 3–10 MB per page. Use pdfree.io/pdf-to-png/ if lossless quality is required." }
-      },
-      {
-        "@type": "Question",
-        "name": "Does PDFree actually export at exactly 300 DPI?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree uses the PDF.js rendering pipeline to rasterize each page at the selected scale factor, which corresponds to the chosen DPI. The output image contains the DPI metadata in its EXIF header." }
-      }
+        {
+            "@type": "Question",
+            "name": "What is the image size when converting PDF to JPG at 300 DPI?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "An A4 PDF page at 300 DPI exports as 2480 × 3508 pixels. A US Letter page (8.5 × 11 in) exports as 2550 × 3300 pixels. The pixel count scales proportionally with the DPI setting."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is 300 DPI better than 150 DPI for PDF conversion?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "For print or editing, yes. For screen viewing or sharing, 150 DPI is almost always sufficient and produces smaller files. 300 DPI is the professional standard for print-ready work."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I convert only one page at 300 DPI?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes — load your PDF, select 300 DPI, and all pages will be exported at that resolution. If you only want specific pages, use pdfree.io/extract-pdf/ to extract those pages first, then convert."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How large is a 300 DPI JPG file?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "For an A4 page, typically 0.5–2 MB per page as a JPG at standard quality. For PNG at 300 DPI, sizes are larger: 3–10 MB per page. Use pdfree.io/pdf-to-png/ if lossless quality is required."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does PDFree actually export at exactly 300 DPI?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. PDFree uses the PDF.js rendering pipeline to rasterize each page at the selected scale factor, which corresponds to the chosen DPI. The output image contains the DPI metadata in its EXIF header."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">

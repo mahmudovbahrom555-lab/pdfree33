@@ -70,38 +70,56 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Is the self-hosted image really free?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree is AGPLv3 — the Docker image is free to pull, run, and even modify, forever, for anyone. There's no license key, no seat count, no feature gate. What you can pay for is optional: a support plan ($49 a month) — never the software itself." }
-      },
-      {
-        "@type": "Question",
-        "name": "What does AGPLv3 mean for us specifically?",
-        "acceptedAnswer": { "@type": "Answer", "text": "You can run it privately inside your own network with no obligation at all. The one real requirement: if you modify the code and let others interact with your modified version over a network, you must offer them the corresponding source. Running it as-is (the common case) carries no source-sharing obligation beyond what's already public on GitHub." }
-      },
-      {
-        "@type": "Question",
-        "name": "Does this need internet access to run?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No — once the image is running, PDF processing itself needs no external calls at all (same client-side engine as pdfree.io). The only optional network calls are for a feedback relay you can configure yourself or simply leave disabled." }
-      },
-      {
-        "@type": "Question",
-        "name": "How is this different from just pointing our team at pdfree.io directly?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Functionally identical tools. What changes is where it's served from — some organizations have policies requiring internal tools to be reachable only on an internal network, or want zero dependency on an external domain even for the initial page load, not just for file processing. This is for that requirement." }
-      },
-      {
-        "@type": "Question",
-        "name": "Does this include SSO or user accounts?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Not yet. The image is anonymous-by-design, same as the hosted site — there's no built-in authentication layer. Put it behind your own reverse proxy or SSO gateway if you need access control." }
-      },
-      {
-        "@type": "Question",
-        "name": "What happens if we stop paying for support?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Nothing changes in the software. It keeps running exactly as before, with every tool — you just stop getting email answers and update help. There is no license check to switch anything off." }
-      }
+        {
+            "@type": "Question",
+            "name": "Is the self-hosted image really free?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. PDFree is AGPLv3 — the Docker image is free to pull, run, and even modify, forever, for anyone. There's no license key, no seat count, no feature gate. What you can pay for is optional: a support plan ($49 a month) — never the software itself."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What does AGPLv3 mean for us specifically?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "You can run it privately inside your own network with no obligation at all. The one real requirement: if you modify the code and let others interact with your modified version over a network, you must offer them the corresponding source. Running it as-is (the common case) carries no source-sharing obligation beyond what's already public on GitHub."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does this need internet access to run?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No — once the image is running, PDF processing itself needs no external calls at all (same client-side engine as pdfree.io). The only optional network calls are for a feedback relay you can configure yourself or simply leave disabled."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How is this different from just pointing our team at pdfree.io directly?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Functionally identical tools. What changes is where it's served from — some organizations have policies requiring internal tools to be reachable only on an internal network, or want zero dependency on an external domain even for the initial page load, not just for file processing. This is for that requirement."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does this include SSO or user accounts?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Not yet. The image is anonymous-by-design, same as the hosted site — there's no built-in authentication layer. Put it behind your own reverse proxy or SSO gateway if you need access control."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What happens if we stop paying for support?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Nothing changes in the software. It keeps running exactly as before, with every tool — you just stop getting email answers and update help. There is no license check to switch anything off."
+            }
+        }
     ]
-  }
+}
   </script>
 </head>
 <body>

@@ -124,48 +124,72 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Bisakah saya menggabungkan file PDF yang lebih besar dari 100MB secara gratis?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Ya — hingga 500 MB per penggabungan di Chrome atau Edge pada komputer dengan memori 8 GB ke atas, dan hingga 300 MB di ponsel, Safari, dan Firefox. Pemrosesan sepenuhnya terjadi di browser Anda, jadi batas ini melindungi memori perangkat Anda, bukan bandwidth server — dalam pengujian kami, penggabungan 500 MB selesai sekitar 5 detik di laptop 8 GB." }
-      },
-      {
-        "@type": "Question",
-        "name": "Kenapa alat cloud punya batas ukuran file?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Alat cloud memproses file di server mereka, yang berarti ada biaya bandwidth dan penyimpanan. Untuk mengontrol biaya tersebut bagi pengguna gratis, mereka menerapkan batas ukuran file. PDFree memproses semuanya secara lokal di browser Anda — tidak ada biaya server, jadi tidak ada batas harian dan tidak ada batas 25MB; satu penggabungan bisa mencapai 500 MB di komputer, dibatasi hanya untuk melindungi memori perangkat Anda." }
-      },
-      {
-        "@type": "Question",
-        "name": "Seberapa besar PDF yang bisa digabungkan PDFree?",
-        "acceptedAnswer": { "@type": "Answer", "text": "500 MB per penggabungan di Chrome atau Edge pada komputer dengan memori 8 GB ke atas, dan 300 MB di ponsel, Safari, dan Firefox — browser tersebut tidak melaporkan jumlah memorinya, jadi mendapat batas yang aman. Dalam pengujian kami, penggabungan 800 MB berhasil dengan sekitar 1,5 GB memori browser, jadi 500 MB masih menyisakan ruang untuk tab Anda yang lain." }
-      },
-      {
-        "@type": "Question",
-        "name": "Apa yang harus saya lakukan jika browser crash saat menggabungkan file yang sangat besar?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Tutup tab browser lain untuk membebaskan memori, lalu coba lagi — setiap tab yang terbuka menggunakan RAM yang tidak lagi tersedia untuk penggabungan. Menggabungkan dalam batch yang lebih kecil (5–10 file sekaligus, lalu gabungkan hasilnya) juga menggunakan lebih sedikit memori sekaligus. Anda juga bisa mengompres setiap file terlebih dahulu dengan alat Kompres PDF untuk mengecilkan ukuran total sebelum digabungkan." }
-      },
-      {
-        "@type": "Question",
-        "name": "Apakah ada batas harian untuk jumlah PDF yang bisa saya gabungkan?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Tidak. PDFree tidak punya batas penggunaan harian. Berbeda dengan alat cloud yang membatasi paket gratis per hari, PDFree memungkinkan Anda menggabungkan sebanyak apa pun PDF yang Anda butuhkan, sesering yang Anda mau, secara gratis." }
-      },
-      {
-        "@type": "Question",
-        "name": "Berapa banyak file PDF yang bisa saya gabungkan sekaligus?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Tidak ada batas jumlah file. Anda bisa menggabungkan 2, 50, 100, atau lebih file PDF dalam satu kali proses, selama total ukurannya tidak melebihi 500 MB di komputer (Chrome/Edge, RAM 8 GB+) atau 300 MB di ponsel dan browser lain." }
-      },
-      {
-        "@type": "Question",
-        "name": "Bisakah saya menggabungkan 50 atau 100 file PDF sekaligus secara gratis?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Ya. PDFree tidak punya batas jumlah file per penggabungan dan tidak ada batas penggunaan harian. Letakkan semua file sekaligus, atur urutannya, lalu klik Gabung. Hasilnya langsung terunduh ke perangkat Anda — tanpa perlu upload ke server mana pun." }
-      },
-      {
-        "@type": "Question",
-        "name": "Kenapa menggabungkan PDF besar lambat di alat cloud tapi cepat di PDFree?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Alat cloud mengharuskan Anda mengupload file ke server mereka, memprosesnya di sana, lalu mengunduh hasilnya — tiga perjalanan jaringan yang menambah waktu signifikan untuk file besar. PDFree memproses semuanya secara lokal di browser Anda tanpa transfer jaringan, jadi kecepatannya hanya bergantung pada CPU perangkat Anda, bukan koneksi internet Anda." }
-      }
+        {
+            "@type": "Question",
+            "name": "Bisakah saya menggabungkan file PDF lebih besar dari 100MB secara gratis?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ya — hingga 500 MB per penggabungan di Chrome atau Edge pada komputer dengan memori 8 GB ke atas, dan hingga 300 MB di ponsel, Safari, dan Firefox. Pemrosesan sepenuhnya terjadi di browser Anda, jadi batas ini melindungi memori perangkat Anda, bukan bandwidth server — dalam pengujian kami, penggabungan 500 MB selesai sekitar 5 detik di laptop 8 GB."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Kenapa alat cloud punya batas ukuran tapi PDFree tidak?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Alat cloud memproses file di server mereka, yang berarti ada biaya bandwidth dan penyimpanan. Untuk mengontrol biaya tersebut bagi pengguna gratis, mereka menerapkan batas ukuran file. PDFree memproses semuanya secara lokal di browser Anda — tidak ada biaya server, jadi tidak ada batas harian dan tidak ada batas 25MB; satu penggabungan bisa mencapai 500 MB di komputer, dibatasi hanya untuk melindungi memori perangkat Anda."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Seberapa besar PDF yang bisa saya gabungkan?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "500 MB per penggabungan di Chrome atau Edge pada komputer dengan memori 8 GB ke atas, dan 300 MB di ponsel, Safari, dan Firefox — browser tersebut tidak melaporkan jumlah memorinya, jadi mendapat batas yang aman. Dalam pengujian kami, penggabungan 800 MB berhasil dengan sekitar 1,5 GB memori browser, jadi 500 MB masih menyisakan ruang untuk tab Anda yang lain."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Apa yang harus saya lakukan jika browser crash saat menggabungkan file yang sangat besar?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tutup tab lain untuk membebaskan memori, lalu coba lagi — menggabungkan dalam batch yang lebih kecil (5–10 file sekaligus, lalu gabungkan hasilnya) juga menggunakan lebih sedikit memori sekaligus. Anda juga bisa mengompres setiap file terlebih dahulu dengan alat Kompres PDF untuk mengecilkan ukuran total sebelum digabungkan."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Apakah ada batas harian untuk penggabungan?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tidak. Berbeda dengan alat cloud yang membatasi paket gratis per hari, PDFree tidak punya batas harian. Gabungkan sebanyak apa pun PDF yang Anda butuhkan, sesering yang Anda mau."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Berapa banyak file PDF yang bisa saya gabungkan sekaligus?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tidak ada batas jumlah file. Anda bisa menggabungkan 2, 50, 100, atau lebih file PDF dalam satu kali proses, selama total ukurannya tidak melebihi 500 MB di komputer (Chrome/Edge, RAM 8 GB+) atau 300 MB di ponsel dan browser lain."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Bisakah saya menggabungkan 50 atau 100 file PDF sekaligus secara gratis?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ya, sepenuhnya gratis tanpa batas harian. Berbeda dengan alat cloud yang membatasi paket gratis per hari, PDFree tidak punya batas penggunaan harian. Letakkan 50 atau 100 file sekaligus, atur urutannya, dan klik Gabung — hasilnya langsung terunduh ke perangkat Anda tanpa upload ke server mana pun."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Kenapa menggabungkan PDF besar lambat di alat cloud tapi cepat di PDFree?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Alat cloud mengharuskan Anda mengupload file ke server mereka, memprosesnya di sana, lalu mengunduh hasilnya — tiga perjalanan jaringan yang menambah waktu signifikan untuk file besar. PDFree memproses semuanya secara lokal di browser Anda tanpa transfer jaringan, jadi kecepatannya hanya bergantung pada CPU perangkat Anda, bukan koneksi internet Anda."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -506,6 +530,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Apakah saya perlu membuat akun?</h3>
             <p style="margin:0;font-size:14px;">Tidak. PDFree tidak pernah mengharuskan akun, email, atau registrasi. Buka tool-nya dan langsung mulai menggabungkan.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Kenapa menggabungkan PDF besar lambat di alat cloud tapi cepat di PDFree?</h3>
+            <p style="margin:0;font-size:14px;">Alat cloud mengharuskan Anda mengupload file ke server mereka, memprosesnya di sana, lalu mengunduh hasilnya — tiga perjalanan jaringan yang menambah waktu signifikan untuk file besar. PDFree memproses semuanya secara lokal di browser Anda tanpa transfer jaringan, jadi kecepatannya hanya bergantung pada CPU perangkat Anda, bukan koneksi internet Anda.</p>
           </div>
         </div>
 

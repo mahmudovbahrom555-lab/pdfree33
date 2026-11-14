@@ -112,33 +112,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Can I merge a PDF that I can open but not edit?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes — this is an owner/permissions password. Open pdfree.io/protect-pdf/, enter the known password to unlock it, then merge the unlocked file." }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I merge PDFs that require a password to open?",
-        "acceptedAnswer": { "@type": "Answer", "text": "You need to first enter the correct open password when loading the file. Once decrypted, the file can be merged normally." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is it legal to remove PDF password restrictions?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes, if you are the owner of the document or have permission from the owner. Removing restrictions on files you don't own or have permission to modify may violate copyright law." }
-      },
-      {
-        "@type": "Question",
-        "name": "Will the merged PDF inherit the password?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. The output PDF from PDFree Merge has no password by default. If you want to protect the merged result with a password, use pdfree.io/protect-pdf/ after merging." }
-      },
-      {
-        "@type": "Question",
-        "name": "Why can't I just merge locked PDFs directly?",
-        "acceptedAnswer": { "@type": "Answer", "text": "The PDF specification prevents tools from modifying locked documents without the password. This is a deliberate security feature — the same mechanism that prevents unauthorized editing also blocks merging." }
-      }
+        {
+            "@type": "Question",
+            "name": "Can I merge a PDF that I can open but not edit?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes — this is an owner/permissions password. Open pdfree.io/protect-pdf/, enter the known password to unlock it, then merge the unlocked file."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I merge PDFs that require a password to open?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "You need to first enter the correct open password when loading the file. Once decrypted, the file can be merged normally."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is it legal to remove PDF password restrictions?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, if you are the owner of the document or have permission from the owner. Removing restrictions on files you don't own or have permission to modify may violate copyright law."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Will the merged PDF inherit the password?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. The output PDF from PDFree Merge has no password by default. If you want to protect the merged result with a password, use pdfree.io/protect-pdf/ after merging."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Why can't I just merge locked PDFs directly?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The PDF specification prevents tools from modifying locked documents without the password. This is a deliberate security feature — the same mechanism that prevents unauthorized editing also blocks merging."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">

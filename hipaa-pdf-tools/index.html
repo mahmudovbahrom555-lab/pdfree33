@@ -96,38 +96,56 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Is PDFree HIPAA compliant for medical records?",
-        "acceptedAnswer": { "@type": "Answer", "text": "PDFree does not certify HIPAA compliance and does not sign Business Associate Agreements. What it does: your PDF files are processed locally in your browser and are not uploaded to our servers, so we never receive, store or log their contents. Whether using it meets your HIPAA obligations depends on how your organization uses it — ask your compliance officer." }
-      },
-      {
-        "@type": "Question",
-        "name": "Can healthcare workers use PDFree to merge patient records?",
-        "acceptedAnswer": { "@type": "Answer", "text": "The tools run in the browser: patient records are merged on the device itself and are not uploaded to our servers. Files are held in the browser's memory while you work and are gone when you close the tab. Whether your organization allows this workflow is its own decision." }
-      },
-      {
-        "@type": "Question",
-        "name": "Does PDFree require a Business Associate Agreement (BAA)?",
-        "acceptedAnswer": { "@type": "Answer", "text": "We do not sign BAAs. PDFree does not receive your files — they are processed locally in your browser — but whether your use of a tool requires a BAA is a legal question for your organization, not something we can decide for you." }
-      },
-      {
-        "@type": "Question",
-        "name": "What happens to patient PDFs after processing in PDFree?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Nothing is retained. Patient PDFs exist only in your browser's temporary memory (RAM) during processing. When you close the tab or navigate away, the files are immediately cleared. There are no server logs, no cached copies, and no backups created anywhere outside your device." }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I use PDFree without internet for patient documents?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree is a Progressive Web App (PWA) that works fully offline after the first visit. This is especially useful in clinical settings with restricted internet access or when working with highly sensitive documents where network activity should be minimized." }
-      },
-      {
-        "@type": "Question",
-        "name": "Can our organization run PDFree on our own servers instead of pdfree.io?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. A free, AGPLv3 Docker image is available for healthcare IT teams whose policy requires internal tools to run entirely on internal infrastructure, with no dependency on an external domain at all. See pdfree.io/enterprise-pdf-tools/ for the image and setup instructions." }
-      }
+        {
+            "@type": "Question",
+            "name": "Is PDFree HIPAA compliant?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "PDFree does not certify HIPAA compliance and does not sign BAAs. What it does: your PDF files are processed locally in your browser and are not uploaded to our servers, so we never receive, store or log their contents. Whether using it meets your HIPAA obligations depends on how your organization uses it — ask your compliance officer."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can healthcare workers use PDFree to merge patient records?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The tools run in the browser: patient records are merged on the device itself and are not uploaded to our servers. Files are held in the browser's memory while you work and are gone when you close the tab. Whether your organization allows this workflow is its own decision."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does PDFree require a Business Associate Agreement (BAA)?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We do not sign BAAs. PDFree does not receive your files — they are processed locally in your browser — but whether your use of a tool requires a BAA is a legal question for your organization, not something we can decide for you."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What happens to patient files after I use PDFree?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Files exist only in your browser's RAM during processing. When you close the tab, they are immediately cleared. No copies of your files on our servers, no backups of them — they exist only on your device."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I use PDFree without internet in a clinical setting?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. PDFree is a PWA that works fully offline after the first visit. This is useful in restricted-network environments or when network activity should be minimized for sensitive documents."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can our organization run PDFree on our own servers instead of pdfree.io?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. A free, AGPLv3 Docker image is available for healthcare IT teams whose policy requires internal tools to run entirely on internal infrastructure, with no dependency on an external domain at all. See Self-Hosted / Enterprise for the image and setup instructions."
+            }
+        }
     ]
-  }
+}
   </script>
   <script type="application/ld+json">
   {
@@ -318,6 +336,14 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can our organization run PDFree on our own servers instead of pdfree.io?</h3>
             <p style="margin:0;font-size:14px;">Yes. A free, AGPLv3 Docker image is available for healthcare IT teams whose policy requires internal tools to run entirely on internal infrastructure, with no dependency on an external domain at all. See <a href="../enterprise-pdf-tools/" style="color:var(--green-text)">Self-Hosted / Enterprise</a> for the image and setup instructions.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can healthcare workers use PDFree to merge patient records?</h3>
+            <p style="margin:0;font-size:14px;">The tools run in the browser: patient records are merged on the device itself and are not uploaded to our servers. Files are held in the browser's memory while you work and are gone when you close the tab. Whether your organization allows this workflow is its own decision.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Does PDFree require a Business Associate Agreement (BAA)?</h3>
+            <p style="margin:0;font-size:14px;">We do not sign BAAs. PDFree does not receive your files — they are processed locally in your browser — but whether your use of a tool requires a BAA is a legal question for your organization, not something we can decide for you.</p>
           </div>
         </div>
 

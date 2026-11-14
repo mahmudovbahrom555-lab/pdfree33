@@ -124,33 +124,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Posso comprimere gratis un PDF più grande di 100 MB?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sì — fino a 500 MB in Chrome o Edge su un computer con almeno 8 GB di memoria, e fino a 150 MB su telefoni, Safari e Firefox. L'elaborazione avviene interamente nel tuo browser, quindi il limite protegge la memoria del tuo dispositivo, non la banda di un server: nei nostri test, una scansione da 500 MB è stata compressa in circa 30 secondi su un portatile con 8 GB." }
-      },
-      {
-        "@type": "Question",
-        "name": "Perché gli strumenti cloud limitano la compressione gratuita?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Gli strumenti cloud comprimono i file sui propri server, il che comporta costi di banda e di archiviazione. Per contenere questi costi per gli utenti gratuiti, il servizio impone limiti di dimensione e limiti giornalieri. PDFree comprime tutto localmente nel tuo browser — non ci sono costi server, quindi niente limite giornaliero né tetto di 25 MB: puoi comprimere file fino a 500 MB su un computer, con un limite che serve solo a proteggere la memoria del tuo dispositivo." }
-      },
-      {
-        "@type": "Question",
-        "name": "Quanto può comprimere PDFree un PDF di grandi dimensioni?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Il risultato dipende dal contenuto. I PDF con molte immagini incorporate spesso si riducono del 40-80%. I PDF principalmente testuali comprimono meno — tipicamente il 10-30%. PDFree usa gli stessi algoritmi di compressione degli strumenti desktop, ma funziona interamente nel tuo browser." }
-      },
-      {
-        "@type": "Question",
-        "name": "C'è un limite giornaliero al numero di compressioni che posso fare?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. PDFree non ha limiti di utilizzo giornalieri. A differenza degli strumenti cloud con limiti giornalieri nel piano gratuito, con PDFree puoi comprimere tutti i PDF che ti servono, tutte le volte che vuoi — gratis." }
-      },
-      {
-        "@type": "Question",
-        "name": "La compressione peggiora la qualità del mio PDF?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Per documenti principalmente testuali, la compressione non ha alcun impatto visibile sulla qualità — il testo resta nitido. Per PDF con foto, livelli di compressione più alti riducono la risoluzione delle immagini, il che può essere percettibile a un esame ravvicinato. Scegli un livello di compressione moderato per bilanciare riduzione della dimensione e qualità delle immagini." }
-      }
+        {
+            "@type": "Question",
+            "name": "Posso comprimere gratis un PDF più grande di 100 MB?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sì — fino a 500 MB in Chrome o Edge su un computer con almeno 8 GB di memoria, e fino a 150 MB su telefoni, Safari e Firefox. L'elaborazione avviene interamente nel tuo browser, quindi il limite protegge la memoria del tuo dispositivo, non la banda di un server: nei nostri test, una scansione da 500 MB è stata compressa in circa 30 secondi su un portatile con 8 GB."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Perché gli strumenti cloud limitano la compressione gratuita e PDFree no?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Gli strumenti cloud elaborano i file sui propri server, il che comporta costi reali di banda e di calcolo. PDFree elabora i file localmente nel tuo browser — non ci sono costi server, quindi niente limite giornaliero né tetto di 25 MB: puoi comprimere file fino a 500 MB su un computer, con un limite che serve solo a proteggere la memoria del tuo dispositivo."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Quanto può comprimere PDFree un PDF di grandi dimensioni?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Il risultato dipende dal contenuto. I PDF con molte immagini incorporate spesso si riducono del 40-80%. I PDF principalmente testuali comprimono meno — tipicamente il 10-30%. PDFree usa gli stessi algoritmi di compressione degli strumenti desktop, ma funziona interamente nel tuo browser."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "C'è un limite giornaliero alle compressioni di PDF?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. A differenza degli strumenti cloud con limiti giornalieri nel piano gratuito, PDFree non ha un limite giornaliero. Comprimi tutti i PDF che ti servono, tutte le volte che vuoi."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Quanto ridurrà la compressione la dimensione del mio PDF?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "I risultati dipendono dal contenuto. I PDF ricchi di immagini tipicamente si riducono del 40-80%. I PDF principalmente testuali comprimono del 10-30%. PDFree usa gli stessi algoritmi di compressione degli strumenti desktop."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -418,6 +433,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Il mio file viene caricato su un server quando lo comprimo?</h3>
             <p style="margin:0;font-size:14px;">No. PDFree non carica mai il tuo file. L'intera operazione di compressione viene eseguita in JavaScript dentro il tuo browser, sul tuo dispositivo. Il tuo documento resta completamente privato — non raggiunge mai alcun server.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Quanto può comprimere PDFree un PDF di grandi dimensioni?</h3>
+            <p style="margin:0;font-size:14px;">Il risultato dipende dal contenuto. I PDF con molte immagini incorporate spesso si riducono del 40-80%. I PDF principalmente testuali comprimono meno — tipicamente il 10-30%. PDFree usa gli stessi algoritmi di compressione degli strumenti desktop, ma funziona interamente nel tuo browser.</p>
           </div>
         </div>
 

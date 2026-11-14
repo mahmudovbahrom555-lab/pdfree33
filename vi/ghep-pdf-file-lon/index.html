@@ -124,48 +124,72 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Tôi có thể ghép file PDF lớn hơn 100MB miễn phí không?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Có — đến 500 MB mỗi lần ghép trong Chrome hoặc Edge trên máy tính có bộ nhớ từ 8 GB trở lên, và đến 300 MB trên điện thoại, Safari và Firefox. Quá trình xử lý diễn ra hoàn toàn trong trình duyệt của bạn, nên mức trần này để bảo vệ bộ nhớ thiết bị chứ không phải băng thông server — trong thử nghiệm của chúng tôi, ghép 500 MB mất khoảng 5 giây trên laptop RAM 8 GB." }
-      },
-      {
-        "@type": "Question",
-        "name": "Tại sao các công cụ đám mây lại giới hạn dung lượng file?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Các công cụ đám mây xử lý file trên server của họ, điều này phát sinh chi phí băng thông và lưu trữ. Để kiểm soát chi phí cho người dùng miễn phí, họ áp giới hạn dung lượng file. PDFree xử lý mọi thứ ngay trong trình duyệt của bạn nên không có chi phí server — vì vậy không có giới hạn hàng ngày và không có mức trần 25MB; một lần ghép có thể lên đến 500 MB trên máy tính, giới hạn chỉ để bảo vệ bộ nhớ thiết bị của bạn." }
-      },
-      {
-        "@type": "Question",
-        "name": "PDFree có thể ghép file PDF lớn đến mức nào?",
-        "acceptedAnswer": { "@type": "Answer", "text": "500 MB mỗi lần ghép trong Chrome hoặc Edge trên máy tính có bộ nhớ từ 8 GB trở lên, 300 MB trên điện thoại, Safari và Firefox — các trình duyệt này không báo dung lượng bộ nhớ nên được áp mức an toàn. Trong thử nghiệm của chúng tôi, ghép 800 MB vẫn chạy được với khoảng 1,5 GB bộ nhớ trình duyệt, nên mức 500 MB chừa chỗ cho các tab khác của bạn." }
-      },
-      {
-        "@type": "Question",
-        "name": "Tôi nên làm gì nếu trình duyệt bị treo khi ghép các file rất lớn?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Đóng các tab trình duyệt khác để giải phóng bộ nhớ, sau đó thử lại — mỗi tab đang mở sẽ chiếm dụng RAM không còn khả dụng cho việc ghép file. Ghép theo từng đợt nhỏ hơn (5–10 file mỗi lần, sau đó ghép các kết quả lại) cũng sử dụng ít bộ nhớ hơn tại một thời điểm. Bạn cũng có thể nén từng file trước bằng công cụ Nén PDF để giảm tổng dung lượng trước khi ghép." }
-      },
-      {
-        "@type": "Question",
-        "name": "Có giới hạn số lần ghép PDF mỗi ngày không?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Không. PDFree không giới hạn lượt dùng mỗi ngày. Khác với các công cụ đám mây giới hạn số lần mỗi ngày ở gói miễn phí, PDFree cho phép bạn ghép bao nhiêu file PDF tùy thích, bất kỳ lúc nào, hoàn toàn miễn phí." }
-      },
-      {
-        "@type": "Question",
-        "name": "Tôi có thể ghép cùng lúc bao nhiêu file PDF?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Không có giới hạn về số lượng file. Bạn có thể ghép 2, 50, 100 hoặc nhiều file PDF hơn trong một lần thao tác. Chỉ cần tổng dung lượng không vượt quá 500 MB trên máy tính (Chrome/Edge, RAM 8 GB+) hoặc 300 MB trên điện thoại và các trình duyệt khác." }
-      },
-      {
-        "@type": "Question",
-        "name": "Tôi có thể ghép 50 hoặc 100 file PDF cùng lúc miễn phí không?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Có. PDFree không giới hạn số lượng file mỗi lần ghép và không giới hạn lượt dùng mỗi ngày. Thả tất cả file vào cùng lúc, sắp xếp thứ tự và nhấn Ghép. Kết quả sẽ tải trực tiếp về thiết bị của bạn — không cần tải lên bất kỳ server nào." }
-      },
-      {
-        "@type": "Question",
-        "name": "Tại sao ghép PDF lớn trên công cụ đám mây chậm nhưng trên PDFree lại nhanh?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Các công cụ đám mây yêu cầu tải file của bạn lên server, xử lý ở đó rồi tải kết quả về — ba bước truyền tải mạng khiến file lớn tốn nhiều thời gian. PDFree xử lý mọi thứ ngay trong trình duyệt mà không cần truyền tải qua mạng, nên tốc độ chỉ phụ thuộc vào CPU thiết bị của bạn, không phụ thuộc vào kết nối internet." }
-      }
+        {
+            "@type": "Question",
+            "name": "Tôi có thể ghép file PDF lớn hơn 100MB miễn phí không?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Có — đến 500 MB mỗi lần ghép trong Chrome hoặc Edge trên máy tính có bộ nhớ từ 8 GB trở lên, và đến 300 MB trên điện thoại, Safari và Firefox. Quá trình xử lý diễn ra hoàn toàn trong trình duyệt của bạn, nên mức trần này để bảo vệ bộ nhớ thiết bị chứ không phải băng thông server — trong thử nghiệm của chúng tôi, ghép 500 MB mất khoảng 5 giây trên laptop RAM 8 GB."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Tại sao công cụ đám mây giới hạn dung lượng còn PDFree cho phép file lớn hơn nhiều?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Các công cụ đám mây xử lý file trên server của họ, gây ra chi phí băng thông và lưu trữ. PDFree xử lý file ngay trong trình duyệt của bạn — không có chi phí server, nên không có giới hạn hàng ngày và không có mức trần 25MB; một lần ghép có thể lên đến 500 MB trên máy tính, giới hạn chỉ để bảo vệ bộ nhớ thiết bị của bạn."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Tôi có thể ghép file PDF lớn đến mức nào?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "500 MB mỗi lần ghép trong Chrome hoặc Edge trên máy tính có bộ nhớ từ 8 GB trở lên, 300 MB trên điện thoại, Safari và Firefox — các trình duyệt này không báo dung lượng bộ nhớ nên được áp mức an toàn. Trong thử nghiệm của chúng tôi, ghép 800 MB vẫn chạy được với khoảng 1,5 GB bộ nhớ trình duyệt, nên mức 500 MB chừa chỗ cho các tab khác của bạn."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Tôi nên làm gì nếu trình duyệt bị treo khi ghép các file rất lớn?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Đóng các tab khác để giải phóng bộ nhớ, sau đó thử lại — ghép theo từng đợt nhỏ hơn (5–10 file mỗi lần, sau đó ghép các kết quả lại) cũng sử dụng ít bộ nhớ hơn tại một thời điểm. Bạn cũng có thể nén từng file trước bằng công cụ Nén PDF để giảm tổng dung lượng trước khi ghép."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Có giới hạn số lần ghép mỗi ngày không?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Không. Khác với các công cụ đám mây giới hạn số lần mỗi ngày ở gói miễn phí, PDFree không giới hạn theo ngày. Ghép bao nhiêu PDF tùy thích, bất kỳ lúc nào."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Tôi có thể ghép cùng lúc bao nhiêu file PDF?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Không có giới hạn về số lượng file. PDFree xử lý mọi thứ trong bộ nhớ trình duyệt của bạn, vì vậy bạn có thể ghép 2, 50 hoặc 100+ file PDF trong một lần thao tác. Chỉ cần tổng dung lượng không vượt quá 500 MB trên máy tính (Chrome/Edge, RAM 8 GB+) hoặc 300 MB trên điện thoại và các trình duyệt khác."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Tôi có thể ghép 50 hoặc 100 file PDF cùng lúc miễn phí không?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Có, hoàn toàn miễn phí và không giới hạn theo ngày. Khác với các công cụ đám mây giới hạn số lần mỗi ngày ở gói miễn phí, PDFree không có bất kỳ ràng buộc sử dụng nào. Thả cả 50 hoặc 100 file vào cùng lúc, sắp xếp thứ tự và nhấn Ghép — kết quả tải trực tiếp về thiết bị của bạn, không cần tải lên bất kỳ server nào."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Tại sao ghép PDF lớn trên công cụ đám mây chậm nhưng trên PDFree lại nhanh?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Các công cụ đám mây yêu cầu tải file của bạn lên server, xử lý ở đó rồi tải kết quả về — ba bước truyền tải mạng khiến file lớn tốn nhiều thời gian. PDFree xử lý mọi thứ ngay trong trình duyệt mà không cần truyền tải qua mạng, nên tốc độ chỉ phụ thuộc vào CPU thiết bị của bạn, không phụ thuộc vào kết nối internet."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -506,6 +530,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Tôi có cần tạo tài khoản không?</h3>
             <p style="margin:0;font-size:14px;">Không. PDFree không bao giờ yêu cầu tài khoản, email hay đăng ký. Mở công cụ và bắt đầu ghép ngay lập tức.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Tại sao ghép PDF lớn trên công cụ đám mây chậm nhưng trên PDFree lại nhanh?</h3>
+            <p style="margin:0;font-size:14px;">Các công cụ đám mây yêu cầu tải file của bạn lên server, xử lý ở đó rồi tải kết quả về — ba bước truyền tải mạng khiến file lớn tốn nhiều thời gian. PDFree xử lý mọi thứ ngay trong trình duyệt mà không cần truyền tải qua mạng, nên tốc độ chỉ phụ thuộc vào CPU thiết bị của bạn, không phụ thuộc vào kết nối internet.</p>
           </div>
         </div>
 

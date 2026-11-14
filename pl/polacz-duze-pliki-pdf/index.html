@@ -124,48 +124,72 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Czy mogę za darmo połączyć pliki PDF większe niż 100 MB?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Tak — do 500 MB na jedno łączenie w Chrome lub Edge na komputerze z co najmniej 8 GB pamięci i do 300 MB na telefonach, w Safari i Firefoksie. Przetwarzanie odbywa się całkowicie w Twojej przeglądarce, więc limit chroni pamięć Twojego urządzenia, a nie przepustowość serwera — w naszych testach połączenie 500 MB zajęło około 5 sekund na laptopie z 8 GB RAM." }
-      },
-      {
-        "@type": "Question",
-        "name": "Dlaczego narzędzia w chmurze mają limit na plik?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Narzędzia w chmurze przetwarzają pliki na swoich serwerach, co generuje koszty transferu i przechowywania. Aby ograniczyć te koszty dla darmowych użytkowników, narzędzie wprowadza limity rozmiaru pliku. PDFree przetwarza wszystko lokalnie w Twojej przeglądarce, więc nie ponosi kosztów serwerowych — a co za tym idzie, nie ma dziennego limitu ani limitu 25 MB; jedno łączenie może mieć do 500 MB na komputerze, a limit służy wyłącznie ochronie pamięci Twojego urządzenia." }
-      },
-      {
-        "@type": "Question",
-        "name": "Jak duży plik PDF może połączyć PDFree?",
-        "acceptedAnswer": { "@type": "Answer", "text": "500 MB na jedno łączenie w Chrome lub Edge na komputerze z co najmniej 8 GB pamięci, 300 MB na telefonach, w Safari i Firefoksie — te przeglądarki nie podają ilości pamięci, więc obowiązuje w nich bezpieczny limit. W naszych testach połączenie 800 MB zadziałało przy około 1,5 GB pamięci przeglądarki, więc 500 MB zostawia miejsce na inne karty." }
-      },
-      {
-        "@type": "Question",
-        "name": "Co zrobić, jeśli przeglądarka się zawiesza podczas łączenia bardzo dużych plików?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Zamknij inne karty przeglądarki, aby zwolnić pamięć, i spróbuj ponownie — każda otwarta karta zajmuje pamięć RAM, która nie jest już dostępna do łączenia. Łączenie mniejszymi partiami (5–10 plików naraz, a następnie połączenie wyników) również zużywa mniej pamięci naraz. Możesz też najpierw skompresować każdy plik za pomocą narzędzia Kompresuj PDF, aby zmniejszyć łączny rozmiar przed połączeniem." }
-      },
-      {
-        "@type": "Question",
-        "name": "Czy istnieje dzienny limit liczby łączeń PDF?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Nie. PDFree nie ma żadnych dziennych limitów użycia. W przeciwieństwie do narzędzi w chmurze z dziennymi limitami w darmowym planie, PDFree pozwala połączyć tyle PDF-ów, ile potrzebujesz, tak często, jak chcesz — za darmo." }
-      },
-      {
-        "@type": "Question",
-        "name": "Ile plików PDF mogę połączyć naraz?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Nie ma limitu liczby plików. Możesz połączyć 2, 50, 100 lub więcej plików PDF w jednej operacji, o ile razem nie przekraczają 500 MB na komputerze (Chrome/Edge, 8 GB+ RAM) lub 300 MB na telefonach i w innych przeglądarkach." }
-      },
-      {
-        "@type": "Question",
-        "name": "Czy mogę za darmo połączyć 50 lub 100 plików PDF naraz?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Tak. PDFree nie ma limitu liczby plików na łączenie ani dziennego limitu użycia. Upuść wszystkie pliki naraz, ustaw kolejność i kliknij Połącz. Wynik pobierze się bezpośrednio na Twoje urządzenie — bez potrzeby przesyłania na jakikolwiek serwer." }
-      },
-      {
-        "@type": "Question",
-        "name": "Dlaczego łączenie dużych PDF-ów jest wolne w narzędziach w chmurze, a szybkie w PDFree?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Narzędzia w chmurze wymagają przesłania pliku na serwer, przetworzenia go tam i pobrania wyniku — trzy etapy transferu sieciowego, które przy dużych plikach znacząco wydłużają czas. PDFree przetwarza wszystko lokalnie w Twojej przeglądarce, bez żadnego transferu sieciowego, więc szybkość zależy wyłącznie od procesora Twojego urządzenia, a nie od połączenia internetowego." }
-      }
+        {
+            "@type": "Question",
+            "name": "Czy mogę za darmo połączyć pliki PDF większe niż 100 MB?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tak — do 500 MB na jedno łączenie w Chrome lub Edge na komputerze z co najmniej 8 GB pamięci i do 300 MB na telefonach, w Safari i Firefoksie. Przetwarzanie odbywa się całkowicie w Twojej przeglądarce, więc limit chroni pamięć Twojego urządzenia, a nie przepustowość serwera — w naszych testach połączenie 500 MB zajęło około 5 sekund na laptopie z 8 GB RAM."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Dlaczego narzędzia w chmurze mają limit rozmiaru, a PDFree nie?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Narzędzia w chmurze przetwarzają pliki na swoich serwerach, co generuje koszty transferu i przechowywania. PDFree przetwarza pliki lokalnie w Twojej przeglądarce — nie ponosi kosztów serwerowych, więc nie ma dziennego limitu ani limitu 25 MB; jedno łączenie może mieć do 500 MB na komputerze, a limit służy wyłącznie ochronie pamięci Twojego urządzenia."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Jak duży PDF mogę połączyć?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "500 MB na jedno łączenie w Chrome lub Edge na komputerze z co najmniej 8 GB pamięci, 300 MB na telefonach, w Safari i Firefoksie — te przeglądarki nie podają ilości pamięci, więc obowiązuje w nich bezpieczny limit. W naszych testach połączenie 800 MB zadziałało przy około 1,5 GB pamięci przeglądarki, więc 500 MB zostawia miejsce na inne karty."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Co zrobić, jeśli przeglądarka się zawiesza podczas łączenia bardzo dużych plików?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Zamknij inne karty, aby zwolnić pamięć, i spróbuj ponownie — łączenie mniejszymi partiami (5–10 plików naraz, a następnie połączenie wyników) również zużywa mniej pamięci naraz. Możesz też najpierw skompresować każdy plik za pomocą narzędzia Kompresuj PDF, aby zmniejszyć łączny rozmiar przed połączeniem."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Czy istnieje dzienny limit łączeń?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Nie. W przeciwieństwie do narzędzi w chmurze z dziennymi limitami w darmowym planie, PDFree nie ma dziennego limitu. Połącz tyle PDF-ów, ile potrzebujesz, tak często, jak chcesz."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Ile plików PDF mogę połączyć naraz?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Nie ma limitu liczby plików. PDFree przetwarza wszystko w pamięci Twojej przeglądarki, więc możesz połączyć 2, 50 lub 100+ plików PDF w jednej operacji, o ile razem nie przekraczają 500 MB na komputerze (Chrome/Edge, 8 GB+ RAM) lub 300 MB na telefonach i w innych przeglądarkach."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Czy mogę za darmo połączyć 50 lub 100 plików PDF naraz?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tak, całkowicie za darmo i bez dziennego limitu. W przeciwieństwie do narzędzi w chmurze z dziennymi limitami w darmowym planie, PDFree nie ma żadnych ograniczeń użycia. Upuść wszystkie 50 lub 100 plików naraz, ustaw kolejność i kliknij Połącz — wynik pobierze się bezpośrednio na Twoje urządzenie, bez przesyłania na jakikolwiek serwer."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Dlaczego łączenie dużych PDF-ów jest wolne w narzędziach w chmurze, a szybkie w PDFree?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Narzędzia w chmurze wymagają przesłania pliku na serwer, przetworzenia go tam i pobrania wyniku — trzy etapy transferu sieciowego, które przy dużych plikach znacząco wydłużają czas. PDFree przetwarza wszystko lokalnie w Twojej przeglądarce, bez żadnego transferu sieciowego, więc szybkość zależy wyłącznie od procesora Twojego urządzenia, a nie od połączenia internetowego."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -506,6 +530,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Czy muszę założyć konto?</h3>
             <p style="margin:0;font-size:14px;">Nie. PDFree nigdy nie wymaga konta, adresu e-mail ani rejestracji. Otwórz narzędzie i od razu zacznij łączyć pliki.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Dlaczego łączenie dużych PDF-ów jest wolne w narzędziach w chmurze, a szybkie w PDFree?</h3>
+            <p style="margin:0;font-size:14px;">Narzędzia w chmurze wymagają przesłania pliku na serwer, przetworzenia go tam i pobrania wyniku — trzy etapy transferu sieciowego, które przy dużych plikach znacząco wydłużają czas. PDFree przetwarza wszystko lokalnie w Twojej przeglądarce, bez żadnego transferu sieciowego, więc szybkość zależy wyłącznie od procesora Twojego urządzenia, a nie od połączenia internetowego.</p>
           </div>
         </div>
 

@@ -152,56 +152,56 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How can browser-only processing actually run PDF operations that normally need a server?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "WebAssembly (Wasm). PDFree compiles PDF-processing libraries — the same kind of code that traditionally runs on a server — into WebAssembly modules that execute directly inside your browser's JavaScript engine, at near-native speed. That's what makes merging, OCR, redaction and the rest possible without a backend."
+        {
+            "@type": "Question",
+            "name": "How can browser-only processing run operations that normally need a server?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "WebAssembly. PDFree compiles PDF-processing libraries into WebAssembly modules that run directly inside your browser's engine, at near-native speed — no backend needed."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is \"private\" just a marketing claim, or can I verify it?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Verify it yourself: open DevTools (F12) → Network tab, process a file, and look for requests carrying your PDF's data. You'll find none. The processing code is also open source on GitHub for a deeper audit."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Which tools are covered by this no-upload architecture?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "All of them — Merge, Split, Compress, Redact, Protect, OCR, Fill and Flatten included. Every PDFree tool runs the same way: locally, in your browser."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does PDFree collect analytics on my documents?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Your files and their contents never reach us — they are processed on your device. We do count anonymous technical events, without cookies or a persistent identifier: which tool was opened, that a file was added and its size range, whether the result succeeded or which error happened — never file names or contents. Page views are counted with Cloudflare Web Analytics. Details: our Privacy Policy."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Do I need to create an account to use these tools?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. There is no signup, no login, and no email collection anywhere on PDFree. Open a tool, add your file, and download the result — that's the entire flow."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I use these tools with no internet connection?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, after your first visit — PDFree is a PWA that's cached by your browser and works fully offline, since a live connection was never required for processing to begin with."
+            }
         }
-      },
-      {
-        "@type": "Question",
-        "name": "Is 'private' just a marketing claim, or can I verify it?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "You can verify it yourself in under a minute. Open any PDFree tool, press F12 to open DevTools, click the Network tab, and process a file. You'll see requests for the app's own JavaScript and WebAssembly files — and no request anywhere containing your PDF's data. The full processing code is also open source on GitHub, so it can be independently audited line by line."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Which PDFree tools are covered by this no-upload architecture?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "All of them, including the tools most relevant to private documents: Merge, Split, Compress, Redact (true content removal, not just a visual cover), Protect (password encryption), OCR (text recognition), Fill (form filling and signature placement), and Flatten (locking a filled form against further edits). Every tool on PDFree runs the same way — locally, in your browser."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Does PDFree collect analytics on my documents or their content?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. Your files and their contents never reach us — they are processed on your device. We do count anonymous technical events, without cookies or a persistent identifier: which tool was opened, that a file was added and its size range (e.g. \"1–10 MB\"), whether the result succeeded or which error happened. Never file names or contents. Page views are counted with Cloudflare Web Analytics. Details: our Privacy Policy."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Do I need to create an account to use these tools?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. There is no signup, no login, and no email collection anywhere on PDFree. Open a tool, add your file, and download the result — that's the entire flow."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I use these tools with no internet connection?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes, after your first visit. PDFree is a Progressive Web App — your browser caches the app itself, so you can reopen it and process files completely offline. This is a natural consequence of the architecture: since nothing is ever sent to a server, a live connection was never required for processing in the first place."
-        }
-      }
     ]
-  }
+}
   </script>
 
   <!-- BreadcrumbList schema -->
@@ -423,6 +423,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I use these tools with no internet connection?</h3>
             <p style="margin:0;font-size:14px;">Yes, after your first visit — PDFree is a PWA that's cached by your browser and works fully offline, since a live connection was never required for processing to begin with.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Do I need to create an account to use these tools?</h3>
+            <p style="margin:0;font-size:14px;">No. There is no signup, no login, and no email collection anywhere on PDFree. Open a tool, add your file, and download the result — that's the entire flow.</p>
           </div>
         </div>
 
