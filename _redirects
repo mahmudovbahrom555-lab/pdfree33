@@ -1,4 +1,11 @@
 /index.html / 301
+# Legal pages without the slash: a permanent 301, not the static-assets
+# layer's own 307 (Google Search Console, 2026-11-14).
+/terms /terms/ 301
+/terms.html /terms/ 301
+/privacy /privacy/ 301
+/privacy.html /privacy/ 301
+
 /annotate /annotate-pdf/ 301
 /annotate/ /annotate-pdf/ 301
 

@@ -45,8 +45,10 @@ const MANUAL_REDIRECTS = {
   '/es/tachar-pdf/':    '/es/censurar-pdf/',
   // Bare blog slugs (real posts live at /blog/how-to-.../) — blog content
   // isn't in data/tools-config.json, so none of these are derivable either.
-  '/blog/jpg2pdf':      '/blog/how-to-convert-pdf-to-jpg/',
-  '/blog/jpg2pdf/':     '/blog/how-to-convert-pdf-to-jpg/',
+  // jpg2pdf is JPG → PDF; there is no blog post for that direction (the PDF → JPG
+  // one was the old target), so the tool itself (Google listed this as a 404).
+  '/blog/jpg2pdf':      '/jpg2pdf/',
+  '/blog/jpg2pdf/':     '/jpg2pdf/',
   '/blog/merge-pdf':    '/blog/how-to-merge-pdf-files-for-free/',
   '/blog/merge-pdf/':   '/blog/how-to-merge-pdf-files-for-free/',
   '/blog/split-pdf':    '/blog/how-to-split-a-pdf/',
