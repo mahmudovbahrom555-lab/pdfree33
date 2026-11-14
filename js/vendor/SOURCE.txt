@@ -116,12 +116,12 @@ Used by:     every pdf.js getDocument() on the site, through the cMapUrl the
 
 Files:       jszip.min.js, docx.umd.js (and pdf-lib.min.js, already here)
 Source:      the official builds of the pinned npm versions, copied as is —
-             jszip 3.10.1 dist/jszip.min.js, docx 8.5.0 build/index.umd.js
+             jszip 3.10.2 dist/jszip.min.js, docx 8.5.0 build/index.umd.js
              (package.json; scripts/check_vendor_sync.py keeps each equal
              to node_modules). Byte-identical to the CDN copies the site
-             loaded before (cdnjs jszip 3.10.1, jsdelivr docx 8.5.0): the
-             same sha384 the loaders pin —
-             jszip  sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG
+             loaded before (cdnjs jszip 3.10.1, jsdelivr docx 8.5.0); jszip moved to
+             3.10.2 on 2026-11-14 (npm build). The sha384 the loaders pin —
+             jszip  sha384-DdGlNq+wVXAn83gXqwyeFHB7iyXy6L0rLrNzgDmhKWPjiJLg9vj6qosYmZmkMfQ+
              docx   sha384-4xaIisuLEy2lo2HkB2C4rEf7v8jbTb2kuogX6TkuEt9feTWKBSFSOzsqNNbV+sKh
              pdf-lib sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI
 Downloaded:  2026-10-24, from node_modules.
