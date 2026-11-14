@@ -82,7 +82,7 @@
     "pdfjs-dist": "4.10.38",
     "playwright": "^1.65.0",
     "read-excel-file": "9.3.14",
-    "terser": "^5.50.0",
+    "terser": "^5.51.2",
     "vitest": "^4.1.6"
   }
 }
