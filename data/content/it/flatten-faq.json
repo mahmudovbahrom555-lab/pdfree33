@@ -52,7 +52,7 @@
     "name": "Appiattire un PDF riduce la dimensione del file?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Spesso leggermente. L'appiattimento rimuove i dati dei widget modulo interattivi e il JavaScript, il che riduce la dimensione del file per moduli con molti campi. Tuttavia, immagini e font incorporati non vengono influenzati dall'appiattimento. Per una riduzione significativa della dimensione, esegui l'output attraverso uno strumento di compressione PDF dopo l'appiattimento."
+      "text": "Spesso leggermente. L'appiattimento rimuove i dati dei widget modulo interattivi e il JavaScript, il che riduce la dimensione del file per moduli con molti campi. Tuttavia, immagini e font incorporati non vengono influenzati. Per una riduzione significativa della dimensione, esegui l'output appiattito attraverso lo strumento <a href=\"/it/comprimi-pdf/\" style=\"color:var(--green-text);\">Comprimi PDF</a>."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Qual è la differenza tra appiattire un PDF e proteggerlo con password?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Risolvono problemi diversi. L'appiattimento rimuove completamente la struttura del modulo interattivo — non esistono campi da modificare, indipendentemente dai permessi. La protezione con password limita l'accesso o i diritti di modifica ma lascia intatti i campi modulo; chi ha la password potrebbe comunque modificare un modulo compilabile. Per la massima sicurezza, appiattisci prima per bloccare il contenuto, poi aggiungi una password."
+      "text": "Risolvono problemi diversi. L'appiattimento rimuove completamente la struttura del modulo interattivo — non esistono campi da modificare, indipendentemente dai permessi. La protezione con password limita l'accesso o i diritti di modifica ma lascia intatti i campi modulo; chi ha la password potrebbe comunque modificare un modulo compilabile. Per la massima sicurezza, appiattisci prima per bloccare il contenuto, poi aggiungi una password con <a href=\"/it/proteggi-pdf/\" style=\"color:var(--green-text);\">Proteggi PDF</a>."
     }
   },
   {

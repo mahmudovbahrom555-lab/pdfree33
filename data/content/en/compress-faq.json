@@ -12,7 +12,7 @@
     "name": "How much does PDF compression reduce file size?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Typical reductions are 20–70%. PDFs with high-resolution images (scanned documents, photo brochures) compress the most — often 50–80% savings. Text-only PDFs see less reduction since text is already stored efficiently as vectors."
+      "text": "Typical reduction is 20–70%. PDFs full of high-resolution images (scans, photos, brochures) compress the most — often 50–80%. Text-only PDFs see less reduction since text is already stored efficiently. The Maximum preset reduces image quality to 72%, giving the largest size savings."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Can I compress a password-protected PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree attempts to optimize encrypted PDFs when possible, but strongly protected files may not compress fully. For best results, remove the password first using the PDFree Protect PDF tool (which can also remove existing passwords), then compress."
+      "text": "PDFree attempts to optimize encrypted PDFs when possible, but strongly protected files may not compress fully. For best results, remove the password first using the <a href='/protect-pdf/' style='color:var(--green-text)'>Protect PDF</a> tool (which can also remove passwords), then compress."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Can I compress a PDF to send by email?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes — that is the most common use case. Most email providers cap attachments at 25MB. Choose the Standard preset to compress your PDF for email: it typically reduces file size 30–50% with no visible quality loss. If the file is still too large, try the Maximum preset, which can cut size by 50–80% at the cost of some image sharpness."
+      "text": "Yes — that is the most common use case. Most email providers (Gmail, Outlook, Yahoo) cap attachments at 25MB. Choose the Standard preset to compress your PDF for email: it typically reduces file size 30–50% with no visible quality loss. If the file is still too large, try the Maximum preset, which can cut size by 50–80% at the cost of some image sharpness."
     }
   },
   {

@@ -68,7 +68,7 @@
     "name": "Posso juntar PDFs no celular ou tablet?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. O PDFree funciona em navegadores móveis — Chrome para Android e Safari para iOS. A seleção de arquivos usa o seletor nativo e pode reordenar os arquivos com os botões na tela."
+      "text": "Sim. O PDFree funciona em navegadores móveis (Chrome para Android, Safari para iOS). O arrastar e soltar é substituído por um seletor de arquivos, e a reordenação funciona com os botões acima/abaixo."
     }
   },
   {

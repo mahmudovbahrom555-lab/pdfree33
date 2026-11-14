@@ -52,7 +52,7 @@
     "name": "Vermindert het afvlakken van een PDF de bestandsgrootte?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Vaak een beetje. Afvlakken verwijdert interactieve formulierwidgetgegevens en JavaScript, wat de bestandsgrootte vermindert voor formulieren met veel velden. Afbeeldingen en ingesloten lettertypen blijven echter ongewijzigd door afvlakken. Voor een aanzienlijke vermindering, gebruik na het afvlakken een PDF-compressietool."
+      "text": "Vaak een beetje. Afvlakken verwijdert interactieve formulierwidgetgegevens en JavaScript, wat de bestandsgrootte vermindert voor formulieren met veel velden. Afbeeldingen en ingesloten lettertypen blijven echter ongewijzigd. Voor een aanzienlijke vermindering, voer de afgevlakte uitvoer door de <a href=\"/nl/pdf-comprimeren/\" style=\"color:var(--green-text);\">PDF Comprimeren</a>-tool."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Wat is het verschil tussen een PDF afvlakken en met een wachtwoord beveiligen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ze lossen verschillende problemen op. Afvlakken verwijdert de interactieve formulierstructuur volledig — er zijn geen velden om te bewerken, ongeacht rechten. Wachtwoordbeveiliging beperkt toegang of bewerkingsrechten, maar laat formuliervelden intact; iemand met het wachtwoord kan een invulbaar formulier nog steeds wijzigen. Voor maximale beveiliging vlak je eerst af om de inhoud vast te leggen, en voeg je daarna een wachtwoord toe."
+      "text": "Ze lossen verschillende problemen op. Afvlakken verwijdert de interactieve formulierstructuur volledig — er zijn geen velden om te bewerken, ongeacht rechten. Wachtwoordbeveiliging beperkt toegang of bewerkingsrechten, maar laat formuliervelden intact; iemand met het wachtwoord kan een invulbaar formulier nog steeds wijzigen. Voor maximale beveiliging vlak je eerst af om de inhoud vast te leggen, en voeg je daarna een wachtwoord toe met <a href=\"/nl/pdf-beveiligen/\" style=\"color:var(--green-text);\">PDF Beveiligen</a>."
     }
   },
   {

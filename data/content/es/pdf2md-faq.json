@@ -20,7 +20,7 @@
     "name": "¿Se convierten tablas e imágenes?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Las tablas simples se detectan automáticamente y se convierten a sintaxis de tabla Markdown. Las imágenes también se extraen — la descarga se convierte en un archivo .zip (document.md + una carpeta images) cuando el PDF tiene imágenes extraíbles, o sigue siendo un simple .md cuando no las tiene. Para una extracción de tablas más fiable, usa PDF a Excel; para documentos completos, usa PDF a Word."
+      "text": "Las tablas simples se detectan automáticamente y se convierten a sintaxis de tabla Markdown. Las imágenes también se extraen — la descarga se convierte en un archivo .zip (document.md + una carpeta images) cuando el PDF tiene imágenes extraíbles, o sigue siendo un simple .md cuando no las tiene. Si necesitas una extracción de tablas más fiable, usa PDF a Excel; para un documento totalmente editable, usa PDF a Word."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "¿Qué tipos de listas se reconocen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Las líneas con viñetas (•, ◦, ▪ y marcadores similares) y las líneas numeradas (1., 2.) se convierten a sintaxis de lista Markdown. Las listas con letras o números romanos (a., iv.) se dejan como texto normal, ya que esos marcadores son demasiado fáciles de confundir con contenido real."
+      "text": "Las líneas con viñetas (•, ◦, ▪ y marcadores similares) y las líneas numeradas (1., 2.) se convierten a sintaxis de lista Markdown. Las listas con letras o números romanos (a., iv.) se dejan como texto normal."
     }
   },
   {

@@ -68,7 +68,7 @@
     "name": "打开文件需要 Microsoft Word 吗？",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "不需要。.docx 格式受 Microsoft Word、Google 文档（上传到云端硬盘后打开）、LibreOffice Writer（免费开源）和 Apple Pages 支持。您不需要付费的 Microsoft 365 订阅即可打开该文件。"
+      "text": "不需要。.docx 是一种开放标准，Google 文档（免费）、LibreOffice Writer（免费开源）、Apple Pages 以及 Microsoft 365 在线版（基于浏览器，免费）都支持。您不需要付费的 Word 订阅。"
     }
   },
   {
@@ -84,7 +84,7 @@
     "name": "能离线使用吗？",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "可以。页面加载完成后，PDFree 就能作为渐进式网页应用（PWA）完全离线运行。转换过程不需要网络连接。"
+      "text": "可以。只要页面至少加载过一次，PDFree 就能作为渐进式网页应用（PWA）完全离线运行。转换过程不需要网络连接。"
     }
   },
   {
@@ -92,7 +92,7 @@
     "name": "转换质量评分是怎么计算的？",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "转换完成后，PDFree 会根据文档中检测到的内容——文字层覆盖率、表格、图表和文字系统的复杂度——显示一个置信度评分（0–100%）。高（80% 及以上）表示输出完全可编辑。中等（55%–79%）表示部分页面可能仅为图片。低（低于 55%）通常意味着 PDF 大部分是扫描件——请先运行 OCR 以获得可编辑的 Word 输出。"
+      "text": "转换完成后，PDFree 会根据文档中检测到的内容——文字层覆盖率、表格、图表和文字系统的复杂度——显示一个置信度评分（0–100%）。高（≥80%）表示输出完全可编辑。中等（55%–79%）表示部分页面可能仅为图片。低（&lt;55%）通常意味着 PDF 大部分是扫描件——请先运行 OCR 以获得可编辑的 Word 输出。"
     }
   },
   {
@@ -100,7 +100,7 @@
     "name": "有不上传文件的 PDF 转 Word 工具吗？",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "有——PDFree。整个转换过程使用 PDF.js 和 WebAssembly 在您的浏览器内运行。您的 PDF 永远不会被发送到任何服务器。您可以打开开发者工具 → Network 标签页自行验证，转换过程中不会发出任何文件上传请求。大多数在线转换工具会把您的文件上传到它们的服务器；PDFree 不会。"
+      "text": "有——PDFree。整个转换过程使用 PDF.js 和 WebAssembly 在您的浏览器内运行。您的 PDF 永远不会被发送到任何服务器。您可以打开开发者工具 → Network 标签页自行验证，转换过程中不会发出任何文件上传请求。大多数在线转换工具都会上传您的文件；PDFree 不会。"
     }
   },
   {

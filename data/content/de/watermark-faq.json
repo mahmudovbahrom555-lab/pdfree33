@@ -36,7 +36,7 @@
     "name": "Werden meine Dateien auf einen Server hochgeladen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. PDFree arbeitet vollständig auf deinem Gerät (clientseitig). Alle Verarbeitungsschritte finden im Browser statt — deine Dateien verlassen dein Gerät nie."
+      "text": "Nein. Alle Verarbeitungsschritte finden ausschließlich in deinem Browser statt. Deine Dokumente verlassen dein Gerät nie."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Ist das Wasserzeichen-Tool kostenlos?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree ist vollständig kostenlos — kein Abo, keine Registrierung, kein Software-Wasserzeichen im Ergebnis. Du kannst beliebig viele PDFs ohne Tageslimit mit Wasserzeichen versehen."
+      "text": "Ja. PDFree ist ein vollständig kostenloses Wasserzeichen-Tool — kein Abo, keine Registrierung, kein Wasserzeichen der Software im Ergebnis. Du kannst beliebig viele PDFs ohne Tageslimit bearbeiten."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "Was ist der Unterschied zwischen Wasserzeichen und Stempel?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Die Begriffe werden oft gleichbedeutend verwendet. Ein Wasserzeichen ist typischerweise ein halbtransparenter Text diagonal über alle Seiten (z. B. ENTWURF mit 30 % Deckkraft). Ein Stempel ist meist ein undurchsichtiges Etikett an einer festen Position (z. B. GENEHMIGT in einer Ecke). Mit PDFree erreichst du beide Varianten durch Anpassen von Deckkraft und Position."
+      "text": "Die Begriffe werden oft gleichbedeutend verwendet. Ein Wasserzeichen ist typischerweise ein halbtransparenter Text, der diagonal über alle Seiten gelegt wird (z. B. ENTWURF mit 30 % Deckkraft). Ein Stempel ist meist ein undurchsichtiges Etikett an einer festen Position (z. B. GENEHMIGT in einer Ecke). Mit PDFree erreichst du beide Varianten durch Anpassen von Deckkraft und Position."
     }
   },
   {

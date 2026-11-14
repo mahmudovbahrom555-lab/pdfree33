@@ -36,7 +36,7 @@
     "name": "Posso rimuovere la password in seguito?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sì. Usa il nostro strumento Sblocca PDF (coming soon) o un lettore PDF inserendo la password."
+      "text": "Sì. Apri il PDF con lo strumento <a href='/it/sblocca-pdf/' style='color:var(--green-text)'>Sblocca PDF</a>, inserisci la password e scarica una copia senza password. Anche qui tutto avviene nel tuo browser."
     }
   },
   {

@@ -4,7 +4,7 @@
     "name": "Kann ich mit einer anderen Zahl als 1 beginnen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Geben Sie eine beliebige Startzahl in das Feld 'Startnummer' ein. Dies ist nützlich für Dokumente, bei denen eine Titelseite die Seite 0 ist, oder für Kapitel, die die Nummerierung aus einem vorherigen Abschnitt fortsetzen."
+      "text": "Ja. Gib eine beliebige Startzahl in das Feld \"Startnummer\" ein. Nützlich für Dokumente, bei denen eine Titelseite die Seite 0 ist."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Welche Zahlenformate sind verfügbar?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Arabische Ziffern (1, 2, 3), römische Kleinbuchstaben (i, ii, iii), römische Großbuchstaben (I, II, III), alphabetisch klein (a, b, c) und alphabetisch groß (A, B, C)."
+      "text": "Arabische Ziffern (1, 2, 3), römische Kleinbuchstaben (i, ii, iii), römische Großbuchstaben (I, II, III), alphabetisch klein und groß."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Kann ich das Format \"Seite 1 von 20\" hinzufügen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Verwenden Sie das Präfix-Feld, um Text vor der Zahl einzufügen (z. B. 'Seite '), und das Suffix-Feld, um Text danach einzufügen (z. B. ' von 20'). Dies erzeugt das gebräuchliche Format 'Seite 1 von 20' für professionelle Druckdokumente."
+      "text": "Ja. Verwende das Präfix-Feld für Text vor der Zahl (z. B. \"Seite \") und das Suffix-Feld für Text danach (z. B. \" von 20\")."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Kann ich das Deckblatt von der Nummerierung ausschließen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Aktivieren Sie die Option 'Erste Seite überspringen'. Seite 1 (Titel) erhält keine Nummer, und die Nummerierung beginnt ab der zweiten Seite."
+      "text": "Ja. Stellen Sie „Von Seite“ auf 2: Das Deckblatt bekommt keine Nummer, und Seite 2 zeigt die 1. Soll Seite 2 die 2 zeigen, stellen Sie zusätzlich „Startnummer“ auf 2."
     }
   },
   {

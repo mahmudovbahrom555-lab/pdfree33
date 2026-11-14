@@ -20,7 +20,7 @@
     "name": "O achatamento pode ser desfeito?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O achatamento é irreversível — os campos de formulário originais são permanentemente substituídos por conteúdo visual estático. Sempre mantenha um backup do seu PDF preenchido antes de achatá-lo."
+      "text": "Não. O achatamento é um processo irreversível. Sempre mantenha uma cópia do original antes de achatar um PDF."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "O achatamento remove as assinaturas digitais?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Assinaturas desenhadas com a ferramenta Preencher PDF (imagens do painel de assinatura) são achatadas na página. Assinaturas digitais criptográficas de provedores certificados de assinatura eletrônica podem ser tratadas de forma diferente — a aparência visual é preservada, mas o certificado criptográfico pode não ser mais válido após o achatamento."
+      "text": "Assinaturas desenhadas com a ferramenta Preencher PDF são achatadas na página. Assinaturas digitais criptográficas de provedores certificados podem ser tratadas de forma diferente — a aparência visual é preservada, mas o certificado criptográfico pode não ser mais válido após o achatamento."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "Por que achatar em vez de simplesmente salvar o PDF preenchido?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Um PDF preenchido salvo ainda contém campos editáveis — um destinatário poderia apagar seus valores e preenchê-los novamente. O achatamento bloqueia permanentemente o conteúdo na página, impede a edição e garante renderização consistente em todos os leitores de PDF."
+      "text": "Um PDF preenchido salvo ainda contém campos editáveis — o destinatário poderia apagar seus valores e preenchê-los novamente. Achatar bloqueia permanentemente o conteúdo na página, impede a edição e garante renderização consistente em todos os leitores de PDF."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Achatar um PDF reduz o tamanho do arquivo?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Frequentemente, um pouco. Achatar remove os dados dos widgets interativos e o JavaScript, reduzindo o tamanho em formulários com muitos campos. Imagens e fontes incorporadas não são afetadas. Para uma redução significativa, processe o resultado achatado com um compressor de PDF."
+      "text": "Frequentemente, um pouco. Achatar remove os dados dos widgets interativos e o JavaScript, reduzindo o tamanho em formulários com muitos campos. Imagens e fontes incorporadas não são afetadas. Para uma redução significativa, processe o resultado com <a href=\"/pt/comprimir-pdf/\" style=\"color:var(--green-text);\">Comprimir PDF</a>."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "Qual é a diferença entre achatar e proteger um PDF com senha?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Eles resolvem problemas diferentes. Achatar remove completamente a estrutura de formulário interativo — nenhum campo existe para ser editado, independentemente das permissões. A proteção por senha restringe o acesso ou os direitos de edição, mas deixa os campos intactos. Para máxima segurança, achate primeiro e depois adicione uma senha."
+      "text": "Eles resolvem problemas diferentes. Achatar remove completamente a estrutura de formulário interativo — nenhum campo existe para ser editado, independentemente das permissões. A proteção por senha restringe o acesso ou os direitos de edição, mas deixa os campos intactos. Para máxima segurança, achate primeiro e depois adicione uma senha com <a href=\"/pt/proteger-pdf/\" style=\"color:var(--green-text);\">Proteger PDF</a>."
     }
   },
   {

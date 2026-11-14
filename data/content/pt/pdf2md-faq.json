@@ -20,7 +20,7 @@
     "name": "Tabelas e imagens são convertidas?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tabelas simples são detectadas automaticamente e convertidas para sintaxe de tabela Markdown. As imagens também são extraídas — o download se torna um arquivo .zip (document.md + uma pasta images) sempre que o PDF tiver imagens extraíveis, ou continua sendo um .md simples quando não tiver. Para uma extração de tabelas mais confiável, use PDF para Excel; para documentos completos, use PDF para Word."
+      "text": "Tabelas simples são detectadas automaticamente e convertidas para sintaxe de tabela Markdown. As imagens também são extraídas — o download se torna um arquivo .zip (document.md + uma pasta images) sempre que o PDF tiver imagens extraíveis, ou continua sendo um .md simples quando não tiver. Para uma extração de tabelas mais confiável, use PDF para Excel; para um documento totalmente editável, use PDF para Word."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Quais tipos de listas são reconhecidas?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Linhas com marcadores (•, ◦, ▪ e similares) e linhas numeradas (1., 2.) são convertidas para sintaxe de lista Markdown. Listas com letras ou números romanos (a., iv.) são deixadas como texto normal, pois esses marcadores são facilmente confundidos com conteúdo real."
+      "text": "Linhas com marcadores (•, ◦, ▪ e similares) e linhas numeradas (1., 2.) são convertidas para sintaxe de lista Markdown. Listas com letras ou números romanos (a., iv.) são deixadas como texto normal."
     }
   },
   {

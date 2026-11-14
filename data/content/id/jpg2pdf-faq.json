@@ -76,7 +76,7 @@
     "name": "Apakah gambar saya diupload ke server?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak. Konversi terjadi sepenuhnya di browser Anda. File gambar tidak pernah dikirim ke server mana pun."
+      "text": "Tidak. Semua pemrosesan terjadi di browser menggunakan pustaka JavaScript pdf-lib. Gambar dimuat ke memori browser dan tidak pernah dikirimkan ke mana pun."
     }
   }
 ]

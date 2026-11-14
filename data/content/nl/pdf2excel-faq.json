@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Ja. Elke gedetecteerde tabel wordt een eigen werkblad in het resulterende .xlsx-bestand, genoemd en gerangschikt op basis van de positie in de PDF, zodat tabellen van verschillende pagina's of secties niet door elkaar raken."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Waarom Hier Converteren in Plaats van een Cloudtool?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "De meeste online PDF-naar-Excel-converters uploaden je document naar een externe server, halen daar de gegevens uit en sturen het bestand terug. Voor een bankafschrift of factuur betekent dat je financiële gegevens het internet oversteken en — al is het maar even — op hardware terechtkomen die je niet zelf beheert."
+    }
   }
 ]

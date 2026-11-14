@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Tak. Każda wykryta tabela staje się osobnym arkuszem w wynikowym pliku .xlsx, nazwanym i uporządkowanym zgodnie z jej pozycją w pliku PDF, dzięki czemu tabele z różnych stron lub sekcji się nie mieszają."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Dlaczego Konwertować Tutaj Zamiast w Narzędziu Chmurowym?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Większość internetowych konwerterów PDF na Excel przesyła Twój dokument na zdalny serwer, wyodrębnia tam dane i odsyła plik z powrotem. W przypadku wyciągu bankowego lub faktury oznacza to, że Twoje dane finansowe przemierzają internet i trafiają — choćby na chwilę — na sprzęt, nad którym nie masz kontroli."
+    }
   }
 ]

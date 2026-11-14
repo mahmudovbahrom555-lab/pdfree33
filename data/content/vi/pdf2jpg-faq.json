@@ -4,7 +4,7 @@
     "name": "Chuyển PDF sang JPG có tải file lên không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không. Tất cả rendering diễn ra trong trình duyệt của bạn bằng PDF.js. File không bao giờ được gửi đến bất kỳ server nào."
+      "text": "Không. Tất cả rendering diễn ra trong trình duyệt bằng PDF.js. File không bao giờ được gửi đến bất kỳ server nào."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Có thể tải về tất cả trang cùng lúc không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Có. Dùng nút 'Tải tất cả (ZIP)' để tải về tất cả trang đã chuyển đổi trong một file ZIP."
+      "text": "Có. Dùng nút \"Tải tất cả (ZIP)\" để tải về tất cả trang đã chuyển đổi trong một file ZIP."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "Có thể chuyển PDF được bảo vệ bằng mật khẩu không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không. PDF được mã hóa không thể mở để render. Hãy xóa mật khẩu trước bằng công cụ phù hợp."
+      "text": "Không. PDF được mã hóa không thể mở để render. Hãy xóa mật khẩu trước bằng công cụ PDF phù hợp."
     }
   }
 ]

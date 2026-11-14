@@ -68,7 +68,7 @@
     "name": "Kann ich PDFs auf dem Smartphone oder Tablet zusammenfügen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree funktioniert in mobilen Browsern — Chrome für Android und Safari für iOS. Die Dateiauswahl erfolgt über den nativen Datei-Picker und die Reihenfolge lässt sich über die Schaltflächen auf dem Bildschirm anpassen."
+      "text": "Ja. PDFree funktioniert in mobilen Browsern (Chrome für Android, Safari für iOS). Drag-and-Drop wird durch eine Dateiauswahl ersetzt, die Neuanordnung erfolgt über die Hoch-/Runter-Schaltflächen."
     }
   },
   {

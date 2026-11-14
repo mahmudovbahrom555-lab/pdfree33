@@ -44,7 +44,7 @@
     "name": "Quanto pode o PDFree reduzir o tamanho de um arquivo PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "As reduções típicas são de 20–70 %. Os PDFs com imagens de alta resolução (documentos digitalizados, brochuras fotográficas) são os mais comprimidos — frequentemente 50–80 % de poupança. Os PDFs apenas com texto são menos reduzidos, uma vez que o texto já é armazenado eficientemente como vectores."
+      "text": "As reduções típicas são de 20–70 %. Os PDFs com imagens de alta resolução são os mais comprimidos — frequentemente 50–80 % de poupança."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "Por que motivo o PDF comprimido parece igual mas é mais pequeno?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Os PDFs contêm frequentemente dados invisíveis: miniaturas de página geradas pelo Adobe Reader, tipos de letra incorporados duplicados, fluxos de metadados XMP e perfis de cor incorporados. O PDFree remove estes extras ocultos. O conteúdo visível permanece idêntico."
+      "text": "Os PDFs contêm frequentemente dados invisíveis: miniaturas de página geradas pelo Adobe Reader, tipos de letra duplicados, fluxos de metadados XMP. O PDFree remove estes extras ocultos. O conteúdo visível permanece idêntico."
     }
   },
   {

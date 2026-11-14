@@ -52,7 +52,7 @@
     "name": "Puis-je ajouter des formules après la conversion ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Les valeurs extraites sont des chiffres et du texte ordinaires, pas des formules — un PDF ne stocke pas les calculs sous-jacents, seulement les résultats affichés. Une fois dans Excel, vous pouvez ajouter vos propres formules sur les données extraites normalement."
+      "text": "Oui. Les valeurs extraites sont des chiffres et du texte ordinaires, pas des formules (un PDF ne stocke pas les calculs, seulement les résultats affichés). Dans Excel, vous pouvez ajouter vos propres formules sur les données extraites normalement."
     }
   },
   {

@@ -28,7 +28,7 @@
     "name": "Funziona con PDF scansionati?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. I PDF scansionati sono immagini senza testo leggibile."
+      "text": "No. I PDF scansionati sono immagini senza testo leggibile. Esegui prima l'OCR, poi converti il risultato."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Questo strumento è gratuito?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sì, completamente gratuito per sempre."
+      "text": "Sì, completamente gratuito per sempre — nessuna registrazione, nessun account."
     }
   },
   {

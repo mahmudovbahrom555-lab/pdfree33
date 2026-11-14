@@ -4,7 +4,7 @@
     "name": "Hangi Markdown öğeleri destekleniyor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Başlıklar (# H1, ## H2), listeler, kalın ve italik metin ve paragraflar desteklenir."
+      "text": "Başlıklar (# H1, ## H2), listeler, kalın ve italik metin, paragraflar, basit tablolar ve görseller desteklenir. Karmaşık tablolar yapısını kaybedebilir; PDF'de çıkarılabilir görsel varsa indirilen dosya bir .zip (document.md + images klasörü) olur, yoksa sade bir .md dosyası olarak kalır."
     }
   },
   {

@@ -28,7 +28,7 @@
     "name": "Có thể dùng cho PDF được quét không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không. PDF được quét là hình ảnh không có văn bản có thể đọc được."
+      "text": "Không. PDF được quét là hình ảnh không có văn bản có thể đọc được. Hãy chạy OCR trước, sau đó chuyển đổi kết quả."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Có miễn phí không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Có, hoàn toàn miễn phí mãi mãi."
+      "text": "Có, hoàn toàn miễn phí mãi mãi — không đăng ký, không cần tài khoản."
     }
   },
   {

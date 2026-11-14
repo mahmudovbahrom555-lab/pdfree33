@@ -4,7 +4,7 @@
     "name": "Apakah file saya diunggah saat menambah nomor halaman?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak. Penomoran halaman diproses sepenuhnya di browser menggunakan JavaScript. File tidak pernah meninggalkan perangkat. Verifikasi dengan membuka DevTools → tab Network — tidak ada upload PDF yang terlihat selama proses."
+      "text": "Tidak. Penomoran halaman diproses sepenuhnya di browser menggunakan JavaScript. File tidak pernah meninggalkan perangkat."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Bisakah saya melewati halaman pertama (halaman sampul)?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ya. Aktifkan opsi 'Lewati halaman pertama'. Halaman 1 (sampul) tidak mendapat nomor, dan penomoran dimulai dari halaman kedua."
+      "text": "Ya. Atur \"Dari halaman\" ke 2: sampul tidak diberi nomor dan halaman 2 menampilkan angka 1. Jika halaman 2 harus menampilkan 2, atur juga \"Nomor awal\" ke 2."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Bisakah saya menambahkan format \"Halaman 1 dari 20\"?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ya. Gunakan kolom awalan untuk menambahkan teks sebelum angka (mis. 'Halaman ') dan kolom akhiran untuk menambahkan teks setelah angka (mis. ' dari 20'). Ini membuat format 'Halaman 1 dari 20' yang umum digunakan dalam dokumen cetak profesional."
+      "text": "Ya. Gunakan kolom awalan untuk menambahkan teks sebelum angka (mis. \"Halaman \") dan kolom akhiran untuk menambahkan teks setelah angka (mis. \" dari 20\"). Ini membuat format \"Halaman 1 dari 20\" yang umum digunakan dalam dokumen cetak profesional."
     }
   },
   {

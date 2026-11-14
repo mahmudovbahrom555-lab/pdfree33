@@ -28,7 +28,7 @@
     "name": "Qual é a diferença entre o modo texto e o modo imagem?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "O modo texto extrai o texto do seu PDF e cria um documento Word editável com parágrafos, títulos, negrito, itálico e tabelas. O modo imagem renderiza cada página como imagem de alta resolução e a insere no documento Word — o layout visual é preservado exatamente, mas o texto não é editável."
+      "text": "O modo texto extrai o texto do seu PDF e cria um documento Word editável com parágrafos, títulos, negrito, itálico e tabelas. O modo imagem renderiza cada página como imagem de alta resolução — o layout visual é preservado exatamente, mas o texto não é editável."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "As tabelas são convertidas corretamente?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "O PDFree detecta tabelas de duas formas: alinhando elementos de texto em colunas (para tabelas de dados) e detectando linhas de borda desenhadas (para formulários). As tabelas detectadas se tornam tabelas Word reais, não texto simples."
+      "text": "O PDFree detecta tabelas de duas formas: alinhando elementos de texto em colunas (para tabelas de dados) e detectando linhas de borda desenhadas (para formulários). As tabelas detectadas se tornam tabelas Word reais. Layouts muito complexos com células mescladas podem não ser convertidos perfeitamente."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Preciso do Microsoft Word para abrir o arquivo?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Não. O formato .docx é compatível com Microsoft Word, Google Docs (faça upload no Drive e abra), LibreOffice Writer (gratuito, open source) e Apple Pages. Você não precisa de uma assinatura paga do Microsoft 365 para abrir o arquivo."
+      "text": "Não. O formato .docx é um padrão aberto compatível com Google Docs (gratuito), LibreOffice Writer (gratuito, open source), Apple Pages e Microsoft 365 online (no navegador, gratuito). Nenhuma assinatura paga do Word é necessária."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "Posso converter um PDF digitalizado em Word editável?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Depende. Se o PDF digitalizado tiver uma camada de texto incorporada (muitos scanners modernos a adicionam), o modo texto a extrai corretamente. Se o PDF for apenas imagem sem camada de texto, use o modo imagem ou use primeiro a ferramenta OCR PDF para adicionar uma camada de texto antes de converter para Word."
+      "text": "Depende. Se o PDF digitalizado tiver uma camada de texto incorporada (adicionada pelo Adobe Scan, Microsoft Lens ou um scanner moderno), o modo texto a extrai corretamente. Se o PDF for puramente visual, use primeiro a <a href=\"/pt/ocr-pdf/\" style=\"color:var(--green-text);\">ferramenta OCR PDF</a> e depois converta para Word."
     }
   },
   {
@@ -84,7 +84,7 @@
     "name": "Funciona offline?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim. Uma vez que a página foi carregada, o PDFree funciona totalmente offline como Progressive Web App. Nenhuma conexão com a internet é necessária para a conversão."
+      "text": "Sim. O PDFree funciona totalmente offline como Progressive Web App após a página ser carregada ao menos uma vez. Nenhuma conexão com a internet é necessária para a conversão."
     }
   },
   {
@@ -92,7 +92,7 @@
     "name": "Como funciona a pontuação de qualidade de conversão?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Após a conversão, o PDFree exibe uma pontuação de confiança (0–100%) com base no que foi detectado: cobertura da camada de texto, tabelas, diagramas e complexidade de alfabeto. Alta (80%+) significa saída totalmente editável. Média (55–79%) indica que algumas páginas podem ser apenas imagens. Baixa (menos de 55%) geralmente significa PDF majoritariamente digitalizado — execute OCR primeiro."
+      "text": "Após a conversão, o PDFree exibe uma pontuação de confiança (0–100%) com base no que foi detectado: cobertura da camada de texto, tabelas, diagramas e complexidade de alfabeto. Alta (≥80%) significa saída totalmente editável. Média (55–79%) indica que algumas páginas podem ser imagens. Baixa (&lt;55%) geralmente significa PDF majoritariamente digitalizado — use OCR primeiro."
     }
   },
   {
@@ -100,7 +100,7 @@
     "name": "Existe um conversor de PDF para Word sem envio de arquivo?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sim — PDFree. A conversão é executada no seu navegador com PDF.js e WebAssembly. Seu PDF nunca é enviado a nenhum servidor. Você pode verificar abrindo DevTools → aba Rede e confirmando que não há nenhuma requisição de upload de arquivo durante a conversão."
+      "text": "Sim — PDFree. A conversão é executada no seu navegador com PDF.js e WebAssembly. Seu PDF nunca é enviado a nenhum servidor. Você pode verificar abrindo DevTools → aba Rede e observando que nenhuma requisição de upload de arquivo ocorre durante a conversão."
     }
   },
   {

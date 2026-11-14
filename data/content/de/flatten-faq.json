@@ -20,7 +20,7 @@
     "name": "Kann das Abflachen rückgängig gemacht werden?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. Das Abflachen ist irreversibel — die ursprünglichen Formularfelder werden dauerhaft durch statischen Inhalt ersetzt. Bewahre immer eine Sicherungskopie deines ausgefüllten PDFs auf, bevor du es abflachst."
+      "text": "Nein. Das Abflachen ist ein irreversibler Vorgang. Bewahre immer eine Kopie des Originals auf, bevor du ein PDF abflachst."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Warum abflachen statt das ausgefüllte PDF einfach zu speichern?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ein gespeichertes ausgefülltes PDF enthält noch bearbeitbare Felder — ein Empfänger könnte die Werte löschen und neu ausfüllen. Das Abflachen sperrt den Inhalt dauerhaft in die Seite, verhindert Bearbeitung und sorgt für konsistente Darstellung in allen PDF-Viewern."
+      "text": "Ein gespeichertes, ausgefülltes PDF enthält noch immer bearbeitbare Felder — ein Empfänger könnte die Werte löschen und neu eingeben. Das Abflachen sperrt den Inhalt dauerhaft in die Seite, verhindert jede Bearbeitung und sorgt für konsistente Darstellung in allen PDF-Viewern."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "Wie kann ich ein PDF direkt im Browser abflachen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree Flatten läuft in jedem modernen Browser — Chrome, Safari, Firefox, Edge — auf Mac, Windows und Linux. Keine Installation erforderlich. Tool öffnen, PDF laden, auf »PDF abflachen« klicken — das Ergebnis lädt direkt auf dein Gerät. Keine Desktop-Software nötig."
+      "text": "PDFree Flatten läuft in jedem modernen Browser — Chrome, Safari, Firefox, Edge — auf Mac, Windows und Linux. Keine Installation erforderlich. Tool öffnen, PDF laden, auf „PDF abflachen\" klicken — das Ergebnis lädt direkt auf dein Gerät. Keine Desktop-Software nötig."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Reduziert das Abflachen die Dateigröße?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Oft leicht. Das Abflachen entfernt interaktive Widget-Daten und JavaScript, was die Dateigröße bei Formularen mit vielen Feldern reduziert. Bilder und eingebettete Schriften sind davon nicht betroffen. Für eine deutliche Verkleinerung das Ergebnis anschließend durch ein PDF-Komprimierungstool laufen lassen."
+      "text": "Oft leicht. Das Abflachen entfernt interaktive Widget-Daten und JavaScript, was die Dateigröße bei Formularen mit vielen Feldern reduziert. Bilder und eingebettete Schriften sind nicht betroffen. Für eine deutliche Verkleinerung das Ergebnis anschließend mit <a href=\"/de/pdf-komprimieren/\" style=\"color:var(--green-text);\">PDF Komprimieren</a> verarbeiten."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Was ist der Unterschied zwischen Abflachen und Passwortschutz?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Beides löst unterschiedliche Probleme. Das Abflachen entfernt die interaktive Formularstruktur vollständig — es gibt keine Felder mehr, die bearbeitet werden könnten, unabhängig von Berechtigungen. Passwortschutz schränkt Zugriff oder Bearbeitungsrechte ein, lässt die Formularfelder aber intakt. Für maximale Sicherheit erst abflachen, dann ein Passwort hinzufügen."
+      "text": "Beides löst unterschiedliche Probleme. Das Abflachen entfernt die interaktive Formularstruktur vollständig — es gibt keine Felder mehr, die bearbeitet werden könnten. Passwortschutz schränkt Zugriff oder Bearbeitungsrechte ein, lässt die Formularfelder aber intakt. Für maximale Sicherheit erst abflachen, dann mit <a href=\"/de/pdf-schuetzen/\" style=\"color:var(--green-text);\">PDF Schützen</a> ein Passwort hinzufügen."
     }
   },
   {

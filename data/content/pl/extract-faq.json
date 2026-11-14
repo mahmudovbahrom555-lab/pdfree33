@@ -20,7 +20,7 @@
     "name": "Jaka jest różnica między Wyodrębnij a Podziel?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Wyodrębnij pozwala wybrać konkretne strony (np. strony 2, 5, 8) i zapisać je jako jeden nowy PDF. Podziel dzieli cały dokument na osobne pliki."
+      "text": "<a href='/pl/podziel-pdf/' style='color:var(--green-text)'>Podziel</a> ma bogatsze opcje wyboru (strony nieparzyste, parzyste, połowy, wizualny wybór miniatur) i może tworzyć wiele osobnych plików. Wyodrębnij jest prostsze — wpisz zakres, otrzymaj jeden PDF. Użyj tego, co pasuje do Twojego przepływu pracy."
     }
   },
   {

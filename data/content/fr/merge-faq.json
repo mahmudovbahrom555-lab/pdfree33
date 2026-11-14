@@ -44,7 +44,7 @@
     "name": "Y a-t-il une limite quotidienne pour les fusions ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. PDFree n'a aucun plafond d'utilisation quotidien. Fusionnez autant de PDFs que vous le souhaitez, aussi souvent que nécessaire — sans limite de tâches ni limite quotidienne."
+      "text": "Non. PDFree n'a aucun plafond d'utilisation. Fusionnez autant de PDF que vous le souhaitez, aussi souvent que nécessaire — aucune limite quotidienne, aucune limite de tâches, aucune limite de nombre de fichiers."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Puis-je fusionner des PDF sur téléphone ou tablette ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Oui. PDFree fonctionne dans les navigateurs mobiles — Chrome pour Android et Safari pour iOS. La sélection des fichiers utilise le sélecteur natif et vous pouvez réorganiser les fichiers à l'aide des boutons à l'écran."
+      "text": "Oui. PDFree fonctionne dans les navigateurs mobiles (Chrome pour Android, Safari pour iOS). Le glisser-déposer est remplacé par un sélecteur de fichiers, et le réordonnancement s'effectue via les boutons haut/bas."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Quelle est la différence entre fusionner, combiner et assembler des PDF ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Aucune — ce sont trois façons de dire la même chose. Que vous cherchiez à fusionner, combiner ou assembler plusieurs PDF en un seul fichier, PDFree fait exactement ça, sans installer de logiciel et sans envoyer vos fichiers sur un serveur."
+      "text": "Aucune — ce sont trois façons de dire la même chose. Que vous cherchiez à « fusionner », « combiner » ou « assembler » plusieurs PDF en un seul fichier, PDFree fait exactement ça : réunir vos documents dans l'ordre choisi, sans installer de logiciel et sans envoyer vos fichiers sur un serveur."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "Puis-je fusionner et compresser un PDF en même temps ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Pas en une seule étape, mais en deux clics : fusionnez d'abord vos fichiers, puis ouvrez le résultat dans l'outil Compresser PDF pour réduire sa taille avant de l'envoyer par e-mail."
+      "text": "Pas en une seule étape, mais en deux clics : fusionnez d'abord vos fichiers ici, puis ouvrez le résultat dans l'outil <a href=\"/fr/compresser-pdf/\" style=\"color:var(--green-text)\">Compresser PDF</a> pour réduire sa taille avant de l'envoyer par e-mail."
     }
   },
   {
@@ -84,7 +84,7 @@
     "name": "Existe-t-il un « PDF joiner » gratuit sans inscription ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Oui, c'est exactement ce qu'est PDFree : un joiner de PDF gratuit, sans compte à créer et sans logiciel à installer. Glissez vos fichiers, réorganisez-les, puis téléchargez le PDF assemblé."
+      "text": "Oui, c'est exactement ce qu'est PDFree : un joiner (assembleur) de PDF gratuit, sans compte à créer et sans logiciel à installer. Glissez vos fichiers, réorganisez-les, puis téléchargez le PDF assemblé."
     }
   },
   {
