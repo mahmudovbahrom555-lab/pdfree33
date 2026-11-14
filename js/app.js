@@ -2160,11 +2160,11 @@ function _retrieveSharedFile(uuid) {
 // events from one session and drowned every error metric, with nothing to say
 // what it was (2026-10-09).
 const _trackedErrors = new Set();
-function _trackUncaught(kind, message) {
+function _trackUncaught(kind, message, where = '') {
   // which script a worker couldn't load — past the 80 characters Chrome's
   // own words take ("…importScripts' on 'WorkerGlobalScope': The script at …")
   const script = String(message || '').match(/importScripts'.*?script at '(?:https?:\/\/[^/]+)?([^']+)'/);
-  const type = script ? `${kind}: importScripts failed: ${script[1].slice(0, 80)}` : `${kind}: ${String(message || '').slice(0, 80)}`;
+  const type = (script ? `${kind}: importScripts failed: ${script[1].slice(0, 80)}` : `${kind}: ${String(message || '').slice(0, 80)}`) + where;
   if (_trackedErrors.has(type)) return;
   _trackedErrors.add(type);
   trackToolError(currentTool, type);
@@ -2184,9 +2184,25 @@ function _describeReason(reason) {
   try { keys = Object.keys(reason).slice(0, 6); } catch { /* exotic object */ }
   return `${kind} {${keys.join(',')}}` + (reason.type ? ` type=${String(reason.type).slice(0, 20)}` : '');
 }
+// Which file and line of our own code a rejection came from (privacy page:
+// "which file and line of PDFree's own code"): the first frame of its stack, or
+// of the Error inside a `{ error }` object, as "nupUI.js:74" — never a path,
+// never another site's script. Two N-up errors (2026-11-14) — one at page
+// load with no file, one a file that stopped being readable — couldn't be
+// traced from their text alone.
+function _whereFrom(reason) {
+  const stack = String(reason?.stack || reason?.error?.stack || '');
+  for (const line of stack.split('\n')) {
+    const m = line.match(/((?:https?:|blob:)[^\s()]+?):(\d+):\d+/);
+    if (!m) continue;
+    if (!_isOwnScript(m[1])) return ' @external';
+    return ` @${m[1].split(/[/?#]/).filter(Boolean).pop()}:${m[2]}`;
+  }
+  return '';
+}
 window.addEventListener('unhandledrejection', event => {
   console.error('[PDFree] Unhandled rejection:', event.reason);
-  _trackUncaught('unhandled_rejection', _describeReason(event.reason));
+  _trackUncaught('unhandled_rejection', _describeReason(event.reason), _whereFrom(event.reason));
 });
 
 // Where an uncaught error came from: our own files (/js/, a worker's blob:)
@@ -2212,6 +2228,8 @@ window.addEventListener('error', event => {
   if (!event.message) return;          // some browser events fire without message
   console.error('[PDFree] Uncaught error:', event.message);
   const external = !_isOwnScript(event.filename) || (!event.filename && /^Uncaught EvalError/.test(event.message));
-  _trackUncaught(external ? 'external_script' : 'js_error', event.message);
+  const where = !external && event.filename
+    ? ` @${String(event.filename).split(/[/?#]/).filter(Boolean).pop()}:${event.lineno || 0}` : '';
+  _trackUncaught(external ? 'external_script' : 'js_error', event.message, where);
 });
 

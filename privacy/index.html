@@ -149,7 +149,7 @@
     <p>To find out which tools fail, on which kinds of files and in which languages, and how long processing takes — so we can fix what doesn't work — PDFree sends small, anonymous usage events to our own server. An event contains only:</p>
     <ul>
       <li>what happened: a tool was opened, a file was added, processing started, finished, failed or was cancelled, a result was downloaded;</li>
-      <li>the tool's name, and for a failure, its category (for example "password-protected file") or, for an unexpected one, the first 60 characters of the program's technical error message (for example "Invalid PDF structure") — messages from the PDF libraries about what failed, not your document's text or name;</li>
+      <li>the tool's name, and for a failure, its category (for example "password-protected file") or, for an unexpected one, the first 60 characters of the program's technical error message (for example "Invalid PDF structure") — messages from the PDF libraries about what failed, not your document's text or name — and which file and line of PDFree's own code it came from (for example "nupUI.js:74");</li>
       <li>the file's size as a range (for example "1–10 MB") and the processing time rounded to 5 seconds;</li>
       <li>the site's language, and — added by our server — your country, your device type (desktop or phone), browser family (for example "Chrome"), operating system family (for example "Android" or "HarmonyOS") and, when the page is open inside an app's own browser, which app (for example "WeChat");</li>
       <li>a random key created when the page loads and gone when you reload or close it, used only to tell which events belong to the same visit. It is not stored on your device and cannot link one visit to another;</li>

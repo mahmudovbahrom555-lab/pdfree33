@@ -165,6 +165,22 @@ for (const [name, fixture, pages, ocr] of [
   });
 }
 
+// An unexpected error says which file and line of our own code it came from
+// (2026-11-14) — never another site's script, never a field's value.
+await test('an unhandled rejection names our file and line; an object without a stack names nothing more', async () => {
+  const s = await open('/pages-per-sheet/');
+  try {
+    await s.page.route('**/js/__probe.js', r => r.fulfill({ contentType: 'text/javascript', body:
+      "Promise.reject(new Error('probe one'));\nPromise.reject({ error: new Error('probe two') });\nPromise.reject({ secret: 'my-file.pdf' });\n" }));
+    await s.page.evaluate(() => { const el = document.createElement('script'); el.src = '/js/__probe.js'; document.head.append(el); });
+    await s.settle();
+    const errs = s.events.filter(e => e.event === 'Tool Error').map(e => e.props.error_type);
+    const want = ['unhandled_rejection: probe one @__probe.js:1', 'unhandled_rejection: Object {error} @__probe.js:2', 'unhandled_rejection: Object {secret}'];
+    for (const w of want) if (!errs.includes(w)) throw new Error(`missing "${w}" in ${JSON.stringify(errs)}`);
+    if (JSON.stringify(errs).includes('my-file.pdf')) throw new Error('a value went into an event');
+  } finally { await s.context.close(); }
+});
+
 await browser.close();
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed} failed`);
