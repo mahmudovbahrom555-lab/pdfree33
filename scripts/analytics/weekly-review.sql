@@ -108,3 +108,23 @@ SELECT blob4 AS target, blob6 AS result, COUNT(DISTINCT blob3) AS people,
 FROM pdfree_events
 WHERE timestamp > NOW() - INTERVAL '30' DAY AND index1 = 'Compress Target'
 GROUP BY target, result ORDER BY people DESC LIMIT 60;
+
+
+-- 10. PDF to Word time by page range and text recognition (from 2026-11-14):
+--     a quarter of 1–10 MB runs took over 2 min and nothing said why.
+--     blob7 pages, blob8 ocr (yes/no), double1 duration_s (rounded to 5 s).
+SELECT blob7 AS pages, blob8 AS ocr, COUNT(DISTINCT blob3) AS people, COUNT() AS runs,
+  avg(double1) AS avg_s, SUM(if(double1 > 120, 1, 0)) AS over_2_min
+FROM pdfree_events
+WHERE timestamp > toDateTime('2026-11-14 03:00:00') AND index1 = 'Tool Success' AND blob2 = 'pdf2word'
+GROUP BY pages, ocr ORDER BY runs DESC LIMIT 40;
+
+
+-- 11. Notices and hand-offs between tools (Fill with no fields → Draw, Resize/Manga → N-up)
+SELECT index1 AS event, blob2 AS tool, blob4 AS detail, blob5 AS detail2,
+  COUNT(DISTINCT blob3) AS people
+FROM pdfree_events
+WHERE timestamp > NOW() - INTERVAL '14' DAY
+  AND (index1 = 'Tool Notice' OR index1 = 'Cross Sell Click'
+       OR (index1 = 'File Added' AND blob2 = 'fill'))
+GROUP BY event, tool, detail, detail2 ORDER BY people DESC LIMIT 60;
