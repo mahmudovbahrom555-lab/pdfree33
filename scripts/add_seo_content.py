@@ -206,7 +206,7 @@ TOOLS = {
             ("What DPI should I choose?", "72 DPI is fine for websites and screen display. 150 DPI works for most office uses. Choose 300 DPI when you need print-quality output or want to read small text clearly after conversion."),
             ("Does converting a PDF to JPG lose quality?", "Converting to JPG involves some compression. At 300 DPI the quality is very high and barely distinguishable from the original. Text remains readable. For lossless output, PNG is better — contact us if you need PNG support."),
             ("Will a 10-page PDF produce 10 separate JPG files?", "Yes. Each page becomes one JPG. If your PDF has more than one page, the files are bundled into a ZIP archive for download."),
-            ("Can I convert specific pages only?", "The current tool converts all pages. To convert only specific pages, first <a href='/split-pdf/' style='color:var(--green)'>split or extract</a> the pages you need into a new PDF, then convert that PDF to JPG."),
+            ("Can I convert specific pages only?", "Yes. Open your PDF, use None, then select the page thumbnails you want to export. One selected page downloads as an image. Multiple selected pages can download together as a ZIP."),
             ("Are my PDF files uploaded to a server?", "No. PDFree uses PDF.js (Mozilla's open-source PDF renderer) running entirely in your browser. Pages are rendered locally and exported as JPG files — nothing leaves your device."),
         ],
         "related": [

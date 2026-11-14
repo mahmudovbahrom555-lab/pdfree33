@@ -1027,14 +1027,13 @@ button,
 }
 
 .j2p-thumb__remove {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 26px;
-  height: 26px;
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0;
   border: 1px solid var(--border);
-  border-radius: 8px 0 8px 0;
+  border-radius: 8px;
   background: var(--surface);
   color: var(--text);
   font-size: 18px;
@@ -5443,6 +5442,7 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 /* Individual thumbnail cell */
 .p2j-thumb-cell {
   position: relative;
+  padding: 0;
   border: 2px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
@@ -5452,11 +5452,13 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   user-select: none;
   background: var(--surface2);
 }
+.p2j-thumb-cell:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
 .p2j-thumb-cell:hover { border-color: var(--green-mid); }
 .p2j-thumb-cell--on { border-color: var(--green); }
 
 /* Placeholder — shown while canvas is rendering */
 .p2j-thumb-ph {
+  display: block;
   width: 100%;
   padding-bottom: var(--thumb-aspect, 141%);
   background: var(--surface2);
