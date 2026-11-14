@@ -24,6 +24,7 @@ import sys
 
 BLOCK = [
     (r'hipaa[- ]safe', 'a HIPAA safety promise'),
+    (r'safe for hipaa|hipaa[- ]compliant (?:pdf|sdk|tool)', 'a HIPAA safety promise'),
     (r'(?:safe|compliant|compliance)\s+by\s+(?:design|architecture)', 'compliance "by design"'),
     (r'structurally\s+(?:guaranteed|impossible)', 'a structural guarantee'),
     (r'no (?:compliance|gdpr) risk', 'a "no risk" promise'),
