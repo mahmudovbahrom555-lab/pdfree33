@@ -902,6 +902,7 @@ window.PDFREE_LOCALE = {
   j2p_scan_filter_color:     'ملون',
   j2p_scan_filter_original:  'أصلي',
   j2p_scan_filter_bw:        'أبيض وأسود',
+  j2p_scan_filter_faded: "نص باهت",
   j2p_scan_brightness:       'السطوع',
   j2p_scan_contrast:         'التباين',
   j2p_scan_reset:            'إعادة تعيين',
@@ -913,9 +914,11 @@ window.PDFREE_LOCALE = {
   scan_cam_permission_denied: 'تم رفض الوصول إلى الكاميرا — سيتم استخدام منتقي الملفات بدلاً من ذلك',
   scan_cam_retake:           'إعادة الالتقاط',
   scan_cam_skip:             'تخطي — استخدام كما هي',
+  scan_cam_add_next: "استخدم القص والتقط صورة أخرى",
   scan_cam_use_crop:         'استخدام هذا القص',
   scan_cam_rotate_left:      'تدوير لليسار',
   scan_cam_rotate_right:     'تدوير لليمين',
+  scan_cam_full_frame: "الصورة كاملة",
   scan_cam_reset_crop:       'إعادة تعيين القص',
   scan_cam_erase:            'محو',
   scan_cam_erase_brush:      'فرشاة',
@@ -936,6 +939,8 @@ window.PDFREE_LOCALE = {
   scan_cam_processing_failed: 'تعذّر معالجة هذه الصورة — يرجى المحاولة مرة أخرى',
 
   // ── scanDocumentUI.js — Document Scanner tool ──
+  sd_ocr_enable: "التعرف على النص",
+  sd_ocr_fallback: "تعذر التعرف على النص. تم حفظ PDF عادي.",
   sd_loading:              'جارٍ تحميل الصور…',
   sd_take_photo:           '📷 التقاط صورة',
   sd_pending_review:       'بحاجة إلى مراجعة',

@@ -61,7 +61,7 @@ let _lastResultBlob  = null;   // Blob for re-download from success card
 let _lastResultName  = null;   // Download filename
 
 // ── Language definitions ─────────────────────────────────────────────────────
-const LANGUAGES = {
+export const OCR_LANGUAGES = {
   european: [
     { code: 'eng', name: 'English',    size: '4 MB',  isDefault: true },
     { code: 'fra', name: 'French',     size: '5 MB'  },
@@ -238,10 +238,10 @@ function _langSelectHTML() {
   const autoLabel = _detectedLang
     ? t('ocr_auto_detected', { lang: _getLangName(_detectedLang) })
     : t('ocr_auto_recommended');
-  const euOptions = LANGUAGES.european
+  const euOptions = OCR_LANGUAGES.european
     .map(l => `<option value="${l.code}"${_selectedLang === l.code ? ' selected' : ''}>${l.name} &middot; ${l.size}</option>`)
     .join('\n        ');
-  const cxOptions = LANGUAGES.complex
+  const cxOptions = OCR_LANGUAGES.complex
     .map(l => `<option value="${l.code}"${_selectedLang === l.code ? ' selected' : ''}>${l.name} &middot; ${l.size}</option>`)
     .join('\n        ');
 
@@ -331,7 +331,7 @@ function _bindLangSelect() {
   sel.value = _selectedLang;
   // Show info immediately if a complex lang is already the active selection on this render
   // (e.g. set by auto-detection or the "continue anyway" escape hatch before this binds)
-  const initComplex = _selectedLang !== 'auto' && LANGUAGES.complex.find(l => l.code === _selectedLang);
+  const initComplex = _selectedLang !== 'auto' && OCR_LANGUAGES.complex.find(l => l.code === _selectedLang);
   if (initComplex) _showLangInfo(initComplex);
   sel.addEventListener('change', e => {
     const val = e.target.value;
@@ -339,7 +339,7 @@ function _bindLangSelect() {
     if (val !== 'auto') {
       try { localStorage.setItem('pdfree_ocr_lang', val); } catch { /* private browsing */ }
     }
-    const complexLang = val !== 'auto' && LANGUAGES.complex.find(l => l.code === val);
+    const complexLang = val !== 'auto' && OCR_LANGUAGES.complex.find(l => l.code === val);
     if (complexLang) {
       _showLangInfo(complexLang);
     } else {
@@ -604,7 +604,7 @@ function _showLangRetry(usedLang) {
   const sc = document.getElementById('successCard');
   if (!sc) return;
   sc.querySelector('.ocr-lang-retry')?.remove();
-  const known = new Set([...LANGUAGES.european, ...LANGUAGES.complex].map(l => l.code));
+  const known = new Set([...OCR_LANGUAGES.european, ...OCR_LANGUAGES.complex].map(l => l.code));
   const alts = [...new Set([..._altLangs, ocrLangForLocale(getLang()), 'eng'])]
     .filter(code => code && code !== usedLang && known.has(code)).slice(0, 3);
   if (!alts.length) return;
@@ -854,7 +854,7 @@ async function _runOcr(file, gen) {
 }
 
 function _getLangName(code) {
-  const all = [...LANGUAGES.european, ...LANGUAGES.complex];
+  const all = [...OCR_LANGUAGES.european, ...OCR_LANGUAGES.complex];
   const found = all.find(l => l.code === code);
   return found ? found.name : code;
 }
@@ -1059,7 +1059,7 @@ function _applyTransform([a, b, c, d, e, f], x, y) {
   return { x: a*x + c*y + e, y: b*x + d*y + f };
 }
 
-async function _buildSearchablePdf(file, ocrPages, lang) {
+async function _buildSearchablePdf(file, ocrPages, lang, progress = _updateProgress) {
   if (!window.PDFLib) {
     throw new Error('pdf-lib not loaded — cannot build searchable PDF');
   }
@@ -1185,10 +1185,72 @@ async function _buildSearchablePdf(file, ocrPages, lang) {
     page.pushOperators(popGraphicsState());
   }
 
-  _updateProgress(98, t('ocr_saving_pdf'));
+  progress(98, t('ocr_saving_pdf'));
   const bytes = await pdfDoc.save({ useObjectStreams: true });
-  _updateProgress(100, t('ocr_done'));
+  progress(100, t('ocr_done'));
   return bytes;
+}
+
+// OCR the assembled scan so the text follows the final page order and layout.
+export async function recognizeScanPdf(file, lang, { signal, progress }) {
+  if (file.size > MAX_FILE_MB * 1024 * 1024) return null;
+  progress(65, t('ocr_initializing_engine'));
+  await Promise.all([loadPdfJs(), loadPdfLib(), loadTesseract()]);
+  signal.throwIfAborted();
+  const bytes = await file.arrayBuffer();
+  signal.throwIfAborted();
+  const task = window.pdfjsLib.getDocument({ data: new Uint8Array(bytes), isEvalSupported: false, disableJavaScript: true, verbosity: 0 });
+  let worker;
+  const stop = () => {
+    if (!worker) return;
+    const active = worker;
+    worker = null;
+    void active.terminate().catch(() => {});
+  };
+  signal.addEventListener('abort', stop, { once: true });
+  try {
+    const doc = await task.promise;
+    signal.throwIfAborted();
+    if (/iphone|ipad|ipod/i.test(navigator.userAgent) && doc.numPages > MAX_PAGES_IOS) return null;
+    worker = await createOcrWorker(lang);
+    signal.throwIfAborted();
+    const pages = [];
+    for (let p = 1; p <= doc.numPages; p++) {
+      signal.throwIfAborted();
+      progress(70 + Math.round(24 * (p - 1) / doc.numPages), t('ocr_page_progress', {
+        p, total: doc.numPages, lang: _getLangName(lang), eta: '',
+      }));
+      const page = await doc.getPage(p);
+      try {
+        const recognized = await _recognizeScanPage(worker, page, lang, signal);
+        pages.push({ pageNum: p, ...recognized });
+      } finally {
+        page.cleanup();
+      }
+    }
+    if (!pages.some(page => page.lines.some(line => line.words.some(word => word.kept && word.confidence >= 20)))) return null;
+    signal.throwIfAborted();
+    return await _buildSearchablePdf(file, pages, lang, progress);
+  } finally {
+    signal.removeEventListener('abort', stop);
+    stop();
+    await task.destroy().catch(() => {});
+  }
+}
+
+// Terminating Tesseract can leave recognize() pending.
+async function _recognizeScanPage(worker, page, lang, signal) {
+  signal.throwIfAborted();
+  let abort;
+  const cancelled = new Promise((_, reject) => {
+    abort = () => reject(signal.reason);
+    signal.addEventListener('abort', abort, { once: true });
+  });
+  try {
+    return await Promise.race([recognizePage(worker, page, lang), cancelled]);
+  } finally {
+    signal.removeEventListener('abort', abort);
+  }
 }
 
 // ── Download helpers ──────────────────────────────────────────────────────────

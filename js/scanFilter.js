@@ -136,7 +136,7 @@ function _filterWorkerRequest(worker, message, transfer) {
  * `imgEl` can be any CanvasImageSource with natural dimensions (a decoded
  * <img>, a canvas, ...).
  * @param {CanvasImageSource & {naturalWidth?: number, width?: number}} imgEl
- * @param {'grayscale'|'color'|'bw'|'original'} [mode='grayscale']
+ * @param {'grayscale'|'faded'|'color'|'bw'|'original'} [mode='grayscale']
  * @param {{brightness?: number, contrast?: number}} [adjust] - -50..50 each,
  *   0 = the same baseline js/scanFilterWorker.js's fixed _STRENGTH already
  *   produced before these were user-adjustable. Ignored in 'original' mode.

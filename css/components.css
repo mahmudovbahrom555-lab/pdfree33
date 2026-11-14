@@ -5953,6 +5953,18 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   margin-top: 12px;
 }
 
+#scanCamConfirmBtn,
+#scanCamSkipBtn {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+#sdCropStatus:not(:empty) {
+  margin-bottom: 12px;
+  color: var(--text2);
+  font-size: 14px;
+}
+
 /* Full-screen on mobile — a real user request while actively using this
    for a real document (an ID card): the default centered-card layout
    caps the working image at 60vh, leaving corner-drag handles cramped
@@ -6662,3 +6674,62 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   .p2p-worksheet-dialog { width: 100vw; height: 100dvh; border: 0; border-radius: 0; }
 }
 .p2p-worksheet-dialog > header button { color: var(--text); font-weight: 600; }
+
+.sd-compare-button,
+.sd-comparison button {
+  min-height: 44px;
+}
+
+.sd-comparison {
+  width: min(900px, 94vw);
+  max-height: 90dvh;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.sd-comparison::backdrop { background: rgba(0, 0, 0, .65); }
+.sd-comparison form { text-align: end; margin-bottom: 12px; }
+
+.sd-comparison__pages {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.sd-comparison figure { margin: 0; }
+.sd-comparison figcaption { margin-bottom: 6px; }
+.sd-comparison img { display: block; width: 100%; max-height: 70dvh; object-fit: contain; }
+
+#scanCamActions { flex-wrap: wrap; }
+#scanCamNextBtn { min-height: 44px; }
+
+.sd-ocr-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+#sdOcrLanguageRow label { display: block; margin-bottom: 4px; }
+#sdOcrLanguage {
+  width: 100%;
+  min-height: 44px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.sd-page-filter { width: min(620px, 94vw); }
+.sd-page-filter img { max-height: 48dvh; }
+.sd-page-filter form { margin: 12px 0 0; }
+.sd-page-filter fieldset { display: grid; gap: 8px; border: 0; padding: 0; text-align: start; }
+.sd-page-filter label { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; }
+.sd-page-filter select { min-height: 44px; max-width: 60%; }
+.sd-page-filter input[type="range"] { width: 55%; }
+.sd-page-filter [role="status"]:empty { display: none; }

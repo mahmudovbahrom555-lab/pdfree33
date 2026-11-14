@@ -58,6 +58,11 @@ export function defaultInsetQuad(width, height, marginFraction = 0.05) {
   };
 }
 
+// With no confident detection, preserve every pixel of the input.
+export function fullFrameQuad(width, height) {
+  return defaultInsetQuad(width - 1, height - 1, 0);
+}
+
 /**
  * Whether a quad (tl/tr/br/bl order — the same order every caller in this
  * codebase already keeps them in) is a plausible, usable crop shape: convex
@@ -237,7 +242,8 @@ export function detectSpineX(data, w, h) {
 // independently-tuned copies — same reasoning as js/scanConstants.js's
 // SCAN_MAX_LONG_EDGE consolidation.
 export const DETECT_LONG_EDGE = 800;  // downsample for detection only — mirrors processor.js's _EREADER_BBOX_EDGE pattern
-const _MIN_AREA_FRACTION  = 0.20; // reject contours smaller than 20% of the frame — too small to plausibly be "the document"
+const _MIN_AREA_FRACTION = 0.20;
+const _MIN_RECEIPT_AREA_FRACTION = 0.06;
 // Reject contours filling nearly the whole frame. Found via a real user
 // photo (document on a textured carpet, with a clothes rack + knee also in
 // frame): the CLAHE + low Canny thresholds + wide 9x9 CLOSE kernel above
@@ -335,6 +341,34 @@ function _quadMaxCornerCosine(pts) {
   return maxCosine;
 }
 
+// Small candidates need the proportions and light margin of a paper receipt.
+function _looksLikeReceipt(points, gray, width, height) {
+  const { tl, tr, br, bl } = orderQuadPoints(points);
+  const sides = [(_dist(tl, tr) + _dist(bl, br)) / 2, (_dist(tl, bl) + _dist(tr, br)) / 2];
+  const long = Math.max(...sides), short = Math.min(...sides);
+  if (long < Math.min(width, height) * 0.45 || short < Math.min(width, height) * 0.075 || long / short < 2.6) return false;
+
+  const center = { x: (tl.x + tr.x + br.x + bl.x) / 4, y: (tl.y + tr.y + br.y + bl.y) / 4 };
+  const data = gray.data;
+  const sample = (x, y) => {
+    const col = Math.round(x), row = Math.round(y);
+    return col < 0 || row < 0 || col >= width || row >= height ? undefined : data[row * width + col];
+  };
+  let paperEdges = 0;
+  for (const [a, b] of [[tl, tr], [tr, br], [br, bl], [bl, tl]]) {
+    let light = 0;
+    for (const t of [0.25, 0.5, 0.75]) {
+      const x = a.x + (b.x - a.x) * t, y = a.y + (b.y - a.y) * t;
+      const dx = (center.x - x) * 0.1, dy = (center.y - y) * 0.1;
+      const inside = sample(x + dx, y + dy);
+      const outside = sample(x - dx, y - dy);
+      if (inside >= 145 && inside - outside >= 18) light++;
+    }
+    if (light >= 2) paperEdges++;
+  }
+  return paperEdges >= 3;
+}
+
 // Runs the shared blur→Canny→morph-close→contour pipeline on a single
 // already-CLAHE-enhanced channel (true grayscale, or one raw color channel
 // — see detectDocumentQuad's per-channel fallback below) and returns the
@@ -342,7 +376,7 @@ function _quadMaxCornerCosine(pts) {
 // fallback can reuse the EXACT same detection logic (including the area-
 // fraction/extent-ratio/corner-angle guards) instead of a second, easier-
 // to-drift-out-of-sync copy.
-function _findQuadInChannel(enhanced, dw, dh, cv) {
+function _findQuadInChannel(enhanced, gray, dw, dh, cv) {
   const blurred = new cv.Mat();
   const edges   = new cv.Mat();
   const morphKernel = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(9, 9));
@@ -375,9 +409,10 @@ function _findQuadInChannel(enhanced, dw, dh, cv) {
     for (let i = 0; i < contours.size(); i++) {
       const contour = contours.get(i);
       const area = cv.contourArea(contour);
-      if (area < frameArea * _MIN_AREA_FRACTION || area > frameArea * _MAX_AREA_FRACTION) { contour.delete(); continue; }
+      if (area < frameArea * _MIN_RECEIPT_AREA_FRACTION || area > frameArea * _MAX_AREA_FRACTION) { contour.delete(); continue; }
 
-      if (area > fallbackArea) {
+      const small = area < frameArea * _MIN_AREA_FRACTION;
+      if (!small && area > fallbackArea) {
         fallbackContour?.delete();
         fallbackArea = area;
         fallbackContour = contour.clone();
@@ -392,7 +427,7 @@ function _findQuadInChannel(enhanced, dw, dh, cv) {
       if (approx.rows === 4 && cv.isContourConvex(approx)) {
         const points = [];
         for (let p = 0; p < 4; p++) points.push({ x: approx.data32S[p * 2], y: approx.data32S[p * 2 + 1] });
-        if (_quadMaxCornerCosine(points) < _MAX_CORNER_COSINE) {
+        if (_quadMaxCornerCosine(points) < _MAX_CORNER_COSINE && (!small || _looksLikeReceipt(points, gray, dw, dh))) {
           best = points;
           bestArea = area;
         }
@@ -468,7 +503,7 @@ export function detectDocumentQuad(sourceCanvas) {
     // real gap in this pipeline; a fixed downstream Canny threshold can't
     // recover an edge that's simply too weak in the source image.
     clahe.apply(gray, enhanced);
-    found = _findQuadInChannel(enhanced, dw, dh, cv);
+    found = _findQuadInChannel(enhanced, gray, dw, dh, cv);
 
     // Per-channel fallback — only pays this extra ~3x detection cost when
     // the fast, common-case grayscale pass above found nothing (a case
@@ -492,7 +527,7 @@ export function detectDocumentQuad(sourceCanvas) {
           const channelMat = channels.get(c);
           const channelEnhanced = new cv.Mat();
           clahe.apply(channelMat, channelEnhanced);
-          const candidate = _findQuadInChannel(channelEnhanced, dw, dh, cv);
+          const candidate = _findQuadInChannel(channelEnhanced, gray, dw, dh, cv);
           channelMat.delete();
           channelEnhanced.delete();
           if (candidate && (!found || candidate.area > found.area)) found = candidate;
