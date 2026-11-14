@@ -247,7 +247,8 @@ export function addFiles(files) {
 
 // What every newly added file goes through: its copy, then the preflight.
 function _afterAdd(added) {
-  for (const f of added) _keepCopy(f);
+  // kept on the file so the process button can wait for the copy (app.js)
+  for (const f of added) f._copyDone = _keepCopy(f).catch(() => {});
 
   // Run preflight on newly added PDFs — async, non-blocking.
   // Annotates file._pdfMeta. For AES- or RC4-encrypted files, tries QPDF
@@ -358,6 +359,16 @@ const _copyBudget = () => (navigator.deviceMemory ?? 8) < 4 || /Android|iPhone|i
 // 2026-10-23: a file over 50 MB unreadable 12 s after it was added — past the
 // budget, still being copied, or changed while copied; nothing told which).
 // Only what the code knows: no state at all is reported as 'unknown'.
+// Whether the file can still be read at its start and its end — a cheap
+// question (two small reads), asked when a read has already failed.
+export async function isReadable(f) {
+  try {
+    await f.slice(0, 1).arrayBuffer();
+    if (f.size > 1) await f.slice(f.size - 1).arrayBuffer();
+    return true;
+  } catch { return false; }
+}
+
 async function _keepCopy(f) {
   if (typeof navigator === 'undefined' || typeof f.stream !== 'function' && typeof f.arrayBuffer !== 'function') return;
   const copied = selectedFiles.reduce((sum, x) => sum + (x !== f && x._copy ? x.size : 0), 0);
@@ -369,7 +380,13 @@ async function _keepCopy(f) {
     copy = f.stream ? await new Response(f.stream()).blob() : new Blob([await f.arrayBuffer()]);
   } catch (err) {
     f._copyState = `copy_failed:${err?.name || 'unknown'}`;
-    if (err?.name !== 'NotReadableError' && err?.name !== 'NotFoundError') return;
+    // A streamed copy reports a file that stops being readable midway as
+    // "TypeError: Failed to fetch", not NotReadableError (tested in Chromium):
+    // the file stayed on the list and failed later as "damaged" (Split and
+    // Compress, Android/Edge, files over 10 MB, 2026-11-11). Ask the file itself.
+    const gone = err?.name === 'NotReadableError' || err?.name === 'NotFoundError'
+      || (err?.name === 'TypeError' && !(await isReadable(f)));
+    if (!gone) return;
     const i = selectedFiles.indexOf(f);
     if (i === -1) return;
     selectedFiles.splice(i, 1);
@@ -596,23 +613,16 @@ function _updateMeta() {
       if (scanned.length > 0) metaStr += ` · ${pageTotal} page${pageTotal !== 1 ? 's' : ''}`;
     }
     metaStr += ` · ${fmtSize(total)}`;
+    // Watermark removal and alternating the two halves of one scan accept one PDF.
+    const mergeMin = _currentTool === 'merge' && !getWmRemove() && getMergeOrder().order !== 'alternate' ? 2 : 1;
+    if (!_locked && count < mergeMin) metaStr += ` · ${t('merge_add_one_more')}`;
     countEl.textContent = metaStr;
 
     const showHint = count > 1 && _currentTool === 'merge' && !_locked;
     const hint = id('reorderHint');
     if (hint) hint.hidden = !showHint;
 
-    // Не снимаем disabled если идёт обработка
-    if (!_locked) {
-      // Merge normally needs 2+ files, but a single file is a valid input when the
-      // user just wants to strip watermarks (handleMerge in worker.js runs fine on
-      // one file) — the watermark-removal toggle is visible and interactive at
-      // count===1, so requiring 2 files unconditionally made that toggle a dead end.
-      // Same for Alternate pages: one scan holding fronts then backs is alternated
-      // by its own halves.
-      const mergeMin = _currentTool === 'merge' && !getWmRemove() && getMergeOrder().order !== 'alternate' ? 2 : 1;
-      btn.disabled = count < mergeMin;
-    }
+    if (!_locked) btn.disabled = count < mergeMin;
   } else {
     hide('fileCount');
     hide('reorderHint');

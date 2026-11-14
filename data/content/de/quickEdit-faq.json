@@ -4,7 +4,7 @@
     "name": "Wird mein PDF irgendwohin hochgeladen, um es zu bearbeiten?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. Der gesamte Vorgang — das Lesen des PDFs, das Rendern als editierbarer Text und das Zusammenbauen des bearbeiteten PDFs — läuft vollständig in deinem Browser. Dein Dokument verlässt niemals dein Gerät."
+      "text": "Nein. Der gesamte Vorgang – das PDF öffnen, die bearbeiteten Zeilen ersetzen und das Ergebnis prüfen – läuft vollständig in deinem Browser. Dein Dokument verlässt dein Gerät nie."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Warum hieß es, mein PDF könne hier nicht bearbeitet werden?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Bevor sich der Editor öffnet, prüft PDFree, wie sauber sich die Struktur deines PDFs in eine editierbare Form umwandeln lässt. Gescannte Dokumente, ungewöhnliche Layouts oder stark beschädigte Textextraktion können zu niedrig bewertet werden, um sicher bearbeitet zu werden — statt dich auf einer defekten Struktur bearbeiten zu lassen und ein schlechteres Ergebnis zu riskieren, blockiert das Tool den Editor und schlägt stattdessen den vollständigen PDF-zu-Word-Konverter vor."
+      "text": "Eine Datei mit Text öffnet sich auf ihren eigenen Seiten, wo du sie direkt bearbeitest. Ein Scan hat keinen Text zum Ändern; ausfüllbare Formulare und signierte PDFs werden nicht direkt bearbeitet. Der bisherige Editor, der das Dokument als bearbeitbaren Text neu aufbaut, prüft zuerst, wie sauber sich die Struktur deines PDFs umwandeln lässt – gescannte Dokumente, ungewöhnliche Layouts oder beschädigte Textextraktion können zu niedrig bewertet werden, und dann schlägt er stattdessen den vollständigen PDF-zu-Word-Konverter vor."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Verändert die Bearbeitung die Formatierung des restlichen Dokuments?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein — es ändert sich nur genau der Text, den du anklickst und neu eintippst. Fett, kursiv, Überschriften, Listennummerierung und Tabellenstruktur an anderen Stellen im Dokument bleiben unangetastet."
+      "text": "Nein. Nur der Text der Zeilen, die du neu eingibst, ändert sich: Ihr alter Text wird entfernt und der neue an derselben Stelle geschrieben. Bilder, andere Zeilen und andere Seiten bleiben, wie sie waren, und jede geänderte Seite wird vor dem Download erneut eingelesen."
     }
   },
   {
@@ -45,6 +45,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Ja. PDFree ist vollkommen kostenlos — keine Registrierung, kein Konto, keine Installation. Tool öffnen, PDF laden, auf den zu korrigierenden Text klicken und das Ergebnis herunterladen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich Text auf jeder Seite suchen und ersetzen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Gib den Text bei Suchen ein und bei Ersetzen durch, was dort stehen soll – leer lassen entfernt den Text, etwa eine Zeile, die am Fuß jeder Seite wiederkehrt. PDFree zeigt, wie viele Treffer es auf wie vielen Seiten gibt, und Alle ersetzen ändert sie im Original-PDF. Ein Treffer muss innerhalb einer Zeile liegen, und der neue Text muss in den Platz seiner Zeile passen; eine Zeile, die sich nicht direkt ändern lässt, bleibt, wie sie war, und ihre Seite wird genannt."
     }
   }
 ]

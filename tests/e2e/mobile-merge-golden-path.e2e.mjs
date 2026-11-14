@@ -182,6 +182,45 @@ await test('output file name: one tap selects the default, typing replaces it, a
   }
 });
 
+// A double or triple click on the drop zone (a folder habit) opens the file
+// picker once, not once per click (26 people rage-clicked it, analytics 2026-11-11).
+await test('drop zone: a double or triple click opens the file picker once', async () => {
+  const ctx = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await ctx.newPage();
+  try {
+    await page.goto(`${BASE_URL}/merge-pdf/`, { waitUntil: 'load' });
+    for (const clicks of [2, 3]) {
+      let opened = 0;
+      const count = () => opened++;
+      page.on('filechooser', count);
+      await page.locator('#dropZone .drop-title').click({ clickCount: clicks });
+      await page.waitForTimeout(800);
+      page.off('filechooser', count);
+      if (opened !== 1) throw new Error(`${clicks} clicks opened the picker ${opened} times`);
+    }
+  } finally {
+    await ctx.close();
+  }
+});
+
+// One PDF chosen: the list says what's missing instead of a silently grey
+// button (user journey 2026-11-13); a second file clears it and enables Merge.
+await test('merge with one PDF: the list says to add one more; a second removes the hint and enables Merge', async () => {
+  const ctx = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await ctx.newPage();
+  try {
+    await page.goto(`${BASE_URL}/merge-pdf/`, { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', [FILE_1]);
+    await page.waitForFunction(() => /Add one more PDF/.test(document.getElementById('fileCount')?.textContent || ''), null, { timeout: 10000 });
+    if (!await page.locator('#mergeBtn').isDisabled()) throw new Error('Merge enabled with one file');
+    await page.setInputFiles('#fileInput', [FILE_2]);
+    await page.waitForFunction(() => !/Add one more PDF/.test(document.getElementById('fileCount')?.textContent || ''), null, { timeout: 10000 });
+    if (await page.locator('#mergeBtn').isDisabled()) throw new Error('Merge still disabled with two files');
+  } finally {
+    await ctx.close();
+  }
+});
+
 await browser.close();
 
 console.log(`\n${'─'.repeat(40)}`);

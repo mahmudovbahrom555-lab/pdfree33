@@ -1026,6 +1026,21 @@ button,
   text-align: center;
 }
 
+.j2p-thumb__remove {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
 .j2p-thumb__badge {
   position: absolute;
   top: -4px;
@@ -1606,6 +1621,10 @@ button,
   flex-wrap: wrap;
 }
 
+.compress-target__custom { display: flex; gap: 8px; margin-top: 8px; }
+.compress-target__custom input { flex: 1 1 auto; min-width: 0; min-height: 44px; padding: 0 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); font-size: 16px; }
+.compress-target__custom select { min-height: 44px; padding: 0 8px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); font-size: 16px; }
+.compress-target__hint { margin: 6px 0 0; color: var(--text2); font-size: 13px; }
 .compress-dpi__chip {
   display: flex;
   flex-direction: column;
@@ -5423,6 +5442,7 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 /* Individual thumbnail cell */
 .p2j-thumb-cell {
   position: relative;
+  padding: 0;
   border: 2px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
@@ -5432,11 +5452,13 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   user-select: none;
   background: var(--surface2);
 }
+.p2j-thumb-cell:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
 .p2j-thumb-cell:hover { border-color: var(--green-mid); }
 .p2j-thumb-cell--on { border-color: var(--green); }
 
 /* Placeholder — shown while canvas is rendering */
 .p2j-thumb-ph {
+  display: block;
   width: 100%;
   padding-bottom: var(--thumb-aspect, 141%);
   background: var(--surface2);
@@ -6542,6 +6564,26 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 .qe-original-line::selection { color: #111; background: #bde2ff; }
 
 .qe-original-page--placing { cursor: crosshair; }
+.qe-page-editor { width: 100%; overflow-x: auto; }
+.qe-page-nav { display: flex; align-items: center; justify-content: center; gap: 12px; margin-block-end: 8px; color: var(--text); }
+.qe-page-nav .qe-copies__button { min-width: 44px; }
+.qe-page-hint { margin: 0 0 8px; text-align: center; color: var(--text2); font-size: 13px; }
+.qe-page-line { border-radius: 2px; outline: 1px dashed transparent; }
+.qe-page-line:hover, .qe-page-line:focus-visible { outline-color: var(--green-text); }
+/* while typing and once edited, the new text shows over the old on a white ground */
+.qe-page-line--active, .qe-page-line--edited { color: #111; background: #fff; font-family: sans-serif; }
+.qe-page-line--active { outline: 2px solid var(--green-text); }
+.qe-page-line--edited { box-shadow: 0 0 0 2px #f5c542; }
+.qe-find { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; margin-block-end: 8px; }
+.qe-find input { flex: 1 1 140px; min-width: 0; min-height: 44px; padding: 0 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); font-size: 16px; }
+.qe-find .qe-copies__button { min-height: 44px; }
+.qe-find__status { flex-basis: 100%; margin: 0; min-height: 1.2em; text-align: center; color: var(--text2); font-size: 13px; }
+.qe-page-line--removed { color: #a00000; background: #fff; font-family: sans-serif; text-decoration: line-through; box-shadow: 0 0 0 2px #f5c542; }
+.qe-repeats { display: flex; flex-direction: column; gap: 8px; margin-block-end: 8px; }
+.qe-repeat { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
+.qe-repeat__text { flex: 1 1 240px; margin: 0; color: var(--text); font-size: 14px; overflow-wrap: anywhere; }
+.qe-repeat .qe-copies__button { min-height: 44px; }
+.qe-page-empty { position: absolute; inset: auto 8px 8px; margin: 0; padding: 8px; border-radius: 6px; background: var(--surface); color: var(--text); font-size: 13px; }
 .qe-scan-field {
   position: absolute;
   box-sizing: border-box;
@@ -6581,3 +6623,42 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   border-color: currentColor;
 }
 .qe-entry a { text-decoration: underline; }
+/* Opt-in PDF to PowerPoint worksheet editor. */
+.p2p-worksheet-launch {
+  margin-top: 12px;
+  background: var(--green-light);
+  color: var(--green-text);
+  border-color: var(--green);
+}
+.p2p-worksheet-dialog {
+  width: min(1480px, calc(100vw - 32px));
+  max-width: none;
+  height: calc(100dvh - 32px);
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  overflow: hidden;
+}
+.p2p-worksheet-dialog[open] {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+.p2p-worksheet-dialog::backdrop { background: rgb(17 24 39 / 60%); }
+.p2p-worksheet-dialog > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-strong);
+}
+.p2p-worksheet-dialog h2 { font-size: 1rem; margin: 0; }
+.p2p-worksheet-dialog iframe { display: block; border: 0; width: 100%; height: 100%; }
+@media (max-width: 740px) {
+  .p2p-worksheet-dialog { width: 100vw; height: 100dvh; border: 0; border-radius: 0; }
+}
+.p2p-worksheet-dialog > header button { color: var(--text); font-weight: 600; }

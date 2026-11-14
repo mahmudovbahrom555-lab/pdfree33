@@ -1498,6 +1498,9 @@ def _generate_pages(config, hashes, env, out_dir, dry_run=False):
                 breadcrumb_schema = _breadcrumb_schema(tool, lang, lang_cfg, canonical_path),
                 hashes         = type('H', (), hashes)(),  # dict → attr access
                 lang_names     = LANG_NAMES,
+                # "One question per slide" (/worksheet-slides/, an editor in a
+                # same-site frame): English page only while its UI is English
+                worksheet      = tool['id'] == 'pdf2ppt' and lang == 'en',
                 # EN-only page for now: the link appears on EN tool pages whose section has entries
                 fixes_anchor   = (FIXES_TOOL_IDS.get(tool['id']) if lang == 'en' and FIXES_TOOL_IDS.get(tool['id']) in fixes_sections else None),
             )

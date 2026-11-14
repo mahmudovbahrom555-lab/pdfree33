@@ -94,7 +94,7 @@ function _render(file) {
 
   el.innerHTML = `
     <div class="compress-info">
-      <span class="compress-info__name" title="${_esc(file.name)}">${name}</span>
+      <span class="compress-info__name" title="${_esc(file.name)}">${_esc(name)}</span>
       <span class="compress-info__dot">·</span>
       <span class="compress-info__meta">${tp(_pageCount, 'split_info_page', 'split_info_pages', { n: _pageCount })} → ${tp(_pageCount, 'p2p_slide_one', 'p2p_slide_many', { n: _pageCount })}</span>
     </div>
@@ -116,10 +116,45 @@ function _render(file) {
     <div id="p2pModeHint" class="compress-scan compress-scan--ok" role="status" aria-live="polite" style="margin-top:8px">
       ${_modeHintText()}
     </div>
+    ${el.dataset.worksheet ? `<button id="p2pWorksheet" class="j2p-chip p2p-worksheet-launch" type="button">${t('p2p_worksheet')}</button>` : ''}
   `;
+
+  const worksheet = id('p2pWorksheet');
+  if (worksheet) worksheet.onclick = () => _openWorksheet(file, el.dataset.worksheet);
 
   el.removeEventListener('change', _onChange);
   el.addEventListener('change', _onChange);
+}
+
+function _openWorksheet(file, url) {
+  if (_file !== file) return;
+  const dialog = document.createElement('dialog');
+  dialog.className = 'p2p-worksheet-dialog';
+  dialog.setAttribute('aria-labelledby', 'p2pWorksheetTitle');
+  const header = document.createElement('header');
+  const title = document.createElement('h2');
+  title.id = 'p2pWorksheetTitle';
+  title.textContent = t('p2p_worksheet');
+  const close = document.createElement('button');
+  close.type = 'button';
+  close.autofocus = true;
+  close.className = 'j2p-chip';
+  close.textContent = t('scan_cam_close');
+  close.onclick = () => dialog.close();
+  const frame = document.createElement('iframe');
+  frame.title = t('p2p_worksheet');
+  frame.onload = () => {
+    frame.onload = null;
+    frame.contentWindow?.postMessage({
+      type: 'pdfree-worksheet-file', file, decryptedBuffer: file._decryptedBuffer,
+    }, location.origin);
+  };
+  frame.src = url + '?embedded=1';
+  header.append(title, close);
+  dialog.append(header, frame);
+  id('pdf2pptOptions').append(dialog);
+  dialog.addEventListener('close', () => dialog.remove(), { once: true });
+  dialog.showModal();
 }
 
 // Unlike pdf2word's own image/text toggle (js/pdf2wordUI.js), the DPI/

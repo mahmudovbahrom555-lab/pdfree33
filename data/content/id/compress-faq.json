@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Banyak formulir daring (pendaftaran CPNS, portal lamaran kerja, situs instansi pemerintah) membatasi ukuran unggahan hanya 2-10 MB, dan seringkali tidak diberitahukan dengan jelas sampai unggahan gagal. Mengompres PDF terlebih dahulu biasanya sudah cukup memperbaikinya, bahkan dengan pengurangan kecil, tanpa mengubah isi dokumen."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya mengompres PDF ke ukuran tertentu, seperti 4 MB atau 500 KB?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa. Di bagian “Kompres ke”, pilih ukuran atau “Ukuran lain” lalu ketik dalam MB atau KB. PDFree mencoba pengaturan dari yang paling ringan dan memakai pengaturan teringan yang membuat file muat, lalu memberi tahu harganya — misalnya gambar 150 dpi dengan kualitas 75 %, atau tanpa kehilangan kualitas sama sekali. Kompresi sebenarnya berjalan hingga empat kali, jadi file besar butuh waktu lebih lama. Jika pengaturan terkuat pun tidak cukup, PDFree mengatakan terus terang bahwa ukuran itu tidak bisa dicapai dan memberi file terdekat; memisah PDF bisa membantu."
+    }
   }
 ]

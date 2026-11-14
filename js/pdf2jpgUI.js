@@ -330,17 +330,20 @@ function _buildThumbs() {
 
   const frag = document.createDocumentFragment();
   for (let p = 1; p <= _pageCount; p++) {
-    const cell = document.createElement('div');
+    const cell = document.createElement('button');
+    cell.type = 'button';
+    cell.setAttribute('aria-label', t('rot_page_aria', { n: p }));
+    cell.setAttribute('aria-pressed', 'true');
     cell.className = 'p2j-thumb-cell p2j-thumb-cell--on';
     cell.dataset.page = p;
     cell.innerHTML = `
-      <div class="p2j-thumb-chk">
+      <span class="p2j-thumb-chk" aria-hidden="true">
         <svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.2">
           <polyline points="1.5,6 4.5,9 10.5,3"/>
         </svg>
-      </div>
-      <div class="p2j-thumb-ph"></div>
-      <div class="p2j-thumb-badge">${p}</div>
+      </span>
+      <span class="p2j-thumb-ph"></span>
+      <span class="p2j-thumb-badge" aria-hidden="true">${p}</span>
     `;
     frag.appendChild(cell);
   }
@@ -413,7 +416,9 @@ function _bindEvents() {
       _selectedPages.push(p);
       _selectedPages.sort((a, b) => a - b);
     }
-    cell.classList.toggle('p2j-thumb-cell--on', _selectedPages.includes(p));
+    const selected = _selectedPages.includes(p);
+    cell.classList.toggle('p2j-thumb-cell--on', selected);
+    cell.setAttribute('aria-pressed', String(selected));
     _afterSelectionChange('custom');
   });
 
@@ -471,7 +476,9 @@ function _applyPreset(preset) {
 
   document.querySelectorAll('#p2jThumbs .p2j-thumb-cell').forEach(cell => {
     const p = parseInt(cell.dataset.page);
-    cell.classList.toggle('p2j-thumb-cell--on', _selectedPages.includes(p));
+    const selected = _selectedPages.includes(p);
+    cell.classList.toggle('p2j-thumb-cell--on', selected);
+    cell.setAttribute('aria-pressed', String(selected));
   });
   _afterSelectionChange(preset);
 }

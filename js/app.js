@@ -19,7 +19,7 @@ import { wireShareButton, resetShareButton } from './shareButton.js';
 console.info(`[PDFree] v${APP_VERSION} loaded — rotate implemented: ${TOOLS.rotate?.implemented}`);
 import { looksEncrypted } from './decryptPdf.js';
 import { showHomePage, showToolPage,
-         renderToolHeader, setButtonReady,
+         renderToolHeader, setButtonReady, setButtonProcessing,
          setButtonDisabled, hideCancelBtn,
          showToast, setDropHint, setBatchHint, clearLongOpHint } from './ui.js';
 import { initFileListeners, setCurrentTool,
@@ -35,7 +35,7 @@ import { hideAllToolOptions, initToolOptions,
 import { savePreset } from './presets.js';
 import { updateMergeDefaultFilename } from './toolRegistrations.js';
 import { renderWorkerScanReport }               from './compressUI.js';
-import { trackToolStart, trackToolSuccess,
+import { trackToolStart, trackToolSuccess, trackCompressTarget,
          trackToolCancel, trackFileAdded,
          trackToolOpen, trackInstallPrompt,
          trackToolError, trackDownload,
@@ -282,8 +282,13 @@ function showTool(tool, pushHistory = true, preFiles = null) {
     history.pushState({ tool }, lt.title, TOOL_SLUGS[tool] || `/${tool}-pdf/`);
   }
 
-  // Heavy DOM work deferred to after first paint — keeps INP under 200ms
+  // Heavy DOM work deferred to after first paint — keeps INP under 200ms.
+  // A file chosen or dropped before that frame (a slow phone draws the tool
+  // page late) is added again after the reset below instead of being wiped
+  // with no message (2026-11-13).
+  const before = [...selectedFiles];
   requestAnimationFrame(() => {
+    const early = selectedFiles.filter(f => !before.includes(f));
     renderToolHeader(lt);
     setCurrentTool(tool, lt.accept);
     setDropHint(lt.accept);
@@ -291,7 +296,7 @@ function showTool(tool, pushHistory = true, preFiles = null) {
     id('fileInput').multiple = lt.multi;
     id('fileInput').accept   = lt.accept;
     resetState();   // already calls hideAllToolOptions internally
-    if (preFiles) addFiles(preFiles);
+    if (preFiles || early.length) addFiles([...(preFiles || []), ...early]);
   });
 }
 
@@ -374,7 +379,7 @@ async function _successUnlessLocked(detail) {
   _handleSuccess(detail);
 }
 
-function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCompressSummary, pageCounts, confidence, atlasEri, requestedCount, successCount, mode }) {
+function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCompressSummary, pageCounts, confidence, atlasEri, requestedCount, successCount, mode, pages, ocrPages }) {
   _freeResultUrl();
   _resultUrl      = URL.createObjectURL(blob);
   _resultBlob     = blob;
@@ -389,7 +394,12 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
   // measures whether the Text/Image relabel (js/pdf2wordUI.js) shifted usage;
   // for pdf2ppt, how many use "Editable text" (a Chinese user's report on it,
   // 2026-10-15, couldn't be told apart from Image mode).
-  trackToolSuccess(tool, { outputSize: blob.size, requestedCount, successCount, mode });
+  trackToolSuccess(tool, { outputSize: blob.size, requestedCount, successCount, mode, pages, ocrPages });
+  if (compressionReport?.target) {
+    const { originalSize, compressedSize, targetSizeMb, target } = compressionReport;
+    trackCompressTarget({ targetBytes: targetSizeMb * 1048576, inputSize: originalSize, outputSize: compressedSize,
+      met: target.met, step: target.step, runs: target.tried.length });
+  }
   _fileAddedThisAttempt = false;   // the attempt is done: the next file starts another
 
   const card = id('successCard');
@@ -646,6 +656,20 @@ function _startWhenAnalysed(tool) {
   setTimeout(tick, 200);
 }
 
+// A wait before the tool starts (the files' copies, their encryption check)
+// shows on the button once it lasts past 150 ms: a press with no visible
+// answer gets pressed again (Rage Click on #mergeBtn, 21 people in a week,
+// analytics 2026-11-11). The tool sets its own state next; a stop before it
+// (a password needed…) gets the button back.
+async function _visiblyWait(promise) {
+  let shown = false;
+  const timer = setTimeout(() => { shown = true; setButtonProcessing(); }, 150);
+  try { await promise; } finally {
+    clearTimeout(timer);
+    if (shown) setButtonReady(getLocalizedTool(TOOLS[currentTool]).btn);
+  }
+}
+
 function _onMergeBtnClick() {
   const mode = id('mergeBtn').dataset.mode || 'process';
   if (mode === 'reset') {
@@ -671,6 +695,14 @@ function _onMergeBtnClick() {
     // its "choose again" in the list instead.
     const unreadable = selectedFiles.find(f => f._unreadable);
     if (unreadable) { showToast(t('err_file_unreadable_marked', { name: unreadable.name }), 8000); return; }
+    // The private copies still being made (files.js _keepCopy): a press right
+    // after adding read the file itself, which an Android pick may no longer
+    // give — "file_unreadable", copy=copying, 3 s after adding (jpg2pdf,
+    // analytics 2026-11-11). Wait for them (a copy that fails takes its file
+    // off the list with why); bounded, so a slow copy never blocks the tool.
+    const copying = selectedFiles.filter(f => f._copyState === 'copying').map(f => f._copyDone);
+    if (copying.length) await _visiblyWait(Promise.race([Promise.all(copying), new Promise(r => setTimeout(r, 15000))]));
+    if (!selectedFiles.length) return;
     // A PDF that still needs its user password can't be processed: every
     // pdf-lib tool loads with ignoreEncryption, so compress/watermark/page
     // numbers/metadata silently returned a corrupt file (0 pages even with
@@ -679,7 +711,7 @@ function _onMergeBtnClick() {
     // validation so that misleading message never shows. Unlock is the one
     // tool meant to receive it; it caches _decryptedBuffer, which clears this.
     if (currentTool !== 'unlock') {
-      await Promise.all(selectedFiles.map(f => f._encryptionCheck));
+      await _visiblyWait(Promise.all(selectedFiles.map(f => f._encryptionCheck)));
       if (selectedFiles.some(f => f._needsPassword && !f._decryptedBuffer)) {
         showToast(t('ocr_password_protected_inline'), 8000);
         return;
@@ -783,6 +815,10 @@ function initEvents() {
     // already activated the input; calling .click() again causes a double-open
     // that immediately closes the picker (invisible bug on iOS).
     if (e.target.closest('#chooseFilesBtn')) return;
+    // The 2nd and 3rd click of a double/triple click (a folder habit) opened
+    // the picker again after each choice — 26 people in a week clicked the
+    // zone three times in a second (Rage Click, analytics 2026-11-11).
+    if (e.detail > 1) return;
     id('fileInput').click();
   });
   id('dropZone').addEventListener('keydown', e => {
@@ -2124,6 +2160,9 @@ function _trackUncaught(kind, message) {
 // be one). "[object Object]" alone was the top N-up error for a week
 // (10 people) and said nothing (2026-11-11).
 function _describeReason(reason) {
+  // a file that stopped being readable: where its private copy stood (files.js
+  // _copyState) — the only clue to which read failed (Split, Android, 2026-11-11)
+  if (reason?.name === 'NotReadableError') return `NotReadableError [copy=${selectedFiles.map(f => f._copyState || 'none').join(',')}]`;
   if (reason?.message) return reason.message;
   if (reason === null || typeof reason !== 'object') return reason;
   const kind = reason.constructor?.name || 'Object';

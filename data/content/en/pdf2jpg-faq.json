@@ -52,7 +52,7 @@
     "name": "Can I convert specific pages only?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "The tool currently converts all pages at once. To export only specific pages, first use the PDFree Split PDF tool to extract the pages you need into a separate PDF, then convert that PDF to JPG. Both steps are free and run locally in your browser."
+      "text": "Yes. Open your PDF, use None, then select the page thumbnails you want to export. One selected page downloads as an image. Multiple selected pages can download together as a ZIP."
     }
   },
   {

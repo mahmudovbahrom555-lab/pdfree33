@@ -28,7 +28,7 @@
 // ============================================================
 
 import { chromium } from 'playwright';
-import { appendFileSync, closeSync, copyFileSync, mkdtempSync, openSync, rmSync, writeSync } from 'fs';
+import { appendFileSync, readFileSync, closeSync, copyFileSync, mkdtempSync, openSync, rmSync, writeSync } from 'fs';
 import { tmpdir } from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -36,6 +36,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE_URL = process.env.PDFREE_BASE_URL || 'http://localhost:8934';
 const GT = path.join(__dirname, '..', 'corpus', 'groundtruth');
+const JPG = path.join(__dirname, '..', 'fixtures', 'gray-scan.jpg');
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -171,6 +172,79 @@ try {
     await page.waitForFunction(() => window.__result || window.__error, null, { timeout: 60000 });
     const after = await page.evaluate(() => window.__error);
     if (after) throw new Error(`the chosen-again file failed: ${after}`);
+  });
+  // The copy's stream breaks midway (a lapsed Android pick, a big file): a
+  // streamed copy reports it as "TypeError: Failed to fetch", not
+  // NotReadableError — the file stayed listed and failed later as "damaged"
+  // (Split and Compress, Android/Edge, analytics 2026-11-11).
+  const addBroken = (page, fileBroken) => page.evaluate(async ([b64, fileBroken]) => {
+    const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+    const f = new File([bytes], 'scan.pdf', { type: 'application/pdf' });
+    Object.defineProperty(f, 'stream', { configurable: true, value: () => new ReadableStream({ start(c) { c.enqueue(bytes.slice(0, 10)); }, pull(c) { c.error(new DOMException('x', 'NotReadableError')); } }) });
+    if (fileBroken) {
+      const err = () => Promise.reject(new DOMException('gone', 'NotReadableError'));
+      Object.defineProperty(f, 'arrayBuffer', { configurable: true, value: err });
+      const realSlice = f.slice.bind(f);
+      Object.defineProperty(f, 'slice', { configurable: true, value: (...a) => { const s = realSlice(...a); Object.defineProperty(s, 'arrayBuffer', { value: err }); return s; } });
+    }
+    const dt = new DataTransfer(); dt.items.add(f);
+    const input = document.getElementById('fileInput'); input.files = dt.files; input.dispatchEvent(new Event('change', { bubbles: true }));
+  }, [readFileSync(path.join(GT, 'en-web.pdf')).toString('base64'), fileBroken]);
+
+  await test('the copy breaks midway and the file is gone: taken off the list at once, with why (not "damaged" later)', async () => {
+    const page = await (await browser.newContext({ serviceWorkers: 'block' })).newPage();
+    await page.goto(`${BASE_URL}/split-pdf/`, { waitUntil: 'load' });
+    // every toast text from the moment the file is added (a slow CI runner missed a one-off poll, 2026-11-12)
+    await page.evaluate(() => {
+      window.__toasts = new Set();
+      setInterval(() => { const t = document.querySelector('#toast')?.innerText; if (t) window.__toasts.add(t); }, 50);
+    });
+    await addBroken(page, true);
+    // the outcome first: the file leaves the list
+    await page.waitForFunction(() => document.querySelectorAll('#fileList .file-item').length === 0 && window.__toasts.size > 0, null, { timeout: 30000 })
+      .catch(() => {});
+    const toasts = await page.evaluate(() => [...window.__toasts]);
+    if (!toasts.some(t => /Couldn't read/.test(t))) throw new Error('no "Couldn\'t read" toast; seen: ' + JSON.stringify(toasts));
+    const listed = await page.evaluate(() => document.querySelectorAll('#fileList .file-item').length);
+    const panel = await page.evaluate(() => document.querySelector('#splitOptions')?.innerText || '');
+    await page.context().close();
+    if (listed !== 0) throw new Error(`still listed: ${listed}`);
+    if (/corrupt|unusual/i.test(panel)) throw new Error(`called damaged: ${panel.slice(0, 120)}`);
+  });
+
+  await test('the copy breaks midway but the file reads fine: it stays and the tool works', async () => {
+    const page = await (await browser.newContext({ serviceWorkers: 'block' })).newPage();
+    await result(page, async () => {
+      await page.goto(`${BASE_URL}/split-pdf/`, { waitUntil: 'load' });
+      await addBroken(page, false);
+      await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 30000 });
+      await page.waitForTimeout(1000);
+      await page.click('#mergeBtn');
+    });
+    await page.context().close();
+  });
+  // Pressed while the private copy is still being made (jpg2pdf, Android, analytics 2026-11-11:
+  // copy=copying, file_unreadable 3 s after adding): the tool waits for the copy, then uses it.
+  await test('pressed while the copy is still being made: the tool waits and uses the copy', async () => {
+    const page = await (await browser.newContext({ serviceWorkers: 'block' })).newPage();
+    await result(page, async () => {
+      await page.goto(`${BASE_URL}/jpg2pdf/`, { waitUntil: 'load' });
+      await page.evaluate(async b64 => {
+        const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+        const f = new File([bytes], 'photo.jpg', { type: 'image/jpeg' });
+        // the copy streams slowly; the file itself can no longer be read (a lapsed Android pick)
+        Object.defineProperty(f, 'stream', { configurable: true, value: () => new ReadableStream({ async start(c) { await new Promise(r => setTimeout(r, 3000)); c.enqueue(bytes); c.close(); } }) });
+        const err = () => Promise.reject(new DOMException('gone', 'NotReadableError'));
+        Object.defineProperty(f, 'arrayBuffer', { configurable: true, value: err });
+        const realSlice = f.slice.bind(f);
+        Object.defineProperty(f, 'slice', { configurable: true, value: (...a) => { const s = realSlice(...a); Object.defineProperty(s, 'arrayBuffer', { value: err }); return s; } });
+        const dt = new DataTransfer(); dt.items.add(f);
+        const input = document.getElementById('fileInput'); input.files = dt.files; input.dispatchEvent(new Event('change', { bubbles: true }));
+      }, readFileSync(JPG).toString('base64'));
+      await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 10000 });
+      await page.click('#mergeBtn');
+    });
+    await page.context().close();
   });
 } finally {
   await browser.close();

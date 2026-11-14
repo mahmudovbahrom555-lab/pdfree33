@@ -1201,7 +1201,7 @@ unreadable. Whenever the new JPEG is smaller (any downsample, a lower quality) i
   /DeviceRGB; a grey JPEG with /Decode is left alone.
 - After the fix: those pages −0.1…−4.8 %; the real scan renders whole; e2e (channels match
   the colour space) fails before, passes after; corpus gate 39/0 FAIL.
-**Status:** `fixing` — waiting for the owner's OK, then verified on pdfree.io.
+**Status:** `verified` — #153 on pdfree.io (482dba70, 2026-11-06): real-1361504 through the live site on Standard and Maximum renders whole (JPEG RGB ↔ /DeviceRGB); compress e2e on pdfree.io 16/16.
 
 ## C33 — after one qpdf abort, every later decryption in the tab fails
 
@@ -1343,4 +1343,6 @@ vs pdfree.io 2df485fe, Standard + Maximum:
 5. e2e: a 1200-px figure drawn 2 in wide → 300×200 (Standard) / 192×128 (Maximum), RGB, text kept — 23/23;
    against pdfree.io the two new tests fail. Unit tests 16/16. signed-pdf 9/9, npm test on Node 20.
 
-**Status:** `fixing` — merge, then verified on pdfree.io.
+**Status:** `verified` — #183 on pdfree.io (deploy 2dc4d02e, 2026-11-12; the first three deploys stopped on a
+CI apt outage and on #185's JSZip warm-up, see #189): compress e2e against the live site 23/23 (C35 tests
+included); arXiv 36525 0.36 MB, 36658 0.59 MB, gip-31 1.05 MB on Maximum — the same bytes as before the merge.
