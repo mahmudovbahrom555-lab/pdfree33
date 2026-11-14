@@ -128,3 +128,11 @@ WHERE timestamp > NOW() - INTERVAL '14' DAY
   AND (index1 = 'Tool Notice' OR index1 = 'Cross Sell Click'
        OR (index1 = 'File Added' AND blob2 = 'fill'))
 GROUP BY event, tool, detail, detail2 ORDER BY people DESC LIMIT 60;
+
+
+-- 12. Files a tool turned away when added (from 2026-11-14): which tool, which extension.
+--     Word to PDF and ".doc": is converting old .doc files (a ~100 MB converter) worth it?
+SELECT blob2 AS tool, blob4 AS ext, COUNT(DISTINCT blob3) AS people, COUNT() AS events
+FROM pdfree_events
+WHERE timestamp > NOW() - INTERVAL '7' DAY AND index1 = 'File Rejected'
+GROUP BY tool, ext ORDER BY people DESC LIMIT 40;

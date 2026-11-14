@@ -11,7 +11,7 @@ import { ACCEPTED_MIME, TOOLS } from './config.js';
 import { t, tp } from './i18n.js';
 import { decryptOwnerOnly } from './decryptPdf.js';
 import { detectSignature } from './signedPdf.js';
-import { trackToolNotice } from './analytics.js';
+import { trackToolNotice, trackFileRejected } from './analytics.js';
 import { bindDragReorder } from './dragReorder.js';
 import { getWmRemove } from './watermarkRemoveUI.js';
 import { getMergeOrder } from './mergeOrderUI.js';
@@ -206,6 +206,7 @@ export function addFiles(files) {
   }
 
   let invalid = 0;
+  const rejected = [];
   let dupes   = 0;
   const added = [];
 
@@ -217,6 +218,7 @@ export function addFiles(files) {
     // п.5: валидация MIME / расширения
     if (!isFileAccepted(f, _currentAccept, ACCEPTED_MIME)) {
       invalid++;
+      rejected.push(f.name);
       return;
     }
     if (existingFPs.has(_fp(f))) {
@@ -230,6 +232,7 @@ export function addFiles(files) {
   });
 
   if (invalid > 0) showToast(_invalidMessage(files), 5000);
+  trackFileRejected(_currentTool, rejected);
   if (dupes > 0) showToast(tp(dupes, 'dupe_skip_one', 'dupe_skip_many'));
 
   if (selectedFiles.length > 0) {

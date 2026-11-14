@@ -139,6 +139,20 @@ export function trackToolSuccess(tool, { inputSize = 0, outputSize = 0, requeste
   _track('Tool Success', props);
 }
 
+// A file a tool turned away when it was added (2026-11-14): only its
+// extension, never its name — anything not shaped like ".doc" is "other".
+// Word to PDF turns old .doc files away; how many people bring one decides
+// whether converting them is worth a ~100 MB converter (privacy page: "for a
+// file a tool doesn't take").
+export function rejectedExt(name) {
+  const m = String(name || '').toLowerCase().match(/(\.[a-z0-9]{1,8})$/);
+  if (m) return m[1];
+  return /\.[^./\\]*$/.test(String(name || '')) ? 'other' : 'none';
+}
+export function trackFileRejected(tool, names) {
+  for (const ext of new Set(names.map(rejectedExt))) _track('File Rejected', { tool, ext });
+}
+
 // PDF to Word (2026-11-14): a quarter of 1–10 MB conversions took over 2 minutes,
 // and nothing said why. The page count as a range and whether any page needed
 // text recognition — never the text (privacy page: "for PDF to Word").

@@ -181,6 +181,19 @@ await test('an unhandled rejection names our file and line; an object without a 
   } finally { await s.context.close(); }
 });
 
+// A file a tool turns away: its extension goes into "File Rejected", never its name (2026-11-14).
+await test('Word to PDF turns a .doc away: File Rejected {tool, ext} with no name', async () => {
+  const s = await open('/word-to-pdf/');
+  try {
+    await s.page.setInputFiles('#fileInput', path.join(FIX, 'docx2pdf_legacy.doc'));
+    await s.settle();
+    const r = s.events.filter(e => e.event === 'File Rejected');
+    if (r.length !== 1) throw new Error(`${r.length} File Rejected`);
+    if (r[0].props.tool !== 'docx2pdf' || r[0].props.ext !== '.doc') throw new Error(JSON.stringify(r[0].props));
+    if (JSON.stringify(r).includes('legacy')) throw new Error('a file name in the event');
+  } finally { await s.context.close(); }
+});
+
 await browser.close();
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed} failed`);
