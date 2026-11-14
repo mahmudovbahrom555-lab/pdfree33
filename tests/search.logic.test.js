@@ -580,6 +580,16 @@ test('pinyin finds the tool (bianji → Quick Edit, xuanzhuan → Rotate, hebing
 test('编辑 (edit) finds Quick Edit, not Redact', () => {
   expect(topKey('编辑pdf', zhIndex)).toBe('quickEdit');
 });
+// Real Search Miss rows (Analytics Engine, 30 days to 2026-11-14), each a tool we have.
+test('shanchu, duibi, 替换, 单页截两页 find Organize, Compare, Quick Edit, Manga Split', () => {
+  expect(topKey('shanchu', zhIndex)).toBe('organize');
+  expect(topKey('duibi', zhIndex)).toBe('compare');
+  expect(topKey('替换', zhIndex)).toBe('quickEdit');
+  expect(topKey('单页截两页', zhIndex)).toBe('mangaSplit');
+});
+test('a half-typed "add fie" finds Add Form Fields', () => {
+  expect(topKey('add fie', index)).toBe('formFields');
+});
 test('Traditional characters are read as Simplified (PDF轉成EXCEL, 壓縮, 浮水印)', () => {
   expect(topKey('PDF轉成EXCEL', zhIndex)).toBe('pdf2excel');
   expect(topKey('壓縮', zhIndex)).toBe('compress');
