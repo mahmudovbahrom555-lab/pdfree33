@@ -1,5 +1,6 @@
 // Drafts for single-column numbered pages. The full width keeps diagrams next
 // to the text, and each result still needs a visual check against the source.
+import { tr } from './i18n.js';
 const NUMBERED_START = /^(?:(?:q|задание|вопрос)\s*)?(\d{1,3})[.)、．](?:\s|$)/iu;
 
 async function lastBandBottom(page, viewport, top) {
@@ -79,9 +80,9 @@ export async function suggestPageFrames(page, suggestTwoColumns) {
   const viewport = page.getViewport({ scale: 1 });
   const { items } = await page.getTextContent();
   const text = items.filter(item => item.str?.trim());
-  if (!text.length) return { reason: 'This page has no text to read.', bands: [] };
+  if (!text.length) return { reason: tr('This page has no text to read.'), bands: [] };
   if (/^answer\s+key\b/i.test(text.slice(0, 2).map(item => item.str.trim()).join(' '))) {
-    return { reason: 'This looks like an answer key. Check the page.', bands: [] };
+    return { reason: tr('This looks like an answer key. Check the page.'), bands: [] };
   }
   const anchors = text.flatMap(item => {
     const marker = NUMBERED_START.exec(item.str.trim());
@@ -89,19 +90,19 @@ export async function suggestPageFrames(page, suggestTwoColumns) {
     const [x, y] = viewport.convertToViewportPoint(item.transform[4], item.transform[5]);
     return [{ x, y, top: Math.max(0, y - item.height - 8), number: Number(marker[1]) }];
   });
-  if (anchors.length < 2) return { reason: 'Too few question numbers for reliable frames.', bands: [] };
+  if (anchors.length < 2) return { reason: tr('Too few question numbers for reliable frames.'), bands: [] };
   const first = Math.min(...anchors.map(anchor => anchor.x));
   if (anchors.some(anchor => anchor.x - first > 10)) {
     const columns = twoColumnSplit(anchors, viewport.width);
     if (columns && suggestTwoColumns) {
       return suggestTwoColumns(page, columns.split, columns.anchors);
     }
-    return { reason: 'Questions start at different indents. Check the columns yourself.', bands: [] };
+    return { reason: tr('Questions start at different indents. Check the columns yourself.'), bands: [] };
   }
   anchors.sort((a, b) => a.top - b.top);
   if (anchors.some((anchor, index) => index &&
     (anchor.number <= anchors[index - 1].number || anchor.top - anchors[index - 1].top < 16))) {
-    return { reason: 'Question numbers or edges are unclear.', bands: [] };
+    return { reason: tr('Question numbers or edges are unclear.'), bands: [] };
   }
   const gap = anchors.some((anchor, index) => index && anchor.number > anchors[index - 1].number + 1);
   const preamble = text.some(item => {
@@ -114,9 +115,9 @@ export async function suggestPageFrames(page, suggestTwoColumns) {
   catch { /* Keep the original lower boundary if the page cannot be rendered. */ }
   return {
     reason: [
-      gap ? 'Check the gap in the numbering.' : '',
-      preamble && !shared ? 'There is text above the first question. Check whether it should be attached.' : '',
-      'Check the frames and shared pictures.',
+      gap ? tr('Check the gap in the numbering.') : '',
+      preamble && !shared ? tr('There is text above the first question. Check whether it should be attached.') : '',
+      tr('Check the frames and shared pictures.'),
     ].filter(Boolean).join(' '),
     shared,
     bands: anchors.map((anchor, index) => ({
