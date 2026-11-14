@@ -138,28 +138,40 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Uploaden PDFree-tools bestanden naar een server?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Nee. Elke PDFree-tool verwerkt bestanden volledig in je browser met JavaScript. Je bestanden verlaten je apparaat nooit, worden nooit naar een server geüpload en nooit ergens buiten het tijdelijke geheugen van je browser opgeslagen." }
-      },
-      {
-        "@type": "Question",
-        "name": "Hoe kan ik controleren dat mijn bestanden niet worden geüpload?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Open de DevTools van je browser (F12), ga naar het tabblad Netwerk en gebruik een willekeurige PDFree-tool. Je ziet geen verzoek met je pdf-bestand. Je ziet de bestanden die de site nodig heeft om te werken (scripts, stijlen, lettertypen en bij sommige tools bibliotheken of taalmodellen) en kleine technische gebruiks- en foutmeldingen die in ons privacybeleid staan beschreven — nooit je pdf-bestand of de inhoud ervan." }
-      },
-      {
-        "@type": "Question",
-        "name": "Wat doet PDFree met mijn gegevens onder de AVG?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Je pdf-bestanden worden in je browser verwerkt en niet naar onze servers geüpload, dus wij hebben de inhoud nooit. De site verzamelt beperkte technische gebruiks- en foutgegevens zonder cookies of blijvende identificatie, zoals ons privacybeleid beschrijft. Wij certificeren geen naleving: of een werkwijze aan je AVG-verplichtingen voldoet, beoordeelt je organisatie." }
-      },
-      {
-        "@type": "Question",
-        "name": "Kan ik PDFree gebruiken voor medische documenten die strikte bescherming vereisen?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Je pdf-bestanden worden in je browser verwerkt en niet naar onze servers geüpload. Wij certificeren geen HIPAA- of AVG-naleving en tekenen geen BAA; of PDFree voor patiëntdossiers past bij je verplichtingen, beslist je organisatie." }
-      }
+        {
+            "@type": "Question",
+            "name": "Uploaden PDFree-tools bestanden naar een server?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Nee. Elke PDFree-tool verwerkt bestanden volledig in je browser. Je bestanden worden nooit naar een server verzonden, ergens opgeslagen of op enige manier gelogd."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Hoe kan ik controleren dat mijn bestanden niet worden geüpload?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Open de DevTools van je browser (F12), ga naar het tabblad Netwerk en gebruik een willekeurige PDFree-tool. Je ziet geen verzoek met je pdf-bestand. Je ziet de bestanden die de site nodig heeft om te werken (scripts, stijlen, lettertypen en bij sommige tools bibliotheken of taalmodellen) en kleine technische gebruiks- en foutmeldingen die in ons privacybeleid staan beschreven — nooit je pdf-bestand of de inhoud ervan."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Wat doet PDFree met mijn gegevens onder de AVG?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Je pdf-bestanden worden in je browser verwerkt en niet naar onze servers geüpload, dus wij hebben de inhoud nooit. De site verzamelt beperkte technische gebruiks- en foutgegevens zonder cookies of blijvende identificatie, zoals ons privacybeleid beschrijft. Wij certificeren geen naleving: of een werkwijze aan je AVG-verplichtingen voldoet, beoordeelt je organisatie."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Kan ik PDFree gebruiken voor medische dossiers die strikte bescherming vereisen?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Je pdf-bestanden worden in je browser verwerkt en niet naar onze servers geüpload. Wij certificeren geen HIPAA- of AVG-naleving en tekenen geen BAA; of PDFree voor patiëntdossiers past bij je verplichtingen, beslist je organisatie."
+            }
+        }
     ]
-  }
+}
   </script>
   <script type="application/ld+json">
   {
@@ -348,11 +360,15 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Kan ik PDFree gebruiken voor medische dossiers die strikte bescherming vereisen?</h3>
-            <p style="margin:0;font-size:14px;">Ja. De architectuur van PDFree zorgt ervoor dat er nooit beschermde gezondheidsinformatie (PHI) extern wordt verzonden. Zorgprofessionals kunnen patiëntendossiers volledig in hun browser verwerken.</p>
+            <p style="margin:0;font-size:14px;">Je pdf-bestanden worden in je browser verwerkt en niet naar onze servers geüpload. Wij certificeren geen HIPAA- of AVG-naleving en tekenen geen BAA; of PDFree voor patiëntdossiers past bij je verplichtingen, beslist je organisatie.</p>
           </div>
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Wat is het verschil tussen PDFree en cloud-PDF-tools?</h3>
             <p style="margin:0;font-size:14px;">Cloud-PDF-tools uploaden je bestanden naar hun servers voor verwerking. PDFree werkt volledig in je browser — je bestanden verlaten nooit je apparaat. PDFree heeft ook geen dagelijkse gebruikslimiet.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Hoe kan ik controleren dat mijn bestanden niet worden geüpload?</h3>
+            <p style="margin:0;font-size:14px;">Open de DevTools van je browser (F12), ga naar het tabblad Netwerk en gebruik een willekeurige PDFree-tool. Je ziet geen verzoek met je pdf-bestand. Je ziet de bestanden die de site nodig heeft om te werken (scripts, stijlen, lettertypen en bij sommige tools bibliotheken of taalmodellen) en kleine technische gebruiks- en foutmeldingen die in ons privacybeleid staan beschreven — nooit je pdf-bestand of de inhoud ervan.</p>
           </div>
         </div>
 

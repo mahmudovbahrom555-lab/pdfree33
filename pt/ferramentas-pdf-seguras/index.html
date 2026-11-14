@@ -138,28 +138,40 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Que tecnologia o PDFree usa para processar PDFs sem enviá-los a um servidor?",
-        "acceptedAnswer": { "@type": "Answer", "text": "O PDFree combina WebAssembly (pdf-lib e PDF.js compilados para WASM) com Web Workers do navegador. O WebAssembly executa o processamento de PDF em velocidade quase nativa diretamente no seu navegador, enquanto os Web Workers mantêm esse trabalho em uma thread separada para que a interface não trave com arquivos grandes." }
-      },
-      {
-        "@type": "Question",
-        "name": "Como posso verificar que meus arquivos não estão sendo enviados?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Abra as DevTools do seu navegador (F12), vá até a aba Rede e use qualquer ferramenta do PDFree. Você não verá nenhuma requisição com o seu arquivo PDF. Você verá os arquivos de que o site precisa para funcionar (scripts, estilos, fontes e, em algumas ferramentas, bibliotecas ou modelos de idioma) e pequenos eventos técnicos de uso e erros descritos na nossa Política de Privacidade — nunca o seu arquivo PDF nem o conteúdo dele." }
-      },
-      {
-        "@type": "Question",
-        "name": "O que o PDFree faz com meus dados segundo a LGPD?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Seus arquivos PDF são processados no seu navegador e não são enviados aos nossos servidores, portanto nunca temos o conteúdo deles. O site coleta informações técnicas limitadas de uso e erros, sem cookies nem identificadores persistentes, como descreve nossa Política de Privacidade. Não certificamos conformidade: se um fluxo de trabalho atende às suas obrigações da LGPD cabe à sua organização avaliar." }
-      },
-      {
-        "@type": "Question",
-        "name": "Posso usar o PDFree para documentos regulados pela HIPAA?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Seus arquivos PDF são processados no seu navegador e não são enviados aos nossos servidores. Não certificamos conformidade com a HIPAA nem assinamos BAA; se usar o PDFree para registros de pacientes atende às suas obrigações, quem decide é a sua organização." }
-      }
+        {
+            "@type": "Question",
+            "name": "Que tecnologia o PDFree usa para processar PDFs sem enviá-los a um servidor?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "O PDFree combina WebAssembly (pdf-lib e PDF.js compilados para WASM) com Web Workers do navegador. O WebAssembly executa o processamento em velocidade quase nativa direto no seu navegador, enquanto os Web Workers mantêm esse trabalho numa thread separada para a interface não travar com arquivos grandes."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Como posso verificar que meus arquivos não estão sendo enviados?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Abra as DevTools do seu navegador (F12), vá até a aba Rede e use qualquer ferramenta do PDFree. Você não verá nenhuma requisição com o seu arquivo PDF. Você verá os arquivos de que o site precisa para funcionar (scripts, estilos, fontes e, em algumas ferramentas, bibliotecas ou modelos de idioma) e pequenos eventos técnicos de uso e erros descritos na nossa Política de Privacidade — nunca o seu arquivo PDF nem o conteúdo dele."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "O que o PDFree faz com meus dados segundo a LGPD?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Seus arquivos PDF são processados no seu navegador e não são enviados aos nossos servidores, portanto nunca temos o conteúdo deles. O site coleta informações técnicas limitadas de uso e erros, sem cookies nem identificadores persistentes, como descreve nossa Política de Privacidade. Não certificamos conformidade: se um fluxo de trabalho atende às suas obrigações da LGPD cabe à sua organização avaliar."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Posso usar o PDFree para registros médicos regulados pela HIPAA?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Seus arquivos PDF são processados no seu navegador e não são enviados aos nossos servidores. Não certificamos conformidade com a HIPAA nem assinamos BAA; se usar o PDFree para registros de pacientes atende às suas obrigações, quem decide é a sua organização."
+            }
+        }
     ]
-  }
+}
   </script>
   <script type="application/ld+json">
   {
@@ -326,6 +338,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Qual a diferença entre o PDFree e as ferramentas PDF na nuvem?</h3>
             <p style="margin:0;font-size:14px;">As ferramentas PDF na nuvem enviam seus arquivos para os servidores delas para processá-los. O PDFree roda inteiramente no seu navegador — seus arquivos nunca saem do seu dispositivo. O PDFree também não tem restrições de uso diário.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Como posso verificar que meus arquivos não estão sendo enviados?</h3>
+            <p style="margin:0;font-size:14px;">Abra as DevTools do seu navegador (F12), vá até a aba Rede e use qualquer ferramenta do PDFree. Você não verá nenhuma requisição com o seu arquivo PDF. Você verá os arquivos de que o site precisa para funcionar (scripts, estilos, fontes e, em algumas ferramentas, bibliotecas ou modelos de idioma) e pequenos eventos técnicos de uso e erros descritos na nossa Política de Privacidade — nunca o seu arquivo PDF nem o conteúdo dele.</p>
           </div>
         </div>
 

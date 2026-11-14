@@ -115,56 +115,56 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How can OCR work without uploading my file?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Modern browsers can run complex software using WebAssembly and JavaScript. PDFree uses Tesseract.js — a port of the industry-standard Tesseract OCR engine compiled to run inside your browser tab. The OCR engine (about 17 MB) is downloaded once and then runs locally. Your PDF is read directly from your device by the browser, processed in RAM, and the result is written back to your device — nothing ever goes to a server."
+        {
+            "@type": "Question",
+            "name": "How can OCR work without uploading my file?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Modern browsers can run complex software using WebAssembly and JavaScript. PDFree uses Tesseract.js — a port of the industry-standard Tesseract OCR engine compiled to run inside your browser tab. The OCR engine (about 17 MB) is downloaded once and then runs locally. Your PDF is read directly from your device by the browser, processed in RAM, and the result is written back to your device — nothing ever goes to a server."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How can I verify that my file is not being uploaded?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Open your browser DevTools (press F12 or Cmd+Option+I), go to the Network tab, and start a filter for 'All' or 'Fetch/XHR'. Then process your PDF. You will see the Tesseract.js engine files load from CDN (first time only) but zero requests containing your PDF data. The file bytes never leave your device."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is PDFree suitable for medical, legal, or financial documents?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Because your files never leave your device, PDFree avoids the confidentiality risks that come with uploading to a cloud OCR service. It is suitable for contracts, patient records, tax forms, court documents, and any other sensitive material. PDFree does not certify HIPAA compliance or sign BAAs — if your organization requires them, consult your compliance officer."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does it work offline?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, after the first use. On first visit, your browser downloads the OCR engine (~17 MB) and the language models you select. These are cached permanently. After that, you can OCR PDFs with no internet connection — useful on flights, in secure environments without internet access, or anywhere with limited connectivity."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What languages can be recognized locally?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "18 languages, all processed on-device: English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish, Arabic, Japanese, Chinese Simplified, Chinese Traditional, Korean, Hindi, and Thai. Language models are downloaded once and cached — repeat use requires no network."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What is the file size limit for local OCR?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Up to 200 MB on desktop browsers with no page limit. On iOS and iPadOS, processing is limited to 30 pages per run to stay within browser memory constraints — split larger documents first. Desktop Chrome, Firefox, Edge, and Safari support arbitrarily large documents within the 200 MB file limit."
+            }
         }
-      },
-      {
-        "@type": "Question",
-        "name": "How can I verify that my file is not being uploaded?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Open your browser DevTools (press F12 or Cmd+Option+I), go to the Network tab, and start a filter for 'All' or 'Fetch/XHR'. Then process your PDF. You will see the Tesseract.js engine files load from CDN (first time only) but zero requests containing your PDF data. The file bytes never leave your device."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is PDFree suitable for medical, legal, or financial documents?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. Because your files never leave your device, PDFree avoids the confidentiality risks that come with uploading to a cloud OCR service. It is suitable for contracts, patient records, tax forms, court documents, and any other sensitive material. PDFree does not certify HIPAA compliance or sign BAAs — if your organization requires them, consult your compliance officer."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Does it work offline?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes, after the first use. On first visit, your browser downloads the OCR engine (~17 MB) and the language models you select. These are cached permanently. After that, you can OCR PDFs with no internet connection — useful on flights, in secure environments without internet access, or anywhere with limited connectivity."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What languages can be recognized without uploading?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "18 languages, all processed locally: English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish, Arabic, Japanese, Chinese Simplified, Chinese Traditional, Korean, Hindi, and Thai. Each language model is downloaded once and cached — subsequent use requires no network for that language."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the file size limit for local OCR?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Up to 200 MB on desktop browsers with no page limit. On iOS and iPadOS, processing is limited to 30 pages per run to stay within browser memory constraints — split larger documents first. Desktop Chrome, Firefox, Edge, and Safari support arbitrarily large documents within the 200 MB file limit."
-        }
-      }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -416,6 +416,26 @@
         <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
           <h3 style="margin:0 0 6px;">Is there a file size or page limit?</h3>
           <p style="margin:0;">Files up to 200 MB are supported with no page limit on desktop browsers. On iOS and iPadOS, processing is capped at 30 pages per run to stay within browser memory. Use Split PDF to process larger documents in sections.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+          <h3 style="margin:0 0 6px;">How can OCR work without uploading my file?</h3>
+          <p style="margin:0;">Modern browsers can run complex software using WebAssembly and JavaScript. PDFree uses Tesseract.js — a port of the industry-standard Tesseract OCR engine compiled to run inside your browser tab. The OCR engine (about 17 MB) is downloaded once and then runs locally. Your PDF is read directly from your device by the browser, processed in RAM, and the result is written back to your device — nothing ever goes to a server.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+          <h3 style="margin:0 0 6px;">How can I verify that my file is not being uploaded?</h3>
+          <p style="margin:0;">Open your browser DevTools (press F12 or Cmd+Option+I), go to the Network tab, and start a filter for 'All' or 'Fetch/XHR'. Then process your PDF. You will see the Tesseract.js engine files load from CDN (first time only) but zero requests containing your PDF data. The file bytes never leave your device.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+          <h3 style="margin:0 0 6px;">Is PDFree suitable for medical, legal, or financial documents?</h3>
+          <p style="margin:0;">Yes. Because your files never leave your device, PDFree avoids the confidentiality risks that come with uploading to a cloud OCR service. It is suitable for contracts, patient records, tax forms, court documents, and any other sensitive material. PDFree does not certify HIPAA compliance or sign BAAs — if your organization requires them, consult your compliance officer.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+          <h3 style="margin:0 0 6px;">Does it work offline?</h3>
+          <p style="margin:0;">Yes, after the first use. On first visit, your browser downloads the OCR engine (~17 MB) and the language models you select. These are cached permanently. After that, you can OCR PDFs with no internet connection — useful on flights, in secure environments without internet access, or anywhere with limited connectivity.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+          <h3 style="margin:0 0 6px;">What is the file size limit for local OCR?</h3>
+          <p style="margin:0;">Up to 200 MB on desktop browsers with no page limit. On iOS and iPadOS, processing is limited to 30 pages per run to stay within browser memory constraints — split larger documents first. Desktop Chrome, Firefox, Edge, and Safari support arbitrarily large documents within the 200 MB file limit.</p>
         </div>
 
       </div>

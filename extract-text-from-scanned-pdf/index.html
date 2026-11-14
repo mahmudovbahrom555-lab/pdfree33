@@ -151,56 +151,56 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How do I extract text from a scanned PDF for free?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Drop your scanned PDF into PDFree, enable 'Also download .txt copy' in the OCR options, select your document language, and click Make PDF Searchable. The extracted text downloads as a plain .txt file with page separators. Everything runs in your browser — free, with no daily limit and no account required."
+        {
+            "@type": "Question",
+            "name": "Can I extract text from a password-protected PDF?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "PDFree can attempt to read password-protected PDFs without a password when the restriction is only on editing or copying (not opening). If the PDF requires a password to open, you will need to remove the password first using a tool with the owner password."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What is the difference between the .txt file and the searchable PDF?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The .txt file contains only the extracted plain text — no images, no layout, just the words. Use it when you need to edit content in Word, paste text into another tool, or process the text programmatically. The searchable PDF keeps your original scanned images with an invisible text layer on top — use it for archiving, sharing, or when you need to search a document while preserving its appearance."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I extract text from a PDF that isn't scanned?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. For PDFs created digitally (from Word, Google Docs, or any app), PDFree detects the existing text layer and extracts it instantly — no OCR engine or download needed. The result is the same .txt file and searchable PDF."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How accurate is the extracted text?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Accuracy depends on scan quality. Clean 300 DPI scans of standard printed text typically score Excellent (90%+) confidence. Below 150 DPI, blurry images, or handwriting significantly reduce accuracy. After extraction, PDFree shows a quality score per page so you can see exactly which pages OCR'd well."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is there a limit on how many pages I can extract?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No page limit on desktop browsers. On iOS and iPadOS, processing is capped at 30 pages to stay within browser memory — use Split PDF first to process larger documents in sections. Files up to 200 MB are supported."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does the PDF get uploaded when extracting text?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. OCR runs entirely in your browser using Tesseract.js. Your PDF never touches any server. Open DevTools → Network and you will see zero uploads while processing."
+            }
         }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the difference between the .txt file and the searchable PDF?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "The .txt file contains only the extracted plain text — no images, no layout, just the words. Use it when you need to edit content in Word, paste text into another tool, or process the text programmatically. The searchable PDF keeps your original scanned images with an invisible text layer on top — use it for archiving, sharing, or when you need to search a document while preserving its appearance."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I extract text from a PDF that already has a text layer?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. PDFree auto-detects whether your PDF has an existing text layer. For text-layer PDFs, extraction is instant and no OCR engine is needed — the text is pulled directly from the file, page by page, with no Tesseract download required."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How accurate is the extracted text?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Accuracy depends on scan quality. Clean 300 DPI scans of standard printed text typically score Excellent (90%+) confidence. Below 150 DPI, blurry images, or handwriting significantly reduce accuracy. After extraction, PDFree shows a quality score per page so you can see exactly which pages OCR'd well."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is there a limit on how many pages I can extract?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No page limit on desktop browsers. On iOS and iPadOS, processing is capped at 30 pages to stay within browser memory — use Split PDF first to process larger documents in sections. Files up to 200 MB are supported."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Does the file get uploaded to extract the text?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Never. OCR runs entirely inside your browser tab. Your PDF never leaves your device — no server ever receives it. To verify: open DevTools → Network tab while processing and you will see zero file uploads."
-        }
-      }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -455,6 +455,18 @@
         <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
           <h3 style="margin:0 0 6px;">Can I extract text from a password-protected PDF?</h3>
           <p style="margin:0;">PDFree can attempt to read password-protected PDFs without a password when the restriction is only on editing or copying (not opening). If the PDF requires a password to open, you will need to remove the password first using a tool with the owner password.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+          <h3 style="margin:0 0 6px;">What is the difference between the .txt file and the searchable PDF?</h3>
+          <p style="margin:0;">The .txt file contains only the extracted plain text — no images, no layout, just the words. Use it when you need to edit content in Word, paste text into another tool, or process the text programmatically. The searchable PDF keeps your original scanned images with an invisible text layer on top — use it for archiving, sharing, or when you need to search a document while preserving its appearance.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+          <h3 style="margin:0 0 6px;">How accurate is the extracted text?</h3>
+          <p style="margin:0;">Accuracy depends on scan quality. Clean 300 DPI scans of standard printed text typically score Excellent (90%+) confidence. Below 150 DPI, blurry images, or handwriting significantly reduce accuracy. After extraction, PDFree shows a quality score per page so you can see exactly which pages OCR'd well.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+          <h3 style="margin:0 0 6px;">Is there a limit on how many pages I can extract?</h3>
+          <p style="margin:0;">No page limit on desktop browsers. On iOS and iPadOS, processing is capped at 30 pages to stay within browser memory — use Split PDF first to process larger documents in sections. Files up to 200 MB are supported.</p>
         </div>
 
       </div>

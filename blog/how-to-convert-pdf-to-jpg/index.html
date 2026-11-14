@@ -127,48 +127,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Does PDF to JPG conversion upload my file?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. PDFree converts PDF to JPG entirely in your browser using PDF.js — Mozilla's open-source PDF renderer. Your file is never sent to any server. You can verify this by opening DevTools → Network tab: you will see no upload during conversion."
+        {
+            "@type": "Question",
+            "name": "Does PDF to JPG conversion upload my file?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. PDFree uses PDF.js (Mozilla's open-source PDF engine) to render pages directly in your browser. Your file is not uploaded to any server. You can verify this: open DevTools → Network tab and you will see no upload during conversion."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I convert PDF to JPG at 300 DPI?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. PDFree offers 72, 150, and 300 DPI output. At 300 DPI the result is print-quality — text is sharp and legible at any zoom. Select your DPI before clicking Convert."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is it completely free — no watermark?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. No watermark, no account, and no daily limit. PDFree adds nothing to your images — the output JPG is a clean render of your PDF page."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I convert PDF to PNG instead of JPG?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. PDFree supports both JPG and PNG output. PNG is lossless — better for text-heavy documents or charts. JPG produces smaller files and suits photo pages. Switch the format before converting."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How do I convert a multi-page PDF to JPG?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Load your PDF and click Convert. Each page is exported as a separate JPG image. For PDFs with more than one page, all images are bundled into a single ZIP file that downloads automatically."
+            }
         }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I convert PDF to JPG at 300 DPI?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. PDFree lets you choose 72, 150, or 300 DPI output. At 300 DPI the images are print-quality — text is sharp and legible at any zoom level. This is the highest quality setting and produces the largest file sizes."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is the PDF to JPG converter completely free — no watermark?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes, completely free with no watermark, no account required, and no daily limit. PDFree adds nothing to your images — the output is a clean JPG or PNG of your PDF page."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I convert PDF to PNG instead of JPG?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. PDFree supports both JPG and PNG output. PNG is lossless — better for text-heavy documents, charts, or anything where you need pixel-perfect sharpness. JPG produces smaller files and suits photo-heavy pages. Switch the format before converting."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How do I convert a multi-page PDF to JPG?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Load your PDF in PDFree and click Convert. Each page is exported as a separate JPG image. For PDFs with more than one page, all images are bundled into a single ZIP file that downloads automatically."
-        }
-      }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">

@@ -85,23 +85,32 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Why do free PDF tools charge for batch processing specifically?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Because batch processing multiplies server costs. A cloud-based tool pays for bandwidth and compute per file processed. One file is a manageable cost to absorb for free; fifty files at once is fifty times the cost. Gating batch behind a paid plan is how these providers keep their free tier financially sustainable." }
-      },
-      {
-        "@type": "Question",
-        "name": "Are there any tools that offer real batch processing for free?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Browser-based tools that process files locally, like PDFree, don't have per-file server costs, so they have no economic reason to cap batch processing. A batch of 2 files and a batch of 200 files cost the same to run: nothing, since no server is involved." }
-      },
-      {
-        "@type": "Question",
-        "name": "What should I check before trusting a 'free batch processing' claim?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Check whether the tool uploads your files to a server (open your browser's Network tab while processing — you'll see the upload if it happens) and whether there's a daily or hourly cap once you go past a couple of files. Many tools advertise 'free' but the batch feature itself, or unlimited daily use of it, is reserved for paid tiers." }
-      }
+        {
+            "@type": "Question",
+            "name": "Why do free PDF tools charge for batch processing specifically?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Because batch processing multiplies server costs. One file is a manageable cost to absorb for free; fifty files at once is fifty times the cost. Gating batch behind a paid plan keeps the free tier financially sustainable for providers that process files on their servers."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Are there any tools that offer real batch processing for free?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Browser-based tools that process files locally don't have per-file server costs, so there's no economic reason to cap batch processing. A batch of 2 files and a batch of 200 files cost the same to run: nothing."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What should I check before trusting a \"free batch processing\" claim?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Check whether the tool uploads your files to a server, and whether there's a daily or hourly cap once you go past a couple of files. Many tools advertise \"free\" but the batch feature itself, or unlimited daily use of it, is reserved for paid tiers."
+            }
+        }
     ]
-  }
+}
   </script>
 </head>
 <body>

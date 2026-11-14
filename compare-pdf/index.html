@@ -132,10 +132,10 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Will my files stay private when comparing PDFs?",
+      "name": "Will my files stay private?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. PDFree runs entirely in your browser. Neither PDF is ever uploaded to a server — not to PDFree's servers, not to any third party. All rendering and comparison happens locally inside your browser tab. You can verify this by opening DevTools → Network tab: you will not see your files being transmitted anywhere."
+        "text": "Yes. PDFree runs entirely in your browser. Neither PDF is ever uploaded — not to PDFree's servers, not to any third party. Open DevTools → Network tab while comparing and you will not see your files being transmitted anywhere."
       }
     },
     {
@@ -143,7 +143,7 @@
       "name": "Can I compare password-protected PDFs?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, if you know the password. PDFree will prompt you to enter it when you open a protected file. Once unlocked, the comparison proceeds normally. PDFree cannot bypass or crack a password — it can only open files you are authorised to open."
+        "text": "Yes, if you know the password. PDFree prompts you to enter it when you open a protected file. Once unlocked, the comparison proceeds normally. PDFree cannot bypass or crack a password — it only opens files you are authorised to open."
       }
     },
     {
@@ -151,7 +151,7 @@
       "name": "Can I compare PDFs on iPhone or Mac without installing an app?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. Open PDFree in Safari (iPhone/iPad) or any browser on Mac — no app download or paid software required. The tool runs entirely in the browser: drop both PDFs, tap Compare PDFs, and scroll through the diff. No installation needed."
+        "text": "Yes. Open PDFree in Safari (iPhone/iPad) or any browser on Mac — no app download or paid software required. Drop both PDFs, tap Compare PDFs, and scroll through the diff. Works entirely in the browser."
       }
     },
     {
@@ -159,7 +159,7 @@
       "name": "Can I compare scanned PDFs?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. PDFree performs a visual comparison at the pixel level, so it works on scanned pages just as well as digital PDFs. Any visible difference — a stamp, a handwritten note, a misaligned scan — will be highlighted in the diff view."
+        "text": "Yes. PDFree compares at the pixel level, so it works on scanned pages as well as digital PDFs. Any visible difference — a stamp, a handwritten note, a misaligned scan — is highlighted in the diff view."
       }
     },
     {
@@ -167,7 +167,7 @@
       "name": "Can I check if two PDFs are identical?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. After comparing, pages with no differences show a 0% changed badge. If all pages show 0% and the page counts match, the two PDFs are visually identical. This is useful for verifying that a copy or a signed version matches the original."
+        "text": "Yes. After comparing, pages with no differences show a 0% changed badge. If all pages show 0% and the page counts match, the files are visually identical — useful for compliance verification, certified copies, and archiving workflows."
       }
     },
     {
@@ -175,7 +175,7 @@
       "name": "What is a PDF redline?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "A redline is a version of a document — typically a contract or legal brief — that shows tracked changes compared to an earlier draft. The term comes from the practice of marking changes in red ink. PDFree highlights those same differences visually: drop the original and the revised version, and the diff view shows every change in red."
+        "text": "A redline is a marked-up version of a document — typically a contract or legal agreement — that shows tracked changes compared to an earlier draft. The term comes from marking changes in red ink. PDFree's diff view serves the same purpose: drop the original and the revised version, and changed areas are highlighted in red."
       }
     },
     {
@@ -183,7 +183,7 @@
       "name": "Does it detect text changes or only visual differences?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "PDFree performs a visual comparison — it highlights any pixel that differs between the two PDFs. This covers text edits, formatting changes, added images, stamps, and layout shifts. It does not do text-only diffing. If you need extracted text compared as strings, use OCR PDF first to get the text, then a text-diff tool."
+        "text": "PDFree performs a visual comparison — it highlights any pixel that differs between the two PDFs. This covers text edits, formatting changes, added images, stamps, and layout shifts. If you need text-only diffing, use OCR PDF first to extract the text, then a text-diff tool."
       }
     },
     {
@@ -191,7 +191,7 @@
       "name": "Can I compare PDFs with different page counts?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. PDFree compares all pages that exist in both files. Pages that only appear in one PDF are shown with an 'Only in A' or 'Only in B' badge so you immediately see which document has extra content."
+        "text": "Yes. PDFree compares all pages that exist in both files. Pages that only appear in one PDF are shown with an \"Only in A\" or \"Only in B\" badge so you immediately see which document has extra content."
       }
     },
     {
@@ -199,7 +199,7 @@
       "name": "Can I export or download the comparison result?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. PDFree displays the differences in your browser for review but does not generate a downloadable report or redline PDF. If you need to share the result, capture the relevant pages using your operating system's screenshot tool (Cmd+Shift+4 on Mac, Windows+Shift+S on Windows)."
+        "text": "No. PDFree displays the differences in your browser for review but does not generate a downloadable report or redline PDF. If you need to share the result, capture the relevant pages using your operating system's screenshot tool (Cmd+Shift+4 on Mac, Windows+Shift+S on Windows). You can then use Redact PDF to cover sensitive areas before sending."
       }
     }
   ]

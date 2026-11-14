@@ -124,48 +124,72 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Posso unire gratis file PDF più grandi di 100 MB?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sì — fino a 500 MB per unione in Chrome o Edge su un computer con almeno 8 GB di memoria, e fino a 300 MB su telefoni, Safari e Firefox. L'elaborazione avviene interamente nel tuo browser, quindi il limite protegge la memoria del tuo dispositivo, non la banda di un server: nei nostri test, un'unione da 500 MB ha richiesto circa 5 secondi su un portatile con 8 GB." }
-      },
-      {
-        "@type": "Question",
-        "name": "Perché gli strumenti cloud hanno un limite per file?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Gli strumenti cloud elaborano i file sui propri server, il che comporta costi di banda e di archiviazione. Per contenere questi costi per gli utenti gratuiti, il servizio impone limiti di dimensione. PDFree elabora tutto localmente nel tuo browser — non ci sono costi server, quindi niente limite giornaliero né tetto di 25 MB: un'unione può arrivare fino a 500 MB su un computer, con un limite che serve solo a proteggere la memoria del tuo dispositivo." }
-      },
-      {
-        "@type": "Question",
-        "name": "Quanto può essere grande un PDF che PDFree riesce a unire?",
-        "acceptedAnswer": { "@type": "Answer", "text": "500 MB per unione in Chrome o Edge su un computer con almeno 8 GB di memoria, 300 MB su telefoni, Safari e Firefox: questi browser non indicano quanta memoria hanno, quindi ricevono il limite prudenziale. Nei nostri test un'unione da 800 MB ha funzionato con circa 1,5 GB di memoria del browser, quindi 500 MB lasciano spazio alle altre schede." }
-      },
-      {
-        "@type": "Question",
-        "name": "Cosa devo fare se il browser si blocca durante l'unione di file molto grandi?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Chiudi le altre schede del browser per liberare memoria, poi riprova — ogni scheda aperta consuma RAM non più disponibile per l'unione. Unire in gruppi più piccoli (5–10 file alla volta, poi unire i risultati) usa anch'esso meno memoria per volta. Puoi anche comprimere prima ogni file con lo strumento Comprimi PDF per ridurre la dimensione totale prima di unire." }
-      },
-      {
-        "@type": "Question",
-        "name": "C'è un limite giornaliero al numero di unioni che posso fare?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. PDFree non ha limiti di utilizzo giornalieri. A differenza degli strumenti cloud con limiti giornalieri nel piano gratuito, con PDFree puoi unire tutti i PDF che ti servono, tutte le volte che vuoi — gratis." }
-      },
-      {
-        "@type": "Question",
-        "name": "Quanti file PDF posso unire contemporaneamente?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Non c'è alcun limite al numero di file. Puoi unire 2, 50, 100 o più file PDF in un'unica operazione, purché insieme restino entro 500 MB su un computer (Chrome/Edge, 8 GB+ di RAM) o 300 MB sui telefoni e negli altri browser." }
-      },
-      {
-        "@type": "Question",
-        "name": "Posso unire gratis 50 o 100 file PDF in una volta sola?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sì. PDFree non ha limiti sul numero di file per unione e nessun limite di utilizzo giornaliero. Carica tutti i file in una volta, ordinali e clicca su Unisci. Il risultato viene scaricato direttamente sul tuo dispositivo — nessun upload su server richiesto." }
-      },
-      {
-        "@type": "Question",
-        "name": "Perché unire PDF grandi è lento sugli strumenti cloud ma veloce su PDFree?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Gli strumenti cloud richiedono di caricare il file sul server, elaborarlo lì e scaricare il risultato — tre passaggi di rete che aggiungono tempo significativo per i file di grandi dimensioni. PDFree elabora tutto localmente nel tuo browser senza alcun trasferimento di rete, quindi la velocità dipende solo dalla CPU del tuo dispositivo, non dalla tua connessione internet." }
-      }
+        {
+            "@type": "Question",
+            "name": "Posso unire gratis file PDF più grandi di 100 MB?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sì — fino a 500 MB per unione in Chrome o Edge su un computer con almeno 8 GB di memoria, e fino a 300 MB su telefoni, Safari e Firefox. L'elaborazione avviene interamente nel tuo browser, quindi il limite protegge la memoria del tuo dispositivo, non la banda di un server: nei nostri test, un'unione da 500 MB ha richiesto circa 5 secondi su un portatile con 8 GB."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Perché gli strumenti cloud hanno un limite di dimensione e PDFree no?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Gli strumenti cloud elaborano i file sui propri server, il che comporta costi di banda e di archiviazione. PDFree elabora i file localmente nel tuo browser — non ci sono costi server, quindi niente limite giornaliero né tetto di 25 MB: un'unione può arrivare fino a 500 MB su un computer, con un limite che serve solo a proteggere la memoria del tuo dispositivo."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Quanto può essere grande un PDF che unisco?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "500 MB per unione in Chrome o Edge su un computer con almeno 8 GB di memoria, 300 MB su telefoni, Safari e Firefox: questi browser non indicano quanta memoria hanno, quindi ricevono il limite prudenziale. Nei nostri test un'unione da 800 MB ha funzionato con circa 1,5 GB di memoria del browser, quindi 500 MB lasciano spazio alle altre schede."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Cosa devo fare se il browser si blocca durante l'unione di file molto grandi?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Chiudi le altre schede per liberare memoria, poi riprova — unire in gruppi più piccoli (5–10 file alla volta, poi unire i risultati) usa anch'esso meno memoria per volta. Puoi anche comprimere prima ogni file con lo strumento Comprimi PDF per ridurre la dimensione totale prima di unire."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "C'è un limite giornaliero alle unioni?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. A differenza degli strumenti cloud con limiti giornalieri nel piano gratuito, PDFree non ha un limite giornaliero. Unisci tutti i PDF che ti servono, tutte le volte che vuoi."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Quanti file PDF posso unire contemporaneamente?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Non c'è alcun limite al numero di file. Puoi unire 2, 50, 100 o più file PDF in un'unica operazione, purché insieme restino entro 500 MB su un computer (Chrome/Edge, 8 GB+ di RAM) o 300 MB sui telefoni e negli altri browser."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Posso unire gratis 50 o 100 file PDF in una volta sola?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sì, completamente gratis e senza limite giornaliero. A differenza degli strumenti cloud con limiti giornalieri nel piano gratuito, PDFree non ha restrizioni di utilizzo. Carica tutti i 50 o 100 file in una volta, ordinali e clicca su Unisci — il risultato viene scaricato direttamente sul tuo dispositivo, senza upload su alcun server."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Perché unire PDF grandi è lento sugli strumenti cloud ma veloce su PDFree?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Gli strumenti cloud richiedono di caricare il file sul server, elaborarlo lì e scaricare il risultato — tre passaggi di rete che aggiungono tempo significativo per i file di grandi dimensioni. PDFree elabora tutto localmente nel tuo browser senza alcun trasferimento di rete, quindi la velocità dipende solo dalla CPU del tuo dispositivo, non dalla tua connessione internet."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -506,6 +530,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Devo creare un account?</h3>
             <p style="margin:0;font-size:14px;">No. PDFree non richiede mai un account, un'email o una registrazione. Apri lo strumento e inizia subito a unire i tuoi file.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Perché unire PDF grandi è lento sugli strumenti cloud ma veloce su PDFree?</h3>
+            <p style="margin:0;font-size:14px;">Gli strumenti cloud richiedono di caricare il file sul server, elaborarlo lì e scaricare il risultato — tre passaggi di rete che aggiungono tempo significativo per i file di grandi dimensioni. PDFree elabora tutto localmente nel tuo browser senza alcun trasferimento di rete, quindi la velocità dipende solo dalla CPU del tuo dispositivo, non dalla tua connessione internet.</p>
           </div>
         </div>
 

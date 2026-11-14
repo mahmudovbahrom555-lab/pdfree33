@@ -58,7 +58,36 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"PDFree","item":"https://pdfree.io/"},{"@type":"ListItem","position":2,"name":"Français","item":"https://pdfree.io/fr/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pdfree.io/fr/blog/"},{"@type":"ListItem","position":4,"name":"Protéger PDF avec mot de passe","item":"https://pdfree.io/fr/blog/proteger-pdf-avec-mot-de-passe/"}]}
   </script>
   <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Quel type de chiffrement PDFree utilise-t-il pour protéger le PDF ?","acceptedAnswer":{"@type":"Answer","text":"PDFree utilise RC4-128, le standard de sécurité Révision 3 de la spécification PDF (PDF 1.4–1.7). Ce n'est pas de l'AES-256 : pour les documents réglementés ou très sensibles, considérez-le comme une couche de protection supplémentaire. Votre mot de passe n'est jamais transmis à un serveur."}},{"@type":"Question","name":"Mes fichiers PDF sont-ils envoyés lors de la protection ?","acceptedAnswer":{"@type":"Answer","text":"Non. PDFree traite tous les fichiers uniquement dans votre navigateur. Vos documents ne quittent jamais votre appareil."}},{"@type":"Question","name":"Puis-je supprimer le mot de passe par la suite ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Utilisez l'outil Déverrouiller PDF de PDFree sur pdfree.io/fr/deverrouiller-pdf/ — également gratuit, sans upload, directement dans le navigateur."}}]}
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Quel type de chiffrement PDFree utilise-t-il pour protéger le PDF ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PDFree utilise RC4-128, le standard de sécurité Révision 3 de la spécification PDF (PDF 1.4–1.7). Ce n'est pas de l'AES-256. Votre mot de passe n'est jamais transmis à un serveur."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Mes fichiers PDF sont-ils envoyés lors de la protection ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Non. PDFree traite tous les fichiers uniquement dans votre navigateur. Vos documents ne quittent jamais votre appareil."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Puis-je supprimer le mot de passe par la suite ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui. Utilisez l'outil Déverrouiller PDF de PDFree — également gratuit, sans upload, directement dans le navigateur."
+      }
+    }
+  ]
+}
   </script>
   <script src="../../../js/theme.js"></script>
 </head>

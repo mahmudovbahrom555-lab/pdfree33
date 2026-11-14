@@ -121,33 +121,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "¿Puedo usar las herramientas de PDFree sin conexión a internet?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sí. Tras tu primera visita, PDFree funciona completamente sin conexión. Un Service Worker guarda en caché todo el JavaScript, los módulos WebAssembly y las fuentes necesarias para ejecutar las herramientas. En visitas posteriores — incluso sin internet — las herramientas cargan desde la caché y siguen procesando PDFs. Esto hace que PDFree sea útil en aviones, zonas con mala conexión o redes corporativas restringidas." }
-      },
-      {
-        "@type": "Question",
-        "name": "¿Qué tecnología usa PDFree para procesar PDFs sin subirlos a un servidor?",
-        "acceptedAnswer": { "@type": "Answer", "text": "PDFree combina WebAssembly (pdf-lib y PDF.js compilados a WASM) con Web Workers del navegador. WebAssembly ejecuta el código de procesamiento de PDF a velocidad casi nativa directamente en tu navegador, mientras que los Web Workers mantienen ese trabajo en un hilo separado para que la interfaz no se congele con archivos grandes. Ninguna de estas tecnologías requiere ni usa un servidor." }
-      },
-      {
-        "@type": "Question",
-        "name": "¿En qué se diferencia esto de las herramientas PDF en la nube?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Las herramientas PDF en la nube suben tu archivo a sus servidores, lo procesan allí y te devuelven el resultado. Esto significa que tu documento viaja por internet, se almacena en infraestructura de terceros (aunque sea temporalmente) y queda sujeto a sus políticas de tratamiento de datos. PDFree es lo contrario: tu archivo nunca sale de tu dispositivo. El motor de procesamiento se ejecuta dentro de tu navegador. No hay ningún servidor implicado en el manejo de tu documento." }
-      },
-      {
-        "@type": "Question",
-        "name": "¿Puedo verificar yo mismo que PDFree no sube mis archivos?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sí. Abre las herramientas de desarrollador de tu navegador (F12 o clic derecho → Inspeccionar), ve a la pestaña Red, y procesa cualquier PDF. No verás ninguna solicitud de red con el contenido de tu archivo — toda la actividad de red se limita a la carga inicial de la página. Es una forma sencilla de comprobar la afirmación en lugar de simplemente confiar en ella." }
-      },
-      {
-        "@type": "Question",
-        "name": "¿Qué pasa con los metadatos ocultos de mis PDFs al procesarlos localmente?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Se mantienen bajo tu control total. Como el procesamiento ocurre en tu dispositivo, PDFree nunca ve ni transmite metadatos como autor, fecha de creación o software usado — a diferencia de las herramientas en la nube, donde esos metadatos pasan por sus servidores igual que el resto del archivo. Puedes usar la herramienta de metadatos de PDFree para revisar o limpiar esta información sin que salga nunca de tu equipo." }
-      }
+        {
+            "@type": "Question",
+            "name": "¿Puedo usar estas herramientas PDF sin conexión a internet?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sí. Tras tu primera visita, PDFree funciona completamente sin conexión. Un Service Worker guarda en caché toda la aplicación — scripts, módulos WebAssembly y fuentes. En cualquier visita posterior, incluso sin internet, todas las herramientas cargan desde la caché y procesan PDFs sin necesitar conexión de red."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "¿Qué tecnología usa PDFree para procesar PDFs sin subirlos a un servidor?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "PDFree combina WebAssembly (pdf-lib y PDF.js compilados a WASM) con Web Workers del navegador. WebAssembly ejecuta el procesamiento de PDF a velocidad casi nativa directamente en tu navegador, mientras los Web Workers lo mantienen en un hilo separado para que la interfaz no se congele con archivos grandes."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "¿En qué se diferencia esto de las herramientas PDF en la nube?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Las herramientas en la nube suben tu archivo a sus servidores, lo procesan de forma remota y te devuelven el resultado. Tu documento está temporalmente en su infraestructura. PDFree es lo contrario — el motor de procesamiento vive en tu navegador. Tu archivo nunca sale de tu dispositivo. Esto hace que PDFree sea fundamentalmente más seguro para documentos sensibles y utilizable sin internet tras la primera carga."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "¿Puedo verificar yo mismo que PDFree no sube mis archivos?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sí. Abre las herramientas de desarrollador de tu navegador (F12 → pestaña Red) y procesa cualquier PDF. No verás ninguna solicitud con el contenido de tu archivo — toda la actividad de red se limita a la carga inicial de la página. Es una forma sencilla de comprobarlo en lugar de simplemente confiar en ello."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "¿Qué pasa con los metadatos ocultos de mis PDFs al procesarlos localmente?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Se mantienen bajo tu control total. Como el procesamiento ocurre en tu dispositivo, PDFree nunca ve ni transmite metadatos como autor o fecha de creación — a diferencia de las herramientas en la nube, donde esos datos pasan por sus servidores igual que el resto del archivo."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">

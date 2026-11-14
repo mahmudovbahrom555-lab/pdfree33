@@ -156,56 +156,56 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "¿Qué pasa si mi conexión a internet se corta mientras uno mis PDFs?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Nada malo — la unión sigue funcionando con normalidad. Como todo el procesamiento ocurre en tu navegador con pdf-lib, PDFree no depende de una conexión activa para unir archivos; solo la necesitas para cargar la página por primera vez. Si tu conexión falla a mitad de una unión, el proceso continúa sin interrupciones porque no hay ninguna solicitud de red en curso que pueda cortarse."
+        {
+            "@type": "Question",
+            "name": "¿Qué pasa si mi conexión a internet se corta mientras uno mis PDFs?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Nada malo — la unión sigue funcionando con normalidad. PDFree no depende de una conexión activa para unir archivos, solo la necesitas para cargar la página. Si tu conexión falla a mitad de una unión, el proceso continúa sin interrupciones porque no hay ninguna solicitud de red en curso."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "¿Es seguro para historiales médicos y documentos legales?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sí. Como los archivos nunca salen de tu dispositivo, PDFree es seguro para historiales médicos protegidos, documentos legales privilegiados y cualquier otro contenido sensible. No hay servidor que pueda ser vulnerado."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "¿En qué se diferencia de las herramientas PDF en la nube?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Las herramientas PDF en la nube suben tus archivos a sus servidores, los procesan allí y los eliminan más tarde; cuánto tiempo los guardan varía. PDFree procesa todo localmente — tus archivos nunca viajan a ningún servidor. Tampoco tienes límite de uso diario, y una unión puede sumar hasta 500 MB en un ordenador (300 MB en móviles)."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "¿Cuánta memoria RAM necesito para unir archivos PDF grandes sin subirlos?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Una misma unión puede sumar hasta 500 MB en Chrome o Edge en un ordenador con 8 GB o más de RAM, y 300 MB en móviles, Safari y Firefox, que no informan de su memoria y reciben el límite seguro. Como no hay subida ni servidor, ese tope no es una cuota de PDFree: solo protege la memoria de tu dispositivo. Para lotes muy grandes, cerrar otras pestañas del navegador libera RAM adicional."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "¿PDFree guarda algún rastro de mis archivos en la caché del navegador tras unirlos?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Aunque PDFree se instala como PWA y guarda en caché los archivos de la propia aplicación para funcionar sin conexión, el contenido de tus PDFs nunca se escribe en caché ni en almacenamiento persistente — existe solo en la RAM del navegador durante la sesión."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "¿Es PDFree compatible con HIPAA?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tus archivos PDF se procesan en tu navegador y no se suben a nuestros servidores. No certificamos el cumplimiento de HIPAA ni firmamos BAA; si usar PDFree para historiales de pacientes encaja con tus obligaciones lo decide tu organización."
+            }
         }
-      },
-      {
-        "@type": "Question",
-        "name": "¿Es seguro para documentos confidenciales como historiales médicos o contratos legales?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Sí. Como PDFree nunca sube tus archivos, es seguro para documentos confidenciales. Historiales médicos, contratos legales, estados financieros e identificaciones personales se procesan por completo en tu dispositivo y nunca se transmiten a ningún servidor. Los archivos existen solo en la memoria RAM de tu navegador y desaparecen al cerrar la pestaña."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "¿En qué se diferencia PDFree de las herramientas PDF en la nube?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Las herramientas PDF en la nube suben tus archivos a sus servidores para procesarlos y los eliminan más tarde; cuánto tiempo los guardan varía. PDFree procesa todo localmente en tu navegador — tus archivos nunca salen de tu dispositivo. Esto hace que PDFree sea inherentemente más seguro para documentos sensibles y usable sin conexión a internet una vez cargado."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "¿Cuánta memoria RAM necesito para unir archivos PDF grandes sin subirlos?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Una misma unión puede sumar hasta 500 MB en Chrome o Edge en un ordenador con 8 GB o más de RAM, y 300 MB en móviles, Safari y Firefox, que no informan de su memoria y reciben el límite seguro. Como no hay subida ni servidor, ese tope no es una cuota de PDFree: solo protege la memoria de tu dispositivo. Para lotes muy grandes, cerrar otras pestañas del navegador libera RAM adicional."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "¿PDFree guarda algún rastro de mis archivos en la caché del navegador tras unirlos?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. Aunque PDFree se instala como Progressive Web App y guarda en caché los archivos de la propia aplicación (HTML, CSS, JS) para funcionar sin conexión, el contenido de tus PDFs nunca se escribe en caché ni en almacenamiento persistente. Los archivos existen únicamente en la memoria RAM del navegador durante la sesión activa y se eliminan por completo al cerrar la pestaña."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "¿Es PDFree compatible con HIPAA?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Tus archivos PDF se procesan en tu navegador y no se suben a nuestros servidores. No certificamos el cumplimiento de HIPAA ni firmamos BAA; si usar PDFree para historiales de pacientes encaja con tus obligaciones lo decide tu organización."
-        }
-      }
     ]
-  }
+}
   </script>
 
   <!-- BreadcrumbList schema -->

@@ -85,23 +85,32 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Is it safe to batch process confidential documents with an online tool?",
-        "acceptedAnswer": { "@type": "Answer", "text": "It depends entirely on whether the tool uploads your files. If it processes files on a server, every document in the batch is transmitted over the internet and briefly exists on that server's infrastructure. If it processes files locally in your browser, nothing is transmitted — you can verify this yourself in DevTools' Network tab." }
-      },
-      {
-        "@type": "Question",
-        "name": "What kinds of documents most need this kind of caution?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Anything with personal, medical, financial, or legally privileged information: contracts, medical records, tax documents, HR files, and insurance claims. These are exactly the documents most often processed in bulk — a batch of client statements, a batch of patient scans, a batch of onboarding packets — which multiplies the exposure if a server upload is involved." }
-      },
-      {
-        "@type": "Question",
-        "name": "Does batch processing locally in the browser have any downsides?",
-        "acceptedAnswer": { "@type": "Answer", "text": "The main practical limit is your device's available RAM rather than a server's capacity. For very large batches (100+ files, or files with heavy embedded images), close other browser tabs first, or split the batch into smaller groups. For the vast majority of real-world batch tasks this isn't a meaningful limitation." }
-      }
+        {
+            "@type": "Question",
+            "name": "Is it safe to batch process confidential documents with an online tool?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "It depends entirely on whether the tool uploads your files. If it processes files on a server, every document in the batch is transmitted over the internet. If it processes files locally in your browser, nothing is transmitted — verify this yourself in DevTools' Network tab."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What kinds of documents most need this kind of caution?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Anything with personal, medical, financial, or legally privileged information — contracts, medical records, tax documents, HR files, and insurance claims. These are exactly the documents most often processed in bulk, which multiplies the exposure if a server upload is involved."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does batch processing locally in the browser have any downsides?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The main practical limit is your device's available RAM rather than a server's capacity. For very large batches, close other tabs first or split the batch into smaller groups. For the vast majority of real-world batch tasks this isn't a meaningful limitation."
+            }
+        }
     ]
-  }
+}
   </script>
 </head>
 <body>

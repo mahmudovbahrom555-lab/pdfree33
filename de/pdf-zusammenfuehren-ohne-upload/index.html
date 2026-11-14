@@ -156,56 +156,56 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Lädt PDFree meine PDF-Dateien auf einen Server hoch?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Nein. PDFree führt PDF-Dateien vollständig in deinem Browser zusammen — mit pdf-lib, einer JavaScript-Bibliothek, die lokal läuft. Deine Dateien werden nie über das Internet gesendet. Du kannst das selbst überprüfen, indem du die DevTools deines Browsers (F12) öffnest, zum Tab „Netzwerk“ gehst und eine Datei zusammenführst — du wirst keine Anfragen mit deinen PDF-Daten sehen."
+        {
+            "@type": "Question",
+            "name": "Lädt PDFree meine PDF-Dateien auf einen Server hoch?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Nein. PDFree führt PDFs vollständig in deinem Browser mit pdf-lib zusammen. Deine Dateien werden nie über das Internet gesendet. Du kannst das überprüfen, indem du DevTools → Netzwerk öffnest — du siehst null Anfragen mit deinen PDF-Daten."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Ist es sicher für medizinische Unterlagen und juristische Dokumente?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ja. Da Dateien dein Gerät nie verlassen, ist PDFree sicher für streng geschützte medizinische Unterlagen, privilegierte juristische Dokumente und jeglichen anderen sensiblen Inhalt. Es gibt keinen Server, der kompromittiert werden könnte."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Wie unterscheidet sich das von Cloud-PDF-Tools?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Cloud-PDF-Tools laden deine Dateien auf ihre Server hoch, verarbeiten sie dort und löschen sie später; wie lange sie sie behalten, ist unterschiedlich. PDFree verarbeitet alles lokal — deine Dateien reisen nie zu einem Server. Du bekommst außerdem kein Tageslimit und kein 25-MB-Limit — eine Zusammenführung darf am Computer bis zu 500 MB groß sein."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Gibt es ein Dateigrößenlimit?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ja, eine: Die Dateien einer Zusammenführung dürfen in Chrome oder Edge auf einem Computer mit mindestens 8 GB Arbeitsspeicher zusammen bis zu 500 MB groß sein, auf Smartphones sowie in Safari und Firefox bis zu 300 MB. Da nichts hochgeladen wird, gibt es kein Upload-Limit — die Grenze schützt nur den Arbeitsspeicher deines Geräts."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Kann ich PDFs vollständig offline zusammenführen?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ja. Nach deinem ersten Besuch wird PDFree als PWA zwischengespeichert und funktioniert vollständig offline — für die Verarbeitung ist keine Internetverbindung nötig."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Was macht PDFree mit meinen Daten nach der DSGVO?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Deine PDF-Dateien werden in deinem Browser verarbeitet und nicht auf unsere Server hochgeladen – ihre Inhalte liegen uns also nie vor. Die Website erfasst begrenzte technische Nutzungs- und Fehlerdaten ohne Cookies oder dauerhafte Kennungen, wie in unserer Datenschutzerklärung beschrieben. Wir zertifizieren keine Konformität: Ob ein Arbeitsablauf deinen DSGVO-Pflichten genügt, muss deine Organisation beurteilen."
+            }
         }
-      },
-      {
-        "@type": "Question",
-        "name": "Ist PDFree sicher für vertrauliche Dokumente wie medizinische Unterlagen oder Verträge?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Ja. Da PDFree deine Dateien nie hochlädt, ist es sicher für vertrauliche Dokumente. Medizinische Unterlagen, Verträge, Finanzberichte und Ausweisdokumente werden vollständig auf deinem Gerät verarbeitet und niemals an einen Server übertragen. Die Dateien existieren nur im Arbeitsspeicher deines Browsers und verschwinden, wenn du den Tab schließt."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Wie unterscheidet sich PDFree von Cloud-PDF-Tools?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Cloud-PDF-Tools laden deine Dateien auf ihre Server hoch und löschen sie später; wie lange sie sie behalten, ist unterschiedlich. PDFree verarbeitet alles lokal in deinem Browser — deine Dateien verlassen dein Gerät nie. Das macht PDFree grundsätzlich sicherer für sensible Dokumente und nutzbar ohne Internetverbindung, sobald es geladen ist."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Gibt es ein Dateigrößenlimit beim Zusammenführen ohne Upload?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Ja, eine: Die Dateien einer Zusammenführung dürfen in Chrome oder Edge auf einem Computer mit mindestens 8 GB Arbeitsspeicher zusammen bis zu 500 MB groß sein, auf Smartphones sowie in Safari und Firefox bis zu 300 MB. Da nichts hochgeladen wird, gibt es kein Upload-Limit — die Grenze schützt nur den Arbeitsspeicher deines Geräts."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Kann ich PDFs offline zusammenführen, ohne sie hochzuladen?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Ja. PDFree ist eine Progressive Web App (PWA). Nach deinem ersten Besuch wird die App in deinem Browser zwischengespeichert und funktioniert vollständig offline. Du kannst PDFs ganz ohne Internetverbindung zusammenführen."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Was macht PDFree mit meinen Daten nach der DSGVO?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Deine PDF-Dateien werden in deinem Browser verarbeitet und nicht auf unsere Server hochgeladen – ihre Inhalte liegen uns also nie vor. Die Website erfasst begrenzte technische Nutzungs- und Fehlerdaten ohne Cookies oder dauerhafte Kennungen, wie in unserer Datenschutzerklärung beschrieben. Wir zertifizieren keine Konformität: Ob ein Arbeitsablauf deinen DSGVO-Pflichten genügt, muss deine Organisation beurteilen."
-        }
-      }
     ]
-  }
+}
   </script>
 
   <!-- BreadcrumbList schema -->

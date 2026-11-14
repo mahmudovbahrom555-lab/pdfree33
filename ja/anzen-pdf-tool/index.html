@@ -138,28 +138,40 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "PDFreeのツールはファイルをサーバーにアップロードしますか？",
-        "acceptedAnswer": { "@type": "Answer", "text": "いいえ。PDFreeのすべてのツールは、JavaScriptを使ってファイルを完全にブラウザ内で処理します。ファイルがデバイスから出ることは一切なく、サーバーにアップロードされることもなく、ブラウザの一時メモリ以外のどこにも保存されません。" }
-      },
-      {
-        "@type": "Question",
-        "name": "自分のファイルがアップロードされていないことをどうやって確認できますか？",
-        "acceptedAnswer": { "@type": "Answer", "text": "ブラウザのDevTools（F12）を開き、［ネットワーク］タブでPDFreeのツールを使ってみてください。PDFファイルを運ぶリクエストは表示されません。 サイトの動作に必要なファイル（スクリプト、スタイル、フォント、一部のツールではライブラリや言語モデル）と、プライバシーポリシーに記載の小さな利用・エラーの技術イベントが表示されます。PDFファイルやその内容が送られることはありません。" }
-      },
-      {
-        "@type": "Question",
-        "name": "GDPRの観点で、PDFreeは私のデータをどう扱いますか？",
-        "acceptedAnswer": { "@type": "Answer", "text": "PDFファイルはブラウザ内で処理され、当社のサーバーにはアップロードされないため、その内容を当社が持つことはありません。サイトは、プライバシーポリシーに記載のとおり、Cookieや永続的な識別子を使わずに、利用状況とエラーに関する限られた技術情報を収集します。当社は適合性を認証しません。ある作業方法がGDPR上の義務を満たすかどうかは、貴組織が判断してください。" }
-      },
-      {
-        "@type": "Question",
-        "name": "HIPAAで規制されている文書にPDFreeを使用できますか？",
-        "acceptedAnswer": { "@type": "Answer", "text": "PDFファイルはブラウザ内で処理され、当社のサーバーにはアップロードされません。当社はHIPAA適合を認証せず、BAAも締結しません。患者記録にPDFreeを使うことが貴組織の義務に合うかどうかは、貴組織が判断します。" }
-      }
+        {
+            "@type": "Question",
+            "name": "PDFreeのツールはファイルをサーバーにアップロードしますか？",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "いいえ。PDFreeのすべてのツールはブラウザ内で完全にファイルを処理します。ファイルがサーバーに送信されたり、どこかに保存されたり、記録されたりすることは一切ありません。"
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "自分のファイルがアップロードされていないことをどうやって確認できますか？",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "ブラウザのDevTools（F12）を開き、［ネットワーク］タブでPDFreeのツールを使ってみてください。PDFファイルを運ぶリクエストは表示されません。 サイトの動作に必要なファイル（スクリプト、スタイル、フォント、一部のツールではライブラリや言語モデル）と、プライバシーポリシーに記載の小さな利用・エラーの技術イベントが表示されます。PDFファイルやその内容が送られることはありません。"
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "GDPRの観点で、PDFreeは私のデータをどう扱いますか？",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "PDFファイルはブラウザ内で処理され、当社のサーバーにはアップロードされないため、その内容を当社が持つことはありません。サイトは、プライバシーポリシーに記載のとおり、Cookieや永続的な識別子を使わずに、利用状況とエラーに関する限られた技術情報を収集します。当社は適合性を認証しません。ある作業方法がGDPR上の義務を満たすかどうかは、貴組織が判断してください。"
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "HIPAAで規制されている医療記録にPDFreeを使用できますか？",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "PDFファイルはブラウザ内で処理され、当社のサーバーにはアップロードされません。当社はHIPAA適合を認証せず、BAAも締結しません。患者記録にPDFreeを使うことが貴組織の義務に合うかどうかは、貴組織が判断します。"
+            }
+        }
     ]
-  }
+}
   </script>
   <script type="application/ld+json">
   {
@@ -348,11 +360,15 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">HIPAAで規制されている医療記録にPDFreeを使用できますか？</h3>
-            <p style="margin:0;font-size:14px;">はい。PDFreeのアーキテクチャにより、保護対象保健情報（PHI）が外部に送信されることは一切ありません。医療専門家は患者記録を完全にブラウザ内で安全に処理できます。</p>
+            <p style="margin:0;font-size:14px;">PDFファイルはブラウザ内で処理され、当社のサーバーにはアップロードされません。当社はHIPAA適合を認証せず、BAAも締結しません。患者記録にPDFreeを使うことが貴組織の義務に合うかどうかは、貴組織が判断します。</p>
           </div>
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFreeはiLovePDFやSmallPDFとどう違いますか？</h3>
             <p style="margin:0;font-size:14px;">iLovePDFやSmallPDFは、処理のためにファイルを自社サーバーにアップロードします。PDFreeは完全にブラウザ内で動作します — ファイルがデバイスから出ることはありません。さらにPDFreeには1日の利用制限もありません。</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">自分のファイルがアップロードされていないことをどうやって確認できますか？</h3>
+            <p style="margin:0;font-size:14px;">ブラウザのDevTools（F12）を開き、［ネットワーク］タブでPDFreeのツールを使ってみてください。PDFファイルを運ぶリクエストは表示されません。 サイトの動作に必要なファイル（スクリプト、スタイル、フォント、一部のツールではライブラリや言語モデル）と、プライバシーポリシーに記載の小さな利用・エラーの技術イベントが表示されます。PDFファイルやその内容が送られることはありません。</p>
           </div>
         </div>
 

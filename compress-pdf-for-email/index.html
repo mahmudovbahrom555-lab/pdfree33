@@ -98,33 +98,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What is the email attachment size limit for Gmail, Outlook, and Yahoo?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Gmail allows attachments up to 25 MB. Outlook.com allows up to 20 MB. Yahoo Mail allows up to 25 MB. Many corporate email servers set limits between 10 and 20 MB. If your PDF exceeds these limits, compress it first — PDFree can reduce a typical 30 MB PDF to under 10 MB." }
-      },
-      {
-        "@type": "Question",
-        "name": "How much can PDFree compress a PDF for email?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Results depend on what's inside the PDF. For scanned documents with embedded photos, PDFree typically achieves 50–75% size reduction. For text-heavy office documents, 20–40% is typical. For already-compressed PDFs (e.g., exported at 'print quality' from Word), reduction may be 15–25%. You can preview the compressed size before downloading." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is it safe to compress confidential documents for emailing?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree compresses files entirely in your browser using JavaScript. No file is ever uploaded to a server. Confidential documents — contracts, financial reports, medical records — stay on your device throughout the process." }
-      },
-      {
-        "@type": "Question",
-        "name": "What if my compressed PDF is still too large?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Try the 'Low quality' compression setting, which applies stronger image reduction. If the PDF still exceeds email limits, split it into smaller parts using PDFree's Split tool, or share it via a file-sharing link (Google Drive, Dropbox) instead of attaching it directly." }
-      },
-      {
-        "@type": "Question",
-        "name": "Does PDF compression affect text quality?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. Text in PDFs is stored as vector data, which is not affected by image compression. Only embedded images (photos, scanned pages) are compressed. Text and fonts remain perfectly sharp at any zoom level after compression." }
-      }
+        {
+            "@type": "Question",
+            "name": "What is the email attachment size limit for Gmail, Outlook, and Yahoo?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Gmail allows 25 MB, Outlook.com allows 20 MB, and Yahoo Mail allows 25 MB per email. Corporate email servers (Office 365, Exchange) often set limits between 10 and 20 MB set by the IT department."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How much can PDFree compress a PDF?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Typically 40–75% for scanned documents and image-heavy PDFs. Text-heavy PDFs (Word exports, reports) compress 20–40%. The exact result depends on image content and the quality setting you choose."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is it safe to compress confidential PDFs for email?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. PDFree compresses files entirely in your browser — no file is ever transmitted to a server. Contracts, financial documents, and medical records stay on your device throughout."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What if my compressed PDF is still too large?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Try the 'Low quality' compression setting, which applies stronger image reduction. If the PDF still exceeds email limits, split it into smaller parts using PDFree's Split tool, or share it via a file-sharing link (Google Drive, Dropbox) instead of attaching it directly."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does compression affect text quality?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Text in PDFs is vector data and is not affected by image compression settings. Only embedded images are compressed. Text remains sharp at any zoom level."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -447,6 +462,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I compress multiple PDFs at once?</h3>
             <p style="margin:0;font-size:14px;">Currently PDFree compresses one PDF at a time. For batch compression, compress each file individually — there are no daily limits or task caps.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">What if my compressed PDF is still too large?</h3>
+            <p style="margin:0;font-size:14px;">Try the 'Low quality' compression setting, which applies stronger image reduction. If the PDF still exceeds email limits, split it into smaller parts using PDFree's Split tool, or share it via a file-sharing link (Google Drive, Dropbox) instead of attaching it directly.</p>
           </div>
         </div>
 

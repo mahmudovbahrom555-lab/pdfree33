@@ -127,48 +127,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Can I merge PDF files without an internet connection?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes — PDFree works offline after the first load. Visit pdfree.io/merge-pdf/ once while connected to cache the app, then use it anytime without internet. The PDF engine runs as WebAssembly in your browser, so no network connection is needed to merge files."
+        {
+            "@type": "Question",
+            "name": "Can I merge PDFs without an internet connection?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes — PDFree works offline after the first load. Visit pdfree.io/merge-pdf/ once while connected to cache the app, then use it anytime without internet. The PDF engine runs as WebAssembly in your browser, so no network connection is needed to merge files."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Which PDFree tools work offline?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Most of them, once you have opened them online at least once — the site and its tools are cached by the service worker. Tools that download something extra on first use, such as OCR language models or the name-detection model in Redact, need that one download with an internet connection; after it, they work offline too."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Do I need to install anything to use PDFree offline?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No installation is required. PDFree runs as a Progressive Web App (PWA) in any modern browser. Simply visit pdfree.io once while connected and the app caches itself automatically. You can optionally install it to your home screen or taskbar for quicker offline access."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does offline mode work in all browsers?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes — Chrome, Firefox, Edge, and Safari all support service workers and WebAssembly. Offline support works across all these browsers on desktop and mobile. Private/Incognito mode may limit caching in some browsers."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What other PDF tools work offline in PDFree?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Most of them, once you have opened them online at least once — the site and its tools are cached by the service worker. Tools that download something extra on first use, such as OCR language models or the name-detection model in Redact, need that one download with an internet connection; after it, they work offline too."
+            }
         }
-      },
-      {
-        "@type": "Question",
-        "name": "How does PDFree work offline?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "PDFree uses a service worker to cache the application files — HTML, CSS, JavaScript, and the WebAssembly PDF engine — on your device after the first visit. When you return without internet, the browser loads everything from the local cache instead of the network. Your PDF files never leave your device in either case."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Do I need to install anything to use PDFree offline?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No installation is required. PDFree runs as a Progressive Web App (PWA) in any modern browser. Simply visit pdfree.io once while connected and the app caches itself automatically. You can optionally install it to your home screen or taskbar for quicker offline access."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Does offline merging work on a plane or without Wi-Fi?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. Once cached, PDFree works in airplane mode, on a train without signal, or on any device with no active internet connection. This makes it ideal for working with confidential documents while traveling or in environments with restricted network access."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What other PDF tools work offline in PDFree?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "All PDFree tools work offline after the first load: Merge, Split, Compress, Rotate, Watermark, Extract Pages, PDF to JPG, JPG to PDF, Protect, and more. The entire toolset is cached as part of the PWA, so switching tools doesn't require a network request."
-        }
-      }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -342,7 +342,7 @@
             <summary style="padding:14px 18px;font-weight:600;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
               Can I merge PDFs without an internet connection?
             </summary>
-            <p style="padding:0 18px 14px;margin:0;font-size:14px;">Yes. Visit <a href="../../merge-pdf/" style="color:var(--green);">pdfree.io/merge-pdf/</a> once while connected, then use it anytime offline. The service worker caches the full app — including the WebAssembly PDF engine — on your device after the first load.</p>
+            <p style="padding:0 18px 14px;margin:0;font-size:14px;">Yes — PDFree works offline after the first load. Visit pdfree.io/merge-pdf/ once while connected to cache the app, then use it anytime without internet. The PDF engine runs as WebAssembly in your browser, so no network connection is needed to merge files.</p>
           </details>
 
           <details style="border:1px solid var(--border);border-radius:10px;padding:0;">
@@ -363,7 +363,7 @@
             <summary style="padding:14px 18px;font-weight:600;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
               Which PDFree tools work offline?
             </summary>
-            <p style="padding:0 18px 14px;margin:0;font-size:14px;">All of them. Merge, Split, Compress, Rotate, Watermark, Extract Pages, PDF to JPG, JPG to PDF, Protect, Annotate, Sign, Fill, Redact — every tool in PDFree is cached by the service worker and works offline after the first load.</p>
+            <p style="padding:0 18px 14px;margin:0;font-size:14px;">Most of them, once you have opened them online at least once — the site and its tools are cached by the service worker. Tools that download something extra on first use, such as OCR language models or the name-detection model in Redact, need that one download with an internet connection; after it, they work offline too.</p>
           </details>
 
           <details style="border:1px solid var(--border);border-radius:10px;padding:0;">
@@ -371,6 +371,16 @@
               Are my files safe when working offline?
             </summary>
             <p style="padding:0 18px 14px;margin:0;font-size:14px;">Yes — and offline mode actually adds an extra layer of certainty. Without a network connection, it is technically impossible for any file data to leave your device. Even when online, PDFree never uploads files; offline mode just makes that guarantee provable.</p>
+          </details>
+            <summary style="padding:14px 18px;font-weight:600;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
+              Do I need to install anything to use PDFree offline?
+            </summary>
+            <p style="padding:0 18px 14px;margin:0;font-size:14px;">No installation is required. PDFree runs as a Progressive Web App (PWA) in any modern browser. Simply visit pdfree.io once while connected and the app caches itself automatically. You can optionally install it to your home screen or taskbar for quicker offline access.</p>
+          </details>
+            <summary style="padding:14px 18px;font-weight:600;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
+              What other PDF tools work offline in PDFree?
+            </summary>
+            <p style="padding:0 18px 14px;margin:0;font-size:14px;">Most of them, once you have opened them online at least once — the site and its tools are cached by the service worker. Tools that download something extra on first use, such as OCR language models or the name-detection model in Redact, need that one download with an internet connection; after it, they work offline too.</p>
           </details>
 
         </div>

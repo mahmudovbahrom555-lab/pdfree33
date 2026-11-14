@@ -124,33 +124,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Czy mogę za darmo skompresować plik PDF większy niż 100 MB?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Tak — do 500 MB w Chrome lub Edge na komputerze z co najmniej 8 GB pamięci i do 150 MB na telefonach, w Safari i Firefoksie. Przetwarzanie odbywa się całkowicie w Twojej przeglądarce, więc limit chroni pamięć Twojego urządzenia, a nie przepustowość serwera — w naszych testach skan 500 MB skompresował się w około 30 sekund na laptopie z 8 GB RAM." }
-      },
-      {
-        "@type": "Question",
-        "name": "Dlaczego narzędzia w chmurze ograniczają darmową kompresję?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Narzędzia w chmurze kompresują pliki na swoich serwerach, co generuje koszty transferu i przechowywania. Aby ograniczyć te koszty dla darmowych użytkowników, narzędzie wprowadza limity rozmiaru pliku i dzienne limity. PDFree kompresuje wszystko lokalnie w Twojej przeglądarce, więc nie ponosi kosztów serwerowych — a co za tym idzie, nie ma dziennego limitu ani limitu 25 MB; pliki mogą mieć do 500 MB na komputerze, a limit służy wyłącznie ochronie pamięci Twojego urządzenia." }
-      },
-      {
-        "@type": "Question",
-        "name": "Jak bardzo PDFree może skompresować duży PDF?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Wynik zależy od zawartości. PDF-y z wieloma osadzonymi obrazami często kurczą się o 40–80%. PDF-y głównie tekstowe kompresują się mniej — zazwyczaj o 10–30%. PDFree wykorzystuje te same algorytmy kompresji co narzędzia desktopowe, działając w całości w Twojej przeglądarce." }
-      },
-      {
-        "@type": "Question",
-        "name": "Czy istnieje dzienny limit liczby kompresji PDF?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Nie. PDFree nie ma żadnych dziennych limitów użycia. W przeciwieństwie do narzędzi w chmurze z dziennymi limitami w darmowym planie, PDFree pozwala skompresować tyle PDF-ów, ile potrzebujesz, tak często, jak chcesz — za darmo." }
-      },
-      {
-        "@type": "Question",
-        "name": "Czy kompresja obniży jakość mojego PDF-a?",
-        "acceptedAnswer": { "@type": "Answer", "text": "W dokumentach głównie tekstowych kompresja nie ma widocznego wpływu na jakość — tekst pozostaje ostry. W PDF-ach ze zdjęciami wyższe poziomy kompresji zmniejszają rozdzielczość obrazów, co może być zauważalne przy dokładniejszym oglądaniu. Wybierz umiarkowany poziom kompresji, aby zrównoważyć redukcję rozmiaru i jakość obrazów." }
-      }
+        {
+            "@type": "Question",
+            "name": "Czy mogę za darmo skompresować plik PDF większy niż 100 MB?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tak — do 500 MB w Chrome lub Edge na komputerze z co najmniej 8 GB pamięci i do 150 MB na telefonach, w Safari i Firefoksie. Przetwarzanie odbywa się całkowicie w Twojej przeglądarce, więc limit chroni pamięć Twojego urządzenia, a nie przepustowość serwera — w naszych testach skan 500 MB skompresował się w około 30 sekund na laptopie z 8 GB RAM."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Dlaczego narzędzia w chmurze ograniczają darmową kompresję, a PDFree nie?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Narzędzia w chmurze przetwarzają pliki na swoich serwerach, co generuje realne koszty transferu i obliczeń. PDFree przetwarza pliki lokalnie w Twojej przeglądarce — nie ponosi kosztów serwerowych, więc nie ma dziennego limitu ani limitu 25 MB; pliki mogą mieć do 500 MB na komputerze, a limit służy wyłącznie ochronie pamięci Twojego urządzenia."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Jak bardzo PDFree może skompresować duży PDF?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Wynik zależy od zawartości. PDF-y z wieloma osadzonymi obrazami często kurczą się o 40–80%. PDF-y głównie tekstowe kompresują się mniej — zazwyczaj o 10–30%. PDFree wykorzystuje te same algorytmy kompresji co narzędzia desktopowe, działając w całości w Twojej przeglądarce."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Czy istnieje dzienny limit kompresji PDF?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Nie. W przeciwieństwie do narzędzi w chmurze z dziennymi limitami w darmowym planie, PDFree nie ma dziennego limitu. Kompresuj tyle PDF-ów, ile potrzebujesz, tak często, jak chcesz."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "O ile kompresja zmniejszy rozmiar mojego PDF-a?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Wynik zależy od zawartości. PDF-y bogate w obrazy zwykle kurczą się o 40–80%. PDF-y głównie tekstowe kompresują się o 10–30%. PDFree wykorzystuje te same algorytmy kompresji co narzędzia desktopowe."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -418,6 +433,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Czy mój plik jest przesyłany na serwer podczas kompresji?</h3>
             <p style="margin:0;font-size:14px;">Nie. PDFree nigdy nie przesyła Twojego pliku. Cała operacja kompresji odbywa się w JavaScript wewnątrz Twojej przeglądarki, na Twoim urządzeniu. Twój dokument pozostaje całkowicie prywatny — nigdy nie trafia na żaden serwer.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Jak bardzo PDFree może skompresować duży PDF?</h3>
+            <p style="margin:0;font-size:14px;">Wynik zależy od zawartości. PDF-y z wieloma osadzonymi obrazami często kurczą się o 40–80%. PDF-y głównie tekstowe kompresują się mniej — zazwyczaj o 10–30%. PDFree wykorzystuje te same algorytmy kompresji co narzędzia desktopowe, działając w całości w Twojej przeglądarce.</p>
           </div>
         </div>
 

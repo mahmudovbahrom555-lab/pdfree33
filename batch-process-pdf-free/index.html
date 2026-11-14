@@ -110,48 +110,72 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Can I really batch process PDF files for free without uploading them?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree's batch mode runs entirely in your browser using JavaScript — your files are never sent to a server. You can verify this yourself: open your browser's DevTools → Network tab while processing a batch, and you'll see no PDF data being uploaded anywhere." }
-      },
-      {
-        "@type": "Question",
-        "name": "How many PDF files can I process in one batch?",
-        "acceptedAnswer": { "@type": "Answer", "text": "There is no limit on the number of files, and each file is checked against its tool's own size limit — most modern computers handle 50-100+ files without issue. Files are processed one at a time in sequence to keep memory usage predictable, then packaged into a ZIP." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is there a daily limit on batch processing?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. Many free cloud-based PDF tools cap you at 1 task per hour or 2 tasks per day. PDFree has no daily cap and no hourly cooldown — run as many batches as you need, as often as you want." }
-      },
-      {
-        "@type": "Question",
-        "name": "Which PDFree tools support batch processing?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Compress, Protect (password), Watermark, Page Numbers, and Flatten all support full batch processing today. Rotate is single-file only, since rotation is applied per page and can't generalize across files with different page counts. Merge and JPG to PDF already accept multiple files too, but they combine inputs into one output rather than producing a ZIP of separate results." }
-      },
-      {
-        "@type": "Question",
-        "name": "Do I need to install anything or create an account to batch process PDFs?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. PDFree runs in any modern browser — Chrome, Firefox, Safari, Edge — with no installation, no account, and no email required. Open a tool, select your files, and start processing immediately." }
-      },
-      {
-        "@type": "Question",
-        "name": "What happens if I select too many files for my device to handle?",
-        "acceptedAnswer": { "@type": "Answer", "text": "If your browser runs low on memory during a large batch, close other tabs to free up RAM and try again, or split the batch into smaller groups (for example 20-30 files at a time). Compressing files first can also reduce memory pressure for image-heavy PDFs." }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I batch process PDF files on my phone?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes, PDFree works on mobile browsers. Very large batches are more reliably handled on a desktop browser, since phones typically have less available RAM, but batches of a dozen or so files work fine on most modern phones." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is it safe to batch process sensitive or confidential documents?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes — batch processing is handled the same way as single-file processing: entirely inside your browser, with nothing uploaded to any server. This makes it suitable for contracts, invoices, medical records, or any document you wouldn't want to send to a third-party server, whether you're processing one file or a hundred." }
-      }
+        {
+            "@type": "Question",
+            "name": "Can I really batch process PDF files for free without uploading them?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. PDFree's batch mode runs entirely in your browser using JavaScript — your files are never sent to a server. Open DevTools → Network tab while processing a batch and you'll see no PDF data being uploaded anywhere."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How many PDF files can I process in one batch?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "There's no software limit. The practical limit is your device's available RAM — most modern computers handle 50-100+ files without issue. Files are processed one at a time to keep memory usage predictable, then packaged into a ZIP."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is there a daily limit on batch processing?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Many free cloud-based PDF tools cap you at 1 task per hour or 2 tasks per day. PDFree has no daily cap or cooldown — run as many batches as you need."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Which PDFree tools support batch processing?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Compress, Protect, Watermark, Page Numbers, and Flatten all support full batch processing. Rotate is single-file only — rotation is per page, so it can't generalize across a batch of files with different page counts. Merge and JPG to PDF also accept multiple files, but they combine inputs into a single output rather than producing a ZIP of separate results."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Do I need to install anything or create an account?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. PDFree runs in any modern browser with no installation, no account, and no email required. Open a tool, select your files, and start processing."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What happens if I select too many files for my device to handle?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Close other browser tabs to free up memory and try again, or split the batch into smaller groups — 20-30 files at a time works well. Compressing image-heavy files first can also reduce memory pressure."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I batch process PDF files on my phone?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, PDFree works on mobile browsers. Very large batches are more reliable on desktop since phones have less available RAM, but a dozen or so files works fine on most modern phones."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is it safe to batch process sensitive documents?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes — batch mode is processed the same way as a single file: entirely inside your browser, nothing uploaded. This makes it suitable for contracts, invoices, or medical records, whether you're processing one file or a hundred."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">

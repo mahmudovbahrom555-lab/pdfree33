@@ -137,28 +137,40 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Do any PDFree tools upload files to a server?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. Every PDFree tool processes files entirely in your browser using JavaScript. Your files never leave your device, are never uploaded to any server, and are never stored anywhere outside your browser's temporary memory." }
-      },
-      {
-        "@type": "Question",
-        "name": "How can I verify that my files are not being uploaded?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Open your browser's DevTools (F12), go to the Network tab, then use any PDFree tool. You will see no request carrying your PDF file. You will see the site loading what it needs to run (scripts, styles, fonts, and for some tools libraries or language models) and small technical usage and error events, described in our Privacy Policy — never your file or its contents." }
-      },
-      {
-        "@type": "Question",
-        "name": "What does PDFree do with my data under GDPR?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Your PDF files are processed in your browser and are not uploaded to our servers, so we hold none of their contents. The site does collect limited technical usage and error information without cookies or persistent identifiers, as our Privacy Policy describes. We don't certify compliance: whether a workflow meets your GDPR obligations is for your organization to assess." }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I use PDFree for HIPAA-regulated documents?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Your PDF files are processed in your browser and are not uploaded to our servers. We don't certify HIPAA compliance or sign BAAs; whether using PDFree for patient records fits your obligations is your organization's decision." }
-      }
+        {
+            "@type": "Question",
+            "name": "Do any PDFree tools upload files to a server?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Every PDFree tool processes files in your browser. Your files are not sent to our servers, stored there, or logged."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How can I verify that my files are not being uploaded?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Open your browser's DevTools (F12), go to the Network tab, then use any PDFree tool. You will see no request carrying your PDF file. You will see the site loading what it needs to run (scripts, styles, fonts, and for some tools libraries or language models) and small technical usage and error events, described in our Privacy Policy — never your file or its contents."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What does PDFree do with my data under GDPR?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Your PDF files are processed in your browser and are not uploaded to our servers, so we hold none of their contents. The site does collect limited technical usage and error information without cookies or persistent identifiers, as our Privacy Policy describes. We don't certify compliance: whether a workflow meets your GDPR obligations is for your organization to assess."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I use PDFree for HIPAA-regulated medical records?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Your PDF files are processed in your browser and are not uploaded to our servers. We don't certify HIPAA compliance or sign BAAs; whether using PDFree for patient records fits your obligations is your organization's decision."
+            }
+        }
     ]
-  }
+}
   </script>
   <script type="application/ld+json">
   {
@@ -326,6 +338,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">How is PDFree different from cloud PDF tools?</h3>
             <p style="margin:0;font-size:14px;">Cloud PDF tools upload your files to their servers for processing. PDFree runs entirely in your browser — your files never leave your device. PDFree also has no daily usage restrictions.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">How can I verify that my files are not being uploaded?</h3>
+            <p style="margin:0;font-size:14px;">Open your browser's DevTools (F12), go to the Network tab, then use any PDFree tool. You will see no request carrying your PDF file. You will see the site loading what it needs to run (scripts, styles, fonts, and for some tools libraries or language models) and small technical usage and error events, described in our Privacy Policy — never your file or its contents.</p>
           </div>
         </div>
 

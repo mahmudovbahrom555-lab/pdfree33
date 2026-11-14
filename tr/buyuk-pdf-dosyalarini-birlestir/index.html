@@ -124,48 +124,72 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "100 MB'den büyük PDF dosyalarını ücretsiz birleştirebilir miyim?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Evet — 8 GB+ belleğe sahip bir bilgisayarda Chrome veya Edge ile birleştirme başına 500 MB'a, telefonlarda, Safari'de ve Firefox'ta 300 MB'a kadar. İşlem tamamen tarayıcınızda gerçekleştiği için bu sınır bir sunucunun bant genişliğini değil, cihazınızın belleğini korur — testlerimizde 8 GB'lık bir dizüstü bilgisayarda 500 MB'lık bir birleştirme yaklaşık 5 saniye sürdü." }
-      },
-      {
-        "@type": "Question",
-        "name": "Bulut araçları neden dosya boyutu sınırı koyuyor?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Bulut araçları dosyaları kendi sunucularında işler; bu da bant genişliği ve depolama maliyeti anlamına gelir. Ücretsiz kullanıcılar için bu maliyetleri kontrol altında tutmak amacıyla dosya boyutu sınırları uygularlar. PDFree, her şeyi tarayıcınızda yerel olarak işler; bu nedenle sunucu maliyeti yoktur — dolayısıyla günlük limit ve 25 MB sınırı da yoktur; tek bir birleştirme bilgisayarda 500 MB'a kadar çıkabilir ve bu sınır yalnızca cihazınızın belleğini korumak içindir." }
-      },
-      {
-        "@type": "Question",
-        "name": "PDFree en fazla ne kadar büyük bir PDF'yi birleştirebilir?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Bilgisayarda Chrome veya Edge ile (8 GB+ bellek) birleştirme başına 500 MB, telefonlarda, Safari'de ve Firefox'ta 300 MB — bu tarayıcılar bellek miktarını bildirmediği için güvenli sınır uygulanır. Testlerimizde 800 MB'lık bir birleştirme yaklaşık 1,5 GB tarayıcı belleğiyle çalıştı; yani 500 MB, diğer sekmeleriniz için de yer bırakır." }
-      },
-      {
-        "@type": "Question",
-        "name": "Çok büyük dosyaları birleştirirken tarayıcım çökerse ne yapmalıyım?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Belleği boşaltmak için diğer tarayıcı sekmelerini kapatın, ardından tekrar deneyin — açık her sekme, birleştirme için artık kullanılamayan RAM tüketir. Daha küçük gruplar halinde birleştirmek (bir seferde 5-10 dosya, ardından sonuçları birleştirmek) de aynı anda daha az bellek kullanır. Birleştirmeden önce toplam boyutu küçültmek için her dosyayı önce PDF Sıkıştır aracıyla sıkıştırabilirsiniz." }
-      },
-      {
-        "@type": "Question",
-        "name": "Kaç PDF birleştirebileceğime dair günlük bir limit var mı?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Hayır. PDFree'de günlük kullanım limiti yoktur. ücretsiz planda günlük sınırı olan bulut araçlarının aksine, PDFree ile ihtiyacınız kadar, istediğiniz sıklıkta PDF birleştirebilirsiniz — ücretsiz olarak." }
-      },
-      {
-        "@type": "Question",
-        "name": "Aynı anda kaç PDF dosyası birleştirebilirim?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Dosya sayısında bir sınır yoktur. PDFree her şeyi tarayıcınızın belleğinde işler, bu yüzden tek bir işlemde 2, 50 veya 100'den fazla PDF dosyasını birleştirebilirsiniz — yeter ki toplamları bilgisayarda (Chrome/Edge, 8 GB+ RAM) 500 MB'ı, telefonlarda ve diğer tarayıcılarda 300 MB'ı aşmasın." }
-      },
-      {
-        "@type": "Question",
-        "name": "50 veya 100 PDF dosyasını aynı anda ücretsiz birleştirebilir miyim?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Evet. PDFree'de birleştirme başına dosya sayısı sınırı ve günlük kullanım limiti yoktur. Tüm dosyalarınızı tek seferde bırakın, sırayı düzenleyin ve Birleştir'e tıklayın. Sonuç doğrudan cihazınıza indirilir — herhangi bir sunucuya yükleme gerekmez." }
-      },
-      {
-        "@type": "Question",
-        "name": "Büyük PDF'leri birleştirmek bulut araçlarında neden yavaş ama PDFree'de hızlı?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Bulut araçları dosyanızı sunucularına yüklemenizi, orada işlenmesini ve sonucun indirilmesini gerektirir — bu, büyük dosyalarda ciddi zaman kaybettiren üç ağ aktarımıdır. PDFree her şeyi tarayıcınızda yerel olarak, ağ aktarımı olmadan işler; bu nedenle hız yalnızca cihazınızın işlemcisine bağlıdır, internet bağlantınıza değil." }
-      }
+        {
+            "@type": "Question",
+            "name": "100 MB'den büyük PDF dosyalarını ücretsiz birleştirebilir miyim?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Evet — 8 GB+ belleğe sahip bir bilgisayarda Chrome veya Edge ile birleştirme başına 500 MB'a, telefonlarda, Safari'de ve Firefox'ta 300 MB'a kadar. İşlem tamamen tarayıcınızda gerçekleştiği için bu sınır bir sunucunun bant genişliğini değil, cihazınızın belleğini korur — testlerimizde 8 GB'lık bir dizüstü bilgisayarda 500 MB'lık bir birleştirme yaklaşık 5 saniye sürdü."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Bulut araçlarında neden boyut sınırı var ama PDFree'de yok?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Bulut araçları dosyaları kendi sunucularında işler; bu da bant genişliği ve depolama maliyeti yaratır. PDFree, dosyaları tarayıcınızda yerel olarak işler — sunucu maliyeti olmadığından günlük limit ve 25 MB sınırı da yoktur; tek bir birleştirme bilgisayarda 500 MB'a kadar çıkabilir ve bu sınır yalnızca cihazınızın belleğini korumak içindir."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "En fazla ne kadar büyük bir PDF'yi birleştirebilirim?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Bilgisayarda Chrome veya Edge ile (8 GB+ bellek) birleştirme başına 500 MB, telefonlarda, Safari'de ve Firefox'ta 300 MB — bu tarayıcılar bellek miktarını bildirmediği için güvenli sınır uygulanır. Testlerimizde 800 MB'lık bir birleştirme yaklaşık 1,5 GB tarayıcı belleğiyle çalıştı; yani 500 MB, diğer sekmeleriniz için de yer bırakır."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Çok büyük dosyaları birleştirirken tarayıcım çökerse ne yapmalıyım?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Belleği boşaltmak için diğer sekmeleri kapatın, ardından tekrar deneyin — daha küçük gruplar halinde birleştirmek (bir seferde 5-10 dosya, ardından sonuçları birleştirmek) de aynı anda daha az bellek kullanır. Birleştirmeden önce toplam boyutu küçültmek için her dosyayı önce PDF Sıkıştır aracıyla sıkıştırabilirsiniz."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Birleştirmelerde günlük bir sınır var mı?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Hayır. ücretsiz planda günlük sınırı olan bulut araçlarının aksine, PDFree'de günlük limit yoktur. İhtiyacınız kadar, istediğiniz sıklıkta PDF birleştirin."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Aynı anda kaç PDF dosyası birleştirebilirim?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Dosya sayısında bir sınır yoktur. PDFree her şeyi tarayıcınızın belleğinde işler, bu yüzden tek bir işlemde 2, 50 veya 100'den fazla PDF dosyasını birleştirebilirsiniz — yeter ki toplamları bilgisayarda (Chrome/Edge, 8 GB+ RAM) 500 MB'ı, telefonlarda ve diğer tarayıcılarda 300 MB'ı aşmasın."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "50 veya 100 PDF dosyasını aynı anda ücretsiz birleştirebilir miyim?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Evet, günlük limit olmadan tamamen ücretsiz. ücretsiz planda günlük sınırı olan bulut araçlarının aksine, PDFree'de kullanım kısıtlaması yoktur. 50 veya 100 dosyanızı tek seferde bırakın, sırayı düzenleyin ve Birleştir'e tıklayın — sonuç herhangi bir sunucuya yükleme yapılmadan doğrudan cihazınıza indirilir."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Büyük PDF'leri birleştirmek bulut araçlarında neden yavaş ama PDFree'de hızlı?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Bulut araçları dosyanızı sunucularına yüklemenizi, orada işlenmesini ve sonucun indirilmesini gerektirir — bu, büyük dosyalarda ciddi zaman kaybettiren üç ağ aktarımıdır. PDFree her şeyi tarayıcınızda yerel olarak, ağ aktarımı olmadan işler; bu nedenle hız yalnızca cihazınızın işlemcisine bağlıdır, internet bağlantınıza değil."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -506,6 +530,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Bir hesap oluşturmam gerekiyor mu?</h3>
             <p style="margin:0;font-size:14px;">Hayır. PDFree hiçbir zaman hesap, e-posta veya kayıt gerektirmez. Aracı açın ve hemen birleştirmeye başlayın.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Büyük PDF'leri birleştirmek bulut araçlarında neden yavaş ama PDFree'de hızlı?</h3>
+            <p style="margin:0;font-size:14px;">Bulut araçları dosyanızı sunucularına yüklemenizi, orada işlenmesini ve sonucun indirilmesini gerektirir — bu, büyük dosyalarda ciddi zaman kaybettiren üç ağ aktarımıdır. PDFree her şeyi tarayıcınızda yerel olarak, ağ aktarımı olmadan işler; bu nedenle hız yalnızca cihazınızın işlemcisine bağlıdır, internet bağlantınıza değil.</p>
           </div>
         </div>
 

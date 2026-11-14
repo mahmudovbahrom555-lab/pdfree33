@@ -42,23 +42,32 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Can I merge all student worksheets into one PDF for printing?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree's Merge PDF tool has no file count limit. Drop all worksheet PDFs at once, arrange them in order, and click Merge. The combined PDF downloads to your device. There is no upload to any server, so student names and work stay private." }
-      },
-      {
-        "@type": "Question",
-        "name": "How do I convert scanned student work to editable text?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Use OCR PDF to add a text layer to the scanned submission, then use PDF to Word to convert it to editable .docx format. You can then copy, quote, or grade the text directly. Both steps run locally in your browser — student data is not uploaded anywhere." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is student data safe when I use a free online PDF tool?",
-        "acceptedAnswer": { "@type": "Answer", "text": "With PDFree, student names, grades, and submitted work are never uploaded to any server. All processing happens locally in your browser. You can verify this by opening your browser's DevTools → Network tab — you should not see any file upload request during processing. This is different from most free online tools which upload files to remote servers." }
-      }
+        {
+            "@type": "Question",
+            "name": "Can I merge 30 student worksheets into one class PDF?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. PDFree Merge has no file count limit. Drop all 30 worksheet files at once, arrange them in the order you want, and click Merge. The single combined PDF downloads directly to your device in seconds."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How do I convert scanned student work to editable text?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Use OCR PDF to add a text layer to the scanned submission, then use PDF to Word to convert it to editable .docx format. You can then copy, quote, or grade the text directly. Both steps run locally in your browser — student data is not uploaded anywhere."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is student data safe when I use a free online PDF tool?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "With PDFree, student names, grades, and submitted work are never uploaded to any server. All processing happens locally in your browser. You can verify this by opening your browser's DevTools → Network tab — you should not see any file upload request during processing. This is different from most free online tools which upload files to remote servers."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -191,6 +200,14 @@
       <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
         <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Does OCR work for non-English student work?</h3>
         <p style="margin:0;font-size:14px;">PDFree OCR supports many languages. PDF to Word text mode handles Arabic, Hebrew (right-to-left), Cyrillic (Russian, Ukrainian), CJK (Chinese, Japanese, Korean), and Devanagari (Hindi) — scripts that most free tools handle poorly. For best OCR results, the scan should be clear and high-contrast.</p>
+      </div>
+      <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
+        <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">How do I convert scanned student work to editable text?</h3>
+        <p style="margin:0;font-size:14px;">Use OCR PDF to add a text layer to the scanned submission, then use PDF to Word to convert it to editable .docx format. You can then copy, quote, or grade the text directly. Both steps run locally in your browser — student data is not uploaded anywhere.</p>
+      </div>
+      <div style="border:1px solid var(--border);border-radius:12px;padding:18px 20px;">
+        <h3 style="font-size:15px;color:var(--text);margin:0 0 8px;font-weight:600;">Is student data safe when I use a free online PDF tool?</h3>
+        <p style="margin:0;font-size:14px;">With PDFree, student names, grades, and submitted work are never uploaded to any server. All processing happens locally in your browser. You can verify this by opening your browser's DevTools → Network tab — you should not see any file upload request during processing. This is different from most free online tools which upload files to remote servers.</p>
       </div>
     </div>
 
