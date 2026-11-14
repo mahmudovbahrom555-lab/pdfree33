@@ -105,9 +105,9 @@ export function trackToolStart(tool, inputSize = 0) {
 /**
  * Call when a tool completes successfully.
  * @param {string} tool
- * @param {{ inputSize?: number, outputSize?: number, requestedCount?: number, successCount?: number, mode?: string }} opts
+ * @param {{ inputSize?: number, outputSize?: number, requestedCount?: number, successCount?: number, mode?: string, pages?: number, ocrPages?: number }} opts
  */
-export function trackToolSuccess(tool, { inputSize = 0, outputSize = 0, requestedCount, successCount, mode } = {}) {
+export function trackToolSuccess(tool, { inputSize = 0, outputSize = 0, requestedCount, successCount, mode, pages, ocrPages } = {}) {
   const durationMs = _timers[tool] ? performance.now() - _timers[tool] : null;
   delete _timers[tool];
   inputSize ||= _inputs[tool] || 0;
@@ -133,8 +133,18 @@ export function trackToolSuccess(tool, { inputSize = 0, outputSize = 0, requeste
   if (mode !== undefined) {
     props.mode = mode;
   }
+  // Only set by pdf2word — where its time goes: many pages, or text recognition.
+  if (pages !== undefined) Object.assign(props, workProps({ pages, ocrPages }));
 
   _track('Tool Success', props);
+}
+
+// PDF to Word (2026-11-14): a quarter of 1–10 MB conversions took over 2 minutes,
+// and nothing said why. The page count as a range and whether any page needed
+// text recognition — never the text (privacy page: "for PDF to Word").
+export function workProps({ pages, ocrPages = 0 }) {
+  const band = pages <= 5 ? '1–5' : pages <= 20 ? '6–20' : pages <= 100 ? '21–100' : '> 100';
+  return { pages: band, ocr: ocrPages > 0 ? 'yes' : 'no' };
 }
 
 // Compress "fit into a size" (2026-11-13): which sizes people ask for, how

@@ -142,6 +142,29 @@ await test('Draw: a downloaded drawing sends Tool Success and Download once per 
   } finally { await context.close(); }
 });
 
+// PDF to Word (2026-11-14): its success also says the page count as a range
+// and whether text recognition ran — a quarter of 1–10 MB runs took over two
+// minutes and nothing said why. Privacy page: "for PDF to Word".
+for (const [name, fixture, pages, ocr] of [
+  ['a text PDF: 3 pages, no recognition', B, '1–5', 'no'],
+  ['a scan: recognition yes', path.join(FIX, 'pdf2word_scan_ar_no_text.pdf'), null, 'yes'],
+]) {
+  await test(`PDF to Word, ${name}`, async () => {
+    const s = await open('/pdf-to-word/');
+    try {
+      await s.page.setInputFiles('#fileInput', fixture);
+      await s.page.waitForFunction(() => !document.getElementById('mergeBtn').disabled, null, { timeout: 30000 });
+      await s.page.click('#mergeBtn');
+      await s.page.waitForFunction(() => document.getElementById('successCard')?.offsetParent, null, { timeout: 240000 });
+      await s.settle();
+      const ok = s.events.filter(e => e.event === 'Tool Success');
+      if (ok.length !== 1) throw new Error(`${ok.length} Tool Success`);
+      const p = ok[0].props;
+      if (p.tool !== 'pdf2word' || p.mode !== 'text' || p.ocr !== ocr || (pages && p.pages !== pages) || !/^(1–5|6–20|21–100|> 100)$/.test(p.pages)) throw new Error(JSON.stringify(p));
+    } finally { await s.context.close(); }
+  });
+}
+
 await browser.close();
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed} failed`);

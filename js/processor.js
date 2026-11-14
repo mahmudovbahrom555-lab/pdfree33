@@ -3257,7 +3257,8 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150, stripMeta
   setProgress(100, t('prog_done'));
 
   document.dispatchEvent(new CustomEvent('pdfree:success', {
-    detail: { tool: 'pdf2word', blob, desc, filename, confidence, atlasEri, mode }
+    detail: { tool: 'pdf2word', blob, desc, filename, confidence, atlasEri, mode,
+              pages: effectivePages, ocrPages: confidence?.ocrPages ?? 0 }
   }));
 }
 
