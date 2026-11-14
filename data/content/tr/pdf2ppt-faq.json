@@ -28,7 +28,7 @@
     "name": "Slaytlarım hangi boyutta olacak?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Slayt boyutu, PDF'nizin sayfa boyutlarını ve en-boy oranını tam olarak eşleştirir — kenarlarda siyah şerit veya gerilmiş kenar boşluğu oluşmaz."
+      "text": "Slayt boyutu, PDF'nizin sayfa boyutlarını ve en-boy oranını tam olarak eşleştirir — dikey bir PDF'yi standart geniş ekran bir slayta zorlamanın aksine, kenarlarda siyah şerit veya gerilmiş kenar boşluğu oluşmaz."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Hangi kalite ayarını seçmeliyim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Dengeli (150 dpi) çoğu deste için iyi bir varsayılandır. Yoğun metin veya küçük yazılar için Yüksek kaliteyi; dosyayı e-postayla gönderecekseniz Kompakt'ı seçin."
+      "text": "Dengeli (150 dpi) çoğu deste için iyi bir varsayılandır. Yakınlaştırıp bakacağınız yoğun metin veya küçük yazılar için Yüksek kaliteyi; dosyayı e-postayla gönderecekseniz ve daha küçük boyut istiyorsanız Kompakt'ı seçin."
     }
   },
   {

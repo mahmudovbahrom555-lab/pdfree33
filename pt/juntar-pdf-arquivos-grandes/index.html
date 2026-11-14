@@ -125,48 +125,72 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Posso juntar arquivos PDF maiores que 100MB gratuitamente?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sim — até 500MB por junção no Chrome ou Edge em um computador com 8GB+ de memória, e até 300MB em celulares, no Safari e no Firefox. O processamento acontece inteiramente no seu navegador, então o limite protege a memória do seu dispositivo, não a largura de banda de um servidor — uma junção de 500MB levou cerca de 5 segundos em um notebook de 8GB nos nossos testes." }
-      },
-      {
-        "@type": "Question",
-        "name": "Por que as ferramentas na nuvem têm um limite por arquivo?",
-        "acceptedAnswer": { "@type": "Answer", "text": "As ferramentas na nuvem processam arquivos em seus servidores, o que gera custos de largura de banda e armazenamento. Para controlar esses custos para usuários gratuitos, a ferramenta impõe limites de tamanho de arquivo. O PDFree processa tudo localmente no seu navegador, então não há custos de servidor — e, portanto, nenhum limite diário nem teto de 25MB; uma junção pode ter até 500MB em um computador, limite que só existe para proteger a memória do seu dispositivo." }
-      },
-      {
-        "@type": "Question",
-        "name": "Qual o tamanho máximo de PDF que o PDFree consegue juntar?",
-        "acceptedAnswer": { "@type": "Answer", "text": "500MB por junção no Chrome ou Edge em um computador com 8GB+ de memória, 300MB em celulares, no Safari e no Firefox — esses não informam a memória disponível, por isso recebem o limite seguro. Uma junção de 800MB funcionou nos nossos testes com cerca de 1,5GB de memória do navegador, então 500MB deixa espaço para as suas outras abas." }
-      },
-      {
-        "@type": "Question",
-        "name": "O que devo fazer se o navegador travar ao juntar arquivos muito grandes?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Feche outras abas do navegador para liberar memória e tente novamente — cada aba aberta consome RAM que deixa de estar disponível para a junção. Juntar em lotes menores (5–10 arquivos por vez, depois juntar os resultados) também usa menos memória de cada vez. Você também pode comprimir cada arquivo primeiro com a ferramenta Comprimir PDF para reduzir o tamanho total antes de juntar." }
-      },
-      {
-        "@type": "Question",
-        "name": "Existe um limite diário de quantos PDFs posso juntar?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Não. O PDFree não tem limites de uso diário. Ao contrário das ferramentas na nuvem com limites diários no plano grátis, o PDFree permite juntar quantos PDFs você precisar, quantas vezes quiser, de graça." }
-      },
-      {
-        "@type": "Question",
-        "name": "Quantos arquivos PDF posso juntar de uma vez?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Não há limite na quantidade de arquivos. Você pode juntar 2, 50, 100 ou mais arquivos PDF em uma única operação, desde que juntos fiquem abaixo de 500MB em um computador (Chrome/Edge, 8GB+ de RAM) ou de 300MB em celulares e outros navegadores." }
-      },
-      {
-        "@type": "Question",
-        "name": "Posso juntar 50 ou 100 arquivos PDF de uma vez gratuitamente?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sim. O PDFree não tem limite na quantidade de arquivos por junção nem limite diário de uso. Solte todos os seus arquivos de uma vez, organize a ordem e clique em Juntar. O resultado é baixado diretamente no seu dispositivo — sem necessidade de upload para nenhum servidor." }
-      },
-      {
-        "@type": "Question",
-        "name": "Por que juntar PDFs grandes é lento nas ferramentas na nuvem, mas rápido no PDFree?",
-        "acceptedAnswer": { "@type": "Answer", "text": "As ferramentas na nuvem exigem o upload do seu arquivo para o servidor, o processamento lá e o download do resultado — três trajetos de rede que somam tempo significativo em arquivos grandes. O PDFree processa tudo localmente no seu navegador, sem transferência de rede, então a velocidade depende apenas da CPU do seu dispositivo, não da sua conexão com a internet." }
-      }
+        {
+            "@type": "Question",
+            "name": "Posso juntar arquivos PDF maiores que 100MB gratuitamente?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sim — até 500MB por junção no Chrome ou Edge em um computador com 8GB+ de memória, e até 300MB em celulares, no Safari e no Firefox. O processamento acontece inteiramente no seu navegador, então o limite protege a memória do seu dispositivo, não a largura de banda de um servidor — uma junção de 500MB levou cerca de 5 segundos em um notebook de 8GB nos nossos testes."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Por que as ferramentas na nuvem têm limite de tamanho, mas o PDFree não?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "As ferramentas na nuvem processam arquivos em seus servidores, o que gera custos de largura de banda e armazenamento. O PDFree processa arquivos localmente no seu navegador — não há custos de servidor, então não há limite diário nem teto de 25MB; uma junção pode ter até 500MB em um computador, limite que só existe para proteger a memória do seu dispositivo."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Qual o tamanho máximo de PDF que posso juntar?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "500MB por junção no Chrome ou Edge em um computador com 8GB+ de memória, 300MB em celulares, no Safari e no Firefox — esses não informam a memória disponível, por isso recebem o limite seguro. Uma junção de 800MB funcionou nos nossos testes com cerca de 1,5GB de memória do navegador, então 500MB deixa espaço para as suas outras abas."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "O que devo fazer se o navegador travar ao juntar arquivos muito grandes?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Feche outras abas para liberar memória e tente novamente — juntar em lotes menores (5–10 arquivos por vez, depois juntar os resultados) também usa menos memória de cada vez. Você também pode comprimir cada arquivo primeiro com a ferramenta Comprimir PDF para reduzir o tamanho total antes de juntar."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Existe um limite diário para junções?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Não. Ao contrário das ferramentas na nuvem com limites diários no plano grátis, o PDFree não tem limite diário. Junte quantos PDFs precisar, quantas vezes quiser."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Quantos arquivos PDF posso juntar de uma vez?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Não há limite na quantidade de arquivos. O PDFree processa tudo na memória do seu navegador, então você pode juntar 2, 50 ou mais de 100 arquivos PDF em uma única operação, desde que juntos fiquem abaixo de 500MB em um computador (Chrome/Edge, 8GB+ de RAM) ou de 300MB em celulares e outros navegadores."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Posso juntar 50 ou 100 arquivos PDF de uma vez gratuitamente?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sim, totalmente grátis e sem limite diário. Ao contrário das ferramentas na nuvem com limites diários no plano grátis, o PDFree não tem restrições de uso. Solte todos os 50 ou 100 arquivos de uma vez, organize a ordem e clique em Juntar — o resultado é baixado diretamente no seu dispositivo, sem upload para nenhum servidor."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Por que juntar PDFs grandes é lento nas ferramentas na nuvem, mas rápido no PDFree?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "As ferramentas na nuvem exigem o upload do seu arquivo para o servidor, o processamento lá e o download do resultado — três trajetos de rede que somam tempo significativo em arquivos grandes. O PDFree processa tudo localmente no seu navegador, sem transferência de rede, então a velocidade depende apenas da CPU do seu dispositivo, não da sua conexão com a internet."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -505,6 +529,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Preciso criar uma conta?</h3>
             <p style="margin:0;font-size:14px;">Não. O PDFree nunca exige conta, e-mail ou cadastro. Abra a ferramenta e comece a juntar imediatamente.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Por que juntar PDFs grandes é lento nas ferramentas na nuvem, mas rápido no PDFree?</h3>
+            <p style="margin:0;font-size:14px;">As ferramentas na nuvem exigem o upload do seu arquivo para o servidor, o processamento lá e o download do resultado — três trajetos de rede que somam tempo significativo em arquivos grandes. O PDFree processa tudo localmente no seu navegador, sem transferência de rede, então a velocidade depende apenas da CPU do seu dispositivo, não da sua conexão com a internet.</p>
           </div>
         </div>
 

@@ -138,28 +138,40 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Uno qualsiasi degli strumenti PDFree carica i file su un server?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. Ogni strumento PDFree elabora i file interamente nel tuo browser usando JavaScript. I tuoi file non lasciano mai il tuo dispositivo, non vengono mai caricati su alcun server e non vengono mai memorizzati al di fuori della memoria temporanea del tuo browser." }
-      },
-      {
-        "@type": "Question",
-        "name": "Come posso verificare che i miei file non vengano caricati?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Apri gli strumenti per sviluppatori del tuo browser (F12), vai alla scheda Rete, poi usa un qualsiasi strumento PDFree. Non vedrai richieste contenenti i dati del tuo file PDF — solo richieste per i file JavaScript e CSS dell'app." }
-      },
-      {
-        "@type": "Question",
-        "name": "Cosa fa PDFree con i miei dati ai sensi del GDPR?",
-        "acceptedAnswer": { "@type": "Answer", "text": "I tuoi file PDF vengono elaborati nel browser e non vengono caricati sui nostri server, quindi non ne abbiamo mai il contenuto. Il sito raccoglie informazioni tecniche limitate su utilizzo ed errori, senza cookie né identificatori persistenti, come descritto nella nostra Informativa sulla privacy. Non certifichiamo la conformità: se un flusso di lavoro soddisfa i tuoi obblighi GDPR lo valuta la tua organizzazione." }
-      },
-      {
-        "@type": "Question",
-        "name": "Posso usare PDFree per documenti medici che richiedono una protezione rigorosa?",
-        "acceptedAnswer": { "@type": "Answer", "text": "I tuoi file PDF vengono elaborati nel browser e non vengono caricati sui nostri server. Non certifichiamo la conformità HIPAA e non firmiamo BAA; se usare PDFree per le cartelle cliniche è compatibile con i tuoi obblighi lo decide la tua organizzazione." }
-      }
+        {
+            "@type": "Question",
+            "name": "Uno qualsiasi degli strumenti PDFree carica i file su un server?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Ogni strumento PDFree elabora i file interamente nel tuo browser. I tuoi file non vengono mai inviati a un server, memorizzati da nessuna parte o registrati in alcun modo."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Come posso verificare che i miei file non vengano caricati?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Apri gli strumenti per sviluppatori del tuo browser (F12), vai alla scheda Rete, poi usa un qualsiasi strumento PDFree. Non vedrai richieste contenenti i dati del tuo file PDF — solo richieste per i file JavaScript e CSS dell'app."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Cosa fa PDFree con i miei dati ai sensi del GDPR?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "I tuoi file PDF vengono elaborati nel browser e non vengono caricati sui nostri server, quindi non ne abbiamo mai il contenuto. Il sito raccoglie informazioni tecniche limitate su utilizzo ed errori, senza cookie né identificatori persistenti, come descritto nella nostra Informativa sulla privacy. Non certifichiamo la conformità: se un flusso di lavoro soddisfa i tuoi obblighi GDPR lo valuta la tua organizzazione."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Posso usare PDFree per documenti medici che richiedono una protezione rigorosa?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "I tuoi file PDF vengono elaborati nel browser e non vengono caricati sui nostri server. Non certifichiamo la conformità HIPAA e non firmiamo BAA; se usare PDFree per le cartelle cliniche è compatibile con i tuoi obblighi lo decide la tua organizzazione."
+            }
+        }
     ]
-  }
+}
   </script>
   <script type="application/ld+json">
   {
@@ -353,6 +365,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">In cosa PDFree è diverso dagli strumenti PDF cloud?</h3>
             <p style="margin:0;font-size:14px;">Gli strumenti PDF cloud caricano i tuoi file sui loro server per l'elaborazione. PDFree funziona interamente nel tuo browser — i tuoi file non lasciano mai il tuo dispositivo. PDFree inoltre non ha restrizioni di utilizzo giornaliero né paywall: i limiti di dimensione dei file servono solo a proteggere la memoria del tuo dispositivo.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Come posso verificare che i miei file non vengano caricati?</h3>
+            <p style="margin:0;font-size:14px;">Apri gli strumenti per sviluppatori del tuo browser (F12), vai alla scheda Rete, poi usa un qualsiasi strumento PDFree. Non vedrai richieste contenenti i dati del tuo file PDF — solo richieste per i file JavaScript e CSS dell'app.</p>
           </div>
         </div>
 

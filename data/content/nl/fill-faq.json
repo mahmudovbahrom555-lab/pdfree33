@@ -4,7 +4,7 @@
     "name": "Wordt mijn ingevulde PDF ergens geüpload?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nee. Het hele invulproces gebeurt in je browser met pdf-lib en pdf.js. Je document verlaat je apparaat nooit — PDFree heeft geen toegang tot je bestand of de gegevens die je invoert."
+      "text": "Nee. Alles gebeurt in je browser met pdf-lib en pdf.js. Noch je originele PDF, noch de ingevulde versie wordt ooit naar een server gestuurd. PDFree heeft geen toegang tot je document."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Is de getekende handtekening juridisch geldig?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Een getekende handtekeningafbeelding is een elektronische handtekening. De juridische waarde hangt af van je rechtsgebied en het documenttype. Voor alledaagse documenten zoals toestemmingsformulieren, interne goedkeuringen of huurcontracten is dit meestal voldoende. Gebruik voor gereguleerde juridische contexten een gecertificeerde e-handtekeningdienst met audittrail."
+      "text": "Een getekende handtekeningafbeelding in een PDF is een elektronische handtekening. De juridische waarde hangt af van je rechtsgebied en het documenttype — voor alledaagse documenten zoals toestemmingsformulieren of huurcontracten is dit meestal voldoende. Voor gereguleerde juridische contexten kun je beter een gecertificeerde e-handtekeningdienst met audittrail gebruiken."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Vult deze tool echt de echte velden van mijn formulier in, of moet ik tekst handmatig plaatsen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree detecteert de echte AcroForm-velden van je PDF — tekstvelden, selectievakjes, keuzerondjes, dropdowns en handtekeningvelden — en toont ze als een echt invulbaar formulier, zonder tekstvakken met de hand te tekenen. Heeft je PDF geen ingebedde velden, dan laat PDFree dat direct weten."
+      "text": "PDFree detecteert de echte AcroForm-velden van je PDF — tekstvelden, selectievakjes, keuzerondjes, dropdowns en handtekeningvelden — en toont ze als een echt invulbaar formulier. Je tekent geen tekstvakken met de hand en gokt niet naar de positie. Heeft je PDF geen ingebedde velden, dan laat PDFree dat direct weten in plaats van velden te simuleren die niet bestaan."
     }
   },
   {

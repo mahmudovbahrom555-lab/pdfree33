@@ -20,7 +20,7 @@
     "name": "What page range format does PDFree accept?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Enter comma-separated pages and ranges: for example 1, 3-7, 12, 15-20. Spaces are optional. You can also click individual page thumbnails to select or deselect them visually, or use quick-select buttons for odd pages, even pages, or halves of the document."
+      "text": "Enter comma-separated pages and ranges: for example <code>1, 3-7, 12, 15-20</code>. Spaces are optional. You can also click individual page thumbnails to select or deselect them visually."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "How do I delete a specific page from a PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Select all pages except the ones you want to remove, then click Split PDF to extract only the pages you want to keep. For example, to delete page 3 from a 10-page PDF, select pages 1-2 and 4-10 and extract them. The result is your PDF without the removed pages — original quality preserved."
+      "text": "Select all pages <em>except</em> the ones you want to remove, then click Split PDF to extract only the pages you want to keep. The result is your original PDF with the unwanted pages removed — no quality loss, no re-rendering. For example, to delete page 3 from a 10-page PDF, select pages 1-2 and 4-10, then extract."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "How do I split a PDF on iPhone, iPad, or Mac in my browser?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Open PDFree in Safari (iPhone/iPad) or any browser on Mac — no app download or paid software required. The tool runs entirely in the browser: load your PDF, select pages, tap Split PDF. The result saves to your Files app on iOS or your Downloads folder on Mac."
+      "text": "Open PDFree in Safari (iPhone/iPad) or any browser on Mac — no app download or desktop software required. The tool runs entirely in the browser: load your PDF, select pages, tap Split PDF. The result saves to your Files app (iOS) or Downloads folder (Mac)."
     }
   },
   {
@@ -84,7 +84,7 @@
     "name": "Can I split multiple PDF files at once?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Not in a single batch — PDFree processes one PDF at a time. Open the tool in a new tab to split a second file in parallel. PDFree also works offline as a Progressive Web App, so there is no network wait between files."
+      "text": "Not in a single batch — PDFree processes one PDF at a time. Open the tool in a new tab to split a second file in parallel. For repeated splitting of many files, PDFree works offline as a Progressive Web App, so there's no network wait between files."
     }
   },
   {
@@ -100,7 +100,7 @@
     "name": "Can I unmerge a PDF back into separate files?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. Select the page ranges that correspond to each original document and extract them as separate PDFs. This unmerges the combined file back into its individual parts — same operation as splitting, applied in reverse."
+      "text": "Yes. If you previously merged several PDFs into one, use the split tool to unmerge it — select the page ranges that correspond to each original document and extract them as separate PDFs. This is exactly the same operation as splitting, applied in reverse."
     }
   },
   {
@@ -116,7 +116,7 @@
     "name": "Does PDFree add a watermark when splitting PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree never adds watermarks to output files. The split pages are the exact content from your original PDF — no logo, no 'Created with PDFree' stamp, no advertising mark. Many free online PDF tools add watermarks to encourage upgrades; PDFree doesn't because there is no paid plan to upgrade to."
+      "text": "No. PDFree never adds watermarks to output files — no logo, no \"Created with PDFree\" stamp, no advertising mark. Many free online PDF tools add watermarks to encourage upgrades; PDFree doesn't, because there is no paid plan to upgrade to."
     }
   }
 ]

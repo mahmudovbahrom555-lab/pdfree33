@@ -20,7 +20,7 @@
     "name": "Werden Tabellen und Bilder konvertiert?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Einfache Tabellen werden automatisch erkannt und in Markdown-Tabellensyntax umgewandelt. Bilder werden ebenfalls extrahiert — der Download wird zu einer .zip-Datei (document.md + einem images-Ordner), sobald das PDF extrahierbare Bilder enthält, oder bleibt eine einfache .md-Datei, wenn nicht. Für zuverlässigere Tabellenextraktion nutze PDF zu Excel, für vollständige Dokumente PDF zu Word."
+      "text": "Einfache Tabellen werden automatisch erkannt und in Markdown-Tabellensyntax umgewandelt. Bilder werden ebenfalls extrahiert — der Download wird zu einer .zip-Datei (document.md + einem images-Ordner), sobald das PDF extrahierbare Bilder enthält, oder bleibt eine einfache .md-Datei, wenn nicht. Für zuverlässigere Tabellenextraktion nutze PDF zu Excel; für ein vollständig editierbares Dokument nutze PDF zu Word."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Welche Listen werden erkannt?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Aufzählungszeilen (•, ◦, ▪ und ähnliche Marker) und nummerierte Zeilen (1., 2.) werden in Markdown-Listensyntax umgewandelt. Buchstaben- oder römische Nummerierungen (a., iv.) bleiben als normaler Text erhalten, da diese Marker zu leicht mit echtem Inhalt zu verwechseln sind."
+      "text": "Aufzählungszeilen (•, ◦, ▪ und ähnliche Marker) und nummerierte Zeilen (1., 2.) werden in Markdown-Listensyntax umgewandelt. Buchstaben- oder römische Nummerierungen (a., iv.) bleiben als normaler Text erhalten."
     }
   },
   {

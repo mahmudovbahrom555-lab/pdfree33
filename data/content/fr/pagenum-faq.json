@@ -4,7 +4,7 @@
     "name": "Mes fichiers sont-ils envoyés à un serveur ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. L'ajout de numéros de page s'effectue entièrement dans votre navigateur avec JavaScript. Les fichiers ne quittent jamais votre appareil."
+      "text": "Non. PDFree traite tous les fichiers entièrement dans votre navigateur. Vos documents ne quittent jamais votre appareil."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Puis-je commencer la numérotation à partir d'un autre chiffre que 1 ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Oui. Entrez n'importe quel numéro de départ dans le champ 'Numéro de départ'. Utile pour les documents où la page de couverture est la page 0, ou pour les chapitres qui continuent la numérotation d'une section précédente."
+      "text": "Oui. Entrez n'importe quel numéro de départ dans le champ \"Numéro de départ\". Utile pour les documents où la page de couverture est la page 0."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Quels formats de numérotation sont disponibles ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Chiffres arabes (1, 2, 3), chiffres romains minuscules (i, ii, iii), chiffres romains majuscules (I, II, III), alphabétique minuscule (a, b, c) et alphabétique majuscule (A, B, C)."
+      "text": "Chiffres arabes (1, 2, 3), chiffres romains minuscules et majuscules, alphabétique minuscule et majuscule."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Puis-je ajouter le format \"Page 1 sur 20\" ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Oui. Utilisez le champ préfixe pour ajouter du texte avant le numéro (p. ex. 'Page ') et le champ suffixe pour ajouter du texte après (p. ex. ' sur 20'). Cela crée le format courant 'Page 1 sur 20' utilisé dans les documents professionnels imprimés."
+      "text": "Oui. Utilisez le champ préfixe pour ajouter du texte avant le numéro (p. ex. \"Page \") et le champ suffixe pour ajouter du texte après (p. ex. \" sur 20\")."
     }
   },
   {

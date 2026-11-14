@@ -4,7 +4,7 @@
     "name": "Posso iniziare la numerazione da un numero diverso da 1?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sì. Inserisci qualsiasi numero iniziale nel campo 'Numero iniziale'. Utile per documenti in cui il frontespizio è considerato pagina 0, oppure per capitoli che proseguono la numerazione di una sezione precedente."
+      "text": "Sì. Inserisci qualsiasi numero iniziale nel campo \"Numero iniziale\". Utile per documenti in cui il frontespizio è considerato pagina 0."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Quali formati numerici sono disponibili?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Cifre arabe (1, 2, 3), numeri romani minuscoli (i, ii, iii), numeri romani maiuscoli (I, II, III), lettere minuscole (a, b, c) e lettere maiuscole (A, B, C)."
+      "text": "Cifre arabe (1, 2, 3), numeri romani minuscoli (i, ii, iii), numeri romani maiuscoli (I, II, III), lettere minuscole e maiuscole."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Posso aggiungere il formato \"Pagina 1 di 20\"?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sì. Usa il campo prefisso per inserire testo prima del numero (es. 'Pagina ') e il campo suffisso per il testo dopo (es. ' di 20'). Questo crea il comune formato 'Pagina 1 di 20' usato nei documenti stampati professionali."
+      "text": "Sì. Usa il campo prefisso per il testo prima del numero (es. \"Pagina \") e il campo suffisso per il testo dopo (es. \" di 20\")."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Posso escludere la copertina dalla numerazione?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sì. Attiva l'opzione 'Salta la prima pagina'. La pagina 1 (copertina) non riceverà un numero e la numerazione partirà dalla seconda pagina."
+      "text": "Sì. Imposta «Dalla pagina» su 2: la copertina resta senza numero e la pagina 2 mostra 1. Se la pagina 2 deve mostrare 2, imposta anche «Numero di inizio» su 2."
     }
   },
   {

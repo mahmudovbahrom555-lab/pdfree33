@@ -4,7 +4,7 @@
     "name": "Czy obracanie PDF przesyła mój plik na serwer?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. Obracanie jest przetwarzane w całości w Twojej przeglądarce. Twoje pliki nigdy nigdzie nie są wysyłane."
+      "text": "Nie. Całe przetwarzanie odbywa się w Twojej przeglądarce. Pliki nigdy nigdzie nie są wysyłane."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Czy obracanie obniża jakość obrazów?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. Obrót zmienia jedynie metadane orientacji strony. Zawartość (obrazy, tekst, grafika wektorowa) nie jest ponownie renderowana ani kompresowana."
+      "text": "Nie. Obrót zmienia jedynie metadane orientacji — treść (tekst, obrazy, grafika wektorowa) pozostaje identyczna i nie jest ponownie kompresowana."
     }
   },
   {

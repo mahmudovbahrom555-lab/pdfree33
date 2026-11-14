@@ -1,9 +1,58 @@
 [
-  {"@type":"Question","name":"Apakah PDF saya diunggah ke suatu tempat untuk diedit?","acceptedAnswer":{"@type":"Answer","text":"Tidak. Seluruh proses — membuka PDF, mengganti baris yang diedit, dan memeriksa hasilnya — berjalan sepenuhnya di browser Anda. Dokumen Anda tidak pernah meninggalkan perangkat Anda."}},
-  {"@type":"Question","name":"Bisakah saya menambahkan paragraf baru atau menghapus baris tabel?","acceptedAnswer":{"@type":"Answer","text":"Tidak dengan alat ini — Edit Teks PDF dibuat untuk mengetik ulang teks yang sudah ada di tempatnya, bukan menyusun ulang struktur dokumen. Jika Anda perlu menambah atau menghapus konten, konversi ke Word dengan PDF to Word, lakukan pengeditan penuh di sana, lalu konversi kembali ke PDF."}},
-  {"@type":"Question","name":"Mengapa muncul pesan bahwa PDF saya tidak bisa diedit di sini?","acceptedAnswer":{"@type":"Answer","text":"File berisi teks terbuka di halamannya sendiri, tempat Anda mengeditnya langsung. Hasil pindaian tidak berisi teks yang bisa diubah; formulir isian dan PDF bertanda tangan tidak diedit langsung. Editor sebelumnya, yang membangun ulang dokumen sebagai teks yang bisa diedit, terlebih dulu memeriksa seberapa rapi struktur PDF Anda terkonversi — dokumen hasil pindaian, tata letak yang tidak biasa, atau ekstraksi teks yang rusak bisa mendapat skor terlalu rendah, dan editor itu lalu menyarankan konverter PDF ke Word lengkap."}},
-  {"@type":"Question","name":"Apakah pengeditan mengubah format bagian lain dokumen?","acceptedAnswer":{"@type":"Answer","text":"Tidak. Hanya teks baris yang Anda ketik ulang yang berubah: teks lamanya dihapus dan teks baru ditulis di tempat yang sama. Gambar, baris lain, dan halaman lain tetap seperti semula, dan setiap halaman yang berubah dibaca ulang sebelum diunduh."}},
-  {"@type":"Question","name":"Apakah PDFree menyimpan atau mencatat file saya setelah diproses?","acceptedAnswer":{"@type":"Answer","text":"Tidak. PDFree berjalan sepenuhnya di browser Anda — tidak ada server backend yang menerima file Anda. Karena tidak ada yang diunggah, tidak ada yang bisa disimpan, dicatat, atau dipertahankan. Dokumen Anda hanya ada di memori browser selama sesi berlangsung dan dihapus saat Anda menutup tab."}},
-  {"@type":"Question","name":"Apakah ini editor PDF gratis tanpa perlu daftar?","acceptedAnswer":{"@type":"Answer","text":"Ya. PDFree sepenuhnya gratis — tanpa daftar, tanpa akun, tanpa instalasi. Buka alat ini, muat PDF Anda, klik teks yang ingin diperbaiki, lalu unduh hasilnya."}},
-  {"@type":"Question","name":"Bisakah saya mencari dan mengganti teks di setiap halaman?","acceptedAnswer":{"@type":"Answer","text":"Bisa. Ketik teks di Cari dan teks penggantinya di Ganti dengan — biarkan kosong untuk menghapus teks, misalnya baris yang berulang di kaki setiap halaman. PDFree menampilkan berapa banyak yang ditemukan dan di berapa halaman, lalu Ganti semua mengubahnya di PDF asli. Kecocokan harus berada dalam satu baris dan teks baru harus muat di ruang barisnya; baris yang tidak bisa diubah langsung tetap seperti semula dan halamannya disebutkan."}}
+  {
+    "@type": "Question",
+    "name": "Apakah PDF saya diunggah ke suatu tempat untuk diedit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Seluruh proses — membuka PDF, mengganti baris yang diedit, dan memeriksa hasilnya — berjalan sepenuhnya di browser Anda. Dokumen Anda tidak pernah meninggalkan perangkat Anda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya menambahkan paragraf baru atau menghapus baris tabel?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak dengan alat ini — Edit Teks PDF dibuat untuk mengetik ulang teks yang sudah ada di tempatnya, bukan menyusun ulang struktur dokumen. Jika Anda perlu menambah atau menghapus konten, konversi ke Word dengan PDF to Word, lakukan pengeditan penuh di sana, lalu konversi kembali ke PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Mengapa muncul pesan bahwa PDF saya tidak bisa diedit di sini?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "File berisi teks terbuka di halamannya sendiri, tempat Anda mengeditnya langsung. Hasil pindaian tidak berisi teks yang bisa diubah; formulir isian dan PDF bertanda tangan tidak diedit langsung. Editor sebelumnya, yang membangun ulang dokumen sebagai teks yang bisa diedit, terlebih dulu memeriksa seberapa rapi struktur PDF Anda terkonversi — dokumen hasil pindaian, tata letak yang tidak biasa, atau ekstraksi teks yang rusak bisa mendapat skor terlalu rendah, dan editor itu lalu menyarankan konverter PDF ke Word lengkap."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah pengeditan mengubah format bagian lain dokumen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Hanya teks baris yang Anda ketik ulang yang berubah: teks lamanya dihapus dan teks baru ditulis di tempat yang sama. Gambar, baris lain, dan halaman lain tetap seperti semula, dan setiap halaman yang berubah dibaca ulang sebelum diunduh."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah PDFree menyimpan atau mencatat file saya setelah diproses?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. PDFree berjalan sepenuhnya di browser Anda — tidak ada server backend yang menerima file Anda. Karena tidak ada yang diunggah, tidak ada yang bisa disimpan, dicatat, atau dipertahankan. Dokumen Anda hanya ada di memori browser selama sesi berlangsung dan dihapus saat Anda menutup tab."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah ini editor PDF gratis tanpa perlu daftar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ya. PDFree sepenuhnya gratis — tanpa daftar, tanpa akun, tanpa instalasi. Buka alat ini, muat PDF Anda, klik teks yang ingin diperbaiki, lalu unduh hasilnya."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya mencari dan mengganti teks di setiap halaman?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa. Ketik teks di Cari dan teks penggantinya di Ganti dengan — biarkan kosong untuk menghapus teks, misalnya baris yang berulang di kaki setiap halaman. PDFree menampilkan berapa banyak yang ditemukan dan di berapa halaman, lalu Ganti semua mengubahnya di PDF asli. Kecocokan harus berada dalam satu baris dan teks baru harus muat di ruang barisnya; baris yang tidak bisa diubah langsung tetap seperti semula dan halamannya disebutkan."
+    }
+  }
 ]

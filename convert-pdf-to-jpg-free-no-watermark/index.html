@@ -112,33 +112,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Does PDFree add a watermark to JPG images converted from PDF?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. PDFree never adds watermarks, logos, or promotional marks to converted images. The JPG or PNG output shows exactly what was on the PDF page — nothing extra is overlaid. Many free PDF-to-image converters stamp a watermark to push users toward paid plans; PDFree doesn't because there is no paid plan." }
-      },
-      {
-        "@type": "Question",
-        "name": "What DPI options are available for PDF to JPG conversion?",
-        "acceptedAnswer": { "@type": "Answer", "text": "PDFree offers three DPI settings: 72 DPI (web quality — small file sizes, good for screen use), 150 DPI (general purpose — sharp enough for most uses at reasonable file sizes), and 300 DPI (print quality — large, crisp images suitable for high-resolution printing)." }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I convert PDF to JPG without signing up?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. No signup, no email, no account. Open the tool, drop your PDF, choose your settings, and download the images. No registration is required at any step." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is my PDF uploaded when converting to JPG?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. Your PDF is rendered to images entirely in your browser using PDF.js (Mozilla's open-source PDF rendering engine). The conversion happens in browser memory — your file is not uploaded to any server." }
-      },
-      {
-        "@type": "Question",
-        "name": "How do I convert a multi-page PDF to JPG?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Drop your multi-page PDF into the tool. Each page will be converted to a separate image. The result downloads as a ZIP file containing one JPG or PNG per page, named sequentially (page-1.jpg, page-2.jpg, etc.)." }
-      }
+        {
+            "@type": "Question",
+            "name": "Does PDFree add a watermark to converted JPG images?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Output images show exactly your PDF page content — no logo, no watermark, no promotional text overlaid."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What DPI options are available for PDF to JPG conversion?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "PDFree offers three DPI settings: 72 DPI (web quality — small file sizes, good for screen use), 150 DPI (general purpose — sharp enough for most uses at reasonable file sizes), and 300 DPI (print quality — large, crisp images suitable for high-resolution printing)."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I convert PDF to JPG without signing up?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. No signup, no email, no account. The tool works immediately without any registration."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is my PDF uploaded during conversion?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Conversion happens in browser memory using PDF.js. Your file is not uploaded to any server. Your PDF stays on your device throughout."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How do I convert a multi-page PDF to individual JPGs?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Drop your PDF into the tool. All pages are converted automatically. The result downloads as a ZIP file with one image per page, named sequentially."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -322,6 +337,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I export as PNG instead of JPG?</h3>
             <p style="margin:0;font-size:14px;">Yes. The PDF to JPG tool offers both JPG and PNG output formats. PNG is lossless and better for images with text or sharp graphics; JPG is smaller and better for photographic content.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">What DPI options are available for PDF to JPG conversion?</h3>
+            <p style="margin:0;font-size:14px;">PDFree offers three DPI settings: 72 DPI (web quality — small file sizes, good for screen use), 150 DPI (general purpose — sharp enough for most uses at reasonable file sizes), and 300 DPI (print quality — large, crisp images suitable for high-resolution printing).</p>
           </div>
         </div>
 

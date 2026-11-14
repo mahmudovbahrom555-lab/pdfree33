@@ -4,7 +4,7 @@
     "name": "File của tôi có bị tải lên khi thêm số trang không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không. Đánh số trang được xử lý hoàn toàn trong trình duyệt bằng JavaScript. File không bao giờ rời khỏi thiết bị. Bạn có thể kiểm tra bằng DevTools → tab Network — không có yêu cầu upload PDF nào trong quá trình xử lý."
+      "text": "Không. Đánh số trang được xử lý hoàn toàn trong trình duyệt bằng JavaScript. File không bao giờ rời khỏi thiết bị."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Tôi có thể bỏ qua trang đầu tiên (trang bìa) không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Có. Bật tùy chọn 'Bỏ qua trang đầu'. Trang 1 (bìa) không có số, và đánh số bắt đầu từ trang thứ hai."
+      "text": "Có. Đặt \"Từ trang\" là 2: trang bìa không được đánh số và trang 2 hiển thị số 1. Nếu muốn trang 2 hiển thị số 2, hãy đặt thêm \"Số bắt đầu\" là 2."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Tôi có thể thêm định dạng \"Trang 1 / 20\" không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Có. Dùng trường tiền tố để thêm văn bản trước số (ví dụ: 'Trang ') và trường hậu tố để thêm văn bản sau số (ví dụ: ' / 20'). Điều này tạo ra định dạng 'Trang 1 / 20' thông dụng trong tài liệu in chuyên nghiệp."
+      "text": "Có. Dùng trường tiền tố để thêm văn bản trước số (ví dụ: \"Trang \") và trường hậu tố để thêm văn bản sau số (ví dụ: \" / 20\"). Điều này tạo ra định dạng \"Trang 1 / 20\" thông dụng trong tài liệu in chuyên nghiệp."
     }
   },
   {

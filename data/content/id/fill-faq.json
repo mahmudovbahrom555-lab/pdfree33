@@ -20,7 +20,7 @@
     "name": "Jenis kolom formulir apa saja yang didukung?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree mendukung kolom teks, kotak centang, tombol radio, menu dropdown, dan kolom tanda tangan (AcroForm standar)."
+      "text": "PDFree mendukung kolom teks, kotak centang, tombol radio, menu dropdown, dan kolom tanda tangan (AcroForm)."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "Apakah alat ini benar-benar mengisi kolom asli formulir saya, atau saya harus menempatkan teks secara manual?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree mendeteksi kolom AcroForm asli PDF Anda — kolom teks, kotak centang, tombol radio, dropdown, dan kolom tanda tangan — dan menampilkannya sebagai formulir yang benar-benar bisa diisi, tanpa menggambar kotak teks secara manual. Jika PDF Anda tidak memiliki kolom formulir, PDFree akan memberi tahu Anda secara langsung."
+      "text": "PDFree mendeteksi kolom AcroForm asli PDF Anda — kolom teks, kotak centang, tombol radio, dropdown, dan kolom tanda tangan — dan menampilkannya sebagai formulir yang benar-benar bisa diisi. Anda tidak menggambar kotak teks secara manual atau menebak posisinya. Jika PDF Anda tidak memiliki kolom formulir, PDFree akan memberi tahu Anda secara langsung, bukan berpura-pura mendeteksi kolom yang tidak ada."
     }
   },
   {

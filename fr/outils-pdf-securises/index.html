@@ -138,28 +138,40 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Des outils PDFree envoient-ils des fichiers à un serveur ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Non. Chaque outil PDFree traite les fichiers entièrement dans votre navigateur en JavaScript. Vos fichiers ne quittent jamais votre appareil, ne sont jamais envoyés à un serveur, et ne sont jamais stockés en dehors de la mémoire temporaire de votre navigateur." }
-      },
-      {
-        "@type": "Question",
-        "name": "Comment vérifier que mes fichiers ne sont pas envoyés ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Ouvrez les DevTools de votre navigateur (F12), allez dans l'onglet Réseau et utilisez n'importe quel outil PDFree. Vous ne verrez aucune requête contenant votre fichier PDF. Vous verrez les fichiers dont le site a besoin pour fonctionner (scripts, styles, polices et, pour certains outils, des bibliothèques ou des modèles de langue) et de petits événements techniques d'utilisation et d'erreurs décrits dans notre Politique de confidentialité — jamais votre fichier PDF ni son contenu." }
-      },
-      {
-        "@type": "Question",
-        "name": "Que fait PDFree de mes données au regard du RGPD ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Vos fichiers PDF sont traités dans votre navigateur et ne sont pas envoyés sur nos serveurs : nous n'en détenons donc jamais le contenu. Le site collecte des informations techniques limitées d'utilisation et d'erreurs, sans cookies ni identifiant persistant, comme le décrit notre Politique de confidentialité. Nous ne certifions pas la conformité : c'est à votre organisation d'évaluer si un usage respecte ses obligations RGPD." }
-      },
-      {
-        "@type": "Question",
-        "name": "Puis-je utiliser PDFree pour des documents réglementés HIPAA ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Vos fichiers PDF sont traités dans votre navigateur et ne sont pas envoyés sur nos serveurs. Nous ne certifions pas la conformité HIPAA et ne signons pas de BAA ; c'est à votre organisation de décider si l'utilisation de PDFree pour des dossiers patients correspond à ses obligations." }
-      }
+        {
+            "@type": "Question",
+            "name": "Des outils PDFree envoient-ils des fichiers à un serveur ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Non. Chaque outil PDFree traite les fichiers entièrement dans votre navigateur. Vos fichiers ne sont jamais envoyés à un serveur, stockés nulle part, ni journalisés d'aucune façon."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Comment vérifier que mes fichiers ne sont pas envoyés ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ouvrez les DevTools de votre navigateur (F12), allez dans l'onglet Réseau et utilisez n'importe quel outil PDFree. Vous ne verrez aucune requête contenant votre fichier PDF. Vous verrez les fichiers dont le site a besoin pour fonctionner (scripts, styles, polices et, pour certains outils, des bibliothèques ou des modèles de langue) et de petits événements techniques d'utilisation et d'erreurs décrits dans notre Politique de confidentialité — jamais votre fichier PDF ni son contenu."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Que fait PDFree de mes données au regard du RGPD ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Vos fichiers PDF sont traités dans votre navigateur et ne sont pas envoyés sur nos serveurs : nous n'en détenons donc jamais le contenu. Le site collecte des informations techniques limitées d'utilisation et d'erreurs, sans cookies ni identifiant persistant, comme le décrit notre Politique de confidentialité. Nous ne certifions pas la conformité : c'est à votre organisation d'évaluer si un usage respecte ses obligations RGPD."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Puis-je utiliser PDFree pour des dossiers médicaux réglementés HIPAA ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Vos fichiers PDF sont traités dans votre navigateur et ne sont pas envoyés sur nos serveurs. Nous ne certifions pas la conformité HIPAA et ne signons pas de BAA ; c'est à votre organisation de décider si l'utilisation de PDFree pour des dossiers patients correspond à ses obligations."
+            }
+        }
     ]
-  }
+}
   </script>
   <script type="application/ld+json">
   {
@@ -326,6 +338,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">En quoi PDFree diffère-t-il des outils PDF cloud ?</h3>
             <p style="margin:0;font-size:14px;">Les outils PDF cloud envoient vos fichiers sur leurs serveurs pour les traiter. PDFree fonctionne entièrement dans votre navigateur — vos fichiers ne quittent jamais votre appareil. PDFree n'a pas non plus de restriction d'utilisation quotidienne.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Comment vérifier que mes fichiers ne sont pas envoyés ?</h3>
+            <p style="margin:0;font-size:14px;">Ouvrez les DevTools de votre navigateur (F12), allez dans l'onglet Réseau et utilisez n'importe quel outil PDFree. Vous ne verrez aucune requête contenant votre fichier PDF. Vous verrez les fichiers dont le site a besoin pour fonctionner (scripts, styles, polices et, pour certains outils, des bibliothèques ou des modèles de langue) et de petits événements techniques d'utilisation et d'erreurs décrits dans notre Politique de confidentialité — jamais votre fichier PDF ni son contenu.</p>
           </div>
         </div>
 

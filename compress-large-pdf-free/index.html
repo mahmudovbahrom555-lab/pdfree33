@@ -124,38 +124,56 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How do I compress a large PDF file for free?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Open PDFree's PDF compressor, drop in your file and pick a compression level. It runs entirely in your browser and downloads the smaller file in seconds. No account, no upload, no daily limit — files up to 500 MB on a computer, 150 MB on phones, while most free online compressors cap uploads around 25MB." }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I compress a PDF larger than 100MB for free?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes — up to 500 MB in Chrome or Edge on a computer with 8 GB+ memory, and up to 150 MB on phones, Safari and Firefox. Processing happens entirely in your browser, so the cap protects your device's memory rather than a server's bandwidth — a 500 MB scan took about 30 seconds on an 8 GB laptop in our tests." }
-      },
-      {
-        "@type": "Question",
-        "name": "Why do cloud tools limit file size for free compression?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Cloud tools compress files on their servers, which means bandwidth and storage costs. To control those costs for free users, they impose file size limits and daily caps. PDFree compresses everything locally in your browser, so there are no server costs — and therefore no daily limit and no 25MB cap; files go up to 500 MB on a computer, limited only to protect your device's memory." }
-      },
-      {
-        "@type": "Question",
-        "name": "How much can PDFree compress a large PDF?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Compression results vary by content. PDFs with many embedded images often shrink 40–80%. Text-heavy PDFs compress less — typically 10–30%. PDFree uses the same PDF compression algorithms as desktop tools, running entirely in your browser." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is there a daily limit on how many PDFs I can compress?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. PDFree has no daily usage limits. Unlike cloud tools with daily limits on their free plans, PDFree lets you compress as many PDFs as you need, as often as you want, for free." }
-      },
-      {
-        "@type": "Question",
-        "name": "Will compression reduce the quality of my PDF?",
-        "acceptedAnswer": { "@type": "Answer", "text": "For documents that are mostly text, compression has no visible impact on quality — the text stays crisp. For PDFs with photos, higher compression levels reduce image resolution, which may be noticeable on close inspection. Choose a moderate compression level to balance size reduction and image quality." }
-      }
+        {
+            "@type": "Question",
+            "name": "How do I compress a large PDF file for free?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Open PDFree's PDF compressor, drop in your file and pick a compression level. It runs entirely in your browser and downloads the smaller file in seconds. No account, no upload, no daily limit — files up to 500 MB on a computer, 150 MB on phones, while most free online compressors cap uploads around 25MB."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I compress a PDF larger than 100MB for free?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes — up to 500 MB in Chrome or Edge on a computer with 8 GB+ memory, and up to 150 MB on phones, Safari and Firefox. Processing happens entirely in your browser, so the cap protects your device's memory rather than a server's bandwidth — a 500 MB scan took about 30 seconds on an 8 GB laptop in our tests."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Why do cloud tools cap free compression but PDFree doesn't?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Cloud tools process files on their servers, creating real bandwidth and compute costs. PDFree processes files locally in your browser — there are no server costs, so there is no daily limit and no 25MB cap; files go up to 500 MB on a computer, limited only to protect your device's memory."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How much can PDFree compress a large PDF?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Compression results vary by content. PDFs with many embedded images often shrink 40–80%. Text-heavy PDFs compress less — typically 10–30%. PDFree uses the same PDF compression algorithms as desktop tools, running entirely in your browser."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is there a daily limit on PDF compressions?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Unlike cloud tools with daily limits on free plans, PDFree has no daily cap. Compress as many PDFs as you need, as often as you want."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How much will compression reduce my PDF's file size?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Results depend on the content. Image-heavy PDFs typically shrink 40–80%. Text-heavy PDFs compress 10–30%. PDFree uses the same compression algorithms as desktop tools."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -422,6 +440,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Does my file get uploaded to a server when I compress it?</h3>
             <p style="margin:0;font-size:14px;">No. PDFree never uploads your file. The entire compression operation runs in JavaScript inside your browser, on your device. Your document stays completely private — it never reaches any server.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">How much can PDFree compress a large PDF?</h3>
+            <p style="margin:0;font-size:14px;">Compression results vary by content. PDFs with many embedded images often shrink 40–80%. Text-heavy PDFs compress less — typically 10–30%. PDFree uses the same PDF compression algorithms as desktop tools, running entirely in your browser.</p>
           </div>
         </div>
 

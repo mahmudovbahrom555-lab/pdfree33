@@ -52,7 +52,7 @@
     "name": "Les tableaux sont-ils correctement convertis ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree détecte les tableaux de deux façons : en alignant les éléments textuels en colonnes (pour les tableaux de données) et en détectant les lignes de bordure dessinées (pour les formulaires). Les tableaux détectés sont convertis en vrais tableaux Word, pas en texte brut."
+      "text": "PDFree détecte les tableaux de deux façons : en alignant les éléments textuels en colonnes (pour les tableaux de données) et en détectant les lignes de bordure dessinées (pour les formulaires). Les tableaux détectés deviennent de vrais tableaux Word. Les mises en page très complexes avec cellules fusionnées peuvent ne pas être parfaitement converties."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Ai-je besoin de Microsoft Word pour ouvrir le fichier ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. Le format .docx est compatible avec Microsoft Word, Google Docs (importer sur Drive et ouvrir), LibreOffice Writer (gratuit, open source) et Apple Pages. Vous n'avez pas besoin d'un abonnement payant Microsoft 365 pour ouvrir le fichier."
+      "text": "Non. Le format .docx est un standard ouvert compatible avec Google Docs (gratuit), LibreOffice Writer (gratuit, open source), Apple Pages et Microsoft 365 en ligne (dans le navigateur, gratuit). Aucun abonnement Word payant n'est nécessaire."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "Puis-je convertir un PDF numérisé en Word éditable ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Cela dépend. Si votre PDF numérisé contient une couche de texte intégrée (ajoutée par de nombreux scanners modernes), le mode texte l'extrait correctement. Si le PDF est purement visuel sans couche de texte, utilisez le mode image ou utilisez d'abord l'outil OCR PDF pour ajouter une couche de texte avant de convertir en Word."
+      "text": "Cela dépend. Si le scan possède une couche de texte intégrée (ajoutée par Adobe Scan, Microsoft Lens ou un scanner moderne), le mode texte l'extrait correctement. Si le PDF est purement visuel, utilisez d'abord l'<a href=\"/fr/ocr-pdf/\" style=\"color:var(--green-text);\">outil OCR PDF</a> puis convertissez en Word."
     }
   },
   {
@@ -84,7 +84,7 @@
     "name": "Fonctionne-t-il hors ligne ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Oui. Une fois la page chargée, PDFree fonctionne entièrement hors ligne en tant que Progressive Web App. Aucune connexion Internet n'est requise pour la conversion."
+      "text": "Oui. PDFree fonctionne entièrement hors ligne en tant que Progressive Web App une fois la page chargée au moins une fois. Aucune connexion Internet n'est requise pour la conversion."
     }
   },
   {
@@ -92,7 +92,7 @@
     "name": "Comment fonctionne le score de qualité de conversion ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Après la conversion, PDFree affiche un score de confiance (0–100 %) basé sur ce qui a été détecté : couverture de la couche de texte, tableaux, diagrammes et complexité des scripts. Élevé (80 %+) signifie une sortie entièrement éditable. Moyen (55–79 %) indique que certaines pages peuvent être en image. Faible (moins de 55 %) signifie généralement un PDF majoritairement numérisé — utilisez d'abord l'OCR."
+      "text": "Après la conversion, PDFree affiche un score de confiance (0–100 %) basé sur ce qui a été détecté : couverture de la couche de texte, tableaux, diagrammes et complexité des scripts. Élevé (≥80 %) signifie une sortie entièrement éditable. Moyen (55–79 %) indique que certaines pages peuvent être en image. Faible (&lt;55 %) signifie généralement un PDF majoritairement numérisé — utilisez d'abord l'OCR."
     }
   },
   {

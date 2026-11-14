@@ -44,7 +44,7 @@
     "name": "Làm phẳng có giảm kích thước file không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Thường giảm một chút. Làm phẳng xóa dữ liệu widget biểu mẫu tương tác và JavaScript. Hình ảnh và font nhúng không bị ảnh hưởng bởi làm phẳng."
+      "text": "Thường giảm một chút. Làm phẳng xóa dữ liệu widget biểu mẫu tương tác và JavaScript, giảm kích thước file cho các biểu mẫu có nhiều trường. Hình ảnh và font nhúng không bị ảnh hưởng."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "Sự khác biệt giữa làm phẳng và bảo vệ bằng mật khẩu?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Làm phẳng xóa hoàn toàn cấu trúc biểu mẫu tương tác — không có trường nào để chỉnh sửa. Bảo vệ mật khẩu hạn chế quyền truy cập nhưng để nguyên các trường biểu mẫu. Để bảo mật tối đa, làm phẳng trước rồi thêm mật khẩu."
+      "text": "Chúng giải quyết các vấn đề khác nhau. Làm phẳng xóa hoàn toàn cấu trúc biểu mẫu tương tác. Bảo vệ mật khẩu hạn chế quyền truy cập nhưng để nguyên các trường biểu mẫu. Để bảo mật tối đa, làm phẳng trước rồi thêm mật khẩu."
     }
   },
   {

@@ -125,48 +125,72 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Kann ich kostenlos PDF-Dateien zusammenführen, die größer als 100 MB sind?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Ja — bis zu 500 MB pro Zusammenführung in Chrome oder Edge auf einem Computer mit mindestens 8 GB Arbeitsspeicher, bis zu 300 MB auf Smartphones sowie in Safari und Firefox. Die Verarbeitung erfolgt vollständig in deinem Browser, die Grenze schützt also den Arbeitsspeicher deines Geräts und nicht die Bandbreite eines Servers — in unseren Tests dauerte eine 500-MB-Zusammenführung auf einem Laptop mit 8 GB etwa 5 Sekunden." }
-      },
-      {
-        "@type": "Question",
-        "name": "Warum haben Cloud-Tools ein Limit pro Datei?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Cloud-Tools verarbeiten Dateien auf ihren Servern, was Bandbreiten- und Speicherkosten verursacht. Um diese Kosten für kostenlose Nutzer zu begrenzen, setzt der Dienst Dateigrößenlimits. PDFree verarbeitet alles lokal in deinem Browser — es entstehen keine Serverkosten, also gibt es weder ein Tageslimit noch eine 25-MB-Grenze; eine Zusammenführung darf am Computer bis zu 500 MB groß sein, begrenzt nur zum Schutz des Arbeitsspeichers deines Geräts." }
-      },
-      {
-        "@type": "Question",
-        "name": "Wie groß darf ein PDF sein, das PDFree zusammenführen kann?",
-        "acceptedAnswer": { "@type": "Answer", "text": "500 MB pro Zusammenführung in Chrome oder Edge auf einem Computer mit mindestens 8 GB Arbeitsspeicher, 300 MB auf Smartphones sowie in Safari und Firefox — diese Browser melden ihren Arbeitsspeicher nicht, deshalb gilt dort die sichere Grenze. In unseren Tests funktionierte sogar eine 800-MB-Zusammenführung mit etwa 1,5 GB Browser-Speicher, 500 MB lassen also Luft für deine anderen Tabs." }
-      },
-      {
-        "@type": "Question",
-        "name": "Was soll ich tun, wenn mein Browser beim Zusammenführen sehr großer Dateien abstürzt?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Schließe andere Browser-Tabs, um Arbeitsspeicher freizugeben, und versuche es erneut — jeder offene Tab belegt RAM, das dann für das Zusammenführen fehlt. Das Zusammenführen in kleineren Gruppen (5–10 Dateien auf einmal, dann die Ergebnisse zusammenführen) benötigt ebenfalls weniger Speicher auf einmal. Du kannst jede Datei auch zuerst mit dem Tool „PDF komprimieren“ verkleinern, bevor du sie zusammenführst." }
-      },
-      {
-        "@type": "Question",
-        "name": "Gibt es ein Tageslimit für die Anzahl der Zusammenführungen?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Nein. PDFree hat keine täglichen Nutzungslimits. Anders als Cloud-Tools mit Tageslimits im Gratis-Tarif kannst du mit PDFree so viele PDFs zusammenführen, wie du brauchst, so oft du willst — kostenlos." }
-      },
-      {
-        "@type": "Question",
-        "name": "Wie viele PDF-Dateien kann ich gleichzeitig zusammenführen?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Es gibt kein Limit für die Dateianzahl. Du kannst 2, 50, 100 oder mehr PDF-Dateien in einem Arbeitsgang zusammenführen, solange sie zusammen am Computer (Chrome/Edge, ab 8 GB RAM) unter 500 MB bleiben, auf Smartphones und in anderen Browsern unter 300 MB." }
-      },
-      {
-        "@type": "Question",
-        "name": "Kann ich kostenlos 50 oder 100 PDF-Dateien auf einmal zusammenführen?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Ja. PDFree hat kein Limit für die Anzahl der Dateien pro Zusammenführung und kein tägliches Nutzungslimit. Lege alle Dateien auf einmal ab, ordne sie an und klicke auf Zusammenführen. Das Ergebnis wird direkt auf dein Gerät heruntergeladen — kein Upload auf einen Server erforderlich." }
-      },
-      {
-        "@type": "Question",
-        "name": "Warum ist das Zusammenführen großer PDFs bei Cloud-Tools langsam, bei PDFree aber schnell?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Cloud-Tools erfordern das Hochladen deiner Datei auf den Server, die Verarbeitung dort und den Download des Ergebnisses — drei Netzwerkwege, die bei großen Dateien deutlich Zeit kosten. PDFree verarbeitet alles lokal in deinem Browser ohne Netzwerkübertragung, sodass die Geschwindigkeit nur von der CPU deines Geräts abhängt, nicht von deiner Internetverbindung." }
-      }
+        {
+            "@type": "Question",
+            "name": "Kann ich kostenlos PDF-Dateien zusammenführen, die größer als 100 MB sind?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ja — bis zu 500 MB pro Zusammenführung in Chrome oder Edge auf einem Computer mit mindestens 8 GB Arbeitsspeicher, bis zu 300 MB auf Smartphones sowie in Safari und Firefox. Die Verarbeitung erfolgt vollständig in deinem Browser, die Grenze schützt also den Arbeitsspeicher deines Geräts und nicht die Bandbreite eines Servers — in unseren Tests dauerte eine 500-MB-Zusammenführung auf einem Laptop mit 8 GB etwa 5 Sekunden."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Warum haben Cloud-Tools ein Größenlimit, PDFree aber nicht?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Cloud-Tools verarbeiten Dateien auf ihren Servern, was Bandbreiten- und Speicherkosten verursacht. PDFree verarbeitet Dateien lokal in deinem Browser — es entstehen keine Serverkosten, also gibt es weder ein Tageslimit noch eine 25-MB-Grenze; eine Zusammenführung darf am Computer bis zu 500 MB groß sein, begrenzt nur zum Schutz des Arbeitsspeichers deines Geräts."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Wie groß darf ein PDF sein, das ich zusammenführe?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "500 MB pro Zusammenführung in Chrome oder Edge auf einem Computer mit mindestens 8 GB Arbeitsspeicher, 300 MB auf Smartphones sowie in Safari und Firefox — diese Browser melden ihren Arbeitsspeicher nicht, deshalb gilt dort die sichere Grenze. In unseren Tests funktionierte sogar eine 800-MB-Zusammenführung mit etwa 1,5 GB Browser-Speicher, 500 MB lassen also Luft für deine anderen Tabs."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Was soll ich tun, wenn mein Browser beim Zusammenführen sehr großer Dateien abstürzt?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Schließe andere Tabs, um Speicher freizugeben, und versuche es erneut — das Zusammenführen in kleineren Gruppen (5–10 Dateien auf einmal, dann die Ergebnisse zusammenführen) benötigt weniger Speicher auf einmal. Du kannst jede Datei auch zuerst mit dem Tool „PDF komprimieren“ verkleinern, bevor du sie zusammenführst."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Gibt es ein Tageslimit für Zusammenführungen?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Nein. Anders als Cloud-Tools mit Tageslimits im Gratis-Tarif hat PDFree kein Tageslimit. Führe so viele PDFs zusammen, wie du brauchst, so oft du willst."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Wie viele PDF-Dateien kann ich gleichzeitig zusammenführen?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Es gibt kein Limit für die Anzahl der Dateien. PDFree verarbeitet alles im Arbeitsspeicher deines Browsers, sodass du 2, 50 oder 100+ PDF-Dateien in einem Arbeitsgang zusammenführen kannst, solange sie zusammen am Computer (Chrome/Edge, ab 8 GB RAM) unter 500 MB bleiben, auf Smartphones und in anderen Browsern unter 300 MB."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Kann ich kostenlos 50 oder 100 PDF-Dateien auf einmal zusammenführen?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ja, komplett kostenlos und ohne Tageslimit. Anders als Cloud-Tools mit Tageslimits im Gratis-Tarif hat PDFree keine Nutzungseinschränkungen. Lege alle 50 oder 100 Dateien auf einmal ab, ordne sie an und klicke auf Zusammenführen — das Ergebnis wird direkt auf dein Gerät heruntergeladen, ohne Upload auf einen Server."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Warum ist das Zusammenführen großer PDFs bei Cloud-Tools langsam, bei PDFree aber schnell?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Cloud-Tools erfordern das Hochladen deiner Datei auf den Server, die Verarbeitung dort und den Download des Ergebnisses — drei Netzwerkwege, die bei großen Dateien deutlich Zeit kosten. PDFree verarbeitet alles lokal in deinem Browser ohne Netzwerkübertragung, sodass die Geschwindigkeit nur von der CPU deines Geräts abhängt, nicht von deiner Internetverbindung."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -505,6 +529,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Muss ich ein Konto erstellen?</h3>
             <p style="margin:0;font-size:14px;">Nein. PDFree erfordert nie ein Konto, eine E-Mail-Adresse oder eine Registrierung. Öffne das Tool und beginne sofort mit dem Zusammenführen.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Warum ist das Zusammenführen großer PDFs bei Cloud-Tools langsam, bei PDFree aber schnell?</h3>
+            <p style="margin:0;font-size:14px;">Cloud-Tools erfordern das Hochladen deiner Datei auf den Server, die Verarbeitung dort und den Download des Ergebnisses — drei Netzwerkwege, die bei großen Dateien deutlich Zeit kosten. PDFree verarbeitet alles lokal in deinem Browser ohne Netzwerkübertragung, sodass die Geschwindigkeit nur von der CPU deines Geräts abhängt, nicht von deiner Internetverbindung.</p>
           </div>
         </div>
 

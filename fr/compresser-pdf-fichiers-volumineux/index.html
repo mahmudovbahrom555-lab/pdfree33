@@ -125,33 +125,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Puis-je compresser gratuitement un PDF de plus de 100 Mo ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Oui — jusqu'à 500 Mo dans Chrome ou Edge sur un ordinateur doté d'au moins 8 Go de mémoire, et jusqu'à 150 Mo sur téléphone, Safari et Firefox. Le traitement se fait entièrement dans votre navigateur : la limite protège la mémoire de votre appareil, pas la bande passante d'un serveur — dans nos tests, un scan de 500 Mo a été compressé en 30 secondes environ sur un portable doté de 8 Go." }
-      },
-      {
-        "@type": "Question",
-        "name": "Pourquoi les outils cloud limitent-ils la compression gratuite ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Les outils cloud compressent les fichiers sur leurs serveurs, ce qui engendre des coûts de bande passante et de stockage. Pour maîtriser ces coûts pour les utilisateurs gratuits, le service impose des limites de taille de fichier et des plafonds quotidiens. PDFree compresse tout localement dans votre navigateur, il n'y a donc aucun coût serveur — et par conséquent ni limite quotidienne ni plafond à 25 Mo ; les fichiers peuvent atteindre 500 Mo sur ordinateur, une limite qui ne sert qu'à protéger la mémoire de votre appareil." }
-      },
-      {
-        "@type": "Question",
-        "name": "Dans quelle mesure PDFree peut-il compresser un gros PDF ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Les résultats de compression varient selon le contenu. Les PDF contenant de nombreuses images intégrées rétrécissent souvent de 40 à 80 %. Les PDF principalement textuels compressent moins — généralement 10 à 30 %. PDFree utilise les mêmes algorithmes de compression que les outils de bureau, tout en s'exécutant entièrement dans votre navigateur." }
-      },
-      {
-        "@type": "Question",
-        "name": "Y a-t-il une limite quotidienne sur le nombre de PDF que je peux compresser ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Non. PDFree n'impose aucune limite d'utilisation quotidienne. Contrairement aux outils cloud qui limitent l'usage gratuit par jour, PDFree vous permet de compresser autant de PDF que nécessaire, aussi souvent que vous le souhaitez, gratuitement." }
-      },
-      {
-        "@type": "Question",
-        "name": "La compression réduira-t-elle la qualité de mon PDF ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Pour les documents majoritairement textuels, la compression n'a aucun impact visible sur la qualité — le texte reste net. Pour les PDF contenant des photos, des niveaux de compression plus élevés réduisent la résolution des images, ce qui peut être perceptible en y regardant de près. Choisissez un niveau de compression modéré pour équilibrer réduction de taille et qualité d'image." }
-      }
+        {
+            "@type": "Question",
+            "name": "Puis-je compresser gratuitement un PDF de plus de 100 Mo ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Oui — jusqu'à 500 Mo dans Chrome ou Edge sur un ordinateur doté d'au moins 8 Go de mémoire, et jusqu'à 150 Mo sur téléphone, Safari et Firefox. Le traitement se fait entièrement dans votre navigateur : la limite protège la mémoire de votre appareil, pas la bande passante d'un serveur — dans nos tests, un scan de 500 Mo a été compressé en 30 secondes environ sur un portable doté de 8 Go."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Pourquoi les outils cloud plafonnent-ils la compression gratuite, mais pas PDFree ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Les outils cloud traitent les fichiers sur leurs serveurs, ce qui crée des coûts réels de bande passante et de calcul. PDFree traite les fichiers localement dans votre navigateur — il n'y a aucun coût serveur, donc ni limite quotidienne ni plafond à 25 Mo ; les fichiers peuvent atteindre 500 Mo sur ordinateur, une limite qui ne sert qu'à protéger la mémoire de votre appareil."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Dans quelle mesure PDFree peut-il compresser un gros PDF ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Les résultats de compression varient selon le contenu. Les PDF contenant de nombreuses images intégrées rétrécissent souvent de 40 à 80 %. Les PDF principalement textuels compressent moins — généralement 10 à 30 %. PDFree utilise les mêmes algorithmes de compression que les outils de bureau, tout en s'exécutant entièrement dans votre navigateur."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Y a-t-il une limite quotidienne sur les compressions de PDF ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Non. Contrairement aux outils cloud qui limitent l'usage gratuit par jour, PDFree n'a aucun plafond quotidien. Compressez autant de PDF que nécessaire, aussi souvent que vous le souhaitez."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "De combien la compression réduira-t-elle la taille de mon PDF ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Le résultat dépend du contenu. Les PDF riches en images rétrécissent généralement de 40 à 80 %. Les PDF principalement textuels compressent de 10 à 30 %. PDFree utilise les mêmes algorithmes de compression que les outils de bureau."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -417,6 +432,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Mon fichier est-il envoyé vers un serveur lorsque je le compresse ?</h3>
             <p style="margin:0;font-size:14px;">Non. PDFree n'envoie jamais votre fichier. L'ensemble de l'opération de compression s'exécute en JavaScript dans votre navigateur, sur votre appareil. Votre document reste entièrement privé — il n'atteint jamais aucun serveur.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Dans quelle mesure PDFree peut-il compresser un gros PDF ?</h3>
+            <p style="margin:0;font-size:14px;">Les résultats de compression varient selon le contenu. Les PDF contenant de nombreuses images intégrées rétrécissent souvent de 40 à 80 %. Les PDF principalement textuels compressent moins — généralement 10 à 30 %. PDFree utilise les mêmes algorithmes de compression que les outils de bureau, tout en s'exécutant entièrement dans votre navigateur.</p>
           </div>
         </div>
 

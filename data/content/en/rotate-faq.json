@@ -68,7 +68,7 @@
     "name": "Is the PDF rotator completely free?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. PDFree is free with no subscription, no daily limits, and no signup. No watermarks are added to the output."
+      "text": "Yes. PDFree is free with no subscription, no daily limits, and no signup. There are no watermarks added to the output; each PDF can be up to 150 MB."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "Does the rotation save permanently to my PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. Clicking Rotate PDF generates a new PDF file that downloads to your device with the rotation permanently applied. It will display in the corrected orientation in any PDF viewer."
+      "text": "Yes. Clicking <strong>Rotate PDF</strong> generates a new PDF file that downloads to your device with the rotation permanently applied. Open it in any PDF viewer and it will display in the corrected orientation."
     }
   },
   {

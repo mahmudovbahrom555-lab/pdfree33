@@ -20,7 +20,7 @@
     "name": "¿Puedo juntar varias imágenes en un solo PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. Puedes añadir tantas imágenes JPG, PNG o WebP como necesites — cada una se convierte en una página del PDF. Ordénalas arrastrándolas antes de convertir."
+      "text": "Sí. Puedes añadir tantas imágenes JPG o PNG como necesites — cada una se convierte en una página del PDF. Ordénalas arrastrándolas antes de convertir."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "¿Se suben mis imágenes a un servidor?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. Todo el procesamiento se realiza en tu navegador. Tus imágenes nunca salen de tu dispositivo y no necesitas registrarte."
+      "text": "No. Todo el procesamiento se realiza en tu navegador. Tus imágenes nunca salen de tu dispositivo."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "¿Funciona en el móvil sin instalar nada?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. Abre la página desde el navegador de tu teléfono y selecciona fotos directamente desde la galería. No hay que instalar ninguna aplicación."
+      "text": "Sí. Abre la página desde el navegador de tu teléfono y selecciona fotos directamente desde la galería. No hay que instalar ninguna app."
     }
   },
   {

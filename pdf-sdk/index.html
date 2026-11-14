@@ -73,33 +73,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Is this a hosted API, or does it really run client-side?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Client-side only. There's no endpoint that receives your users' files — the SDK ships WebAssembly/JS that runs in the browser tab, the same engine already powering pdfree.io's own tools." }
-      },
-      {
-        "@type": "Question",
-        "name": "How is this different from just using pdf-lib directly?",
-        "acceptedAnswer": { "@type": "Answer", "text": "pdf-lib is a great low-level library, but it doesn't ship ready-made compress/watermark/redact operations — teams build and maintain that layer themselves. PDFree SDK aims to be the finished, high-level version of that layer." }
-      },
-      {
-        "@type": "Question",
-        "name": "Does this help with HIPAA/GDPR compliance?",
-        "acceptedAnswer": { "@type": "Answer", "text": "If a file never leaves the browser, whether the vendor receives PHI or personal data is off the table for that step of the pipeline. It doesn't replace a full compliance review, but it removes one entire category of risk." }
-      },
-      {
-        "@type": "Question",
-        "name": "Will the PDFree SDK be free, like the website?",
-        "acceptedAnswer": { "@type": "Answer", "text": "pdfree.io stays free for individual use. The SDK is being scoped as a licensed product for teams embedding it in their own software — exact pricing isn't set yet." }
-      },
-      {
-        "@type": "Question",
-        "name": "When does the PDFree SDK ship?",
-        "acceptedAnswer": { "@type": "Answer", "text": "There's no date yet — this page is the first signal-gathering step. Joining the waitlist and describing what you'd build directly shapes what gets built first." }
-      }
+        {
+            "@type": "Question",
+            "name": "Is this a hosted API, or does it really run client-side?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Client-side only. There's no endpoint that receives your users' files — the SDK ships WebAssembly/JS that runs in the browser tab, the same engine already powering pdfree.io's own tools."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How is this different from just using pdf-lib directly?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "pdf-lib is a great low-level library, but it doesn't ship ready-made compress/watermark/redact operations — teams build and maintain that layer themselves. PDFree SDK aims to be the finished, high-level version of that layer."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does this help with HIPAA/GDPR compliance?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "If a file never leaves the browser, \"does this vendor receive PHI/personal data\" is off the table for that step of your pipeline. It doesn't replace a full compliance review of your own product, but it removes one entire category of risk."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Will it be free, like the website?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "pdfree.io stays free for individual use. The SDK is being scoped as a licensed product for teams embedding it in their own software — exact pricing isn't set yet, which is part of why this page exists."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "When does it ship?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "There's no date yet — this page is the first real signal-gathering step. Join the waitlist below and tell us what you'd build; that shapes what gets built first."
+            }
+        }
     ]
-  }
+}
   </script>
 </head>
 <body>

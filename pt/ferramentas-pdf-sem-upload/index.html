@@ -121,33 +121,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Posso usar as ferramentas do PDFree sem conexão com a internet?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sim. Após sua primeira visita, o PDFree funciona totalmente offline. Um Service Worker armazena em cache todo o JavaScript, os módulos WebAssembly e as fontes necessárias para executar as ferramentas. Em visitas posteriores — mesmo sem internet — as ferramentas carregam do cache e continuam processando PDFs. Isso torna o PDFree útil em aviões, em áreas com conectividade ruim ou em redes corporativas restritas." }
-      },
-      {
-        "@type": "Question",
-        "name": "Meu PDF é realmente enviado quando uso o PDFree?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Não. Seu PDF nunca é enviado a nenhum servidor. Quando você solta um arquivo no PDFree, o navegador o lê diretamente do seu disco local usando a File API. Todo o processamento — juntar, comprimir, dividir, converter — acontece no seu navegador via WebAssembly (pdf-lib e PDF.js). O resultado é baixado diretamente da memória para o seu dispositivo. Nenhum byte do seu arquivo toca em um servidor." }
-      },
-      {
-        "@type": "Question",
-        "name": "Qual a diferença em relação às ferramentas PDF na nuvem?",
-        "acceptedAnswer": { "@type": "Answer", "text": "As ferramentas PDF em nuvem enviam seu arquivo para os servidores delas, processam-no lá e devolvem o resultado. Isso significa que seu documento viaja pela internet, fica armazenado em infraestrutura de terceiros (mesmo que temporariamente) e fica sujeito às políticas de tratamento de dados delas. O PDFree é o oposto: seu arquivo nunca sai do seu dispositivo. O motor de processamento roda dentro do seu navegador. Nenhum servidor está envolvido no manuseio do seu documento." }
-      },
-      {
-        "@type": "Question",
-        "name": "O PDFree funciona no celular sem upload?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sim. O PDFree funciona no Safari do iOS, no Chrome do Android e em todos os navegadores móveis modernos — sem upload. O mesmo processamento baseado em WebAssembly funciona em dispositivos móveis. Você também pode instalar o PDFree como PWA pela opção \"Adicionar à tela inicial\" do seu navegador, obtendo acesso offline como um app nativo." }
-      },
-      {
-        "@type": "Question",
-        "name": "O PDFree é realmente grátis, sem limites ocultos?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sim. O PDFree é totalmente gratuito, sem limites diários de tarefas, sem exigência de conta e sem marcas d'água no resultado. Não existe plano pago para desbloquear — todas as ferramentas são grátis para sempre. O projeto é open source sob a licença GNU AGPLv3." }
-      }
+        {
+            "@type": "Question",
+            "name": "Posso usar essas ferramentas PDF sem conexão com a internet?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sim. Após sua primeira visita, o PDFree funciona totalmente offline. Um Service Worker armazena em cache todo o aplicativo — scripts, módulos WebAssembly e fontes. Em qualquer visita posterior, mesmo sem internet, todas as ferramentas carregam do cache e processam PDFs sem precisar de conexão de rede."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Meu PDF é realmente enviado quando uso o PDFree?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Não. Seu PDF é lido do seu disco local pela File API do navegador e processado na memória do navegador. Nenhum byte do seu arquivo é enviado por uma conexão de rede. Você pode verificar isso sozinho: abra as DevTools do seu navegador → aba Rede e observe se aparece alguma requisição de upload de arquivo — não há nenhuma."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Qual a diferença em relação às ferramentas PDF na nuvem?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ferramentas em nuvem enviam seu arquivo para os servidores delas, processam remotamente e devolvem o resultado. Seu documento fica temporariamente na infraestrutura delas. O PDFree é o oposto — o motor de processamento vive no seu navegador. Seu arquivo nunca sai do seu dispositivo. Isso torna o PDFree fundamentalmente mais seguro para documentos sensíveis e utilizável sem internet após o primeiro carregamento."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "O PDFree funciona no celular sem upload?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sim. O PDFree funciona no Safari do iOS, no Chrome do Android e em todos os navegadores móveis modernos. O processamento baseado em WebAssembly funciona da mesma forma no celular — sem upload, sem servidor. Você também pode instalar o PDFree como PWA pelo menu do seu navegador, para acesso offline rápido a partir da tela inicial."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "É realmente grátis, sem pegadinhas escondidas?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sim. O PDFree não tem plano pago, sem limites diários, sem marcas d'água no resultado e sem exigência de conta. Todas as ferramentas são grátis para sempre. O projeto é open source sob a licença GNU AGPLv3 — você pode inspecionar o código-fonte para verificar exatamente como funciona."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">

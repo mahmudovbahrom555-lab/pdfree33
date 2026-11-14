@@ -97,4 +97,51 @@
 
         <p style="font-size:14px;margin:0;">Já tem um PDF com campos que precisa de preencher, em vez de criar? Use <a href="/pt/preencher-pdf/" style="color:var(--green-text);">Preencher formulário PDF</a>.</p>
 
+        <!-- FAQ -->
+        <h2 style="font-size:22px;color:var(--text);margin:48px 0 20px;font-weight:700;">Perguntas Frequentes</h2>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">O meu PDF é enviado para algum lado quando adiciono campos de formulário?</h3>
+          <p style="margin:0;font-size:14px;">Não. Tudo corre no seu navegador usando o pdf.js (para mostrar a página em que clica) e o pdf-lib (para gravar os campos AcroForm reais). Nem o PDF original nem a versão com os campos adicionados são alguma vez enviados para um servidor. O PDFree não tem acesso ao seu documento.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Qual é a diferença entre esta ferramenta e Preencher PDF?</h3>
+          <p style="margin:0;font-size:14px;">Preencher PDF é para documentos que já têm campos de formulário interativos — deteta-os e permite escrever valores neles. Adicionar campos de formulário é para o caso contrário: um PDF simples ou digitalizado que AINDA não tem nenhum campo interativo. É você que posiciona os campos clicando na página e depois baixa um PDF que, pela primeira vez, tem campos reais e preenchíveis. Se o PDFree detetar que o seu ficheiro já tem campos, encaminha-o para Preencher PDF.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Os campos criados por esta ferramenta são «reais» ou apenas caixas desenhadas na página?</h3>
+          <p style="margin:0;font-size:14px;">São campos reais. Cada caixa posicionada torna-se um verdadeiro campo de texto AcroForm gravado na estrutura do PDF com o pdf-lib — a mesma tecnologia usada para construir formulários interativos no Acrobat e noutras ferramentas de autoria de PDF. Abra o resultado em qualquer leitor de PDF que cumpra o padrão e poderá clicar dentro do campo e escrever, saltar entre campos com o tabulador, e os valores ficam guardados como dados de formulário reais, não como imagem.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Que tipos de campo posso adicionar?</h3>
+          <p style="margin:0;font-size:14px;">Quatro tipos: campos de texto, caixas de seleção, grupos de botões de opção e listas suspensas. Escolha o tipo nos botões acima da página e clique para o posicionar. Os campos de texto servem para nomes, datas, moradas e respostas livres; as caixas de seleção, para marcas de sim/não; um grupo de opção é um conjunto de botões em que só um pode ser escolhido de cada vez; uma lista suspensa oferece as opções que você próprio escrever. Campos de assinatura ainda não são suportados — use Desenhar no PDF para assinar um documento.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Como posiciono e ajusto um campo?</h3>
+          <p style="margin:0;font-size:14px;">Escolha um tipo de campo e clique em qualquer ponto da página apresentada para o colocar ali. Arraste o campo pela alça redonda para o reposicionar, arraste o canto inferior direito para o redimensionar e escreva diretamente na etiqueta do campo para lhe dar um nome (útil se você ou outra pessoa vir mais tarde os nomes dos campos no painel de formulários de um leitor de PDF). Clique no pequeno botão × para remover um campo que não queira.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Como crio um grupo de botões de opção em que só um pode ser selecionado?</h3>
+          <p style="margin:0;font-size:14px;">Escolha o tipo de campo Botão de opção e dê um nome ao grupo na caixa do nome do grupo; depois clique para posicionar cada opção. Todos os botões que posicionar com esse nome ativo passam a pertencer ao mesmo grupo, pelo que só um deles poderá ficar selecionado — e é isso que distingue os botões de opção de uma fila de caixas de seleção. Escreva o valor próprio de cada botão (por exemplo Sim e Não). Para começar um segundo grupo, independente, clique em «Novo grupo» e dê-lhe um nome diferente. Editar o nome enquanto um botão já posicionado está selecionado renomeia todo esse grupo.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Como defino as opções de uma lista suspensa?</h3>
+          <p style="margin:0;font-size:14px;">Escolha o tipo de campo Lista suspensa e escreva as opções na caixa de opções, separadas por vírgulas — por exemplo Pequeno, Médio, Grande. Clique na página para posicionar a lista, e essas opções são gravadas no PDF como uma lista real que o leitor consegue abrir. Clique numa lista já posicionada para carregar as suas opções de volta na caixa e editá-las.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Funciona em PDF com várias páginas?</h3>
+          <p style="margin:0;font-size:14px;">Sim. Use a navegação de páginas acima da pré-visualização para mudar de página — os campos podem ser posicionados em qualquer página e cada página guarda o seu próprio conjunto. A lista «Campos posicionados», ao lado da página, mostra todos os campos adicionados em todo o documento, com o respetivo número de página; clicar numa entrada salta para essa página e destaca o campo, para não ter de folhear o documento à procura dele.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Posso aproximar o zoom para posicionar um campo com precisão?</h3>
+          <p style="margin:0;font-size:14px;">Sim. Os controlos de zoom ficam junto à navegação de páginas: aproxime ou afaste em passos até 400 %, com um botão para voltar à vista predefinida. O zoom só altera o tamanho com que a página é desenhada no ecrã — os campos são guardados como posições relativas à própria página, por isso tudo o que já posicionou fica exatamente onde está no PDF final, seja qual for o nível de zoom com que o posicionou ou reviu.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Posso adicionar campos a um PDF digitalizado (uma foto ou digitalização de um formulário em papel)?</h3>
+          <p style="margin:0;font-size:14px;">Sim — é exatamente o caso para o qual esta ferramenta foi construída. Um PDF digitalizado é apenas uma imagem, sem qualquer camada interativa, por isso posicionar com um clique permite colocar campos de texto reais mesmo por cima dos espaços impressos, transformando uma digitalização num formulário digital preenchível.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">É um criador de formulários PDF gratuito e sem registo?</h3>
+          <p style="margin:0;font-size:14px;">Sim. Adicionar campos de formulário é totalmente grátis, sem conta, sem registo e sem instalação. Abra a ferramenta, carregue o seu PDF, clique para posicionar os campos e baixe — não é pedido nenhum endereço de e-mail.</p>
+        </div>
+
 </div>

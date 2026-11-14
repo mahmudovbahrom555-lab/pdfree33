@@ -111,33 +111,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Why does rotating a PDF in a viewer not permanently save the rotation?",
-        "acceptedAnswer": { "@type": "Answer", "text": "PDF viewers like browser built-ins or Preview on macOS often rotate the display as a viewing preference, not by modifying the PDF file itself. When you send that file to someone else, their viewer may open it at the original orientation. PDFree modifies the PDF file's page dictionary using pdf-lib — the rotation value is written into the file structure itself, so it persists in every viewer, on every device." }
-      },
-      {
-        "@type": "Question",
-        "name": "Will the rotated PDF display correctly in all PDF viewers?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Because PDFree writes the rotation into the PDF page dictionary (the 'Rotate' key in the page object), the rotation is part of the file specification — not a viewer preference. Any PDF viewer that follows the PDF spec will render the page at the correct orientation." }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I rotate specific pages instead of all pages?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree's rotate tool lets you rotate all pages at once or choose specific page numbers or ranges to rotate. Each page's rotation is set independently in the output PDF." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is my PDF uploaded when I rotate it?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. Your PDF is rotated entirely in your browser using pdf-lib (a JavaScript PDF library). The operation happens in browser memory — your file is not uploaded to any server. The rotated PDF downloads directly to your device." }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I rotate a PDF for free without signing up?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree requires no account, no email, and no signup. The rotate tool is immediately usable without any registration." }
-      }
+        {
+            "@type": "Question",
+            "name": "Why does rotating in my viewer not save permanently?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Many viewers rotate display-only, without modifying the file. PDFree modifies the actual Rotate key in the PDF page dictionary, so the rotation is part of the file — not just a viewing preference."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Will the rotated PDF display correctly in all PDF viewers?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Because PDFree writes the rotation into the PDF page dictionary (the 'Rotate' key in the page object), the rotation is part of the file specification — not a viewer preference. Any PDF viewer that follows the PDF spec will render the page at the correct orientation."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I rotate only specific pages?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. You can rotate all pages or choose specific page numbers or ranges. Each selected page's Rotate value is updated independently."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is my PDF uploaded when I rotate it?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Rotation is performed locally in your browser using pdf-lib. Your PDF never leaves your device."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I rotate a PDF for free without an account?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. No account, no email, no signup. The rotate tool is immediately available without any registration."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -310,6 +325,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I rotate a PDF for free without an account?</h3>
             <p style="margin:0;font-size:14px;">Yes. No account, no email, no signup. The rotate tool is immediately available without any registration.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Will the rotated PDF display correctly in all PDF viewers?</h3>
+            <p style="margin:0;font-size:14px;">Yes. Because PDFree writes the rotation into the PDF page dictionary (the 'Rotate' key in the page object), the rotation is part of the file specification — not a viewer preference. Any PDF viewer that follows the PDF spec will render the page at the correct orientation.</p>
           </div>
         </div>
 

@@ -156,56 +156,56 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "O PDFree envia meus arquivos PDF a um servidor?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Não. O PDFree junta arquivos PDF inteiramente no seu navegador usando pdf-lib — uma biblioteca JavaScript que roda localmente. Seus arquivos nunca são enviados pela internet. Você pode verificar isso abrindo as DevTools do seu navegador (F12), indo até a aba Rede e juntando um arquivo — você não verá nenhuma requisição com os dados do seu PDF."
+        {
+            "@type": "Question",
+            "name": "O PDFree envia meus arquivos PDF a um servidor?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Não. O PDFree junta PDFs inteiramente no seu navegador usando pdf-lib. Seus arquivos nunca são enviados pela internet. Você pode verificar abrindo DevTools → Rede — verá zero requisições com os dados do seu PDF."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "É seguro para registros médicos e documentos jurídicos?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sim. Como os arquivos nunca saem do seu dispositivo, o PDFree é seguro para registros médicos protegidos, documentos jurídicos confidenciais e qualquer outro conteúdo sensível. Não há servidor que possa ser comprometido."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Qual a diferença em relação às ferramentas PDF na nuvem?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "As ferramentas PDF na nuvem enviam seus arquivos para os servidores delas, processam-nos lá e os excluem depois; o tempo de guarda varia. O PDFree processa tudo localmente — seus arquivos nunca viajam até um servidor. Você também não tem limites de uso diário."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Existe um limite de tamanho de arquivo?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sim, mas não há limite de upload: como o processamento acontece localmente, uma junção pode ter até 500 MB em um computador (Chrome/Edge, 8 GB+ de RAM) ou 300 MB no celular — um teto que protege a memória do seu dispositivo."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Posso juntar PDFs completamente offline?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sim. Após sua primeira visita, o PDFree fica em cache como PWA e funciona totalmente offline — nenhuma conexão com a internet é necessária para o processamento."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "O PDFree é compatível com HIPAA?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Seus arquivos PDF são processados no seu navegador e não são enviados aos nossos servidores. Não certificamos conformidade com a HIPAA nem assinamos BAA; se usar o PDFree para registros de pacientes atende às suas obrigações, quem decide é a sua organização."
+            }
         }
-      },
-      {
-        "@type": "Question",
-        "name": "É seguro para documentos confidenciais como registros médicos ou contratos jurídicos?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Sim. Como o PDFree nunca envia seus arquivos, ele é seguro para documentos confidenciais. Registros médicos, contratos jurídicos, demonstrações financeiras e documentos de identificação são processados inteiramente no seu dispositivo e nunca são transmitidos a nenhum servidor. Os arquivos existem apenas na memória RAM do seu navegador e desaparecem ao fechar a aba."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Qual a diferença entre o PDFree e as ferramentas PDF na nuvem?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "As ferramentas PDF na nuvem enviam seus arquivos para os servidores delas para processá-los e os excluem depois; o tempo de guarda varia. O PDFree processa tudo localmente no seu navegador — seus arquivos nunca saem do seu dispositivo. Isso torna o PDFree inerentemente mais seguro para documentos sensíveis e utilizável sem conexão com a internet depois de carregado."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Existe um limite de tamanho de arquivo para juntar PDFs sem enviá-los?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Sim, mas não há limite de upload: como o processamento acontece localmente, uma junção pode ter até 500 MB em um computador (Chrome/Edge, 8 GB+ de RAM) ou 300 MB no celular — um teto que protege a memória do seu dispositivo."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Posso juntar PDFs offline, sem enviá-los?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Sim. O PDFree é um Progressive Web App (PWA). Após sua primeira visita, o app fica em cache no seu navegador e funciona totalmente offline. Você pode juntar PDFs sem nenhuma conexão com a internet."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "O PDFree é compatível com HIPAA?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Seus arquivos PDF são processados no seu navegador e não são enviados aos nossos servidores. Não certificamos conformidade com a HIPAA nem assinamos BAA; se usar o PDFree para registros de pacientes atende às suas obrigações, quem decide é a sua organização."
-        }
-      }
     ]
-  }
+}
   </script>
 
   <!-- BreadcrumbList schema -->

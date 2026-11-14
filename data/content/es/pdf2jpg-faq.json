@@ -20,7 +20,7 @@
     "name": "¿Puedo convertir PDF a PNG en lugar de JPG?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. PDFree admite salida en JPG y PNG. PNG es sin pérdidas y mejor para documentos con mucho texto o gráficos donde necesita nitidez perfecta al píxel. JPG produce archivos más pequeños y es mejor para páginas con muchas fotos. Selecciona el formato antes de convertir."
+      "text": "Sí. PDFree admite salida en JPG y PNG. PNG es sin pérdidas y mejor para documentos con mucho texto o gráficos. JPG produce archivos más pequeños y es mejor para páginas con muchas fotos."
     }
   },
   {

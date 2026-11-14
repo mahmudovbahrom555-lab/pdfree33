@@ -111,33 +111,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Can I compress a PDF without creating an account?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree's compress tool requires no account, no email, and no signup of any kind. Open the tool, drop your PDF, choose a compression level, and download the result. No registration is involved at any step." }
-      },
-      {
-        "@type": "Question",
-        "name": "Why do some PDF compressors require an account?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Many PDF tools require accounts so they can send marketing emails, enforce daily usage limits on free users, and collect data about how you use the service. PDFree processes files locally in your browser, so there is no server infrastructure that requires user identification, and no business model that benefits from your personal information." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is my PDF uploaded when I compress it?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. Your PDF is compressed entirely in your browser using WebAssembly. The file is read from your device, processed in browser memory, and the compressed output downloads directly. Your file is not uploaded to any server at any point." }
-      },
-      {
-        "@type": "Question",
-        "name": "What compression levels are available?",
-        "acceptedAnswer": { "@type": "Answer", "text": "PDFree offers three levels: Low (minor compression, best quality preservation), Medium (balanced — typically reduces file size by 40-60%), and High (maximum compression, some quality reduction on images). All three are available without any account." }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I compress multiple PDFs without an account?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. PDFree has no daily limit and no per-file limit. You can compress as many PDFs as you want, as many times as you want, without creating an account. Each compression runs independently in your browser." }
-      }
+        {
+            "@type": "Question",
+            "name": "Can I compress a PDF without creating an account?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. PDFree requires no account, no email, and no signup. The compress tool is open to use immediately, without any registration."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Why do some PDF compressors require an account?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "To enforce daily usage limits, collect email addresses, and send marketing. PDFree processes locally so there is no need to identify you — and no business model based on collecting your data."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is my PDF uploaded when compressed?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Your PDF is compressed in browser memory. Nothing is uploaded. The output downloads directly to your device."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What compression levels are available?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "PDFree offers three levels: Low (minor compression, best quality preservation), Medium (balanced — typically reduces file size by 40-60%), and High (maximum compression, some quality reduction on images). All three are available without any account."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I compress multiple PDFs without an account?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. PDFree has no daily limit and no per-file limit. You can compress as many PDFs as you want, as many times as you want, without creating an account. Each compression runs independently in your browser."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -307,6 +322,14 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Does the compressed PDF look worse?</h3>
             <p style="margin:0;font-size:14px;">At low and medium levels, quality loss is minimal or unnoticeable for most documents. At high compression, images may show some quality reduction — primarily visible in photographs. Text remains sharp at all levels.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">What compression levels are available?</h3>
+            <p style="margin:0;font-size:14px;">PDFree offers three levels: Low (minor compression, best quality preservation), Medium (balanced — typically reduces file size by 40-60%), and High (maximum compression, some quality reduction on images). All three are available without any account.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I compress multiple PDFs without an account?</h3>
+            <p style="margin:0;font-size:14px;">Yes. PDFree has no daily limit and no per-file limit. You can compress as many PDFs as you want, as many times as you want, without creating an account. Each compression runs independently in your browser.</p>
           </div>
         </div>
 

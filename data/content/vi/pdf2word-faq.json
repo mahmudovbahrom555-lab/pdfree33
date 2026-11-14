@@ -44,7 +44,7 @@
     "name": "Tôi có cần Microsoft Word để mở file đã chuyển đổi không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không. Định dạng .docx được hỗ trợ bởi Microsoft Word, Google Docs, LibreOffice Writer (miễn phí) và Apple Pages. Bạn không cần đăng ký Microsoft 365 trả phí để mở file."
+      "text": "Không. Định dạng .docx được hỗ trợ bởi Microsoft Word, Google Docs (tải lên Drive và mở), LibreOffice Writer (miễn phí, mã nguồn mở) và Apple Pages. Bạn không cần đăng ký Microsoft 365 trả phí để mở file."
     }
   },
   {

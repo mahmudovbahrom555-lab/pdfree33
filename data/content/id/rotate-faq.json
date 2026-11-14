@@ -20,7 +20,7 @@
     "name": "Bisakah memutar hanya beberapa halaman tertentu?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ya. Setiap halaman dapat diputar secara independen menggunakan tombol rotasi pada thumbnail halaman tersebut."
+      "text": "Ya. Setiap halaman dapat diputar secara independen. Klik tombol rotasi pada halaman yang ingin Anda putar saja."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Apakah kualitas PDF berkurang setelah diputar?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak. Rotasi PDF adalah operasi lossless — hanya metadata orientasi yang diubah, bukan konten halaman."
+      "text": "Tidak. Rotasi PDF adalah operasi lossless — hanya metadata orientasi yang diubah, bukan konten halaman itu sendiri."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "Apakah bisa digunakan di ponsel?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ya. PDFree berfungsi di browser mobile (Chrome Android, Safari iOS). Ketuk tombol rotasi untuk memutar halaman."
+      "text": "Ya. PDFree berfungsi di browser mobile — Chrome untuk Android dan Safari untuk iOS. Ketuk tombol rotasi untuk memutar halaman di ponsel."
     }
   },
   {

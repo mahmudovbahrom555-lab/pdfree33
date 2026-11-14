@@ -44,7 +44,7 @@
     "name": "Şifremi unuttuysam ne yapabilirim?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree yalnızca bildiğiniz şifreyle çalışır. Şifreni bilmediğiniz belgelerin korumasını kaldırmak mümkün değildir."
+      "text": "PDFree yalnızca bildiğiniz şifreyle çalışır. Şifreni bilmediğiniz belgelerin korumasını kaldırmak mümkün değildir. Şifreyi bilmiyorsanız, dosyayı koruyan kişiden almanız gerekir."
     }
   },
   {

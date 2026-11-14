@@ -78,7 +78,7 @@ export function loadJSZip() {
   return _load(
     'jsZip',
     new URL('./vendor/jszip.min.js', import.meta.url).href,
-    'sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG',
+    'sha384-DdGlNq+wVXAn83gXqwyeFHB7iyXy6L0rLrNzgDmhKWPjiJLg9vj6qosYmZmkMfQ+',
   );
 }
 

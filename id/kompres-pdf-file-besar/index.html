@@ -124,33 +124,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Bisakah saya mengompres PDF lebih besar dari 100MB secara gratis?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Ya — hingga 500 MB di Chrome atau Edge pada komputer dengan memori 8 GB ke atas, dan hingga 150 MB di ponsel, Safari, dan Firefox. Pemrosesan sepenuhnya terjadi di browser Anda, jadi batas ini melindungi memori perangkat Anda, bukan bandwidth server — dalam pengujian kami, hasil scan 500 MB terkompres sekitar 30 detik di laptop 8 GB." }
-      },
-      {
-        "@type": "Question",
-        "name": "Kenapa alat cloud membatasi kompresi gratis?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Alat cloud mengompres file di server mereka, yang berarti ada biaya bandwidth dan penyimpanan. Untuk mengontrol biaya tersebut bagi pengguna gratis, mereka menerapkan batas ukuran file dan batas harian. PDFree mengompres semuanya secara lokal di browser Anda — tidak ada biaya server, jadi tidak ada batas harian dan tidak ada batas 25MB; file bisa mencapai 500 MB di komputer, dibatasi hanya untuk melindungi memori perangkat Anda." }
-      },
-      {
-        "@type": "Question",
-        "name": "Seberapa banyak PDFree bisa mengompres PDF besar?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Hasilnya bervariasi tergantung konten. PDF dengan banyak gambar tertanam sering mengecil 40–80%. PDF yang berat teks kompresinya lebih kecil — biasanya 10–30%. PDFree menggunakan algoritma kompresi PDF yang sama seperti tool desktop, tapi berjalan sepenuhnya di browser Anda." }
-      },
-      {
-        "@type": "Question",
-        "name": "Apakah ada batas harian untuk jumlah PDF yang bisa saya kompres?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Tidak. PDFree tidak punya batas penggunaan harian. Berbeda dengan alat cloud yang membatasi paket gratis per hari, PDFree memungkinkan Anda mengompres sebanyak apa pun PDF yang Anda butuhkan, sesering yang Anda mau, secara gratis." }
-      },
-      {
-        "@type": "Question",
-        "name": "Apakah kompresi akan menurunkan kualitas PDF saya?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Untuk dokumen yang mayoritas teks, kompresi tidak berdampak terlihat pada kualitas — teksnya tetap tajam. Untuk PDF berisi foto, tingkat kompresi yang lebih tinggi mengurangi resolusi gambar, yang mungkin terlihat jika diperhatikan dari dekat. Pilih tingkat kompresi sedang untuk menyeimbangkan pengurangan ukuran dan kualitas gambar." }
-      }
+        {
+            "@type": "Question",
+            "name": "Bisakah saya mengompres PDF lebih besar dari 100MB secara gratis?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ya — hingga 500 MB di Chrome atau Edge pada komputer dengan memori 8 GB ke atas, dan hingga 150 MB di ponsel, Safari, dan Firefox. Pemrosesan sepenuhnya terjadi di browser Anda, jadi batas ini melindungi memori perangkat Anda, bukan bandwidth server — dalam pengujian kami, hasil scan 500 MB terkompres sekitar 30 detik di laptop 8 GB."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Kenapa alat cloud membatasi kompresi gratis tapi PDFree tidak?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Alat cloud memproses file di server mereka, yang menimbulkan biaya bandwidth dan komputasi yang nyata. PDFree memproses file secara lokal di browser Anda — tidak ada biaya server, jadi tidak ada batas harian dan tidak ada batas 25MB; file bisa mencapai 500 MB di komputer, dibatasi hanya untuk melindungi memori perangkat Anda."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Seberapa banyak kompresi bisa mengecilkan ukuran PDF saya?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Hasilnya bergantung pada konten. PDF yang berat gambar biasanya mengecil 40–80%. PDF yang berat teks mengompres 10–30%. PDFree menggunakan algoritma kompresi yang sama seperti tool desktop."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Apakah ada batas harian untuk kompresi PDF?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tidak. Berbeda dengan alat cloud yang membatasi paket gratis per hari, PDFree tidak punya batas harian. Kompres sebanyak apa pun PDF yang Anda butuhkan, sesering yang Anda mau."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Apakah kompresi akan menurunkan kualitas PDF saya?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Untuk dokumen yang mayoritas teks, kompresi tidak berdampak terlihat pada kualitas — teksnya tetap tajam. Untuk PDF berisi foto, tingkat kompresi yang lebih tinggi mengurangi resolusi gambar, yang mungkin terlihat jika diperhatikan dari dekat. Pilih tingkat kompresi sedang untuk menyeimbangkan pengurangan ukuran dan kualitas gambar."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -396,6 +411,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Apakah file saya diupload ke server saat dikompres?</h3>
             <p style="margin:0;font-size:14px;">Tidak. PDFree tidak pernah mengupload file Anda. Seluruh proses kompresi berjalan dalam JavaScript di dalam browser Anda, di perangkat Anda. Dokumen Anda tetap sepenuhnya privat — tidak pernah mencapai server mana pun.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Apakah kompresi akan menurunkan kualitas PDF saya?</h3>
+            <p style="margin:0;font-size:14px;">Untuk dokumen yang mayoritas teks, kompresi tidak berdampak terlihat pada kualitas — teksnya tetap tajam. Untuk PDF berisi foto, tingkat kompresi yang lebih tinggi mengurangi resolusi gambar, yang mungkin terlihat jika diperhatikan dari dekat. Pilih tingkat kompresi sedang untuk menyeimbangkan pengurangan ukuran dan kualitas gambar.</p>
           </div>
         </div>
 

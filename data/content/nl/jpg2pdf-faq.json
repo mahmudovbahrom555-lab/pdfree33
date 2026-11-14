@@ -28,7 +28,7 @@
     "name": "Vermindert de afbeeldingskwaliteit?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree gebruikt een resolutie van 2400px voor hoge kwaliteit met redelijke bestandsgrootte. Kies Hoge kwaliteit voor maximale resolutie."
+      "text": "PDFree gebruikt een instelling van 2400px voor hoge kwaliteit met redelijke bestandsgrootte. Je kunt Hoge kwaliteit kiezen voor maximale resolutie."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Kan ik meerdere afbeeldingen samenvoegen tot één PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Voeg zoveel afbeeldingen toe als je wilt — elke afbeelding wordt een pagina in de PDF."
+      "text": "Ja. Voeg zoveel afbeeldingen toe als je wilt — elke afbeelding wordt een pagina in de uiteindelijke PDF."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Werkt het op iPhone?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Open Safari op iPhone, ga naar pdfree.io, klik op JPG naar PDF en selecteer afbeeldingen via de Foto's- of Bestanden-app."
+      "text": "Ja. Open Safari op iPhone, ga naar pdfree.io, klik op JPG naar PDF, selecteer afbeeldingen uit de Foto's- of Bestanden-app."
     }
   }
 ]

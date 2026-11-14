@@ -1,9 +1,58 @@
 [
-  {"@type":"Question","name":"Wordt mijn PDF ergens geüpload om te bewerken?","acceptedAnswer":{"@type":"Answer","text":"Nee. Het hele proces — de PDF openen, de bewerkte regels vervangen en het resultaat controleren — draait volledig in je browser. Je document verlaat je apparaat nooit."}},
-  {"@type":"Question","name":"Kan ik nieuwe alinea's toevoegen of een tabelrij verwijderen?","acceptedAnswer":{"@type":"Answer","text":"Niet met deze tool — PDF Tekst Bewerken is gemaakt om bestaande tekst opnieuw te typen, niet om een document te herstructureren. Moet je inhoud toevoegen of verwijderen, converteer dan naar Word met PDF naar Word, bewerk het daar volledig en converteer het daarna terug naar PDF."}},
-  {"@type":"Question","name":"Waarom werd gezegd dat mijn PDF hier niet bewerkt kan worden?","acceptedAnswer":{"@type":"Answer","text":"Een bestand met tekst opent op zijn eigen pagina's, waar je het ter plekke bewerkt. Een scan heeft geen tekst om te wijzigen; invulbare formulieren en ondertekende PDF's worden niet ter plekke bewerkt. De vorige editor, die het document opnieuw opbouwt als bewerkbare tekst, controleert eerst hoe netjes de structuur van je PDF wordt omgezet — gescande documenten, ongebruikelijke lay-outs of beschadigde tekstextractie kunnen te laag scoren, en dan stelt hij de volledige PDF-naar-Word-converter voor."}},
-  {"@type":"Question","name":"Verandert bewerken de opmaak van de rest van het document?","acceptedAnswer":{"@type":"Answer","text":"Nee. Alleen de tekst van de regels die je opnieuw typt verandert: hun oude tekst wordt verwijderd en de nieuwe op dezelfde plek geschreven. Afbeeldingen, andere regels en andere pagina's blijven zoals ze waren, en elke gewijzigde pagina wordt vóór de download opnieuw gelezen."}},
-  {"@type":"Question","name":"Slaat PDFree mijn bestanden op of registreert het ze na verwerking?","acceptedAnswer":{"@type":"Answer","text":"Nee. PDFree draait volledig in je browser — er is geen backend-server die je bestanden ontvangt. Omdat er niets wordt geüpload, kan er ook niets worden opgeslagen, geregistreerd of bewaard. Je document bestaat alleen in het geheugen van je browser tijdens de sessie en wordt gewist wanneer je het tabblad sluit."}},
-  {"@type":"Question","name":"Is dit een gratis PDF-editor zonder registratie?","acceptedAnswer":{"@type":"Answer","text":"Ja. PDFree is volledig gratis — geen registratie, geen account, geen installatie. Open de tool, laad je PDF, klik op de tekst die je wilt aanpassen en download het resultaat."}},
-  {"@type":"Question","name":"Kan ik tekst op elke pagina zoeken en vervangen?","acceptedAnswer":{"@type":"Answer","text":"Ja. Typ de tekst bij Zoeken en wat er moet komen te staan bij Vervangen door — laat het leeg om de tekst te verwijderen, zoals een regel die onderaan elke pagina terugkomt. PDFree toont hoeveel er gevonden is en op hoeveel pagina's, en Alles vervangen wijzigt ze in de originele PDF. Een treffer moet binnen één regel staan en de nieuwe tekst moet in de ruimte van die regel passen; een regel die niet ter plekke kan worden gewijzigd blijft zoals hij was, en de pagina wordt genoemd."}}
+  {
+    "@type": "Question",
+    "name": "Wordt mijn PDF ergens geüpload om te bewerken?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Het hele proces — de PDF openen, de bewerkte regels vervangen en het resultaat controleren — draait volledig in je browser. Je document verlaat je apparaat nooit."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik nieuwe alinea's toevoegen of een tabelrij verwijderen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Niet met deze tool — PDF Tekst Bewerken is gemaakt om bestaande tekst opnieuw te typen, niet om een document te herstructureren. Moet je inhoud toevoegen of verwijderen, converteer dan naar Word met PDF naar Word, bewerk het daar volledig en converteer het daarna terug naar PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Waarom werd gezegd dat mijn PDF hier niet bewerkt kan worden?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Een bestand met tekst opent op zijn eigen pagina's, waar je het ter plekke bewerkt. Een scan heeft geen tekst om te wijzigen; invulbare formulieren en ondertekende PDF's worden niet ter plekke bewerkt. De vorige editor, die het document opnieuw opbouwt als bewerkbare tekst, controleert eerst hoe netjes de structuur van je PDF wordt omgezet — gescande documenten, ongebruikelijke lay-outs of beschadigde tekstextractie kunnen te laag scoren, en dan stelt hij de volledige PDF-naar-Word-converter voor."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Verandert bewerken de opmaak van de rest van het document?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Alleen de tekst van de regels die je opnieuw typt verandert: hun oude tekst wordt verwijderd en de nieuwe op dezelfde plek geschreven. Afbeeldingen, andere regels en andere pagina's blijven zoals ze waren, en elke gewijzigde pagina wordt vóór de download opnieuw gelezen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Slaat PDFree mijn bestanden op of registreert het ze na verwerking?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. PDFree draait volledig in je browser — er is geen backend-server die je bestanden ontvangt. Omdat er niets wordt geüpload, kan er ook niets worden opgeslagen, geregistreerd of bewaard. Je document bestaat alleen in het geheugen van je browser tijdens de sessie en wordt gewist wanneer je het tabblad sluit."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Is dit een gratis PDF-editor zonder registratie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. PDFree is volledig gratis — geen registratie, geen account, geen installatie. Open de tool, laad je PDF, klik op de tekst die je wilt aanpassen en download het resultaat."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik tekst op elke pagina zoeken en vervangen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Typ de tekst bij Zoeken en wat er moet komen te staan bij Vervangen door — laat het leeg om de tekst te verwijderen, zoals een regel die onderaan elke pagina terugkomt. PDFree toont hoeveel er gevonden is en op hoeveel pagina's, en Alles vervangen wijzigt ze in de originele PDF. Een treffer moet binnen één regel staan en de nieuwe tekst moet in de ruimte van die regel passen; een regel die niet ter plekke kan worden gewijzigd blijft zoals hij was, en de pagina wordt genoemd."
+    }
+  }
 ]

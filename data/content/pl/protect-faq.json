@@ -4,7 +4,7 @@
     "name": "Jakiego szyfrowania używa PDFree?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "RC4-128 — standard bezpieczeństwa Revision 3 specyfikacji PDF (PDF 1.4–1.7). To nie jest AES-256: w przypadku dokumentów regulowanych lub bardzo wrażliwych traktuj to jako jedną warstwę ochrony, a nie jedyne zabezpieczenie."
+      "text": "PDFree używa RC4-128 — standardu bezpieczeństwa Revision 3 specyfikacji PDF (PDF 1.4–1.7). To nie jest AES-256: w przypadku dokumentów regulowanych lub bardzo wrażliwych traktuj to jako jedną warstwę ochrony, a nie jedyne zabezpieczenie."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Czy plik jest przesyłany na serwer?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nie. Szyfrowanie odbywa się całkowicie w przeglądarce za pomocą JavaScript. Plik nigdy nie opuszcza Twojego urządzenia."
+      "text": "Nie. Szyfrowanie odbywa się całkowicie w przeglądarce. Plik nigdy nie opuszcza Twojego urządzenia."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Czy mogę później usunąć hasło?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tak. Możesz użyć narzędzia PDF odblokuj (wkrótce dostępne) lub innego programu do PDF z podaniem hasła."
+      "text": "Tak. Otwórz PDF w narzędziu <a href='/pl/odblokuj-pdf/' style='color:var(--green-text)'>Odblokuj PDF</a>, wpisz hasło i pobierz kopię bez hasła. To również odbywa się w całości w Twojej przeglądarce."
     }
   },
   {

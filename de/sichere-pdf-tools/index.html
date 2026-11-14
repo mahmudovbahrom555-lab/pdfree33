@@ -138,28 +138,40 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Laden PDFree-Tools Dateien auf einen Server hoch?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Nein. Jedes PDFree-Tool verarbeitet Dateien vollständig in deinem Browser mit JavaScript. Deine Dateien verlassen dein Gerät nie, werden nie auf einen Server hochgeladen und niemals außerhalb des temporären Speichers deines Browsers gespeichert." }
-      },
-      {
-        "@type": "Question",
-        "name": "Wie kann ich überprüfen, dass meine Dateien nicht hochgeladen werden?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Öffne die DevTools deines Browsers (F12), gehe zum Tab „Netzwerk“ und nutze dann ein beliebiges PDFree-Tool. Du wirst keine Anfragen mit deinen PDF-Dateidaten sehen — nur Anfragen für das JavaScript und CSS der App." }
-      },
-      {
-        "@type": "Question",
-        "name": "Was macht PDFree mit meinen Daten nach der DSGVO?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Deine PDF-Dateien werden in deinem Browser verarbeitet und nicht auf unsere Server hochgeladen – ihre Inhalte liegen uns also nie vor. Die Website erfasst begrenzte technische Nutzungs- und Fehlerdaten ohne Cookies oder dauerhafte Kennungen, wie in unserer Datenschutzerklärung beschrieben. Wir zertifizieren keine Konformität: Ob ein Arbeitsablauf deinen DSGVO-Pflichten genügt, muss deine Organisation beurteilen." }
-      },
-      {
-        "@type": "Question",
-        "name": "Kann ich PDFree für streng geschützte medizinische Dokumente nutzen?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Deine PDF-Dateien werden in deinem Browser verarbeitet und nicht auf unsere Server hochgeladen. Wir zertifizieren keine HIPAA- oder DSGVO-Konformität; ob die Nutzung von PDFree für Patientenakten zu deinen Pflichten passt, entscheidet deine Organisation." }
-      }
+        {
+            "@type": "Question",
+            "name": "Laden PDFree-Tools Dateien auf einen Server hoch?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Nein. Jedes PDFree-Tool verarbeitet Dateien vollständig in deinem Browser. Deine Dateien werden nie an einen Server gesendet, irgendwo gespeichert oder in irgendeiner Weise protokolliert."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Wie kann ich überprüfen, dass meine Dateien nicht hochgeladen werden?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Öffne die DevTools deines Browsers (F12), gehe zum Tab „Netzwerk“ und nutze dann ein beliebiges PDFree-Tool. Du wirst keine Anfragen mit deinen PDF-Dateidaten sehen — nur Anfragen für das JavaScript und CSS der App."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Was macht PDFree mit meinen Daten nach der DSGVO?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Deine PDF-Dateien werden in deinem Browser verarbeitet und nicht auf unsere Server hochgeladen – ihre Inhalte liegen uns also nie vor. Die Website erfasst begrenzte technische Nutzungs- und Fehlerdaten ohne Cookies oder dauerhafte Kennungen, wie in unserer Datenschutzerklärung beschrieben. Wir zertifizieren keine Konformität: Ob ein Arbeitsablauf deinen DSGVO-Pflichten genügt, muss deine Organisation beurteilen."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Kann ich PDFree für streng geschützte medizinische Unterlagen nutzen?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Deine PDF-Dateien werden in deinem Browser verarbeitet und nicht auf unsere Server hochgeladen. Wir zertifizieren keine HIPAA- oder DSGVO-Konformität; ob die Nutzung von PDFree für Patientenakten zu deinen Pflichten passt, entscheidet deine Organisation."
+            }
+        }
     ]
-  }
+}
   </script>
   <script type="application/ld+json">
   {
@@ -326,6 +338,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Wie unterscheidet sich PDFree von Cloud-PDF-Tools?</h3>
             <p style="margin:0;font-size:14px;">Cloud-PDF-Tools laden deine Dateien zur Verarbeitung auf ihre Server hoch. PDFree läuft vollständig in deinem Browser — deine Dateien verlassen dein Gerät nie. Außerdem gibt es bei PDFree keine Tagesbeschränkungen und keine Bezahlschranke.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Wie kann ich überprüfen, dass meine Dateien nicht hochgeladen werden?</h3>
+            <p style="margin:0;font-size:14px;">Öffne die DevTools deines Browsers (F12), gehe zum Tab „Netzwerk“ und nutze dann ein beliebiges PDFree-Tool. Du wirst keine Anfragen mit deinen PDF-Dateidaten sehen — nur Anfragen für das JavaScript und CSS der App.</p>
           </div>
         </div>
 

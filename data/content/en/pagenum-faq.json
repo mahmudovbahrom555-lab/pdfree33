@@ -36,7 +36,7 @@
     "name": "Can I skip the first page (cover page) from numbering?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. Enable the 'Skip first page' option. Page 1 (the cover) receives no number, and numbering starts from the second page."
+      "text": "Yes. Set From page to 2: the cover gets no number and page 2 shows 1. If page 2 should show 2, also set Start number to 2."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Can I choose where the page numbers appear?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. Position options include bottom center, bottom left, bottom right, top center, top left, and top right."
+      "text": "Yes. Position options include: bottom center, bottom left, bottom right, top center, top left, and top right."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Can I add \"Page 1 of 20\" format instead of just \"1\"?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. Use the prefix field to add text before the number (e.g. 'Page ') and the suffix field to add text after (e.g. ' of 20'). This creates the common 'Page 1 of 20' format used in professional print documents and reports."
+      "text": "Yes. Use the prefix field to add text before the number (e.g. \"Page \") and the suffix field to add text after (e.g. \" of 20\"). This creates the common \"Page 1 of 20\" format used in professional print documents and reports."
     }
   },
   {
@@ -84,7 +84,7 @@
     "name": "What does it mean to paginate a PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Paginating a PDF means adding visible page numbers to each page of the document. Pagination makes long documents easier to navigate, reference, and print. PDFree paginates PDFs online free — choose the number format, position, and starting number, then download the paginated PDF instantly."
+      "text": "Paginating a PDF means adding visible page numbers to each page of the document. Pagination makes long documents easier to navigate, reference, and print. PDFree paginates PDFs online free — choose the number format, position (header or footer), and starting number, then download the paginated PDF instantly."
     }
   },
   {

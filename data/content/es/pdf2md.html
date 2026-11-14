@@ -83,6 +83,10 @@
   <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Funciona con PDFs escaneados?</h3>
   <p style="margin:0;font-size:14px;">Solo si el PDF ya tiene una capa de texto. Los PDFs escaneados basados solo en imágenes no tienen texto extraíble — aplica primero OCR y luego convierte el resultado.</p>
 </div>
+<div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+  <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Sirve para preparar PDF para herramientas de IA, RAG o el contexto de un LLM?</h3>
+  <p style="margin:0;font-size:14px;">Sí — Markdown es un formato ligero y muy usado para introducir documentos en la ventana de contexto de un LLM o en un pipeline de RAG, y convertir el archivo localmente significa que el contenido no tiene que salir de tu dispositivo solo para cambiarlo de formato. La detección de tablas se basa en heurísticas, por lo que las tablas complejas o muy densas pueden perder parte de su estructura — si tu PDF tiene muchas tablas, revisa el resultado antes de usarlo con un modelo, o pasa primero el OCR si está escaneado.</p>
+</div>
 
 <h2 style="font-size:20px; color:var(--text); margin:32px 0 16px; font-weight:600;">Herramientas relacionadas</h2>
 <ul style="margin:0 0 24px; padding-left:24px; font-size:14px; line-height:1.8;">

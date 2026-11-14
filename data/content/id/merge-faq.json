@@ -52,7 +52,7 @@
     "name": "Apakah ada batasan harian untuk penggabungan?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak. PDFree tidak memiliki batasan penggunaan harian. Gabungkan sebanyak PDF yang Anda inginkan, sesering yang Anda butuhkan."
+      "text": "Tidak. PDFree tidak memiliki batasan penggunaan. Gabungkan sebanyak PDF yang Anda inginkan, sesering yang Anda butuhkan."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Apakah penggabungan mengupload file saya ke server?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak. PDFree menggabungkan file PDF sepenuhnya di browser Anda menggunakan pdf-lib. File Anda tidak pernah meninggalkan perangkat dan tidak pernah dikirim ke server mana pun."
+      "text": "Tidak. File Anda diproses sepenuhnya di memori browser Anda. Tidak ada yang dikirim ke server mana pun. Tutup tab dan file hilang dari memori — tidak ada jejak di server mana pun."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "Bisakah menggabungkan PDF di ponsel atau tablet?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ya. PDFree berfungsi di browser mobile — Chrome untuk Android dan Safari untuk iOS. Pemilihan file menggunakan pemilih file bawaan, dan Anda dapat mengubah urutan file menggunakan tombol di layar."
+      "text": "Ya. PDFree berfungsi di browser mobile (Chrome untuk Android, Safari untuk iOS). Drag and drop digantikan oleh pemilih file, dan pengurutan ulang bekerja dengan mengetuk tombol atas/bawah."
     }
   },
   {

@@ -152,56 +152,56 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Will the scanned PDF look different after making it searchable?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. PDFree adds an invisible text layer over the original scanned images. The PDF looks identical — same pages, same layout, same images. The only change is that Ctrl+F, text selection, and copy now work."
+        {
+            "@type": "Question",
+            "name": "Will my scanned PDF look different after making it searchable?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. The original scanned images are preserved exactly as they were. Only an invisible text layer is added on top. Open the result in any PDF reader — visually it is identical to the original."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does the file get uploaded to make it searchable?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Never. All processing happens inside your browser tab using the Tesseract.js engine. Your scanned PDF never leaves your device — no server ever receives it. Open DevTools → Network while processing to verify: zero uploads."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I make a CamScanner PDF searchable?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. PDFs exported from CamScanner, Microsoft Lens, Adobe Scan, and similar mobile scanning apps are image-only PDFs — exactly what PDFree is designed for. Drop the PDF, select your language, and click Make PDF Searchable."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What types of scanned PDFs does it work with?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Any PDF that contains scanned images — output from office scanners, CamScanner, phone cameras, fax machines, or archive scanning services. PDFree also handles hybrid PDFs (text pages mixed with scanned pages) by processing each page independently."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is there a file size or page count limit?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Files up to 200 MB and no page limit on desktop browsers (Chrome, Firefox, Edge, Safari on Mac). On iOS and iPadOS, processing is capped at 30 pages to stay within browser memory limits — use Split PDF first to process a large document in sections."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What languages can be made searchable?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "18 languages: English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish (European scripts) and Arabic, Japanese, Chinese Simplified, Chinese Traditional, Korean, Hindi, Thai (complex scripts). Select the correct language before running OCR — accuracy depends on the matching language model."
+            }
         }
-      },
-      {
-        "@type": "Question",
-        "name": "Does the file get uploaded to make it searchable?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Never. All processing happens inside your browser tab using the Tesseract.js engine. Your scanned PDF never leaves your device — no server ever receives it. Open DevTools → Network while processing to verify: zero uploads."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How long does it take to make a scanned PDF searchable?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Typically 2–5 seconds per page depending on your device. A 10-page scanned PDF takes under a minute on a modern laptop. After OCR, PDFree shows an estimated time remaining so you know when it will finish."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What types of scanned PDFs does it work with?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Any PDF that contains scanned images — output from office scanners, CamScanner, phone cameras, fax machines, or archive scanning services. PDFree also handles hybrid PDFs (text pages mixed with scanned pages) by processing each page independently."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is there a page limit or file size limit?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No page limit on desktop browsers; files up to 200 MB. On iOS/iPadOS, processing is capped at 30 pages to stay within browser memory limits — split the PDF first to process the rest. Files up to 200 MB are supported."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What languages can be made searchable?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "18 languages: English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish (European scripts) and Arabic, Japanese, Chinese Simplified, Chinese Traditional, Korean, Hindi, Thai (complex scripts). Select the correct language before running OCR — accuracy depends on the matching language model."
-        }
-      }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -431,6 +431,18 @@
         <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
           <h3 style="margin:0 0 6px;">Can I also get the text as a plain .txt file?</h3>
           <p style="margin:0;">Yes. Enable "Also download .txt copy" in the OCR options to get both a searchable PDF and a plain text file at the same time. The .txt file contains all extracted text with page separators — useful for pasting into Word, Google Docs, or any text editor.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+          <h3 style="margin:0 0 6px;">Does the file get uploaded to make it searchable?</h3>
+          <p style="margin:0;">Never. All processing happens inside your browser tab using the Tesseract.js engine. Your scanned PDF never leaves your device — no server ever receives it. Open DevTools → Network while processing to verify: zero uploads.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+          <h3 style="margin:0 0 6px;">What types of scanned PDFs does it work with?</h3>
+          <p style="margin:0;">Any PDF that contains scanned images — output from office scanners, CamScanner, phone cameras, fax machines, or archive scanning services. PDFree also handles hybrid PDFs (text pages mixed with scanned pages) by processing each page independently.</p>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+          <h3 style="margin:0 0 6px;">What languages can be made searchable?</h3>
+          <p style="margin:0;">18 languages: English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish (European scripts) and Arabic, Japanese, Chinese Simplified, Chinese Traditional, Korean, Hindi, Thai (complex scripts). Select the correct language before running OCR — accuracy depends on the matching language model.</p>
         </div>
 
       </div>
