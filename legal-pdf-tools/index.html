@@ -108,48 +108,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Is PDFree's redaction tool safe for privileged or confidential legal content?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "The Redact PDF tool performs true redaction: the page is rasterized and the content underneath the redaction box is replaced at the object level, not just visually covered. The original text data is not retained anywhere in the file and cannot be recovered by copy-pasting, text search, or opening the PDF's internal structure. This is different from PDFree's general 'Redact PDF' tool elsewhere on the site, which only draws an opaque box and is not suitable for privileged information — always use the dedicated Redact PDF tool for legal redaction."
+        {
+            "@type": "Question",
+            "name": "Is PDFree's redaction tool safe for privileged or confidential content?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The Redact PDF tool performs true redaction — the page is rasterized and the content under the box is removed at the object level, not just covered. It cannot be recovered by copy-paste or text search. This is different from a generic \"cover area\" tool elsewhere on the site, which only draws an opaque box — always use Redact PDF specifically for privileged material."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I use PDFree for attorney-client privileged documents?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Because processing is entirely local and no file is ever uploaded, there is no third-party processor with access to the content — which sidesteps the waiver-of-privilege concern that can come with uploading to a cloud service."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does PDFree remove hidden metadata like author name and edit history?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, using the Metadata tool. PDFs often carry hidden author, software, and timestamp properties worth stripping before filing or exchanging with opposing counsel."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is a signature added with PDFree legally binding?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "PDFree adds a visual signature (drawn, typed, or uploaded), not a certified digital signature with a cryptographic audit trail. This satisfies the US ESIGN Act and UETA for most contracts and engagement letters. For matters needing a qualified electronic signature or certified audit trail, use a dedicated certified e-signature provider."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can a paralegal use these tools without special IT approval?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Since no file is uploaded anywhere, PDFree doesn't introduce a new third-party data processor into the firm's workflow. Many firms still confirm internally before use on client matters, but the technical risk profile is close to a local desktop tool."
+            }
         }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I use PDFree for documents protected by attorney-client privilege?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. Because PDFree processes every file locally in the browser and never uploads it to a server, privileged documents are never transmitted to or stored by a third party. There is no vendor with access to the content, which sidesteps the waiver-of-privilege risk that can come with uploading documents to a cloud service."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Does PDFree remove hidden metadata like author name and edit history?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes, using the Metadata tool. PDF files often carry hidden properties — author, creation software, edit timestamps, sometimes prior comments — that can inadvertently reveal who drafted a document or what changes were made. Stripping this before filing or opposing-counsel exchange is a standard precaution, and PDFree does it locally like everything else."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is a signature added with PDFree legally binding on a contract?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "PDFree lets you draw, type, or upload an image of your signature and place it on a document — a visual signature, not a cryptographically certified digital signature with an audit trail. In most jurisdictions this satisfies the US ESIGN Act and UETA for ordinary contracts and engagement letters. For matters that specifically require a qualified electronic signature (QES) or a certified audit trail — such as certain e-filings or notarized documents — use a dedicated certified e-signature provider instead."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can a paralegal use these tools without IT or firm approval for cloud software?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Because no file is uploaded anywhere, PDFree does not introduce a third-party data processor into the firm's workflow — there is no cloud vendor to vet, no data-sharing agreement to review, and no account to provision. Many firms still prefer to confirm this internally before use on client matters, but the technical risk profile is close to using a local desktop application."
-        }
-      }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">

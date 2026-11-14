@@ -4,7 +4,7 @@
     "name": "Mật khẩu của tôi có bị gửi đến server PDFree không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không. Mã hóa được thực hiện hoàn toàn trong trình duyệt bằng PDF-Lib. File không bao giờ rời khỏi thiết bị. Bạn có thể kiểm tra bằng DevTools → tab Network — không có yêu cầu upload nào xuất hiện trong quá trình xử lý."
+      "text": "Không bao giờ. Mã hóa được thực hiện hoàn toàn trong trình duyệt bằng pdf-lib. Mật khẩu và file không bao giờ rời thiết bị của bạn."
     }
   },
   {

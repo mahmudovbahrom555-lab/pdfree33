@@ -44,7 +44,7 @@
     "name": "Warum sieht das komprimierte PDF gleich aus, ist aber kleiner?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFs enthalten oft unsichtbaren Overhead: von Adobe Reader generierte Seitenvorschauen, doppelt eingebettete Schriftarten, XMP-Metadaten-Streams, eingebettete Farbprofile und PieceInfo-Privatdaten aus Adobe-Anwendungen. PDFree entfernt diese versteckten Extras. Der sichtbare Inhalt — Text, Bilder, Layout — bleibt identisch."
+      "text": "PDFs enthalten oft unsichtbaren Overhead: von Adobe Reader generierte Seitenvorschauen, doppelt eingebettete Schriftarten und XMP-Metadaten-Streams. PDFree entfernt diese versteckten Extras. Der sichtbare Inhalt bleibt identisch."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "Kann ich ein passwortgeschütztes PDF komprimieren?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree versucht, verschlüsselte PDFs nach Möglichkeit zu optimieren, aber stark geschützte Dateien werden möglicherweise nicht vollständig komprimiert. Für beste Ergebnisse entferne zuerst das Passwort mit dem PDFree-Tool \"PDF schützen\" (das auch vorhandene Passwörter entfernen kann), und komprimiere dann."
+      "text": "PDFree versucht, verschlüsselte PDFs nach Möglichkeit zu optimieren, aber stark geschützte Dateien werden möglicherweise nicht vollständig komprimiert. Entferne zuerst das Passwort mit dem Tool \"PDF schützen\", und komprimiere dann."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Funktioniert die PDF-Komprimierung ohne Internetverbindung?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree funktioniert als Progressive Web App vollständig offline, sobald die Seite geladen wurde. Es ist keine Internetverbindung erforderlich — die gesamte Verarbeitung erfolgt in deinem Browser."
+      "text": "Ja. PDFree funktioniert als Progressive Web App vollständig offline, sobald die Seite geladen wurde."
     }
   },
   {
@@ -69,6 +69,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Viele Online-Formulare (Bewerbungsportale, das Finanzamt-Portal, Jobcenter-Formulare) begrenzen Uploads auf 2–10 MB, oft ohne das vorher klar anzuzeigen — der Fehler kommt erst beim Hochladen. Die PDF vorher zu komprimieren behebt das meist schon mit einer kleinen Reduzierung, ohne den Inhalt zu verändern."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich ein PDF auf eine genaue Größe komprimieren, etwa 4 MB oder 500 KB?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Wähle bei „Komprimieren auf“ eine Größe oder „Andere Größe“ und gib sie in MB oder KB ein. PDFree probiert die Einstellungen ab der schonendsten und behält die schonendste, bei der die Datei passt; danach sagt es, was das gekostet hat – etwa Bilder mit 150 dpi und 75 % Qualität oder gar kein Qualitätsverlust. Die echte Komprimierung läuft bis zu viermal, eine große Datei dauert also länger. Reicht selbst die stärkste Einstellung nicht, sagt PDFree offen, dass diese Größe nicht erreichbar ist, und gibt dir die nächstliegende Datei; das PDF zu teilen kann helfen."
     }
   }
 ]

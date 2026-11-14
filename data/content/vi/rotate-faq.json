@@ -20,7 +20,7 @@
     "name": "Có thể xoay chỉ một số trang cụ thể không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Có. Mỗi trang có thể được xoay độc lập bằng cách nhấp nút xoay trên thumbnail của trang đó."
+      "text": "Có. Mỗi trang có thể được xoay độc lập. Nhấp nút xoay trên trang bạn muốn xoay mà thôi."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "Có thể dùng trên điện thoại không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Có. PDFree hoạt động trên trình duyệt di động (Chrome Android, Safari iOS). Chạm vào nút xoay để xoay trang."
+      "text": "Có. PDFree hoạt động trên trình duyệt di động — Chrome cho Android và Safari cho iOS. Chạm vào nút xoay để xoay trang trên điện thoại."
     }
   },
   {

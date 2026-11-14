@@ -116,12 +116,12 @@ Used by:     every pdf.js getDocument() on the site, through the cMapUrl the
 
 Files:       jszip.min.js, docx.umd.js (and pdf-lib.min.js, already here)
 Source:      the official builds of the pinned npm versions, copied as is —
-             jszip 3.10.1 dist/jszip.min.js, docx 8.5.0 build/index.umd.js
+             jszip 3.10.2 dist/jszip.min.js, docx 8.5.0 build/index.umd.js
              (package.json; scripts/check_vendor_sync.py keeps each equal
              to node_modules). Byte-identical to the CDN copies the site
-             loaded before (cdnjs jszip 3.10.1, jsdelivr docx 8.5.0): the
-             same sha384 the loaders pin —
-             jszip  sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG
+             loaded before (cdnjs jszip 3.10.1, jsdelivr docx 8.5.0); jszip moved to
+             3.10.2 on 2026-11-14 (npm build). The sha384 the loaders pin —
+             jszip  sha384-DdGlNq+wVXAn83gXqwyeFHB7iyXy6L0rLrNzgDmhKWPjiJLg9vj6qosYmZmkMfQ+
              docx   sha384-4xaIisuLEy2lo2HkB2C4rEf7v8jbTb2kuogX6TkuEt9feTWKBSFSOzsqNNbV+sKh
              pdf-lib sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI
 Downloaded:  2026-10-24, from node_modules.
@@ -331,3 +331,16 @@ Checked:     OSV: 0 advisories for 4.10.38; 1 for the 3.11.174 it replaces
              font; fixed in 4.2.67).
 License:     Apache License 2.0 (Mozilla Foundation), notice at the top of both files.
 Used by:     js/pdfjsLoader.js (import()), js/pdfWorkerShim.js (module worker).
+
+MuPDF.js 1.28.1
+Source: https://registry.npmjs.org/mupdf/-/mupdf-1.28.1.tgz
+Project: https://github.com/ArtifexSoftware/mupdf.js
+Build output: mupdf-1.28.1/mupdf.js, mupdf-1.28.1/mupdf-wasm.js,
+       mupdf-1.28.1/mupdf-wasm.wasm, mupdf-1.28.1/LICENSE
+License: AGPL-3.0-or-later (see bundled LICENSE)
+
+read-excel-file 9.3.14
+Source: https://registry.npmjs.org/read-excel-file/-/read-excel-file-9.3.14.tgz
+Project: https://github.com/catamphetamine/read-excel-file
+Build output: read-excel-file-9.3.14/read-excel-file.min.js, read-excel-file-9.3.14/LICENSE
+License: MIT (see bundled LICENSE)

@@ -112,33 +112,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How do I split a PDF into sections by page range?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Open pdfree.io/split-pdf/, load your PDF, choose the range split option, define your ranges (e.g. 1-10, 11-25), and click Split PDF. Each range downloads as a separate file." }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I define multiple ranges in one operation?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes — define as many ranges as you need in one pass. Each range produces one output PDF." }
-      },
-      {
-        "@type": "Question",
-        "name": "Do ranges have to cover every page?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No — you can skip pages. If your document is 100 pages and you define ranges 1-10 and 50-60, only those pages are saved; the rest are excluded." }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I overlap ranges?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Ranges can overlap — a page can appear in more than one output file if you define overlapping ranges." }
-      },
-      {
-        "@type": "Question",
-        "name": "What's the difference between range splitting and extracting?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Range splitting defines multiple consecutive sections that each become their own file. Extracting (pdfree.io/extract-pdf/) saves a specific set of pages (including non-consecutive) into one new file. Range splitting is for dividing; extracting is for picking." }
-      }
+        {
+            "@type": "Question",
+            "name": "How do I split a PDF into sections by page range?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Open pdfree.io/split-pdf/, load your PDF, choose the range split option, define your ranges (e.g. 1–10, 11–25), and click Split PDF. Each range downloads as a separate file."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I define multiple ranges in one operation?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes — define as many ranges as you need in one pass. Each range produces one output PDF."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Do ranges have to cover every page?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No — you can skip pages. If your document is 100 pages and you define ranges 1–10 and 50–60, only those pages are saved; the rest are excluded."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I overlap ranges?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ranges can overlap — a page can appear in more than one output file if you define overlapping ranges."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What's the difference between range splitting and extracting?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Range splitting defines multiple consecutive sections that each become their own file. Extracting (pdfree.io/extract-pdf/) saves a specific set of pages — including non-consecutive ones — into one new file. Range splitting is for dividing; extracting is for picking."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">

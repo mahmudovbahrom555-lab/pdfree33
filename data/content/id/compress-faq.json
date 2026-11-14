@@ -4,7 +4,7 @@
     "name": "Apakah mengompres PDF mengunggah file saya?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tidak. Kompresi terjadi sepenuhnya di browser Anda menggunakan JavaScript. PDF Anda tidak pernah diunggah ke server mana pun atau dikirim melalui internet. Anda dapat memverifikasi ini sendiri: buka DevTools browser Anda → tab Network selama kompresi — Anda tidak akan melihat PDF Anda diunggah ke server jarak jauh."
+      "text": "Tidak. Kompresi terjadi sepenuhnya di browser Anda menggunakan JavaScript. PDF Anda tidak pernah diunggah ke server mana pun atau dikirim melalui internet."
     }
   },
   {
@@ -12,7 +12,7 @@
     "name": "Apakah kompresi mengurangi kualitas visual PDF saya?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree menawarkan tiga preset. Ringan hanya menghapus metadata — teks dan gambar tidak tersentuh sama sekali. Standar mengompres ulang gambar pada kualitas JPEG 82% — kehilangan kualitas minimal dan tidak terlihat di sebagian besar dokumen. Maksimum mengompres pada 72% — terlihat hanya pada inspeksi dekat PDF yang banyak gambarnya."
+      "text": "PDFree menawarkan tiga preset. Ringan hanya menghapus metadata — teks dan gambar tidak tersentuh sama sekali. Standar mengompres ulang gambar pada kualitas JPEG 82% — kehilangan kualitas minimal. Maksimum mengompres pada 72% — terlihat hanya pada inspeksi dekat PDF yang banyak gambarnya."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Mengapa PDF yang dikompres terlihat sama tetapi lebih kecil?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDF sering mengandung bloat tak terlihat: thumbnail halaman yang dihasilkan oleh Adobe Reader, font duplikat yang disematkan, aliran metadata XMP, profil warna yang disematkan, dan data pribadi PieceInfo dari aplikasi Adobe. PDFree menghapus tambahan tersembunyi ini. Konten visual — teks, gambar, tata letak — tetap identik."
+      "text": "PDF sering mengandung bloat tak terlihat: thumbnail halaman yang dihasilkan oleh PDF reader, font yang disematkan secara duplikat, aliran metadata XMP, profil warna yang disematkan, dan data pribadi Adobe. PDFree menghapus tambahan tersembunyi ini. Konten visual — teks, gambar, tata letak — tetap identik."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Bisakah mengompres PDF yang dilindungi kata sandi?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree mencoba mengoptimalkan PDF terenkripsi jika memungkinkan, tetapi file yang dilindungi kuat mungkin tidak dapat dikompres sepenuhnya. Untuk hasil terbaik, hapus kata sandi terlebih dahulu menggunakan alat Lindungi PDF PDFree, kemudian kompres."
+      "text": "PDFree mencoba mengoptimalkan PDF terenkripsi jika memungkinkan, tetapi file yang dilindungi kuat mungkin tidak dapat dikompres sepenuhnya. Hapus kata sandi terlebih dahulu, kemudian kompres."
     }
   },
   {
@@ -61,6 +61,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Banyak formulir daring (pendaftaran CPNS, portal lamaran kerja, situs instansi pemerintah) membatasi ukuran unggahan hanya 2-10 MB, dan seringkali tidak diberitahukan dengan jelas sampai unggahan gagal. Mengompres PDF terlebih dahulu biasanya sudah cukup memperbaikinya, bahkan dengan pengurangan kecil, tanpa mengubah isi dokumen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya mengompres PDF ke ukuran tertentu, seperti 4 MB atau 500 KB?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa. Di bagian “Kompres ke”, pilih ukuran atau “Ukuran lain” lalu ketik dalam MB atau KB. PDFree mencoba pengaturan dari yang paling ringan dan memakai pengaturan teringan yang membuat file muat, lalu memberi tahu harganya — misalnya gambar 150 dpi dengan kualitas 75 %, atau tanpa kehilangan kualitas sama sekali. Kompresi sebenarnya berjalan hingga empat kali, jadi file besar butuh waktu lebih lama. Jika pengaturan terkuat pun tidak cukup, PDFree mengatakan terus terang bahwa ukuran itu tidak bisa dicapai dan memberi file terdekat; memisah PDF bisa membantu."
     }
   }
 ]

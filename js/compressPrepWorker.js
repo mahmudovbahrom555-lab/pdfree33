@@ -59,14 +59,18 @@
 //  images re-encoded as CMYK JPEG at no more than 300 dpi — js/cmykD.js, see
 //  its header. It runs before the CMYK re-deflate above, which then sees only
 //  the CMYK images D300 left as they were. A failure of D300 leaves the
-//  document as the other steps made it.
+//  document as the other steps made it. The same pass re-encodes JPEG 2000
+//  (JPX) RGB/grey images at the mode's own dpi and quality (`cmykD.rgb`) —
+//  nothing else in Compress reads JPX — and downsamples RGB/grey figures drawn
+//  smaller than the page above that dpi (C35: handleCompress judges dpi by
+//  the page size, so it left them).
 //
 //  Message contract:
 //   in  → { file: ArrayBuffer, stripXmp: boolean, cmykFlate: boolean,
-//           cmykD: { target, quality, maxMegapixels } | null } [transferred]
+//           cmykD: { target, quality, maxMegapixels, rgb: { target, quality, maxMegapixels } | null } | null } [transferred]
 //   out → { type: 'progress', done, total } while D300 works (keeps the caller's watchdog awake)
 //         { type: 'done', result: ArrayBuffer, encoded: number, resolved: number, xmp: number, cmyk: number,
-//           d: { replaced, before, after, skipped } | null } [transferred]
+//           d: { replaced, jpx, placed, before, after, skipped } | null } [transferred]
 //         result is the original buffer when nothing was changed.
 //         Any failure also answers 'done' with the original buffer and
 //         encoded: 0 — this pass must never block a compression.
@@ -145,53 +149,63 @@ function _resolveImageDims(pdf) {
   return changed;
 }
 
-// Cheap scan: "/Metadata n 0 R" twice or more in the file's plain text — the
-// catalog's and another object's (a reference: the XMP stream's own
-// "/Type /Metadata" isn't one). Image dicts are stream dicts, never in
-// object streams, so an image's XMP is always seen; a false "no" (the
-// catalog's key compressed away) only forgoes savings.
-const _METADATA = /\/Metadata\s+\d+\s+\d+\s+R\b/g;
+// Cheap scan: two or more XMP streams ("/Type /Metadata") in the file's plain
+// text — then at least one isn't the catalog's. A stream's dictionary is
+// never inside an object stream, so every XMP stream is seen; the keys that
+// point at them may not be: InDesign's marked-content properties
+// (/Properties /MC0 << /Metadata … >>) sit in compressed object streams, and
+// a scan for "/Metadata n 0 R" missed them — 1.28 MB of XMP left in an
+// 8.4 MB Maximum output (C24, found 2026-11-11). Or one XMP stream of 64 KB
+// or more: the catalog's, which handleCompress unhooks on Standard/Maximum
+// but pdf-lib still writes — 0.24–0.34 MB left in three USGS outputs. Below
+// that, a full parse for a few KB isn't worth it. A false "yes" only costs
+// the parse.
+const _METADATA = /\/Type\s*\/Metadata\b/g;
+const _BIG_XMP = 64 * 1024;
 function _mayHaveObjectXmp(bytes) {
   const CHUNK = 1 << 20, latin1 = new TextDecoder('latin1');
   let seen = 0;
   for (let i = 0; i < bytes.length; i += CHUNK - 64) {
     const part = latin1.decode(bytes.subarray(i, Math.min(bytes.length, i + CHUNK)));
     // a match in the 64-byte overlap is seen twice — counted only in the chunk it starts in
-    for (const m of part.matchAll(_METADATA)) if (i === 0 || m.index >= 64) seen++;
-    if (seen >= 2) return true;
+    for (const m of part.matchAll(_METADATA)) {
+      if (i !== 0 && m.index < 64) continue;
+      if (++seen >= 2) return true;
+      // its own dictionary, around the match: a direct /Length that is big
+      const dict = part.slice(Math.max(0, part.lastIndexOf('<<', m.index)), part.indexOf('>>', m.index) + 1 || m.index + 512);
+      const len = /\/Length\s+(\d+)(?!\s+\d+\s+R)/.exec(dict);
+      if (len && Number(len[1]) >= _BIG_XMP) return true;
+    }
   }
   return false;
 }
 
-// Removes /Metadata from every object but the catalog, then every object
+// Removes /Metadata from every object, the catalog's too, then every object
 // the trailer no longer reaches. Returns how many XMP keys were removed.
+// Only on Standard/Maximum (stripXmp), where handleCompress removes the
+// catalog's key anyway — done here, its stream goes as well.
 function _stripObjectXmp(pdf) {
   const { PDFName, PDFDict, PDFArray, PDFRawStream, PDFRef } = PDFLib;
   const key = PDFName.of('Metadata');
-  const catalogXmp = pdf.catalog.get(key);
   const gone = new Set();
   // at any depth: InDesign hangs a placed image's XMP on the marked-content
   // properties inside a page's /Resources (/Properties /MC0 << /Metadata … >>)
-  const strip = (v, top) => {
+  const strip = (v) => {
     const dict = v instanceof PDFRawStream ? v.dict : v;
     if (dict instanceof PDFDict) {
-      if (!top && dict.has(key)) {
+      if (dict.has(key)) {
         const ref = dict.get(key);
         dict.delete(key);
-        if (ref instanceof PDFRef && ref !== catalogXmp) gone.add(ref);
+        if (ref instanceof PDFRef) gone.add(ref);
       }
-      for (const [, x] of dict.entries()) if (!(x instanceof PDFRef)) strip(x, false);
+      for (const [, x] of dict.entries()) if (!(x instanceof PDFRef)) strip(x);
     } else if (v instanceof PDFArray) {
-      for (const x of v.asArray()) if (!(x instanceof PDFRef)) strip(x, false);
+      for (const x of v.asArray()) if (!(x instanceof PDFRef)) strip(x);
     }
   };
   for (const [, obj] of pdf.context.enumerateIndirectObjects()) {
-    if (obj === pdf.catalog) {   // its own XMP stays (handleCompress's, by preset) — its nested dicts don't
-      for (const [, x] of obj.entries()) if (!(x instanceof PDFRef)) strip(x, false);
-      continue;
-    }
     if (obj instanceof PDFRawStream && obj.dict.get(PDFName.of('Type'))?.toString() === '/Metadata') continue;
-    strip(obj, false);
+    strip(obj);
   }
   for (const ref of gone) pdf.context.delete(ref);
   _dropUnreachable(pdf);
@@ -217,13 +231,38 @@ function _dropUnreachable(pdf) {
   return dropped;
 }
 
-// Cheap scan: "/DeviceCMYK" anywhere in the plain text. An image's stream dict
-// is never in an object stream; a colour space given by reference to a
-// compressed object is missed — that only forgoes savings.
-function _mayHaveCmyk(bytes) {
+// Cheap scans: "/DeviceCMYK" or "/JPXDecode" anywhere in the plain text. An
+// image's stream dict is never in an object stream; a colour space given by
+// reference to a compressed object is missed — that only forgoes savings.
+function _mayHaveCmyk(bytes) { return _mayHaveName(bytes, '/DeviceCMYK'); }
+
+// Cheap scan for C35 (figures drawn smaller than the page): an image of
+// 250,000 pixels or more — below that, the bytes a downsample could save
+// don't pay for parsing the document. Same text-level window as
+// _mayHaveRawImage; a size given by reference counts as big (let the parse decide).
+const _BIG_IMAGE_PX = 250000;
+function _mayHaveBigImage(bytes) {
+  const n = bytes.length;
+  for (let i = bytes.indexOf(0x2f); i !== -1 && i <= n - 7; i = bytes.indexOf(0x2f, i + 1)) {
+    let hit = true;
+    for (let k = 1; k < 6; k++) if (bytes[i + k] !== _IMAGE[k]) { hit = false; break; }
+    if (!hit || !_DELIM.has(bytes[i + 6])) continue;
+    const from = Math.max(0, i - _WINDOW), to = Math.min(n, i + _WINDOW);
+    const text  = String.fromCharCode.apply(null, bytes.subarray(from, to));
+    const start = text.lastIndexOf('<<', i - from), end = text.indexOf('stream', i - from);
+    if (start === -1 || end === -1) return true;
+    const dict = text.slice(start, end);
+    const w = /\/Width\s+(\d+)(\s+\d+\s+R)?/.exec(dict), h = /\/Height\s+(\d+)(\s+\d+\s+R)?/.exec(dict);
+    if (!w || !h || w[2] || h[2]) return true;
+    if (Number(w[1]) * Number(h[1]) >= _BIG_IMAGE_PX) return true;
+  }
+  return false;
+}
+function _mayHaveJpx(bytes) { return _mayHaveName(bytes, '/JPXDecode'); }
+function _mayHaveName(bytes, name) {
   const CHUNK = 1 << 20, latin1 = new TextDecoder('latin1');
   for (let i = 0; i < bytes.length; i += CHUNK - 64) {
-    if (latin1.decode(bytes.subarray(i, Math.min(bytes.length, i + CHUNK))).includes('/DeviceCMYK')) return true;
+    if (latin1.decode(bytes.subarray(i, Math.min(bytes.length, i + CHUNK))).includes(name)) return true;
   }
   return false;
 }
@@ -306,7 +345,7 @@ async function _encodeRawImages(buffer, stripXmp = false, cmykFlate = false, dOp
   const rawImages = _mayHaveRawImage(bytesIn), dimRefs = _mayHaveIndirectDims(bytesIn);
   const objectXmp = stripXmp && _mayHaveObjectXmp(bytesIn);
   const anyCmyk = (cmykFlate || dOpts) && _mayHaveCmyk(bytesIn);
-  const cmyk = cmykFlate && anyCmyk, wantD = !!dOpts && anyCmyk;
+  const cmyk = cmykFlate && anyCmyk, wantD = !!dOpts && (anyCmyk || (!!dOpts.rgb && (_mayHaveJpx(bytesIn) || (!!dOpts.rgb.target && _mayHaveBigImage(bytesIn)))));
   const none = { result: buffer, encoded: 0, resolved: 0, xmp: 0, cmyk: 0, d: null };
   if (!rawImages && !dimRefs && !objectXmp && !cmyk && !wantD) return none;
   // No yielding while parsing or writing: pdf-lib pauses every 100 objects

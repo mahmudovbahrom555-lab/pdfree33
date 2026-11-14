@@ -127,48 +127,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How do I add a CONFIDENTIAL watermark to a PDF?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Open pdfree.io/watermark-pdf/, load your PDF, type CONFIDENTIAL in the text field, set the opacity to around 30–50% so it's visible but doesn't obscure the content, and click 'Add Watermark'. The stamped PDF downloads instantly — no upload required."
+        {
+            "@type": "Question",
+            "name": "How do I add a CONFIDENTIAL watermark?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Open pdfree.io/watermark-pdf/, load your PDF, type CONFIDENTIAL in the text field, set opacity to 30–40%, and click \"Add Watermark\". The stamped PDF downloads immediately — no upload required."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I watermark only specific pages?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. By default the watermark goes on every page; set From page and To page to stamp only that range — for example pages 2 to 5."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does adding a watermark increase the file size?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Very slightly. A text watermark is stored as a PDF drawing operation — typically under 5 KB per page. For a 10-page PDF the size increase is negligible."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is the watermark permanent?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. The watermark is embedded into the PDF page content, not as a layer that can be toggled off. For practical purposes it is permanent — a standard PDF viewer cannot remove it."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I add an image or logo watermark?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Switch to Logo mode and upload a PNG or JPG — your company logo, a signature stamp, anything. Size, opacity, and position work the same way as with a text watermark."
+            }
         }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I watermark only specific pages?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "PDFree applies the watermark to all pages at once. If you need to watermark only specific pages, split the PDF first using the Split PDF tool, watermark the relevant pages, then merge the parts back together with Merge PDF."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Does adding a watermark change the PDF file size?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "The increase is very small — typically under 5 KB per page. A text watermark is stored as a simple PDF drawing operation, not as an embedded image, so the file size impact is minimal."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is the watermark permanent?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes — the watermark is embedded into the PDF page content. It cannot be removed by simply opening the PDF in a standard viewer. Someone with advanced PDF editing software could potentially remove it, but for most practical purposes it is permanent."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I add a logo or image watermark instead of text?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "PDFree's watermark tool currently supports text watermarks only. For image or logo watermarks, you would need desktop PDF software. Text watermarks cover the most common use cases: CONFIDENTIAL, DRAFT, DO NOT COPY, copyright notices, and company names."
-        }
-      }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -345,7 +345,7 @@
             <summary style="padding:14px 18px;font-weight:600;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
               Can I watermark only specific pages?
             </summary>
-            <p style="padding:0 18px 14px;margin:0;font-size:14px;">PDFree applies the watermark to all pages at once. To watermark only specific pages: use <a href="../../split-pdf/" style="color:var(--green);">Split PDF</a> to separate the pages you want to stamp, apply the watermark, then combine everything back with <a href="../../merge-pdf/" style="color:var(--green);">Merge PDF</a>.</p>
+            <p style="padding:0 18px 14px;margin:0;font-size:14px;">Yes. By default the watermark goes on every page; set From page and To page to stamp only that range — for example pages 2 to 5.</p>
           </details>
 
           <details style="border:1px solid var(--border);border-radius:10px;padding:0;">
@@ -366,7 +366,7 @@
             <summary style="padding:14px 18px;font-weight:600;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;">
               Can I add an image or logo watermark?
             </summary>
-            <p style="padding:0 18px 14px;margin:0;font-size:14px;">PDFree supports text watermarks only. Text covers the most common needs: CONFIDENTIAL, DRAFT, company name, copyright notice, DO NOT COPY. For image-based watermarks, desktop PDF software is required.</p>
+            <p style="padding:0 18px 14px;margin:0;font-size:14px;">Yes. Switch to Logo mode and upload a PNG or JPG — your company logo, a signature stamp, anything. Size, opacity, and position work the same way as with a text watermark.</p>
           </details>
 
         </div>

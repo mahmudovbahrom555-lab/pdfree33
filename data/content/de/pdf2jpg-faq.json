@@ -44,7 +44,7 @@
     "name": "Kann ich PDF statt in JPG in PNG konvertieren?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree unterstützt sowohl JPG- als auch PNG-Ausgabe. PNG ist verlustfrei und besser für textlastige Dokumente oder Diagramme, bei denen du pixelgenaue Schärfe benötigst. JPG erzeugt kleinere Dateien und eignet sich besser für bildreiche Seiten. Wähle das Format vor der Konvertierung aus."
+      "text": "Ja. PDFree unterstützt sowohl JPG- als auch PNG-Ausgabe. PNG ist verlustfrei und besser für textlastige Dokumente. Wähle das Format vor der Konvertierung aus."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Erzeugt ein 10-seitiges PDF 10 separate JPG-Dateien?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Jede Seite wird zu einer JPG- oder PNG-Datei. Wenn dein PDF mehr als eine Seite hat, werden alle Bilder für den Download in einem ZIP-Archiv gebündelt."
+      "text": "Ja. Jede Seite wird zu einer JPG- oder PNG-Datei. Bei mehr als einer Seite werden alle Bilder für den Download in einem ZIP-Archiv gebündelt."
     }
   }
 ]

@@ -4,7 +4,7 @@
     "name": "¿Se suben mis archivos al añadir números de página?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. La adición de números de página se procesa completamente en tu navegador con JavaScript. Los archivos nunca abandonan tu dispositivo. Puedes verificarlo: abre DevTools → pestaña Red — no deberías ver tu PDF siendo subido a ningún servidor remoto."
+      "text": "No. La adición de números de página se procesa completamente en tu navegador con JavaScript. Los archivos nunca abandonan tu dispositivo."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "¿Puedo empezar la numeración desde un número distinto de 1?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. Introduce cualquier número inicial en el campo 'Número de inicio'. Útil para documentos donde la portada es la página 0, o para capítulos que continúan la numeración de una sección anterior."
+      "text": "Sí. Introduce cualquier número inicial en el campo \"Número de inicio\". Útil para documentos donde la portada es la página 0."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "¿Qué formatos de número están disponibles?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Números arábigos (1, 2, 3), números romanos en minúscula (i, ii, iii), romanos en mayúscula (I, II, III), alfabético en minúscula (a, b, c) y alfabético en mayúscula (A, B, C)."
+      "text": "Números arábigos (1, 2, 3), romanos en minúscula (i, ii, iii), romanos en mayúscula (I, II, III), alfabético en minúscula (a, b, c) y alfabético en mayúscula (A, B, C)."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "¿Puedo añadir el formato \"Página 1 de 20\"?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. Usa el campo de prefijo para añadir texto antes del número (p. ej. 'Página ') y el campo de sufijo para añadir texto después (p. ej. ' de 20'). Esto crea el formato común 'Página 1 de 20' usado en documentos profesionales."
+      "text": "Sí. Usa el campo de prefijo para añadir texto antes del número (p. ej. \"Página \") y el campo de sufijo para añadir texto después (p. ej. \" de 20\")."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "¿Puedo excluir la portada de la numeración?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. Ajusta el número inicial a 0 o comienza la numeración desde la página 2. La portada queda sin número."
+      "text": "Sí. Pon «Desde página» en 2: la portada queda sin número y la página 2 muestra el 1. Si quieres que la página 2 muestre el 2, pon también «Número de inicio» en 2."
     }
   },
   {

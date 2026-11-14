@@ -36,7 +36,7 @@
     "name": "De combien PDFree peut-il réduire la taille d'un PDF ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Les réductions typiques sont de 20 à 70 %. Les PDFs contenant des images haute résolution (documents numérisés, brochures photo) sont les plus compressés — souvent 50 à 80 % d'économie. Les PDFs uniquement textuels sont moins réduits car le texte est déjà stocké efficacement sous forme de vecteurs."
+      "text": "Les réductions typiques sont de 20 à 70 %. Les PDFs contenant des images haute résolution sont les plus compressés — souvent 50 à 80 % d'économie."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Pourquoi le PDF compressé semble identique mais est plus petit ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Les PDFs contiennent souvent des données invisibles : des miniatures de pages générées par Adobe Reader, des polices incorporées en double, des flux de métadonnées XMP et des profils de couleur incorporés. PDFree supprime ces données cachées. Le contenu visible reste identique."
+      "text": "Les PDFs contiennent souvent des données invisibles : miniatures générées par Adobe Reader, polices en double, flux de métadonnées XMP. PDFree supprime ces données cachées. Le contenu visible reste identique."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "Puis-je compresser un PDF protégé par mot de passe ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree tente d'optimiser les PDFs chiffrés lorsque c'est possible, mais les fichiers très protégés pourraient ne pas être compressés entièrement. Supprimez d'abord le mot de passe à l'aide de l'outil Protéger PDF, puis compressez."
+      "text": "PDFree tente d'optimiser les PDFs chiffrés lorsque c'est possible, mais les fichiers très protégés pourraient ne pas être compressés entièrement. Supprimez d'abord le mot de passe, puis compressez."
     }
   },
   {
@@ -69,6 +69,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "De nombreux formulaires en ligne (service-public.fr, portails de candidature, CAF) limitent les envois à 2-10 Mo, souvent sans le préciser clairement avant l'échec de l'envoi. Compresser le PDF au préalable règle généralement le problème, même avec une petite réduction, sans changer le contenu du document."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je compresser un PDF à une taille précise, comme 4 Mo ou 500 Ko ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Dans « Compresser à », choisissez une taille ou « Autre taille » et saisissez-la en Mo ou en Ko. PDFree essaie les réglages du plus doux au plus fort et garde le plus doux avec lequel le fichier tient, puis indique ce que cela a coûté — par exemple des images à 150 ppp et une qualité de 75 %, ou aucune perte de qualité. La vraie compression s'exécute jusqu'à quatre fois : un gros fichier prend donc plus de temps. Si même le réglage le plus fort ne suffit pas, PDFree dit franchement que cette taille est impossible à atteindre et vous donne le fichier le plus proche ; diviser le PDF peut aider."
     }
   }
 ]

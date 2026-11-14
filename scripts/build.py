@@ -1190,6 +1190,21 @@ def _generate_search_keywords(config, dist_root):
 
 # ── Static asset copy ─────────────────────────────────────────────────────────
 
+def _copy_quick_edit_dependencies(out_dir):
+    packages = {
+        'mupdf-1.28.1': ('mupdf', ('LICENSE', 'dist/mupdf.js', 'dist/mupdf-wasm.js', 'dist/mupdf-wasm.wasm')),
+        'read-excel-file-9.3.14': ('read-excel-file', ('LICENSE', 'bundle/read-excel-file.min.js')),
+    }
+    for directory, (package, files) in packages.items():
+        target = os.path.join(out_dir, 'js', 'vendor', directory)
+        os.makedirs(target, exist_ok=True)
+        for name in files:
+            source = os.path.join(ROOT, 'node_modules', package, name)
+            if not os.path.isfile(source):
+                raise RuntimeError(f'Missing {package} build asset. Run npm ci before building.')
+            shutil.copyfile(source, os.path.join(target, os.path.basename(name)))
+
+
 def _should_skip(name, is_dir):
     if is_dir:
         return name in SKIP_DIRS
@@ -1483,6 +1498,9 @@ def _generate_pages(config, hashes, env, out_dir, dry_run=False):
                 breadcrumb_schema = _breadcrumb_schema(tool, lang, lang_cfg, canonical_path),
                 hashes         = type('H', (), hashes)(),  # dict → attr access
                 lang_names     = LANG_NAMES,
+                # "One question per slide" (/worksheet-slides/, an editor in a
+                # same-site frame): English page only while its UI is English
+                worksheet      = tool['id'] == 'pdf2ppt' and lang == 'en',
                 # EN-only page for now: the link appears on EN tool pages whose section has entries
                 fixes_anchor   = (FIXES_TOOL_IDS.get(tool['id']) if lang == 'en' and FIXES_TOOL_IDS.get(tool['id']) in fixes_sections else None),
             )
@@ -1535,6 +1553,7 @@ def main():
         # Copy static assets
         print('Copying static assets...')
         _copy_static(ROOT, DIST, tool_dirs)
+        _copy_quick_edit_dependencies(DIST)
         print('  done')
 
         if BASE_URL != 'https://pdfree.io':

@@ -30,6 +30,11 @@ import { setButtonDisabled }            from './ui.js';
 import { loadPdfJs }                    from './pdf2jpgUI.js';
 import { renderDocxToDom }              from './docxToPdfCore.js';
 import { _buildPdf2WordDocxBlob }       from './processor.js';
+import { bindQuickEditCopies } from './quickEditCopies.js';
+import { openOriginalPdf, originalLines } from './quickEditOriginal.js';
+import { createPageEditor } from './quickEditPage.js';
+import { copyText } from './quickEditCopyText.js';
+import { RECIPIENT_LIMIT } from './quickEditRecipients.js';
 import { t }                            from './i18n.js';
 
 // Focus-trap selector — same standard set formFieldsUI.js uses.
@@ -37,31 +42,59 @@ const FOCUSABLE_SEL = 'a[href], button:not([disabled]), input:not([disabled]), '
   'select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 // ── State ──────────────────────────────────────────────────────
+export const quickEditExamples = new WeakMap();
+
 let _loading    = false;
 let _generation = 0;    // staleness guard, same pattern as formFieldsUI.js
 let _container  = null; // the outer #quickEditOptions panel
 let _fileLabel  = '';
+let _sourceFile = null;
 let _docContainer = null; // the live docx-preview render target — lives INSIDE the modal while open
+// In-place editing (quickEditPage.js), tried first: the PDF itself, edited line
+// by line; the rebuild editor above only when a file can't be edited in place
+let _pageOriginal = null;
+let _pageEditor   = null;
+let _forceRebuild = false;   // the person chose the rebuild editor for this file
 let _atlasEri   = null; // {eri, components, findings} from _buildPdf2WordDocxBlob — pre-edit gate
 let _modal      = null;
+let _clearCopyFields = null;
 let _prevFocus  = null;
 let _inerted    = [];
 
 // ── Public API ────────────────────────────────────────────────
+
+export const COPY_MODE = 'personalized-copies';
+export const COPY_MODE_QUERY = `?mode=${COPY_MODE}`;
 
 export function initQuickEditOptions(file) {
   const el = id('quickEditOptions');
   if (!el) return;
   el.style.display = '';
   if (!file) { el.innerHTML = ''; _closeModal({ silent: true }); return; }
+  if (new URLSearchParams(location.search).get('mode') === COPY_MODE) {
+    _generation++;
+    _closeModal({ silent: true });
+    _loading = false;
+    _atlasEri = null;
+    _sourceFile = file;
+    _fileLabel = file.name;
+    _container = el;
+    _docContainer = null;
+    el.innerHTML = _sourceOnlyButton();
+    _bindTriggerEvents(el);
+    void _openModal(null, true);
+    return;
+  }
+  _forceRebuild = false;
   _prepareAndRender(file, el);
 }
 
 export function getQuickEditParams() {
   return {
     loading:        _loading,
-    hasOpened:      !!_docContainer,
+    hasOpened:      !!_docContainer || !!_pageEditor,
     editedContainer: _docContainer,
+    pageEdit:        _pageEditor ? { original: _pageOriginal, edits: _pageEditor.edits() } : null,
   };
 }
 
@@ -69,8 +102,11 @@ export function hideQuickEditOptions() {
   const el = id('quickEditOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
   _closeModal({ silent: true });
+  _dropPageEditor();
+  _forceRebuild = false;
   _loading = false;
   _fileLabel = '';
+  _sourceFile = null;
   _docContainer = null;
   _atlasEri = null;
   _generation++;
@@ -120,13 +156,17 @@ function _atlasSummaryHTML(atlasEri) {
 
 function _spinnerHTML(msg) {
   return `<div style="padding:24px 16px;text-align:center;color:var(--text3);font-size:14px;">
-    <div style="font-size:24px;margin-bottom:8px;">⏳</div>${esc(msg)}</div>`;
+    <div style="font-size:24px;margin-bottom:8px;">⏳</div><span data-qe-progress>${esc(msg)}</span>${_sourceOnlyButton()}</div>`;
 }
 
 function _errorHTML(msg) {
   return `<div style="padding:16px;border:1px solid #fca5a5;border-radius:10px;background:#fff1f2;color:#dc2626;font-size:13px;">
     ${esc(msg)}
   </div>`;
+}
+
+function _sourceOnlyButton() {
+  return `<button type="button" class="qe-copies__button" id="qeOpenOriginal">${copyText('Open original for personalized copies', '打开原始 PDF 并生成个性化副本')}</button>`;
 }
 
 // Shown when the source PDF's structure survived the PDF->DOCX step too
@@ -146,6 +186,7 @@ function _blockedHTML(atlasEri) {
       <p style="margin:0;font-size:13px;color:var(--text3);line-height:1.5;">
         ${esc(t('quickedit_blocked_body'))}<a href="/pdf-to-word/" style="color:var(--green-text);">${esc(t('quickedit_blocked_link'))}</a>${esc(t('quickedit_blocked_suffix'))}
       </p>
+      ${_sourceOnlyButton()}
     </div>`;
 }
 
@@ -164,17 +205,73 @@ function _triggerHTML() {
 
 function _bindTriggerEvents(container) {
   container.querySelector('#qeReopenBtn')?.addEventListener('click', () => _openModal());
+  container.querySelector('#qeOpenOriginal')?.addEventListener('click', () => {
+    _generation++;
+    _loading = false;
+    _openModal(null, true);
+    setButtonDisabled();
+  });
 }
 
 // ── Build: PDF -> DOCX blob (reusing pdf2word's own engine, text mode
 // only — image mode has no text runs to click-edit) -> render for preview ──
+
+function _dropPageEditor() {
+  _pageEditor?.destroy();
+  _pageEditor = null;
+  void _pageOriginal?.pdf.destroy().catch(() => {});
+  _pageOriginal = null;
+}
+
+// In place when the file has a text layer on its first pages and isn't a form
+// or signed (openOriginalPdf refuses those): nothing else in the file changes.
+// Arabic, Persian and Hebrew can't be written in place yet (no shaping), so a
+// mostly right-to-left file keeps the previous editor and its script warning
+// rather than failing only after the edit
+async function _openInPlace(file, container, myGen) {
+  let original;
+  try { original = await openOriginalPdf(file); } catch { return false; }
+  try {
+    let letters = 0, rtl = 0;
+    for (let i = 1; i <= Math.min(3, original.pdf.numPages); i++) {
+      for (const line of originalLines((await (await original.pdf.getPage(i)).getTextContent()).items)) {
+        letters += (line.text.match(/\p{L}/gu) || []).length;
+        rtl += (line.text.match(/[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/gu) || []).length;
+      }
+    }
+    if (!letters || rtl > letters * 0.3 || myGen !== _generation) { await original.pdf.destroy(); return myGen !== _generation; }
+  } catch { await original.pdf.destroy().catch(() => {}); return false; }
+  _pageOriginal = original;
+  _loading = false;
+  container.innerHTML = _triggerHTML();
+  _bindTriggerEvents(container);
+  await _openModal();
+  return true;
+}
+
+// From the in-place editor to the rebuild one, for a file the page editor
+// can't change: the same file, rebuilt once (until another file is chosen)
+async function _switchToRebuild() {
+  const file = _sourceFile, container = _container;
+  _closeModal({ silent: true });
+  _dropPageEditor();
+  _forceRebuild = true;
+  await _prepareAndRender(file, container);
+}
 
 async function _prepareAndRender(file, container) {
   _loading = true;
   _atlasEri = null;
   const myGen = ++_generation;
   _closeModal({ silent: true }); // a new file replaces any editor already open for a previous one
+  _dropPageEditor();
+  _sourceFile = file;
+  _fileLabel = file.name;
+  _container = container;
+  _docContainer = null;
   container.innerHTML = _spinnerHTML('Converting to an editable form…');
+  _bindTriggerEvents(container);
+  const progress = container.querySelector('[data-qe-progress]');
 
   try {
     // _buildPdf2WordDocxBlob expects window.pdfjsLib to already be loaded
@@ -182,6 +279,7 @@ async function _prepareAndRender(file, container) {
     // follows) — it only checks for it, doesn't load it itself.
     await loadPdfJs();
     if (myGen !== _generation) return;
+    if (!_forceRebuild && await _openInPlace(file, container, myGen)) return;
 
     // Reuses pdf2word's own conversion engine — text mode only, since
     // image mode produces no text runs to click-edit at all (Atlas ERI
@@ -191,8 +289,9 @@ async function _prepareAndRender(file, container) {
     // — real progress text, not a static spinner message.
     const { blob, atlasEri } = await _buildPdf2WordDocxBlob(file, {
       mode: 'text',
+      preserveNumericFields: true,
       onProgress:  (pct, label) => {
-        if (myGen === _generation) container.innerHTML = _spinnerHTML(label || 'Converting to an editable form…');
+        if (myGen === _generation) progress.textContent = label || 'Converting to an editable form…';
       },
       isCancelled: () => myGen !== _generation,
     });
@@ -207,11 +306,12 @@ async function _prepareAndRender(file, container) {
     if (atlasEri && !atlasEri.error && atlasEri.eri < _ATLAS_BLOCK_THRESHOLD) {
       _loading = false;
       container.innerHTML = _blockedHTML(atlasEri);
+      _bindTriggerEvents(container);
       setButtonDisabled();
       return;
     }
 
-    container.innerHTML = _spinnerHTML('Rendering preview…');
+    progress.textContent = 'Rendering preview…';
 
     // Off-screen render target, moved into the modal's stage once built —
     // same "caller owns the container" contract renderDocxToDom documents.
@@ -234,6 +334,7 @@ async function _prepareAndRender(file, container) {
 
     _loading    = false;
     _fileLabel  = file.name;
+    _sourceFile = file;
     _container  = container;
 
     container.innerHTML = _triggerHTML();
@@ -242,7 +343,8 @@ async function _prepareAndRender(file, container) {
   } catch (err) {
     if (myGen !== _generation) return;
     _loading = false;
-    container.innerHTML = _errorHTML(err.message);
+    container.innerHTML = _errorHTML(err.message) + _sourceOnlyButton();
+    _bindTriggerEvents(container);
     setButtonDisabled();
   }
 }
@@ -250,8 +352,9 @@ async function _prepareAndRender(file, container) {
 // ── Full-viewport modal (mirrors js/formFieldsUI.js's _openModal almost
 // line-for-line — see that file for the fuller rationale on each piece) ──
 
-async function _openModal(docContainer) {
+async function _openModal(docContainer, originalOnly = false) {
   if (_modal) return;
+  const pageMode = !!_pageOriginal && !originalOnly;
   const active = document.activeElement;
   _prevFocus = active && typeof active.focus === 'function' ? active : null;
   _modal = document.createElement('div');
@@ -263,8 +366,109 @@ async function _openModal(docContainer) {
         <button type="button" class="qe-modal-close" id="qeModalClose" aria-label="${esc(t('quickedit_close_aria'))}">✕</button>
       </div>
       <p class="qe-modal__hint">${esc(t('quickedit_modal_hint'))}</p>
-      <div class="qe-modal__stage" id="qeModalStage"></div>
+      <div class="qe-workspace">
+        <div class="qe-modal__stage" id="qeModalStage"></div>
+        <section id="qeCopies" class="qe-copies" aria-labelledby="qeCopiesTitle" hidden>
+          <h2 id="qeCopiesTitle">${copyText('Personalized copies', '个性化 PDF 副本')}</h2>
+          <p class="qe-copies__intro">${copyText('Create one PDF for each recipient from this document.', '为每位收件人生成一份独立的 PDF。')}</p>
+
+          <div class="qe-copies__step">
+            <label><input type="checkbox" data-preserve-layout> ${copyText('Preserve original layout', '保留原始版式')} <small>${copyText('(experimental)', '（实验功能）')}</small></label>
+            <p data-layout-hint>${copyText('Quick Edit rebuilds the PDF. Check the sample for changes to page breaks or layout.', '快速编辑会重新生成 PDF。请查看样本，确认分页和版式。')}</p>
+            <div data-original-options hidden>
+              <label for="qeOriginalPage">${copyText('Original page', '原始 PDF 页码')}</label>
+              <select id="qeOriginalPage"></select>
+              <label><input type="checkbox" data-smaller-text> ${copyText('Allow slightly smaller text when a name does not fit', '姓名放不下时允许适当缩小字号')}</label>
+              <p>${copyText('Selected lines use an available replacement font. Changing modes clears selected fields.', '选中的文本会使用可用的替代字体。切换模式会清除已选字段。')}</p>
+              <details data-name-style>
+                <summary>${copyText('Name appearance', '姓名样式')}</summary>
+                <label><input type="checkbox" data-style-enable> ${copyText('Customize inserted names', '自定义插入的姓名样式')}</label>
+                <fieldset data-style-options disabled>
+                  <label>${copyText('Font family', '字体')}
+                    <select data-style-font><option value="">${copyText('Match source family', '匹配原字体类别')}</option><option value="Sans">${copyText('Sans', '无衬线')}</option><option value="Serif">${copyText('Serif', '衬线')}</option><option value="Mono">${copyText('Mono', '等宽')}</option></select>
+                  </label>
+                  <label>${copyText('Size (pt)', '字号（磅）')} <input data-style-size type="number" min="6" max="48" placeholder="${copyText('Auto', '自动')}"></label>
+                  <label>${copyText('Color', '颜色')} <input data-style-color type="color" value="#000000"></label>
+                  <label><input data-style-bold type="checkbox"> ${copyText('Bold', '粗体')}</label>
+                  <label><input data-style-italic type="checkbox"> ${copyText('Italic', '斜体')}</label>
+                </fieldset>
+              </details>
+              <label data-wrap-option hidden><input type="checkbox" data-wrap-name> ${copyText('Allow long names to wrap in this blank area (two lines)', '允许长姓名在此空白区域内换行（最多两行）')}</label>
+              <button type="button" class="qe-copies__button" data-place aria-pressed="false" hidden>${copyText('Add name on scan', '在扫描页添加姓名')}</button>
+              <p>${copyText('Original PDF engine', '原始 PDF 处理引擎')}
+                <a href="/js/vendor/mupdf-1.28.1/LICENSE" target="_blank" rel="noopener">${copyText('MuPDF license', 'MuPDF 许可证')}</a>
+                · <a href="https://github.com/ArtifexSoftware/mupdf/tree/1.28.1" target="_blank" rel="noopener">${copyText('Source and build files', '源代码和构建文件')}</a>
+              </p>
+            </div>
+          </div>
+
+          <div class="qe-copies__step">
+            <label for="qeCopyNames">${copyText('1. Add recipients', '1. 添加收件人')}</label>
+            <p id="qeCopyNamesHint">${copyText(`Paste one full name per line or import a table. Up to ${RECIPIENT_LIMIT} recipients.`, `每行粘贴一个姓名，或导入表格。最多支持 ${RECIPIENT_LIMIT} 位收件人。`)}</p>
+            <textarea id="qeCopyNames" rows="4" aria-describedby="qeCopyNamesHint"
+              placeholder="${copyText('Anna Example&#10;Boris Example', '张小明&#10;李晓华')}" spellcheck="false"></textarea>
+            <p data-recipient-count>${copyText('0 recipients', '0 位收件人')}</p>
+            <label for="qeRecipientFile">${copyText('Import Excel or CSV', '导入 Excel 或 CSV')}</label>
+            <input type="file" id="qeRecipientFile" data-recipient-file accept=".xlsx,.csv,.tsv">
+            <div data-import-options hidden>
+              <label for="qeRecipientSheet">${copyText('Sheet', '工作表')}</label>
+              <select id="qeRecipientSheet" data-import-sheet></select>
+              <label for="qeRecipientStart">${copyText('First row with a name', '姓名起始行')}</label>
+              <input id="qeRecipientStart" data-import-start type="number" min="1" value="2">
+              <label for="qeRecipientColumn">${copyText('Full name column', '姓名所在列')}</label>
+              <select id="qeRecipientColumn" data-import-column></select>
+              <p data-import-preview></p>
+              <button type="button" class="qe-copies__button" data-import-apply disabled>${copyText('Use this column', '使用此列')}</button>
+            </div>
+          </div>
+
+          <div class="qe-copies__step">
+            <h3>${copyText('2. Mark the name fields', '2. 标记姓名字段')}</h3>
+            <p>${copyText('Select a name or placeholder in the document, then add it as a field. Repeat for each place to replace.', '在文档中选中姓名或占位文字，再添加为字段。需要替换多处时，请逐一添加。')}</p>
+            <div class="qe-copies__actions">
+              <button type="button" class="qe-copies__button" data-bind>${copyText('Use selected text', '使用选中的文字')}</button>
+              <button type="button" class="qe-copies__button" data-reset disabled>${copyText('Clear fields', '清除字段')}</button>
+            </div>
+              <details data-name-suggestions hidden>
+                <summary>${copyText('Suggested name fields on this page', '当前页建议的姓名字段')}</summary>
+                <div class="qe-copies__actions" data-suggestion-list></div>
+              </details>
+            <p data-field-count>${copyText('0 fields selected', '已选 0 个字段')}</p>
+          </div>
+
+          <div class="qe-copies__step" data-copy-watermark>
+            <label><input type="checkbox" id="qeCopyWm" data-wm-enable> ${copyText('Also add a watermark to each copy', '同时为每份副本添加水印')}</label>
+            <fieldset data-wm-options disabled hidden>
+              <label for="qeCopyWmText">${copyText('Watermark text — {name} becomes the recipient', '水印文字 — {name} 会替换为收件人姓名')}</label>
+              <input id="qeCopyWmText" data-wm-text type="text" maxlength="200" value="${esc(copyText('Copy for {name}', '{name} 专用副本'))}">
+              <label for="qeCopyWmPosition">${copyText('Position', '位置')}</label>
+              <select id="qeCopyWmPosition" data-wm-position>
+                <option value="center">${copyText('Diagonal, page centre', '页面中央（斜向）')}</option>
+                <option value="tile">${copyText('Tiled across the page', '平铺整页')}</option>
+                <option value="top">${copyText('Top of the page', '页面顶部')}</option>
+                <option value="bottom">${copyText('Bottom of the page', '页面底部')}</option>
+              </select>
+            </fieldset>
+          </div>
+
+          <div class="qe-copies__step">
+            <h3>${copyText('3. Check and download', '3. 检查并下载')}</h3>
+            <p>${copyText('Preview a recipient and check that the names fit before downloading.', '下载前可预览收件人的副本，并检查姓名是否放得下。')}</p>
+            <label for="qeCopyRecipient">${copyText('Sample recipient', '样本收件人')}</label>
+            <select id="qeCopyRecipient" disabled><option>${copyText('Add names first', '请先添加姓名')}</option></select>
+            <div class="qe-copies__actions">
+              <button type="button" class="qe-copies__button" data-view-sample hidden disabled>${copyText('Preview on page', '在当前页预览')}</button>
+              <button type="button" class="qe-copies__button" data-check-copies hidden disabled>${copyText('Check all names', '检查所有姓名')}</button>
+              <button type="button" class="qe-copies__button" data-preview disabled>${copyText('Download sample PDF', '下载样本 PDF')}</button>
+              <button type="button" class="qe-copies__button qe-copies__button--primary" data-download disabled>${copyText('Download ZIP', '下载 ZIP')}</button>
+              <button type="button" class="qe-copies__button" data-stop hidden>${copyText('Stop export', '停止导出')}</button>
+            </div>
+          </div>
+          <p class="qe-copies__status" role="status"></p>
+        </section>
+      </div>
       <div class="qe-modal__footer">
+        <button type="button" class="qe-copies__button" data-copies-toggle aria-expanded="false" aria-controls="qeCopies">${copyText('Create personalized copies', '生成个性化副本')}</button>
         <button type="button" class="merge-btn" id="qeModalSaveBtn" style="position:static;margin-top:0;">${esc(t('quickedit_save_btn'))}</button>
       </div>
     </div>`;
@@ -294,7 +498,28 @@ async function _openModal(docContainer) {
   // saved in module state, so reopening resumes the SAME live DOM (and any
   // edits already made to it, once Stage 3 lands) rather than re-rendering
   // from scratch.
-  const target = docContainer || _docContainer;
+  // In place: the page editor (kept between openings, its edits too). Personalized
+  // copies open on the original layout (the same engine); the rebuild editor
+  // stays one press away for a file the page editor can't change
+  if (pageMode) {
+    const toggle = _modal.querySelector('[data-copies-toggle]');
+    toggle?.addEventListener('click', () => { _closeModal({ silent: true }); void _openModal(null, true); });
+    const rebuild = document.createElement('button');
+    rebuild.type = 'button';
+    rebuild.id = 'qeUseRebuild';
+    rebuild.className = 'qe-copies__button';
+    rebuild.textContent = t('quickedit_use_rebuild');
+    rebuild.title = t('quickedit_use_rebuild_title');
+    rebuild.addEventListener('click', () => void _switchToRebuild());
+    toggle?.before(rebuild);
+    const stage = id('qeModalStage');
+    if (_pageEditor) stage.appendChild(_pageEditor.root);
+    else _pageEditor = createPageEditor(stage, _pageOriginal);
+    id('qeModalClose')?.focus();
+    return;
+  }
+
+  const target = originalOnly ? document.createElement('div') : docContainer || _docContainer;
   if (target) {
     id('qeModalStage').appendChild(target);
     // Real bug, found via empirical click-testing (Stage 3): while
@@ -314,13 +539,20 @@ async function _openModal(docContainer) {
     // now that `target` genuinely IS inside the modal.
     target.removeAttribute('inert');
     target.removeAttribute('aria-hidden');
-    _docContainer = target;
+    if (!originalOnly) _docContainer = target;
     _fitDocContainerToStage(target);
     // Only bind once per container — reopening (docContainer===undefined,
     // falls back to _docContainer) must NOT re-run this, since the
     // delegated listener + editable-run classes already applied the first
     // time are still intact on the same, never-torn-down DOM node.
     if (docContainer) _bindEditableSpans(target);
+    _clearCopyFields = bindQuickEditCopies(id('qeCopies'), target, _sourceFile, _fitDocContainerToStage, originalOnly);
+    const exampleNames = quickEditExamples.get(_sourceFile);
+    if (exampleNames) {
+      const names = id('qeCopyNames');
+      names.value = exampleNames;
+      names.dispatchEvent(new Event('input'));
+    }
   }
 
   id('qeModalClose')?.focus();
@@ -368,6 +600,7 @@ let _activeEditSpan = null; // the one span currently in edit mode, or null
 function _bindEditableSpans(container) {
   _markEditableSpans(container);
   container.addEventListener('click', e => {
+    if (id('qeCopies')?.hidden === false) return;
     const span = e.target.closest('span');
     if (!_isEditableSpan(span)) return;
     if (span === _activeEditSpan) return; // already editing this one
@@ -496,7 +729,7 @@ function _fitDocContainerToStage(container) {
   const section = container.querySelector('.docx-wrapper > section.docx');
   const stage   = id('qeModalStage');
   if (!section || !stage) return;
-  const sectionWidth = section.getBoundingClientRect().width;
+  const sectionWidth = section.offsetWidth;
   const stageWidth   = stage.getBoundingClientRect().width - 32; // minus .qe-modal__stage's own padding
   if (sectionWidth <= 0 || stageWidth <= 0) return;
   const scale = Math.min(1, stageWidth / sectionWidth);
@@ -504,6 +737,7 @@ function _fitDocContainerToStage(container) {
   if (!wrapper) return;
   wrapper.style.transform       = scale < 1 ? `scale(${scale})` : '';
   wrapper.style.transformOrigin = 'top center';
+  wrapper.style.marginBottom = '';
   // Scaling via CSS transform doesn't shrink the element's own layout box
   // (the stage would still reserve/scroll the UNSCALED height) — compensate
   // so the visible content doesn't leave a tall dead-space gap below it.
@@ -550,13 +784,16 @@ function _setBackgroundInert(on) {
 function _closeModal({ silent = false } = {}) {
   const wasOpen = !!_modal;
   if (_modal) {
+    _clearCopyFields?.();
+    _clearCopyFields = null;
     document.removeEventListener('keydown', _onModalKeydown);
     _modal.remove();
     _modal = null;
   }
   _setBackgroundInert(false);
   if (!silent && _container) {
-    _container.innerHTML = _triggerHTML();
+    _container.innerHTML = (_docContainer || _pageEditor) ? _triggerHTML()
+      : _atlasEri && !_atlasEri.error && _atlasEri.eri < _ATLAS_BLOCK_THRESHOLD ? _blockedHTML(_atlasEri) : _sourceOnlyButton();
     _bindTriggerEvents(_container);
   }
   if (wasOpen) _restoreFocus(silent);
@@ -564,7 +801,7 @@ function _closeModal({ silent = false } = {}) {
 
 function _restoreFocus(silent) {
   let target = null;
-  if (!silent && _container) target = _container.querySelector('#qeReopenBtn');
+  if (!silent && _container) target = _container.querySelector('#qeReopenBtn, #qeOpenOriginal');
   if (!target && _prevFocus && _prevFocus.isConnected) target = _prevFocus;
   _prevFocus = null;
   try { target?.focus(); } catch { /* element became unfocusable — nothing to restore to */ }

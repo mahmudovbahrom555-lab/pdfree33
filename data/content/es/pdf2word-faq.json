@@ -28,7 +28,7 @@
     "name": "¿Cuál es la diferencia entre el modo texto y el modo imagen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "El modo texto extrae el texto de tu PDF y crea un documento Word editable con párrafos, encabezados, negrita, cursiva y tablas. El modo imagen renderiza cada página como imagen de alta resolución y la inserta en el documento Word — el diseño visual se conserva exactamente pero el texto no es editable."
+      "text": "El modo texto extrae el texto de tu PDF y crea un documento Word editable con párrafos, encabezados, negrita, cursiva y tablas. El modo imagen renderiza cada página como imagen de alta resolución — el diseño visual se conserva exactamente pero el texto no es editable."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "¿Necesito Microsoft Word para abrir el archivo?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. El formato .docx es compatible con Microsoft Word, Google Docs (subir a Drive y abrir), LibreOffice Writer (gratis, código abierto) y Apple Pages. No necesitas una suscripción de pago a Microsoft 365 para abrir el archivo."
+      "text": "No. El formato .docx es un estándar abierto compatible con Google Docs (gratis), LibreOffice Writer (gratis, código abierto), Apple Pages y Microsoft 365 Online (en el navegador, gratis). No necesitas una suscripción de pago a Word."
     }
   },
   {
@@ -84,7 +84,7 @@
     "name": "¿Funciona sin conexión?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. Una vez que la página se ha cargado, PDFree funciona completamente sin conexión como Progressive Web App. No se necesita Internet para la conversión."
+      "text": "Sí. PDFree funciona completamente sin conexión como Progressive Web App una vez que la página se ha cargado al menos una vez. No se requiere conexión a Internet para la conversión."
     }
   },
   {
@@ -92,7 +92,7 @@
     "name": "¿Cómo funciona la puntuación de calidad de conversión?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Tras la conversión, PDFree muestra una puntuación de confianza (0–100 %) basada en lo que se detectó: cobertura de la capa de texto, tablas, diagramas y complejidad de escritura. Alta (80 %+) significa salida completamente editable. Media (55–79 %) indica que algunas páginas pueden ser solo imágenes. Baja (menos del 55 %) suele significar PDF mayormente escaneado — ejecuta OCR primero."
+      "text": "Tras la conversión, PDFree muestra una puntuación de confianza (0–100 %) basada en lo que se detectó: cobertura de la capa de texto, tablas, diagramas y complejidad de escritura. Alta (≥80 %) significa salida completamente editable. Media (55–79 %) indica que algunas páginas pueden ser solo imágenes. Baja (&lt;55 %) suele significar PDF mayormente escaneado — ejecuta OCR primero."
     }
   },
   {
@@ -100,7 +100,7 @@
     "name": "¿Existe un conversor de PDF a Word que no suba archivos?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí — PDFree. La conversión se ejecuta en tu navegador con PDF.js y WebAssembly. Tu PDF nunca se envía a ningún servidor. Puedes verificarlo abriendo DevTools → pestaña Red y comprobando que no hay solicitud de subida durante la conversión. La mayoría de conversores en línea sí suben el archivo; PDFree no lo hace."
+      "text": "Sí — PDFree. La conversión se ejecuta en tu navegador con PDF.js y WebAssembly. Tu PDF nunca se envía a ningún servidor. Puedes verificarlo: abre DevTools → pestaña Red y observa que no se realiza ninguna solicitud de subida durante la conversión."
     }
   },
   {

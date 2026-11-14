@@ -4,7 +4,7 @@
     "name": "Hoeveel wordt het bestand kleiner?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDF's met veel afbeeldingen worden typisch 30–70% kleiner. Alleen-tekst PDF's 5–15%. PDFree toont een schatting voor het comprimeren."
+      "text": "Hangt af van de inhoud. PDF's met veel afbeeldingen worden typisch 30–70% kleiner. Alleen-tekst PDF's worden weinig kleiner (5–15%) — ze zijn al geoptimaliseerd. PDFree toont een schatting voor het comprimeren."
     }
   },
   {
@@ -12,7 +12,7 @@
     "name": "Verlies ik kwaliteit bij het comprimeren?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Comprimeren verlaagt de resolutie van ingesloten afbeeldingen. Tekst en vectorafbeeldingen blijven scherp."
+      "text": "Comprimeren verlaagt de resolutie van ingesloten afbeeldingen. Tekst en vectorafbeeldingen blijven scherp. Gebruik de instelling 'Beste kwaliteit' voor printen, 'E-mail' of 'Web' voor digitaal gebruik."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Worden mijn bestanden geüpload?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nee. Het comprimeren vindt volledig plaats in het browsergeheugen. Geen bestanden worden naar een server gestuurd."
+      "text": "Nee. Het comprimeren vindt volledig plaats in het browsergeheugen. Er worden geen bestanden naar een server gestuurd."
     }
   },
   {
@@ -61,6 +61,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Veel online formulieren (MijnOverheid, DigiD-portalen, sollicitatiesites) beperken uploads tot 2-10 MB, vaak zonder dit duidelijk te vermelden totdat de upload mislukt. Het PDF-bestand vooraf comprimeren lost dit meestal al op met een kleine verkleining, zonder de inhoud te veranderen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik een PDF comprimeren tot een exacte grootte, zoals 4 MB of 500 KB?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Kies bij ‘Comprimeren naar’ een grootte of ‘Andere grootte’ en typ die in MB of KB. PDFree probeert de instellingen vanaf de zachtste en houdt de zachtste waarbij het bestand past; daarna vertelt het wat dat kostte — bijvoorbeeld afbeeldingen op 150 dpi en 75 % kwaliteit, of helemaal geen kwaliteitsverlies. De echte compressie draait tot vier keer, dus een groot bestand duurt langer. Lukt het zelfs met de sterkste instelling niet, dan zegt PDFree eerlijk dat die grootte niet haalbaar is en geeft het het dichtstbijzijnde bestand; de PDF splitsen kan helpen."
     }
   }
 ]

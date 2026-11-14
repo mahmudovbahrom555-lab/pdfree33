@@ -76,7 +76,7 @@
     "name": "Do I need Microsoft Word to open the file?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. The .docx format is supported by Microsoft Word, Google Docs (upload to Drive and open), LibreOffice Writer (free, open-source), and Apple Pages. You do not need a paid Microsoft 365 subscription to open the file."
+      "text": "No. The .docx format is an open standard supported by Google Docs (free), LibreOffice Writer (free, open-source), Apple Pages, and Microsoft 365 Online (browser-based, free). You do not need a paid Word subscription."
     }
   },
   {
@@ -92,7 +92,7 @@
     "name": "Does it work offline?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. Once the page has loaded, PDFree works fully offline as a Progressive Web App. No internet connection is required for conversion."
+      "text": "Yes. PDFree works fully offline as a Progressive Web App once the page has been loaded at least once. No internet connection is required for conversion."
     }
   },
   {
@@ -100,7 +100,7 @@
     "name": "How does the conversion quality score work?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "After converting, PDFree shows a confidence score (0–100%) based on what was detected in your document: text layer coverage, tables, diagrams, and script complexity. High (80%+) means fully editable output. Fair (55–79%) means some pages may be image-only. Limited (under 55%) usually means the PDF is mostly scanned — run OCR first for editable Word output."
+      "text": "After converting, PDFree shows a confidence score (0–100%) based on what was detected in your document: text layer coverage, tables, diagrams, and script complexity. High (≥80%) means fully editable output. Fair (55–79%) means some pages may be image-only. Limited (&lt;55%) usually means the PDF is mostly scanned — run OCR first for editable Word output."
     }
   },
   {
@@ -108,7 +108,7 @@
     "name": "Is there a PDF to Word converter that doesn't upload files?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes — PDFree. The entire conversion runs inside your browser using PDF.js and WebAssembly. Your PDF is never sent to any server. You can verify this by opening DevTools → Network tab and watching that no file upload request is made during conversion. Most online converters upload your file to their servers; PDFree does not."
+      "text": "Yes — PDFree. The entire conversion runs inside your browser using PDF.js and WebAssembly. Your PDF is never sent to any server. You can verify this by opening DevTools → Network tab and watching that no file upload request is made during conversion. Most online converters do upload your file; PDFree does not."
     }
   }
 ]

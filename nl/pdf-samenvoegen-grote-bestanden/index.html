@@ -124,48 +124,72 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Kan ik gratis PDF-bestanden groter dan 100 MB samenvoegen?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Ja — tot 500 MB per samenvoeging in Chrome of Edge op een computer met 8 GB+ geheugen, en tot 300 MB op telefoons, in Safari en in Firefox. De verwerking gebeurt volledig in je browser, dus de limiet beschermt het geheugen van je apparaat, niet de bandbreedte van een server — in onze tests duurde een samenvoeging van 500 MB ongeveer 5 seconden op een laptop met 8 GB." }
-      },
-      {
-        "@type": "Question",
-        "name": "Waarom hebben cloudtools een limiet per bestand?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Cloudtools verwerken bestanden op hun servers, wat bandbreedte- en opslagkosten met zich meebrengt. Om die kosten voor gratis gebruikers te beperken, hanteren zij limieten op bestandsgrootte. PDFree verwerkt alles lokaal in je browser, dus er zijn geen serverkosten — en daarom ook geen dagelijkse limiet en geen limiet van 25 MB; één samenvoeging mag op een computer tot 500 MB groot zijn, alleen begrensd om het geheugen van je apparaat te beschermen." }
-      },
-      {
-        "@type": "Question",
-        "name": "Hoe groot mag een PDF zijn die PDFree kan samenvoegen?",
-        "acceptedAnswer": { "@type": "Answer", "text": "500 MB per samenvoeging in Chrome of Edge op een computer met 8 GB+ geheugen, 300 MB op telefoons, in Safari en in Firefox — die browsers geven hun geheugen niet door, dus daar geldt de veilige limiet. In onze tests werkte een samenvoeging van 800 MB met ongeveer 1,5 GB browsergeheugen, dus bij 500 MB blijft er ruimte over voor je andere tabbladen." }
-      },
-      {
-        "@type": "Question",
-        "name": "Wat moet ik doen als mijn browser vastloopt bij het samenvoegen van zeer grote bestanden?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sluit andere browsertabbladen om geheugen vrij te maken en probeer het opnieuw — elk open tabblad gebruikt RAM dat niet meer beschikbaar is voor het samenvoegen. Samenvoegen in kleinere batches (5–10 bestanden tegelijk, en dat resultaat daarna samenvoegen) gebruikt ook minder geheugen tegelijk. Je kunt elk bestand ook eerst comprimeren met de tool PDF Comprimeren om de totale grootte te verkleinen vóór het samenvoegen." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is er een dagelijkse limiet op het aantal samenvoegingen?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Nee. PDFree heeft geen dagelijkse gebruikslimieten. In tegenstelling tot cloudtools met daglimieten in het gratis plan kun je met PDFree zoveel PDF's samenvoegen als nodig, zo vaak als je wilt — gratis." }
-      },
-      {
-        "@type": "Question",
-        "name": "Hoeveel PDF-bestanden kan ik tegelijk samenvoegen?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Er is geen limiet op het aantal bestanden. Je kunt 2, 50, 100 of meer PDF-bestanden in één bewerking samenvoegen, zolang ze samen onder 500 MB blijven op een computer (Chrome/Edge, 8 GB+ RAM) of onder 300 MB op telefoons en in andere browsers." }
-      },
-      {
-        "@type": "Question",
-        "name": "Kan ik gratis 50 of 100 PDF-bestanden tegelijk samenvoegen?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Ja. PDFree heeft geen limiet op het aantal bestanden per samenvoeging en geen dagelijkse gebruikslimiet. Sleep alle bestanden in één keer erin, bepaal de volgorde en klik op Samenvoegen. Het resultaat wordt direct naar je apparaat gedownload — geen upload naar een server nodig." }
-      },
-      {
-        "@type": "Question",
-        "name": "Waarom is het samenvoegen van grote PDF's traag bij cloudtools, maar snel bij PDFree?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Bij cloudtools moet je je bestand naar hun server uploaden, daar laten verwerken en het resultaat downloaden — drie netwerkstappen die bij grote bestanden aanzienlijk tijd kosten. PDFree verwerkt alles lokaal in je browser zonder netwerkoverdracht, dus de snelheid hangt alleen af van de processor van je apparaat, niet van je internetverbinding." }
-      }
+        {
+            "@type": "Question",
+            "name": "Kan ik gratis PDF-bestanden groter dan 100 MB samenvoegen?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ja — tot 500 MB per samenvoeging in Chrome of Edge op een computer met 8 GB+ geheugen, en tot 300 MB op telefoons, in Safari en in Firefox. De verwerking gebeurt volledig in je browser, dus de limiet beschermt het geheugen van je apparaat, niet de bandbreedte van een server — in onze tests duurde een samenvoeging van 500 MB ongeveer 5 seconden op een laptop met 8 GB."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Waarom hebben cloudtools een groottelimiet, maar PDFree niet?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Cloudtools verwerken bestanden op hun servers, wat bandbreedte- en opslagkosten met zich meebrengt. PDFree verwerkt bestanden lokaal in je browser — er zijn geen serverkosten, dus er is geen dagelijkse limiet en geen limiet van 25 MB; één samenvoeging mag op een computer tot 500 MB groot zijn, alleen begrensd om het geheugen van je apparaat te beschermen."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Hoe groot mag een PDF zijn die ik samenvoeg?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "500 MB per samenvoeging in Chrome of Edge op een computer met 8 GB+ geheugen, 300 MB op telefoons, in Safari en in Firefox — die browsers geven hun geheugen niet door, dus daar geldt de veilige limiet. In onze tests werkte een samenvoeging van 800 MB met ongeveer 1,5 GB browsergeheugen, dus bij 500 MB blijft er ruimte over voor je andere tabbladen."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Wat moet ik doen als mijn browser vastloopt bij het samenvoegen van zeer grote bestanden?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sluit andere tabbladen om geheugen vrij te maken en probeer het opnieuw — samenvoegen in kleinere batches (5–10 bestanden tegelijk, en dat resultaat daarna samenvoegen) gebruikt ook minder geheugen tegelijk. Je kunt elk bestand ook eerst comprimeren met de tool PDF Comprimeren om de totale grootte te verkleinen vóór het samenvoegen."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is er een dagelijkse limiet op samenvoegingen?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Nee. In tegenstelling tot cloudtools met daglimieten in het gratis plan heeft PDFree geen dagelijkse limiet. Voeg zoveel PDF's samen als nodig, zo vaak als je wilt."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Hoeveel PDF-bestanden kan ik tegelijk samenvoegen?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Er is geen limiet op het aantal bestanden. PDFree verwerkt alles in het geheugen van je browser, dus je kunt 2, 50 of 100+ PDF-bestanden in één bewerking samenvoegen, zolang ze samen onder 500 MB blijven op een computer (Chrome/Edge, 8 GB+ RAM) of onder 300 MB op telefoons en in andere browsers."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Kan ik gratis 50 of 100 PDF-bestanden tegelijk samenvoegen?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ja, volledig gratis en zonder dagelijkse limiet. In tegenstelling tot cloudtools met daglimieten in het gratis plan heeft PDFree geen gebruiksbeperkingen. Sleep alle 50 of 100 bestanden in één keer erin, bepaal de volgorde en klik op Samenvoegen — het resultaat wordt direct naar je apparaat gedownload, zonder upload naar een server."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Waarom is het samenvoegen van grote PDF's traag bij cloudtools, maar snel bij PDFree?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Bij cloudtools moet je je bestand naar hun server uploaden, daar laten verwerken en het resultaat downloaden — drie netwerkstappen die bij grote bestanden aanzienlijk tijd kosten. PDFree verwerkt alles lokaal in je browser zonder netwerkoverdracht, dus de snelheid hangt alleen af van de processor van je apparaat, niet van je internetverbinding."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -505,6 +529,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Moet ik een account aanmaken?</h3>
             <p style="margin:0;font-size:14px;">Nee. PDFree vereist nooit een account, e-mailadres of registratie. Open de tool en begin direct met samenvoegen.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Waarom is het samenvoegen van grote PDF's traag bij cloudtools, maar snel bij PDFree?</h3>
+            <p style="margin:0;font-size:14px;">Bij cloudtools moet je je bestand naar hun server uploaden, daar laten verwerken en het resultaat downloaden — drie netwerkstappen die bij grote bestanden aanzienlijk tijd kosten. PDFree verwerkt alles lokaal in je browser zonder netwerkoverdracht, dus de snelheid hangt alleen af van de processor van je apparaat, niet van je internetverbinding.</p>
           </div>
         </div>
 

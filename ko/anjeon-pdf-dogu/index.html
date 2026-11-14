@@ -138,28 +138,40 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "PDFree 도구가 파일을 서버에 업로드하나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "아니요. PDFree의 모든 도구는 JavaScript를 사용해 파일을 전적으로 브라우저에서 처리합니다. 파일은 절대 기기를 벗어나지 않으며, 서버에 업로드되지 않고, 브라우저의 임시 메모리 외에는 어디에도 저장되지 않습니다." }
-      },
-      {
-        "@type": "Question",
-        "name": "제 파일이 업로드되지 않는다는 것을 어떻게 확인할 수 있나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "브라우저 DevTools(F12)를 열고 네트워크 탭에서 PDFree 도구를 사용해 보세요. PDF 파일을 담은 요청은 보이지 않습니다. 사이트 실행에 필요한 파일(스크립트, 스타일, 글꼴, 일부 도구의 라이브러리나 언어 모델)과 개인정보 처리방침에 설명된 작은 사용·오류 기술 이벤트가 보입니다. PDF 파일이나 그 내용은 절대 보이지 않습니다." }
-      },
-      {
-        "@type": "Question",
-        "name": "GDPR 관점에서 PDFree는 내 데이터를 어떻게 다루나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "PDF 파일은 브라우저에서 처리되며 당사 서버에 업로드되지 않으므로 당사는 그 내용을 갖지 않습니다. 사이트는 개인정보 처리방침에 설명된 대로 쿠키나 영구 식별자 없이 사용 및 오류에 관한 제한된 기술 정보를 수집합니다. 당사는 준수를 인증하지 않습니다. 어떤 작업 방식이 GDPR 의무를 충족하는지는 귀하의 조직이 판단해야 합니다." }
-      },
-      {
-        "@type": "Question",
-        "name": "HIPAA 규제 대상 문서에 PDFree를 사용할 수 있나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "PDF 파일은 브라우저에서 처리되며 당사 서버에 업로드되지 않습니다. 당사는 HIPAA 준수를 인증하지 않으며 BAA를 체결하지 않습니다. 환자 기록에 PDFree를 쓰는 것이 의무에 맞는지는 귀하의 조직이 결정합니다." }
-      }
+        {
+            "@type": "Question",
+            "name": "PDFree 도구가 파일을 서버에 업로드하나요?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "아니요. PDFree의 모든 도구는 브라우저에서 전적으로 파일을 처리합니다. 파일은 서버로 전송되거나, 어딘가에 저장되거나, 어떤 방식으로든 기록되지 않습니다."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "제 파일이 업로드되지 않는다는 것을 어떻게 확인할 수 있나요?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "브라우저 DevTools(F12)를 열고 네트워크 탭에서 PDFree 도구를 사용해 보세요. PDF 파일을 담은 요청은 보이지 않습니다. 사이트 실행에 필요한 파일(스크립트, 스타일, 글꼴, 일부 도구의 라이브러리나 언어 모델)과 개인정보 처리방침에 설명된 작은 사용·오류 기술 이벤트가 보입니다. PDF 파일이나 그 내용은 절대 보이지 않습니다."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "GDPR 관점에서 PDFree는 내 데이터를 어떻게 다루나요?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "PDF 파일은 브라우저에서 처리되며 당사 서버에 업로드되지 않으므로 당사는 그 내용을 갖지 않습니다. 사이트는 개인정보 처리방침에 설명된 대로 쿠키나 영구 식별자 없이 사용 및 오류에 관한 제한된 기술 정보를 수집합니다. 당사는 준수를 인증하지 않습니다. 어떤 작업 방식이 GDPR 의무를 충족하는지는 귀하의 조직이 판단해야 합니다."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "HIPAA 규제 대상 진료 기록에 PDFree를 사용할 수 있나요?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "PDF 파일은 브라우저에서 처리되며 당사 서버에 업로드되지 않습니다. 당사는 HIPAA 준수를 인증하지 않으며 BAA를 체결하지 않습니다. 환자 기록에 PDFree를 쓰는 것이 의무에 맞는지는 귀하의 조직이 결정합니다."
+            }
+        }
     ]
-  }
+}
   </script>
   <script type="application/ld+json">
   {
@@ -348,11 +360,15 @@
           </div>
           <div style="border-bottom:1px solid var(--border);padding-bottom:20px;">
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">HIPAA 규제 대상 진료 기록에 PDFree를 사용할 수 있나요?</h3>
-            <p style="margin:0;font-size:14px;">네. PDFree의 아키텍처는 보호 대상 건강 정보(PHI)가 외부로 전송되는 일이 전혀 없도록 보장합니다. 의료 전문가는 환자 기록을 전적으로 브라우저에서 안전하게 처리할 수 있습니다.</p>
+            <p style="margin:0;font-size:14px;">PDF 파일은 브라우저에서 처리되며 당사 서버에 업로드되지 않습니다. 당사는 HIPAA 준수를 인증하지 않으며 BAA를 체결하지 않습니다. 환자 기록에 PDFree를 쓰는 것이 의무에 맞는지는 귀하의 조직이 결정합니다.</p>
           </div>
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">PDFree는 iLovePDF나 SmallPDF와 어떻게 다른가요?</h3>
             <p style="margin:0;font-size:14px;">iLovePDF와 SmallPDF는 처리를 위해 파일을 자사 서버에 업로드합니다. PDFree는 전적으로 브라우저에서 실행됩니다 — 파일이 기기를 벗어나지 않습니다. 또한 PDFree에는 일일 사용 제한도 없습니다.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">제 파일이 업로드되지 않는다는 것을 어떻게 확인할 수 있나요?</h3>
+            <p style="margin:0;font-size:14px;">브라우저 DevTools(F12)를 열고 네트워크 탭에서 PDFree 도구를 사용해 보세요. PDF 파일을 담은 요청은 보이지 않습니다. 사이트 실행에 필요한 파일(스크립트, 스타일, 글꼴, 일부 도구의 라이브러리나 언어 모델)과 개인정보 처리방침에 설명된 작은 사용·오류 기술 이벤트가 보입니다. PDF 파일이나 그 내용은 절대 보이지 않습니다.</p>
           </div>
         </div>
 

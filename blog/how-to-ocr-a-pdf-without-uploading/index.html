@@ -115,28 +115,40 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Does OCR require uploading my PDF to a server?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. PDFree runs Tesseract.js — an open-source OCR engine compiled to WebAssembly — directly in your browser. Text recognition happens on your own device's CPU. The scanned file and the recognized text never travel over the network." }
-      },
-      {
-        "@type": "Question",
-        "name": "How accurate is browser-based OCR compared to server-side OCR?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Tesseract.js is the same open-source OCR engine (Tesseract) used by many server-side tools, just compiled to run in the browser. Accuracy depends mainly on scan quality — a clean 300 DPI scan typically recognizes at 95%+ character accuracy for printed text, whether the engine runs locally or on a server." }
-      },
-      {
-        "@type": "Question",
-        "name": "What languages does PDFree's OCR support?",
-        "acceptedAnswer": { "@type": "Answer", "text": "18 languages: English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish, Arabic, Japanese, Chinese (Simplified and Traditional), Korean, Hindi, and Thai." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is there a file size or page limit?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No artificial limit is imposed by PDFree. The practical limit is your device's available memory — very large scanned documents (hundreds of pages) may take longer since recognition runs page by page on your own hardware." }
-      }
+        {
+            "@type": "Question",
+            "name": "Does OCR require uploading my PDF to a server?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. PDFree runs Tesseract.js — an open-source OCR engine compiled to WebAssembly — directly in your browser. Text recognition happens on your own device's CPU. The scanned file and the recognized text never travel over the network."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How accurate is browser-based OCR compared to server-side OCR?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tesseract.js is the same open-source OCR engine (Tesseract) used by many server-side tools, just compiled to run in the browser. Accuracy depends mainly on scan quality — a clean 300 DPI scan typically recognizes at 95%+ character accuracy for printed text, whether the engine runs locally or on a server."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What languages does PDFree's OCR support?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "18 languages: English, French, German, Spanish, Italian, Portuguese, Russian, Uzbek, Dutch, Polish, Turkish, Arabic, Japanese, Chinese (Simplified and Traditional), Korean, Hindi, and Thai."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is there a file size or page limit?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No artificial limit is imposed by PDFree. The practical limit is your device's available memory — very large scanned documents (hundreds of pages) may take longer since recognition runs page by page on your own hardware."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">

@@ -9,6 +9,7 @@
 //  Run: node tests/e2e/pdf2jpg-cbz.e2e.mjs   (dist/ served on :8934)
 // ============================================================
 
+import { readFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -48,6 +49,27 @@ try {
     if (r.type !== 'application/vnd.comicbook+zip') throw new Error(`type ${r.type}`);
     if (r.names.join() !== '001.jpg,002.jpg,003.jpg,004.jpg,005.jpg') throw new Error(r.names.join());
     if (!r.jpeg) throw new Error('not a JPEG inside');
+  });
+  await test('keyboard selection downloads only page 2 as JPEG', async () => {
+    const context = await browser.newContext({ serviceWorkers: 'block', acceptDownloads: true });
+    try {
+      const page = await context.newPage();
+      await page.goto(BASE_URL + '/pdf2jpg/');
+      await page.setInputFiles('#fileInput', path.join(__dirname, '..', 'fixtures', 'normal-3page.pdf'));
+      await page.locator('#p2jNone').click();
+      const thumbnail = page.getByRole('button', { name: 'Page 2', exact: true });
+      await thumbnail.press('Space');
+      if (await thumbnail.getAttribute('aria-pressed') !== 'true') throw new Error('Page 2 was not selected');
+      const [download] = await Promise.all([
+        page.waitForEvent('download', { timeout: 30000 }),
+        page.locator('#mergeBtn').click(),
+      ]);
+      if (download.suggestedFilename() !== 'normal-3page-page2.jpg') throw new Error(download.suggestedFilename());
+      const bytes = await readFile(await download.path());
+      if (bytes[0] !== 0xff || bytes[1] !== 0xd8) throw new Error('Expected JPEG bytes');
+    } finally {
+      await context.close();
+    }
   });
 } finally {
   await browser.close();

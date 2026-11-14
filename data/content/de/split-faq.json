@@ -52,7 +52,7 @@
     "name": "Kann ich ein PDF offline aufteilen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. PDFree ist eine Progressive Web App und funktioniert vollständig offline, sobald die Seite in deinem Browser geladen wurde. Es ist keine Internetverbindung erforderlich, um Seiten zu teilen oder zu extrahieren."
+      "text": "Ja. PDFree ist eine Progressive Web App und funktioniert nach dem Laden im Browser vollständig offline. Für das Aufteilen oder Extrahieren von Seiten ist keine Internetverbindung erforderlich."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "Kann ich mehrere PDFs gleichzeitig aufteilen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nicht als Batch — PDFree verarbeitet jeweils eine Datei. Das Tool kann in einem neuen Tab geöffnet werden, um eine zweite Datei parallel zu teilen. PDFree funktioniert auch offline als Progressive Web App, sodass kein Warten auf das Netzwerk nötig ist."
+      "text": "Nicht als Batch — PDFree verarbeitet jeweils eine Datei. Das Tool kann in einem neuen Tab geöffnet werden, um eine zweite Datei parallel zu teilen. PDFree funktioniert auch offline, sodass kein Warten auf das Netzwerk nötig ist."
     }
   },
   {

@@ -12,6 +12,8 @@
 import { registerTool } from './toolRegistry.js';
 import { id, esc }      from './utils.js';
 import { t }             from './i18n.js';
+import { copyText }      from './quickEditCopyText.js';
+import { RECIPIENT_LIMIT } from './quickEditRecipients.js';
 import { getWmRemove, wmRemoveHtml, bindWmRemove, resetWmRemove } from './watermarkRemoveUI.js';
 import { checkbox, chipGroup } from './uiComponents.js';
 import { mergeOrderHtml, bindMergeOrder, getMergeOrder, resetMergeOrder } from './mergeOrderUI.js';
@@ -148,6 +150,11 @@ function _filenameHtml() {
 function _bindFilenameInput() {
   const input = document.getElementById('mergeFilenameInput');
   if (!input) return;
+  // The default name selected on entry, so typing replaces it: 39 people in a
+  // week clicked this field three times in a second (Rage Click, 2026-11-11) —
+  // a triple click is how a whole name gets selected to be retyped.
+  input.addEventListener('focus', () => { if (!_outputNameTouched) input.select(); });
+  input.addEventListener('mouseup', e => { if (!_outputNameTouched && input.selectionStart === 0 && input.selectionEnd === input.value.length) e.preventDefault(); });
   input.addEventListener('input', () => {
     _outputStem        = input.value;
     _outputNameTouched = input.value.trim().length > 0;
@@ -321,7 +328,8 @@ registerTool('compress', {
     // found zero removable items the operation will produce negligible results.
     // Single file only: the scan covers selectedFiles[0] alone, so for a batch
     // it can't vouch for the other files (see compressUI.js's auto-select).
-    if (scan && p.preset === 'low' && scan.opportunities === 0 && selectedFiles.length === 1) {
+    if (p.targetMissing) return t('compress_target_enter');
+    if (scan && p.preset === 'low' && scan.opportunities === 0 && selectedFiles.length === 1 && !p.targetSizeMb) {
       return t('val_light_no_savings');
     }
     return null;
@@ -386,9 +394,20 @@ registerTool('watermark', {
   init:       initWatermarkOptions,
   hide:       hideWatermarkOptions,
   getParams:  getWatermarkParams,
-  validate:   p => p.kind === 'image'
-    ? (!p.bytes ? t('val_wm_upload_logo') : null)
-    : (!p.text?.trim() ? t('val_wm_enter_text') : null),
+  validate:   p => {
+    if (p.kind === 'image') return !p.bytes ? t('val_wm_upload_logo') : null;
+    if (!p.text?.trim()) return t('val_wm_enter_text');
+    // Personalized copies: a list within the limit and {name} in the text;
+    // {name} without copies would print the token itself
+    if (p.copies) {
+      if (!p.copies.length) return copyText('Add at least one name to the list.', '请至少在名单中添加一个姓名。');
+      if (p.copies.length > RECIPIENT_LIMIT) return copyText(`Up to ${RECIPIENT_LIMIT} names per run.`, `每次最多 ${RECIPIENT_LIMIT} 个姓名。`);
+      if (!p.text.includes('{name}')) return copyText('Write {name} in the watermark text — each copy puts one name there.', '请在水印文字中写入 {name}，每份副本会在此处填入一个姓名。');
+    } else if (p.text.includes('{name}')) {
+      return copyText('Turn on personalized copies, or remove {name} from the text.', '请开启个性化副本，或从文字中删除 {name}。');
+    }
+    return null;
+  },
   // Image-mode watermarks carry the logo's raw bytes — not practical to
   // persist in localStorage, so image mode simply isn't remembered.
   // fromPage/toPage deliberately excluded — a remembered page range is

@@ -1,8 +1,8 @@
 <div class="seo-content" style="max-width:800px;margin:60px auto 40px;padding:0 24px;color:var(--text2);line-height:1.75;">
 
         <h1 id="seoH1_quick-edit-pdf" style="font-size:clamp(22px,3.5vw,30px);color:var(--text);margin:0 0 16px;font-weight:700;">Quick Edit PDF — Fix a Typo Without Leaving Your Browser</h1>
-        <p style="font-size:15px;margin:0 0 12px;">Need to fix a typo, a date, or a name inside a PDF — without opening Word, without a subscription, without uploading the file anywhere? Quick Edit PDF reads your PDF, turns its text into a real editable document in your browser, lets you click any line and retype it, then rebuilds a real PDF with your change — all on your own device.</p>
-        <p style="font-size:12px;margin:0 0 40px;color:var(--text3);">Built for small text fixes, not a full rewrite: retype a word, a line, a paragraph fragment. Adding or removing whole paragraphs, restructuring tables, or reflowing layout isn't supported — see the FAQ below for exactly what this tool is and isn't for. Last verified: September 2026.</p>
+        <p style="font-size:15px;margin:0 0 12px;">Need to fix a typo, a date, or a name inside a PDF — without opening Word, without a subscription, without uploading the file anywhere? Quick Edit PDF opens your PDF's own pages, lets you tap any line and retype it, then replaces just that line's text in the original file — every other page, picture and line stays as it was. All on your own device.</p>
+        <p style="font-size:12px;margin:0 0 40px;color:var(--text3);">Built for small text fixes, not a full rewrite: retype a word, a line, a paragraph fragment. Adding or removing whole paragraphs, restructuring tables, or reflowing layout isn't supported — see the FAQ below for exactly what this tool is and isn't for. Last verified: November 2026.</p>
 
         <!-- How to use -->
         <h2 style="font-size:22px;color:var(--text);margin:0 0 20px;font-weight:700;">How to Edit Text in a PDF in 3 Steps</h2>
@@ -11,21 +11,21 @@
           <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">1</div>
           <div>
             <strong style="color:var(--text);font-size:15px;">Open your PDF</strong>
-            <p style="margin:6px 0 0;font-size:14px;">Click <strong>Choose file</strong> or drag your PDF into the drop zone. PDFree reads the document's text and checks how cleanly it can be turned into an editable version.</p>
+            <p style="margin:6px 0 0;font-size:14px;">Click <strong>Choose file</strong> or drag your PDF into the drop zone. Its pages open as they are.</p>
           </div>
         </div>
         <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
           <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
           <div>
             <strong style="color:var(--text);font-size:15px;">Click the text you want to fix</strong>
-            <p style="margin:6px 0 0;font-size:14px;">A real editable preview of your document opens. Click any line, paragraph, heading, or table cell, retype it, and press Enter — the rest of the document stays exactly as it was.</p>
+            <p style="margin:6px 0 0;font-size:14px;">Your PDF's pages open as they are. Tap any line, retype it, and press Enter; the new text must fit the space of that line. Use the page arrows to reach any page, and the zoom button on a phone.</p>
           </div>
         </div>
         <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
           <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">3</div>
           <div>
             <strong style="color:var(--text);font-size:15px;">Save and download</strong>
-            <p style="margin:6px 0 0;font-size:14px;">Click <strong>Save</strong>. Your edits are rebuilt into a real PDF and download immediately.</p>
+            <p style="margin:6px 0 0;font-size:14px;">Click <strong>Save</strong>. PDFree removes the old text of each edited line, writes the new text in its place, reads every changed page back to check it, and the PDF downloads.</p>
           </div>
         </div>
 
@@ -41,14 +41,14 @@
           <p style="margin:6px 0 0;font-size:14px;">Adding or deleting whole paragraphs, inserting new table rows, changing page layout, or reflowing text — this tool edits existing text in place, it doesn't restructure a document. For that level of editing, convert to Word first (see PDF to Word below), edit fully there, then convert back.</p>
         </div>
         <div style="border-left:3px solid var(--green);padding:12px 16px;margin-bottom:16px;background:var(--surface);">
-          <strong style="color:var(--text);font-size:15px;">Automatically blocked when unsafe</strong>
-          <p style="margin:6px 0 0;font-size:14px;">Before the editor opens, PDFree scores how cleanly the PDF's structure converted. If a document is too damaged to safely edit — heavily scanned pages, unusual layouts — the tool blocks the editor and points you to the full PDF to Word converter instead, rather than risk shipping a PDF built on broken structure.</p>
+          <strong style="color:var(--text);font-size:15px;">When a file can't be edited in place</strong>
+          <p style="margin:6px 0 0;font-size:14px;">A scan has no text to change, and fillable forms and signed PDFs aren't edited in place. Arabic, Persian and Hebrew text isn't edited in place yet — such files open in the previous editor. For a file with text, <strong>Use the previous editor</strong> rebuilds the document as editable text instead; before that editor opens, PDFree scores how cleanly the structure converted and, if it's too damaged, points you to PDF to Word rather than risk a PDF built on broken structure.</p>
         </div>
 
         <!-- Privacy -->
         <h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">Why Edit Here Instead of a Cloud Tool?</h2>
         <p style="font-size:14px;margin:0 0 16px;">Most online PDF editors upload your file to a remote server to make it editable, then send back a result. A contract, a signed form, an ID scan, an internal memo — whatever is in the PDF briefly exists on hardware you don't control, and some services keep a copy.</p>
-        <p style="font-size:14px;margin:0 0 32px;">PDFree works differently. Your PDF is read, rendered into an editable form, and rebuilt entirely inside your own browser. No server receives it — not even PDFree's own servers.</p>
+        <p style="font-size:14px;margin:0 0 32px;">PDFree works differently. Your PDF is read and edited entirely inside your own browser. No server receives it — not even PDFree's own servers.</p>
 
         <!-- Comparison table -->
         <h2 style="font-size:22px;color:var(--text);margin:0 0 16px;font-weight:700;">How PDFree Differs from Cloud Editors</h2>
@@ -96,7 +96,7 @@
 
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Is my PDF uploaded anywhere to edit it?</h3>
-          <p style="margin:0;font-size:14px;">No. The whole process — reading the PDF, rendering it as editable text, and rebuilding the edited PDF — runs entirely in your browser. Your document never leaves your device.</p>
+          <p style="margin:0;font-size:14px;">No. The whole process — opening the PDF, replacing the edited lines and checking the result — runs entirely in your browser. Your document never leaves your device.</p>
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I add new paragraphs or delete a table row?</h3>
@@ -104,11 +104,11 @@
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Why did it say my PDF can't be edited here?</h3>
-          <p style="margin:0;font-size:14px;">Before opening the editor, PDFree checks how cleanly your PDF's structure converts to an editable form. Scanned documents, unusual layouts, or heavily damaged text extraction can score too low to safely edit — rather than let you edit on top of broken structure and risk a worse result, the tool blocks the editor and suggests the full PDF to Word converter instead.</p>
+          <p style="margin:0;font-size:14px;">A file with text opens on its own pages, where you edit it in place. A scan has no text to change; fillable forms and signed PDFs aren't edited in place. The previous editor, which rebuilds the document as editable text, first checks how cleanly your PDF's structure converts — scanned documents, unusual layouts or damaged text extraction can score too low to edit safely, and then it suggests the full PDF to Word converter instead.</p>
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Does editing change the formatting of the rest of the document?</h3>
-          <p style="margin:0;font-size:14px;">No — only the exact text you click and retype changes. Bold, italic, headings, list numbering, and table structure elsewhere in the document are untouched.</p>
+          <p style="margin:0;font-size:14px;">No. Only the text of the lines you retype changes: their old text is removed and the new text is written in the same place. Pictures, other lines and other pages stay as they were, and every changed page is read back before you download it.</p>
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Does PDFree store or log my files after processing?</h3>
@@ -117,6 +117,14 @@
         <div style="margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Is this a free PDF editor with no sign up?</h3>
           <p style="margin:0;font-size:14px;">Yes. PDFree is completely free — no sign up, no account, no installation. Open the tool, load your PDF, click the text you want to fix, and download the result.</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I find and replace text on every page?</h3>
+          <p style="margin:0;font-size:14px;">Yes. Type the text in Find and what should stand there in Replace with — leave it empty to remove the text, such as a line repeated at the foot of every page. PDFree shows how many it found and on how many pages, and Replace all changes them in the original PDF. A match has to sit within one line, and the new text has to fit the space of its line; a line that can't be changed in place is left as it was, and its page is named.</p>
+        </div>
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Can I create one PDF per recipient from a list of names?</h3>
+          <p style="margin:0;font-size:14px;">Yes. Choose Personalized PDF copies in Quick Edit PDF before opening a file. Paste the names or import an Excel or CSV list, mark where the name goes, then download the PDFs as a ZIP. To add a watermark as well, turn on Also add a watermark to each copy: write {name} in its text, such as Copy for {name}, and each copy gets its recipient's name there too. Try an example to follow the same steps with a sample PDF and two fictional recipients.</p>
         </div>
 
         <!-- Related tools -->

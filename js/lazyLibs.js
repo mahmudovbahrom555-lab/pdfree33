@@ -78,7 +78,7 @@ export function loadJSZip() {
   return _load(
     'jsZip',
     new URL('./vendor/jszip.min.js', import.meta.url).href,
-    'sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG',
+    'sha384-DdGlNq+wVXAn83gXqwyeFHB7iyXy6L0rLrNzgDmhKWPjiJLg9vj6qosYmZmkMfQ+',
   );
 }
 
@@ -124,6 +124,11 @@ async function _loadDocxWithFallback() {
 
 // A two-URL fallback chain (jsdelivr → unpkg): if the first CDN is down or
 // slow, the second is tried; on total failure the cached promise is cleared.
+export function loadExcelReader() {
+  if (window.readXlsxFile) return Promise.resolve();
+  return _load('Excel reader', new URL('./vendor/read-excel-file-9.3.14/read-excel-file.min.js', import.meta.url).href);
+}
+
 export function loadExcelJs() {
   if (window.ExcelJS) return Promise.resolve();
   if (_promises['excelJs']) return _promises['excelJs'];

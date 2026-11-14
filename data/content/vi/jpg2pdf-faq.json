@@ -4,7 +4,7 @@
     "name": "Định dạng ảnh nào có thể chuyển sang PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "JPG và PNG được hỗ trợ đầy đủ, cũng như WebP. Mỗi ảnh trở thành một trang trong PDF kết quả."
+      "text": "PDFree hỗ trợ JPG/JPEG, PNG và WebP. Mỗi ảnh trở thành một trang trong PDF kết quả."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Ảnh của tôi có bị tải lên đâu đó không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Không. Quá trình chuyển đổi diễn ra hoàn toàn trong trình duyệt. File ảnh không bao giờ được gửi đến bất kỳ server nào."
+      "text": "Không. Tất cả xử lý diễn ra trong trình duyệt bằng thư viện JavaScript pdf-lib. Ảnh được tải vào bộ nhớ trình duyệt và không bao giờ được truyền đi."
     }
   },
   {

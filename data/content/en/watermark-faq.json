@@ -28,7 +28,7 @@
     "name": "Can I add an image watermark (logo)?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. Switch to Logo mode in the watermark tool and upload a PNG or JPG. It uses the same opacity, size, and position controls as the text watermark, and PNGs with a transparent background are supported."
+      "text": "Yes. Switch to Logo mode and upload a PNG or JPG — your company logo, a signature stamp, anything. Size, opacity, and position work the same way as with a text watermark."
     }
   },
   {
@@ -84,7 +84,7 @@
     "name": "What is the difference between a watermark and a stamp on a PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "The terms are often used interchangeably. A watermark is typically a semi-transparent text that repeats diagonally across every page (e.g. DRAFT at 30% opacity). A stamp is usually an opaque label placed once in a fixed position (e.g. APPROVED in a corner). PDFree lets you achieve either look by adjusting the opacity and position of the text watermark."
+      "text": "The terms are often used interchangeably. A watermark is typically a semi-transparent text or image that repeats diagonally across every page (e.g. DRAFT at 30% opacity). A stamp is usually an opaque label placed once in a fixed position (e.g. APPROVED in a corner). PDFree lets you achieve either look by adjusting the opacity and position of the text watermark."
     }
   },
   {
@@ -100,7 +100,7 @@
     "name": "Can I create a personalized copy for each recipient (e.g. with their name or email)?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Not yet. Today, watermarking multiple files applies the same text or logo to every file. A separate \"batch personalization\" mode — a unique copy per recipient, useful for tracing where a leaked confidential document came from — is being considered but isn't built. Click \"I'd use this\" in the watermark tool's options panel to let us know it matters to you."
+      "text": "Yes. Turn on \"Personalized copies\" in the watermark options and write {name} in the watermark text (for example \"Confidential — {name}\"). Paste the names, one per line, or import them from an Excel or CSV file. PDFree makes one PDF per name, with that name in the watermark, and downloads them together as a ZIP — up to 100 names per run. Everything runs in your browser; the list stays on your device. Names in a script the watermark font lacks, such as Chinese, are drawn as an image."
     }
   },
   {

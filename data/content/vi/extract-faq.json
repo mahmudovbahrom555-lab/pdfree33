@@ -20,7 +20,7 @@
     "name": "Có thể chọn các trang không liền nhau không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Có. Chọn trang riêng lẻ (ví dụ: 1, 3, 7) hoặc kết hợp phạm vi và trang đơn (ví dụ: 1-3, 5, 8-10) trong một thao tác."
+      "text": "Có. Chọn trang riêng lẻ (ví dụ: 1, 3, 7) hoặc kết hợp phạm vi và trang đơn (ví dụ: 1–3, 5, 8–10) trong một thao tác."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Font và hình ảnh có được bảo toàn khi trích xuất không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Có. PDFree dùng pdf-lib sao chép trang ở cấp độ đối tượng PDF. Tất cả font, hình ảnh và định dạng được bảo toàn chính xác như bản gốc."
+      "text": "Có. PDFree dùng pdf-lib sao chép trang ở cấp độ đối tượng PDF — tất cả font, hình ảnh và định dạng được bảo toàn chính xác như bản gốc."
     }
   },
   {

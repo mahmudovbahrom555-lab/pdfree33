@@ -138,28 +138,40 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "¿Alguna herramienta de PDFree sube archivos a un servidor?",
-        "acceptedAnswer": { "@type": "Answer", "text": "No. Cada herramienta de PDFree procesa los archivos por completo en tu navegador usando JavaScript. Tus archivos nunca salen de tu dispositivo, nunca se suben a ningún servidor y nunca se almacenan fuera de la memoria temporal de tu navegador." }
-      },
-      {
-        "@type": "Question",
-        "name": "¿Cómo puedo verificar que mis archivos no se están subiendo?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Abre las DevTools de tu navegador (F12), ve a la pestaña Red y usa cualquier herramienta de PDFree. No verás ninguna solicitud con tu archivo PDF. Verás los archivos que el sitio necesita para funcionar (scripts, estilos, fuentes y, en algunas herramientas, bibliotecas o modelos de idioma) y pequeños eventos técnicos de uso y errores descritos en nuestra Política de privacidad — nunca tu archivo PDF ni su contenido." }
-      },
-      {
-        "@type": "Question",
-        "name": "¿Qué hace PDFree con mis datos según el RGPD?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Tus archivos PDF se procesan en tu navegador y no se suben a nuestros servidores, así que no tenemos su contenido. El sitio recoge información técnica limitada de uso y errores sin cookies ni identificadores persistentes, como describe nuestra Política de privacidad. No certificamos el cumplimiento: si un flujo de trabajo cumple tus obligaciones del RGPD lo debe evaluar tu organización." }
-      },
-      {
-        "@type": "Question",
-        "name": "¿Puedo usar PDFree para documentos regulados por HIPAA?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Tus archivos PDF se procesan en tu navegador y no se suben a nuestros servidores. No certificamos el cumplimiento de HIPAA ni firmamos BAA; si usar PDFree para historiales de pacientes encaja con tus obligaciones lo decide tu organización." }
-      }
+        {
+            "@type": "Question",
+            "name": "¿Alguna herramienta de PDFree sube archivos a un servidor?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Cada herramienta de PDFree procesa los archivos por completo en tu navegador. Tus archivos nunca se envían a ningún servidor, se almacenan en ningún sitio ni se registran de ninguna forma."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "¿Cómo puedo verificar que mis archivos no se están subiendo?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Abre las DevTools de tu navegador (F12), ve a la pestaña Red y usa cualquier herramienta de PDFree. No verás ninguna solicitud con tu archivo PDF. Verás los archivos que el sitio necesita para funcionar (scripts, estilos, fuentes y, en algunas herramientas, bibliotecas o modelos de idioma) y pequeños eventos técnicos de uso y errores descritos en nuestra Política de privacidad — nunca tu archivo PDF ni su contenido."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "¿Qué hace PDFree con mis datos según el RGPD?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tus archivos PDF se procesan en tu navegador y no se suben a nuestros servidores, así que no tenemos su contenido. El sitio recoge información técnica limitada de uso y errores sin cookies ni identificadores persistentes, como describe nuestra Política de privacidad. No certificamos el cumplimiento: si un flujo de trabajo cumple tus obligaciones del RGPD lo debe evaluar tu organización."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "¿Puedo usar PDFree para historiales médicos regulados por HIPAA?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tus archivos PDF se procesan en tu navegador y no se suben a nuestros servidores. No certificamos el cumplimiento de HIPAA ni firmamos BAA; si usar PDFree para historiales de pacientes encaja con tus obligaciones lo decide tu organización."
+            }
+        }
     ]
-  }
+}
   </script>
   <script type="application/ld+json">
   {
@@ -326,6 +338,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿En qué se diferencia PDFree de las herramientas PDF en la nube?</h3>
             <p style="margin:0;font-size:14px;">Las herramientas PDF en la nube suben tus archivos a sus servidores para procesarlos. PDFree se ejecuta por completo en tu navegador — tus archivos nunca salen de tu dispositivo. PDFree tampoco tiene restricciones de uso diario, y su tope de tamaño (hasta 500 MB en un ordenador) solo protege la memoria de tu dispositivo.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">¿Cómo puedo verificar que mis archivos no se están subiendo?</h3>
+            <p style="margin:0;font-size:14px;">Abre las DevTools de tu navegador (F12), ve a la pestaña Red y usa cualquier herramienta de PDFree. No verás ninguna solicitud con tu archivo PDF. Verás los archivos que el sitio necesita para funcionar (scripts, estilos, fuentes y, en algunas herramientas, bibliotecas o modelos de idioma) y pequeños eventos técnicos de uso y errores descritos en nuestra Política de privacidad — nunca tu archivo PDF ni su contenido.</p>
           </div>
         </div>
 

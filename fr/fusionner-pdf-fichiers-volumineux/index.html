@@ -125,48 +125,72 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Puis-je fusionner gratuitement des fichiers PDF de plus de 100 Mo ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Oui — jusqu'à 500 Mo par fusion dans Chrome ou Edge sur un ordinateur doté d'au moins 8 Go de mémoire, et 300 Mo sur téléphone, Safari et Firefox. Le traitement se fait entièrement dans votre navigateur : cette limite protège la mémoire de votre appareil, ce n'est ni un plafond d'envoi ni une offre payante." }
-      },
-      {
-        "@type": "Question",
-        "name": "Pourquoi les outils cloud ont-ils une limite par fichier ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Les outils cloud traitent les fichiers sur leurs serveurs, ce qui engendre des coûts de bande passante et de stockage. Pour maîtriser ces coûts pour les utilisateurs gratuits, le service impose des limites de taille de fichier. PDFree traite tout localement dans votre navigateur, il n'y a donc aucun coût serveur — et par conséquent ni limite quotidienne ni plafond à 25 Mo ; une fusion peut atteindre 500 Mo sur ordinateur, une limite qui ne sert qu'à protéger la mémoire de votre appareil." }
-      },
-      {
-        "@type": "Question",
-        "name": "Quelle taille de PDF PDFree peut-il fusionner ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "500 Mo par fusion dans Chrome ou Edge sur un ordinateur doté d'au moins 8 Go de mémoire, 300 Mo sur téléphone, Safari et Firefox — ces derniers n'indiquent pas leur mémoire, ils reçoivent donc la limite prudente. Dans nos tests, une fusion de 800 Mo a abouti avec environ 1,5 Go de mémoire du navigateur : 500 Mo laisse donc de la place pour vos autres onglets." }
-      },
-      {
-        "@type": "Question",
-        "name": "Que faire si mon navigateur plante en fusionnant des fichiers très volumineux ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Fermez les autres onglets du navigateur pour libérer de la mémoire, puis réessayez — chaque onglet ouvert utilise de la RAM qui n'est plus disponible pour la fusion. Fusionner par petits lots (5 à 10 fichiers à la fois, puis fusionner les résultats) utilise également moins de mémoire à la fois. Vous pouvez aussi compresser chaque fichier au préalable avec l'outil Compresser PDF pour réduire la taille totale avant la fusion." }
-      },
-      {
-        "@type": "Question",
-        "name": "Y a-t-il une limite quotidienne sur le nombre de PDF que je peux fusionner ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Non. PDFree n'impose aucune limite d'utilisation quotidienne. Contrairement aux outils cloud qui limitent l'usage gratuit par jour, PDFree vous permet de fusionner autant de PDF que nécessaire, aussi souvent que vous le souhaitez, gratuitement." }
-      },
-      {
-        "@type": "Question",
-        "name": "Combien de fichiers PDF puis-je fusionner en une seule fois ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Il n'y a aucune limite sur le nombre de fichiers. Vous pouvez fusionner 2, 50, 100 fichiers PDF ou plus en une seule opération. Les fichiers d'une même fusion peuvent totaliser jusqu'à 500 Mo sur ordinateur (Chrome/Edge, 8 Go de RAM ou plus) ou 300 Mo sur téléphone ; PDFree traite tout dans la mémoire de votre navigateur." }
-      },
-      {
-        "@type": "Question",
-        "name": "Puis-je fusionner gratuitement 50 ou 100 fichiers PDF en une seule fois ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Oui. PDFree n'impose aucune limite sur le nombre de fichiers par fusion ni aucun plafond d'utilisation quotidien. Déposez tous vos fichiers à la fois, organisez l'ordre, puis cliquez sur Fusionner. Le résultat se télécharge directement sur votre appareil — aucun envoi vers un serveur n'est requis." }
-      },
-      {
-        "@type": "Question",
-        "name": "Pourquoi la fusion de gros PDF est-elle lente sur les outils cloud mais rapide sur PDFree ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Les outils cloud exigent d'envoyer votre fichier vers leur serveur, de le traiter là-bas, puis de télécharger le résultat — trois allers-retours réseau qui ajoutent un temps considérable pour les gros fichiers. PDFree traite tout localement dans votre navigateur sans transfert réseau, la vitesse ne dépend donc que du processeur de votre appareil, pas de votre connexion internet." }
-      }
+        {
+            "@type": "Question",
+            "name": "Puis-je fusionner gratuitement des fichiers PDF de plus de 100 Mo ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Oui — jusqu'à 500 Mo par fusion dans Chrome ou Edge sur un ordinateur doté d'au moins 8 Go de mémoire, et 300 Mo sur téléphone, Safari et Firefox. Le traitement se fait entièrement dans votre navigateur : cette limite protège la mémoire de votre appareil, ce n'est ni un plafond d'envoi ni une offre payante."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Pourquoi les outils cloud ont-ils une limite de taille, mais pas PDFree ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Les outils cloud traitent les fichiers sur leurs serveurs, ce qui crée des coûts réels de bande passante et de stockage. PDFree traite les fichiers localement dans votre navigateur — il n'y a aucun coût serveur, donc ni limite quotidienne ni plafond à 25 Mo ; une fusion peut atteindre 500 Mo sur ordinateur, une limite qui ne sert qu'à protéger la mémoire de votre appareil."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Quelle taille de PDF puis-je fusionner ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "500 Mo par fusion dans Chrome ou Edge sur un ordinateur doté d'au moins 8 Go de mémoire, 300 Mo sur téléphone, Safari et Firefox — ces derniers n'indiquent pas leur mémoire, ils reçoivent donc la limite prudente. Dans nos tests, une fusion de 800 Mo a abouti avec environ 1,5 Go de mémoire du navigateur : 500 Mo laisse donc de la place pour vos autres onglets."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Que faire si mon navigateur plante en fusionnant des fichiers très volumineux ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Fermez les autres onglets pour libérer de la mémoire, puis réessayez — fusionner par petits lots (5 à 10 fichiers à la fois, puis fusionner les résultats) utilise également moins de mémoire à la fois. Vous pouvez aussi compresser chaque fichier au préalable avec l'outil Compresser PDF pour réduire la taille totale avant la fusion."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Y a-t-il une limite quotidienne sur les fusions ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Non. Contrairement aux outils cloud qui limitent l'usage gratuit par jour, PDFree n'a aucun plafond quotidien. Fusionnez autant de PDF que nécessaire, aussi souvent que vous le souhaitez."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Combien de fichiers PDF puis-je fusionner en une seule fois ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Il n'y a aucune limite sur le nombre de fichiers. PDFree traite tout dans la mémoire de votre navigateur, vous pouvez donc fusionner 2, 50 ou 100+ fichiers PDF en une seule opération. Les fichiers d'une même fusion peuvent totaliser jusqu'à 500 Mo sur ordinateur (Chrome/Edge, 8 Go de RAM ou plus) ou 300 Mo sur téléphone."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Puis-je fusionner gratuitement 50 ou 100 fichiers PDF en une seule fois ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Oui, totalement gratuit et sans plafond quotidien. Contrairement aux outils cloud qui limitent l'usage gratuit par jour, PDFree n'a aucune restriction d'utilisation. Déposez vos 50 ou 100 fichiers à la fois, organisez l'ordre et cliquez sur Fusionner — le résultat se télécharge directement sur votre appareil, sans aucun envoi vers un serveur."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Pourquoi la fusion de gros PDF est-elle lente sur les outils cloud mais rapide sur PDFree ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Les outils cloud exigent d'envoyer votre fichier vers leur serveur, de le traiter là-bas, puis de télécharger le résultat — trois allers-retours réseau qui ajoutent un temps considérable pour les gros fichiers. PDFree traite tout localement dans votre navigateur sans transfert réseau, la vitesse ne dépend donc que du processeur de votre appareil, pas de votre connexion internet."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">
@@ -505,6 +529,10 @@
           <div>
             <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Dois-je créer un compte ?</h3>
             <p style="margin:0;font-size:14px;">Non. PDFree ne nécessite jamais de compte, d'adresse e-mail ni d'inscription. Ouvrez l'outil et commencez à fusionner immédiatement.</p>
+          </div>
+          <div>
+            <h3 style="font-size:17px;color:var(--text);margin:0 0 8px;font-weight:600;">Pourquoi la fusion de gros PDF est-elle lente sur les outils cloud mais rapide sur PDFree ?</h3>
+            <p style="margin:0;font-size:14px;">Les outils cloud exigent d'envoyer votre fichier vers leur serveur, de le traiter là-bas, puis de télécharger le résultat — trois allers-retours réseau qui ajoutent un temps considérable pour les gros fichiers. PDFree traite tout localement dans votre navigateur sans transfert réseau, la vitesse ne dépend donc que du processeur de votre appareil, pas de votre connexion internet.</p>
           </div>
         </div>
 

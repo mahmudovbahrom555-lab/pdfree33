@@ -4,7 +4,7 @@
     "name": "¿Se suben mis archivos al dividir un PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. PDFree divide los PDFs completamente en tu navegador usando JavaScript. Los archivos nunca salen de tu dispositivo. Puedes verificarlo tú mismo: abre las DevTools de tu navegador → pestaña \"Red\" — no deberías ver que tu PDF se sube a un servidor remoto durante el procesamiento."
+      "text": "No. PDFree divide los PDFs completamente en tu navegador usando JavaScript. Los archivos nunca salen de tu dispositivo. Puedes verificarlo: abre las DevTools → pestaña Red — no verás tu PDF siendo enviado a un servidor remoto durante el procesamiento."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "¿Qué formato de rango de páginas acepta PDFree?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Introduce páginas y rangos separados por comas: por ejemplo 1, 3-7, 12, 15-20. Los espacios son opcionales. También puedes hacer clic en las miniaturas de página individuales para seleccionarlas o deseleccionarlas visualmente, o usar los botones de selección rápida para páginas impares, pares o mitades del documento."
+      "text": "Introduce páginas y rangos separados por comas: por ejemplo <code>1, 3–7, 12, 15–20</code>. Los espacios son opcionales. También puedes hacer clic en las miniaturas de página individuales para seleccionarlas visualmente, o usar los botones de selección rápida para páginas impares, pares o mitades."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "¿Puedo extraer solo páginas específicas de un PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. Puedes extraer un rango de páginas personalizado (p. ej., páginas 3–7) o dividir cada página en archivos individuales. Introduce el rango como valores separados por comas como \"1-5, 8, 11-15\", o haz clic en las páginas visualmente en la cuadrícula de miniaturas."
+      "text": "Sí. Puedes extraer un rango de páginas personalizado (p. ej. páginas 3–7) o dividir cada página en archivos individuales. Introduce el rango como valores separados por comas: <code>1-5, 8, 11-15</code>, o haz clic en las páginas visualmente en la cuadrícula."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "¿Cómo elimino una página específica de un PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Selecciona todas las páginas excepto las que quieras eliminar y luego haz clic en \"Dividir PDF\" para extraer solo las páginas que quieras conservar. Por ejemplo, para eliminar la página 3 de un PDF de 10 páginas, selecciona las páginas 1-2 y 4-10 y extráelas. El resultado es tu PDF sin las páginas eliminadas — calidad original preservada."
+      "text": "Selecciona todas las páginas <em>excepto</em> las que deseas eliminar y haz clic en Dividir PDF para extraer solo las que quieres conservar. Por ejemplo, para eliminar la página 3 de un PDF de 10 páginas, selecciona las páginas 1–2 y 4–10. El resultado es tu PDF sin las páginas eliminadas — calidad original preservada."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "¿Puedo dividir un PDF sin conexión?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. PDFree es una Progressive Web App y funciona completamente sin conexión una vez cargado en tu navegador. No se requiere conexión a internet para dividir o extraer páginas."
+      "text": "Sí. PDFree es una Progressive Web App y funciona completamente sin conexión una vez cargado en el navegador. No se requiere conexión a internet para dividir o extraer páginas."
     }
   },
   {

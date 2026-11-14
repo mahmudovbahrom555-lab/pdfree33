@@ -36,7 +36,7 @@
     "name": "¿Por qué el PDF comprimido se ve igual pero ocupa menos espacio?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Los PDFs suelen contener datos ocultos: miniaturas de página generadas por Adobe Reader, fuentes incrustadas duplicadas, flujos de metadatos XMP, perfiles de color incrustados y datos privados PieceInfo de aplicaciones de Adobe. PDFree elimina estos extras ocultos. El contenido visible — texto, imágenes, diseño — permanece idéntico."
+      "text": "Los PDFs suelen contener datos ocultos: miniaturas de página generadas por Adobe Reader, fuentes incrustadas duplicadas, flujos de metadatos XMP y perfiles de color incrustados. PDFree elimina estos extras ocultos. El contenido visible permanece idéntico."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "¿Puedo comprimir un PDF protegido con contraseña?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree intenta optimizar los PDFs cifrados cuando es posible, pero los archivos muy protegidos podrían no comprimirse completamente. Para mejores resultados, elimina primero la contraseña usando la herramienta PDFree Protect PDF (que también puede eliminar contraseñas existentes), y luego comprima."
+      "text": "PDFree intenta optimizar los PDFs cifrados cuando es posible, pero los archivos muy protegidos podrían no comprimirse completamente. Elimina primero la contraseña con la herramienta Proteger PDF, y luego comprime."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "¿La compresión de PDF funciona sin conexión a internet?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sí. PDFree funciona completamente sin conexión como una Progressive Web App una vez que la página ha cargado. No se requiere conexión a internet — todo el procesamiento se ejecuta en tu navegador."
+      "text": "Sí. PDFree funciona completamente sin conexión como una Progressive Web App una vez que la página ha cargado. No se requiere conexión a internet."
     }
   },
   {
@@ -69,6 +69,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Muchos formularios en línea (oposiciones, sede electrónica de la administración, portales de empleo) limitan las subidas a 2-10 MB y no lo avisan claramente hasta que falla la subida. Comprimir el PDF antes suele solucionarlo con una reducción pequeña, sin cambiar el contenido del documento."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo comprimir un PDF a un tamaño exacto, como 4 MB o 500 KB?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. En «Comprimir a» elige un tamaño u «Otro tamaño» y escríbelo en MB o KB. PDFree prueba los ajustes desde el más suave y se queda con el más suave con el que el archivo cabe; después te dice lo que costó, por ejemplo imágenes a 150 ppp y calidad del 75 %, o ninguna pérdida de calidad. La compresión real se ejecuta hasta cuatro veces, así que un archivo grande tarda más. Si ni el ajuste más fuerte basta, PDFree dice claramente que ese tamaño no se puede alcanzar y te da el archivo más cercano; dividir el PDF puede ayudar."
     }
   }
 ]

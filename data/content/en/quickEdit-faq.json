@@ -1,10 +1,18 @@
 [
   {
     "@type": "Question",
+    "name": "Can I create one PDF per recipient from a list of names?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Choose Personalized PDF copies in Quick Edit PDF before opening a file. Paste the names or import an Excel or CSV list, mark where the name goes, then download the PDFs as a ZIP. To add a watermark as well, turn on Also add a watermark to each copy: write {name} in its text, such as Copy for {name}, and each copy gets its recipient's name there too. Try an example to follow the same steps with a sample PDF and two fictional recipients."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Is my PDF uploaded anywhere to edit it?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. The whole process — reading the PDF, rendering it as editable text, and rebuilding the edited PDF — runs entirely in your browser. Your document never leaves your device."
+      "text": "No. The whole process — opening the PDF, replacing the edited lines and checking the result — runs entirely in your browser. Your document never leaves your device."
     }
   },
   {
@@ -20,7 +28,7 @@
     "name": "Why did it say my PDF can't be edited here?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Before opening the editor, PDFree checks how cleanly your PDF's structure converts to an editable form. Scanned documents, unusual layouts, or heavily damaged text extraction can score too low to safely edit — rather than let you edit on top of broken structure and risk a worse result, the tool blocks the editor and suggests the full PDF to Word converter instead."
+      "text": "A file with text opens on its own pages, where you edit it in place. A scan has no text to change; fillable forms and signed PDFs aren't edited in place. The previous editor, which rebuilds the document as editable text, first checks how cleanly your PDF's structure converts — scanned documents, unusual layouts or damaged text extraction can score too low to edit safely, and then it suggests the full PDF to Word converter instead."
     }
   },
   {
@@ -28,7 +36,7 @@
     "name": "Does editing change the formatting of the rest of the document?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No — only the exact text you click and retype changes. Bold, italic, headings, list numbering, and table structure elsewhere in the document are untouched."
+      "text": "No. Only the text of the lines you retype changes: their old text is removed and the new text is written in the same place. Pictures, other lines and other pages stay as they were, and every changed page is read back before you download it."
     }
   },
   {
@@ -45,6 +53,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Yes. PDFree is completely free — no sign up, no account, no installation. Open the tool, load your PDF, click the text you want to fix, and download the result."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I find and replace text on every page?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Type the text in Find and what should stand there in Replace with — leave it empty to remove the text, such as a line repeated at the foot of every page. PDFree shows how many it found and on how many pages, and Replace all changes them in the original PDF. A match has to sit within one line, and the new text has to fit the space of its line; a line that can't be changed in place is left as it was, and its page is named."
     }
   }
 ]

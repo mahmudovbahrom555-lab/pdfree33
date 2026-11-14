@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Wiele formularzy online (ePUAP, portale rekrutacyjne, strony urzędów) ogranicza rozmiar przesyłanych plików do 2-10 MB, często nie informując o tym jasno, dopóki przesyłanie się nie powiedzie. Skompresowanie PDF wcześniej zwykle rozwiązuje ten problem nawet przy niewielkim zmniejszeniu rozmiaru, bez zmiany zawartości dokumentu."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę skompresować PDF do dokładnego rozmiaru, np. 4 MB lub 500 KB?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. W sekcji „Kompresuj do” wybierz rozmiar lub „Inny rozmiar” i wpisz go w MB albo KB. PDFree próbuje ustawień od najłagodniejszego i zostawia najłagodniejsze, przy którym plik się mieści, a potem mówi, ile to kosztowało — np. obrazy 150 dpi i jakość 75 % albo brak utraty jakości. Prawdziwa kompresja uruchamia się do czterech razy, więc duży plik trwa dłużej. Jeśli nawet najmocniejsze ustawienie nie wystarczy, PDFree uczciwie mówi, że tego rozmiaru nie da się osiągnąć, i daje najbliższy plik; może pomóc podzielenie PDF."
+    }
   }
 ]

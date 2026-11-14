@@ -1,8 +1,58 @@
 [
-  {"@type":"Question","name":"¿Se sube mi PDF a algún sitio para editarlo?","acceptedAnswer":{"@type":"Answer","text":"No. Todo el proceso — leer el PDF, convertirlo en texto editable y reconstruir el PDF editado — se ejecuta por completo en tu navegador. Tu documento nunca sale de tu dispositivo."}},
-  {"@type":"Question","name":"¿Puedo añadir nuevos párrafos o eliminar una fila de una tabla?","acceptedAnswer":{"@type":"Answer","text":"No con esta herramienta — Quick Edit PDF está pensada para reescribir texto existente en su sitio, no para reestructurar un documento. Si necesitas añadir o eliminar contenido, convierte a Word con PDF a Word, haz la edición completa allí y luego vuelve a convertir a PDF."}},
-  {"@type":"Question","name":"¿Por qué me dijo que mi PDF no se puede editar aquí?","acceptedAnswer":{"@type":"Answer","text":"Antes de abrir el editor, PDFree comprueba con qué limpieza se convierte la estructura de tu PDF a una forma editable. Los documentos escaneados, los diseños poco habituales o una extracción de texto muy dañada pueden obtener una puntuación demasiado baja para editar con seguridad — en lugar de dejarte editar sobre una estructura rota y arriesgarte a un resultado peor, la herramienta bloquea el editor y te sugiere el conversor completo de PDF a Word."}},
-  {"@type":"Question","name":"¿Editar cambia el formato del resto del documento?","acceptedAnswer":{"@type":"Answer","text":"No — solo cambia el texto exacto en el que haces clic y reescribes. La negrita, la cursiva, los encabezados, la numeración de listas y la estructura de las tablas en el resto del documento permanecen intactos."}},
-  {"@type":"Question","name":"¿PDFree almacena o registra mis archivos después de procesarlos?","acceptedAnswer":{"@type":"Answer","text":"No. PDFree se ejecuta completamente en tu navegador — no hay ningún servidor backend que reciba tus archivos. Como nada se sube, nada puede ser almacenado, registrado ni retenido. Tu documento existe solo en la memoria de tu navegador durante la sesión y se elimina al cerrar la pestaña."}},
-  {"@type":"Question","name":"¿Es un editor de PDF gratuito sin necesidad de registro?","acceptedAnswer":{"@type":"Answer","text":"Sí. PDFree es completamente gratuito — sin registro, sin cuenta, sin instalación. Abre la herramienta, carga tu PDF, haz clic en el texto que quieras corregir y descarga el resultado."}}
+  {
+    "@type": "Question",
+    "name": "¿Se sube mi PDF a algún sitio para editarlo?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Todo el proceso (abrir el PDF, reemplazar las líneas editadas y comprobar el resultado) se ejecuta por completo en tu navegador. Tu documento nunca sale de tu dispositivo."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo añadir nuevos párrafos o eliminar una fila de una tabla?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No con esta herramienta — Quick Edit PDF está pensada para reescribir texto existente en su sitio, no para reestructurar un documento. Si necesitas añadir o eliminar contenido, convierte a Word con PDF a Word, haz la edición completa allí y luego vuelve a convertir a PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Por qué me dijo que mi PDF no se puede editar aquí?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Un archivo con texto se abre en sus propias páginas, donde lo editas en su sitio. Un escaneo no tiene texto que cambiar; los formularios rellenables y los PDF firmados no se editan en su sitio. El editor anterior, que reconstruye el documento como texto editable, comprueba primero con qué limpieza se convierte la estructura de tu PDF: los documentos escaneados, los diseños poco habituales o una extracción de texto dañada pueden puntuar demasiado bajo, y entonces sugiere el conversor completo de PDF a Word."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Editar cambia el formato del resto del documento?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Solo cambia el texto de las líneas que vuelves a escribir: su texto antiguo se elimina y el nuevo se escribe en el mismo lugar. Las imágenes, las demás líneas y las demás páginas quedan como estaban, y cada página modificada se vuelve a leer antes de la descarga."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿PDFree almacena o registra mis archivos después de procesarlos?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. PDFree se ejecuta completamente en tu navegador — no hay ningún servidor backend que reciba tus archivos. Como nada se sube, nada puede ser almacenado, registrado ni retenido. Tu documento existe solo en la memoria de tu navegador durante la sesión y se elimina al cerrar la pestaña."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Es un editor de PDF gratuito sin necesidad de registro?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. PDFree es completamente gratuito — sin registro, sin cuenta, sin instalación. Abre la herramienta, carga tu PDF, haz clic en el texto que quieras corregir y descarga el resultado."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo buscar y reemplazar texto en todas las páginas?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Escribe el texto en Buscar y lo que debe ir en su lugar en Reemplazar por; déjalo vacío para borrar el texto, como una línea que se repite al pie de cada página. PDFree muestra cuántos encontró y en cuántas páginas, y Reemplazar todo los cambia en el PDF original. Cada coincidencia debe estar dentro de una línea y el texto nuevo debe caber en el espacio de su línea; una línea que no se puede cambiar en su sitio queda como estaba y se indica su página."
+    }
+  }
 ]

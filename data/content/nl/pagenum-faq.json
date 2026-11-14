@@ -4,7 +4,7 @@
     "name": "Kan ik beginnen met een ander nummer dan 1?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Voer een willekeurig startnummer in bij het veld 'Startnummer'. Dit is handig voor documenten waarbij een titelpagina als pagina 0 telt, of voor hoofdstukken die de nummering van een vorige sectie voortzetten."
+      "text": "Ja. Voer een willekeurig startnummer in bij het veld \"Startnummer\". Handig voor documenten waarbij een titelpagina als pagina 0 telt."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Welke nummerformaten zijn beschikbaar?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Arabische cijfers (1, 2, 3), kleine Romeinse cijfers (i, ii, iii), hoofdletter Romeinse cijfers (I, II, III), kleine letters (a, b, c) en hoofdletters (A, B, C)."
+      "text": "Arabische cijfers (1, 2, 3), kleine Romeinse cijfers (i, ii, iii), hoofdletter Romeinse cijfers (I, II, III), kleine letters en hoofdletters."
     }
   },
   {
@@ -28,7 +28,7 @@
     "name": "Kan ik het formaat \"Pagina 1 van 20\" toevoegen?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Gebruik het voorvoegselveld om tekst vóór het nummer te plaatsen (bijv. 'Pagina ') en het achtervoegselveld voor tekst erna (bijv. ' van 20'). Dit creëert het gangbare formaat 'Pagina 1 van 20' voor professionele gedrukte documenten."
+      "text": "Ja. Gebruik het voorvoegselveld voor tekst vóór het nummer (bijv. \"Pagina \") en het achtervoegselveld voor tekst erna (bijv. \" van 20\")."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Kan ik de omslag uitsluiten van de nummering?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Schakel de optie 'Eerste pagina overslaan' in. Pagina 1 (de omslag) krijgt geen nummer en de nummering begint vanaf de tweede pagina."
+      "text": "Ja. Zet ‘Vanaf pagina’ op 2: de omslag krijgt geen nummer en pagina 2 toont 1. Moet pagina 2 het nummer 2 tonen, zet dan ook ‘Startnummer’ op 2."
     }
   },
   {

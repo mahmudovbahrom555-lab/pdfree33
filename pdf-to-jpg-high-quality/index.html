@@ -112,33 +112,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How do I convert PDF to JPG without losing quality?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Use pdfree.io/pdf2jpg/, select 150 or 300 DPI (higher = sharper), and convert. PDFree applies high-quality JPG compression (Q=85–90) to minimize artifacts. For truly lossless output, use pdfree.io/pdf-to-png/ for PNG format instead." }
-      },
-      {
-        "@type": "Question",
-        "name": "What DPI should I use for high-quality PDF to JPG?",
-        "acceptedAnswer": { "@type": "Answer", "text": "150 DPI is sufficient for most digital use (sharing, presentations, web). 300 DPI is for print, editing, or professional work. There is rarely a reason to go above 300 DPI for typical PDF content." }
-      },
-      {
-        "@type": "Question",
-        "name": "Why does my converted JPG look blurry?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Blurry output usually means the DPI was set too low. Try 150 or 300 DPI. Also check whether the source PDF has low-resolution embedded images — PDFree renders at whatever resolution you specify, but if the PDF's images are low-res, the output will also be low-res." }
-      },
-      {
-        "@type": "Question",
-        "name": "Is JPG or PNG better for PDF conversion?",
-        "acceptedAnswer": { "@type": "Answer", "text": "JPG for most cases — smaller files with excellent visual quality. PNG for diagrams, screenshots, technical drawings, or content where you need pixel-perfect accuracy and lossless quality." }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I convert just one page of a PDF to high-quality JPG?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes — load the PDF, convert at your chosen DPI, and all pages export as separate files. To get only specific pages, use pdfree.io/extract-pdf/ to extract those pages first." }
-      }
+        {
+            "@type": "Question",
+            "name": "How do I convert PDF to JPG without losing quality?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Use pdfree.io/pdf2jpg/, select 150 or 300 DPI (higher = sharper), and convert. PDFree applies high-quality JPG compression (Q=85–90) to minimize artifacts. For truly lossless output, use pdfree.io/pdf-to-png/ for PNG format instead."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What DPI should I use for high-quality PDF to JPG?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "150 DPI is sufficient for most digital use (sharing, presentations, web). 300 DPI is for print, editing, or professional work. There is rarely a reason to go above 300 DPI for typical PDF content."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Why does my converted JPG look blurry?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Blurry output usually means the DPI was set too low. Try 150 or 300 DPI. Also check whether the source PDF has low-resolution embedded images — PDFree renders at whatever resolution you specify, but if the PDF's images are low-res, the output will also be low-res."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is JPG or PNG better for PDF conversion?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "JPG for most cases — smaller files with excellent visual quality. PNG for diagrams, screenshots, technical drawings, or content where you need pixel-perfect accuracy and lossless quality."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I convert just one page of a PDF to high-quality JPG?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes — load the PDF, convert at your chosen DPI, and all pages export as separate files. To get only specific pages, use pdfree.io/extract-pdf/ to extract those pages first."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">

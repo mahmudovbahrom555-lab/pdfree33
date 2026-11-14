@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Questions from a PDF · PDFree</title>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="./editor.css">
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+<nav class="app-header" aria-label="PDF → PowerPoint editor">
+  <a class="logo" href="https://pdfree.io/pdf-to-powerpoint/" aria-label="PDFree · PDF → PowerPoint">
+      <div class="logo-icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+    <span class="logo-text">PDF<span>ree</span></span>
+  </a>
+  <div class="app-title">PDF → PowerPoint</div>
+  <div class="nav-right">
+    <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch theme"></button>
+    <label class="file-button">Open PDF<input id="file" type="file" accept=".pdf,application/pdf"></label>
+  </div>
+</nav>
+<main>
+  <section id="welcome" class="welcome">
+    <div class="welcome-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+    <h1>One question per slide</h1>
+    <p>Draw a frame around each question on the PDF pages. Add shared pictures and continued parts, then download a PowerPoint or sheets to print.</p>
+    <label class="button primary file-button">Choose PDF<input id="welcome-file" type="file" accept=".pdf,application/pdf"></label>
+    <small>Your PDF stays in your browser</small>
+  </section>
+  <fieldset id="workspace" disabled hidden aria-label="Question editor">
+    <div class="document-bar">
+      <div class="document-meta"><strong id="document-name"></strong><span id="document-pages"></span></div>
+      <div class="document-actions">
+        <button id="export-pdf" type="button">PDF for printing</button>
+        <button id="export-pptx" class="primary merge-btn" type="button">Download PowerPoint</button>
+      </div>
+    </div>
+    <details id="review" class="panel review-panel">
+      <summary id="review-summary">Check before download</summary>
+      <div class="review-content">
+        <label>Page <select id="review-page"></select></label>
+        <label><input id="reviewed" type="checkbox"> Checked</label>
+        <span id="review-current"></span>
+        <p id="review-shared"></p>
+      </div>
+    </details>
+    <div class="workspace">
+      <aside class="panel task-panel" aria-label="Questions">
+        <div class="panel-heading"><h2>Questions</h2><span id="task-count"></span></div>
+        <div id="task-list" class="task-list"></div>
+        <button id="suggest-tasks" type="button">Suggest frames</button>
+        <button id="add-task" class="add-task" type="button">＋ Add question</button>
+        <details class="tools">
+          <summary>Order and joining</summary>
+          <div class="tools-content">
+            <div class="button-row"><button id="task-up" type="button">↑ Up</button><button id="task-down" type="button">↓ Down</button></div>
+            <button id="merge-next" type="button">Join with the next</button>
+            <button id="remove-task" class="danger" type="button">Delete question</button>
+          </div>
+        </details>
+        <p id="saved" role="status" aria-live="polite"></p>
+      </aside>
+      <section class="viewer" aria-label="PDF page">
+        <div class="viewer-toolbar">
+          <div class="button-row page-nav">
+            <button id="previous" type="button" aria-label="Previous page">← Back</button>
+            <label class="page-number"><span class="sr-only">Page</span><input id="page" type="number" min="1" value="1"></label>
+            <span id="page-total"></span>
+            <button id="next" type="button" aria-label="Next page">Next →</button>
+          </div>
+          <label class="tool-select"><span class="sr-only">New frame type</span><select id="kind"><option value="task">Question frame</option><option value="shared">Shared frame</option></select></label>
+          <label class="tool-select"><span class="sr-only">Zoom</span><select id="zoom"><option value="1">Fit width</option><option value="1.5">150%</option><option value="2">200%</option></select></label>
+          <button id="undo" type="button" title="Undo the last frame change" disabled>↶ Undo</button>
+        </div>
+        <div id="suggestions-panel" class="suggestions-panel" hidden>
+          <div class="button-row">
+            <label class="sr-only" for="suggestion-page">Page to check</label>
+            <select id="suggestion-page"></select>
+            <button id="apply-suggestions" class="primary" type="button">Add frames</button>
+            <button id="close-suggestions" type="button" aria-label="Close suggestions">×</button>
+          </div>
+          <p id="suggestions-message" role="status"></p>
+          <label id="suggest-shared-label" hidden><input id="suggest-shared" type="checkbox">
+            Attach the shared instructions to all new questions on the page
+          </label>
+        </div>
+        <p class="viewer-hint">Drag across the page to draw a frame.</p>
+        <div class="paper-scroll">
+          <div id="paper" hidden><canvas id="source"></canvas><svg id="overlay" aria-label="Frames on the page"></svg></div>
+        </div>
+      </section>
+      <aside class="panel inspector" aria-label="Parts and preview">
+        <section class="inspector-section preview-section">
+          <div class="panel-heading"><h2>Slide</h2></div>
+          <div class="preview-placeholder" id="preview-placeholder">Preview of the chosen question</div>
+          <button id="expand-preview" type="button" hidden aria-label="Enlarge the preview"><canvas id="slide" hidden aria-label="Slide preview"></canvas></button>
+          <label class="space-label">Space to work <select id="space"><option value="more">A lot</option><option value="less">A little</option></select></label>
+          <button id="preview" type="button">Preview slide</button>
+          <details class="tools">
+            <summary>Interactive answer</summary>
+            <div class="tools-content">
+              <label class="quiz-toggle"><input id="quiz-enabled" type="checkbox"> Multiple choice</label>
+              <div id="quiz-fields" class="quiz-fields" hidden>
+                <label>Choices <select id="quiz-count"><option value="4">A–D</option><option value="5">A–E</option></select></label>
+                <label>Correct answer <select id="quiz-correct"><option value="">Choose an answer</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option></select></label>
+                <label>Explanation <textarea id="quiz-explanation" rows="3" maxlength="400"></textarea></label>
+              </div>
+            </div>
+          </details>
+        </section>
+        <section class="inspector-section">
+          <div class="panel-heading"><h2>Parts</h2><span id="fragment-count"></span></div>
+          <div id="fragments"></div>
+          <div id="frame-tools" hidden>
+            <button id="expand-frame" type="button" hidden aria-label="Enlarge the chosen cut-out">
+              <canvas id="frame-preview" aria-label="Chosen cut-out"></canvas>
+            </button>
+            <div class="button-row">
+              <label class="sr-only" for="boundary-side">Frame side</label>
+              <select id="boundary-side"><option value="0">Left</option><option value="1">Top</option><option value="2">Right</option><option value="3">Bottom</option></select>
+              <button id="suggest-boundary" type="button">Suggest an edge</button>
+            </div>
+            <p id="boundary-message" role="status"></p>
+            <div id="boundary-actions" class="button-row" hidden>
+              <button id="accept-boundary" type="button">Accept</button>
+              <button id="reject-boundary" type="button">Dismiss</button>
+            </div>
+            <div class="button-row"><button id="frame-up" type="button">↑ Up</button><button id="frame-down" type="button">↓ Down</button></div>
+            <button id="cut-frame" type="button" aria-pressed="false">Cut the frame</button>
+            <details class="tools">
+              <summary>More frame actions</summary>
+              <div class="tools-content">
+                <button id="split-task" type="button">Split the question here</button>
+                <label>Move to <select id="move-target" disabled></select></label>
+                <button id="delete-frame" class="danger" type="button">Delete frame</button>
+              </div>
+            </details>
+          </div>
+        </section>
+      </aside>
+    </div>
+    <div class="mobile-preview-bar" aria-label="Page and slide">
+      <div class="mobile-page-nav" role="group" aria-label="PDF pages">
+        <button id="mobile-previous" type="button" aria-label="Previous PDF page">←</button>
+        <button id="mobile-page" type="button">PDF page</button>
+        <button id="mobile-next" type="button" aria-label="Next PDF page">→</button>
+      </div>
+      <button id="mobile-slide" type="button">Slide</button>
+    </div>
+  </fieldset>
+  <dialog id="preview-dialog" aria-labelledby="preview-title">
+    <div class="panel-heading"><h2 id="preview-title">Slide preview</h2><form method="dialog"><button type="submit">Close</button></form></div>
+    <div id="slide-review-tools" class="button-row" hidden>
+      <button id="preview-previous" type="button" aria-label="Previous slide">← Back</button>
+      <span id="preview-position"></span>
+      <button id="preview-next" type="button" aria-label="Next slide">Next →</button>
+      <button id="preview-zoom" type="button" aria-pressed="false">Enlarge question</button>
+      <button id="preview-fix" type="button">Fix the frame</button>
+    </div>
+    <p id="preview-empty" hidden>This question has no frame yet.</p>
+    <img id="preview-image" alt="The chosen question's slide">
+    <div id="quiz-preview" hidden>
+      <div id="quiz-answers" class="button-row" aria-label="Answer buttons check"></div>
+      <p id="quiz-feedback" role="status"></p>
+    </div>
+  </dialog>
+  <dialog id="export-review" aria-labelledby="export-review-title">
+    <h2 id="export-review-title">Check the frames</h2>
+    <p id="export-review-message"></p>
+    <div class="button-row">
+      <button id="export-back" type="button">Back to checking</button>
+      <button id="export-continue" class="primary" type="button">Download anyway</button>
+    </div>
+  </dialog>
+  <canvas id="resize-loupe" width="100" height="100" hidden aria-hidden="true"></canvas>
+  <p id="status" role="status" aria-live="polite"></p>
+</main>
+<script src="../js/vendor/pdf-lib.min.js"></script>
+<script type="module" src="./editor.js"></script>
+</body>
+</html>

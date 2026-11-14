@@ -20,7 +20,7 @@
     "name": "What is the difference between Extract and Split?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Extract lets you pick specific pages (e.g. pages 2, 5, 8) and save them as one new PDF. Split divides the entire document into individual files."
+      "text": "<a href='/split-pdf/' style='color:var(--green-text)'>Split</a> has richer selection options (odd pages, even pages, halves, visual thumbnail selection) and can produce multiple separate files. Extract is simpler — enter a range, get one PDF. Use whichever fits your workflow."
     }
   },
   {

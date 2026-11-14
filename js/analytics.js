@@ -89,7 +89,9 @@ const _inputs = {};   // tool → bytes in, from trackToolStart (no caller passe
  * Call when a tool becomes visible to the user (step 1 of the funnel).
  * Plausible funnel: Tool Open → File Added → Tool Start → Tool Success/Cancel/Error
  */
+let _lastTool = '';   // the tool whose page is open (Rage Click)
 export function trackToolOpen(tool) {
+  _lastTool = tool;
   _track('Tool Open', { tool });
 }
 
@@ -97,14 +99,15 @@ export function trackToolOpen(tool) {
 export function trackToolStart(tool, inputSize = 0) {
   _timers[tool] = performance.now();
   _inputs[tool] = inputSize;
+  _hiddenSinceStart = typeof document !== 'undefined' && document.hidden;
 }
 
 /**
  * Call when a tool completes successfully.
  * @param {string} tool
- * @param {{ inputSize?: number, outputSize?: number, requestedCount?: number, successCount?: number, mode?: string }} opts
+ * @param {{ inputSize?: number, outputSize?: number, requestedCount?: number, successCount?: number, mode?: string, pages?: number, ocrPages?: number }} opts
  */
-export function trackToolSuccess(tool, { inputSize = 0, outputSize = 0, requestedCount, successCount, mode } = {}) {
+export function trackToolSuccess(tool, { inputSize = 0, outputSize = 0, requestedCount, successCount, mode, pages, ocrPages } = {}) {
   const durationMs = _timers[tool] ? performance.now() - _timers[tool] : null;
   delete _timers[tool];
   inputSize ||= _inputs[tool] || 0;
@@ -130,8 +133,34 @@ export function trackToolSuccess(tool, { inputSize = 0, outputSize = 0, requeste
   if (mode !== undefined) {
     props.mode = mode;
   }
+  // Only set by pdf2word — where its time goes: many pages, or text recognition.
+  if (pages !== undefined) Object.assign(props, workProps({ pages, ocrPages }));
 
   _track('Tool Success', props);
+}
+
+// PDF to Word (2026-11-14): a quarter of 1–10 MB conversions took over 2 minutes,
+// and nothing said why. The page count as a range and whether any page needed
+// text recognition — never the text (privacy page: "for PDF to Word").
+export function workProps({ pages, ocrPages = 0 }) {
+  const band = pages <= 5 ? '1–5' : pages <= 20 ? '6–20' : pages <= 100 ? '21–100' : '> 100';
+  return { pages: band, ocr: ocrPages > 0 ? 'yes' : 'no' };
+}
+
+// Compress "fit into a size" (2026-11-13): which sizes people ask for, how
+// often they're reached and what reaching them cost — numbers only, never the
+// file (privacy page: "for Compress's fit into a size"). The size asked for is
+// kept as typed (a portal's limit — "4 MB", "500 KB" — names no one).
+export function compressTargetProps({ targetBytes, inputSize, outputSize, met, step, runs }) {
+  const mb = targetBytes / 1048576;
+  const target = mb >= 1 ? `${+mb.toFixed(1)} MB` : `${Math.round(targetBytes / 1024)} KB`;
+  const ratio = outputSize / targetBytes;
+  const result = met ? 'fits' : ratio <= 1.1 ? 'over ≤10%' : ratio <= 1.5 ? 'over 10–50%' : ratio <= 2 ? 'over 50–100%' : 'over >2×';
+  return { tool: 'compress', target, input_size: _sizeBucket(inputSize), result, step, runs };
+}
+
+export function trackCompressTarget(details) {
+  _track('Compress Target', compressTargetProps(details));
 }
 
 /** Track tool cancellations — useful for UX insight */
@@ -167,10 +196,26 @@ export function trackFileAdded(tool, fileSize = 0) {
  *                         Tool Cancel, not an error)
  *   unknown             — unclassified
  */
+// Context for an error, after the fields saved queries read (src/index.js
+// puts x_… keys last): the file's size band; whether the tab was hidden at any
+// time since the run started (frozen background tabs — most Compress timeouts
+// were Edge on desktop, 2026-11-11); whether a person ever pressed or typed on
+// the page (an error with no one acting is an automated visit, as the N-up
+// "[object Object]" of 17 sessions was). Strings, so they stay blobs.
+let _acted = false;
+let _hiddenSinceStart = false;
+if (typeof document !== 'undefined') {
+  const acted = () => { _acted = true; };
+  for (const type of ['pointerdown', 'keydown', 'touchstart', 'drop']) document.addEventListener(type, acted, { capture: true, once: true, passive: true });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) _hiddenSinceStart = true; });
+}
+
 export function trackToolError(tool, errorType = 'unknown') {
+  const size = _inputs[tool];
   delete _timers[tool];
   delete _inputs[tool];
-  _track('Tool Error', { tool, error_type: errorType });
+  _track('Tool Error', { tool, error_type: errorType,
+    x_size: _sizeBucket(size), x_hidden: _hiddenSinceStart ? 'yes' : 'no', x_acted: _acted ? 'yes' : 'no' });
 }
 
 /**
@@ -405,7 +450,9 @@ export function trackHomepageScrollDepth(depth) {
  * @param {string} target — best-effort element descriptor (#id, tag.class, or bare tag)
  */
 export function trackRageClick(target) {
-  _track('Rage Click', { target });
+  // which tool's page (blob2, a fixed slot: nothing moves) — on the homepage none
+  const onTool = typeof document !== 'undefined' && document.getElementById('toolArea')?.offsetParent;
+  _track('Rage Click', { tool: onTool ? _lastTool : '', target });
 }
 
 // ── Manga Split post-use survey ──────────────────────────────────

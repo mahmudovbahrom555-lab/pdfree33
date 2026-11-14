@@ -160,6 +160,67 @@ await test('add 2 files on a real mobile viewport, click #mergeBtn, get a real v
   if (!r.ok) throw new Error(report(r));
 });
 
+// The default file name is selected on entry, so typing replaces it (39 people in a
+// week clicked the field three times in a second to select it, Rage Click 2026-11-11);
+// once a name was typed, a tap only places the caret.
+await test('output file name: one tap selects the default, typing replaces it, a second tap keeps it', async () => {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 664 }, hasTouch: true, isMobile: true, serviceWorkers: 'block' });
+  const page = await ctx.newPage();
+  try {
+    await page.goto(`${BASE_URL}/merge-pdf/`, { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', [FILE_2, FILE_1]);
+    await page.locator('#mergeFilenameInput').waitFor();
+    await page.tap('#mergeFilenameInput');
+    await page.keyboard.type('Quarterly report');
+    if (await page.inputValue('#mergeFilenameInput') !== 'Quarterly report') throw new Error(`after typing: ${await page.inputValue('#mergeFilenameInput')}`);
+    await page.tap('#mergeFilenameInput');
+    await page.keyboard.press('End');
+    await page.keyboard.type(' v2');
+    if (await page.inputValue('#mergeFilenameInput') !== 'Quarterly report v2') throw new Error(`after the second tap: ${await page.inputValue('#mergeFilenameInput')}`);
+  } finally {
+    await ctx.close();
+  }
+});
+
+// A double or triple click on the drop zone (a folder habit) opens the file
+// picker once, not once per click (26 people rage-clicked it, analytics 2026-11-11).
+await test('drop zone: a double or triple click opens the file picker once', async () => {
+  const ctx = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await ctx.newPage();
+  try {
+    await page.goto(`${BASE_URL}/merge-pdf/`, { waitUntil: 'load' });
+    for (const clicks of [2, 3]) {
+      let opened = 0;
+      const count = () => opened++;
+      page.on('filechooser', count);
+      await page.locator('#dropZone .drop-title').click({ clickCount: clicks });
+      await page.waitForTimeout(800);
+      page.off('filechooser', count);
+      if (opened !== 1) throw new Error(`${clicks} clicks opened the picker ${opened} times`);
+    }
+  } finally {
+    await ctx.close();
+  }
+});
+
+// One PDF chosen: the list says what's missing instead of a silently grey
+// button (user journey 2026-11-13); a second file clears it and enables Merge.
+await test('merge with one PDF: the list says to add one more; a second removes the hint and enables Merge', async () => {
+  const ctx = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await ctx.newPage();
+  try {
+    await page.goto(`${BASE_URL}/merge-pdf/`, { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', [FILE_1]);
+    await page.waitForFunction(() => /Add one more PDF/.test(document.getElementById('fileCount')?.textContent || ''), null, { timeout: 10000 });
+    if (!await page.locator('#mergeBtn').isDisabled()) throw new Error('Merge enabled with one file');
+    await page.setInputFiles('#fileInput', [FILE_2]);
+    await page.waitForFunction(() => !/Add one more PDF/.test(document.getElementById('fileCount')?.textContent || ''), null, { timeout: 10000 });
+    if (await page.locator('#mergeBtn').isDisabled()) throw new Error('Merge still disabled with two files');
+  } finally {
+    await ctx.close();
+  }
+});
+
 await browser.close();
 
 console.log(`\n${'─'.repeat(40)}`);

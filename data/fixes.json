@@ -17,6 +17,24 @@
    "summary": "Today the 5 / 10 / 25 MB choices apply fixed settings and don't check the result. We measured it: the target was met for 13–50 % of large files. We are building a size check that keeps small print, stamps and Chinese text readable, and says so honestly when a size can't be reached."
   },
   {
+   "id": "C35",
+   "tool": "compress",
+   "status": "fixed",
+   "date": "2026-11-12",
+   "verified": "2026-11-12, compress e2e on pdfree.io 23/23; two scientific papers 0.73 → 0.36 MB and 0.97 → 0.59 MB on Maximum",
+   "title": "Figures smaller than the page were never made smaller",
+   "summary": "Compress judged a picture's resolution by the size of the page, so a chart or photo drawn a few inches wide kept 300–500 dpi even on Maximum. Now each picture is judged by the size it is actually drawn at, and made smaller when it's sharper than the chosen setting — scientific papers and reports come out up to half the size."
+  },
+  {
+   "id": "C34",
+   "tool": "compress",
+   "status": "fixed",
+   "date": "2026-11-11",
+   "verified": "2026-11-11, compress e2e on pdfree.io 21/21; a 34 MB USGS report 1.00 → 0.39 of its size on Maximum",
+   "title": "Images stored as JPEG 2000 were never compressed",
+   "summary": "Some PDFs (maps, scanned books, government reports) keep their pictures in the JPEG 2000 format, and Compress left them exactly as they were — even on Maximum such a file barely shrank. Now Standard and Maximum resize and recompress them like any other colour picture, and keep the original whenever the new one would not be smaller."
+  },
+  {
    "id": "C33",
    "tool": "all",
    "status": "fixed",
@@ -24,6 +42,15 @@
    "verified": "2026-11-06, qpdf recovery e2e on pdfree.io (800 mixed passwords, forced failures, the Unlock screen), 9/9",
    "title": "After one failure, password-protected PDFs stopped opening until the page was reloaded",
    "summary": "If decrypting one file failed (for example a very large one), every later protected or restricted PDF in the same tab failed too, and Unlock called a right password wrong. Now the next file works, and 'incorrect password' is shown only when the password is wrong."
+  },
+  {
+   "id": "C31",
+   "tool": "compress",
+   "status": "fixed",
+   "date": "2026-11-06",
+   "verified": "2026-11-06, a real grey scan through pdfree.io on Standard and Maximum renders whole; compress e2e on pdfree.io",
+   "title": "Compress destroyed some grey scans",
+   "summary": "A grey scan from an office scanner could come out as overlapping, unreadable copies of the page on Standard and Maximum. Fixed: the page now stays whole."
   },
   {
    "id": "C30",

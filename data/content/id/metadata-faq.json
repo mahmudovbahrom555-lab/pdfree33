@@ -52,7 +52,7 @@
     "name": "Di mana metadata PDF disimpan?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Metadata disimpan di header dokumen PDF, bukan di halaman yang terlihat. Pembaca PDF menampilkan metadata ini di Properti Dokumen (Ctrl+D / Cmd+D)."
+      "text": "Metadata disimpan di header dokumen PDF, bukan di halaman yang terlihat. Pembaca PDF seperti Acrobat menampilkan metadata ini di Properti Dokumen (Ctrl+D / Cmd+D)."
     }
   }
 ]

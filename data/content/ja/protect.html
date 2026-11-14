@@ -128,6 +128,10 @@
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">複数のPDFファイルに一度にパスワードを設定できますか？</h3>
           <p style="margin:0;font-size:14px;">はい。PDFreeのバッチモードでは、複数のPDFファイルに一度にパスワードとアクセス権限を設定できます。それぞれがブラウザ内で同じ設定を使って個別に暗号化されます。保護されたすべてのファイルが1つのZIPにまとめられます。</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">RC4-128暗号化はPDFを保護するのに十分安全ですか？</h3>
+          <p style="margin:0;font-size:14px;">日常的な用途——ちょっとしたアクセスを防いだり、信頼できる相手と機密ファイルを共有したり、印刷やコピーを制限したりする程度であれば——RC4-128はPDF 1.4以降サポートされている実用的なPDF標準規格で、どのビューアでも開くことができます。ただしAES-256ほど強力ではなく、リソースを持つ攻撃者が暗号化ファイルを入手すれば破られる可能性があります。医療記録、法的文書、あるいは実際の規制上のリスクがある文書については、パスワード保護だけに頼らず、暗号化ドライブや安全なファイル共有サービス、組織のコンプライアンスツールと組み合わせてください。RC4-128には一つ利点があります——AES-256に対応していない古いPDFビューアでも開けるため、パスワード付きPDFをより多くの相手に開いてもらえます。</p>
         </div><h2 style="font-size:22px;color:var(--text);margin:48px 0 16px;font-weight:700;">PDFreeでパスワード保護を選ぶ理由</h2>
         <ul style="margin:0 0 32px;padding-left:24px;display:flex;flex-direction:column;gap:8px;font-size:14px;">
           <li><strong>完全プライベート</strong> — ファイルもパスワードも外部サーバーに送られません</li>

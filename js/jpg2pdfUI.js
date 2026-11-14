@@ -17,7 +17,7 @@
 import { id }       from './utils.js';
 import { t, tp }    from './i18n.js';
 import { showToast } from './ui.js';
-import { selectedFiles, isFilesLocked } from './files.js';
+import { selectedFiles, isFilesLocked, removeFile } from './files.js';
 import { bindDragReorder } from './dragReorder.js';
 import { presetRememberCard } from './uiComponents.js';
 import { loadPreset, clearPreset } from './presets.js';
@@ -40,6 +40,7 @@ let _quality     = 0.82;       // JPEG quality 0–1
 let _separate    = false;      // one PDF per image (as a ZIP) instead of one merged PDF
 let _exifAngles  = [];         // cached EXIF rotation per file (degrees)
 let _rememberLoaded = false;   // "Remember my settings" applied once per tool session
+let _optionsGeneration = 0;
 let _settingsRendered = false; // see _render()'s split-render comment
 
 export function getJpg2PdfParams() {
@@ -58,7 +59,8 @@ export async function initJpg2PdfOptions(files) {
   const container = id('jpg2pdfOptions');
   if (!container) return;
 
-  if (files.length === 0) { container.style.display = 'none'; return; }
+  const generation = ++_optionsGeneration;
+  if (files.length === 0) { hideJpg2PdfOptions(); return; }
 
   // Restore saved layout/quality settings once per tool session — exifAngles
   // is never part of the saved preset (this batch's own per-image rotation,
@@ -90,7 +92,9 @@ export async function initJpg2PdfOptions(files) {
   container.style.display = 'block';
 
   // Read EXIF in parallel — fast, only first 64KB per file
-  _exifAngles = await Promise.all(files.map(f => _readExifAngle(f)));
+  const angles = await Promise.all(files.map(f => _readExifAngle(f)));
+  if (generation !== _optionsGeneration) return;
+  _exifAngles = angles;
 
   // One-time soft warning per session past the threshold — never blocks.
   if (files.length > _MANY_IMAGES_WARN_THRESHOLD && !_warnedManyImages) {
@@ -105,6 +109,7 @@ export async function initJpg2PdfOptions(files) {
 }
 
 export function hideJpg2PdfOptions() {
+  ++_optionsGeneration;
   const container = id('jpg2pdfOptions');
   if (!container) return;
   container.style.display = 'none';
@@ -157,6 +162,8 @@ function _previewsHtml(files) {
           <canvas class="j2p-thumb__canvas" data-index="${i}"
                   width="${_THUMB_RASTER_SIZE}" height="${_THUMB_RASTER_SIZE}" aria-hidden="true"></canvas>
           <span class="j2p-thumb__name">${_esc(_truncName(f.name, 12))}</span>
+          <button type="button" class="j2p-thumb__remove" data-remove-image="${i}"
+                  aria-label="${_esc(t('j2p_remove_image', { name: f.name }))}">×</button>
           ${_exifAngles[i] !== 0 ? `<span class="j2p-thumb__badge" aria-label="${t('j2p_will_be_rotated')}">↺</span>` : ''}
         </div>
       `).join('')}
@@ -270,7 +277,7 @@ function _render(files) {
   const sepBlock = id('j2pSeparateBlock');
   if (sepBlock) sepBlock.style.display = files.length > 1 ? '' : 'none';
 
-  _bindThumbGridEvents();
+  _bindThumbGridEvents(files);
   _renderPreviews(files);
 }
 
@@ -416,7 +423,7 @@ function _bindSettingsEvents() {
 
 }
 
-function _bindThumbGridEvents() {
+function _bindThumbGridEvents(files) {
   const container = id('jpg2pdfOptions');
   if (!container) return;
 
@@ -425,6 +432,18 @@ function _bindThumbGridEvents() {
   // in lockstep so a thumbnail's rotation correction follows it to its new
   // position instead of staying pinned to the old index.
   const previews = container.querySelector('.j2p-previews');
+  previews?.querySelectorAll('[data-remove-image]').forEach(button => {
+    const file = files[Number(button.dataset.removeImage)];
+    button.addEventListener('touchstart', event => event.stopPropagation());
+    button.addEventListener('click', () => {
+      if (isFilesLocked()) return;
+      const index = selectedFiles.indexOf(file);
+      if (index < 0) return;
+      removeFile(index);
+      if (!selectedFiles.length) hideJpg2PdfOptions();
+    });
+  });
+
   if (previews) {
     bindDragReorder({
       container:    previews,
@@ -501,5 +520,7 @@ function _truncName(name, max) {
 }
 
 function _esc(str) {
-  const d = document.createElement('div'); d.textContent = str; return d.innerHTML;
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML.replaceAll('"', '&quot;');
 }

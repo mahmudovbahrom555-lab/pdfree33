@@ -28,7 +28,7 @@
 // ============================================================
 
 import { chromium } from 'playwright';
-import { PDFDocument, PDFName, pushGraphicsState, popGraphicsState, concatTransformationMatrix, drawObject } from 'pdf-lib';
+import { PDFDocument, PDFName, StandardFonts, pushGraphicsState, popGraphicsState, concatTransformationMatrix, drawObject } from 'pdf-lib';
 import zlib from 'zlib';
 import fs from 'fs';
 import os from 'os';
@@ -187,6 +187,72 @@ await test('D300 on Maximum: a 600-ppi CMYK photo → 300 ppi (900×600), still 
   expect(`${w}×${h}`).toBe('900×600');
 });
 
+// JPEG 2000 (class JPX, 2026-11-10): a 1200×800 RGB JPX drawn 4 × 2.67 in
+// (300 dpi) under a line of text — before, no mode touched JPX at all
+const jpxPdf = await PDFDocument.create();
+const jpxImg = jpxPdf.context.register(jpxPdf.context.stream(fs.readFileSync(new URL('../fixtures/jpx/rgb-1200x800.jp2', import.meta.url)),
+  { Type: 'XObject', Subtype: 'Image', Width: 1200, Height: 800, ColorSpace: 'DeviceRGB', BitsPerComponent: 8, Filter: 'JPXDecode' }));
+const jpxPage = jpxPdf.addPage([595, 842]);
+jpxPage.node.setXObject(PDFName.of('Im0'), jpxImg);
+jpxPage.pushOperators(pushGraphicsState(), concatTransformationMatrix(288, 0, 0, 192, 100, 400), drawObject('Im0'), popGraphicsState());
+jpxPage.drawText('JPX survey page 7', { x: 100, y: 700, size: 14, font: await jpxPdf.embedFont(StandardFonts.Helvetica) });
+const jpxFile = path.join(tmp, 'jpx-300dpi.pdf');
+const jpxBytes = await jpxPdf.save({ useObjectStreams: false });
+fs.writeFileSync(jpxFile, jpxBytes);
+const pageText = async (bytes) => {
+  const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+  const doc = await pdfjs.getDocument({ data: new Uint8Array(bytes), isEvalSupported: false, standardFontDataUrl: new URL('../../node_modules/pdfjs-dist/standard_fonts/', import.meta.url).pathname }).promise;
+  const text = (await (await doc.getPage(1)).getTextContent()).items.map(i => i.str).join(' ');
+  await doc.destroy();
+  return text;
+};
+for (const [preset, size] of [['medium', '600×400'], ['high', '384×256']]) {
+  await test(`JPX on ${preset === 'high' ? 'Maximum' : 'Standard'}: a 300-dpi JPEG 2000 → a JPEG at ${size}, RGB, smaller, the text kept`, async () => {
+    const out = await compressViaUi(browser, jpxFile, preset);
+    const after = firstImage(await PDFDocument.load(out));
+    expect(after.dict.get(PDFName.of('Filter'))?.toString()).toBe('/DCTDecode');
+    expect(after.dict.get(PDFName.of('ColorSpace'))?.toString()).toBe('/DeviceRGB');
+    expect(`${after.dict.get(PDFName.of('Width'))}×${after.dict.get(PDFName.of('Height'))}`).toBe(size);
+    if (!(out.length < jpxBytes.length / 2)) throw new Error(`${jpxBytes.length} → ${out.length}`);
+    expect((await pageText(out)).includes('JPX survey page 7')).toBe(true);
+  });
+}
+await test('JPX on Light: the JPEG 2000 image is left as it is', async () => {
+  // A thumbnail gives Light a real opportunity, so the UI does not refuse a no-op.
+  const lightPdf = await PDFDocument.load(jpxBytes);
+  const thumbnail = lightPdf.context.register(lightPdf.context.stream(new Uint8Array(4096), {
+    Type: 'XObject', Subtype: 'Image', Width: 64, Height: 64, ColorSpace: 'DeviceGray', BitsPerComponent: 8,
+  }));
+  lightPdf.getPage(0).node.set(PDFName.of('Thumb'), thumbnail);
+  const lightFile = path.join(tmp, 'jpx-with-thumbnail.pdf');
+  fs.writeFileSync(lightFile, await lightPdf.save());
+  const output = await PDFDocument.load(await compressViaUi(browser, lightFile, 'low'));
+  CHECKS.untouched(firstImage(jpxPdf), firstImage(output));
+});
+
+// C35 (2026-11-11): a 1200×800 RGB JPEG drawn 2 in wide (600 dpi) — worker.js
+// judged its dpi from the page size and left it; now it follows where it is drawn
+const figPdf = await PDFDocument.create();
+const figImg = figPdf.context.register(figPdf.context.stream(fs.readFileSync(new URL('../fixtures/placed/rgb-1200x800.jpg', import.meta.url)),
+  { Type: 'XObject', Subtype: 'Image', Width: 1200, Height: 800, ColorSpace: 'DeviceRGB', BitsPerComponent: 8, Filter: 'DCTDecode' }));
+const figPage = figPdf.addPage([595, 842]);
+figPage.node.setXObject(PDFName.of('Im0'), figImg);
+figPage.pushOperators(pushGraphicsState(), concatTransformationMatrix(144, 0, 0, 96, 100, 500), drawObject('Im0'), popGraphicsState());
+figPage.drawText('Figure 3: placed small', { x: 100, y: 450, size: 12, font: await figPdf.embedFont(StandardFonts.Helvetica) });
+const figFile = path.join(tmp, 'figure-600dpi.pdf');
+const figBytes = await figPdf.save({ useObjectStreams: false });
+fs.writeFileSync(figFile, figBytes);
+for (const [preset, size] of [['medium', '300×200'], ['high', '192×128']]) {
+  await test(`C35 on ${preset === 'high' ? 'Maximum' : 'Standard'}: a figure drawn 2 in wide at 600 dpi → ${size}, RGB, smaller, the text kept`, async () => {
+    const out = await compressViaUi(browser, figFile, preset);
+    const after = firstImage(await PDFDocument.load(out));
+    expect(after.dict.get(PDFName.of('ColorSpace'))?.toString()).toBe('/DeviceRGB');
+    expect(`${after.dict.get(PDFName.of('Width'))}×${after.dict.get(PDFName.of('Height'))}`).toBe(size);
+    if (!(out.length < figBytes.length / 3)) throw new Error(`${figBytes.length} → ${out.length}`);
+    expect((await pageText(out)).includes('Figure 3: placed small')).toBe(true);
+  });
+}
+
 // Pure K right against colour: D300's guard keeps the original, so the
 // lossless CMYK re-deflate (owner 2026-11-05) still does its part.
 const KW = 600, KH = 800, KC = Buffer.from(CMYK);
@@ -295,6 +361,52 @@ await test('a clean text PDF compresses on the first click — the starred prese
   fs.writeFileSync(textFile, await textPdf());
   const out = await compressViaUi(browser, textFile);
   expect(out.length > 0).toBe(true);
+});
+
+// "Fit into N MB/KB" (a person asked for 4 MB, 2026-11-13): the gentlest
+// setting whose file fits, the cost said; an unreachable size said plainly
+async function compressToSize(file, kb) {
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    await page.addInitScript(BLOB_HOOK);
+    await page.goto(`${BASE_URL}/compress-pdf/`, { waitUntil: 'load', timeout: 30000 });
+    await page.setInputFiles('#fileInput', file);
+    await page.waitForTimeout(3000);
+    await page.click('.compress-target [data-target="custom"]');
+    await page.selectOption('#compressTargetUnit', 'KB');
+    await page.fill('#compressTargetValue', String(kb));
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__blob, null, { timeout: 120000 });
+    const size = await page.evaluate(() => window.__blob.size);
+    const verdict = await page.locator('#targetVerdict').innerText();
+    return { size, verdict };
+  } finally {
+    await context.close();
+  }
+}
+
+await test('fit into a size: an image PDF fits 40 % of its size, and the cost is said', async () => {
+  const W = 1600, H = 1200, rgb = Buffer.alloc(W * H * 3);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const i = (y * W + x) * 3, n = (x * 31 + y * 17) % 23;
+    rgb[i] = 128 + 90 * Math.sin(x / 37) + n; rgb[i + 1] = 120 + 80 * Math.cos(y / 29) + n; rgb[i + 2] = 110 + 70 * Math.sin((x - y) / 41) + n;
+  }
+  const bytes = await imagePdf(zlib.deflateSync(rgb), { Width: W, Height: H, ColorSpace: 'DeviceRGB', Filter: 'FlateDecode' });
+  const file = path.join(tmp, 'photo-size.pdf');
+  fs.writeFileSync(file, bytes);
+  const kb = Math.floor(bytes.length * 0.4 / 1024);
+  const { size, verdict } = await compressToSize(file, kb);
+  if (!(size <= kb * 1024)) throw new Error(`${size} bytes over ${kb} KB`);
+  if (!/fits/.test(verdict) || !/dpi|No quality lost/.test(verdict)) throw new Error(verdict);
+});
+
+await test('fit into a size: an unreachable size is said plainly and a file is still given', async () => {
+  const file = path.join(tmp, 'text-size.pdf');
+  fs.writeFileSync(file, await textPdf());
+  const { size, verdict } = await compressToSize(file, 0.2);   // the text PDF is ~1 KB already
+  expect(size > 0).toBe(true);
+  if (!/Couldn't get under/.test(verdict)) throw new Error(verdict);
 });
 
 await browser.close();

@@ -33,32 +33,34 @@ const assert = (cond, msg) => { if (!cond) throw new Error(msg); };
 
 // A page with a JPEG-like image; XMP on the catalog, and optionally on the
 // image and the page (each 200 KB of unfiltered XML, as InDesign writes it).
-async function build({ objectXmp }) {
+async function build({ objectXmp, catalogXmpBytes = 200000, mc0Only = false, objectStreams = false }) {
   const pdf = await PDFDocument.create();
   const page = pdf.addPage([200, 200]);
-  const xmp = () => pdf.context.register(PDFRawStream.of(
-    pdf.context.obj({ Type: 'Metadata', Subtype: 'XML' }), new TextEncoder().encode('<x:xmpmeta>' + 'h'.repeat(200000) + '</x:xmpmeta>')));
-  pdf.catalog.set(PDFName.of('Metadata'), xmp());
+  const xmp = (n = 200000) => pdf.context.register(PDFRawStream.of(
+    pdf.context.obj({ Type: 'Metadata', Subtype: 'XML' }), new TextEncoder().encode('<x:xmpmeta>' + 'h'.repeat(n) + '</x:xmpmeta>')));
+  pdf.catalog.set(PDFName.of('Metadata'), xmp(catalogXmpBytes));
   const imgDict = pdf.context.obj({ Type: 'XObject', Subtype: 'Image', Width: 1, Height: 1, ColorSpace: 'DeviceGray', BitsPerComponent: 8, Filter: 'FlateDecode' });
-  if (objectXmp) imgDict.set(PDFName.of('Metadata'), xmp());
+  if (objectXmp && !mc0Only) imgDict.set(PDFName.of('Metadata'), xmp());
   const img = pdf.context.register(PDFRawStream.of(imgDict, pdf.context.flateStream(new Uint8Array([128])).contents));
   page.node.set(PDFName.of('Resources'), pdf.context.obj({ XObject: { Im0: img } }));
-  if (objectXmp) page.node.set(PDFName.of('Metadata'), xmp());
+  if (objectXmp && !mc0Only) page.node.set(PDFName.of('Metadata'), xmp());
   // InDesign: a placed image's XMP on the marked-content properties inside the page's resources
   if (objectXmp) page.node.Resources().set(PDFName.of('Properties'), pdf.context.obj({ MC0: pdf.context.obj({ Metadata: xmp() }) }));
-  return (await pdf.save({ useObjectStreams: false })).buffer;
+  return (await pdf.save({ useObjectStreams: objectStreams })).buffer;
 }
 
 console.log('\n🗜️  compressPrepWorker — XMP on objects:');
 
-await test('XMP on an image, a page and marked-content properties: keys and streams gone, the catalog\'s left, the file smaller', async () => {
+await test('XMP on the catalog, an image, a page and marked-content properties: keys and streams gone, the file smaller', async () => {
   const input = await build({ objectXmp: true });
   const before = input.byteLength;
   const out = await _encodeRawImages(input.slice(0), true);
-  assert(out.xmp === 3, `removed ${out.xmp}, expected 3 (image, page, marked-content properties)`);
-  assert(out.result.byteLength < before - 550000, `${before} → ${out.result.byteLength}: the streams were not dropped`);
+  assert(out.xmp === 4, `removed ${out.xmp}, expected 4 (catalog, image, page, marked-content properties)`);
+  assert(out.result.byteLength < before - 750000, `${before} → ${out.result.byteLength}: the streams were not dropped`);
   const pdf = await PDFDocument.load(out.result);
-  assert(pdf.catalog.has(PDFName.of('Metadata')), 'the catalog\'s XMP was removed (handleCompress\'s job, by preset)');
+  // handleCompress unhooks the catalog's XMP on Standard/Maximum anyway, but pdf-lib then still
+  // wrote the stream; removed here, it goes (C24, 2026-11-11)
+  assert(!pdf.catalog.has(PDFName.of('Metadata')), 'the catalog still has /Metadata');
   const page = pdf.getPage(0);
   assert(!page.node.has(PDFName.of('Metadata')), 'the page still has /Metadata');
   const img = pdf.context.lookup(page.node.Resources().lookup(PDFName.of('XObject')).get(PDFName.of('Im0')));
@@ -73,8 +75,8 @@ await test('Light (stripXmp off): the input comes back as it is', async () => {
   assert(out.result === input && out.xmp === 0, 'the file was changed on Light');
 });
 
-await test('only the catalog has XMP: no parse, the input comes back as it is', async () => {
-  const input = await build({ objectXmp: false });
+await test('only a small catalog XMP: no parse, the input comes back as it is', async () => {
+  const input = await build({ objectXmp: false, catalogXmpBytes: 4000 });
   assert(!_mayHaveObjectXmp(new Uint8Array(input)), 'the scan saw object XMP where there is none');
   const out = await _encodeRawImages(input, true);
   assert(out.result === input && out.xmp === 0, 'the file was changed');
@@ -82,6 +84,22 @@ await test('only the catalog has XMP: no parse, the input comes back as it is', 
 
 await test('the scan sees XMP on objects', async () => {
   assert(_mayHaveObjectXmp(new Uint8Array(await build({ objectXmp: true }))), 'missed');
+});
+
+await test('marked-content XMP whose keys sit in compressed object streams is seen and removed (C24, USGS InDesign files)', async () => {
+  const input = await build({ objectXmp: true, mc0Only: true, catalogXmpBytes: 4000, objectStreams: true });
+  // the old scan looked for "/Metadata n 0 R" in plain text — inside object streams it saw none
+  assert(!/\/Metadata\s+\d+\s+\d+\s+R/.test(Buffer.from(input).toString('latin1')), 'the fixture must hide its references');
+  assert(_mayHaveObjectXmp(new Uint8Array(input)), 'missed');
+  const out = await _encodeRawImages(input.slice(0), true);
+  assert(out.xmp === 2 && out.result.byteLength < input.byteLength - 190000, `removed ${out.xmp}, ${input.byteLength} → ${out.result.byteLength}`);
+});
+
+await test('one big catalog XMP alone (≥ 64 KB): removed with its stream on Standard/Maximum', async () => {
+  const input = await build({ objectXmp: false, catalogXmpBytes: 200000 });
+  assert(_mayHaveObjectXmp(new Uint8Array(input)), 'missed');
+  const out = await _encodeRawImages(input.slice(0), true);
+  assert(out.xmp === 1 && out.result.byteLength < input.byteLength - 190000, `removed ${out.xmp}, ${input.byteLength} → ${out.result.byteLength}`);
 });
 
 // ── Flate L for CMYK images (criteria v0.2, owner 2026-11-05) ─────────────

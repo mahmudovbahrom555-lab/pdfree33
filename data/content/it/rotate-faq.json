@@ -4,7 +4,7 @@
     "name": "Ruotare un PDF carica il mio file su un server?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. La rotazione viene elaborata interamente nel tuo browser. I tuoi file non vengono mai inviati da nessuna parte."
+      "text": "No. Tutta l'elaborazione avviene nel tuo browser. I file non vengono mai inviati altrove."
     }
   },
   {
@@ -12,7 +12,7 @@
     "name": "Posso ruotare solo alcune pagine?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Sì. Puoi scegliere di ruotare tutte le pagine oppure selezionare singole pagine da ruotare."
+      "text": "Sì. Clicca sulle anteprime delle singole pagine per selezionare quelle da ruotare. Le altre restano invariate."
     }
   },
   {
@@ -20,7 +20,7 @@
     "name": "Ruotare riduce la qualità delle immagini?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. La rotazione modifica solo il metadato di orientamento della pagina. Il contenuto (immagini, testo, grafica vettoriale) non viene ricompresso o ridisegnato."
+      "text": "No. La rotazione modifica solo il metadato di orientamento — il contenuto (testo, immagini, grafica vettoriale) resta identico e non viene ricompresso."
     }
   },
   {

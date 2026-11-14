@@ -44,7 +44,7 @@
     "name": "Quanto pode o PDFree reduzir o tamanho de um arquivo PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "As reduções típicas são de 20–70 %. Os PDFs com imagens de alta resolução (documentos digitalizados, brochuras fotográficas) são os mais comprimidos — frequentemente 50–80 % de poupança. Os PDFs apenas com texto são menos reduzidos, uma vez que o texto já é armazenado eficientemente como vectores."
+      "text": "As reduções típicas são de 20–70 %. Os PDFs com imagens de alta resolução são os mais comprimidos — frequentemente 50–80 % de poupança."
     }
   },
   {
@@ -52,7 +52,7 @@
     "name": "Por que motivo o PDF comprimido parece igual mas é mais pequeno?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Os PDFs contêm frequentemente dados invisíveis: miniaturas de página geradas pelo Adobe Reader, tipos de letra incorporados duplicados, fluxos de metadados XMP e perfis de cor incorporados. O PDFree remove estes extras ocultos. O conteúdo visível permanece idêntico."
+      "text": "Os PDFs contêm frequentemente dados invisíveis: miniaturas de página geradas pelo Adobe Reader, tipos de letra duplicados, fluxos de metadados XMP. O PDFree remove estes extras ocultos. O conteúdo visível permanece idêntico."
     }
   },
   {
@@ -69,6 +69,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Muitos formulários on-line (concursos via Cebraspe, FGV, VUNESP, portais de órgãos públicos) limitam os envios a 2-10 MB, muitas vezes sem avisar claramente até o envio falhar. Comprimir o PDF antes costuma resolver isso mesmo com uma redução pequena, sem alterar o conteúdo do documento."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso comprimir um PDF para um tamanho exato, como 4 MB ou 500 KB?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Em “Comprimir para”, escolha um tamanho ou “Outro tamanho” e digite-o em MB ou KB. O PDFree testa as configurações da mais suave para a mais forte e fica com a mais suave em que o arquivo cabe; depois diz o que isso custou — por exemplo, imagens a 150 dpi e qualidade de 75 %, ou nenhuma perda de qualidade. A compressão real roda até quatro vezes, então um arquivo grande demora mais. Se nem a configuração mais forte for suficiente, o PDFree diz claramente que esse tamanho não pode ser alcançado e entrega o arquivo mais próximo; dividir o PDF pode ajudar."
     }
   }
 ]

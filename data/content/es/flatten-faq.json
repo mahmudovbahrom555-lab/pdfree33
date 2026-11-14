@@ -52,7 +52,7 @@
     "name": "¿Por qué aplanar en lugar de simplemente guardar el PDF rellenado?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Un PDF rellenado guardado sigue conteniendo campos editables — un destinatario podría borrar tus valores y volver a rellenarlos. Aplanar bloquea permanentemente el contenido en la página, evita la edición y garantiza una representación coherente en todos los visores de PDF."
+      "text": "Un PDF rellenado guardado sigue conteniendo campos editables — el destinatario podría borrar tus valores y volver a rellenarlos. Aplanar bloquea el contenido de forma permanente en la página, impide la edición y garantiza una visualización coherente en todos los visores de PDF."
     }
   },
   {
@@ -68,7 +68,7 @@
     "name": "¿Aplanar un PDF reduce el tamaño del archivo?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "A menudo, ligeramente. Aplanar elimina los datos de los widgets interactivos y el JavaScript, lo que reduce el tamaño en formularios con muchos campos. Las imágenes y fuentes incrustadas no se ven afectadas. Para una reducción significativa, procesa el resultado aplanado con un compresor de PDF."
+      "text": "A menudo, ligeramente. Aplanar elimina los datos de los widgets interactivos y el JavaScript, lo que reduce el tamaño en formularios con muchos campos. Las imágenes y fuentes incrustadas no se ven afectadas. Para una reducción significativa, procesa el resultado con <a href=\"/es/comprimir-pdf/\" style=\"color:var(--green-text);\">Comprimir PDF</a>."
     }
   },
   {
@@ -76,7 +76,7 @@
     "name": "¿Cuál es la diferencia entre aplanar y proteger con contraseña un PDF?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Resuelven problemas distintos. Aplanar elimina por completo la estructura de formulario interactivo — no existen campos que editar, sin importar los permisos. La protección por contraseña restringe el acceso o los derechos de edición pero deja los campos intactos. Para mayor seguridad, aplana primero y luego añade una contraseña."
+      "text": "Resuelven problemas distintos. Aplanar elimina por completo la estructura de formulario interactivo — no existen campos que editar, sin importar los permisos. La protección por contraseña restringe el acceso o los derechos de edición pero deja los campos intactos. Para mayor seguridad, aplana primero y luego añade una contraseña con <a href=\"/es/proteger-pdf/\" style=\"color:var(--green-text);\">Proteger PDF</a>."
     }
   },
   {

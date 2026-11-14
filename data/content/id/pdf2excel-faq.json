@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Ya. Setiap tabel yang terdeteksi menjadi lembar tersendiri di file .xlsx hasil konversi, diberi nama dan diurutkan sesuai posisinya di PDF, sehingga tabel dari halaman atau bagian berbeda tidak tercampur."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kenapa Konversi di Sini, Bukan di Alat Cloud?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Kebanyakan konverter PDF ke Excel online mengunggah dokumen Anda ke server jarak jauh, mengekstrak datanya di sana, lalu mengirimkan kembali hasilnya. Untuk laporan bank atau faktur, itu berarti data keuangan Anda melintasi internet dan — meski sebentar — berada di perangkat keras yang bukan milik Anda."
+    }
   }
 ]

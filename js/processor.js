@@ -14,6 +14,8 @@ import { trackToolError, trackBatchStart, trackBatchSuccess, trackRepair, trackF
 import { TOOLS } from './config.js';
 import { maxFileMb, isLargeDevice } from './fileLimits.js';
 import { getRunner, getWorkerTool } from './toolRegistry.js';
+import { copyText } from './quickEditCopyText.js';
+import { watermarkTextRequest } from './watermarkTextRequest.js';
 import { loadJSZip, loadDocx, loadExcelJs, loadPptxGenJs } from './lazyLibs.js';
 import { repairSplitSurrogates } from './ooxmlRepair.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
@@ -184,18 +186,26 @@ function _createWorker() {
 // background when the tool opens, they're in the cache by then.
 const _SHARED_WORKER = ['worker.js?v=__WORKER_HASH__', 'pdfEncrypt.js', 'watermarkImage.js'];
 const _RUNNER_SCRIPTS = {
-  merge: ['mergeWorker.js'], split: ['splitWorker.js'], organize: ['organizeWorker.js'],
+  // Merge: adding files starts its page-count scan in the shared worker
+  // ("importScripts failed: /js/watermarkImage.js", 3 people, 2026-11-11)
+  merge: ['mergeWorker.js', ..._SHARED_WORKER], split: ['splitWorker.js', 'pageTreeCounts.js'], organize: ['organizeWorker.js'],
   compress: [..._SHARED_WORKER, 'compressPrepWorker.js', 'cmykD.js'], worker: _SHARED_WORKER,
   jpg2pdf: [..._SHARED_WORKER, 'tiffWorker.js', 'vendor/UTIF.js', 'vendor/pako_inflate.min.js'],
   resize: ['resizeWorker.js'], nup: ['nupWorker.js', 'nupLayout.js'], mangaSplit: ['mangaSplitWorker.js'],
   fillOrder: ['fillOrderWorker.js'], cleanScan: ['cleanScanWorker.js'], ereader: ['ereaderWorker.js'],
   glossary: ['glossaryWorker.js'],
 };
+// For every tool: pdf.js, its worker and their shims — almost every tool reads
+// the file with it as soon as one is added (pages, previews); not cached yet and
+// the connection gone, the tool said the PDF was damaged (Split, 2026-11-11).
+// Not JSZip or docx: they load only when a tool needs them, and a failed load
+// is retried on the next press (tests/e2e/cdn-fallback.e2e.mjs).
+const _ALWAYS = ['pdfjsLoader.js', 'atPolyfill.js', 'vendor/pdfjs-4.10.38/pdf.min.js', 'pdfWorkerModule.js',
+  'vendor/pdfjs-4.10.38/pdf.worker.min.js'];
 const _warmed = new Set();
 export function warmToolScripts(tool) {
   const own = _RUNNER_SCRIPTS[getRunner(tool)];
-  if (!own) return;
-  for (const path of ['vendor/pdf-lib.min.js', ...own]) {
+  for (const path of [..._ALWAYS, ...(own ? ['vendor/pdf-lib.min.js', ...own] : [])]) {
     const url = new URL('./' + path, import.meta.url).href;
     if (_warmed.has(url)) continue;
     _warmed.add(url);
@@ -1213,60 +1223,61 @@ async function _runFillOrder(filesSnapshot, params) {
 // parallel (matches pdf2jpgUI.js's own bounded-concurrency discipline;
 // full-DPI raster pages are far heavier than that file's 160px thumbs) —
 // and cleanScanWorker.js only ever receives already-rendered bitmaps.
-// ── Watermark (text mode): dedicated Unicode-capable worker ────────────
-// See watermarkTextWorker.js's own header for the full rationale — this
-// exists because worker.js's handleWatermark() embeds a WinAnsi-only
-// standard font, which can't render Cyrillic/Vietnamese/Turkish text
-// (including the localized default watermark text on ru/vi/tr). Image
-// watermarks don't need any of this and stay on worker.js unchanged —
-// only routed here when options.kind !== 'image'.
-let _watermarkTextWorker = null;
-function _ensureWatermarkTextWorker() {
-  if (!_watermarkTextWorker) {
-    _watermarkTextWorker = new Worker(new URL('./watermarkTextWorker.js', import.meta.url));
-  }
-  return _watermarkTextWorker;
+// Personalized copies (the users' "watermark-batch" request): one PDF per name,
+// {name} in the text replaced by it, through the same watermarkTextWorker as a
+// single run — so every option (position, tile, rotation, pages, layer) and
+// the raster fallback for scripts the font lacks (CJK) apply to each copy.
+// All-or-nothing: a failing copy stops the run and names it. ZIP up to 100 MiB.
+const _WM_COPIES_ZIP_CAP = 100 * 1024 * 1024;
+function _wmCopyFileName(base, name, used) {
+  // characters a file name can't hold, and control characters (char codes below 32)
+  const clean = [...name].map(c => (c.charCodeAt(0) < 32 || '\\/:*?"<>|'.includes(c) ? '_' : c)).join('').replace(/\s+/g, ' ').trim().slice(0, 80) || 'copy';
+  const stem = `${base}-${clean}`;
+  const n = (used.get(stem) || 0) + 1;
+  used.set(stem, n);
+  return n === 1 ? `${stem}.pdf` : `${stem} (${n}).pdf`;
 }
 
-// Fetched once per page load and cached — same file every time, same
-// pattern as pdfaAnalyze.js's _loadLiberationFont (LiberationSans-Bold is
-// the metric-compatible replacement for the HelveticaBold this feature
-// used before, so existing Latin-text watermarks render identically).
-// Only fileBuffer goes in postMessage's transfer list below, never this
-// cached buffer — an ArrayBuffer put in a transfer list is detached after
-// the call, which would silently corrupt every watermark after the first
-// if this cache were transferred instead of structure-cloned.
-let _liberationSansBoldPromise = null;
-function _loadLiberationSansBold() {
-  if (!_liberationSansBoldPromise) {
-    const url = new URL('./vendor/liberation-fonts/LiberationSans-Bold.ttf', import.meta.url).href;
-    _liberationSansBoldPromise = fetch(url).then(r => {
-      if (!r.ok) throw new Error(`Failed to load LiberationSans-Bold.ttf (${r.status})`);
-      return r.arrayBuffer();
-    });
+async function _runWatermarkCopies(filesSnapshot, params) {
+  const file = filesSnapshot[0];
+  if (!_checkSize(file, maxFileMb('watermark'))) { _abortUI(); return; }
+  const source = file._decryptedBuffer ? file._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(file));
+  const names = params.copies;
+  const base = file.name.replace(/\.pdf$/i, '');
+  await loadJSZip();
+  const zip = new window.JSZip();
+  const used = new Map();
+  let total = 0, pages = 0;
+  for (let i = 0; i < names.length; i++) {
+    if (!isProcessing) return;   // cancelled between copies
+    setProgress(Math.round(5 + 88 * i / names.length), copyText(`Copy ${i + 1} of ${names.length}…`, `正在生成第 ${i + 1}/${names.length} 份…`));
+    let data;
+    try {
+      data = await watermarkTextRequest(source.slice(0), { ...params, copies: null, text: params.text.replaceAll('{name}', names[i]) });
+    } catch (err) {
+      isProcessing = false; setFilesLocked(false); hideCancelBtn();
+      const why = err.code === 'unsupported-characters' ? t('err_watermark_unsupported_chars') : err.message;
+      _handleError('watermark', copyText(`Copy ${i + 1} (${names[i]}): ${why}`, `第 ${i + 1} 份（${names[i]}）：${why}`), 'watermark_copies_failed');
+      return;
+    }
+    total += data.result.byteLength;
+    if (total > _WM_COPIES_ZIP_CAP) {
+      isProcessing = false; setFilesLocked(false); hideCancelBtn();
+      _handleError('watermark', copyText(`The copies would exceed 100 MB after ${i + 1} names. Use fewer names per run.`, `生成到第 ${i + 1} 份时将超过 100 MB，请减少每次的姓名数量。`), 'watermark_copies_too_large');
+      return;
+    }
+    pages = data.pageCount;
+    zip.file(_wmCopyFileName(base, names[i], used), data.result);
   }
-  return _liberationSansBoldPromise;
-}
-
-// Low-level request/response round trip for one file — shared by both the
-// single-file path (_runWatermarkText) and the batch path
-// (_batchWorkerToolOne). No watchdog/cancel wiring (unlike
-// _postToWorkerForBatch's shared-worker version) — font-embedding +
-// drawText is fast enough that a hang here would indicate a real bug, not
-// something worth a timeout UX for.
-async function _watermarkTextRequest(fileBuffer, options, onProgress) {
-  const fontBytes = await _loadLiberationSansBold();
-  return new Promise((resolve, reject) => {
-    const worker = _ensureWatermarkTextWorker();
-    worker.onmessage = (e) => {
-      const data = e.data;
-      if (data.type === 'progress') { onProgress?.(data.value, data.label); return; }
-      if (data.type === 'done')     { resolve(data); return; }
-      if (data.type === 'error')    { const err = new Error(data.message); err.code = data.code; err.chars = data.chars; reject(err); return; }
-    };
-    worker.onerror = (e) => reject(new Error(e.message || 'Worker error'));
-    worker.postMessage({ fileBuffer, options, fontBytes }, [fileBuffer]);
-  });
+  if (!isProcessing) return;
+  setProgress(95, t('prog_zip'));
+  const blob = await zip.generateAsync({ type: 'blob', mimeType: 'application/zip' });
+  isProcessing = false; setFilesLocked(false); hideCancelBtn();
+  setProgress(100, t('prog_done'));
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: { tool: 'watermark', blob, filename: `${base}-personalized.zip`,
+              desc: copyText(`${names.length} personalized PDFs · ${pages} pages each · ${fmtSize(blob.size)}`, `${names.length} 份个性化 PDF · 每份 ${pages} 页 · ${fmtSize(blob.size)}`) },
+  }));
 }
 
 async function _runWatermarkText(filesSnapshot, params) {
@@ -1278,7 +1289,7 @@ async function _runWatermarkText(filesSnapshot, params) {
 
   let data;
   try {
-    data = await _watermarkTextRequest(buffer, params, (value, label) => setProgress(value, label));
+    data = await watermarkTextRequest(buffer, params, (value, label) => setProgress(value, label));
   } catch (err) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
     if (err.code === 'unsupported-characters') {
@@ -1817,6 +1828,12 @@ let _compressPrepXmp = 0;   // XMP streams the last pre-pass removed (0 on fallb
 // used only from 75 up. maxMegapixels: images larger than this are left as
 // they are — a first, unmeasured guard for small devices (BASE tier); to be
 // set from measurements on real phones.
+//
+// rgb: JPEG 2000 images (C34), which nothing else in Compress reads, and
+// RGB/grey figures drawn smaller than the page (C35), whose dpi worker.js
+// misjudges from the page size — the dpi and quality worker.js uses for every
+// other RGB/grey image: the chosen resolution (null = keep), else the mode's
+// 150/96; the chosen quality, else 82/72.
 function _cmykDOptions(preset, file, manual = {}) {
   if (preset === 'low' || file?._signed) return null;
   const base = preset === 'high' ? 75 : 82;
@@ -1825,6 +1842,14 @@ function _cmykDOptions(preset, file, manual = {}) {
     target: Math.max(300, manual.targetDpi || 0),
     quality: q && q >= 75 ? q : base,
     maxMegapixels: isLargeDevice() ? 64 : 16,
+    // JPX decoding (pdf.js's OpenJPEG) peaks at ~20 bytes per pixel (measured:
+    // 15.8 MP → ~310 MB, the same on every following image) against ~4 for a
+    // CMYK JPEG — so its own cap, from that measurement, not from real phones yet
+    rgb: {
+      target: 'targetDpi' in manual ? manual.targetDpi : (preset === 'high' ? 96 : 150),
+      quality: q || (preset === 'high' ? 72 : 82),
+      maxMegapixels: isLargeDevice() ? 24 : 4,
+    },
   };
 }
 
@@ -1858,6 +1883,154 @@ function _compressPrep(buffer, file, preset, manual) {
   });
 }
 
+// The result card for a compressed file whose bytes are final
+function _compressSucceeded(file, originalSize, final, data, prepXmp, toolKey, extra) {
+  isProcessing = false;
+  setFilesLocked(false);
+  hideCancelBtn();
+  setProgress(100, t('prog_done'));
+  const blob = new Blob([final.result], { type: 'application/pdf' });
+
+  // Build filename: "report.pdf" → "report-compressed.pdf"
+  const baseName = file.name.replace(/\.pdf$/i, '');
+  const filename  = `${baseName}-compressed.pdf`;
+
+  const savedBytes = originalSize - final.compressedSize;
+  const savedPct  = originalSize > 0
+    ? Math.round((savedBytes / originalSize) * 100)
+    : 0;
+  const desc = savedPct > 0
+    ? t('desc_compress_saved', { pct: savedPct })
+    : t('desc_compress_optimized');
+
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: {
+      tool: toolKey,  // actual tool key (compress or compress-email) for registry dispatch
+      blob,
+      desc,
+      filename,
+      // Extra data for compression report UI (beyond standard ТЗ)
+      compressionReport: {
+        originalSize,
+        compressedSize: final.compressedSize,
+        savedBytes,
+        // XMP removed from images/pages by the pre-pass is listed like the catalog's
+        report:         prepXmp && data.report ? { ...data.report, hasXMP: true } : data.report,
+        ...extra,
+      },
+    }
+  }));
+
+  if (data.report?.wasEncrypted) {
+    showToast(t('warn_encrypted_pdf'), 5000);
+  }
+}
+
+// ── Compress to a size: the least loss that fits (2026-11-13) ──
+// A person asked for "4 MB" (zh, a portal's limit). The old chips only set
+// Maximum + 96 dpi + one quality and hoped. Here the real compression runs
+// (pre-pass + worker, worker.js untouched) on a ladder from no loss to the
+// most, and the gentlest step whose file fits is kept. Halving 11 places
+// (no step fits … every step fits) pins that step in at most 4 runs, each
+// one proven: the step just gentler was run and didn't fit. Guessing the
+// first step from the size ratio or predicting steps from measured sizes
+// left a gentler step unrun on 2 of 7 fits (2026-11-13). When nothing fits,
+// the halving has run the strongest step, and that is said plainly.
+const _TARGET_LADDER = [
+  { preset: 'low' },                                   // lossless: structure only
+  { preset: 'medium', targetDpi: 300, quality: 0.85 },
+  { preset: 'medium', targetDpi: 200, quality: 0.80 },
+  { preset: 'medium', targetDpi: 150, quality: 0.75 },
+  { preset: 'medium', targetDpi: 150, quality: 0.65 },
+  { preset: 'medium', targetDpi: 120, quality: 0.60 },
+  { preset: 'medium', targetDpi: 96,  quality: 0.55 },
+  { preset: 'medium', targetDpi: 96,  quality: 0.45 },
+  { preset: 'medium', targetDpi: 72,  quality: 0.40 },
+  { preset: 'medium', targetDpi: 72,  quality: 0.30 },
+];
+
+// One full compression at one ladder step → the worker's 'done' data (null if cancelled)
+async function _compressAttempt(original, file, step, { preserveText, removeWatermarks }, onProgress) {
+  const manual = step.preset === 'low' ? {} : { targetDpi: step.targetDpi, quality: step.quality };
+  const buffer = await _compressPrep(original.slice(0), file, step.preset, manual);
+  if (!buffer || !isProcessing) return null;
+  return new Promise((resolve, reject) => {
+    let watchdog;
+    const arm = () => {
+      clearTimeout(watchdog);
+      watchdog = setTimeout(() => reject(Object.assign(new Error(t('err_compress_timeout')), { type: 'timeout' })), 45_000);
+    };
+    arm();
+    _shared().onmessage = (e) => {
+      const data = e.data;
+      if (data.type === 'progress') { arm(); onProgress(data.value); }
+      else if (data.type === 'scan-report') arm();
+      else if (data.type === 'done') {
+        clearTimeout(watchdog);
+        if (data.result instanceof ArrayBuffer) resolve(data); else reject(new Error('Unexpected result type from worker'));
+      } else if (data.type === 'error') { clearTimeout(watchdog); reject(new Error(data.message)); }
+    };
+    _shared().onerror = (e) => { clearTimeout(watchdog); reject(new Error(e.message || 'Worker error')); };
+    _shared().postMessage({ tool: 'compress', file: buffer, options: {
+      preset: step.preset, preserveText, removeWatermarks,
+      targetDpi: step.targetDpi ?? null, quality: step.quality ?? null,
+    } }, [buffer]);
+  });
+}
+
+async function _runCompressToTarget(file, original, originalSize, targetSizeMb, opts, toolKey) {
+  const target = targetSizeMb * 1024 * 1024;
+  const steps = _TARGET_LADDER.length;
+  // lo: the strongest step known NOT to fit; hi: the gentlest known to fit
+  let lo = -1, hi = steps, run = 0;
+  const results = new Map();
+  const attempt = async index => {
+    setProgress(5 + run * 23, t('prog_target_try', { n: run + 1 }));
+    const tryNumber = run;
+    const data = await _compressAttempt(original, file, _TARGET_LADDER[index], opts,
+      value => setProgress(5 + tryNumber * 23 + Math.round(value * 0.22), t('prog_target_try', { n: tryNumber + 1 })));
+    run++;
+    if (data) results.set(index, data);
+    return data;
+  };
+  try {
+    // a file already within the size needs no loss at all: one lossless run
+    // (never a bigger file — _notLarger below gives its own bytes back)
+    if (originalSize <= target) {
+      if (!await attempt(0) || !isProcessing) return;
+      hi = 0;
+    }
+    while (hi - lo > 1) {
+      const step = Math.floor((lo + hi) / 2);
+      const data = await attempt(step);
+      if (!data || !isProcessing) return;
+      if (data.compressedSize <= target) hi = step; else lo = step;
+    }
+  } catch (err) {
+    isProcessing = false;
+    setFilesLocked(false);
+    hideCancelBtn();
+    _handleError('compress', err.message, err.type);
+    return;
+  }
+  // Nothing fits: the gentlest step within 3 % of the smallest file — the
+  // strongest step bought 1 % on a book of vector pages and blurred every
+  // picture for it (8.6 MB → 7.16 MB at 150 dpi, 7.07 MB at 72 dpi, 2026-11-13)
+  const smallest = Math.min(...[...results.values()].map(result => result.compressedSize));
+  const chosen = hi < steps ? hi
+    : Math.min(...[...results.keys()].filter(index => results.get(index).compressedSize <= smallest * 1.03));
+  const data = results.get(chosen);
+  const final = await _notLarger(data, originalSize, file);
+  const { targetDpi = null, quality = null } = _TARGET_LADDER[chosen];
+  _compressSucceeded(file, originalSize, final, data, 0, toolKey, {
+    targetSizeMb,
+    // tried: each step run and its size — whether the gentler step was really
+    // tried and missed (the measure of "least loss", scripts in wip-bench)
+    target: { met: final.compressedSize <= target, lossless: chosen === 0, dpi: targetDpi, quality, heavy: chosen >= 7,
+      step: chosen, tried: [...results].map(([index, result]) => [index, result.compressedSize]) },
+  });
+}
+
 async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = true, removeWatermarks = false, targetDpi = null, quality = null, targetSizeMb = null } = {}, toolKey = 'compress') {
   if (!_checkSize(filesSnapshot[0], maxFileMb('compress'))) { _abortUI(); return; }
 
@@ -1867,9 +2040,12 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
   // the worker then only sees the pre-passed bytes — savings must be
   // reported against what the user actually uploaded.
   const originalSize = original.byteLength;
+  if (targetSizeMb) {
+    await _runCompressToTarget(file, original, originalSize, targetSizeMb, { preserveText, removeWatermarks }, toolKey);
+    return;
+  }
   setProgress(5, t('prog_loading_pdf'));
-  // a target size works with the mode's own D300 settings (plan §7): not with the chips' dpi/quality
-  const buffer = await _compressPrep(original, file, preset, targetSizeMb ? {} : { targetDpi, quality });
+  const buffer = await _compressPrep(original, file, preset, { targetDpi, quality });
   if (!buffer || !isProcessing) return;
   const prepXmp = _compressPrepXmp;
 
@@ -1896,51 +2072,12 @@ async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = t
 
   // The result card, once the bytes are final: never a bigger file (see _notLarger).
   const _finishCompress = async (data) => {
-    const final = await _notLarger(data, originalSize, file);
-    isProcessing = false;
-    setFilesLocked(false);
-    hideCancelBtn();
-    setProgress(100, t('prog_done'));
-    const blob = new Blob([final.result], { type: 'application/pdf' });
-
-    // Build filename: "report.pdf" → "report-compressed.pdf"
-    const baseName = file.name.replace(/\.pdf$/i, '');
-    const filename  = `${baseName}-compressed.pdf`;
-
-    const savedBytes = originalSize - final.compressedSize;
-    const savedPct  = originalSize > 0
-      ? Math.round((savedBytes / originalSize) * 100)
-      : 0;
-    const desc = savedPct > 0
-      ? t('desc_compress_saved', { pct: savedPct })
-      : t('desc_compress_optimized');
-
-    document.dispatchEvent(new CustomEvent('pdfree:success', {
-      detail: {
-        tool: toolKey,  // actual tool key (compress or compress-email) for registry dispatch
-        blob,
-        desc,
-        filename,
-        // Extra data for compression report UI (beyond standard ТЗ)
-        compressionReport: {
-          originalSize,
-          compressedSize: final.compressedSize,
-          savedBytes,
-          // XMP removed from images/pages by the pre-pass is listed like the catalog's
-          report:         prepXmp && data.report ? { ...data.report, hasXMP: true } : data.report,
-          targetSizeMb,
-        },
-      }
-    }));
-
-    if (data.report?.wasEncrypted) {
-      showToast(t('warn_encrypted_pdf'), 5000);
-    }
+    _compressSucceeded(file, originalSize, await _notLarger(data, originalSize, file), data, prepXmp, toolKey, {});
   };
 
   // ⚠️  TRANSFERABLE: buffer detached after this call — worker owns it until done.
   _shared().postMessage(
-    { tool: 'compress', file: buffer, options: { preset, preserveText, removeWatermarks, targetDpi, quality, targetSizeMb } },
+    { tool: 'compress', file: buffer, options: { preset, preserveText, removeWatermarks, targetDpi, quality } },
     [buffer]
   );
 
@@ -2451,7 +2588,9 @@ async function _runPdf2Jpg(filesSnapshot, { pages, format, dpi }) {
   const successCount = streamZip ? streamCount : (singleResult ? 1 : 0);
   if (successCount === 0) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
-    _handleError('pdf2jpg', t('err_no_render'), 'render_all_failed'); return;
+    // with the first page's reason: "render_all_failed" alone, three times in a
+    // row for one person, said nothing about why (analytics 2026-11-11)
+    _handleError('pdf2jpg', t('err_no_render'), `render_all_failed: ${String(failures[0]?.msg || '').slice(0, 60)}`); return;
   }
 
   // Real bug fixed here: a partial failure (some pages rendered, some
@@ -2520,7 +2659,7 @@ async function _runWorkerTool(tool, filesSnapshot, params, bufferOverride) {
   // Text watermarks need a Unicode-capable font — see watermarkTextWorker.js.
   // Image watermarks (options.kind === 'image') don't and stay below unchanged.
   if (tool === 'watermark' && params.kind !== 'image') {
-    return _runWatermarkText(filesSnapshot, params);
+    return params.copies?.length ? _runWatermarkCopies(filesSnapshot, params) : _runWatermarkText(filesSnapshot, params);
   }
   // Page numbers with text around them, a colour or a font — pageNumWorker.js.
   if (tool === 'pagenum' && _pageNumNeedsOwnWorker(params)) {
@@ -2739,7 +2878,7 @@ async function _batchWorkerToolOne(tool, file, params, onProgress) {
   // (e.g. code:'unsupported-characters') is caught by _runBatch's own
   // per-file try/catch, same as any other batch-item failure.
   const data = (tool === 'watermark' && params.kind !== 'image')
-    ? await _watermarkTextRequest(buffer, params, onProgress)
+    ? await watermarkTextRequest(buffer, params, onProgress)
     : (tool === 'pagenum' && _pageNumNeedsOwnWorker(params))
     ? await _pageNumRequest(buffer, params, onProgress)
     : await _postToWorkerForBatch({ tool, file: buffer, options: params }, [buffer], onProgress);
@@ -2908,7 +3047,7 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
  * @returns {Promise<{ blob: Blob, atlasEri: object|null, confidence: object|null,
  *   effectivePages: number, totalPages: number }>}
  */
-export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, stripMetadata = true, onProgress, isCancelled } = {}) {
+export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, stripMetadata = true, preserveNumericFields = false, onProgress, isCancelled } = {}) {
   onProgress?.(5, 'Loading libraries…');
 
   try {
@@ -2981,7 +3120,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
     } finally {
       await ocr.close();
     }
-    ({ paragraphs, cs } = await _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { repeatPatternSet, isCancelled, onProgress }));
+    ({ paragraphs, cs } = await _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { repeatPatternSet, preserveNumericFields, isCancelled, onProgress }));
     confidence = _p2wConfidence(cs, median);
   } else {
     onProgress?.(10, 'Rendering pages…');
@@ -3059,7 +3198,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
       if (cs.totalTables > 0 && atlasEri.components.tables < _ERI_TABLE_RETRY_THRESHOLD) {
         onProgress?.(95, 'Verifying table structure…');
         const retry = await _p2wBuildParagraphs(
-          pdfDoc, pageData, median, repeatTextSet, cs, { useTables: false, repeatPatternSet, isCancelled, onProgress }
+          pdfDoc, pageData, median, repeatTextSet, cs, { useTables: false, repeatPatternSet, preserveNumericFields, isCancelled, onProgress }
         );
         const retryBlob = await repairSplitSurrogates(await Packer.toBlob(_buildDoc(retry.paragraphs)), window.JSZip);
         const retryEri = await evaluateStructural(await retryBlob.arrayBuffer());
@@ -3118,7 +3257,8 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150, stripMeta
   setProgress(100, t('prog_done'));
 
   document.dispatchEvent(new CustomEvent('pdfree:success', {
-    detail: { tool: 'pdf2word', blob, desc, filename, confidence, atlasEri, mode }
+    detail: { tool: 'pdf2word', blob, desc, filename, confidence, atlasEri, mode,
+              pages: effectivePages, ocrPages: confidence?.ocrPages ?? 0 }
   }));
 }
 
@@ -4347,8 +4487,9 @@ async function _runDocx2Pdf(filesSnapshot, _extraParams) {
 // container element straight through extraParams — safe specifically
 // because this tool runs entirely main-thread, no postMessage/structured-
 // clone boundary to survive.
-async function _runQuickEdit(filesSnapshot, { editedContainer } = {}) {
+async function _runQuickEdit(filesSnapshot, { editedContainer, pageEdit } = {}) {
   const file = filesSnapshot[0];
+  if (pageEdit) { await _runQuickEditInPlace(file, pageEdit); return; }
   if (!editedContainer) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
     _handleError('quickEdit', 'Open the editor first.');
@@ -4399,6 +4540,61 @@ async function _runQuickEdit(filesSnapshot, { editedContainer } = {}) {
   document.dispatchEvent(new CustomEvent('pdfree:success', {
     detail: { tool: 'quickEdit', blob, desc, filename }
   }));
+}
+
+// In place (quickEditPage.js): the edited lines' glyphs removed by MuPDF, the new
+// text drawn where they were, every changed page read back before the file is
+// given (quickEditOriginal.js) — the rest of the PDF is the original's.
+async function _runQuickEditInPlace(file, { original, edits }) {
+  const done = () => { isProcessing = false; setFilesLocked(false); hideCancelBtn(); };
+  if (!edits.length) {
+    done();
+    _handleError('quickEdit', t('quickedit_no_edits'), 'no_edits');
+    return;
+  }
+  let blob;
+  // A line the engine refuses (one it can't match, a text too long for it) —
+  // or the page, when the check after the save fails there — is left as it
+  // was and the rest is saved:
+  // one odd line must not undo a Replace all over hundreds of pages. The
+  // pages left alone are named; with nothing left to change, the refusal is
+  // the error, as before.
+  let remaining = edits;
+  const skipped = [];
+  try {
+    const engine = await import('./quickEditOriginal.js');
+    for (;;) {
+      setProgress(30, t('quickedit_replacing'));
+      try {
+        const prepared = await engine.prepareOriginalCopy(original, remaining.map(e => e.line));
+        if (!isProcessing) return;
+        setProgress(60, t('quickedit_checking_pages'));
+        const planned = await engine.planOriginalCopies(prepared,
+          [{ recipientIndex: null, changes: remaining.map(({ line, text }) => ({ line, text, parts: null, appearance: null })) }],
+          true, () => !isProcessing);
+        if (!isProcessing || !planned) return;
+        blob = await engine.writeOriginalCopy(prepared, planned[0]);
+        break;
+      } catch (err) {
+        const rest = err.line ? remaining.filter(e => e.line !== err.line)
+          : err.page ? remaining.filter(e => e.line.page + 1 !== err.page) : remaining;
+        if (!isProcessing || rest.length === remaining.length || !rest.length) throw err;
+        skipped.push(err.page);
+        remaining = rest;
+      }
+    }
+  } catch (err) {
+    done();
+    _handleError('quickEdit', err.message, 'inplace_failed');
+    return;
+  }
+  if (!isProcessing) return;
+  done();
+  setProgress(100, t('prog_done'));
+  document.dispatchEvent(new CustomEvent('pdfree:success', {
+    detail: { tool: 'quickEdit', blob, desc: fmtSize(blob.size), filename: file.name.replace(/\.pdf$/i, '-edited.pdf') },
+  }));
+  if (skipped.length) showToast(t('quickedit_pages_left', { pages: [...new Set(skipped)].sort((x, y) => x - y).join(', ') }), 8000);
 }
 
 // pdf2md's extraction/render core (_detectPageImages/_p2mdExtractImageBlob/
@@ -4487,7 +4683,7 @@ async function _runUnlock(filesSnapshot, { password } = {}) {
 // useTables:false skips text-detected AND border-grid tables entirely (all
 // their lines flow through the normal paragraph path instead) — used as the
 // conservative fallback when the first attempt's tables look mis-detected.
-export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { useTables = true, repeatPatternSet = new Set(), isCancelled = () => !isProcessing, onProgress = setProgress } = {}) {
+export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { useTables = true, repeatPatternSet = new Set(), preserveNumericFields = false, isCancelled = () => !isProcessing, onProgress = setProgress } = {}) {
   // window.__pdfreeDocxBuilder — see the namespace-collision comment on
   // _buildPdf2WordDocxBlob's own window.__pdfreeDocxBuilder read, above.
   const { Paragraph, TextRun, HeadingLevel,
@@ -4973,7 +5169,8 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
           // (last 3 lines) that contains only a pure integer. Checking only the
           // very last line missed cases where the CamScanner watermark line is
           // below the page number, making the number the second-to-last line.
-          if (lineIdx >= lines.length - 3 && ln.items.length === 1 && !lineToTable.has(lineIdx)) {
+          // Quick Edit must keep standalone numeric fields (e.g. contract placeholders).
+          if (!preserveNumericFields && lineIdx >= lines.length - 3 && ln.items.length === 1 && !lineToTable.has(lineIdx)) {
             const t = ln.items[0].str.trim();
             if (/^\d+$/.test(t)) continue;
           }

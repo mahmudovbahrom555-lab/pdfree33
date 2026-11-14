@@ -12,7 +12,7 @@
     "name": "Những loại trường form nào được hỗ trợ?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree hỗ trợ trường văn bản, hộp kiểm, nút radio, danh sách thả xuống và trường chữ ký (AcroForm tiêu chuẩn)."
+      "text": "PDFree hỗ trợ trường văn bản, hộp kiểm, nút radio, danh sách thả xuống và trường chữ ký (AcroForm)."
     }
   },
   {
@@ -44,7 +44,7 @@
     "name": "Form đã điền có thể chỉnh sửa lại không?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Có. Tải về PDF đã điền, rồi mở lại trong PDFree bất cứ lúc nào để thay đổi giá trị các trường trước khi lưu lại."
+      "text": "Có. Mở lại PDF đã điền trong PDFree để thay đổi giá trị các trường trước khi lưu lại."
     }
   },
   {
@@ -60,7 +60,7 @@
     "name": "Công cụ này có thực sự điền vào các trường thực của form, hay tôi phải đặt văn bản thủ công?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "PDFree phát hiện các trường AcroForm thực của PDF — trường văn bản, hộp kiểm, nút radio, danh sách thả xuống và trường chữ ký — và hiển thị chúng như một form thực sự có thể điền được, không vẽ ô văn bản thủ công. Nếu PDF của bạn không có trường form, PDFree sẽ báo trực tiếp."
+      "text": "PDFree phát hiện các trường AcroForm thực của PDF — trường văn bản, hộp kiểm, nút radio, danh sách thả xuống và trường chữ ký — và hiển thị chúng như một form thực sự có thể điền được. Bạn không vẽ ô văn bản thủ công hay đoán vị trí. Nếu PDF của bạn không có trường form, PDFree sẽ báo trực tiếp thay vì giả vờ phát hiện các trường không tồn tại."
     }
   },
   {

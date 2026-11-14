@@ -121,33 +121,48 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Puis-je utiliser les outils PDFree sans connexion internet ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Oui. Après votre première visite, PDFree fonctionne entièrement hors ligne. Un Service Worker met en cache tout le JavaScript, les modules WebAssembly et les polices nécessaires à l'exécution des outils. Lors des visites suivantes — même sans internet — les outils se chargent depuis le cache et continuent de traiter les PDF. Cela rend PDFree utile en avion, dans les zones à faible connectivité ou sur des réseaux d'entreprise verrouillés." }
-      },
-      {
-        "@type": "Question",
-        "name": "Mon PDF est-il vraiment envoyé quand j'utilise PDFree ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Non. Votre PDF n'est jamais envoyé à un serveur. Lorsque vous déposez un fichier dans PDFree, le navigateur le lit depuis votre disque local via la File API. Tout le traitement — fusion, compression, division, conversion — se fait dans votre navigateur via WebAssembly (pdf-lib et PDF.js). Le résultat est téléchargé directement depuis la mémoire vers votre appareil. Aucun octet de votre fichier ne touche un serveur." }
-      },
-      {
-        "@type": "Question",
-        "name": "En quoi est-ce différent des outils PDF dans le cloud ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Les outils PDF dans le cloud envoient votre fichier sur leurs serveurs, le traitent là-bas, puis vous renvoient le résultat. Cela signifie que votre document voyage sur internet, se retrouve stocké sur une infrastructure tierce (même temporairement), et est soumis à leurs politiques de traitement des données. PDFree fait l'inverse : votre fichier ne quitte jamais votre appareil. Le moteur de traitement s'exécute dans votre navigateur. Aucun serveur n'intervient dans la gestion de votre document." }
-      },
-      {
-        "@type": "Question",
-        "name": "PDFree fonctionne-t-il sur mobile sans envoi de fichiers ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Oui. PDFree fonctionne sur Safari iOS, Chrome Android et tous les navigateurs mobiles modernes — sans envoi. Le même traitement basé sur WebAssembly s'exécute sur les appareils mobiles. Vous pouvez aussi installer PDFree comme PWA via l'option « Ajouter à l'écran d'accueil » de votre navigateur, pour un accès hors ligne façon application native." }
-      },
-      {
-        "@type": "Question",
-        "name": "PDFree est-il vraiment gratuit, sans limites cachées ?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Oui. PDFree est entièrement gratuit, sans limite quotidienne, sans compte requis et sans filigrane sur le résultat. Il n'existe aucun forfait payant à débloquer — tous les outils sont gratuits pour toujours. Le projet est open source sous licence GNU AGPLv3." }
-      }
+        {
+            "@type": "Question",
+            "name": "Puis-je utiliser ces outils PDF sans connexion internet ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Oui. Après votre première visite, PDFree fonctionne entièrement hors ligne. Un Service Worker met en cache toute l'application — scripts, modules WebAssembly et polices. Lors de toute visite ultérieure, même sans internet, tous les outils se chargent depuis le cache et traitent les PDF sans avoir besoin de connexion réseau."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Mon PDF est-il vraiment envoyé quand j'utilise PDFree ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Non. Votre PDF est lu depuis votre disque local par la File API du navigateur et traité en mémoire du navigateur. Aucun octet de votre fichier n'est envoyé via une connexion réseau. Vous pouvez le vérifier vous-même : ouvrez les DevTools de votre navigateur → onglet Réseau et observez qu'aucune requête d'envoi de fichier n'apparaît — il n'y en a aucune."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "En quoi est-ce différent des outils PDF dans le cloud ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Les outils cloud envoient votre fichier sur leurs serveurs, le traitent à distance, puis vous renvoient le résultat. Votre document se trouve temporairement sur leur infrastructure. PDFree fait l'inverse — le moteur de traitement vit dans votre navigateur. Votre fichier ne quitte jamais votre appareil. Cela rend PDFree fondamentalement plus sûr pour les documents sensibles et utilisable sans internet après le premier chargement."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "PDFree fonctionne-t-il sur mobile sans envoi de fichiers ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Oui. PDFree fonctionne sur Safari iOS, Chrome Android et tous les navigateurs mobiles modernes. Le traitement basé sur WebAssembly fonctionne de la même façon sur mobile — sans envoi, sans serveur. Vous pouvez aussi installer PDFree comme PWA depuis le menu de votre navigateur pour un accès hors ligne rapide depuis votre écran d'accueil."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Est-ce vraiment gratuit, sans piège caché ?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Oui. PDFree n'a aucun forfait payant, aucune limite quotidienne, aucun filigrane sur le résultat et aucun compte requis. Tous les outils sont gratuits pour toujours. Le projet est open source sous licence GNU AGPLv3 — vous pouvez inspecter le code source pour vérifier exactement comment il fonctionne."
+            }
+        }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">

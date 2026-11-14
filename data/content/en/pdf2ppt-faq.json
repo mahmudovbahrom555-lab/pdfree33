@@ -28,7 +28,7 @@
     "name": "What size will my slides be?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "The deck's slide size matches your PDF's first-page dimensions and aspect ratio. If every page is the same size, slides fill edge-to-edge with no letterboxing. PowerPoint only supports one slide size per deck, so if your PDF mixes page sizes or orientations, those pages are scaled to fit and centered instead of being stretched or distorted."
+      "text": "The deck's slide size matches your PDF's first-page dimensions and aspect ratio. If every page is the same size, slides fill edge-to-edge with no letterboxing — unlike forcing a portrait PDF onto a standard widescreen slide. PowerPoint only supports one slide size per deck, so if your PDF mixes page sizes or orientations, those pages are scaled to fit and centered instead of being stretched or distorted."
     }
   },
   {
@@ -36,7 +36,7 @@
     "name": "Which quality setting should I choose?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Balanced (150 dpi) is a good default for most decks. Choose High quality for dense text or fine print; choose Compact if you're emailing the file and want a smaller size."
+      "text": "Balanced (150 dpi) is a good default for most decks. Choose High quality for dense text or fine print you'll zoom into; choose Compact if you're emailing the file and want a smaller size."
     }
   },
   {
@@ -53,6 +53,14 @@
     "acceptedAnswer": {
       "@type": "Answer",
       "text": "Yes, though very large page counts automatically use a lower image quality to keep your browser from running out of memory. For huge decks, Compact quality is the most reliable choice."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Can I put one question per slide, for a quiz or a worksheet?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Choose your PDF and press One question per slide. Draw a frame around each question — the Suggest frames help reads the numbers on single-column pages, and a picture or instructions shared by several questions can be attached to all of them. Each slide shows its question exactly as on the page, cut from it, with as much space to work as you choose. Turn on Interactive answer to make A–E choices clickable in the slide show: a correct answer shows your explanation, a wrong one says Try again. You can also download a PDF with one question per page for printing. Everything happens in your browser; the PDF is not uploaded."
     }
   }
 ]

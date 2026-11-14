@@ -4,8 +4,23 @@
   "name": "Cara Mengedit Teks di PDF",
   "description": "Perbaiki typo atau perubahan teks kecil di dalam PDF — 100% di browser Anda.",
   "step": [
-    {"@type":"HowToStep","position":1,"name":"Buka PDF Anda","text":"Klik 'Pilih file' atau seret PDF Anda ke area drop. PDFree memeriksa seberapa bersih dokumen dapat diubah menjadi versi yang bisa diedit."},
-    {"@type":"HowToStep","position":2,"name":"Klik teks yang ingin Anda perbaiki","text":"Pratinjau dokumen Anda yang benar-benar bisa diedit akan terbuka. Klik baris, paragraf, judul, atau sel tabel mana pun, ketik ulang, lalu tekan Enter."},
-    {"@type":"HowToStep","position":3,"name":"Simpan dan unduh","text":"Klik 'Simpan'. Perubahan Anda disusun ulang menjadi PDF asli dan langsung diunduh."}
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Buka PDF Anda",
+      "text": "Klik Pilih file atau seret PDF Anda ke area unggah. Halamannya terbuka apa adanya."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Klik teks yang ingin Anda perbaiki",
+      "text": "Halaman PDF Anda terbuka apa adanya. Ketuk baris mana pun, ketik ulang, lalu tekan Enter; teks baru harus muat di ruang baris tersebut. Gunakan tombol panah untuk ke halaman mana pun, dan tombol zoom di ponsel."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Simpan dan unduh",
+      "text": "Klik Simpan. PDFree menghapus teks lama setiap baris yang diedit, menulis teks baru di tempat yang sama, membaca ulang setiap halaman yang berubah untuk memeriksanya, lalu PDF diunduh."
+    }
   ]
 }

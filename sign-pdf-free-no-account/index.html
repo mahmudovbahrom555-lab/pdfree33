@@ -149,56 +149,56 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Do I really not need an account to sign a PDF?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Correct — there's no signup, no login, and no email collection. Open the tool, add your PDF, sign it, and download. That's the entire flow."
+        {
+            "@type": "Question",
+            "name": "Do I really not need an account to sign a PDF?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Correct — no signup, no login, no email collection. Open the tool, add your PDF, sign it, download it."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is this a real signature, or just typed text?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Both, your choice — draw it by hand, type your name in a signature font, or upload an image of your existing signature. It's a visual signature, not a certified digital signature with an audit trail, so it's not for use cases that specifically require a QES — but it covers the vast majority of everyday contracts and forms."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is my document uploaded anywhere?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Signing happens entirely in your browser via WebAssembly. Verify it yourself with DevTools (F12) → Network tab while you sign — no request will carry your file's data."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is a typed or drawn signature legally valid?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "In most jurisdictions, yes, for ordinary business use — satisfies the US ESIGN Act, UETA, and EU eIDAS for most contracts. Documents needing a certified QES require a dedicated e-signature provider instead."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I reuse the same signature on multiple documents?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Your signature is saved locally in your browser after you first create it, ready to reuse on your next document on the same device."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does the signed PDF have a watermark?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. No watermark, no branding, no page limit — the download is your file with just the signature and any fields you filled in."
+            }
         }
-      },
-      {
-        "@type": "Question",
-        "name": "Is this a real signature, or just typed text?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Both, your choice. You can draw your signature by hand with a mouse, trackpad, or finger, type your name in a signature-style font, or upload an image of an existing signature. It's a visual signature placed on the document — not a cryptographically certified digital signature with an audit trail, so it's not suitable for use cases that specifically require a qualified electronic signature (QES), but it's sufficient for the vast majority of everyday contracts, forms, and agreements."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is my document uploaded anywhere when I sign it?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. Signing happens entirely inside your browser using WebAssembly and JavaScript. Your PDF and your signature never leave your device — you can verify this yourself by opening DevTools (F12) and watching the Network tab while you sign a document."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is a typed or drawn signature legally valid?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "In most jurisdictions, yes, for ordinary business purposes. A drawn or typed signature on a document satisfies the US ESIGN Act and UETA, and equivalent laws like EU eIDAS, for the majority of contracts, consent forms, and agreements. Documents that specifically require a certified qualified electronic signature (QES) — some government filings or notarized documents — need a dedicated certified e-signature service instead."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I reuse the same signature on multiple documents?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. Your signature is saved locally in your browser after you create it, so the next document you sign on the same device can reuse it without redrawing it from scratch."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Does the signed PDF have a watermark?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. PDFree adds no watermark, no branding, and no page limit to signed documents — the download is your file, unmodified except for the signature and any fields you filled in."
-        }
-      }
     ]
-  }
+}
   </script>
 
   <script type="application/ld+json">

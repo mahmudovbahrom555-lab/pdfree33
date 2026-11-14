@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Có. Mỗi bảng được nhận diện sẽ trở thành một trang tính riêng trong file .xlsx kết quả, được đặt tên và sắp xếp theo đúng vị trí trong file PDF, nên các bảng từ những trang hoặc phần khác nhau sẽ không bị lẫn vào nhau."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Vì Sao Nên Chuyển Đổi Ở Đây Thay Vì Công Cụ Trên Đám Mây?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hầu hết các công cụ chuyển PDF sang Excel trực tuyến đều tải tài liệu của bạn lên máy chủ từ xa, trích xuất dữ liệu ở đó rồi gửi kết quả về. Đối với sao kê ngân hàng hay hóa đơn, điều đó có nghĩa là dữ liệu tài chính của bạn đi qua internet và nằm — dù chỉ trong chốc lát — trên phần cứng bạn không kiểm soát."
+    }
   }
 ]

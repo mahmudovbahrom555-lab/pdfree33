@@ -80,10 +80,22 @@ jobs:
         # file before updating scopes the update to the repos we actually
         # need and stops depending on Google's mirror being in a consistent
         # state at the exact moment this step runs.
+        #
+        # Retried: on 2026-11-11 the runners could not resolve the Ubuntu mirrors
+        # ("Temporary failure resolving 'archive.ubuntu.com'") for over an hour —
+        # three deploys in a row stopped here with nothing wrong in the change.
+        # Up to 6 attempts a minute apart, then the step fails as before.
         run: |
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list
-          sudo apt-get update
-          sudo apt-get install -y qpdf tesseract-ocr   # tesseract: clean-scan-dark e2e reads its output
+          for attempt in 1 2 3 4 5 6; do
+            if sudo apt-get -o Acquire::Retries=3 update && \
+               sudo apt-get -o Acquire::Retries=3 install -y qpdf tesseract-ocr; then   # tesseract: clean-scan-dark e2e reads its output
+              exit 0
+            fi
+            echo "apt attempt $attempt failed; retrying in 60 s"
+            sleep 60
+          done
+          exit 1
 
       - name: Validate source pages (DOM + i18n + SW)
         run: |

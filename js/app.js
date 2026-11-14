@@ -19,7 +19,7 @@ import { wireShareButton, resetShareButton } from './shareButton.js';
 console.info(`[PDFree] v${APP_VERSION} loaded — rotate implemented: ${TOOLS.rotate?.implemented}`);
 import { looksEncrypted } from './decryptPdf.js';
 import { showHomePage, showToolPage,
-         renderToolHeader, setButtonReady,
+         renderToolHeader, setButtonReady, setButtonProcessing,
          setButtonDisabled, hideCancelBtn,
          showToast, setDropHint, setBatchHint, clearLongOpHint } from './ui.js';
 import { initFileListeners, setCurrentTool,
@@ -35,7 +35,7 @@ import { hideAllToolOptions, initToolOptions,
 import { savePreset } from './presets.js';
 import { updateMergeDefaultFilename } from './toolRegistrations.js';
 import { renderWorkerScanReport }               from './compressUI.js';
-import { trackToolStart, trackToolSuccess,
+import { trackToolStart, trackToolSuccess, trackCompressTarget,
          trackToolCancel, trackFileAdded,
          trackToolOpen, trackInstallPrompt,
          trackToolError, trackDownload,
@@ -46,6 +46,7 @@ import { trackToolStart, trackToolSuccess,
 import { confirmSignedCopy } from './signedConfirm.js';
 import { buildIndex, search, hasCjk,
          minQueryLength }                    from './search.js';
+import { COPY_MODE, COPY_MODE_QUERY, quickEditExamples } from './quickEditUI.js';
 import { loadPdfLib }                              from './lazyLibs.js';
 import { forgetStoredSignals, recordDownload,
          checkAndRecordConversion,
@@ -281,8 +282,13 @@ function showTool(tool, pushHistory = true, preFiles = null) {
     history.pushState({ tool }, lt.title, TOOL_SLUGS[tool] || `/${tool}-pdf/`);
   }
 
-  // Heavy DOM work deferred to after first paint — keeps INP under 200ms
+  // Heavy DOM work deferred to after first paint — keeps INP under 200ms.
+  // A file chosen or dropped before that frame (a slow phone draws the tool
+  // page late) is added again after the reset below instead of being wiped
+  // with no message (2026-11-13).
+  const before = [...selectedFiles];
   requestAnimationFrame(() => {
+    const early = selectedFiles.filter(f => !before.includes(f));
     renderToolHeader(lt);
     setCurrentTool(tool, lt.accept);
     setDropHint(lt.accept);
@@ -290,7 +296,7 @@ function showTool(tool, pushHistory = true, preFiles = null) {
     id('fileInput').multiple = lt.multi;
     id('fileInput').accept   = lt.accept;
     resetState();   // already calls hideAllToolOptions internally
-    if (preFiles) addFiles(preFiles);
+    if (preFiles || early.length) addFiles([...(preFiles || []), ...early]);
   });
 }
 
@@ -300,8 +306,11 @@ function showTool(tool, pushHistory = true, preFiles = null) {
 // of rendering the tool. Route those through a real navigation + IndexedDB
 // handoff instead, same mechanism already used by cross-sell result links.
 function _openToolWithFiles(key, files) {
-  if (TOOLS[key]?.inline === false && files[0]) {
-    const href = TOOL_SLUGS[key] || `/${key}-pdf/`;
+  const copies = key === COPY_MODE;
+  if (copies) key = 'quickEdit';
+  if (TOOLS[key]?.inline === false && (files[0] || copies)) {
+    const href = copies ? _toolHref(key) + COPY_MODE_QUERY : (TOOL_SLUGS[key] || `/${key}-pdf/`);
+    if (!files[0]) { location.href = href; return; }
     saveHandoff(files[0], files[0].name, currentTool, href)
       .catch(() => {})
       .then(() => { location.href = href; });
@@ -370,7 +379,7 @@ async function _successUnlessLocked(detail) {
   _handleSuccess(detail);
 }
 
-function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCompressSummary, pageCounts, confidence, atlasEri, requestedCount, successCount, mode }) {
+function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCompressSummary, pageCounts, confidence, atlasEri, requestedCount, successCount, mode, pages, ocrPages }) {
   _freeResultUrl();
   _resultUrl      = URL.createObjectURL(blob);
   _resultBlob     = blob;
@@ -385,7 +394,12 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
   // measures whether the Text/Image relabel (js/pdf2wordUI.js) shifted usage;
   // for pdf2ppt, how many use "Editable text" (a Chinese user's report on it,
   // 2026-10-15, couldn't be told apart from Image mode).
-  trackToolSuccess(tool, { outputSize: blob.size, requestedCount, successCount, mode });
+  trackToolSuccess(tool, { outputSize: blob.size, requestedCount, successCount, mode, pages, ocrPages });
+  if (compressionReport?.target) {
+    const { originalSize, compressedSize, targetSizeMb, target } = compressionReport;
+    trackCompressTarget({ targetBytes: targetSizeMb * 1048576, inputSize: originalSize, outputSize: compressedSize,
+      met: target.met, step: target.step, runs: target.tried.length });
+  }
   _fileAddedThisAttempt = false;   // the attempt is done: the next file starts another
 
   const card = id('successCard');
@@ -642,6 +656,20 @@ function _startWhenAnalysed(tool) {
   setTimeout(tick, 200);
 }
 
+// A wait before the tool starts (the files' copies, their encryption check)
+// shows on the button once it lasts past 150 ms: a press with no visible
+// answer gets pressed again (Rage Click on #mergeBtn, 21 people in a week,
+// analytics 2026-11-11). The tool sets its own state next; a stop before it
+// (a password needed…) gets the button back.
+async function _visiblyWait(promise) {
+  let shown = false;
+  const timer = setTimeout(() => { shown = true; setButtonProcessing(); }, 150);
+  try { await promise; } finally {
+    clearTimeout(timer);
+    if (shown) setButtonReady(getLocalizedTool(TOOLS[currentTool]).btn);
+  }
+}
+
 function _onMergeBtnClick() {
   const mode = id('mergeBtn').dataset.mode || 'process';
   if (mode === 'reset') {
@@ -667,6 +695,14 @@ function _onMergeBtnClick() {
     // its "choose again" in the list instead.
     const unreadable = selectedFiles.find(f => f._unreadable);
     if (unreadable) { showToast(t('err_file_unreadable_marked', { name: unreadable.name }), 8000); return; }
+    // The private copies still being made (files.js _keepCopy): a press right
+    // after adding read the file itself, which an Android pick may no longer
+    // give — "file_unreadable", copy=copying, 3 s after adding (jpg2pdf,
+    // analytics 2026-11-11). Wait for them (a copy that fails takes its file
+    // off the list with why); bounded, so a slow copy never blocks the tool.
+    const copying = selectedFiles.filter(f => f._copyState === 'copying').map(f => f._copyDone);
+    if (copying.length) await _visiblyWait(Promise.race([Promise.all(copying), new Promise(r => setTimeout(r, 15000))]));
+    if (!selectedFiles.length) return;
     // A PDF that still needs its user password can't be processed: every
     // pdf-lib tool loads with ignoreEncryption, so compress/watermark/page
     // numbers/metadata silently returned a corrupt file (0 pages even with
@@ -675,7 +711,7 @@ function _onMergeBtnClick() {
     // validation so that misleading message never shows. Unlock is the one
     // tool meant to receive it; it caches _decryptedBuffer, which clears this.
     if (currentTool !== 'unlock') {
-      await Promise.all(selectedFiles.map(f => f._encryptionCheck));
+      await _visiblyWait(Promise.all(selectedFiles.map(f => f._encryptionCheck)));
       if (selectedFiles.some(f => f._needsPassword && !f._decryptedBuffer)) {
         showToast(t('ocr_password_protected_inline'), 8000);
         return;
@@ -779,6 +815,10 @@ function initEvents() {
     // already activated the input; calling .click() again causes a double-open
     // that immediately closes the picker (invisible bug on iOS).
     if (e.target.closest('#chooseFilesBtn')) return;
+    // The 2nd and 3rd click of a double/triple click (a folder habit) opened
+    // the picker again after each choice — 26 people in a week clicked the
+    // zone three times in a second (Rage Click, analytics 2026-11-11).
+    if (e.detail > 1) return;
     id('fileInput').click();
   });
   id('dropZone').addEventListener('keydown', e => {
@@ -1000,7 +1040,22 @@ function initSearch() {
   for (const [key, phrases] of Object.entries(seoKeywords)) {
     localeTags[key] = [...(localeTags[key] || []), ...phrases];
   }
-  const index = buildIndex(TOOLS, lang, localeTags);
+  const searchTools = {
+    ...TOOLS,
+    [COPY_MODE]: {
+      implemented: true,
+      title: 'Personalized PDF copies',
+      titles: { 'zh-CN': '批量生成个性化 PDF', ru: 'Именные копии PDF' },
+      desc: 'One PDF and a recipient list → one PDF per person',
+      descs: {
+        'zh-CN': '一个 PDF 加一份名单，为每人生成一份 PDF',
+        ru: 'Один PDF и список имён → отдельный PDF для каждого',
+      },
+      tags: ['pdf mail merge', 'personalized pdf from excel', 'batch watermark', 'one pdf per recipient',
+        '批量生成PDF', 'Excel名单生成PDF', '一人一份PDF', 'один pdf для каждого клиента', 'именные pdf из excel'],
+    },
+  };
+  const index = buildIndex(searchTools, lang, localeTags);
   // 编辑 or 漂白 typed on the English page: searched with the Chinese,
   // Japanese and Korean synonyms too (build.py ships them in
   // searchKeywords.js). Only for such a request — "pdf" would otherwise
@@ -1017,7 +1072,7 @@ function initSearch() {
         }
         for (const [key, phrases] of Object.entries(more)) tags[key] = [...(tags[key] || []), ...phrases];
       }
-      _cjkIndex = buildIndex(TOOLS, lang, tags);
+      _cjkIndex = buildIndex(searchTools, lang, tags);
     }
     return _cjkIndex;
   };
@@ -1591,6 +1646,14 @@ function initSearch() {
 
   function _applyResult(entry) {
     _activeResult = entry;
+    const directLink = entry.key === COPY_MODE;
+    if (directLink) {
+      srInfoLabel?.setAttribute('tabindex', '0');
+      srInfoLabel?.setAttribute('role', 'link');
+    } else {
+      srInfoLabel?.removeAttribute('tabindex');
+      srInfoLabel?.removeAttribute('role');
+    }
     if (srDesc) srDesc.textContent = entry.desc || '';
     srFileInput.accept    = entry.accept || '.pdf,application/pdf';
     srFileInput.multiple  = !!entry.multi;
@@ -1630,7 +1693,18 @@ function initSearch() {
   // it opens the native file picker by default. When a file is already pending,
   // intercept and launch the tool directly instead of re-prompting for a file.
   if (srInfoLabel) {
+    srInfoLabel.addEventListener('keydown', e => {
+      if (e.key !== 'Enter' || _activeResult?.key !== COPY_MODE) return;
+      e.preventDefault();
+      srInfoLabel.click();
+    });
     srInfoLabel.addEventListener('click', e => {
+      if (_activeResult?.key === COPY_MODE && (!_pendingFiles || _pendingFiles.length === 1)) {
+        e.preventDefault();
+        trackSearchSelect(COPY_MODE);
+        _openToolWithFiles(COPY_MODE, _pendingFiles || []);
+        return;
+      }
       if (_pendingFiles && _activeResult) {
         e.preventDefault();
         if (!_activeResult.multi && _pendingFiles.length > 1) {
@@ -1697,6 +1771,53 @@ const _NO_SIGNED_PROMPT = new Set(['pdf2jpg', 'pdf2word', 'pdf2excel', 'pdf2ppt'
 
 // ── Initial routing ──────────────────────────────────────────
 
+function initQuickEditEntry() {
+  const entry = id('qeEntry');
+  if (!entry) return;
+  const buttons = [...entry.querySelectorAll('[data-qe-mode]')];
+  const example = id('qeTryExample');
+  const select = (mode, updateUrl = false) => {
+    buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.qeMode === mode)));
+    if (!updateUrl) return;
+    const url = new URL(location.href);
+    if (mode === COPY_MODE) url.searchParams.set('mode', COPY_MODE);
+    else url.searchParams.delete('mode');
+    history.replaceState(history.state, '', url);
+  };
+  select(new URLSearchParams(location.search).get('mode') === COPY_MODE ? COPY_MODE : 'edit');
+  buttons.forEach(button => button.addEventListener('click', () => {
+    if (button.getAttribute('aria-pressed') === 'true') return;
+    select(button.dataset.qeMode, true);
+    if (selectedFiles.length) initToolOptions('quickEdit', [...selectedFiles]);
+  }));
+  example.addEventListener('click', async () => {
+    if (selectedFiles.length) {
+      showToast(t('single_file_only'));
+      return;
+    }
+    example.disabled = true;
+    const lang = document.documentElement.lang;
+    try {
+      await loadPdfLib();
+      const pdf = await window.PDFLib.PDFDocument.create();
+      const page = pdf.addPage([460, 240]);
+      page.drawText('Event invitation', { x: 36, y: 185, size: 24 });
+      page.drawText('Recipient: SAMPLE NAME', { x: 36, y: 131, size: 16 });
+      page.drawText('You are invited to our annual customer event.', { x: 36, y: 86, size: 13 });
+      const bytes = await pdf.save();
+      if (selectedFiles.length) return;
+      const file = new File([bytes], 'sample-invitation.pdf', { type: 'application/pdf' });
+      quickEditExamples.set(file, lang.startsWith('zh') ? '王晓明\n陈小雨' : lang === 'ru' ? 'Анна Иванова\nИван Петров' : 'Alex Morgan\nJamie Chen');
+      select(COPY_MODE, true);
+      addFiles([file]);
+    } catch {
+      showToast(lang.startsWith('zh') ? '无法打开示例，请重试。' : lang === 'ru' ? 'Не удалось открыть пример. Попробуйте ещё раз.' : 'Could not open the example. Please try again.');
+    } finally {
+      example.disabled = false;
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   forgetStoredSignals();
   // opened as an installed app: a return, counted with nothing stored
@@ -1723,6 +1844,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (requestedTool && TOOLS[requestedTool]) {
     showTool(requestedTool, false);
+    initQuickEditEntry();
     // Restore a handoff blob from the previous tool page (if any).
     // IDB resolves asynchronously — by then showTool's RAF has already run,
     // so addFiles() fires into a fully-initialised tool UI.
@@ -2033,9 +2155,24 @@ function _trackUncaught(kind, message) {
   _trackedErrors.add(type);
   trackToolError(currentTool, type);
 }
+// A rejection with something other than an Error: its kind, the names of its
+// fields and an event-like `type` — never the other values (a file name could
+// be one). "[object Object]" alone was the top N-up error for a week
+// (10 people) and said nothing (2026-11-11).
+function _describeReason(reason) {
+  // a file that stopped being readable: where its private copy stood (files.js
+  // _copyState) — the only clue to which read failed (Split, Android, 2026-11-11)
+  if (reason?.name === 'NotReadableError') return `NotReadableError [copy=${selectedFiles.map(f => f._copyState || 'none').join(',')}]`;
+  if (reason?.message) return reason.message;
+  if (reason === null || typeof reason !== 'object') return reason;
+  const kind = reason.constructor?.name || 'Object';
+  let keys = [];
+  try { keys = Object.keys(reason).slice(0, 6); } catch { /* exotic object */ }
+  return `${kind} {${keys.join(',')}}` + (reason.type ? ` type=${String(reason.type).slice(0, 20)}` : '');
+}
 window.addEventListener('unhandledrejection', event => {
   console.error('[PDFree] Unhandled rejection:', event.reason);
-  _trackUncaught('unhandled_rejection', event.reason?.message ?? event.reason);
+  _trackUncaught('unhandled_rejection', _describeReason(event.reason));
 });
 
 // Where an uncaught error came from: our own files (/js/, a worker's blob:)

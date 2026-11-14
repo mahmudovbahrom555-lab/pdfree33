@@ -60,7 +60,7 @@
     "name": "Can I organize multiple PDF files at once?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Organize works with one PDF at a time, since page order and deletions are specific to that document. For files that all need the exact same treatment, PDFree's other tools such as Compress and Watermark support processing several files at once."
+      "text": "Organize works with one PDF at a time, since page order and deletions are specific to that document. For files that all need the exact same treatment (like a password or watermark), PDFree's other tools such as Compress and Watermark support processing several files at once."
     }
   },
   {
