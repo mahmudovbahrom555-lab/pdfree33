@@ -222,11 +222,28 @@ function _splitBalanced(heights, k) {
 // instead — found via a corpus-based fuzz sweep, not a specific user
 // report (see docx2pdf.e2e.mjs for the regression coverage).
 const OLE_CFBF_MAGIC = [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1];
+// Which of the two it is, from the container's stream names (UTF-16LE in its
+// directory): a password-protected .docx holds "EncryptedPackage", an old
+// .doc "WordDocument". One message for both said "maybe a password, maybe the
+// old format" — a person pressed Convert 13 times on the same file
+// (2026-11-14). Neither name found: the old shared message.
+const _utf16 = name => new Uint8Array([...name].flatMap(c => [c.charCodeAt(0), 0]));
+const _ENCRYPTED_STREAM = _utf16('EncryptedPackage');
+const _WORD_STREAM      = _utf16('WordDocument');
+function _holds(bytes, needle) {
+  outer: for (let i = 0; i <= bytes.length - needle.length; i++) {
+    for (let j = 0; j < needle.length; j++) if (bytes[i + j] !== needle[j]) continue outer;
+    return true;
+  }
+  return false;
+}
 async function _rejectIfOleCfbf(file) {
   const head = new Uint8Array(await file.slice(0, 8).arrayBuffer());
-  if (OLE_CFBF_MAGIC.every((b, i) => head[i] === b)) {
-    throw new Error('DOCX_LEGACY_OR_ENCRYPTED');
-  }
+  if (!OLE_CFBF_MAGIC.every((b, i) => head[i] === b)) return;
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  if (_holds(bytes, _ENCRYPTED_STREAM)) throw new Error('DOCX_ENCRYPTED');
+  if (_holds(bytes, _WORD_STREAM)) throw new Error('DOCX_LEGACY_DOC');
+  throw new Error('DOCX_LEGACY_OR_ENCRYPTED');
 }
 
 /**

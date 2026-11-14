@@ -46,6 +46,13 @@ const MISSING_DOCXML_DOCX      = path.join(__dirname, '..', 'fixtures', 'docx2pd
 const UNSUPPORTED_SCRIPT_DOCX  = path.join(__dirname, '..', 'fixtures', 'docx2pdf_unsupported_script.docx');
 const GIF_IMAGE_DOCX           = path.join(__dirname, '..', 'fixtures', 'docx2pdf_gif_image.docx');
 const TIFF_IMAGE_DOCX          = path.join(__dirname, '..', 'fixtures', 'docx2pdf_tiff_image.docx');
+// Real files: an old .doc saved by LibreOffice from docx2pdf_merged_cells.docx,
+// and that .docx encrypted with the password "test123" (msoffcrypto-tool).
+const LEGACY_DOC     = path.join(__dirname, '..', 'fixtures', 'docx2pdf_legacy.doc');
+// the same .doc named .docx — how it reached the converter for the person who
+// pressed 13 times (a .doc by its name is turned away when added, below)
+const LEGACY_AS_DOCX = path.join(__dirname, '..', 'fixtures', 'docx2pdf_legacy_renamed.docx');
+const ENCRYPTED_DOCX = path.join(__dirname, '..', 'fixtures', 'docx2pdf_encrypted.docx');
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -290,6 +297,43 @@ await test('a password-protected/legacy-.doc-shaped file (real OLE2/CFBF magic b
     if (!/password|\.doc\b/i.test(toastText)) {
       throw new Error(`Toast doesn't mention password-protection or the legacy .doc format: ${toastText}`);
     }
+  } finally {
+    await context.close();
+  }
+});
+
+// One message for both said "maybe a password, maybe the old format", and the
+// file stayed: a person pressed Convert 13 times on one file (2026-11-14).
+for (const [name, file, says, not] of [
+  ['a password-protected .docx says so — not "or the old format"', ENCRYPTED_DOCX, /password-protected/i, /\.doc\b/],
+  ['an old .doc (named .docx) says so — not "password"', LEGACY_AS_DOCX, /old \.doc file/i, /password/i],
+]) {
+  await test(`${name}; the file leaves the list, so Convert can't repeat it`, async () => {
+    const context = await browser.newContext({ serviceWorkers: 'block' });
+    const page = await context.newPage();
+    try {
+      await page.addInitScript(BLOB_HOOK);
+      const { result, toastText } = await convertAndCapture(page, file);
+      if (result) throw new Error('Expected a message, got a PDF');
+      if (!says.test(toastText || '') || not.test(toastText || '')) throw new Error(`Toast: ${toastText}`);
+      const left = await page.locator('#fileList .file-item').count();
+      if (left !== 0) throw new Error(`${left} file(s) still on the list`);
+      if (!(await page.locator('#mergeBtn').isDisabled())) throw new Error('Convert can still be pressed');
+    } finally {
+      await context.close();
+    }
+  });
+}
+
+await test('a .doc added to Word to PDF is told it is the old format — not "Please select a JPG or PNG image"', async () => {
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    await page.goto(`${BASE_URL}/word-to-pdf/`, { waitUntil: 'load', timeout: 30000 });
+    await page.setInputFiles('#fileInput', LEGACY_DOC);
+    await page.waitForTimeout(800);
+    const toast = await page.locator('#toast').textContent();
+    if (!/old \.doc file/i.test(toast || '') || /JPG|PNG/.test(toast || '')) throw new Error(`Toast: ${toast}`);
   } finally {
     await context.close();
   }
