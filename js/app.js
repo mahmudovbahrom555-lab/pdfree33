@@ -864,8 +864,20 @@ function initEvents() {
     }
   });
 
+  // A PDF→Excel result belongs to the file and number format it was made
+  // with — a new file or format hides it until the next conversion.
+  function invalidateExcelResult() {
+    ++_successGen;
+    _freeResultUrl();
+    hide('successCard');
+    const button = id('mergeBtn');
+    button.dataset.mode = 'process';
+    button.textContent = getLocalizedTool(TOOLS.pdf2excel).btn;
+  }
+
   // Tool-specific UI init — dispatched through registry
   document.addEventListener('pdfree:files-added', () => {
+    if (currentTool === 'pdf2excel') invalidateExcelResult();
     initToolOptions(currentTool, [...selectedFiles]);
   });
 
@@ -901,6 +913,7 @@ function initEvents() {
   // Re-init after a file is removed so the active tool always uses the current files[0].
   // Without this, tools like OCR keep a stale _file reference to the removed file.
   document.addEventListener('pdfree:file-removed', () => {
+    if (currentTool === 'pdf2excel') invalidateExcelResult();
     initToolOptions(currentTool, [...selectedFiles]);
     if (currentTool === 'compress' || currentTool === 'compress-email') {
       cancelCompressScan();
@@ -955,6 +968,10 @@ function initEvents() {
   // just on the next file add/remove.
   document.addEventListener('pdfree:wm-remove-changed', () => renderList(true));
   document.addEventListener('pdfree:merge-order-changed', () => renderList(true));
+
+  document.addEventListener('pdfree:excel-format-changed', () => {
+    if (currentTool === 'pdf2excel' && !isProcessing) invalidateExcelResult();
+  });
 
   document.addEventListener('pdfree:success', e => _successUnlessLocked(e.detail));
 

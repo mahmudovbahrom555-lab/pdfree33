@@ -6733,3 +6733,34 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 .sd-page-filter select { min-height: 44px; max-width: 60%; }
 .sd-page-filter input[type="range"] { width: 55%; }
 .sd-page-filter [role="status"]:empty { display: none; }
+
+/* PDF to Excel options and workbook preview */
+.p2e-number-format {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+  color: var(--text2);
+}
+.p2e-number-format select {
+  padding: 6px 8px;
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.p2e-preview details { margin-top: 8px; }
+.p2e-preview summary { cursor: pointer; }
+.p2e-preview-scroll { overflow-x: auto; margin-top: 6px; }
+.p2e-preview table { border-collapse: collapse; font-size: 13px; }
+.p2e-preview th,
+.p2e-preview td {
+  border: 1px solid var(--border);
+  padding: 5px 8px;
+  text-align: start;
+  white-space: pre-wrap;
+  min-width: 72px;
+  overflow-wrap: anywhere;
+}
