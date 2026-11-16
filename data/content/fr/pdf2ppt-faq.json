@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Oui, mais les PDFs très volumineux utilisent automatiquement une qualité d'image plus basse pour éviter que le navigateur manque de mémoire. Pour un très grand nombre de pages, Compact est le choix le plus fiable."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je mettre une question par diapositive, pour un quiz ou une fiche d'exercices ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Choisissez votre PDF et appuyez sur « Une question par diapositive ». Tracez un cadre autour de chaque question : « Proposer des cadres » lit les numéros sur les pages à une colonne, et une image ou des consignes communes à plusieurs questions peuvent être rattachées à toutes. Chaque diapositive montre sa question exactement comme sur la page, découpée dans celle-ci, avec l'espace pour répondre que vous choisissez. Activez « Réponse interactive » pour rendre les choix A–E cliquables pendant le diaporama : une bonne réponse affiche votre explication, une mauvaise dit « Réessayez ». Vous pouvez aussi télécharger un PDF avec une question par page à imprimer. Tout se passe dans votre navigateur ; le PDF n'est pas envoyé."
+    }
   }
 ]

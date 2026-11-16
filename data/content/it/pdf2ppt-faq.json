@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Sì, anche se un numero di pagine molto elevato usa automaticamente una qualità immagine inferiore per evitare che il browser esaurisca la memoria. Per presentazioni enormi, la qualità Compact è la scelta più affidabile."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso mettere una domanda per diapositiva, per un quiz o una scheda di esercizi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Scegli il tuo PDF e premi «Una domanda per diapositiva». Disegna una cornice attorno a ogni domanda: «Suggerisci cornici» legge i numeri sulle pagine a una colonna, e un'immagine o istruzioni comuni a più domande si possono collegare a tutte. Ogni diapositiva mostra la sua domanda esattamente come sulla pagina, ritagliata da essa, con lo spazio per svolgere che scegli. Attiva «Risposta interattiva» per rendere cliccabili le scelte A–E nella presentazione: una risposta giusta mostra la tua spiegazione, una sbagliata dice «Riprova». Puoi anche scaricare un PDF con una domanda per pagina da stampare. Tutto avviene nel tuo browser; il PDF non viene caricato."
+    }
   }
 ]

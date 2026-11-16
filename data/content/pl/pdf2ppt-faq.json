@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Tak, choć bardzo duża liczba stron automatycznie korzysta z niższej jakości obrazu, aby zapobiec wyczerpaniu pamięci przeglądarki. Dla ogromnych prezentacji jakość Compact jest najbardziej niezawodnym wyborem."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę zrobić jedno pytanie na slajd – do quizu lub karty pracy?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Wybierz PDF i naciśnij „Jedno pytanie na slajd”. Narysuj ramkę wokół każdego pytania – „Zaproponuj ramki” odczytuje numery na stronach z jedną kolumną, a obraz lub polecenia wspólne dla kilku pytań można dołączyć do wszystkich. Każdy slajd pokazuje pytanie dokładnie tak jak na stronie, wycięte z niej, z wybraną przez Ciebie ilością miejsca na rozwiązanie. Włącz „Odpowiedź interaktywna”, aby odpowiedzi A–E dało się klikać w pokazie: dobra odpowiedź pokazuje Twoje wyjaśnienie, zła – „Spróbuj ponownie”. Możesz też pobrać PDF z jednym pytaniem na stronę do druku. Wszystko dzieje się w przeglądarce; PDF nie jest przesyłany."
+    }
   }
 ]
