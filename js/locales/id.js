@@ -53,9 +53,9 @@ window.PDFREE_LOCALE = {
   sent:             '✓ Terkirim',
   process_again:    '↺ Proses ulang',
   download_again:      '⬇ Unduh ulang',
-  auto_download_hint:  '✓ {filename} tersimpan di perangkat Anda',
+  auto_download_hint:  '⬇ Unduhan {filename} dimulai',
   downloads_where_hint: "Tidak terlihat? Buka unduhan browser — {keys}",
-  download_toast:      '📥 {filename} diunduh',
+  download_toast:      '📥 Mengunduh {filename}…',
 
   // files
   split_one_only:  'Pisah hanya bekerja dengan satu PDF. Silakan hapus file yang ada terlebih dahulu.',
