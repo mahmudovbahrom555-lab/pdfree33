@@ -3433,9 +3433,11 @@ function _p2eBuildWorkbook(tables, textRows) {
   tables.forEach((tbl, i) => {
     const sheet = workbook.addWorksheet(`Table ${i + 1}`.slice(0, 31));
 
+    // A table that writes 1.234,56 elsewhere reads its 1,234 the same way.
+    const decimalMark = _p2eDecimalMark(tbl.rows) ?? '.';
     tbl.rows.forEach((row, ri) => {
       if (ri === 0) { sheet.addRow(row); return; } // header stays plain text
-      const parsed    = row.map(_p2eCellValue);
+      const parsed    = row.map(cell => _p2eCellValue(cell, decimalMark));
       const excelRow  = sheet.addRow(parsed.map(p => p.value));
       parsed.forEach((p, ci) => {
         if (p.numFmt) excelRow.getCell(ci + 1).numFmt = p.numFmt;
@@ -3467,7 +3469,9 @@ function _p2eBuildWorkbook(tables, textRows) {
     sheet.columns.forEach(col => {
       let maxLen = 10;
       col.eachCell({ includeEmpty: true }, cell => {
-        maxLen = Math.max(maxLen, String(cell.value ?? '').length);
+        const lines = String(cell.value ?? '').split('\n');
+        if (lines.length > 1) cell.alignment = { ...cell.alignment, wrapText: true };
+        for (const line of lines) maxLen = Math.max(maxLen, line.length);
       });
       col.width = Math.min(maxLen + 2, 60);
     });
@@ -3599,19 +3603,27 @@ const _p2eAllBold = lns => lns.some(ln => ln.items.length) &&
 // borderless tables. Anything neither claims becomes a Text-sheet row.
 export function _p2eExtractPage(lines, grids, page) {
   const tables   = [];
-  const consumed = new Set();
+  const consumedItems = new Set();
 
   for (const grid of grids) {
     const { rowYs, colXs } = grid;
+    const left = colXs[0];
+    const right = colXs[colXs.length - 1];
     const bands = Array.from({ length: rowYs.length - 1 }, () => []);
     const claimed = [];
-    lines.forEach((ln, li) => {
-      if (consumed.has(li)) return;
-      const r = rowYs.findIndex((top, i) => i < bands.length && ln.y < top && ln.y >= rowYs[i + 1]);
-      if (r < 0) return;
-      bands[r].push(ln);
-      claimed.push(li);
-    });
+    for (const line of lines) {
+      const fragments = new Map();
+      for (const item of line.items) {
+        if (consumedItems.has(item) || item.x < left - GRID_SLACK || item.x >= right) continue;
+        const y = item.y ?? line.y;
+        const row = rowYs.findIndex((top, i) => i < bands.length && y < top && y >= rowYs[i + 1]);
+        if (row < 0) continue;
+        if (!fragments.has(row)) fragments.set(row, []);
+        fragments.get(row).push(item);
+        claimed.push(item);
+      }
+      for (const [row, items] of fragments) bands[row].push({ items });
+    }
 
     const rows = [];
     const boldRows = new Set();
@@ -3620,20 +3632,26 @@ export function _p2eExtractPage(lines, grids, page) {
       for (const ln of bandLines) {
         _assignLineToGridCols(ln.items, colXs).forEach((text, c) => { if (text) cols[c].push(text); });
       }
-      const row = cols.map(parts => parts.join(' '));
+      const row = cols.map(parts => parts.join('\n'));
       if (!row.some(Boolean)) continue;
       if (_p2eAllBold(bandLines)) boldRows.add(rows.length);
       rows.push(row);
     }
-    // Same 2-row floor detectTables applies — a lone ruled box (a signature
-    // field, a boxed note) isn't a table; its text falls through below.
+    // A lone ruled box (a signature field, a boxed note) isn't a table.
     if (rows.length < 2) continue;
-    claimed.forEach(li => consumed.add(li));
+    claimed.forEach(item => consumedItems.add(item));
     tables.push({ page, rows, confidence: 1, boldRows, colXs });
   }
 
-  const restIdx = lines.map((_, li) => li).filter(li => !consumed.has(li));
-  const rest    = restIdx.map(li => lines[li]);
+  const restIdx = [];
+  const rest = [];
+  lines.forEach((line, i) => {
+    const items = line.items.filter(item => !consumedItems.has(item));
+    if (!items.length) return;
+    restIdx.push(i);
+    rest.push({ ...line, items });
+  });
+  const consumedLines = new Set();
   // Prose that merely lines up is not a table — the same two guards pdf2word and
   // pdf2md apply to detectTables(). Justified text set word by word (Chromium
   // prints of Wikipedia) aligns into 10+ "columns" of single words: 23 such
@@ -3646,7 +3664,7 @@ export function _p2eExtractPage(lines, grids, page) {
     const boldRows = new Set();
     tbl.rowLines.forEach((lis, r) => { if (_p2eAllBold(lis.map(li => rest[li]))) boldRows.add(r); });
     const own = new Set();
-    for (let i = tbl.startIdx; i <= tbl.endIdx; i++) { consumed.add(restIdx[i]); own.add(restIdx[i]); }
+    for (let i = tbl.startIdx; i <= tbl.endIdx; i++) { consumedLines.add(restIdx[i]); own.add(restIdx[i]); }
     // Whether anything but page furniture stands below / above the table on its
     // page — a table can only continue onto the next page if nothing does (see
     // _p2eStitchTables).
@@ -3660,8 +3678,8 @@ export function _p2eExtractPage(lines, grids, page) {
   }
 
   const textRows = [];
-  lines.forEach((ln, li) => {
-    if (consumed.has(li)) return;
+  rest.forEach((ln, li) => {
+    if (consumedLines.has(restIdx[li])) return;
     const text = ln.items.map(i => i.str).join(' ').trim();
     if (text) textRows.push({ page, text });
   });
@@ -3732,42 +3750,91 @@ export function _p2eConfidence({ tables, totalPages, pagesWithNoText }) {
   return { score, level, tableCount: tables.length, pagesWithNoText, totalPages };
 }
 
-// Parses a table cell's text into a typed Excel value where it's unambiguous
-// to do so, so sums/charts/sorting work without the user retyping numbers.
-// Conservative by design (same philosophy as detectTables() itself — prefer
-// leaving a cell as text over silently mis-parsing it):
-//   • numbers: optional currency symbol / thousands separators, then a plain
-//     integer or decimal — "$1,234.56" and "1234.56" both become a Number
-//   • percentages: "12.5%" → 0.125 with a percent display format
-//   • dates: ISO (YYYY-MM-DD) only. Slash/dot formats (01/02/2026) are
-//     deliberately left as text — JS's Date parser assumes MM/DD/YYYY
-//     regardless of the source locale, so guessing would risk silently
-//     swapping day and month rather than just failing to format.
-//   • Arabic-Indic / Persian digits with their own separators (٬ thousands,
-//     ٫ decimal) read as the same numbers — "١٬٤٥٠٫٠٠" is 1450, so a column of
-//     them sums (table ground truth 2026-10-02: 0% of such cells were numbers)
-const _NATIVE_DIGIT_RE = /[\u0660-\u0669\u06F0-\u06F9]/g;
-export function _p2eCellValue(str) {
-  const s = (str ?? '').trim()
-    .replace(_NATIVE_DIGIT_RE, d => String(d.charCodeAt(0) & 0xF))
-    .replace(/\u066C/g, ',').replace(/\u066B/g, '.');
-  if (!s) return { value: str };
+// Each pattern captures the integer and fractional parts of a supported
+// format. Group separators must repeat consistently in groups of three.
+// Index 0 reads "." as the decimal mark, index 1 reads ",".
+const _P2E_NUMBER_FORMATS = [
+  /^(\d+|[1-9]\d{0,2}(?:,\d{3})+|[1-9]\d{0,2}(?: \d{3})+)(?:\.(\d+))?$/,
+  /^(\d+|[1-9]\d{0,2}(?:\.\d{3})+|[1-9]\d{0,2}(?: \d{3})+)(?:,(\d+))?$/,
+  /^(\d+|[1-9]\d{0,2}(?:\u066C\d{3})+)(?:\u066B(\d+))?$/,
+];
+const _P2E_MARKS = ['.', ',', null];
 
-  if (/^-?\d{1,3}(,\d{3})*(\.\d+)?%$/.test(s) || /^-?\d+(\.\d+)?%$/.test(s)) {
-    return { value: parseFloat(s.replace(/,/g, '').replace('%', '')) / 100, numFmt: '0.00%' };
+function _p2eNormalize(str) {
+  return (str ?? '').trim()
+    .replace(/[\u0660-\u0669\u06F0-\u06F9]/g, digit => String(digit.charCodeAt(0) & 0xF))
+    .replace(/[\u00A0\u202F]/g, ' ')
+    .replace(/^\u2212/, '-');
+}
+
+// Every reading of a number's digits, keyed by the decimal mark that
+// reading assumes — "1,234" gives two, "1,234.5" one.
+function _p2eReadings(magnitude) {
+  const readings = new Map();
+  _P2E_NUMBER_FORMATS.forEach((format, i) => {
+    const match = format.exec(magnitude);
+    if (!match) return;
+    const integer = match[1].replace(/[., \u066C]/g, '');
+    const number = match[2] ? `${integer}.${match[2]}` : integer;
+    if (![...readings.values()].includes(number)) readings.set(_P2E_MARKS[i], number);
+  });
+  return readings;
+}
+
+function _p2eMagnitude(text) {
+  const percent = text.endsWith('%');
+  const unsigned = percent ? text.slice(0, -1) : text.replace(/^[$€£¥] ?/, '');
+  return { percent, negative: unsigned.startsWith('-'), magnitude: unsigned.replace(/^[-+]/, '') };
+}
+
+// The decimal mark a table's own unambiguous numbers use: "1,234.56" or
+// "0.5" say ".", "12,50" or "1.234,56" say ",". null when nothing says.
+export function _p2eDecimalMark(rows) {
+  const votes = { '.': 0, ',': 0 };
+  rows.slice(1).forEach(row => row.forEach(cell => {
+    const { magnitude } = _p2eMagnitude(_p2eNormalize(cell));
+    if (!/[.,]/.test(magnitude)) return;
+    const readings = _p2eReadings(magnitude);
+    if (readings.size !== 1) return;
+    const [mark] = readings.keys();
+    if (mark) votes[mark]++;
+  }));
+  if (votes['.'] === votes[',']) return null;
+  return votes['.'] > votes[','] ? '.' : ',';
+}
+
+// decimalMark settles a lone separator such as 1,234: "." reads it as one
+// thousand two hundred thirty-four (what this tool always did), "," as 1.234,
+// null keeps the cell as text.
+export function _p2eCellValue(str, decimalMark = '.') {
+  const original = { value: str };
+  const text = _p2eNormalize(str);
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+    // Excel's default date system has a fictitious leap day in 1900.
+    if (text < '1900-03-01') return original;
+    const date = new Date(text);
+    return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === text
+      ? { value: date, numFmt: 'yyyy-mm-dd' } : original;
   }
 
-  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
-    const d = new Date(s);
-    if (!isNaN(d.getTime())) return { value: d, numFmt: 'yyyy-mm-dd' };
-  }
+  const { percent, negative, magnitude } = _p2eMagnitude(text);
+  const readings = _p2eReadings(magnitude);
+  if (!readings.size) return original;
+  const number = readings.size === 1 ? [...readings.values()][0] : readings.get(decimalMark);
+  if (number === undefined) return original;
 
-  const numCandidate = s.replace(/^[$€£¥]\s?/, '').replace(/,/g, '');
-  if (/^-?\d+(\.\d+)?$/.test(numCandidate)) {
-    return { value: parseFloat(numCandidate) };
-  }
+  const [integer, fraction = ''] = number.split('.');
+  const significant = (integer + fraction).replace(/^0+|0+$/g, '');
+  // Excel limits numbers to 15 significant digits. Preserve the spelling of
+  // padded and long digit sequences so identifiers survive export intact.
+  if (/^0\d/.test(integer) || integer.length > 15 || significant.length > 15) return original;
+  const decimalPlaces = fraction.replace(/0+$/, '').length;
+  if (percent && decimalPlaces > 30) return original;
 
-  return { value: str };
+  const value = Number(`${negative ? '-' : ''}${number}${percent ? 'e-2' : ''}`);
+  if (!Number.isFinite(value) || (significant && Math.abs(value) < 2.2250738585072014e-308)) return original;
+  return percent ? { value, numFmt: `0.${'0'.repeat(Math.max(2, decimalPlaces))}%` } : { value };
 }
 
 // ── PDF → PowerPoint ─────────────────────────────────────────────
