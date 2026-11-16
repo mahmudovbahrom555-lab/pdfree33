@@ -1241,6 +1241,8 @@ window.PDFREE_LOCALE = {
   merge_next_extract_sub:   '从合并后的文件中精确选取所需页面 — 立即打开，无需重新上传。',
   cleanscan_next_ocr_title: '继续使用"OCR PDF"',
   cleanscan_next_ocr_sub:   '让清理后的文本可选中、可搜索 — 更白更清晰的扫描件识别更准确。',
+  jpg2pdf_next_scan_title: '这是纸质页面的照片吗？在文档扫描仪中打开',
+  jpg2pdf_next_scan_sub:   '从照片中裁出页面并拉直，让 PDF 看起来像扫描件。',
   resize_next_nup_title: "继续使用\"多页合一\"",
   resize_next_nup_sub: "每张纸放多页，或做成小册子 — 立即打开，无需重新上传。",
   manga_next_booklet_title: "打印成小册子",

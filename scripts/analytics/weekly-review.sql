@@ -136,3 +136,23 @@ SELECT blob2 AS tool, blob4 AS ext, COUNT(DISTINCT blob3) AS people, COUNT() AS 
 FROM pdfree_events
 WHERE timestamp > NOW() - INTERVAL '7' DAY AND index1 = 'File Rejected'
 GROUP BY tool, ext ORDER BY people DESC LIMIT 40;
+
+
+-- 13. JPG→PDF's scanner hint (from 2026-11-16): one photo shows "Photo of a paper page?
+--     Open it in Document Scanner"; a click carries the photo there. Pre-registered:
+--     after 7 days, clicks / shows under ~3 % → remove the hint; above → keep it and
+--     check that clickers get a scan (13b). A session id lives one page load, so the
+--     scanner marks the photo it received (Tool Notice photo_from_jpg2pdf).
+SELECT
+  COUNT(DISTINCT if(index1 = 'Tool Notice' AND blob2 = 'jpg2pdf' AND blob4 = 'notice=scan_hint', blob3, NULL)) AS shown,
+  COUNT(DISTINCT if(index1 = 'Cross Sell Click' AND blob4 = 'from=jpg2pdf' AND blob5 = 'to=scanDocument', blob3, NULL)) AS clicked
+FROM pdfree_events
+WHERE timestamp > toDateTime('2026-11-17 00:00:00');
+
+-- 13b. Scanner page loads that received the photo: did they save a PDF?
+SELECT blob3 AS session,
+  SUM(if(index1 = 'Tool Notice' AND blob4 = 'notice=photo_from_jpg2pdf', 1, 0)) AS got_photo,
+  SUM(if(index1 = 'Tool Success', 1, 0)) AS scanned
+FROM pdfree_events
+WHERE timestamp > toDateTime('2026-11-17 00:00:00') AND blob2 = 'scanDocument'
+GROUP BY session HAVING got_photo > 0 ORDER BY scanned LIMIT 200;

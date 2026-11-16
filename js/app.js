@@ -104,6 +104,14 @@ function _toolHref(tool) {
   return link ? new URL(link.getAttribute('href'), location.href).pathname : (TOOL_SLUGS[tool] || `/${tool}-pdf/`);
 }
 
+// /scan-document/ is English-only; every homepage carries the scanner in its
+// own language (?tool= opens it there) — the logo links to that homepage on
+// a tool page, and on a homepage it is no link at all.
+function _scannerHref() {
+  const home = id('logo')?.getAttribute('href');
+  return (home ? new URL(home, location.href).pathname : location.pathname) + '?tool=scanDocument';
+}
+
 function _toolFromPath(pathname) {
   const p = pathname.endsWith('/') ? pathname : pathname + '/';
   return _PATH_TO_TOOL[p] || null;
@@ -515,14 +523,22 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
     resize:     { icon: '🗂️', titleKey: 'resize_next_nup_title',     subKey: 'resize_next_nup_sub',     toTool: 'nup' },
     mangaSplit: { icon: '🗂️', titleKey: 'manga_next_booklet_title',  subKey: 'manga_next_booklet_sub',  toTool: 'nup',
                   query: () => `?mode=booklet&rtl=${collectToolParams('mangaSplit').params.rtl ? 1 : 0}` },
+    // A photo of a paper page comes out of JPG→PDF still a photo (a user's
+    // report, 2026-11-16). One photo only — the scanner crops one at a time —
+    // and not PNG (mostly screenshots) or TIFF (already scanned). No EXIF
+    // check: messengers strip it. Carries the photo, not the PDF.
+    jpg2pdf:    { icon: '📷', titleKey: 'jpg2pdf_next_scan_title',   subKey: 'jpg2pdf_next_scan_sub',   toTool: 'scanDocument',
+                  href: _scannerHref, input: true, notice: 'scan_hint',
+                  when: () => selectedFiles.length === 1 && /^image\/(jpeg|webp|hei[cf])$/.test(selectedFiles[0].type) },
   };
   const nextStepEl = id('nextStepRow');
   if (nextStepEl) {
     const step = NEXT_STEP[tool];
-    if (step) {
-      const href = _toolHref(step.toTool) + (step.query ? step.query() : '');
+    if (step && (!step.when || step.when())) {
+      const href = step.href ? step.href() : _toolHref(step.toTool) + (step.query ? step.query() : '');
+      if (step.notice) trackToolNotice(tool, step.notice);
       nextStepEl.innerHTML = `
-        <a href="${href}" class="next-step-row" data-handoff data-cross-sell-to="${step.toTool}">
+        <a href="${href}" class="next-step-row" data-handoff${step.input ? ' data-handoff-input' : ''} data-cross-sell-to="${step.toTool}">
           <div class="next-step-row__icon" aria-hidden="true">${step.icon}</div>
           <div class="next-step-row__body">
             <p class="next-step-row__title">${t(step.titleKey)}</p>
@@ -960,8 +976,10 @@ function initEvents() {
     if (link.classList.contains('handoff-link--busy')) { e.preventDefault(); return; } // already in flight
     // No result yet but the link carries the file in hand (Fill's "no
     // fields — use Draw on PDF"): the person would otherwise add it again.
+    // A link that carries the input takes it even when a result exists:
+    // JPG→PDF's scanner hint sends the photo, not the PDF made from it.
     const input  = 'handoffInput' in link.dataset && selectedFiles[0];
-    const result = _getResultForHandoff() || (input ? { blob: input, filename: input.name } : null);
+    const result = (input ? { blob: input, filename: input.name } : null) || _getResultForHandoff();
     if (!result) return;              // blob already revoked → normal navigation
     e.preventDefault();
     // A big merged/converted blob makes the IndexedDB write real, visible work
@@ -1864,10 +1882,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // so addFiles() fires into a fully-initialised tool UI.
     restoreHandoff().then(handoff => {
       if (!handoff) return;
-      const file = new File([handoff.blob], handoff.filename, { type: 'application/pdf' });
+      const type = handoff.blob.type || 'application/pdf';
+      const file = new File([handoff.blob], handoff.filename, { type });
       requestAnimationFrame(() => {
         addFiles([file]);
-        showToast(`📂 PDF ready — continue without re-uploading`);
+        // a photo opens the scanner's crop review straight away — that says it
+        if (type === 'application/pdf') showToast(`📂 PDF ready — continue without re-uploading`);
+        // the session id is per page load: this ties the scan to the hint's click
+        else trackToolNotice(requestedTool, `photo_from_${handoff.sourceTool}`);
       });
     }).catch(() => {});
   } else {

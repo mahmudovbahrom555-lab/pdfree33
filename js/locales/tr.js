@@ -1192,6 +1192,8 @@ window.PDFREE_LOCALE = {
   merge_next_extract_sub:   'Bu birleştirilmiş dosyadan tam olarak ihtiyacınız olan sayfaları seçin — anında açılır, yeniden yükleme gerekmez.',
   cleanscan_next_ocr_title: 'OCR PDF\'e devam et',
   cleanscan_next_ocr_sub:   'Temizlenmiş metni seçilebilir ve aranabilir hale getirin — daha beyaz, daha keskin bir tarama daha doğru tanınır.',
+  jpg2pdf_next_scan_title: 'Kâğıt bir sayfanın fotoğrafı mı? Belge Tarayıcı\'da açın',
+  jpg2pdf_next_scan_sub:   'Sayfayı fotoğraftan kırpın ve düzeltin; PDF taranmış gibi görünsün.',
   resize_next_nup_title: "“Kağıt başına sayfa” ile devam et",
   resize_next_nup_sub: "Her kağıda birden fazla sayfa ya da kitapçık — anında açılır, yeniden yükleme yok.",
   manga_next_booklet_title: "Kitapçık olarak yazdır",

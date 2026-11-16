@@ -1195,6 +1195,8 @@ window.PDFREE_LOCALE = {
   merge_next_extract_sub:   'Wähle genau die Seiten aus dieser zusammengeführten Datei, die du brauchst — öffnet sofort, kein erneutes Hochladen.',
   cleanscan_next_ocr_title: 'Weiter zu OCR PDF',
   cleanscan_next_ocr_sub:   'Mache den bereinigten Text auswählbar und durchsuchbar — ein weißerer, schärferer Scan wird genauer erkannt.',
+  jpg2pdf_next_scan_title: 'Foto einer Papierseite? Im Dokumentenscanner öffnen',
+  jpg2pdf_next_scan_sub:   'Schneide die Seite aus dem Foto aus und richte sie gerade, damit das PDF wie ein Scan aussieht.',
   resize_next_nup_title: "Weiter mit „Seiten pro Blatt“",
   resize_next_nup_sub: "Mehrere Seiten auf jedes Blatt oder eine Broschüre — öffnet sofort, ohne erneutes Hochladen.",
   manga_next_booklet_title: "Als Broschüre drucken",
