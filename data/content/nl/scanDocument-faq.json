@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wordt een document bij het scannen ergens naartoe geüpload?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nee. Elke stap — de opname, de hoekdetectie, het bijsnijden, de perspectiefcorrectie — gebeurt in je browser. Er wordt niets geüpload naar de servers van PDFree of ergens anders. Je kunt het zelf controleren door tijdens het scannen het tabblad Netwerk van de ontwikkelaarstools van je browser te openen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Waarom toont elke foto die ik toevoeg een bijsnijscherm, ook uit de galerij?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Deze tool is speciaal gemaakt om documenten te scannen, dus elke foto — van de camera of uit de galerij — gaat door dezelfde randdetectie en controle van de uitsnede, net als in een scanner-app. Wil je alleen foto's zonder bijsnijden tot een PDF samenvoegen, gebruik dan de tool \"JPG naar PDF\" van PDFree — die heeft geen controlescherm en is sneller."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Wat als de automatische randdetectie het mis heeft?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sleep een van de vier hoeken om de uitsnede aan te passen voordat je bevestigt. Vindt de detectie helemaal geen betrouwbare rand, dan begint de tool met een veilige standaarduitsnede die je vrij kunt aanpassen."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik bijsnijden overslaan bij een foto die geen document is?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Kies op het controlescherm \"Overslaan — zo gebruiken\" in plaats van de uitsnede te bevestigen — de originele foto komt onbewerkt in de PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Werkt het in kleur, of alleen zwart-wit?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Allebei, en meer. \"Grijswaarden\" (de standaard) maakt de achtergrond wit en de tekst scherper — het beste voor gewone documenten. \"Kleur\" corrigeert ongelijkmatig licht en behoudt de echte kleuren van de pagina. \"Z/W\" maakt van de pagina zuiver zwarte tekst op wit. \"Vage tekst\" zorgt dat lichte of zwakke letters niet verdwijnen. \"Origineel\" laat de foto zoals hij is. Schuifregelaars voor helderheid en contrast verfijnen het resultaat."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan de gescande PDF doorzoekbaar zijn?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Zet \"Tekst herkennen\" aan en kies de taal van het document: de tekst wordt in je browser herkend en in de PDF opgeslagen, zodat je hem kunt zoeken en kopiëren. Is tekstherkenning op je apparaat niet beschikbaar, dan wordt een gewone PDF opgeslagen en meldt de tool dat."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik meerdere pagina's in één PDF scannen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Voeg zoveel foto's toe als je nodig hebt — van de camera, uit de galerij of allebei — zet ze op volgorde door te slepen en bij het opslaan worden ze samengevoegd tot één PDF."
+    }
+  }
+]

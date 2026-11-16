@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cómo escanear un documento a PDF",
+  "description": "Escanea un documento con la cámara o con una foto existente: detección automática de bordes y corrección de perspectiva, gratis y sin subir archivos.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Toma una foto o elige una de tu galería",
+      "text": "Pulsa «Tomar foto» para usar la cámara, o arrastra / elige una foto existente de un documento."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Revisa el recorte detectado",
+      "text": "Los bordes del documento se detectan automáticamente. Arrastra cualquier esquina para ajustar, o elige «Omitir — usar tal cual» si la foto no necesita recorte."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Confirma y guarda en PDF",
+      "text": "Añade más páginas del mismo modo si hace falta, elige un filtro («Escala de grises» por defecto) y guarda tu escaneo en PDF."
+    }
+  ]
+}

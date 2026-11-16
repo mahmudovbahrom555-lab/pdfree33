@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Digitalizar um documento envia o arquivo para algum lugar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. Cada etapa — a captura, a detecção dos cantos, o recorte, a correção de perspectiva — acontece no seu navegador. Nada é enviado aos servidores do PDFree nem a qualquer outro lugar. Você pode conferir abrindo a aba Rede das ferramentas de desenvolvedor do navegador enquanto digitaliza."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Por que cada foto que adiciono mostra uma tela de recorte, mesmo da galeria?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Esta ferramenta foi feita para digitalizar documentos, então cada foto — da câmera ou da galeria — passa pela mesma detecção de bordas e revisão de recorte, como num app de scanner. Se você só quer juntar fotos num PDF sem recortar, use a ferramenta «JPG para PDF» do PDFree: ela não tem tela de revisão e é mais rápida."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "E se a detecção automática de bordas errar?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Arraste qualquer um dos quatro cantos para ajustar o recorte antes de confirmar. Se nenhuma borda confiável for encontrada, a ferramenta começa com um recorte padrão seguro que você pode mudar à vontade."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso não recortar uma foto que não é documento?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Na tela de revisão, escolha «Pular — usar como está» em vez de confirmar o recorte: a foto original entra no PDF sem processamento."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funciona em cores ou só em preto e branco?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nos dois, e mais. «Escala de cinza» (o padrão) clareia o fundo e deixa o texto mais nítido — ideal para documentos comuns. «Cor» corrige a iluminação irregular e mantém as cores reais da página. «P&B» transforma a página em texto preto puro sobre branco. «Texto desbotado» evita que escrita clara ou fraca desapareça. «Original» deixa a foto como está. Os controles de brilho e contraste ajustam o resultado."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "O PDF digitalizado pode ser pesquisável?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Ative «Reconhecer texto» e escolha o idioma do documento: o texto é reconhecido no seu navegador e salvo no PDF, para você pesquisar e copiar. Se o reconhecimento de texto não estiver disponível no seu dispositivo, um PDF comum é salvo e a ferramenta avisa."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso digitalizar várias páginas em um só PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Adicione quantas fotos precisar — da câmera, da galeria ou das duas —, ordene-as arrastando e elas serão unidas em um único PDF ao salvar."
+    }
+  }
+]

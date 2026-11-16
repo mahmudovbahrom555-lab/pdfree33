@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "So scannst du ein Dokument zu PDF",
+  "description": "Scanne ein Dokument mit der Kamera oder einem vorhandenen Foto — automatische Kantenerkennung und Perspektivkorrektur, kostenlos, ohne Upload.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Nimm ein Foto auf oder wähle eines aus der Galerie",
+      "text": "Tippe auf „Foto aufnehmen“, um die Kamera zu nutzen, oder ziehe / wähle ein vorhandenes Foto eines Dokuments."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Prüfe den erkannten Zuschnitt",
+      "text": "Die Kanten des Dokuments werden automatisch erkannt. Ziehe eine Ecke zum Anpassen oder wähle „Überspringen — so verwenden“, wenn das Foto keinen Zuschnitt braucht."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Bestätige und speichere als PDF",
+      "text": "Füge bei Bedarf weitere Seiten genauso hinzu, wähle einen Filter (voreingestellt „Graustufen“) und speichere deinen Scan als PDF."
+    }
+  ]
+}
