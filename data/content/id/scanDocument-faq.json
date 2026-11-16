@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Apakah memindai dokumen akan mengunggahnya ke suatu tempat?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tidak. Setiap langkah — pengambilan foto, deteksi sudut, pemotongan, koreksi perspektif — terjadi di browser Anda. Tidak ada yang diunggah ke server PDFree atau ke mana pun. Anda bisa memeriksanya sendiri dengan membuka tab Network di DevTools browser saat memindai."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Mengapa setiap foto yang saya tambahkan menampilkan layar pemotongan, bahkan dari galeri?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Alat ini dibuat khusus untuk memindai dokumen, jadi setiap foto — dari kamera atau galeri — melewati deteksi tepi dan peninjauan potongan yang sama, seperti aplikasi pemindai. Jika Anda hanya ingin menggabungkan foto menjadi PDF tanpa dipotong, gunakan alat \"JPG ke PDF\" dari PDFree — tanpa layar peninjauan dan lebih cepat."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bagaimana jika deteksi tepi otomatis salah?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Seret salah satu dari empat sudut untuk menyesuaikan potongan sebelum mengonfirmasi. Jika tidak ditemukan tepi yang meyakinkan sama sekali, alat ini memulai dengan potongan bawaan yang aman dan bisa Anda ubah dengan bebas."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya tidak memotong foto yang bukan dokumen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa. Di layar peninjauan, pilih \"Lewati — gunakan apa adanya\" alih-alih mengonfirmasi potongan — foto asli masuk ke PDF tanpa diproses."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Apakah bisa berwarna, atau hanya hitam-putih?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Keduanya, dan lebih. \"Skala Abu-abu\" (bawaan) memutihkan latar dan menajamkan teks — paling cocok untuk dokumen biasa. \"Warna\" meratakan pencahayaan sambil mempertahankan warna asli halaman. \"Hitam-Putih\" mengubah halaman menjadi teks hitam pekat di atas putih. \"Teks pudar\" menjaga tulisan yang pucat atau tipis agar tidak hilang. \"Asli\" membiarkan foto apa adanya. Penggeser kecerahan dan kontras menyempurnakan hasilnya."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah PDF hasil pindaian dicari teksnya?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa. Nyalakan \"Kenali teks\" dan pilih bahasa dokumen: teks dikenali di browser Anda dan disimpan di dalam PDF, sehingga bisa dicari dan disalin. Jika pengenalan teks tidak tersedia di perangkat Anda, PDF biasa yang disimpan dan alat ini memberi tahu Anda."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya memindai beberapa halaman ke satu PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa. Tambahkan foto sebanyak yang Anda perlukan — dari kamera, galeri, atau keduanya — atur urutannya dengan menyeret, dan semuanya digabung menjadi satu PDF saat disimpan."
+    }
+  }
+]

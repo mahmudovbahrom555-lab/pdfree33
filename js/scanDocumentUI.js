@@ -373,7 +373,7 @@ async function _decodeSourcePhoto(file) {
 //    capture input (no review — same graceful-degradation reasoning
 //    as jpg2pdf's fallback) only when getUserMedia isn't supported.
 //
-//    Lives in scan-document/index.html's STATIC HTML (like the
+//    Lives in the tool page's static markup (scripts/templates/tool-page.html, like the
 //    drop-zone itself), not inside #scanDocumentOptions — real bug
 //    found+fixed during the 2026-08-22 QA pass: the panel (and
 //    anything inside it) only ever renders once files.length > 0, so a

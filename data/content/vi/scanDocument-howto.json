@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách quét tài liệu sang PDF",
+  "description": "Quét tài liệu bằng camera hoặc ảnh có sẵn — tự động nhận diện cạnh và chỉnh phối cảnh, miễn phí, không cần tải tệp lên.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Chụp ảnh hoặc chọn ảnh trong thư viện",
+      "text": "Chạm \"Chụp ảnh\" để dùng camera, hoặc kéo thả / chọn ảnh tài liệu có sẵn."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Xem lại vùng cắt được nhận diện",
+      "text": "Cạnh tài liệu được nhận diện tự động. Kéo góc bất kỳ để chỉnh, hoặc chọn \"Bỏ qua — dùng nguyên trạng\" nếu ảnh không cần cắt."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Xác nhận và lưu thành PDF",
+      "text": "Thêm trang khác theo cách tương tự nếu cần, chọn bộ lọc (mặc định \"Thang xám\") rồi lưu bản quét thành PDF."
+    }
+  ]
+}

@@ -192,7 +192,7 @@ _NAV_TOOL_IDS = [
     'watermark', 'pagenum', 'metadata', 'extract',
     # draw-on-pdf inserted here (EN-only, no locale slugs)
     'rotate', 'organize', 'resize', 'nup', 'protect', 'ocr', 'pdf2word', 'pdf2excel', 'pdf2ppt', 'pdf2md', 'unlock',
-    'cleanScan',
+    'cleanScan', 'scanDocument',
 ]
 
 def _build_nav_items(lang, all_tools):
@@ -537,13 +537,8 @@ SPECIALTY_PAGES = [
     # EN-only) — links to the real self-hosted Docker package, see
     # SELF_HOSTING.md and Dockerfile.
     'enterprise-pdf-tools',
-    # Document Scanner — EN-only tool page, same as compare-pdf above.
-    # Was missing from this list since the tool shipped (2026-08-22) —
-    # found while adding glossary-pdf below and checking sitemap.xml
-    # against production; a real, pre-existing gap, not new.
-    'scan-document',
-    # Document Glossary — EN-only tool page, same pattern as compare-pdf/
-    # scan-document above.
+    # Document Glossary — EN-only tool page, same pattern as compare-pdf
+    # above.
     'glossary-pdf',
     # Static pages
     'privacy',
@@ -1149,7 +1144,7 @@ def _generate_search_keywords(config, dist_root):
     not just the shorter hand-written synonyms in js/config.js's TOOLS[key]
     .tags. Only tools that actually have a `keywords` entry for a given
     language contribute anything — several tools (compare, compress-email,
-    draw-pdf, glossary, read, scanDocument) have no data/tools-config.json
+    draw-pdf, glossary, read) have no data/tools-config.json
     entry at all (hand-authored pages, not the templated SEO pipeline) and
     are silently skipped, not an error: search still works for them via the
     existing hand-written tags/search_tags, just without this extra layer.

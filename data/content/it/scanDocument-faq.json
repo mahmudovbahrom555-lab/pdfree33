@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Scansionare un documento lo carica da qualche parte?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Ogni passaggio — lo scatto, il rilevamento degli angoli, il ritaglio, la correzione della prospettiva — avviene nel tuo browser. Niente viene caricato sui server di PDFree né altrove. Puoi verificarlo aprendo la scheda Rete degli strumenti per sviluppatori del browser mentre scansioni."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Perché ogni foto che aggiungo mostra una schermata di ritaglio, anche dalla galleria?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Questo strumento è fatto per scansionare documenti, quindi ogni foto — dalla fotocamera o dalla galleria — passa per lo stesso rilevamento dei bordi e controllo del ritaglio, come in un'app scanner. Se vuoi solo unire foto in un PDF senza ritagliarle, usa lo strumento «JPG in PDF» di PDFree: non ha la schermata di controllo ed è più veloce."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "E se il rilevamento automatico dei bordi sbaglia?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Trascina uno dei quattro angoli per regolare il ritaglio prima di confermare. Se non viene trovato alcun bordo affidabile, lo strumento parte da un ritaglio predefinito sicuro che puoi modificare liberamente."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso non ritagliare una foto che non è un documento?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Nella schermata di controllo scegli «Salta — usa così com'è» invece di confermare il ritaglio: la foto originale viene aggiunta al PDF senza elaborazione."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funziona a colori o solo in bianco e nero?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Entrambi, e non solo. «Scala di grigi» (predefinito) schiarisce lo sfondo e rende il testo più nitido — ideale per i documenti comuni. «Colore» corregge l'illuminazione irregolare mantenendo i colori reali della pagina. «B/N» trasforma la pagina in testo nero puro su bianco. «Testo sbiadito» evita che la scrittura chiara o debole scompaia. «Originale» lascia la foto com'è. I cursori di luminosità e contrasto rifiniscono il risultato."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Il PDF scansionato può essere ricercabile?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Attiva «Riconosci il testo» e scegli la lingua del documento: il testo viene riconosciuto nel tuo browser e salvato nel PDF, così puoi cercarlo e copiarlo. Se il riconoscimento del testo non è disponibile sul tuo dispositivo, viene salvato un PDF normale e lo strumento te lo segnala."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso scansionare più pagine in un solo PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Aggiungi tutte le foto che ti servono — dalla fotocamera, dalla galleria o da entrambe — riordinale trascinandole e al salvataggio vengono unite in un unico PDF."
+    }
+  }
+]

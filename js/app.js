@@ -104,14 +104,6 @@ function _toolHref(tool) {
   return link ? new URL(link.getAttribute('href'), location.href).pathname : (TOOL_SLUGS[tool] || `/${tool}-pdf/`);
 }
 
-// /scan-document/ is English-only; every homepage carries the scanner in its
-// own language (?tool= opens it there) — the logo links to that homepage on
-// a tool page, and on a homepage it is no link at all.
-function _scannerHref() {
-  const home = id('logo')?.getAttribute('href');
-  return (home ? new URL(home, location.href).pathname : location.pathname) + '?tool=scanDocument';
-}
-
 function _toolFromPath(pathname) {
   const p = pathname.endsWith('/') ? pathname : pathname + '/';
   return _PATH_TO_TOOL[p] || null;
@@ -528,14 +520,14 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
     // and not PNG (mostly screenshots) or TIFF (already scanned). No EXIF
     // check: messengers strip it. Carries the photo, not the PDF.
     jpg2pdf:    { icon: '📷', titleKey: 'jpg2pdf_next_scan_title',   subKey: 'jpg2pdf_next_scan_sub',   toTool: 'scanDocument',
-                  href: _scannerHref, input: true, notice: 'scan_hint',
+                  input: true, notice: 'scan_hint',
                   when: () => selectedFiles.length === 1 && /^image\/(jpeg|webp|hei[cf])$/.test(selectedFiles[0].type) },
   };
   const nextStepEl = id('nextStepRow');
   if (nextStepEl) {
     const step = NEXT_STEP[tool];
     if (step && (!step.when || step.when())) {
-      const href = step.href ? step.href() : _toolHref(step.toTool) + (step.query ? step.query() : '');
+      const href = _toolHref(step.toTool) + (step.query ? step.query() : '');
       if (step.notice) trackToolNotice(tool, step.notice);
       nextStepEl.innerHTML = `
         <a href="${href}" class="next-step-row" data-handoff${step.input ? ' data-handoff-input' : ''} data-cross-sell-to="${step.toTool}">

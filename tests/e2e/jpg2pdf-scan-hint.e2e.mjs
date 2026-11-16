@@ -6,8 +6,8 @@
 //  A user's report: "converted, but it is still a photo, not a PDF" — the
 //  PDF was made and downloaded, it just showed the photo as it was. Under
 //  the result, one photo (JPEG/WebP/HEIC) now gets a quiet line to the
-//  scanner; a click carries the PHOTO (not the PDF) to the scanner on the
-//  person's own homepage, where its crop review opens on it. PNG
+//  scanner; a click carries the PHOTO (not the PDF) to the scanner page in
+//  the person's language, where its crop review opens on it. PNG
 //  (mostly screenshots) and two or more photos get no line.
 //
 //  Run: node tests/e2e/jpg2pdf-scan-hint.e2e.mjs   (dist/ served on :8934)
@@ -54,9 +54,9 @@ async function convert(fromPath, files, viewport) {
 
 const hint = page => page.$('#nextStepRow a.next-step-row[data-cross-sell-to="scanDocument"]');
 
-async function followHint(page) {
+async function followHint(page, to) {
   await Promise.all([
-    page.waitForURL(u => u.searchParams.get('tool') === 'scanDocument', { timeout: 30000 }),
+    page.waitForURL(u => u.pathname === to, { timeout: 30000 }),
     page.click('#nextStepRow a.next-step-row'),
   ]);
   await page.waitForSelector('.scan-cam-modal--open', { timeout: 60000 });
@@ -69,9 +69,7 @@ await test('one JPEG: the hint shows, is counted once, and the photo opens in th
   if (notices.length !== 1) throw new Error(`scan_hint notices: ${notices.length}`);
   const title = await page.$eval('#nextStepRow .next-step-row__title', el => el.textContent);
   if (!/Document Scanner/.test(title)) throw new Error(title);
-  await followHint(page);
-  const url = new URL(page.url());
-  if (url.pathname !== '/') throw new Error(`landed on ${url.pathname}`);
+  await followHint(page, '/scan-document/');
   const files = await page.evaluate(async () => (await import('/js/files.js')).selectedFiles.map(f => [f.name, f.type]));
   if (files.length !== 1 || files[0][1] !== 'image/jpeg' || files[0][0] !== 'gray-scan.jpg') throw new Error(JSON.stringify(files));
   if (!events.some(e => e.event === 'Tool Notice' && e.props?.tool === 'scanDocument' && e.props?.notice === 'photo_from_jpg2pdf'))
@@ -81,7 +79,7 @@ await test('one JPEG: the hint shows, is counted once, and the photo opens in th
 
 await test('the click is counted as a cross-sell to the scanner', async () => {
   const { page, events } = await convert('/jpg2pdf/', [JPEG]);
-  await followHint(page);
+  await followHint(page, '/scan-document/');
   // the click's event went out before the navigation
   const before = events.filter(e => e.event === 'Cross Sell Click');
   if (!before.some(e => e.props?.from === 'jpg2pdf' && e.props?.to === 'scanDocument')) throw new Error(JSON.stringify(before));
@@ -91,11 +89,10 @@ await test('Chinese page: the hint is in Chinese and the scanner opens in Chines
   const { page, errors } = await convert('/zh/jpg-zhuan-pdf/', [JPEG]);
   const title = await page.$eval('#nextStepRow .next-step-row__title', el => el.textContent);
   if (!/文档扫描仪/.test(title)) throw new Error(title);
-  await followHint(page);
-  const url = new URL(page.url());
-  if (url.pathname !== '/zh/') throw new Error(`landed on ${url.pathname}`);
+  await followHint(page, '/zh/wendang-saomiao/');
   const lang = await page.evaluate(() => document.documentElement.lang);
   if (!/^zh/.test(lang)) throw new Error(`lang ${lang}`);
+  if (!/拍照/.test(await page.$eval('#sdTakePhotoBtn', el => el.textContent))) throw new Error('no Chinese camera button');
   if (errors.length) throw new Error(errors.join('; '));
 });
 

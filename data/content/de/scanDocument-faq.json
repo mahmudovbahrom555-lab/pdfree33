@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Wird ein Dokument beim Scannen irgendwohin hochgeladen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. Jeder Schritt — die Aufnahme, die Eckenerkennung, der Zuschnitt, die Perspektivkorrektur — passiert in deinem Browser. Nichts wird auf die Server von PDFree oder anderswohin hochgeladen. Du kannst das selbst prüfen, indem du beim Scannen den Netzwerk-Tab der Entwicklertools deines Browsers öffnest."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Warum zeigt jedes Foto einen Zuschnitt-Bildschirm, auch aus der Galerie?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dieses Tool ist für das Scannen von Dokumenten gemacht, deshalb durchläuft jedes Foto — von der Kamera oder aus der Galerie — dieselbe Kantenerkennung und Zuschnittprüfung, wie in einer Scanner-App. Wenn du Fotos nur ohne Zuschnitt zu einem PDF zusammenfügen willst, nutze das Tool „JPG zu PDF“ von PDFree — es hat keinen Prüfbildschirm und ist schneller."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Was, wenn die automatische Kantenerkennung danebenliegt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ziehe eine der vier Ecken, um den Zuschnitt vor dem Bestätigen anzupassen. Findet die Erkennung gar keine sichere Kante, startet das Tool mit einem sicheren Standardzuschnitt, den du frei ändern kannst."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich den Zuschnitt bei einem Foto überspringen, das kein Dokument ist?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Wähle auf dem Prüfbildschirm „Überspringen — so verwenden“ statt den Zuschnitt zu bestätigen — das Originalfoto kommt unverarbeitet ins PDF."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Funktioniert es in Farbe oder nur schwarz-weiß?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Beides, und mehr. „Graustufen“ (voreingestellt) hellt den Hintergrund auf und schärft den Text — ideal für normale Dokumente. „Farbe“ gleicht ungleichmäßiges Licht aus und behält die echten Farben der Seite. „S/W“ macht die Seite zu reinem schwarzem Text auf Weiß. „Blasser Text“ verhindert, dass helle oder schwache Schrift verschwindet. „Original“ lässt das Foto, wie es ist. Regler für Helligkeit und Kontrast verfeinern das Ergebnis."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann das gescannte PDF durchsuchbar sein?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Schalte „Text erkennen“ ein und wähle die Dokumentsprache: Der Text wird in deinem Browser erkannt und im PDF gespeichert, sodass du ihn suchen und kopieren kannst. Ist die Texterkennung auf deinem Gerät nicht verfügbar, wird ein normales PDF gespeichert, und das Tool sagt es dir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich mehrere Seiten in ein PDF scannen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Füge so viele Fotos hinzu, wie du brauchst — von der Kamera, aus der Galerie oder beides —, ordne sie per Ziehen und sie werden beim Speichern zu einem PDF zusammengefügt."
+    }
+  }
+]

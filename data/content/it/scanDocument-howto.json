@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Come scansionare un documento in PDF",
+  "description": "Scansiona un documento con la fotocamera o una foto esistente — rilevamento automatico dei bordi e correzione della prospettiva, gratis, senza caricare file.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Scatta una foto o scegline una dalla galleria",
+      "text": "Tocca «Scatta foto» per usare la fotocamera, oppure trascina / scegli una foto esistente di un documento."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Controlla il ritaglio rilevato",
+      "text": "I bordi del documento vengono rilevati automaticamente. Trascina un angolo per regolare, oppure scegli «Salta — usa così com'è» se la foto non ha bisogno di ritaglio."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Conferma e salva in PDF",
+      "text": "Aggiungi altre pagine allo stesso modo se serve, scegli un filtro («Scala di grigi» predefinito) e salva la scansione in PDF."
+    }
+  ]
+}

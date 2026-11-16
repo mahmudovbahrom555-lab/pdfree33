@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Een document naar PDF scannen",
+  "description": "Scan een document met je camera of een bestaande foto — automatische randdetectie en perspectiefcorrectie, gratis, zonder uploaden.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Maak een foto of kies er een uit je galerij",
+      "text": "Tik op \"Foto maken\" om de camera te gebruiken, of sleep / kies een bestaande foto van een document."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Controleer de gevonden uitsnede",
+      "text": "De randen van het document worden automatisch gevonden. Sleep een hoek om bij te stellen, of kies \"Overslaan — zo gebruiken\" als de foto niet bijgesneden hoeft te worden."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Bevestig en sla op als PDF",
+      "text": "Voeg zo nodig meer pagina's op dezelfde manier toe, kies een filter (standaard \"Grijswaarden\") en sla je scan op als PDF."
+    }
+  ]
+}

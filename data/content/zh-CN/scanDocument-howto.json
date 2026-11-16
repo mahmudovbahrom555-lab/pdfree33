@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "如何把文档扫描成 PDF",
+  "description": "用相机或已有照片扫描文档——自动检测边缘并校正透视，免费，无需上传文件。",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "拍照或从相册中选择",
+      "text": "点击“拍照”使用相机，或拖入 / 选择一张已有的文档照片。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "检查自动检测的裁剪",
+      "text": "文档边缘会被自动检测。拖动任意一个角进行调整；如果照片不需要裁剪，选择“跳过 — 按原样使用”。"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "确认并保存为 PDF",
+      "text": "如有需要，用同样的方式添加更多页面，选择滤镜（默认为“灰度”），然后把扫描件保存为 PDF。"
+    }
+  ]
+}
