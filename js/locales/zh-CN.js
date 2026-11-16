@@ -1168,8 +1168,10 @@ window.PDFREE_LOCALE = {
   atlas_verdict_heavy:     '严重问题',
 
   // ── pdf2excelUI.js ─────────────────────────────────────────────
-  p2e_mode_hint:              '📊 检测到的表格将转换为独立的 Excel 工作表。其他文本会保留在"文本"工作表中，确保内容不丢失。',
-  p2e_ocr_hint:                '⚠️ 未检测到文本层 — 此 PDF 为扫描图像，因此无法提取表格。',
+  p2e_mode_hint: "检测到的表格分别导出到独立的 Excel 工作表。提取的其他文本放在“Text”工作表中。",
+  p2e_ocr_hint: "在已检查的页面中未找到可提取的文本。",
+  p2e_skipped_pages: "以下页面没有可提取的文本，已跳过：{pages}。",
+  p2e_ocr_scans: "对扫描页运行 OCR",
   p2e_ocr_to_get_extractable:  '以获得可提取的文本。',
   p2e_tables_detected_one:     '🗂️ 检测到 {n} 个表格 — 将生成独立的 Excel 工作表',
   p2e_tables_detected_many:    '🗂️ 检测到 {n} 个表格 — 每个都将生成独立的 Excel 工作表',

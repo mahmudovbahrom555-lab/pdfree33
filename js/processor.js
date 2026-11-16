@@ -319,11 +319,14 @@ export function cancelMergeScan() {
 let _batchCancelReject = null;
 let _scanOcrAbort = null;
 let _compressAbort = null;
+let _pdf2excelAbort = null;
 
 export function cancelProcess(currentTool) {
   if (!isProcessing) return;
   _scanOcrAbort?.abort();
   _compressAbort?.abort();
+  _pdf2excelAbort?.abort();
+  _pdf2excelAbort = null;
   if (_batchCancelReject) {
     const reject = _batchCancelReject;
     reject(new _BatchCancelled());
@@ -410,11 +413,15 @@ export async function doProcess(currentTool, extraParams = {}) {
   const compressAbort = getRunner(currentTool) === 'compress' ? new AbortController() : null;
   if (compressAbort) _compressAbort = compressAbort;
   const signal = compressAbort?.signal;
+  const excelRun = currentTool === 'pdf2excel' ? new AbortController() : null;
+  if (excelRun) _pdf2excelAbort = excelRun;
 
   setFilesLocked(true);
   setButtonProcessing();
   setProgress(5, t('prog_reading'));
+  if (excelRun) showCancelBtn();
   await _warmPdfLib();
+  if (excelRun?.signal.aborted) return;
   startLongOpHint(12000);
   showCancelBtn();
 
@@ -450,7 +457,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     jpg2pdf:  () => _runJpg2Pdf(filesSnapshot, extraParams, currentTool),
     pdf2jpg:  () => _runPdf2Jpg(filesSnapshot, extraParams),
     pdf2word: () => _runPdf2Word(filesSnapshot, extraParams),
-    pdf2excel: () => _runPdf2Excel(filesSnapshot, extraParams),
+    pdf2excel: () => _runPdf2Excel(filesSnapshot, excelRun.signal),
     pdf2ppt:  () => _runPdf2Ppt(filesSnapshot, extraParams),
     pdf2md:   () => _runPdf2Md(filesSnapshot, extraParams),
     docx2pdf: () => _runDocx2Pdf(filesSnapshot, extraParams),
@@ -480,11 +487,13 @@ export async function doProcess(currentTool, extraParams = {}) {
     const run    = runnerMap[runner] ?? (() => _runStub(currentTool));
     await run();
   } catch (err) {
-    if (signal?.aborted) return;
+    if (signal?.aborted || excelRun?.signal.aborted) return;
     isProcessing = false;
     setFilesLocked(false);
     hideCancelBtn();
     _handleError(currentTool, err.message);
+  } finally {
+    if (_pdf2excelAbort === excelRun) _pdf2excelAbort = null;
   }
 }
 
@@ -3333,19 +3342,17 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150, stripMeta
 // table is appended to a catch-all "Text" sheet so nothing is silently
 // dropped, even on documents that turn out not to be spreadsheet-like.
 
-async function _runPdf2Excel(filesSnapshot) {
+async function _runPdf2Excel(filesSnapshot, signal) {
   const file = filesSnapshot[0];
   if (!_checkSize(file, maxFileMb('pdf2excel'))) { _abortUI(); return; }
 
   setProgress(5, 'Loading libraries…');
-
   try {
     await loadExcelJs();
   } catch {
-    isProcessing = false; setFilesLocked(false); hideCancelBtn();
-    _handleError('pdf2excel', 'Excel library unavailable — check your internet connection.');
-    return;
+    throw new Error('Excel library unavailable — check your internet connection.');
   }
+  signal.throwIfAborted();
 
   if (!window.pdfjsLib) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
@@ -3354,32 +3361,35 @@ async function _runPdf2Excel(filesSnapshot) {
   }
 
   setProgress(8, 'Loading PDF…');
+  const rawBuf = file._decryptedBuffer
+    ? file._decryptedBuffer.slice(0)
+    : await preprocessPdfBuffer(await _readSelected(file));
+  signal.throwIfAborted();
+  const task = window.pdfjsLib.getDocument({ isEvalSupported: false,
+    data:              new Uint8Array(rawBuf),
+    useSystemFonts:    false,
+    verbosity:         0,
+    disableJavaScript: true,
+  });
 
-  let pdfDoc;
-  try {
-    const rawBuf = file._decryptedBuffer
-      ? file._decryptedBuffer.slice(0)
-      : await preprocessPdfBuffer(await _readSelected(file));
-    pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
-      data:              new Uint8Array(rawBuf),
-      useSystemFonts:    false,
-      verbosity:         0,
-      disableJavaScript: true,
-    }).promise;
-  } catch (err) {
-    isProcessing = false; setFilesLocked(false); hideCancelBtn();
-    _handleError('pdf2excel', err.message); return;
-  }
-
+  // Aborting must release the PDF even while a PDF.js promise is pending.
+  // Both abort and the normal exit share the same destruction promise.
+  let destruction;
+  const destroy = () => {
+    destruction ??= Promise.resolve().then(() => task.destroy()).catch(() => {});
+    return destruction;
+  };
+  signal.addEventListener('abort', destroy, { once: true });
   let extracted;
   try {
-    extracted = await _p2eExtractTables(pdfDoc);
-  } catch (err) {
-    isProcessing = false; setFilesLocked(false); hideCancelBtn();
-    _handleError('pdf2excel', err.message); return;
+    const doc = await task.promise;
+    signal.throwIfAborted();
+    extracted = await _p2eExtractTables(doc, signal);
+  } finally {
+    signal.removeEventListener('abort', destroy);
+    await destroy();
   }
-
-  if (!isProcessing) return;
+  signal.throwIfAborted();
 
   setProgress(90, 'Building spreadsheet…');
 
@@ -3401,6 +3411,7 @@ async function _runPdf2Excel(filesSnapshot) {
 
   let workbook = _p2eBuildWorkbook(tables, textRows);
   let buffer   = await workbook.xlsx.writeBuffer();
+  signal.throwIfAborted();
 
   // Gate 2: independent structural check computed from the ACTUAL produced
   // .xlsx bytes (eriScoreXlsx.js), not the detector's self-reported
@@ -3408,9 +3419,10 @@ async function _runPdf2Excel(filesSnapshot) {
   // be structurally wrong (e.g. a confidently-aligned two-column layout
   // that isn't tabular data at all). Best-effort: any failure here just
   // ships the gate-1 result, never blocks a successful conversion.
-  if (tables.length && isProcessing) {
+  if (tables.length) {
     try {
       const eri = await evaluateXlsxStructural(buffer);
+      signal.throwIfAborted();
       const badSheetNames = new Set(
         eri.sheets.filter(s => s.eri < _P2E_ERI_THRESHOLD).map(s => s.name)
       );
@@ -3434,13 +3446,14 @@ async function _runPdf2Excel(filesSnapshot) {
     }
   }
 
+  signal.throwIfAborted();
   const blob = new Blob([buffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   });
 
   const baseName = file.name.replace(/\.pdf$/i, '');
   const filename = `${baseName}.xlsx`;
-  const confidence = _p2eConfidence({ ...extracted, tables });
+  const confidence = { tableCount: tables.length, skippedPages: extracted.skippedPages };
   const tableNote = tables.length
     ? `${tables.length} table${tables.length !== 1 ? 's' : ''} found`
     : 'no tables found';
@@ -3529,10 +3542,10 @@ function _p2eBuildWorkbook(tables, textRows) {
 // Simplified line-grouping (no heading/RTL-paragraph/rotated-header handling —
 // none of that matters for cell data) + detectTables() per page. Lines not
 // consumed by a detected table are returned separately as fallback rows.
-async function _p2eExtractTables(pdfDoc) {
+async function _p2eExtractTables(pdfDoc, signal) {
   const tables = [];
   const textRows = [];
-  let pagesWithNoText = 0;
+  const skippedPages = [];
 
   // Checked at the TOP of each iteration (not the bottom, unlike
   // _p2wBuildPageData's identical idiom) because this loop has an early
@@ -3544,15 +3557,17 @@ async function _p2eExtractTables(pdfDoc) {
   // _runPdf2Jpg already uses.
   let frameStart = performance.now();
   for (let p = 1; p <= pdfDoc.numPages; p++) {
-    if (!isProcessing) break;
+    signal.throwIfAborted();
     if (performance.now() - frameStart >= _FRAME_BUDGET_MS) {
       await _yieldToUI();
+      signal.throwIfAborted();
       frameStart = performance.now();
     }
     setProgress(10 + Math.round((p / pdfDoc.numPages) * 75),
                 `Reading page ${p}/${pdfDoc.numPages}…`);
 
     const page    = await pdfDoc.getPage(p);
+    signal.throwIfAborted();
     // getOperatorList() alongside getTextContent() forces pdf.js to resolve
     // font objects into page.commonObjs — without it, _isFontBold below
     // silently always returns false (same fix as pdf2readCore.js's own
@@ -3564,6 +3579,7 @@ async function _p2eExtractTables(pdfDoc) {
       page.getTextContent({ normalizeWhitespace: false }),
       page.getOperatorList().catch(() => {}),
     ]);
+    signal.throwIfAborted();
     const _boldFontCache = new Map(); // fontName -> boolean, one commonObjs lookup per unique font per page
     const _isFontBold = fontName => {
       if (_boldFontCache.has(fontName)) return _boldFontCache.get(fontName);
@@ -3592,9 +3608,10 @@ async function _p2eExtractTables(pdfDoc) {
 
     const lines = groupItemsIntoLines(items);
 
-    if (!lines.length) { pagesWithNoText++; page.cleanup?.(); continue; }
+    if (!lines.length) { skippedPages.push(p); page.cleanup?.(); continue; }
 
     const grids = await detectTableGrids(page, { paintedOnly: true }).catch(() => []);
+    signal.throwIfAborted();
     // An RTL line is read in runs, each in its reading order with harakat on
     // their letters, never across a table rule (lineRuns): cells joined item by
     // item came out reversed and letter-spaced for Chromium-printed Persian
@@ -3615,7 +3632,7 @@ async function _p2eExtractTables(pdfDoc) {
     page.cleanup?.();
   }
 
-  return { tables: _p2eStitchTables(tables), textRows, totalPages: pdfDoc.numPages, pagesWithNoText };
+  return { tables: _p2eStitchTables(tables), textRows, totalPages: pdfDoc.numPages, skippedPages };
 }
 
 // A whole row is treated as bold only when EVERY item on it is bold —
@@ -3781,17 +3798,6 @@ export function _p2eStitchTables(tables) {
     previous = tbl;
   }
   return out;
-}
-
-export function _p2eConfidence({ tables, totalPages, pagesWithNoText }) {
-  if (!tables.length) {
-    return { score: 0, level: 'none', tableCount: 0, pagesWithNoText, totalPages };
-  }
-  const avgConf      = tables.reduce((sum, t) => sum + t.confidence, 0) / tables.length;
-  const pageCoverage = Math.max(0.5, 1 - (pagesWithNoText / totalPages));
-  const score        = Math.round(avgConf * 100 * pageCoverage);
-  const level        = score >= 80 ? 'high' : score >= 55 ? 'medium' : 'low';
-  return { score, level, tableCount: tables.length, pagesWithNoText, totalPages };
 }
 
 // Each pattern captures the integer and fractional parts of a supported

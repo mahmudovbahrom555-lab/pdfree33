@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // ============================================================
 //  tests/pdf2excel.logic.test.js — Unit тесты логики pdf2excel
-//  Тестируем: _p2eCellValue (типизация ячеек), _p2eConfidence
-//  (расчёт confidence score) и detectTables (общий с pdf2word
-//  детектор таблиц по X-координатам колонок).
+//  Cell types, table extraction, cancellation, and result messaging.
 // ============================================================
 
 // processor.js touches Worker/document at module load time (it's built for
@@ -19,8 +17,10 @@ global.document = {
 global.window    = globalThis;
 global.Worker    = class { postMessage() {} terminate() {} addEventListener() {} };
 
-const { _p2eCellValue, _p2eDecimalMark, _p2eConfidence, _p2eExtractPage, _p2eStitchTables } = await import('../js/processor.js');
+const { _p2eCellValue, _p2eDecimalMark, _p2eExtractPage, _p2eStitchTables } = await import('../js/processor.js');
 const { detectTables, groupItemsIntoLines } = await import('../js/pdf2wordTables.js');
+
+const { initPdf2ExcelOptions, hidePdf2ExcelOptions, renderP2eConfidence } = await import('../js/pdf2excelUI.js');
 
 let passed = 0, failed = 0;
 
@@ -174,58 +174,6 @@ test('проверка календаря сохраняет невозможн�
     expect(_p2eCellValue(source)).toEqual({ value: source });
   }
   expect(_p2eCellValue('2024-02-29').value.toISOString()).toBe('2024-02-29T00:00:00.000Z');
-});
-
-// ── _p2eConfidence ──────────────────────────────────────────
-console.log('\n_p2eConfidence:');
-
-test('без таблиц — score 0, level none', () => {
-  const result = _p2eConfidence({ tables: [], totalPages: 3, pagesWithNoText: 0 });
-  expect(result).toEqual({ score: 0, level: 'none', tableCount: 0, pagesWithNoText: 0, totalPages: 3 });
-});
-
-test('высокая уверенность и полное покрытие страниц дают level high', () => {
-  const result = _p2eConfidence({
-    tables: [{ confidence: 0.9 }, { confidence: 0.95 }],
-    totalPages: 2,
-    pagesWithNoText: 0,
-  });
-  expect(result.level).toBe('high');
-  expect(result.tableCount).toBe(2);
-});
-
-test('низкая уверенность даёт level low', () => {
-  const result = _p2eConfidence({
-    tables: [{ confidence: 0.3 }],
-    totalPages: 2,
-    pagesWithNoText: 0,
-  });
-  expect(result.level).toBe('low');
-});
-
-test('много страниц без текста снижает score через pageCoverage', () => {
-  const withCoverage = _p2eConfidence({
-    tables: [{ confidence: 0.9 }],
-    totalPages: 10,
-    pagesWithNoText: 0,
-  });
-  const withoutCoverage = _p2eConfidence({
-    tables: [{ confidence: 0.9 }],
-    totalPages: 10,
-    pagesWithNoText: 8,
-  });
-  if (!(withoutCoverage.score < withCoverage.score)) {
-    throw new Error(`Expected lower score with more no-text pages: ${withoutCoverage.score} < ${withCoverage.score}`);
-  }
-});
-
-test('pageCoverage не опускается ниже 0.5 (минимальный пол)', () => {
-  const result = _p2eConfidence({
-    tables: [{ confidence: 1 }],
-    totalPages: 10,
-    pagesWithNoText: 10, // 100% страниц без текста
-  });
-  expect(result.score).toBe(50); // 1 * 100 * 0.5
 });
 
 // ── groupItemsIntoLines (общая для preview-скана и реальной конвертации) ────
@@ -549,6 +497,168 @@ test('different columns, a skipped page, or a text-detected table are NOT stitch
   ]);
   expect(out.length).toBe(4);
 });
+
+function deferred() {
+  let resolve;
+  const promise = new Promise(done => { resolve = done; });
+  return { promise, resolve };
+}
+
+async function testCancelThenRetry(stage) {
+  const { doProcess, cancelProcess } = await import('../js/processor.js');
+  const { selectedFiles, isFilesLocked } = await import('../js/files.js');
+  const { registerTool } = await import('../js/toolRegistry.js');
+  const { clearLongOpHint } = await import('../js/ui.js');
+  registerTool('pdf2excel', { runner: 'pdf2excel' });
+  const element = { style: { setProperty() {} }, classList: { add() {}, remove() {} }, setAttribute() {} };
+  const files = name => ({ name, size: 8, _decryptedBuffer: new ArrayBuffer(8) });
+  const reachedOld = deferred();
+  const reachedNew = deferred();
+  const oldWork = deferred();
+  const newWrite = deferred();
+  const successes = [];
+  const destroyed = [];
+  let loads = 0;
+  let writes = 0;
+  let oldRun;
+  let newRun;
+
+  document.getElementById = key => key === 'toast' ? null : element;
+  document.dispatchEvent = event => { if (event.type === 'pdfree:success') successes.push(event.detail.filename); };
+  const oldFetch = global.fetch;
+  const OldCustomEvent = global.CustomEvent;
+  global.CustomEvent = class {
+    constructor(type, { detail } = {}) { this.type = type; this.detail = detail; }
+  };
+  global.fetch = async () => new Response(new ArrayBuffer(0));
+  window.pdfjsLib = {
+    getDocument() {
+      const index = ++loads;
+      const doc = { numPages: 0 };
+      if (index === 1 && stage === 'loading') reachedOld.resolve();
+      return {
+        promise: index === 1 && stage === 'loading' ? oldWork.promise.then(() => doc) : Promise.resolve(doc),
+        destroy: async () => { destroyed.push(index); },
+      };
+    },
+  };
+  window.ExcelJS = {
+    Workbook: class {
+      addWorksheet() { return { addRow() {} }; }
+      get xlsx() {
+        return { writeBuffer: () => {
+          writes++;
+          if (stage === 'writing' && writes === 1) {
+            reachedOld.resolve();
+            return oldWork.promise;
+          }
+          reachedNew.resolve();
+          return newWrite.promise;
+        } };
+      }
+    },
+  };
+
+  try {
+    selectedFiles.push(files('first.pdf'));
+    oldRun = doProcess('pdf2excel');
+    await Promise.race([reachedOld.promise, oldRun.then(() => { throw new Error('First run exited before the pause'); })]);
+    cancelProcess('pdf2excel');
+    selectedFiles.splice(0, 1, files('second.pdf'));
+    newRun = doProcess('pdf2excel');
+    await Promise.race([reachedNew.promise, newRun.then(() => { throw new Error('Retry exited before the pause'); })]);
+    oldWork.resolve(new ArrayBuffer(8));
+    // On the old loading path the cancelled run may also wait on newWrite.
+    // Give it a turn to reach that point without blocking the retry.
+    await new Promise(resolve => setImmediate(resolve));
+    const whileRetrying = { originalReleased: destroyed.includes(1), locked: isFilesLocked(), results: [...successes] };
+    newWrite.resolve(new ArrayBuffer(8));
+    await Promise.all([oldRun, newRun]);
+    expect({ whileRetrying, successes, destroyed: [...destroyed].sort() }).toEqual({
+      whileRetrying: { originalReleased: true, locked: true, results: [] },
+      successes: ['second.xlsx'],
+      destroyed: [1, 2],
+    });
+  } finally {
+    oldWork.resolve(new ArrayBuffer(8));
+    newWrite.resolve(new ArrayBuffer(8));
+    await Promise.allSettled([oldRun, newRun]);
+    clearLongOpHint();
+    selectedFiles.length = 0;
+    global.fetch = oldFetch;
+    global.CustomEvent = OldCustomEvent;
+    delete window.ExcelJS;
+    delete window.pdfjsLib;
+    delete document.dispatchEvent;
+    document.getElementById = () => null;
+  }
+}
+
+for (const stage of ['loading', 'writing']) {
+  const name = `cancel while ${stage} releases the original PDF and keeps the retry isolated`;
+  try {
+    await testCancelThenRetry(stage);
+    console.log(`  ✓ ${name}`);
+    passed++;
+  } catch (error) {
+    console.error(`  ✗ ${name}\n    ${error.message}`);
+    failed++;
+  }
+}
+
+test('Excel result warns about skipped pages even when no table was found', () => {
+  const root = { style: {}, innerHTML: '', children: [], replaceChildren() { this.children = []; },
+    append(node) { this.children.push(node); } };
+  const originalDocument = { ...document };
+  const originalLocation = global.location;
+  document.getElementById = id => id === 'p2eConfidence' ? root : null;
+  document.createElement = () => ({ style: {}, children: [], append(...nodes) { this.children.push(...nodes); } });
+  global.location = { pathname: '/ar/pdf-ila-excel/' };
+  try {
+    renderP2eConfidence({ tableCount: 0, skippedPages: [2, 3, 4, 7] });
+    expect(root.style.display).toBe('');
+    const [warning] = root.children;
+    expect(warning.children[0].textContent.includes('2-4, 7')).toBe(true);
+    expect(warning.children[1].href).toBe('/ar/taarruf-dawi-pdf/');
+    renderP2eConfidence({ tableCount: 1, skippedPages: [], score: 100, level: 'high' });
+    expect(root.children.length).toBe(1);
+    expect(root.innerHTML.includes('100%')).toBe(false);
+  } finally {
+    Object.assign(document, originalDocument);
+    global.location = originalLocation;
+  }
+});
+
+const filenameFixture = '<b>NAME</b>.pdf';
+try {
+  const oldDocument = { ...document };
+  const oldPdfJs = window.pdfjsLib;
+  const nameNode = {};
+  const panel = {
+    style: {}, innerHTML: '',
+    querySelector: selector => selector === '.compress-info__name' ? nameNode : null,
+  };
+  document.getElementById = key => key === 'pdf2excelOptions' ? panel : null;
+  document.createElement = () => ({
+    set textContent(text) { this.innerHTML = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); },
+  });
+  window.pdfjsLib = { getDocument: () => ({ promise: Promise.resolve({ numPages: 0 }), destroy: async () => {} }) };
+  try {
+    await initPdf2ExcelOptions({ name: filenameFixture, _decryptedBuffer: new ArrayBuffer(8) });
+    expect(panel.innerHTML.includes(filenameFixture)).toBe(false);
+    expect(nameNode.textContent).toBe(filenameFixture);
+    expect(nameNode.title).toBe(filenameFixture);
+  } finally {
+    hidePdf2ExcelOptions();
+    Object.assign(document, oldDocument);
+    window.pdfjsLib = oldPdfJs;
+  }
+  console.log('  ✓ Excel preview treats the filename as text');
+  passed++;
+} catch (error) {
+  console.error(`  ✗ Excel preview treats the filename as text\n    ${error.message}`);
+  failed++;
+}
 
 // ── Summary ────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);

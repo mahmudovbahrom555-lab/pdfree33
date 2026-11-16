@@ -1123,8 +1123,10 @@ window.PDFREE_LOCALE = {
   atlas_verdict_heavy:     'Ciddi sorunlar',
 
   // ── pdf2excelUI.js ───────────────────────────────────────
-  p2e_mode_hint:              '📊 Tespit edilen tablolar ayrı Excel sayfalarına dönüştürülür. Diğer tüm metinler hiçbir şey kaybolmadan bir "Metin" sayfasında tutulur.',
-  p2e_ocr_hint:               '⚠️ Metin katmanı tespit edilmedi — bu PDF taranmış bir görüntü, bu nedenle hiçbir tablo çıkarılamaz. ',
+  p2e_mode_hint: "Algılanan tablolar ayrı Excel sayfalarına aktarılır. Çıkarılan diğer metinler “Text” sayfasına gider.",
+  p2e_ocr_hint: "İncelenen sayfalarda çıkarılabilir metin bulunamadı. ",
+  p2e_skipped_pages: "Çıkarılabilir metin içermeyen sayfalar atlandı: {pages}.",
+  p2e_ocr_scans: "Taranan sayfalarda OCR çalıştırın",
   p2e_ocr_to_get_extractable: ' ile çıkarılabilir metin elde edebilirsiniz.',
   p2e_tables_detected_one:    '🗂️ {n} tablo tespit edildi — kendi Excel sayfasına dönüştürülecek',
   p2e_tables_detected_many:   '🗂️ {n} tablo tespit edildi — her biri kendi Excel sayfasına dönüştürülecek',

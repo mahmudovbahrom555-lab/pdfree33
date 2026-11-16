@@ -1123,8 +1123,10 @@ window.PDFREE_LOCALE = {
   atlas_verdict_heavy:     'Poważne problemy',
 
   // ── pdf2excelUI.js ───────────────────────────────────────
-  p2e_mode_hint:              '📊 Wykryte tabele są konwertowane na osobne arkusze Excel. Pozostały tekst jest zachowywany w arkuszu "Tekst", dzięki czemu nic nie ginie.',
-  p2e_ocr_hint:               '⚠️ Nie wykryto warstwy tekstu — ten plik PDF to zeskanowany obraz, więc nie można wyodrębnić żadnych tabel. ',
+  p2e_mode_hint: "Wykryte tabele trafiają do oddzielnych arkuszy Excela. Pozostały wyodrębniony tekst trafia do arkusza „Text”.",
+  p2e_ocr_hint: "Na sprawdzonych stronach nie znaleziono tekstu do wyodrębnienia. ",
+  p2e_skipped_pages: "Pominięto strony bez tekstu do wyodrębnienia: {pages}.",
+  p2e_ocr_scans: "Uruchom OCR na zeskanowanych stronach",
   p2e_ocr_to_get_extractable: ', aby uzyskać tekst możliwy do wyodrębnienia.',
   p2e_tables_detected_one:    '🗂️ Wykryto {n} tabelę — stanie się osobnym arkuszem Excel',
   p2e_tables_detected_many:   '🗂️ Wykryto {n} tabel — każda stanie się osobnym arkuszem Excel',

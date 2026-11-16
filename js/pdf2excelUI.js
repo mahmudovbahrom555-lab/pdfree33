@@ -7,6 +7,7 @@ import { preprocessPdfBuffer } from './decryptPdf.js';
 import { loadingRow } from './uiComponents.js';
 import { detectTables, groupItemsIntoLines } from './pdf2wordTables.js';
 import { t, tp } from './i18n.js';
+import { pagesToRangeString } from './pageSelectorUtils.js';
 
 // Locale-correct slugs for the "Run OCR first" / "PDF to Word" cross-links in
 // the hints below. This module is shared across every locale's page, and
@@ -15,13 +16,11 @@ import { t, tp } from './i18n.js';
 // '/ocr-pdf/' / '/pdf-to-word/' hrefs resolve to the English pages
 // regardless of which locale the user is on. Mirrors the per-locale slugs in
 // data/tools-config.json (same table/pattern as the fix in js/ocrUI.js).
-const OCR_SLUGS      = { en: 'ocr-pdf', de: 'ocr-pdf', es: 'ocr-pdf', fr: 'ocr-pdf', pt: 'ocr-pdf', id: 'ocr-pdf', vi: 'nhan-dang-van-ban-pdf', ru: 'raspoznat-tekst-pdf', ja: 'pdf-moji-ninshiki', tr: 'metin-tanima-pdf', it: 'riconosci-testo-pdf', ko: 'pdf-munja-insik', nl: 'pdf-tekstherkenning', pl: 'rozpoznaj-tekst-pdf' };
-const PDF2WORD_SLUGS = { en: 'pdf-to-word', de: 'pdf-zu-word', es: 'pdf-a-word', fr: 'pdf-en-word', pt: 'pdf-para-word', id: 'pdf-ke-word', vi: 'pdf-sang-word', ru: 'pdf-v-word', ja: 'pdf-word-henkan', tr: 'pdf-word-donustur', it: 'pdf-in-word', ko: 'pdf-word-byeonhwan', nl: 'pdf-naar-word', pl: 'pdf-do-word' };
-const KNOWN_LOCALES  = new Set(['de', 'es', 'fr', 'pt', 'id', 'vi', 'ru', 'ja', 'it', 'ko', 'nl', 'pl', 'tr']);
-
+const OCR_SLUGS      = { en: 'ocr-pdf', de: 'ocr-pdf', es: 'ocr-pdf', fr: 'ocr-pdf', pt: 'ocr-pdf', id: 'ocr-pdf', vi: 'nhan-dang-van-ban-pdf', ru: 'raspoznat-tekst-pdf', ja: 'pdf-moji-ninshiki', tr: 'metin-tanima-pdf', it: 'riconosci-testo-pdf', ko: 'pdf-munja-insik', nl: 'pdf-tekstherkenning', pl: 'rozpoznaj-tekst-pdf', 'zh-CN': 'pdf-wenzi-shibie', ar: 'taarruf-dawi-pdf' };
+const PDF2WORD_SLUGS = { en: 'pdf-to-word', de: 'pdf-zu-word', es: 'pdf-a-word', fr: 'pdf-en-word', pt: 'pdf-para-word', id: 'pdf-ke-word', vi: 'pdf-sang-word', ru: 'pdf-v-word', ja: 'pdf-word-henkan', tr: 'pdf-word-donustur', it: 'pdf-in-word', ko: 'pdf-word-byeonhwan', nl: 'pdf-naar-word', pl: 'pdf-do-word', 'zh-CN': 'pdf-zhuan-word', ar: 'pdf-ila-word' };
 function _crossToolHref(slugs) {
   const seg = location.pathname.split('/')[1];
-  const lc  = KNOWN_LOCALES.has(seg) ? seg : 'en';
+  const lc  = Object.prototype.hasOwnProperty.call(slugs, seg) ? seg : 'en';
   const slug = slugs[lc] || slugs.en;
   return lc === 'en' ? `/${slug}/` : `/${lc}/${slug}/`;
 }
@@ -30,10 +29,17 @@ function _crossToolHref(slugs) {
 let _file      = null;
 let _pageCount = 0;
 let _loading   = false;
+let _scanTask  = null;
 let _scanGen   = 0;    // incremented on each new file — cancels stale background scans
 
 export function getPdf2ExcelParams() {
   return { pageCount: _pageCount, loading: _loading };
+}
+
+function _releaseScan() {
+  const task = _scanTask;
+  _scanTask = null;
+  if (task) void task.destroy().catch(() => {});
 }
 
 // ── Public API ────────────────────────────────────────────────────────────────
@@ -42,6 +48,8 @@ export async function initPdf2ExcelOptions(file) {
   const el = id('pdf2excelOptions');
   if (!el) return;
 
+  const gen = ++_scanGen;
+  _releaseScan();
   _file    = file;
   _loading = true;
   el.innerHTML    = loadingRow(t('val_analysing_pdf'));
@@ -49,24 +57,32 @@ export async function initPdf2ExcelOptions(file) {
 
   try {
     await loadPdfJs();
+    if (gen !== _scanGen) return;
     const rawBuf = file._decryptedBuffer
       ? file._decryptedBuffer.slice(0)
       : await preprocessPdfBuffer(await file.arrayBuffer());
-    const doc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
+    if (gen !== _scanGen) return;
+    const task = window.pdfjsLib.getDocument({ isEvalSupported: false,
       data:              new Uint8Array(rawBuf),
       useSystemFonts:    false,
       verbosity:         0,
       disableJavaScript: true,
-    }).promise;
+    });
+    _scanTask = task;
+    const doc = await task.promise;
+    if (gen !== _scanGen) return;
 
     _pageCount = doc.numPages;
 
-    const _thisGen = ++_scanGen;
-    _scanTablesBackground(doc, _thisGen).catch(() => {});
+    void _scanTablesBackground(doc, gen).catch(() => {}).finally(() => {
+      if (_scanTask === task) _releaseScan();
+    });
 
     _loading = false;
     _render(file);
   } catch (err) {
+    if (gen !== _scanGen) return;
+    _releaseScan();
     _loading = false;
     el.innerHTML = `
       <div class="compress-scan compress-scan--found" role="alert">
@@ -79,7 +95,8 @@ export function hidePdf2ExcelOptions() {
   const el = id('pdf2excelOptions');
   if (el) { el.style.display = 'none'; el.innerHTML = ''; }
   _file = null; _pageCount = 0; _loading = false;
-  ++_scanGen; // cancel any in-flight background scan
+  ++_scanGen;
+  _releaseScan();
   clearP2eConfidence();
 }
 
@@ -93,7 +110,7 @@ function _render(file) {
 
   el.innerHTML = `
     <div class="compress-info">
-      <span class="compress-info__name" title="${_esc(file.name)}">${name}</span>
+      <span class="compress-info__name"></span>
       <span class="compress-info__dot">·</span>
       <span class="compress-info__meta">${tp(_pageCount, 'split_info_page', 'split_info_pages', { n: _pageCount })}</span>
     </div>
@@ -102,6 +119,9 @@ function _render(file) {
       ${t('p2e_mode_hint')}
     </div>
   `;
+  const nameEl = el.querySelector('.compress-info__name');
+  nameEl.title = file.name;
+  nameEl.textContent = name;
 }
 
 function _esc(str) {
@@ -150,8 +170,8 @@ async function _scanTablesBackground(doc, gen) {
 
   // ── OCR hint: pure-image PDF has no extractable text layer ───────────────
   const ocrHintEl   = el.querySelector('#p2eOcrHint');
-  const isPureImage = (totalTextItems / pageLimit) < 3;
-  if (isPureImage) {
+  const noExtractableText = totalTextItems === 0;
+  if (noExtractableText) {
     if (!ocrHintEl && hint) {
       const div = document.createElement('div');
       div.id        = 'p2eOcrHint';
@@ -161,7 +181,7 @@ async function _scanTablesBackground(doc, gen) {
       div.innerHTML =
         t('p2e_ocr_hint') +
         `<a href="${_crossToolHref(OCR_SLUGS)}" style="color:inherit;font-weight:600;white-space:nowrap">` +
-        `${t('p2w_run_ocr_link')}</a>${t('p2e_ocr_to_get_extractable')}`;
+        `${t('p2e_ocr_scans')}</a>`;
       hint.before(div);
     }
   } else if (ocrHintEl) {
@@ -184,7 +204,7 @@ async function _scanTablesBackground(doc, gen) {
     }
   } else {
     if (badge) badge.remove();
-    if (!isPureImage && !el.querySelector('#p2eNoTableHint') && hint) {
+    if (!noExtractableText && !el.querySelector('#p2eNoTableHint') && hint) {
       const div = document.createElement('div');
       div.id        = 'p2eNoTableHint';
       div.className = 'compress-scan';
@@ -199,24 +219,30 @@ async function _scanTablesBackground(doc, gen) {
 
 // ── Confidence report ─────────────────────────────────────────────────────────
 
-export function renderP2eConfidence({ score, level, tableCount }) {
+export function renderP2eConfidence({ tableCount, skippedPages = [] }) {
   const el = id('p2eConfidence');
   if (!el) return;
 
-  if (!tableCount) {
-    el.innerHTML    = '';
-    el.style.display = 'none';
-    return;
+  el.replaceChildren();
+  el.style.display = tableCount || skippedPages.length ? '' : 'none';
+  if (tableCount) {
+    const count = document.createElement('div');
+    count.className = 'p2w-confidence__row';
+    count.textContent = tp(tableCount, 'p2e_table_count_one', 'p2e_table_count_many', { n: tableCount });
+    el.append(count);
   }
 
-  const levelLabel = level === 'high' ? t('p2w_confidence_good') : level === 'medium' ? t('p2w_confidence_fair') : t('p2w_confidence_limited');
-
-  el.innerHTML = `<div class="p2w-confidence__row">
-    <span class="p2w-confidence__label">${t('p2w_detected_label')}</span>
-    <span class="p2w-confidence__items"><span>${tp(tableCount, 'p2e_table_count_one', 'p2e_table_count_many', { n: tableCount })}</span></span>
-    <span class="p2w-confidence__badge p2w-confidence__badge--${level}">${score}% ${levelLabel}</span>
-  </div>`;
-  el.style.display = '';
+  if (skippedPages.length) {
+    const warning = document.createElement('div');
+    warning.className = 'compress-scan compress-scan--found';
+    const message = document.createElement('span');
+    message.textContent = t('p2e_skipped_pages', { pages: `\u2066${pagesToRangeString(skippedPages)}\u2069` }) + ' ';
+    const link = document.createElement('a');
+    link.href = _crossToolHref(OCR_SLUGS);
+    link.textContent = t('p2e_ocr_scans');
+    warning.append(message, link);
+    el.append(warning);
+  }
 }
 
 export function clearP2eConfidence() {
