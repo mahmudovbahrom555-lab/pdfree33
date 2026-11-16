@@ -524,6 +524,13 @@ jobs:
         # See tests/e2e/jpg2pdf-tiff.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:jpg2pdf-tiff
 
+      - name: E2E — JPG to PDF offers the scanner for one photo, and the photo gets there
+        # One JPEG → the quiet next-step line, counted once → click → the same
+        # photo in the scanner's crop review on the person's own homepage
+        # (Chinese page → Chinese scanner); PNG and two photos → no line;
+        # a tap on a 390×664 phone reaches it. See tests/e2e/jpg2pdf-scan-hint.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:jpg2pdf-scan-hint
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do
