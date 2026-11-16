@@ -1125,8 +1125,10 @@ window.PDFREE_LOCALE = {
   atlas_verdict_heavy:     '심각한 문제',
 
   // ── pdf2excelUI.js ───────────────────────────────────────
-  p2e_mode_hint:              '📊 감지된 표는 각각 별도의 Excel 시트로 변환됩니다. 다른 텍스트는 손실 없이 "텍스트" 시트에 보관됩니다.',
-  p2e_ocr_hint:               '⚠️ 텍스트 레이어가 감지되지 않았습니다 — 이 PDF는 스캔된 이미지이므로 표를 추출할 수 없습니다. ',
+  p2e_mode_hint: "감지된 표는 각각 별도의 Excel 시트에 들어갑니다. 추출한 나머지 텍스트는 “Text” 시트에 들어갑니다.",
+  p2e_ocr_hint: "확인한 페이지에서 추출할 수 있는 텍스트가 없습니다. ",
+  p2e_skipped_pages: "추출할 수 있는 텍스트가 없어 건너뛴 페이지: {pages}.",
+  p2e_ocr_scans: "스캔 페이지에 OCR 실행",
   p2e_ocr_to_get_extractable: '하면 추출 가능한 텍스트를 얻을 수 있습니다.',
   p2e_tables_detected_one:    '🗂️ 표 {n}개 감지됨 — 별도의 Excel 시트가 됩니다',
   p2e_tables_detected_many:   '🗂️ 표 {n}개 감지됨 — 각각 별도의 Excel 시트가 됩니다',

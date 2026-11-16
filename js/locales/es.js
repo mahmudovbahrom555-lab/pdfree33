@@ -1125,8 +1125,10 @@ window.PDFREE_LOCALE = {
   atlas_verdict_heavy:     'Problemas graves',
 
   // ── pdf2excelUI.js ───────────────────────────────────────
-  p2e_mode_hint:              '📊 Las tablas detectadas se convierten en hojas de Excel independientes. Cualquier otro texto se mantiene en una hoja "Texto" para que nada se pierda.',
-  p2e_ocr_hint:               '⚠️ No se detectó capa de texto — este PDF es una imagen escaneada, por lo que no se pueden extraer tablas. ',
+  p2e_mode_hint: "Las tablas detectadas se exportan a hojas de Excel separadas. El resto del texto extraído va a la hoja «Text».",
+  p2e_ocr_hint: "No se encontró texto extraíble en las páginas revisadas. ",
+  p2e_skipped_pages: "Se omitieron las páginas sin texto extraíble: {pages}.",
+  p2e_ocr_scans: "Ejecutar OCR en las páginas escaneadas",
   p2e_ocr_to_get_extractable: ' para obtener texto extraíble.',
   p2e_tables_detected_one:    '🗂️ {n} tabla detectada — se convertirá en su propia hoja de Excel',
   p2e_tables_detected_many:   '🗂️ {n} tablas detectadas — cada una se convertirá en su propia hoja de Excel',

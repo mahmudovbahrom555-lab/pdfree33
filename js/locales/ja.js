@@ -1126,8 +1126,10 @@ window.PDFREE_LOCALE = {
   atlas_verdict_heavy:     '深刻な問題',
 
   // ── pdf2excelUI.js ───────────────────────────────────────
-  p2e_mode_hint:              '📊 検出された表はそれぞれ個別のExcelシートに変換されます。それ以外のテキストは「テキスト」シートに保持されるため、何も失われません。',
-  p2e_ocr_hint:               '⚠️ テキストレイヤーが検出されません — このPDFはスキャンされた画像のため、表を抽出できません。',
+  p2e_mode_hint: "検出した表は個別のExcelシートに入ります。その他の抽出テキストは「Text」シートに入ります。",
+  p2e_ocr_hint: "確認したページに抽出できるテキストはありませんでした。",
+  p2e_skipped_pages: "テキストを抽出できなかったため省略したページ：{pages}。",
+  p2e_ocr_scans: "スキャンページにOCRを実行",
   p2e_ocr_to_get_extractable: 'すると、抽出可能なテキストが得られます。',
   p2e_tables_detected_one:    '🗂️ {n}個の表を検出 — それぞれ独立したExcelシートになります',
   p2e_tables_detected_many:   '🗂️ {n}個の表を検出 — それぞれ独立したExcelシートになります',

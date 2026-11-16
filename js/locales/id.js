@@ -1124,8 +1124,10 @@ window.PDFREE_LOCALE = {
   atlas_verdict_heavy:     'Masalah berat',
 
   // ── pdf2excelUI.js ───────────────────────────────────────
-  p2e_mode_hint:              '📊 Tabel yang terdeteksi akan diubah menjadi sheet Excel terpisah. Teks lainnya disimpan dalam sheet "Teks" agar tidak ada yang hilang.',
-  p2e_ocr_hint:               '⚠️ Tidak ada lapisan teks terdeteksi — PDF ini adalah gambar hasil pindaian, sehingga tidak ada tabel yang dapat diekstrak. ',
+  p2e_mode_hint: "Tabel yang terdeteksi masuk ke lembar Excel terpisah. Teks lain yang diekstrak masuk ke lembar “Text”.",
+  p2e_ocr_hint: "Tidak ditemukan teks yang dapat diekstrak pada halaman yang diperiksa. ",
+  p2e_skipped_pages: "Halaman tanpa teks yang dapat diekstrak dilewati: {pages}.",
+  p2e_ocr_scans: "Jalankan OCR pada halaman hasil pindai",
   p2e_ocr_to_get_extractable: ' untuk mendapatkan teks yang dapat diekstrak.',
   p2e_tables_detected_one:    '🗂️ {n} tabel terdeteksi — akan menjadi sheet Excel tersendiri',
   p2e_tables_detected_many:   '🗂️ {n} tabel terdeteksi — masing-masing akan menjadi sheet Excel tersendiri',

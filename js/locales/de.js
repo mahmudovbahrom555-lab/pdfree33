@@ -1126,8 +1126,10 @@ window.PDFREE_LOCALE = {
   atlas_verdict_heavy:     'Erhebliche Probleme',
 
   // ── pdf2excelUI.js ───────────────────────────────────────
-  p2e_mode_hint:              '📊 Erkannte Tabellen werden in separate Excel-Tabellenblätter umgewandelt. Anderer Text bleibt in einem Blatt "Text" erhalten, damit nichts verloren geht.',
-  p2e_ocr_hint:               '⚠️ Keine Textebene erkannt — dieses PDF ist ein gescanntes Bild, daher können keine Tabellen extrahiert werden. ',
+  p2e_mode_hint: "Erkannte Tabellen kommen in separate Excel-Tabellenblätter. Sonstiger extrahierter Text steht im Blatt „Text“.",
+  p2e_ocr_hint: "Auf den geprüften Seiten wurde kein extrahierbarer Text gefunden. ",
+  p2e_skipped_pages: "Seiten ohne extrahierbaren Text wurden übersprungen: {pages}.",
+  p2e_ocr_scans: "OCR für gescannte Seiten starten",
   p2e_ocr_to_get_extractable: ', um extrahierbaren Text zu erhalten.',
   p2e_tables_detected_one:    '🗂️ {n} Tabelle erkannt — wird zu einem eigenen Excel-Blatt',
   p2e_tables_detected_many:   '🗂️ {n} Tabellen erkannt — jede wird zu einem eigenen Excel-Blatt',
