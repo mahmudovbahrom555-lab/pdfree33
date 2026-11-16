@@ -15,7 +15,7 @@
 //  caller (js/scanDocumentUI.js) needed zero changes.
 //
 //  filterScanPhoto(imgEl, mode) supports 'grayscale' (default), 'color' —
-//  a real competitive gap found 2026-08-22 testing against PDF24's camera
+//  a real competitive gap found 2026-08-22 testing against competitor D's camera
 //  scanner, which offers Color/Grayscale/B&W — plus 'bw' and 'original',
 //  added 2026-08-30 after a live comparison against a different
 //  competitor's Original/Photo/Document/B&W tabs. 'bw' reuses Clean

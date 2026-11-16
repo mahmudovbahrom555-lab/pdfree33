@@ -3,8 +3,7 @@
 Self-hosted REST API for [`@pdfree/pdf2md-core`](../pdf2md-core) — `POST` a PDF, get Markdown back.
 Runs on **your own** infrastructure; no file this processes ever touches pdfree.io's servers, same
 guarantee as [pdfree.io's browser tool](https://pdfree.io/pdf-to-markdown/) and the CLI, just as a
-REST API instead — the shape developer tools like Marker/Docling/HURIDOCS are usually reached
-through. See [the real output-quality benchmark](https://pdfree.io/blog/pdf-to-markdown-benchmark/).
+REST API instead — the shape developer PDF-to-Markdown tools are usually reached through. See [the real output-quality benchmark](https://pdfree.io/blog/pdf-to-markdown-benchmark/).
 
 ## Quick start (Docker)
 
@@ -52,7 +51,7 @@ No multipart/form-data — send the PDF's raw bytes directly as the request body
 
 ## Security — read this before exposing it beyond localhost
 
-**There is no built-in authentication.** This matches how HURIDOCS and similar self-hosted
+**There is no built-in authentication.** This matches how similar self-hosted
 PDF/document tools are typically deployed — the expectation is that *you* put it behind your own
 reverse proxy, firewall, VPN, or auth layer if it's reachable from anywhere untrusted. Running it
 open on the public internet with no auth in front means anyone who finds it can burn your CPU/memory

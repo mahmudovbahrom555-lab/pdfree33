@@ -5,7 +5,7 @@
 //  repairWorker.js — "Try to repair" for a damaged PDF (2026-10-14)
 //
 //  Offered from the "file is damaged" error. Measured first, not assumed:
-//  a plain qpdf rewrite (BentoPDF's Repair) fixed none of the failures our
+//  a plain qpdf rewrite (an open-source toolkit's Repair) fixed none of the failures our
 //  tools actually report — pdf-lib already survives a broken xref or a cut
 //  tail by scanning objects. What breaks our tools is narrower:
 //    1. the catalog's /Pages pointing at something that isn't the page

@@ -8,7 +8,7 @@
 //
 //  Flow: 'live' (getUserMedia video preview + capture button, with a
 //  continuously-updating live corner-tracking overlay — added
-//  2026-08-22 after a competitive test against PDF24's camera scanner
+//  2026-08-22 after a competitive test against competitor D's camera scanner
 //  showed it doing the same; throttled to ~5fps, non-interactive, just
 //  a framing guide) → freeze frame → 'review' (frozen frame + 4
 //  draggable corner handles, auto-detected via js/scanGeometry.js's

@@ -3,7 +3,7 @@
 
 // ============================================================
 //  blankPage.js — is a rendered page blank? For Extract's "Without blank
-//  pages" preset (2026-10-14; BentoPDF/PDFCraft both offer "Remove blank
+//  pages" preset (2026-10-14; two open-source PDF toolkits both offer "Remove blank
 //  pages" — the leftovers of a duplex scan, separator sheets).
 //
 //  Judged on the picture, not the text layer: a scanned page has no text

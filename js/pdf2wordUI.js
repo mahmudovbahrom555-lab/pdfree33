@@ -26,7 +26,7 @@ let _vpH       = 0;    // first page height in PDF points
 let _loading   = false;
 let _scanGen   = 0;    // incremented on each new file — cancels stale background scans
 // Default false (preserve): a live competitor check (real Playwright runs
-// against iLovePDF and Smallpdf, real docProps/core.xml read from the
+// against competitors A and B, real docProps/core.xml read from the
 // downloaded .docx) confirmed both carry the source PDF's Author/Title into
 // the result unconditionally, zero clicks — see
 // pdf2word_metadata_toggle_gated_idea_2026_09 memory's own recorded critique

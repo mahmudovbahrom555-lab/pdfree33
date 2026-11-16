@@ -48,9 +48,9 @@ BLOCK = [
     # for its SEO re-check (2026-11-16), like the rules below.
     (r'(?:no loss of readability|без потери читабельности|不影响可读性|読みやすさを損なわずに|tanpa kehilangan keterbacaan|mà không mất khả năng đọc)', 'a promise the measurement disproved: 96 dpi can make small print and CJK hard to read', r'^(?:ar/|data/content/ar/|js/locales/ar\.js)'),
     # competitors are compared, never named (owner, 2026-11-04); a viewer named as a format fact
-    # ("opens in Adobe Acrobat") stays. Arabic pages wait for their own PR (SEO re-check until 2026-11-16).
-    (r'\b(?:iLovePDF|Smallpdf|PDF24|Sejda|DocuSign|HelloSign|SignNow|pymupdf4llm|Docling)\b', 'a competitor named: say cloud PDF tools / other tools', r'^(?:ar/|data/content/ar/|js/locales/ar\.js)'),
-    (r'(?:without|ohne|sin|sans|sem|senza|zonder|bez|olmadan|không cần|tanpa|なしで|없이|без) (?:Adobe|Acrobat)|\bvs\.? Adobe|Adobe\'s (?:free )?Fill', 'a competitor named: say paid software / cloud tools', r'^(?:ar/|data/content/ar/|js/locales/ar\.js)'),
+    # ("opens in Adobe Acrobat") stays. Arabic too since its pages were cleaned (2026-11-16, #221).
+    (r'\b(?:iLovePDF|Smallpdf|PDF24|Sejda|DocuSign|HelloSign|SignNow|pymupdf4llm|Docling|BentoPDF|PDFCraft|Stirling[- ]?PDF|Xodo|pdfFiller|PDFescape|Soda ?PDF)\b', 'a competitor named: say cloud PDF tools / other tools'),
+    (r'(?:without|ohne|sin|sans|sem|senza|zonder|bez|olmadan|không cần|tanpa|なしで|없이|без) (?:Adobe|Acrobat)|\bvs\.? Adobe|Adobe\'s (?:free )?Fill', 'a competitor named: say paid software / cloud tools'),
     # Arabic keeps "خصوصية 100%" until its SEO re-check ends (2026-11-16) — then the same change, and its pattern here
     # the same promises in the translations (removed 2026-11-04, PR 1b);
     # a user's question ("…conforme à HIPAA ?") stays — its answer says we don't certify
