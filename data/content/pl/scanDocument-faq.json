@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Czy skanowanie dokumentu wysyła go gdziekolwiek?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nie. Każdy krok — zdjęcie, wykrywanie narożników, kadrowanie, korekcja perspektywy — odbywa się w Twojej przeglądarce. Nic nie jest wysyłane na serwery PDFree ani nigdzie indziej. Możesz to sprawdzić sam, otwierając podczas skanowania kartę Sieć w narzędziach deweloperskich przeglądarki."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Dlaczego każde dodane zdjęcie, nawet z galerii, pokazuje ekran kadrowania?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "To narzędzie jest stworzone do skanowania dokumentów, więc każde zdjęcie — z aparatu czy z galerii — przechodzi to samo wykrywanie krawędzi i kontrolę kadru, jak w aplikacji skanera. Jeśli chcesz tylko połączyć zdjęcia w PDF bez kadrowania, użyj narzędzia „JPG do PDF” od PDFree — nie ma ekranu kontroli i działa szybciej."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Co, jeśli automatyczne wykrywanie krawędzi się pomyli?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Przeciągnij dowolny z czterech narożników, aby poprawić kadr przed zatwierdzeniem. Jeśli nie zostanie znaleziona żadna pewna krawędź, narzędzie zaczyna od bezpiecznego domyślnego kadru, który możesz dowolnie zmieniać."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę nie kadrować zdjęcia, które nie jest dokumentem?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Na ekranie kontroli wybierz „Pomiń — użyj bez zmian” zamiast zatwierdzać kadr — oryginalne zdjęcie trafi do PDF bez obróbki."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy działa w kolorze, czy tylko czarno-biało?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "W obu, i nie tylko. „Skala szarości” (domyślnie) wybiela tło i wyostrza tekst — najlepsza do zwykłych dokumentów. „Kolor” wyrównuje nierówne oświetlenie i zachowuje prawdziwe kolory strony. „Cz-b” zamienia stronę w czysto czarny tekst na białym tle. „Wyblakły tekst” nie pozwala zniknąć jasnemu lub słabemu pismu. „Oryginał” zostawia zdjęcie bez zmian. Suwaki jasności i kontrastu dopracowują wynik."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy zeskanowany PDF może mieć wyszukiwanie tekstu?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Włącz „Rozpoznaj tekst” i wybierz język dokumentu: tekst jest rozpoznawany w Twojej przeglądarce i zapisywany w PDF, więc możesz go wyszukiwać i kopiować. Jeśli rozpoznawanie tekstu nie jest dostępne na Twoim urządzeniu, zapisze się zwykły PDF, a narzędzie Ci o tym powie."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Czy mogę zeskanować kilka stron do jednego PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Dodaj tyle zdjęć, ile potrzebujesz — z aparatu, z galerii lub z obu — ustaw kolejność przeciąganiem, a przy zapisie połączą się w jeden PDF."
+    }
+  }
+]

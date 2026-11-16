@@ -45,7 +45,7 @@ let _position = 'center';       // 'center' | 'top' | 'bottom' | 'tile'
 let _fontSize = 40;
 let _color    = 'gray';         // 'gray' | 'red' | 'blue'
 
-// Competitor-parity additions (iLovePDF/Smallpdf/PDF24 all have these three
+// Competitor-parity additions (competitors A, B and D all have these three
 // — see watermark_competitor_comparison_2026_09 memory). Defaults chosen to
 // be 100% behavior-identical to before these existed, so nobody's existing
 // workflow changes unless they touch the new controls:

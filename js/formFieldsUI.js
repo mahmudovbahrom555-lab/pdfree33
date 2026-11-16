@@ -95,7 +95,7 @@ const MIN_H_FRAC     = 0.015;
 // actually renders.
 const SQUARE_TYPES = new Set(['checkbox', 'radio']);
 
-// Manual zoom ladder (competitive gap vs iLovePDF's own PDF-Forms editor,
+// Manual zoom ladder (competitive gap vs competitor B's own PDF-Forms editor,
 // which ships %/+/−/fit-width controls — checked live 2026-09-17). Index 2
 // (1.0) means "exactly what _renderPage's own fit-to-width computed", so
 // "Fit to width" is simply a reset to this index, not separate math. Fixed
@@ -313,7 +313,7 @@ function _bindTriggerEvents(container) {
 }
 
 // Two-column body: the editing surface on the left, a live list of every
-// placed field on the right. The sidebar is the competitive gap iLovePDF's
+// placed field on the right. The sidebar is the competitive gap competitor B's
 // own PDF-Forms editor covers with its "Form Field List" (checked live
 // 2026-09-17): on a document with many fields, finding a specific one by
 // hunting across pages on the canvas doesn't scale. It's collapsed away

@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cara memindai dokumen ke PDF",
+  "description": "Pindai dokumen dengan kamera atau foto yang sudah ada — deteksi tepi otomatis dan koreksi perspektif, gratis, tanpa mengunggah file.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Ambil foto atau pilih dari galeri",
+      "text": "Ketuk \"Ambil foto\" untuk memakai kamera, atau seret / pilih foto dokumen yang sudah ada."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Tinjau potongan yang terdeteksi",
+      "text": "Tepi dokumen terdeteksi secara otomatis. Seret sudut mana pun untuk menyesuaikan, atau pilih \"Lewati — gunakan apa adanya\" jika foto tidak perlu dipotong."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Konfirmasi dan simpan sebagai PDF",
+      "text": "Tambahkan halaman lain dengan cara yang sama bila perlu, pilih filter (\"Skala Abu-abu\" sebagai bawaan), lalu simpan hasil pindaian sebagai PDF."
+    }
+  ]
+}

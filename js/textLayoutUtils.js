@@ -58,7 +58,7 @@ export const NUMBERED_RE = /^\d{1,3}[.)](?!\d)/;
 // parent item ("1. Complete setup" / "  a. Verify email" / "  b. Choose a
 // name") had its sub-items silently merged into ONE paragraph, since
 // neither BULLET_RE nor NUMBERED_RE recognized them as list markers at
-// all — iLovePDF and Smallpdf both split them into separate list items.
+// all — competitors A and B both split them into separate list items.
 // The indentation requirement at the call site is what makes this safe to
 // add despite the exclusion note above: a false positive like "A. Smith
 // wrote the report." sits at the SAME x as ordinary body text (no real

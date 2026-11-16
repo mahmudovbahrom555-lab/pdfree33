@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Bir belgeyi taramak onu bir yere yükler mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Hayır. Her adım — çekim, köşe algılama, kırpma, perspektif düzeltme — tarayıcınızda gerçekleşir. Hiçbir şey PDFree sunucularına veya başka bir yere yüklenmez. Tarama sırasında tarayıcınızın geliştirici araçlarındaki Ağ sekmesini açarak bunu kendiniz doğrulayabilirsiniz."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Galeriden eklediğim fotoğraflar dahil, neden her fotoğrafta kırpma ekranı çıkıyor?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bu araç özellikle belge taramak için yapıldı; bu yüzden kameradan ya da galeriden gelen her fotoğraf, bir tarayıcı uygulamasında olduğu gibi aynı kenar algılama ve kırpma kontrolünden geçer. Fotoğrafları kırpmadan PDF'de birleştirmek istiyorsanız PDFree'nin \"JPG'den PDF'ye\" aracını kullanın; kontrol ekranı yoktur ve daha hızlıdır."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Otomatik kenar algılama yanılırsa ne olur?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Onaylamadan önce kırpmayı ayarlamak için dört köşeden birini sürükleyin. Hiç güvenilir bir kenar bulunamazsa araç, serbestçe değiştirebileceğiniz güvenli bir varsayılan kırpmayla başlar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Belge olmayan bir fotoğrafı kırpmadan kullanabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Kontrol ekranında kırpmayı onaylamak yerine \"Atla — olduğu gibi kullan\"ı seçin; orijinal fotoğraf işlenmeden PDF'ye eklenir."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Renkli mi çalışır, yoksa sadece siyah beyaz mı?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "İkisi de, fazlası da. \"Gri Tonlama\" (varsayılan) arka planı beyazlatır ve metni keskinleştirir — sıradan belgeler için en iyisi. \"Renkli\" eşit olmayan ışığı düzeltir ve sayfanın gerçek renklerini korur. \"S/B\" sayfayı beyaz üzerine saf siyah metne dönüştürür. \"Soluk metin\" açık veya silik yazının kaybolmasını önler. \"Orijinal\" fotoğrafı olduğu gibi bırakır. Parlaklık ve kontrast kaydırıcıları sonucu ince ayarlar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Taranan PDF'de arama yapılabilir mi?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. \"Metni tanı\"yı açın ve belgenin dilini seçin: metin tarayıcınızda tanınır ve PDF'ye kaydedilir; böylece arayıp kopyalayabilirsiniz. Cihazınızda metin tanıma kullanılamıyorsa normal bir PDF kaydedilir ve araç bunu size söyler."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Birden fazla sayfayı tek bir PDF'ye tarayabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Gerektiği kadar fotoğraf ekleyin — kameradan, galeriden veya ikisinden —, sürükleyerek sıralayın; kaydederken tek bir PDF'de birleşirler."
+    }
+  }
+]

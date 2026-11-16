@@ -1059,8 +1059,8 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
   // A variable page-number footer/header ("Page 1 of 4", "Page 2 of 4", ...,
   // "1/4", "- 4 -") differs per page by design, so it never matches the
   // exact-string _repeatTextSet above and used to leak into the body as its
-  // own paragraph on every page (real, competitor-verified gap — iLovePDF
-  // and Smallpdf both strip this). Digit-normalizing ("Page # of #") lets
+  // own paragraph on every page (real, competitor-verified gap — competitors
+  // A and B both strip this). Digit-normalizing ("Page # of #") lets
   // the same cross-page-repetition idea catch it, restricted to lines near
   // the top or bottom of the page (first/last 3 lines by index — same
   // position proxy the bare-integer page-number skip below already uses)

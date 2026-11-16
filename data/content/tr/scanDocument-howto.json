@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Bir belge PDF'ye nasıl taranır",
+  "description": "Bir belgeyi kamerayla veya mevcut bir fotoğrafla tarayın — otomatik kenar algılama ve perspektif düzeltme, ücretsiz, dosya yüklemeden.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Fotoğraf çekin veya galeriden seçin",
+      "text": "Kamerayı kullanmak için \"Fotoğraf çek\"e dokunun ya da bir belgenin mevcut fotoğrafını sürükleyin / seçin."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Algılanan kırpmayı kontrol edin",
+      "text": "Belgenin kenarları otomatik olarak algılanır. Ayarlamak için herhangi bir köşeyi sürükleyin ya da fotoğrafın kırpılması gerekmiyorsa \"Atla — olduğu gibi kullan\"ı seçin."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Onaylayın ve PDF olarak kaydedin",
+      "text": "Gerekirse diğer sayfaları da aynı şekilde ekleyin, bir filtre seçin (varsayılan \"Gri Tonlama\") ve taramanızı PDF olarak kaydedin."
+    }
+  ]
+}

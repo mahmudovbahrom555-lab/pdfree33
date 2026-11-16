@@ -13,7 +13,7 @@
 Each page gets:
   - Visible How-to steps (3-4 steps)
   - When-to-use scenarios (4 real scenarios)
-  - Competitor comparison table (PDFree vs iLovePDF vs SmallPDF vs Adobe)
+  - Competitor comparison table (PDFree vs competitors A, B and C)
   - FAQ section (5-7 questions, visible HTML)
   - Related tools links
 """
@@ -47,9 +47,9 @@ TOOLS = {
         "comparison_feature": "Max file size (free)",
         "competitors": [
             ("PDFree", "No limit", "No limit", "No upload", "Free forever", True),
-            ("iLovePDF", "~25 MB", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
-            ("SmallPDF", "~15 MB", "2 tasks/day", "Uploaded to servers", "Free / $9+/mo", False),
-            ("Adobe Acrobat", "100 MB", "2/month free", "Uploaded to servers", "$19.99/mo", False),
+            ("Competitor B", "~25 MB", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
+            ("Competitor A", "~15 MB", "2 tasks/day", "Uploaded to servers", "Free / $9+/mo", False),
+            ("Competitor C", "100 MB", "2/month free", "Uploaded to servers", "$19.99/mo", False),
         ],
         "faqs": [
             ("How much does PDF compression reduce file size?", "Typical reduction is 20–70%. PDFs full of high-resolution images (scans, photos, brochures) compress the most. Text-only PDFs see less reduction since text is already stored efficiently. The 'Heavy' preset reduces image quality to 72%, giving the largest size savings."),
@@ -85,15 +85,15 @@ TOOLS = {
         "comparison_feature": "File size limit (free)",
         "competitors": [
             ("PDFree", "No limit", "No limit", "No upload", "Free forever", True),
-            ("iLovePDF", "~25 MB", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
-            ("SmallPDF", "~5 MB compressed", "2 tasks/day", "Uploaded to servers", "Free / $9+/mo", False),
-            ("Adobe Acrobat", "100 MB (paid)", "2/month free", "Uploaded to servers", "$19.99/mo", False),
+            ("Competitor B", "~25 MB", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
+            ("Competitor A", "~5 MB compressed", "2 tasks/day", "Uploaded to servers", "Free / $9+/mo", False),
+            ("Competitor C", "100 MB (paid)", "2/month free", "Uploaded to servers", "$19.99/mo", False),
         ],
         "faqs": [
             ("How many PDF files can I merge at once?", "There is no hard limit. PDFree processes everything in browser memory, so you can merge dozens of files. For very large batches (50+ files or total size 500MB+), close other browser tabs to free up RAM."),
             ("Will the formatting and fonts be preserved after merging?", "Yes. PDFree uses pdf-lib, which copies pages at the PDF object level — fonts, images, vector graphics, and formatting are preserved exactly as in the originals."),
             ("Can I merge password-protected PDFs?", "No. Encrypted PDFs cannot be read or modified without the password. Remove the password first using a PDF tool, then merge."),
-            ("Is there a daily limit on how many merges I can do?", "No. Unlike SmallPDF (2 tasks/day free) or iLovePDF (daily limits), PDFree has no usage caps. Merge as many PDFs as you want, as often as you need."),
+            ("Is there a daily limit on how many merges I can do?", "No. Unlike competitor A (2 tasks/day free) or competitor B (daily limits), PDFree has no usage caps. Merge as many PDFs as you want, as often as you need."),
             ("Does merging upload my files to a server?", "No. Your files are processed entirely in your browser's memory. Your file is not uploaded to any server. Close the tab and the files are gone from memory — no trace on any server."),
             ("Can I merge PDFs on a phone or tablet?", "Yes. PDFree works in mobile browsers (Chrome for Android, Safari for iOS). Drag and drop is replaced by a file picker, and reordering works by tapping the up/down buttons."),
         ],
@@ -123,9 +123,9 @@ TOOLS = {
         "comparison_feature": "File size limit (free)",
         "competitors": [
             ("PDFree", "No limit", "No limit", "No upload", "Free forever", True),
-            ("iLovePDF", "~25 MB", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
-            ("SmallPDF", "~15 MB", "2 tasks/day", "Uploaded to servers", "Free / $9+/mo", False),
-            ("Adobe Acrobat", "100 MB (paid)", "2/month free", "Uploaded to servers", "$19.99/mo", False),
+            ("Competitor B", "~25 MB", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
+            ("Competitor A", "~15 MB", "2 tasks/day", "Uploaded to servers", "Free / $9+/mo", False),
+            ("Competitor C", "100 MB (paid)", "2/month free", "Uploaded to servers", "$19.99/mo", False),
         ],
         "faqs": [
             ("What page range format does PDFree accept?", "Enter comma-separated pages and ranges: for example <code>1, 3-7, 12, 15-20</code>. Spaces are optional. You can also click individual page thumbnails to select or deselect them visually."),
@@ -160,9 +160,9 @@ TOOLS = {
         "comparison_feature": "Image quality",
         "competitors": [
             ("PDFree", "Original quality", "No limit", "No upload", "Free forever", True),
-            ("iLovePDF", "Good quality", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
-            ("SmallPDF", "Compressed", "2 tasks/day", "Uploaded to servers", "Free / $9+/mo", False),
-            ("Adobe Acrobat", "Original quality", "2/month free", "Uploaded to servers", "$19.99/mo", False),
+            ("Competitor B", "Good quality", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
+            ("Competitor A", "Compressed", "2 tasks/day", "Uploaded to servers", "Free / $9+/mo", False),
+            ("Competitor C", "Original quality", "2/month free", "Uploaded to servers", "$19.99/mo", False),
         ],
         "faqs": [
             ("What image formats can I convert to PDF?", "PDFree supports JPG/JPEG, PNG, and WebP. Each image becomes one page in the output PDF."),
@@ -198,9 +198,9 @@ TOOLS = {
         "comparison_feature": "Max output DPI (free)",
         "competitors": [
             ("PDFree", "300 DPI", "No limit", "No upload", "Free forever", True),
-            ("iLovePDF", "150 DPI free", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
-            ("SmallPDF", "150 DPI free", "2 tasks/day", "Uploaded to servers", "Free / $9+/mo", False),
-            ("Adobe Acrobat", "300 DPI", "2/month free", "Uploaded to servers", "$19.99/mo", False),
+            ("Competitor B", "150 DPI free", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
+            ("Competitor A", "150 DPI free", "2 tasks/day", "Uploaded to servers", "Free / $9+/mo", False),
+            ("Competitor C", "300 DPI", "2/month free", "Uploaded to servers", "$19.99/mo", False),
         ],
         "faqs": [
             ("What DPI should I choose?", "72 DPI is fine for websites and screen display. 150 DPI works for most office uses. Choose 300 DPI when you need print-quality output or want to read small text clearly after conversion."),
@@ -235,9 +235,9 @@ TOOLS = {
         "comparison_feature": "Watermark customization",
         "competitors": [
             ("PDFree", "Text, opacity, rotation, color, size", "No limit", "No upload", "Free forever", True),
-            ("iLovePDF", "Text, basic options", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
-            ("SmallPDF", "Text only (free)", "2 tasks/day", "Uploaded to servers", "Free / $9+/mo", False),
-            ("Adobe Acrobat", "Full control", "2/month free", "Uploaded to servers", "$19.99/mo", False),
+            ("Competitor B", "Text, basic options", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
+            ("Competitor A", "Text only (free)", "2 tasks/day", "Uploaded to servers", "Free / $9+/mo", False),
+            ("Competitor C", "Full control", "2/month free", "Uploaded to servers", "$19.99/mo", False),
         ],
         "faqs": [
             ("Can I remove a watermark from a PDF?", "PDFree adds watermarks but does not remove them from existing PDFs. Watermarks added by PDFree are embedded as page content and cannot be automatically removed by basic tools."),
@@ -272,9 +272,9 @@ TOOLS = {
         "comparison_feature": "Encryption standard",
         "competitors": [
             ("PDFree", "256-bit AES", "No limit", "No upload — key stays on device", "Free forever", True),
-            ("iLovePDF", "128-bit or 256-bit", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
-            ("SmallPDF", "Not specified", "2 tasks/day", "Uploaded to servers", "Free / $9+/mo", False),
-            ("Adobe Acrobat", "256-bit AES", "2/month free", "Uploaded to servers", "$19.99/mo", False),
+            ("Competitor B", "128-bit or 256-bit", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
+            ("Competitor A", "Not specified", "2 tasks/day", "Uploaded to servers", "Free / $9+/mo", False),
+            ("Competitor C", "256-bit AES", "2/month free", "Uploaded to servers", "$19.99/mo", False),
         ],
         "faqs": [
             ("What encryption does PDFree use?", "PDFree uses 256-bit AES encryption, the same standard used by banks and government agencies. It is the highest level of PDF encryption defined in the PDF specification (PDF 2.0 / PDF 1.7)."),
@@ -309,9 +309,9 @@ TOOLS = {
         "comparison_feature": "Redaction method",
         "competitors": [
             ("PDFree", "Permanent replacement", "No limit", "No upload", "Free forever", True),
-            ("iLovePDF", "Black overlay", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
-            ("SmallPDF", "Not available free", "—", "Uploaded to servers", "Paid only", False),
-            ("Adobe Acrobat", "True redaction", "2/month free", "Uploaded to servers", "$19.99/mo", False),
+            ("Competitor B", "Black overlay", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
+            ("Competitor A", "Not available free", "—", "Uploaded to servers", "Paid only", False),
+            ("Competitor C", "True redaction", "2/month free", "Uploaded to servers", "$19.99/mo", False),
         ],
         "faqs": [
             ("Is the redaction permanent?", "Yes. PDFree replaces the content under the redaction boxes with a black rectangle at the PDF object level. The original text or image data is not stored elsewhere in the file and cannot be recovered."),
@@ -346,9 +346,9 @@ TOOLS = {
         "comparison_feature": "Per-page rotation",
         "competitors": [
             ("PDFree", "All pages or per-page", "No limit", "No upload", "Free forever", True),
-            ("iLovePDF", "All pages only (free)", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
-            ("SmallPDF", "All pages only", "2 tasks/day", "Uploaded to servers", "Free / $9+/mo", False),
-            ("Adobe Acrobat", "Per-page control", "2/month free", "Uploaded to servers", "$19.99/mo", False),
+            ("Competitor B", "All pages only (free)", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
+            ("Competitor A", "All pages only", "2 tasks/day", "Uploaded to servers", "Free / $9+/mo", False),
+            ("Competitor C", "Per-page control", "2/month free", "Uploaded to servers", "$19.99/mo", False),
         ],
         "faqs": [
             ("Can I rotate only specific pages, not all of them?", "Yes. Click individual page thumbnails to select which pages to rotate. Unselected pages remain in their original orientation. You can also use Select All / Deselect All for quick batch selection."),
@@ -383,9 +383,9 @@ TOOLS = {
         "comparison_feature": "Fields editable (free)",
         "competitors": [
             ("PDFree", "Title, Author, Subject, Keywords, Creator", "No limit", "No upload", "Free forever", True),
-            ("iLovePDF", "Not available", "—", "—", "—", False),
-            ("SmallPDF", "Not available", "—", "—", "—", False),
-            ("Adobe Acrobat", "Full metadata editor", "Paid only", "Uploaded to servers", "$19.99/mo", False),
+            ("Competitor B", "Not available", "—", "—", "—", False),
+            ("Competitor A", "Not available", "—", "—", "—", False),
+            ("Competitor C", "Full metadata editor", "Paid only", "Uploaded to servers", "$19.99/mo", False),
         ],
         "faqs": [
             ("What metadata fields does PDFree show and edit?", "PDFree reads and writes the standard PDF document information dictionary: Title, Author, Subject, Keywords, Creator (application that created the PDF), and Producer (PDF library used). Modification date is updated automatically on save."),
@@ -420,9 +420,9 @@ TOOLS = {
         "comparison_feature": "Number formats",
         "competitors": [
             ("PDFree", "Arabic, Roman, Alphabetic + custom start", "No limit", "No upload", "Free forever", True),
-            ("iLovePDF", "Arabic only (free)", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
-            ("SmallPDF", "Not available free", "—", "Uploaded to servers", "Paid only", False),
-            ("Adobe Acrobat", "Full control", "Paid only", "Uploaded to servers", "$19.99/mo", False),
+            ("Competitor B", "Arabic only (free)", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
+            ("Competitor A", "Not available free", "—", "Uploaded to servers", "Paid only", False),
+            ("Competitor C", "Full control", "Paid only", "Uploaded to servers", "$19.99/mo", False),
         ],
         "faqs": [
             ("Can I start page numbering from a number other than 1?", "Yes. Set any starting number in the 'Start at' field. This is useful for documents where a cover page is page 0, or for chapters that continue numbering from a previous section."),
@@ -457,9 +457,9 @@ TOOLS = {
         "comparison_feature": "Page selection",
         "competitors": [
             ("PDFree", "Range input + visual click", "No limit", "No upload", "Free forever", True),
-            ("iLovePDF", "Range input", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
-            ("SmallPDF", "Range input", "2 tasks/day", "Uploaded to servers", "Free / $9+/mo", False),
-            ("Adobe Acrobat", "Full page panel", "2/month free", "Uploaded to servers", "$19.99/mo", False),
+            ("Competitor B", "Range input", "Daily limit", "Uploaded to servers", "Free / $6+/mo", False),
+            ("Competitor A", "Range input", "2 tasks/day", "Uploaded to servers", "Free / $9+/mo", False),
+            ("Competitor C", "Full page panel", "2/month free", "Uploaded to servers", "$19.99/mo", False),
         ],
         "faqs": [
             ("What is the page range format?", "Enter pages and ranges separated by commas: <code>1, 3-7, 12, 15-20</code>. Spaces are optional. Ranges are inclusive — <code>3-7</code> extracts pages 3, 4, 5, 6, and 7."),

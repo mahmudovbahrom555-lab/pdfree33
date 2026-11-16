@@ -125,7 +125,7 @@ test('a genuine 3-column layout (all three Y-overlapping) still correctly detect
 console.log('\ndetectColumnRegions — a long uninterrupted merged run of real prose is not mistaken for a table:');
 
 // Real bug, found via a live competitor comparison (pdfree.io's own
-// pdf-to-word output vs iLovePDF/Smallpdf on an identical file): a genuine
+// pdf-to-word output vs competitors A and B on an identical file): a genuine
 // 2-column newsletter — two independent paragraphs per column, DIFFERENT
 // lengths so the columns' heights diverge partway down the page, exactly
 // what real 2-column documents look like — still produced a long

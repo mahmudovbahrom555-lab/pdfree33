@@ -418,7 +418,7 @@ console.log('\n_p2wBuildParagraphs — lettered sub-list items ("a.", "b.") spli
 // Real, competitor-verified gap: a lettered sub-list under a numbered
 // parent item had its sub-items silently merged into ONE paragraph, since
 // neither BULLET_RE nor NUMBERED_RE recognized "a."/"b." as a list marker
-// at all — iLovePDF and Smallpdf both correctly split them. Fixed via
+// at all — competitors A and B both correctly split them. Fixed via
 // LETTERED_RE (textLayoutUtils.js), gated on indentation past the page's
 // baseline left margin (mkItem's x=50 here matches the numbered parent
 // item, x=75 the indented sub-items — a 25pt indent, comfortably past the
@@ -558,8 +558,8 @@ console.log('\n_p2wBuildParagraphs — variable page-number footers/headers (rep
 // Real, competitor-verified gap (js/pdf2wordColumns.js's sibling day-8
 // finding): a page-number footer like "Page 1 of 4" differs per page by
 // design, so it never matches repeatTextSet's exact-string check and used
-// to leak into the body as its own paragraph on every page — iLovePDF and
-// Smallpdf both strip it, pdfree didn't. Fixed via a digit-normalized
+// to leak into the body as its own paragraph on every page — competitors A
+// and B both strip it, pdfree didn't. Fixed via a digit-normalized
 // ("Page # of #") pattern set, built in _p2wBuildPageData from lines near
 // the page edges that recur across most pages once digits are stripped,
 // consumed here in _p2wBuildParagraphs via the same edge-of-page (first/
