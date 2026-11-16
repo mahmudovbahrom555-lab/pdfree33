@@ -313,6 +313,7 @@ window.PDFREE_LOCALE = {
   compress_target_lossless:  '화질 손실 없음.',
   compress_target_cost:      '이미지: {dpi} dpi, 품질 {quality}%.',
   compress_target_heavy:     '이미지가 눈에 띄게 부드러워졌습니다 — 보내기 전에 작은 글씨를 확인하세요.',
+  compress_target_qr_protected: 'QR 코드를 읽을 수 있는 상태로 {target} 이하로 줄이지 못했습니다. 저장 크기: {size}.',
   compress_target_unreached: '⚠️ 가장 강한 설정으로도 {target} 아래로 줄이지 못했습니다. {size} 파일입니다 — 크기가 거의 같은 것 중 화질을 가장 잘 지킨 버전입니다. PDF를 나누면 도움이 될 수 있습니다.',
   prog_target_try:           '크기에 맞는 설정을 찾는 중 — {n}번째 시도…',
 

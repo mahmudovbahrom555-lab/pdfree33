@@ -354,5 +354,27 @@ await test('C35: a grey Flate image drawn small → downsampled; an inverted /De
   assert(r.replaced === 0 && dims(pdf, img)[0] === 1200, JSON.stringify(r));
 });
 
+await test('target-size prep leaves page-sized RGB JPEGs to the browser encoder', async () => {
+  const options = {
+    ...RGB_OPTS, rgb: {...RGB_OPTS.rgb, target: 200, preferNativeScans: true},
+  };
+  const { pdf, img } = await figurePage({ inches: 3 });
+  pdf.getPage(0).setSize(216, 144);
+  const result = await D.cmykD(pdf, options);
+  assert(result.deferred === 1 && result.replaced === 0, JSON.stringify(result));
+  assert(dims(pdf, img).join() === '1200,800,/DCTDecode', dims(pdf, img).join());
+
+  const profile = pdf.context.register(PDFRawStream.of(pdf.context.obj({ N: 3 }), new Uint8Array()));
+  const colour = pdf.context.register(pdf.context.obj(['ICCBased', profile]));
+  pdf.context.lookup(img).dict.set(PDFName.of('ColorSpace'), colour);
+  const icc = await D.cmykD(pdf, options);
+  assert(icc.deferred === 1 && pdf.context.lookup(img).dict.get(PDFName.of('ColorSpace')) === colour,
+    JSON.stringify(icc));
+
+  const figure = await figurePage();
+  const placed = await D.cmykD(figure.pdf, options);
+  assert(placed.placed === 1 && !placed.deferred, JSON.stringify(placed));
+});
+
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed ? 1 : 0);

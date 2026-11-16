@@ -397,8 +397,8 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
   // 2026-10-15, couldn't be told apart from Image mode).
   trackToolSuccess(tool, { outputSize: blob.size, requestedCount, successCount, mode, pages, ocrPages });
   if (compressionReport?.target) {
-    const { originalSize, compressedSize, targetSizeMb, target } = compressionReport;
-    trackCompressTarget({ targetBytes: targetSizeMb * 1048576, inputSize: originalSize, outputSize: compressedSize,
+    const { originalSize, compressedSize, targetBytes, target } = compressionReport;
+    trackCompressTarget({ targetBytes, inputSize: originalSize, outputSize: compressedSize,
       met: target.met, step: target.step, runs: target.tried.length });
   }
   _fileAddedThisAttempt = false;   // the attempt is done: the next file starts another

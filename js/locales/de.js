@@ -312,6 +312,7 @@ window.PDFREE_LOCALE = {
   compress_target_lossless:  'Keine Qualität verloren.',
   compress_target_cost:      'Bilder: {dpi} dpi, Qualität {quality} %.',
   compress_target_heavy:     'Bilder sind deutlich weicher – prüfe Kleingedrucktes vor dem Senden.',
+  compress_target_qr_protected: '{target} waren bei lesbarem QR-Code nicht erreichbar. Gespeichert: {size}.',
   compress_target_unreached: '⚠️ Selbst mit der stärksten Einstellung ging es nicht unter {target}. Hier sind {size} – die schonendste Version, die etwa so klein ist. Das PDF zu teilen kann helfen.',
   prog_target_try:           'Passende Einstellung wird gesucht – Versuch {n}…',
 

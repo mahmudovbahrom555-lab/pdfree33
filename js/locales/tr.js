@@ -311,6 +311,7 @@ window.PDFREE_LOCALE = {
   compress_target_lossless:  'Kalite kaybı yok.',
   compress_target_cost:      'Görseller: {dpi} dpi, kalite %{quality}.',
   compress_target_heavy:     'Görseller belirgin biçimde yumuşadı — göndermeden önce küçük yazıları kontrol edin.',
+  compress_target_qr_protected: 'QR kodu okunabilir kalırken {target} sınırına ulaşılamadı. Kaydedilen boyut: {size}.',
   compress_target_unreached: '⚠️ En güçlü ayarla bile {target} altına inilemedi. İşte {size} — neredeyse aynı boyuttaki en yumuşak sürüm. PDF\'i bölmek yardımcı olabilir.',
   prog_target_try:           'Sığan ayar aranıyor — deneme {n}…',
 

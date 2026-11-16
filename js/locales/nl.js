@@ -311,6 +311,7 @@ window.PDFREE_LOCALE = {
   compress_target_lossless:  'Geen kwaliteit verloren.',
   compress_target_cost:      'Afbeeldingen: {dpi} dpi, kwaliteit {quality} %.',
   compress_target_heavy:     'Afbeeldingen zijn merkbaar zachter — controleer kleine tekst voor het versturen.',
+  compress_target_qr_protected: '{target} was niet haalbaar met een leesbare QR-code. Opgeslagen: {size}.',
   compress_target_unreached: '⚠️ Zelfs met de sterkste instelling lukte het niet onder {target}. Hier is {size} — de zachtste versie die ongeveer even klein is. De PDF splitsen kan helpen.',
   prog_target_try:           'Instelling zoeken die past — poging {n}…',
 
