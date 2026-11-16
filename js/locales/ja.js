@@ -1195,6 +1195,8 @@ window.PDFREE_LOCALE = {
   merge_next_extract_sub:   'この結合済みファイルから必要なページだけを選択 — 即座に開き、再アップロード不要です。',
   cleanscan_next_ocr_title: 'OCR PDFに進む',
   cleanscan_next_ocr_sub:   'クリーニング済みのテキストを選択・検索可能にします — より白く鮮明なスキャンほど認識精度が上がります。',
+  jpg2pdf_next_scan_title: '紙のページの写真ですか? ドキュメントスキャナーで開く',
+  jpg2pdf_next_scan_sub:   '写真からページを切り抜いてまっすぐに直し、スキャンしたような PDF にします。',
   resize_next_nup_title: "「1枚に複数ページ」で続ける",
   resize_next_nup_sub: "1枚に複数ページ、または冊子に — すぐに開き、再アップロード不要。",
   manga_next_booklet_title: "冊子として印刷",

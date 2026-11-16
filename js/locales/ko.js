@@ -1194,6 +1194,8 @@ window.PDFREE_LOCALE = {
   merge_next_extract_sub:   '병합된 이 파일에서 필요한 페이지만 정확히 선택하세요 — 즉시 열리며 다시 업로드할 필요가 없습니다.',
   cleanscan_next_ocr_title: 'OCR PDF로 계속하기',
   cleanscan_next_ocr_sub:   '정리된 텍스트를 선택하고 검색할 수 있게 만드세요 — 더 희고 선명한 스캔일수록 더 정확하게 인식됩니다.',
+  jpg2pdf_next_scan_title: '종이 문서를 찍은 사진인가요? 문서 스캐너에서 열기',
+  jpg2pdf_next_scan_sub:   '사진에서 페이지만 잘라 내고 반듯하게 펴서 스캔한 것 같은 PDF로 만드세요.',
   resize_next_nup_title: "‘한 장에 여러 페이지’로 계속",
   resize_next_nup_sub: "한 장에 여러 페이지 또는 소책자 — 바로 열리고 다시 업로드할 필요가 없습니다.",
   manga_next_booklet_title: "소책자로 인쇄",

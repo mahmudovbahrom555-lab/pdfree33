@@ -1194,6 +1194,8 @@ window.PDFREE_LOCALE = {
   merge_next_extract_sub:   'Choisissez exactement les pages dont vous avez besoin dans ce fichier fusionné — s\'ouvre instantanément, sans nouveau téléchargement.',
   cleanscan_next_ocr_title: 'Continuer dans OCR PDF',
   cleanscan_next_ocr_sub:   'Rendez le texte nettoyé sélectionnable et consultable — un scan plus blanc et plus net est reconnu plus précisément.',
+  jpg2pdf_next_scan_title: 'Photo d\'une page papier ? Ouvrez-la dans le Scanner de Documents',
+  jpg2pdf_next_scan_sub:   'Recadrez la page dans la photo et redressez-la pour que le PDF ressemble à un scan.',
   resize_next_nup_title: "Continuer dans Pages par feuille",
   resize_next_nup_sub: "Plusieurs pages par feuille ou un livret — s’ouvre aussitôt, sans renvoyer le fichier.",
   manga_next_booklet_title: "Imprimer en livret",

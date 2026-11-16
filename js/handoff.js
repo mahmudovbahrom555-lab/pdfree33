@@ -34,9 +34,11 @@ function _openDb() {
 // Save a result blob for pickup on the next tool page.
 // destinationHref: absolute URL of the link the user clicked (stored to prevent
 // back-navigation from consuming the entry on the source page).
-// No-op if blob is not a PDF (ZIP from split, TXT from OCR extract).
+// No-op unless blob is a PDF or an image (ZIP from split, TXT from OCR
+// extract stay behind) — an image is JPG→PDF's photo going on to the
+// Document Scanner. The blob keeps its own type through IndexedDB.
 export async function saveHandoff(blob, filename, sourceTool, destinationHref = null) {
-  if (!blob || blob.type !== 'application/pdf') return;
+  if (!blob || (blob.type !== 'application/pdf' && !blob.type.startsWith('image/'))) return;
   const db = await _openDb();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(STORE_NAME, 'readwrite');

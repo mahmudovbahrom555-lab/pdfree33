@@ -1192,6 +1192,8 @@ window.PDFREE_LOCALE = {
   merge_next_extract_sub:   'Kies precies de pagina\'s die je nodig hebt uit dit samengevoegde bestand — opent direct, geen nieuwe upload nodig.',
   cleanscan_next_ocr_title: 'Doorgaan naar OCR PDF',
   cleanscan_next_ocr_sub:   'Maak de opgeschoonde tekst selecteerbaar en doorzoekbaar — een wittere, scherpere scan wordt nauwkeuriger herkend.',
+  jpg2pdf_next_scan_title: 'Foto van een papieren pagina? Open hem in Documentscanner',
+  jpg2pdf_next_scan_sub:   'Snijd de pagina uit de foto en zet hem recht, zodat de PDF eruitziet als een scan.',
   resize_next_nup_title: "Verder in Pagina's per vel",
   resize_next_nup_sub: "Meerdere pagina's per vel of een boekje — opent meteen, zonder opnieuw uploaden.",
   manga_next_booklet_title: "Afdrukken als boekje",

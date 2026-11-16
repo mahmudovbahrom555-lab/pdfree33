@@ -1192,6 +1192,8 @@ window.PDFREE_LOCALE = {
   merge_next_extract_sub:   'Wybierz dokładnie te strony, których potrzebujesz, z tego połączonego pliku — otwiera się natychmiast, bez ponownego przesyłania.',
   cleanscan_next_ocr_title: 'Przejdź do OCR PDF',
   cleanscan_next_ocr_sub:   'Spraw, by oczyszczony tekst można było zaznaczać i wyszukiwać — bielszy, ostrzejszy skan jest rozpoznawany dokładniej.',
+  jpg2pdf_next_scan_title: 'Zdjęcie papierowej strony? Otwórz je w Skanerze Dokumentów',
+  jpg2pdf_next_scan_sub:   'Wytnij stronę ze zdjęcia i wyprostuj ją, aby PDF wyglądał jak skan.',
   resize_next_nup_title: "Przejdź do „Strony na arkusz”",
   resize_next_nup_sub: "Kilka stron na każdym arkuszu albo broszura — otwiera się od razu, bez ponownego wysyłania.",
   manga_next_booklet_title: "Wydrukuj jako broszurę",

@@ -1193,6 +1193,8 @@ window.PDFREE_LOCALE = {
   merge_next_extract_sub:   'Chọn chính xác các trang bạn cần từ tệp đã gộp này — mở ngay lập tức, không cần tải lên lại.',
   cleanscan_next_ocr_title: 'Tiếp tục với OCR PDF',
   cleanscan_next_ocr_sub:   'Biến văn bản đã làm sạch thành có thể chọn và tìm kiếm được — bản quét trắng hơn, sắc nét hơn sẽ được nhận dạng chính xác hơn.',
+  jpg2pdf_next_scan_title: 'Ảnh chụp trang giấy? Mở trong Máy Quét Tài Liệu',
+  jpg2pdf_next_scan_sub:   'Cắt trang ra khỏi ảnh và làm thẳng, để PDF trông như bản quét.',
   resize_next_nup_title: "Tiếp tục với Nhiều trang trên một tờ",
   resize_next_nup_sub: "Nhiều trang trên mỗi tờ hoặc sổ gập — mở ngay, không cần tải lại.",
   manga_next_booklet_title: "In thành sổ gập",
