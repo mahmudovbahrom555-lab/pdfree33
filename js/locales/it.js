@@ -1122,8 +1122,15 @@ window.PDFREE_LOCALE = {
   atlas_verdict_heavy:     'Problemi gravi',
 
   // ── pdf2excelUI.js ───────────────────────────────────────
-  p2e_mode_hint:              '📊 Le tabelle rilevate vengono convertite in fogli Excel separati. Il resto del testo viene mantenuto in un foglio "Testo" così da non perdere nulla.',
-  p2e_ocr_hint:               '⚠️ Nessun livello di testo rilevato — questo PDF è un\'immagine scansionata, quindi non è possibile estrarre alcuna tabella. ',
+  p2e_mode_hint: "Le tabelle rilevate vanno in fogli Excel separati. Il resto del testo estratto va nel foglio «Text».",
+  p2e_ocr_hint: "Nelle pagine esaminate non è stato trovato testo estraibile. ",
+  p2e_image_pages: "Le immagini grandi nelle pagine {pages} possono contenere dati mancanti in Excel. Controlla queste pagine e usa OCR se necessario.",
+  p2e_skipped_pages: "Pagine saltate perché prive di testo estraibile: {pages}.",
+  p2e_ocr_scans: "Esegui l’OCR sulle pagine scansionate",
+  p2e_number_format: "Separatore decimale",
+  p2e_number_auto: "Automatico",
+  p2e_preview_meta: "{n} righe · pagine PDF {pages}",
+  p2e_download: "Scarica XLSX",
   p2e_ocr_to_get_extractable: ' per ottenere testo estraibile.',
   p2e_tables_detected_one:    '🗂️ {n} tabella rilevata — diventerà un foglio Excel a sé stante',
   p2e_tables_detected_many:   '🗂️ {n} tabelle rilevate — ciascuna diventerà un foglio Excel a sé stante',

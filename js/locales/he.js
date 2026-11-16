@@ -11,6 +11,15 @@
 // `{ ...EN, ...PDFREE_LOCALE }` merge — intentional, not a gap to "finish"
 // without a real signal to justify it.
 window.PDFREE_LOCALE = {
+  p2e_mode_hint: "טבלאות שזוהו מועברות לגיליונות Excel נפרדים. שאר הטקסט שחולץ מופיע בגיליון «Text».",
+  p2e_ocr_hint: "לא נמצא טקסט שניתן לחלץ בעמודים שנבדקו. ",
+  p2e_image_pages: "תמונות גדולות בעמודים {pages} עשויות להכיל נתונים שלא הועברו ל-Excel. בדקו עמודים אלה והשתמשו ב-OCR לפי הצורך.",
+  p2e_skipped_pages: "דולגו עמודים ללא טקסט שניתן לחלץ: {pages}.",
+  p2e_ocr_scans: "הפעלת OCR בעמודים סרוקים",
+  p2e_number_format: "מפריד עשרוני",
+  p2e_number_auto: "אוטומטי",
+  p2e_preview_meta: "{n} שורות · עמודי PDF ‏{pages}",
+  p2e_download: "הורדת XLSX",
   wait_processing:     '⏳ נא להמתין עד לסיום העיבוד',
   done_time:           '⚡ הושלם תוך {time} שניות — עיבוד מקומי, שום דבר לא הועלה',
   done_no_time:        '⚡ העיבוד המקומי הושלם — הקובץ לעולם לא יצא מהמכשיר שלכם',

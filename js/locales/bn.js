@@ -11,6 +11,15 @@
 // i18n.js's `{ ...EN, ...PDFREE_LOCALE }` merge — intentional, not a gap
 // to "finish" without a real signal to justify it.
 window.PDFREE_LOCALE = {
+  p2e_mode_hint: "শনাক্ত করা টেবিলগুলো আলাদা Excel শিটে রাখা হয়। অন্য উদ্ধার করা লেখা «Text» শিটে থাকে।",
+  p2e_ocr_hint: "পরীক্ষা করা পৃষ্ঠাগুলোতে বের করার মতো লেখা পাওয়া যায়নি। ",
+  p2e_image_pages: "{pages} পৃষ্ঠার বড় ছবিতে এমন তথ্য থাকতে পারে যা Excel-এ আসেনি। পৃষ্ঠাগুলো পরীক্ষা করুন এবং প্রয়োজনে OCR ব্যবহার করুন।",
+  p2e_skipped_pages: "বের করার মতো লেখা না থাকায় এই পৃষ্ঠাগুলো বাদ গেছে: {pages}।",
+  p2e_ocr_scans: "স্ক্যান করা পৃষ্ঠায় OCR চালান",
+  p2e_number_format: "দশমিক বিভাজক",
+  p2e_number_auto: "স্বয়ংক্রিয়",
+  p2e_preview_meta: "{n} সারি · PDF পৃষ্ঠা {pages}",
+  p2e_download: "XLSX ডাউনলোড করুন",
   wait_processing:     '⏳ প্রক্রিয়াকরণ শেষ হওয়া পর্যন্ত অপেক্ষা করুন',
   done_time:           '⚡ {time} সেকেন্ডে সম্পন্ন হয়েছে — স্থানীয় প্রক্রিয়াকরণ, কিছুই আপলোড করা হয়নি',
   done_no_time:        '⚡ স্থানীয় প্রক্রিয়াকরণ সম্পন্ন হয়েছে — ফাইল কখনও আপনার ডিভাইস ছেড়ে যায়নি',

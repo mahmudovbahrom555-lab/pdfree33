@@ -1123,8 +1123,15 @@ window.PDFREE_LOCALE = {
   atlas_verdict_heavy:     'Vấn đề nghiêm trọng',
 
   // ── pdf2excelUI.js ───────────────────────────────────────
-  p2e_mode_hint:              '📊 Các bảng được phát hiện sẽ chuyển thành các trang tính Excel riêng biệt. Văn bản còn lại được giữ trong một trang tính "Văn bản" để không bị mất dữ liệu.',
-  p2e_ocr_hint:               '⚠️ Không phát hiện lớp văn bản — PDF này là hình ảnh được quét, do đó không thể trích xuất bảng nào. ',
+  p2e_mode_hint: "Các bảng được phát hiện nằm ở các trang tính Excel riêng. Văn bản khác trích xuất được nằm ở trang tính “Text”.",
+  p2e_ocr_hint: "Không tìm thấy văn bản có thể trích xuất trên các trang đã kiểm tra. ",
+  p2e_image_pages: "Ảnh lớn trên các trang {pages} có thể chứa dữ liệu chưa được đưa vào Excel. Kiểm tra các trang này và dùng OCR nếu cần.",
+  p2e_skipped_pages: "Đã bỏ qua các trang không có văn bản có thể trích xuất: {pages}.",
+  p2e_ocr_scans: "Chạy OCR trên các trang đã quét",
+  p2e_number_format: "Dấu phân cách thập phân",
+  p2e_number_auto: "Tự động",
+  p2e_preview_meta: "{n} hàng · trang PDF {pages}",
+  p2e_download: "Tải XLSX",
   p2e_ocr_to_get_extractable: ' để có văn bản có thể trích xuất.',
   p2e_tables_detected_one:    '🗂️ Phát hiện {n} bảng — sẽ trở thành trang tính Excel riêng',
   p2e_tables_detected_many:   '🗂️ Phát hiện {n} bảng — mỗi bảng sẽ trở thành trang tính Excel riêng',

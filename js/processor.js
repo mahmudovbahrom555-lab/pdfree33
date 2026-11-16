@@ -41,7 +41,7 @@ import { _p2wBuildPageData, uprightMatrix, uprightBox } from './pdf2readCore.js'
 import { createOcrLayer } from './pdf2wordOcr.js';
 import { createActualTextReader } from './pdfActualText.js';
 import { createDigitFixReader, loadDigitTemplates } from './pdfDigitFix.js';
-import { detectTableGrids, lineInGrid, gridRowsOfLines, gridHoldsTable } from './pdf2wordBorders.js';
+import { tableGridsFromOperators, lineInGrid, gridRowsOfLines, gridHoldsTable } from './pdf2wordBorders.js';
 import { cjkJoin } from './cjkText.js';
 import { recognizeFormula } from './formulaOcr.js';
 import { docxToPdf, walkDomToPdfContent, pdfContentToBlob } from './docxToPdfCore.js';
@@ -318,10 +318,13 @@ export function cancelMergeScan() {
 // sequential await loop instead of leaving it hung on a terminated worker.
 let _batchCancelReject = null;
 let _scanOcrAbort = null;
+let _pdf2excelAbort = null;
 
 export function cancelProcess(currentTool) {
   if (!isProcessing) return;
   _scanOcrAbort?.abort();
+  _pdf2excelAbort?.abort();
+  _pdf2excelAbort = null;
   if (_batchCancelReject) {
     const reject = _batchCancelReject;
     _batchCancelReject = null;
@@ -406,11 +409,16 @@ export async function doProcess(currentTool, extraParams = {}) {
   _processStartMs = Date.now();
 
   const filesSnapshot = [...selectedFiles];
+  const excelRun = currentTool === 'pdf2excel' ? new AbortController() : null;
+  if (excelRun) _pdf2excelAbort = excelRun;
+
 
   setFilesLocked(true);
   setButtonProcessing();
   setProgress(5, t('prog_reading'));
+  if (excelRun) showCancelBtn();
   await _warmPdfLib();
+  if (excelRun?.signal.aborted) return;
   startLongOpHint(12000);
   showCancelBtn();
 
@@ -445,7 +453,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     jpg2pdf:  () => _runJpg2Pdf(filesSnapshot, extraParams, currentTool),
     pdf2jpg:  () => _runPdf2Jpg(filesSnapshot, extraParams),
     pdf2word: () => _runPdf2Word(filesSnapshot, extraParams),
-    pdf2excel: () => _runPdf2Excel(filesSnapshot, extraParams),
+    pdf2excel: () => _runPdf2Excel(filesSnapshot, excelRun.signal, extraParams.decimalSeparator),
     pdf2ppt:  () => _runPdf2Ppt(filesSnapshot, extraParams),
     pdf2md:   () => _runPdf2Md(filesSnapshot, extraParams),
     docx2pdf: () => _runDocx2Pdf(filesSnapshot, extraParams),
@@ -475,10 +483,13 @@ export async function doProcess(currentTool, extraParams = {}) {
     const run    = runnerMap[runner] ?? (() => _runStub(currentTool));
     await run();
   } catch (err) {
+    if (excelRun?.signal.aborted) return;
     isProcessing = false;
     setFilesLocked(false);
     hideCancelBtn();
     _handleError(currentTool, err.message);
+  } finally {
+    if (_pdf2excelAbort === excelRun) _pdf2excelAbort = null;
   }
 }
 
@@ -3298,19 +3309,17 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150, stripMeta
 // table is appended to a catch-all "Text" sheet so nothing is silently
 // dropped, even on documents that turn out not to be spreadsheet-like.
 
-async function _runPdf2Excel(filesSnapshot) {
+async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
   const file = filesSnapshot[0];
   if (!_checkSize(file, maxFileMb('pdf2excel'))) { _abortUI(); return; }
 
   setProgress(5, 'Loading libraries…');
-
   try {
     await loadExcelJs();
   } catch {
-    isProcessing = false; setFilesLocked(false); hideCancelBtn();
-    _handleError('pdf2excel', 'Excel library unavailable — check your internet connection.');
-    return;
+    throw new Error('Excel library unavailable — check your internet connection.');
   }
+  signal.throwIfAborted();
 
   if (!window.pdfjsLib) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
@@ -3319,32 +3328,35 @@ async function _runPdf2Excel(filesSnapshot) {
   }
 
   setProgress(8, 'Loading PDF…');
+  const rawBuf = file._decryptedBuffer
+    ? file._decryptedBuffer.slice(0)
+    : await preprocessPdfBuffer(await _readSelected(file));
+  signal.throwIfAborted();
+  const task = window.pdfjsLib.getDocument({ isEvalSupported: false,
+    data:              new Uint8Array(rawBuf),
+    useSystemFonts:    false,
+    verbosity:         0,
+    disableJavaScript: true,
+  });
 
-  let pdfDoc;
-  try {
-    const rawBuf = file._decryptedBuffer
-      ? file._decryptedBuffer.slice(0)
-      : await preprocessPdfBuffer(await _readSelected(file));
-    pdfDoc = await window.pdfjsLib.getDocument({ isEvalSupported: false,
-      data:              new Uint8Array(rawBuf),
-      useSystemFonts:    false,
-      verbosity:         0,
-      disableJavaScript: true,
-    }).promise;
-  } catch (err) {
-    isProcessing = false; setFilesLocked(false); hideCancelBtn();
-    _handleError('pdf2excel', err.message); return;
-  }
-
+  // Aborting must release the PDF even while a PDF.js promise is pending.
+  // Both abort and the normal exit share the same destruction promise.
+  let destruction;
+  const destroy = () => {
+    destruction ??= Promise.resolve().then(() => task.destroy()).catch(() => {});
+    return destruction;
+  };
+  signal.addEventListener('abort', destroy, { once: true });
   let extracted;
   try {
-    extracted = await _p2eExtractTables(pdfDoc);
-  } catch (err) {
-    isProcessing = false; setFilesLocked(false); hideCancelBtn();
-    _handleError('pdf2excel', err.message); return;
+    const doc = await task.promise;
+    signal.throwIfAborted();
+    extracted = await _p2eExtractTables(doc, signal);
+  } finally {
+    signal.removeEventListener('abort', destroy);
+    await destroy();
   }
-
-  if (!isProcessing) return;
+  signal.throwIfAborted();
 
   setProgress(90, 'Building spreadsheet…');
 
@@ -3354,7 +3366,7 @@ async function _runPdf2Excel(filesSnapshot) {
   // Demoted rows are joined with a double space, same shape as a plain
   // text line — they're no longer claimed to be tabular data.
   const keptTables  = [];
-  let   textRows    = [...extracted.textRows];
+  const textRows    = [...extracted.textRows];
   for (const tbl of extracted.tables) {
     if (tbl.confidence >= _P2E_CONF_THRESHOLD) {
       keptTables.push(tbl);
@@ -3364,8 +3376,9 @@ async function _runPdf2Excel(filesSnapshot) {
   }
   let tables = keptTables;
 
-  let workbook = _p2eBuildWorkbook(tables, textRows);
+  const workbook = _p2eBuildWorkbook(tables, textRows, decimalSeparator);
   let buffer   = await workbook.xlsx.writeBuffer();
+  signal.throwIfAborted();
 
   // Gate 2: independent structural check computed from the ACTUAL produced
   // .xlsx bytes (eriScoreXlsx.js), not the detector's self-reported
@@ -3373,25 +3386,27 @@ async function _runPdf2Excel(filesSnapshot) {
   // be structurally wrong (e.g. a confidently-aligned two-column layout
   // that isn't tabular data at all). Best-effort: any failure here just
   // ships the gate-1 result, never blocks a successful conversion.
-  if (tables.length && isProcessing) {
+  if (tables.length) {
     try {
       const eri = await evaluateXlsxStructural(buffer);
+      signal.throwIfAborted();
       const badSheetNames = new Set(
         eri.sheets.filter(s => s.eri < _P2E_ERI_THRESHOLD).map(s => s.name)
       );
       if (badSheetNames.size) {
         setProgress(95, 'Verifying table structure…');
         const survivors = [];
+        const demotedText = [...textRows];
         tables.forEach((tbl, i) => {
           if (badSheetNames.has(`Table ${i + 1}`)) {
-            for (const row of tbl.rows) textRows.push({ page: tbl.page, text: row.join('  ') });
+            for (const row of tbl.rows) demotedText.push({ page: tbl.page, text: row.join('  ') });
           } else {
             survivors.push(tbl);
           }
         });
-        tables   = survivors;
-        workbook = _p2eBuildWorkbook(tables, textRows);
-        buffer   = await workbook.xlsx.writeBuffer();
+        const verified = _p2eBuildWorkbook(survivors, demotedText, decimalSeparator);
+        buffer = await verified.xlsx.writeBuffer();
+        tables = survivors;
       }
     } catch {
       // ERI check is best-effort — never let a scoring failure block a
@@ -3399,13 +3414,26 @@ async function _runPdf2Excel(filesSnapshot) {
     }
   }
 
+  signal.throwIfAborted();
   const blob = new Blob([buffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   });
 
   const baseName = file.name.replace(/\.pdf$/i, '');
   const filename = `${baseName}.xlsx`;
-  const confidence = _p2eConfidence({ ...extracted, tables });
+  const confidence = {
+    tableCount: tables.length,
+    skippedPages: extracted.skippedPages,
+    imagePages: extracted.imagePages,
+    previews: tables.map((table, i) => ({
+      name: `Table ${i + 1}`,
+      rowCount: table.rows.length,
+      pages: table.sourcePages,
+      merges: table.merges.filter(merge => merge.row < 5),
+      rows: table.rows.slice(0, 5).map((row, ri) => ri === 0 ? row :
+        row.map(text => _p2ePreviewCell(_p2eCellValue(text, decimalSeparator)))),
+    })),
+  };
   const tableNote = tables.length
     ? `${tables.length} table${tables.length !== 1 ? 's' : ''} found`
     : 'no tables found';
@@ -3426,7 +3454,7 @@ async function _runPdf2Excel(filesSnapshot) {
 // _runPdf2Excel() can rebuild it a second time (cheap — no PDF re-parse,
 // no re-detection) after demoting whichever tables fail the post-build ERI
 // structural check.
-function _p2eBuildWorkbook(tables, textRows) {
+function _p2eBuildWorkbook(tables, textRows, decimalSeparator) {
   const workbook = new window.ExcelJS.Workbook();
   workbook.creator = 'PDFree';
 
@@ -3435,7 +3463,7 @@ function _p2eBuildWorkbook(tables, textRows) {
 
     tbl.rows.forEach((row, ri) => {
       if (ri === 0) { sheet.addRow(row); return; } // header stays plain text
-      const parsed    = row.map(_p2eCellValue);
+      const parsed    = row.map(text => _p2eCellValue(text, decimalSeparator));
       const excelRow  = sheet.addRow(parsed.map(p => p.value));
       parsed.forEach((p, ci) => {
         if (p.numFmt) excelRow.getCell(ci + 1).numFmt = p.numFmt;
@@ -3467,10 +3495,15 @@ function _p2eBuildWorkbook(tables, textRows) {
     sheet.columns.forEach(col => {
       let maxLen = 10;
       col.eachCell({ includeEmpty: true }, cell => {
-        maxLen = Math.max(maxLen, String(cell.value ?? '').length);
+        const lines = String(cell.value ?? '').split('\n');
+        if (lines.length > 1) cell.alignment = { ...cell.alignment, wrapText: true };
+        for (const line of lines) maxLen = Math.max(maxLen, line.length);
       });
       col.width = Math.min(maxLen + 2, 60);
     });
+    for (const { row, from, to, rowSpan = 1 } of tbl.merges ?? []) {
+      sheet.mergeCells(row + 1, from + 1, row + rowSpan, to + 1);
+    }
   });
 
   if (textRows.length) {
@@ -3490,10 +3523,35 @@ function _p2eBuildWorkbook(tables, textRows) {
 // Simplified line-grouping (no heading/RTL-paragraph/rotated-header handling —
 // none of that matters for cell data) + detectTables() per page. Lines not
 // consumed by a detected table are returned separately as fallback rows.
-async function _p2eExtractTables(pdfDoc) {
+// Conservative warning, not table recognition: a large raster region with
+// very little overlapping text may contain information absent from Excel.
+export function _p2eHasUnrepresentedImage(images, items, view) {
+  const [x0, y0, x1, y1] = view;
+  const pageArea = (x1 - x0) * (y1 - y0);
+  if (!(pageArea > 0)) return false;
+  return images.some(image => {
+    const left = Math.max(x0, image.x);
+    const right = Math.min(x1, image.x + image.width);
+    const bottom = Math.max(y0, image.yTop - image.height);
+    const top = Math.min(y1, image.yTop);
+    if (right <= left || top <= bottom || (right - left) * (top - bottom) < pageArea * 0.15) return false;
+    let characters = 0;
+    for (const item of items) {
+      const center = item.x + (item.width || 0) / 2;
+      if (center >= left && center <= right && item.y >= bottom && item.y <= top) {
+        characters += item.str.replace(/\s/g, '').length;
+        if (characters >= 20) return false;
+      }
+    }
+    return true;
+  });
+}
+
+async function _p2eExtractTables(pdfDoc, signal) {
   const tables = [];
   const textRows = [];
-  let pagesWithNoText = 0;
+  const skippedPages = [];
+  const imagePages = [];
 
   // Checked at the TOP of each iteration (not the bottom, unlike
   // _p2wBuildPageData's identical idiom) because this loop has an early
@@ -3505,26 +3563,31 @@ async function _p2eExtractTables(pdfDoc) {
   // _runPdf2Jpg already uses.
   let frameStart = performance.now();
   for (let p = 1; p <= pdfDoc.numPages; p++) {
-    if (!isProcessing) break;
+    signal.throwIfAborted();
     if (performance.now() - frameStart >= _FRAME_BUDGET_MS) {
       await _yieldToUI();
+      signal.throwIfAborted();
       frameStart = performance.now();
     }
     setProgress(10 + Math.round((p / pdfDoc.numPages) * 75),
                 `Reading page ${p}/${pdfDoc.numPages}…`);
 
     const page    = await pdfDoc.getPage(p);
-    // getOperatorList() alongside getTextContent() forces pdf.js to resolve
-    // font objects into page.commonObjs — without it, _isFontBold below
-    // silently always returns false (same fix as pdf2readCore.js's own
-    // _p2wBuildPageData, see its comment for the real fixture this was
-    // found on: content.styles[...].fontFamily alone reports a generic
-    // "sans-serif" fallback for both a bold and a regular weight of the
-    // same embedded font, indistinguishable without the real PostScript name).
-    const [content] = await Promise.all([
-      page.getTextContent({ normalizeWhitespace: false }),
-      page.getOperatorList().catch(() => {}),
-    ]);
+    signal.throwIfAborted();
+    const content = await page.getTextContent({ normalizeWhitespace: false });
+    signal.throwIfAborted();
+    const textItems = content.items.filter(item => 'str' in item && item.str.split('\u0000').join('').trim());
+    if (!textItems.length) { skippedPages.push(p); page.cleanup?.(); continue; }
+
+    // One operator list both resolves the fonts and supplies the table rules.
+    const operators = await page.getOperatorList().catch(() => null);
+    signal.throwIfAborted();
+    const viewport = page.getViewport({ scale: 1 });
+    const upright = uprightMatrix(page);
+    let grids = [];
+    try {
+      grids = tableGridsFromOperators(operators, viewport, { paintedOnly: true, matrix: upright });
+    } catch { /* malformed drawing operators: use the text detector */ }
     const _boldFontCache = new Map(); // fontName -> boolean, one commonObjs lookup per unique font per page
     const _isFontBold = fontName => {
       if (_boldFontCache.has(fontName)) return _boldFontCache.get(fontName);
@@ -3536,15 +3599,14 @@ async function _p2eExtractTables(pdfDoc) {
       return bold;
     };
     const rtlVisual = rtlItemsAreVisual(content.items);
-    const items = content.items
-      .filter(item => 'str' in item && item.str.split(' ').join('').trim())
-      .map((item, seq) => {
+    const items = textItems      .map((item, seq) => {
         const fam = (content.styles[item.fontName]?.fontFamily || '').toLowerCase();
+        const [,,,, x, y] = item.transform;
         return {
           seq,      // content-stream order — see reorderVisualRtlLine
           str: toUnifiedIdeographs((item.dir === 'rtl' && rtlVisual) ? _visualRTLToLogical(item.str) : item.str).split(' ').join(''),
-          x: item.transform[4],
-          y: item.transform[5],
+          x: upright ? upright[0] * x + upright[2] * y + upright[4] : x,
+          y: upright ? upright[1] * x + upright[3] * y + upright[5] : y,
           width: item.width || 0,
           fontSize: (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10,
           bold: _isFontBold(item.fontName) || BOLD_FONT_NAME_RE.test(fam),
@@ -3553,9 +3615,6 @@ async function _p2eExtractTables(pdfDoc) {
 
     const lines = groupItemsIntoLines(items);
 
-    if (!lines.length) { pagesWithNoText++; page.cleanup?.(); continue; }
-
-    const grids = await detectTableGrids(page, { paintedOnly: true }).catch(() => []);
     // An RTL line is read in runs, each in its reading order with harakat on
     // their letters, never across a table rule (lineRuns): cells joined item by
     // item came out reversed and letter-spaced for Chromium-printed Persian
@@ -3569,14 +3628,22 @@ async function _p2eExtractTables(pdfDoc) {
         ln.items = joinTouchingItems(ln.items, cuts);
       }
     }
-    const pageResult = _p2eExtractPage(lines, grids, p);
+    const pageView = upright ? [0, 0, viewport.width, viewport.height] : page.view;
+    try {
+      const placed = _detectPageImages(operators);
+      const images = upright ? placed.map(image => uprightBox(upright, image)) : placed;
+      if (_p2eHasUnrepresentedImage(images, items, pageView ?? [0, 0, viewport.width, viewport.height])) {
+        imagePages.push(p);
+      }
+    } catch { /* unreadable image operators: retain the extracted text */ }
+    const pageResult = _p2eExtractPage(lines, grids, p, pageView);
     tables.push(...pageResult.tables);
     textRows.push(...pageResult.textRows);
 
     page.cleanup?.();
   }
 
-  return { tables: _p2eStitchTables(tables), textRows, totalPages: pdfDoc.numPages, pagesWithNoText };
+  return { tables: _p2eStitchTables(tables), textRows, totalPages: pdfDoc.numPages, skippedPages, imagePages };
 }
 
 // A whole row is treated as bold only when EVERY item on it is bold —
@@ -3597,43 +3664,112 @@ const _p2eAllBold = lns => lns.some(ln => ln.items.length) &&
 // names glued onto the previous record). Lines outside every grid still go
 // through detectTables, unchanged — it remains the only option for
 // borderless tables. Anything neither claims becomes a Text-sheet row.
-export function _p2eExtractPage(lines, grids, page) {
-  const tables   = [];
-  const consumed = new Set();
+export function _p2eExtractPage(lines, grids, page, pageView) {
+  const tables = [];
+  const contentLines = lines.filter(line => !_p2ePageFurniture(line));
+  const edgeMargin = pageView ? Math.min(108, (pageView[3] - pageView[1]) * 0.18) : 0;
+  const position = (top, bottom, left) => ({
+    top, left,
+    clearAbove: !contentLines.some(line => line.y > top),
+    clearBelow: !contentLines.some(line => line.y < bottom),
+    atTop: !!pageView && top >= pageView[3] - edgeMargin,
+    atBottom: !!pageView && bottom <= pageView[1] + edgeMargin,
+  });
+  const consumedItems = new Set();
 
   for (const grid of grids) {
     const { rowYs, colXs } = grid;
+    const left = colXs[0];
+    const right = colXs[colXs.length - 1];
     const bands = Array.from({ length: rowYs.length - 1 }, () => []);
     const claimed = [];
-    lines.forEach((ln, li) => {
-      if (consumed.has(li)) return;
-      const r = rowYs.findIndex((top, i) => i < bands.length && ln.y < top && ln.y >= rowYs[i + 1]);
-      if (r < 0) return;
-      bands[r].push(ln);
-      claimed.push(li);
-    });
+    for (const line of lines) {
+      const fragments = new Map();
+      for (const item of line.items) {
+        if (consumedItems.has(item) || item.x < left - GRID_SLACK || item.x >= right) continue;
+        const y = item.y ?? line.y;
+        const row = rowYs.findIndex((top, i) => i < bands.length && y < top && y >= rowYs[i + 1]);
+        if (row < 0) continue;
+        if (!fragments.has(row)) fragments.set(row, []);
+        fragments.get(row).push(item);
+        claimed.push(item);
+      }
+      for (const [row, items] of fragments) bands[row].push({ items });
+    }
 
     const rows = [];
     const boldRows = new Set();
-    for (const bandLines of bands) {
-      const cols = Array.from({ length: colXs.length - 1 }, () => []);
+    const merges = [];
+    for (const [band, bandLines] of bands.entries()) {
+      if (!bandLines.length && !grid.rowDividers) continue;
+      const boundaries = grid.colDividers?.length
+        ? _activeDividersForY(grid, (rowYs[band] + rowYs[band + 1]) / 2)
+        : null;
+      const anchors = colXs.map((_, c) => c).filter(c =>
+        c === 0 || c === colXs.length - 1 || !boundaries || boundaries[c - 1]);
+      const activeXs = anchors.map(c => colXs[c]);
+      const cols = Array.from({ length: activeXs.length - 1 }, () => []);
       for (const ln of bandLines) {
-        _assignLineToGridCols(ln.items, colXs).forEach((text, c) => { if (text) cols[c].push(text); });
+        _assignLineToGridCols(ln.items, activeXs).forEach((text, c) => { if (text) cols[c].push(text); });
       }
-      const row = cols.map(parts => parts.join(' '));
-      if (!row.some(Boolean)) continue;
+      const row = Array(colXs.length - 1).fill('');
+      cols.forEach((parts, c) => { row[anchors[c]] = parts.join('\n'); });
+      if (!row.some(Boolean) && !grid.rowDividers) continue;
       if (_p2eAllBold(bandLines)) boldRows.add(rows.length);
+      for (let c = 0; c < anchors.length - 1; c++) {
+        if (anchors[c + 1] - anchors[c] > 1) merges.push({ row: rows.length, from: anchors[c], to: anchors[c + 1] - 1 });
+      }
       rows.push(row);
     }
-    // Same 2-row floor detectTables applies — a lone ruled box (a signature
-    // field, a boxed note) isn't a table; its text falls through below.
+    // Join only identically bounded cells with no drawn rule between them.
+    // Even a partial separator keeps cells independent.
+    if (grid.rowDividers) {
+      const cells = rows.map((row, r) => row.map((_, c) => {
+        const horizontal = merges.find(m => m.row === r && c >= m.from && c <= m.to);
+        return horizontal ?? { row: r, from: c, to: c };
+      }).filter((cell, c) => cell.from === c));
+      const covered = new Set();
+      const vertical = [];
+      for (let r = 0; r < rows.length; r++) {
+        for (const cell of cells[r]) {
+          if (covered.has(cell)) continue;
+          let end = r;
+          while (end + 1 < rows.length) {
+            const next = cells[end + 1].find(c => c.from === cell.from && c.to === cell.to);
+            const rule = grid.rowDividers[end];
+            if (!next || !rule || rule.spans.some(([a, b]) =>
+              Math.min(b, colXs[cell.to + 1]) - Math.max(a, colXs[cell.from]) > GRID_SLACK)) break;
+            end++;
+            covered.add(next);
+            const text = rows[end][cell.from];
+            if (text) rows[r][cell.from] = [rows[r][cell.from], text].filter(Boolean).join('\n');
+            rows[end][cell.from] = '';
+          }
+          if (end > r) vertical.push({ ...cell, rowSpan: end - r + 1 });
+        }
+      }
+      const replaced = new Set(vertical.map(m => `${m.row}:${m.from}`));
+      const horizontal = merges.filter(m => !covered.has(m) && !replaced.has(`${m.row}:${m.from}`));
+      merges.splice(0, merges.length, ...horizontal, ...vertical);
+    }
+    // A lone ruled box (a signature field, a boxed note) isn't a table.
     if (rows.length < 2) continue;
-    claimed.forEach(li => consumed.add(li));
-    tables.push({ page, rows, confidence: 1, boldRows, colXs });
+    claimed.forEach(item => consumedItems.add(item));
+    tables.push({
+      page, rows, confidence: 1, boldRows, colXs, merges,
+      ...position(rowYs[0], rowYs[rowYs.length - 1], left),
+    });
   }
 
-  const restIdx = lines.map((_, li) => li).filter(li => !consumed.has(li));
-  const rest    = restIdx.map(li => lines[li]);
+  const restIdx = [];
+  const rest = [];
+  lines.forEach((line, i) => {
+    const items = line.items.filter(item => !consumedItems.has(item));
+    if (!items.length) return;
+    restIdx.push(i);
+    rest.push({ ...line, items });
+  });
+  const consumedLines = new Set();
   // Prose that merely lines up is not a table — the same two guards pdf2word and
   // pdf2md apply to detectTables(). Justified text set word by word (Chromium
   // prints of Wikipedia) aligns into 10+ "columns" of single words: 23 such
@@ -3645,26 +3781,22 @@ export function _p2eExtractPage(lines, grids, page) {
   for (const tbl of textTables) {
     const boldRows = new Set();
     tbl.rowLines.forEach((lis, r) => { if (_p2eAllBold(lis.map(li => rest[li]))) boldRows.add(r); });
-    const own = new Set();
-    for (let i = tbl.startIdx; i <= tbl.endIdx; i++) { consumed.add(restIdx[i]); own.add(restIdx[i]); }
-    // Whether anything but page furniture stands below / above the table on its
-    // page — a table can only continue onto the next page if nothing does (see
-    // _p2eStitchTables).
-    const ys = [...own].map(li => lines[li].y);
-    const top = Math.max(...ys), bottom = Math.min(...ys);
-    const others = lines.filter((ln, li) => !own.has(li) && !_p2ePageFurniture(ln));
+    for (let i = tbl.startIdx; i <= tbl.endIdx; i++) consumedLines.add(restIdx[i]);
+    const top = rest[tbl.startIdx].y;
+    const bottom = rest[tbl.endIdx].y;
     tables.push({
       page, rows: tbl.rows, confidence: tbl.confidence, boldRows, colCenters: tbl.colCenters,
-      clearBelow: !others.some(ln => ln.y < bottom), clearAbove: !others.some(ln => ln.y > top),
+      ...position(top, bottom, tbl.colCenters[0]),
     });
   }
 
   const textRows = [];
-  lines.forEach((ln, li) => {
-    if (consumed.has(li)) return;
+  rest.forEach((ln, li) => {
+    if (consumedLines.has(restIdx[li])) return;
     const text = ln.items.map(i => i.str).join(' ').trim();
     if (text) textRows.push({ page, text });
   });
+  tables.sort((a, b) => b.top - a.top || a.left - b.left);
   return { tables, textRows };
 }
 
@@ -3676,98 +3808,119 @@ export function _p2ePageFurniture(ln) {
   return _P2E_PAGE_NUMBER_RE.test(ln.items.map(i => i.str).join(' ').trim());
 }
 
-// Joins a table that continues onto the next page back into ONE table
-// (→ one worksheet), instead of one worksheet per page. Rows repeating the
-// first table's leading rows (a header reprinted on every page) are dropped
-// from the continuation.
-//   Ruled tables: the same drawn column rules (colXs) on consecutive pages.
-//   Borderless tables (detectTables): the same columns (colCenters, within
-//     8pt), and the table runs to the bottom of its page and the next one
-//     starts at the top — nothing but a page number below the first or above
-//     the second (clearBelow/clearAbove). A heading such as "Expenses" over a
-//     table with the same columns keeps them apart: two tables with matching
-//     columns are merged only when nothing but the page break separates them.
-//     User report 2026-10-08 ("put into multiple tabs Table1, Table 2"):
-//     borderless tables were never stitched, so a multi-page one became one
-//     sheet per page.
+// A repeated first row can itself be data. Treat its nonnumeric cells as
+// labels only if styled as a heading or if a label heads typed values below.
+function _p2eHasHeader(table) {
+  const [first] = table.rows;
+  const isTypedValue = text => typeof _p2eCellValue(text).value !== 'string';
+  if (!first?.some(text => text.trim()) || first.some(isTypedValue)) return false;
+  return table.boldRows.has(0) || table.rows.slice(1, 4).some(row =>
+    row.some((text, col) => first[col]?.trim() && isTypedValue(text)));
+}
+
 export function _p2eStitchTables(tables) {
   const out = [];
-  let last = null, lastPage = 0;
+  let last = null;
+  let previous = null;
+  let lastHeader = null;
   for (const tbl of tables) {
-    const next = last && tbl.page === lastPage + 1;
-    const ruled = next && tbl.colXs && last.colXs &&
-      tbl.colXs.length === last.colXs.length &&
-      tbl.colXs.every((x, i) => Math.abs(x - last.colXs[i]) <= 4);
-    const borderless = next && tbl.colCenters && last.colCenters && last.clearBelow && tbl.clearAbove &&
-      tbl.colCenters.length === last.colCenters.length &&
-      tbl.colCenters.every((x, i) => Math.abs(x - last.colCenters[i]) <= 8);
-    const continues = ruled || borderless;
+    const adjacent = previous && tbl.page === previous.page + 1 && previous.clearBelow && tbl.clearAbove;
+    const oldCols = tbl.colXs ? last?.colXs : last?.colCenters;
+    const newCols = tbl.colXs ?? tbl.colCenters;
+    const matchesColumns = adjacent && oldCols && newCols && oldCols.length === newCols.length &&
+      newCols.every((x, i) => Math.abs(x - oldCols[i]) <= (tbl.colXs ? 4 : 8));
+
+    const header = _p2eHasHeader(tbl) ? tbl.rows[0].map(text => text.replace(/\s+/g, ' ').trim()) : null;
+    const repeatedHeader = matchesColumns && header && lastHeader &&
+      !(tbl.merges ?? []).some(m => m.row === 0 && m.rowSpan > 1) &&
+      !(last.merges ?? []).some(m => m.row === 0 && m.rowSpan > 1) &&
+      header.length === lastHeader.length && header.every((text, i) => text === lastHeader[i]);
+
+    // Without a confirmed repeat, the tables must run into the page break
+    // and the continuation must begin with data.
+    const continues = repeatedHeader ||
+      (matchesColumns && !header && previous.atBottom && tbl.atTop);
     if (!continues) {
       last = { ...tbl, rows: [...tbl.rows], boldRows: new Set(tbl.boldRows) };
-      lastPage = tbl.page;
+      last.sourcePages = [tbl.page];
+      last.merges = [...(tbl.merges ?? [])];
+      lastHeader = header;
       out.push(last);
-      continue;
+    } else {
+      last.sourcePages.push(tbl.page);
+      const skip = repeatedHeader ? 1 : 0;
+      const offset = last.rows.length - skip;
+      for (const merge of tbl.merges ?? []) {
+        if (merge.row >= skip) last.merges.push({ ...merge, row: merge.row + offset });
+      }
+      for (let i = skip; i < tbl.rows.length; i++) {
+        if (tbl.boldRows.has(i)) last.boldRows.add(last.rows.length);
+        last.rows.push(tbl.rows[i]);
+      }
     }
-    const header = last.rows.slice(0, 3).map(r => r.join('\u0001'));
-    let skip = 0;
-    while (skip < tbl.rows.length && header.includes(tbl.rows[skip].join('\u0001'))) skip++;
-    tbl.rows.slice(skip).forEach((row, i) => {
-      if (tbl.boldRows.has(i + skip)) last.boldRows.add(last.rows.length);
-      last.rows.push(row);
-    });
-    last.clearBelow = tbl.clearBelow;
-    lastPage = tbl.page;
+    previous = tbl;
   }
   return out;
 }
 
-export function _p2eConfidence({ tables, totalPages, pagesWithNoText }) {
-  if (!tables.length) {
-    return { score: 0, level: 'none', tableCount: 0, pagesWithNoText, totalPages };
-  }
-  const avgConf      = tables.reduce((sum, t) => sum + t.confidence, 0) / tables.length;
-  const pageCoverage = Math.max(0.5, 1 - (pagesWithNoText / totalPages));
-  const score        = Math.round(avgConf * 100 * pageCoverage);
-  const level        = score >= 80 ? 'high' : score >= 55 ? 'medium' : 'low';
-  return { score, level, tableCount: tables.length, pagesWithNoText, totalPages };
+function _p2ePreviewCell({ value, numFmt }) {
+  if (value instanceof Date) return value.toISOString().slice(0, 10);
+  if (numFmt?.endsWith('%')) return `${(value * 100).toFixed(numFmt.length - 3)}%`;
+  return String(value ?? '');
 }
 
-// Parses a table cell's text into a typed Excel value where it's unambiguous
-// to do so, so sums/charts/sorting work without the user retyping numbers.
-// Conservative by design (same philosophy as detectTables() itself — prefer
-// leaving a cell as text over silently mis-parsing it):
-//   • numbers: optional currency symbol / thousands separators, then a plain
-//     integer or decimal — "$1,234.56" and "1234.56" both become a Number
-//   • percentages: "12.5%" → 0.125 with a percent display format
-//   • dates: ISO (YYYY-MM-DD) only. Slash/dot formats (01/02/2026) are
-//     deliberately left as text — JS's Date parser assumes MM/DD/YYYY
-//     regardless of the source locale, so guessing would risk silently
-//     swapping day and month rather than just failing to format.
-//   • Arabic-Indic / Persian digits with their own separators (٬ thousands,
-//     ٫ decimal) read as the same numbers — "١٬٤٥٠٫٠٠" is 1450, so a column of
-//     them sums (table ground truth 2026-10-02: 0% of such cells were numbers)
-const _NATIVE_DIGIT_RE = /[\u0660-\u0669\u06F0-\u06F9]/g;
-export function _p2eCellValue(str) {
-  const s = (str ?? '').trim()
-    .replace(_NATIVE_DIGIT_RE, d => String(d.charCodeAt(0) & 0xF))
-    .replace(/\u066C/g, ',').replace(/\u066B/g, '.');
-  if (!s) return { value: str };
+// Each pattern captures the integer and fractional parts of a supported
+// format. Group separators must repeat consistently in groups of three.
+const _P2E_NUMBER_FORMATS = [
+  /^(\d+|[1-9]\d{0,2}(?:,\d{3})+|[1-9]\d{0,2}(?: \d{3})+)(?:\.(\d+))?$/,
+  /^(\d+|[1-9]\d{0,2}(?:\.\d{3})+|[1-9]\d{0,2}(?: \d{3})+)(?:,(\d+))?$/,
+  /^(\d+|[1-9]\d{0,2}(?:\u066C\d{3})+)(?:\u066B(\d+))?$/,
+];
 
-  if (/^-?\d{1,3}(,\d{3})*(\.\d+)?%$/.test(s) || /^-?\d+(\.\d+)?%$/.test(s)) {
-    return { value: parseFloat(s.replace(/,/g, '').replace('%', '')) / 100, numFmt: '0.00%' };
+export function _p2eCellValue(str, decimalSeparator) {
+  const original = { value: str };
+  const text = (str ?? '').trim()
+    .replace(/[\u0660-\u0669\u06F0-\u06F9]/g, digit => String(digit.charCodeAt(0) & 0xF))
+    .replace(/[\u00A0\u202F]/g, ' ')
+    .replace(/^\u2212/, '-');
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+    // Excel's default date system has a fictitious leap day in 1900.
+    if (text < '1900-03-01') return original;
+    const date = new Date(text);
+    return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === text
+      ? { value: date, numFmt: 'yyyy-mm-dd' } : original;
   }
 
-  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
-    const d = new Date(s);
-    if (!isNaN(d.getTime())) return { value: d, numFmt: 'yyyy-mm-dd' };
+  const percent = text.endsWith('%');
+  const unsigned = percent ? text.slice(0, -1) : text.replace(/^[$€£¥] ?/, '');
+  const negative = unsigned.startsWith('-');
+  const magnitude = unsigned.replace(/^[-+]/, '');
+  const candidates = new Set();
+  const preferredIndex = ['dot', 'comma'].indexOf(decimalSeparator);
+  let preferred;
+  for (const [index, format] of _P2E_NUMBER_FORMATS.entries()) {
+    const match = format.exec(magnitude);
+    if (!match) continue;
+    const integer = match[1].replace(/[., \u066C]/g, '');
+    const canonical = match[2] ? `${integer}.${match[2]}` : integer;
+    candidates.add(canonical);
+    if (index === preferredIndex) preferred = canonical;
   }
+  // A lone separator in e.g. 1,234 can be decimal or grouping.
+  const number = candidates.size === 1 ? candidates.values().next().value : preferred;
+  if (number === undefined) return original;
+  const [integer, fraction = ''] = number.split('.');
+  const significant = (integer + fraction).replace(/^0+|0+$/g, '');
+  // Excel limits numbers to 15 significant digits. Preserve the spelling of
+  // padded and long digit sequences so identifiers survive export intact.
+  if (/^0\d/.test(integer) || integer.length > 15 || significant.length > 15) return original;
+  const decimalPlaces = fraction.replace(/0+$/, '').length;
+  if (percent && decimalPlaces > 30) return original;
 
-  const numCandidate = s.replace(/^[$€£¥]\s?/, '').replace(/,/g, '');
-  if (/^-?\d+(\.\d+)?$/.test(numCandidate)) {
-    return { value: parseFloat(numCandidate) };
-  }
-
-  return { value: str };
+  const value = Number(`${negative ? '-' : ''}${number}${percent ? 'e-2' : ''}`);
+  if (!Number.isFinite(value) || (significant && Math.abs(value) < 2.2250738585072014e-308)) return original;
+  return percent ? { value, numFmt: `0.${'0'.repeat(Math.max(2, decimalPlaces))}%` } : { value };
 }
 
 // ── PDF → PowerPoint ─────────────────────────────────────────────

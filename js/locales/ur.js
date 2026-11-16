@@ -11,6 +11,15 @@
 // `{ ...EN, ...PDFREE_LOCALE }` merge — intentional, not a gap to "finish"
 // without a real signal to justify it.
 window.PDFREE_LOCALE = {
+  p2e_mode_hint: "شناخت شدہ جدولیں الگ Excel شیٹس میں جاتی ہیں۔ باقی اخذ شدہ متن «Text» شیٹ میں جاتا ہے۔",
+  p2e_ocr_hint: "جانچے گئے صفحات پر اخذ کرنے کے قابل متن نہیں ملا۔ ",
+  p2e_image_pages: "صفحات {pages} کی بڑی تصاویر میں ایسا ڈیٹا ہو سکتا ہے جو Excel میں شامل نہیں ہوا۔ ان صفحات کو دیکھیں اور ضرورت ہو تو OCR استعمال کریں۔",
+  p2e_skipped_pages: "اخذ کرنے کے قابل متن کے بغیر صفحات چھوڑ دیے گئے: {pages}۔",
+  p2e_ocr_scans: "اسکین شدہ صفحات پر OCR چلائیں",
+  p2e_number_format: "اعشاری جداکار",
+  p2e_number_auto: "خودکار",
+  p2e_preview_meta: "{n} قطاریں · PDF صفحات {pages}",
+  p2e_download: "XLSX ڈاؤن لوڈ کریں",
   wait_processing:     '⏳ براہ کرم پروسیسنگ مکمل ہونے تک انتظار کریں',
   done_time:           '⚡ {time} سیکنڈ میں مکمل ہوا — مقامی کارروائی، کچھ بھی اپلوڈ نہیں ہوا',
   done_no_time:        '⚡ مقامی کارروائی مکمل ہوئی — فائل کبھی بھی آپ کے آلے سے باہر نہیں گئی',

@@ -166,6 +166,8 @@ export function setFilesLocked(locked) {
   dz.style.pointerEvents = locked ? 'none' : '';
   const chooseBtn = id('chooseFilesBtn');
   chooseBtn.disabled = locked;
+  const excelFormat = id('p2eDecimalSeparator');
+  if (excelFormat) excelFormat.disabled = locked;
   // aria-disabled дублирует disabled для скринридеров которые не всегда
   // читают disabled на кастомных компонентах
   chooseBtn.setAttribute('aria-disabled', locked ? 'true' : 'false');
@@ -453,7 +455,7 @@ export function removeFile(index) {
   renderList();
   // Re-init the active tool so it picks up the new files[0] (single-source-of-truth).
   // Without this, tools like OCR keep a stale _file reference to the removed file.
-  if (selectedFiles.length > 0) {
+  if (selectedFiles.length > 0 || _currentTool === 'pdf2excel') {
     document.dispatchEvent(new CustomEvent('pdfree:file-removed'));
   }
 }

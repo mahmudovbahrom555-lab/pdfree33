@@ -1124,8 +1124,15 @@ window.PDFREE_LOCALE = {
   atlas_verdict_heavy:     'Problèmes importants',
 
   // ── pdf2excelUI.js ───────────────────────────────────────
-  p2e_mode_hint:              '📊 Les tableaux détectés sont convertis en feuilles Excel distinctes. Tout autre texte est conservé dans une feuille « Texte » afin de ne rien perdre.',
-  p2e_ocr_hint:               '⚠️ Aucune couche de texte détectée — ce PDF est une image numérisée, aucun tableau ne peut donc être extrait. ',
+  p2e_mode_hint: "Les tableaux détectés vont dans des feuilles Excel distinctes. Le reste du texte extrait va dans la feuille « Text ».",
+  p2e_ocr_hint: "Aucun texte extractible n’a été trouvé sur les pages examinées. ",
+  p2e_image_pages: "Les grandes images des pages {pages} peuvent contenir des données absentes du fichier Excel. Vérifiez ces pages et utilisez l’OCR si nécessaire.",
+  p2e_skipped_pages: "Pages ignorées faute de texte extractible : {pages}.",
+  p2e_ocr_scans: "Lancer l’OCR sur les pages numérisées",
+  p2e_number_format: "Séparateur décimal",
+  p2e_number_auto: "Automatique",
+  p2e_preview_meta: "{n} lignes · pages PDF {pages}",
+  p2e_download: "Télécharger le XLSX",
   p2e_ocr_to_get_extractable: ' pour obtenir du texte extractible.',
   p2e_tables_detected_one:    '🗂️ {n} tableau détecté — deviendra sa propre feuille Excel',
   p2e_tables_detected_many:   '🗂️ {n} tableaux détectés — chacun deviendra sa propre feuille Excel',

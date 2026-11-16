@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // ============================================================
 //  tests/pdf2excel.logic.test.js — Unit тесты логики pdf2excel
-//  Тестируем: _p2eCellValue (типизация ячеек), _p2eConfidence
-//  (расчёт confidence score) и detectTables (общий с pdf2word
-//  детектор таблиц по X-координатам колонок).
+//  Cell types, table extraction, cancellation, and result messaging.
 // ============================================================
 
 // processor.js touches Worker/document at module load time (it's built for
@@ -19,8 +17,10 @@ global.document = {
 global.window    = globalThis;
 global.Worker    = class { postMessage() {} terminate() {} addEventListener() {} };
 
-const { _p2eCellValue, _p2eConfidence, _p2eExtractPage, _p2eStitchTables } = await import('../js/processor.js');
+const { _p2eHasUnrepresentedImage, _p2eCellValue, _p2eExtractPage, _p2eStitchTables } = await import('../js/processor.js');
 const { detectTables, groupItemsIntoLines } = await import('../js/pdf2wordTables.js');
+
+const { initPdf2ExcelOptions, hidePdf2ExcelOptions, renderP2eConfidence } = await import('../js/pdf2excelUI.js');
 
 let passed = 0, failed = 0;
 
@@ -81,7 +81,7 @@ test('простой процент конвертируется в долю с 
 });
 
 test('процент с разделителем тысяч конвертируется корректно', () => {
-  expect(_p2eCellValue('1,234%')).toEqual({ value: 12.34, numFmt: '0.00%' });
+  expect(_p2eCellValue('1,234.0%')).toEqual({ value: 12.34, numFmt: '0.00%' });
 });
 
 // ── _p2eCellValue: даты ────────────────────────────────────
@@ -127,56 +127,33 @@ test('текст, похожий на число с буквой, остаётс
   expect(_p2eCellValue('42kg')).toEqual({ value: '42kg' });
 });
 
-// ── _p2eConfidence ──────────────────────────────────────────
-console.log('\n_p2eConfidence:');
-
-test('без таблиц — score 0, level none', () => {
-  const result = _p2eConfidence({ tables: [], totalPages: 3, pagesWithNoText: 0 });
-  expect(result).toEqual({ score: 0, level: 'none', tableCount: 0, pagesWithNoText: 0, totalPages: 3 });
+test('локальные суммы записываются числами без изменения значения', () => {
+  for (const [source, value] of [
+    ['12,50', 12.5], ['€1.234,56', 1234.56], ['−1 234,56', -1234.56],
+    ['1.234.567', 1234567], ['1 234 567.89', 1234567.89],
+    ['١٢٫٣٤٥', 12.345], ['١٢٬٣٤٥', 12345],
+  ]) expect(_p2eCellValue(source)).toEqual({ value });
 });
 
-test('высокая уверенность и полное покрытие страниц дают level high', () => {
-  const result = _p2eConfidence({
-    tables: [{ confidence: 0.9 }, { confidence: 0.95 }],
-    totalPages: 2,
-    pagesWithNoText: 0,
-  });
-  expect(result.level).toBe('high');
-  expect(result.tableCount).toBe(2);
+test('идентификаторы, неоднозначное и неточное число остаются текстом', () => {
+  for (const source of [
+    '00123', '۰۰۱۲۳', '12345678901234567', '1234567890123456',
+    '1.234', '12,345', '1,234%', '1,23,456', '1,234 567.89',
+    '123456789.1234567',
+  ]) expect(_p2eCellValue(source)).toEqual({ value: source });
+  expect(_p2eCellValue('0.123')).toEqual({ value: 0.123 });
 });
 
-test('низкая уверенность даёт level low', () => {
-  const result = _p2eConfidence({
-    tables: [{ confidence: 0.3 }],
-    totalPages: 2,
-    pagesWithNoText: 0,
-  });
-  expect(result.level).toBe('low');
+test('локальные проценты сохраняют значение и видимые знаки после запятой', () => {
+  expect(_p2eCellValue('12,5%')).toEqual({ value: 0.125, numFmt: '0.00%' });
+  expect(_p2eCellValue('12,3456%')).toEqual({ value: 0.123456, numFmt: '0.0000%' });
 });
 
-test('много страниц без текста снижает score через pageCoverage', () => {
-  const withCoverage = _p2eConfidence({
-    tables: [{ confidence: 0.9 }],
-    totalPages: 10,
-    pagesWithNoText: 0,
-  });
-  const withoutCoverage = _p2eConfidence({
-    tables: [{ confidence: 0.9 }],
-    totalPages: 10,
-    pagesWithNoText: 8,
-  });
-  if (!(withoutCoverage.score < withCoverage.score)) {
-    throw new Error(`Expected lower score with more no-text pages: ${withoutCoverage.score} < ${withCoverage.score}`);
+test('проверка календаря сохраняет невозможные даты как текст', () => {
+  for (const source of ['2026-02-31', '2025-02-29', '1900-02-29', '1899-12-31']) {
+    expect(_p2eCellValue(source)).toEqual({ value: source });
   }
-});
-
-test('pageCoverage не опускается ниже 0.5 (минимальный пол)', () => {
-  const result = _p2eConfidence({
-    tables: [{ confidence: 1 }],
-    totalPages: 10,
-    pagesWithNoText: 10, // 100% страниц без текста
-  });
-  expect(result.score).toBe(50); // 1 * 100 * 0.5
+  expect(_p2eCellValue('2024-02-29').value.toISOString()).toBe('2024-02-29T00:00:00.000Z');
 });
 
 // ── groupItemsIntoLines (общая для preview-скана и реальной конвертации) ────
@@ -325,8 +302,97 @@ test('a cell wrapped over two lines stays ONE cell in its own row, and an empty 
   ];
   const { tables, textRows } = _p2eExtractPage(lines, [GRID], 1);
   expect(tables.length).toBe(1);
-  expect(tables[0].rows).toEqual([['No', 'Name', 'Group'], ['1', 'Long name continued', '89'], ['2', '', '90']]);
+  expect(tables[0].rows).toEqual([['No', 'Name', 'Group'], ['1', 'Long name\ncontinued', '89'], ['2', '', '90']]);
   expect(textRows.map(r => r.text)).toEqual(['Report title']);
+});
+
+test('two grids own only their cells and preserve notes at the same heights', () => {
+  const left = { colXs: [40, 140, 240], rowYs: [90, 60, 30, 0] };
+  const right = { colXs: [320, 420, 520], rowYs: [90, 60, 30, 0] };
+  const lines = [
+    makeLineAt(75, [['Item', 45], ['Qty', 145], ['Code', 325], ['Rate', 425]]),
+    makeLineAt(50, [['Paper', 45], ['Memo', 245], ['A', 325], ['7', 425]]),
+    makeLineAt(40, [['ream', 45], ['outside the right grid', 530]]),
+    makeLineAt(15, [['Ink', 45], ['3', 145], ['B', 325], ['8', 425]]),
+  ];
+  const { tables, textRows } = _p2eExtractPage(lines, [left, right], 1);
+  expect(tables.map(t => t.rows)).toEqual([
+    [['Item', 'Qty'], ['Paper\nream', ''], ['Ink', '3']],
+    [['Code', 'Rate'], ['A', '7'], ['B', '8']],
+  ]);
+  expect(textRows.map(row => row.text)).toEqual(['Memo', 'outside the right grid']);
+});
+
+test('a partial divider merges only the relevant row and preserves its left anchor', () => {
+  const grid = { ...GRID, colDividers: [
+    { x: 100, spans: [[0, 60]] }, { x: 200, spans: [[0, 90]] },
+  ] };
+  const lines = [
+    makeLineAt(75, [['Item details', 105], ['Cost', 205]]),
+    makeLineAt(45, [['Paper', 5], ['3', 105], ['12.5', 205]]),
+    makeLineAt(15, [['Ink', 5], ['4', 105], ['8', 205]]),
+  ];
+  const [table] = _p2eExtractPage(lines, [grid], 1).tables;
+  expect(table.rows[0]).toEqual(['Item details', '', 'Cost']);
+  expect(table.merges).toEqual([{ row: 0, from: 0, to: 1 }]);
+});
+
+test('vertical cells move wrapped text to the top anchor and preserve blank rows', () => {
+  const grid = { ...GRID, rowDividers: [
+    { y: 60, spans: [[0, 300]] }, { y: 30, spans: [[100, 300]] },
+  ] };
+  const lines = [
+    makeLineAt(75, [['Name', 5], ['Qty', 105], ['Cost', 205]]),
+    makeLineAt(45, [['Long', 5], ['3', 105], ['12', 205]]),
+    makeLineAt(15, [['name', 5], ['4', 105], ['8', 205]]),
+  ];
+  const table = _p2eExtractPage(lines, [grid], 1).tables[0];
+  expect(table.rows).toEqual([['Name', 'Qty', 'Cost'], ['Long\nname', '3', '12'], ['', '4', '8']]);
+  expect(table.merges).toEqual([{ row: 1, from: 0, to: 0, rowSpan: 2 }]);
+  const blank = _p2eExtractPage(lines.slice(0, 2), [grid], 1).tables[0];
+  expect(blank.rows.length).toBe(3);
+  expect(blank.merges).toEqual(table.merges);
+});
+
+test('drawn separators preserve independent blank cells', () => {
+  const grid = { ...GRID, rowDividers: [
+    { y: 60, spans: [[0, 300]] }, { y: 30, spans: [[0, 300]] },
+  ] };
+  const lines = [
+    makeLineAt(75, [['Name', 5], ['Qty', 105], ['Cost', 205]]),
+    makeLineAt(45, [['Paper', 5], ['3', 105]]),
+    makeLineAt(15, [['4', 105]]),
+  ];
+  const table = _p2eExtractPage(lines, [grid], 1).tables[0];
+  expect(table.rows).toEqual([['Name', 'Qty', 'Cost'], ['Paper', '3', ''], ['', '4', '']]);
+  expect(table.merges).toEqual([]);
+});
+
+test('a rectangular merge preserves text placed in its lower row', () => {
+  const grid = { ...GRID,
+    colDividers: [{ x: 100, spans: [[0, 30]] }, { x: 200, spans: [[0, 90]] }],
+    rowDividers: [{ y: 60, spans: [[200, 300]] }, { y: 30, spans: [[0, 300]] }],
+  };
+  const lines = [
+    makeLineAt(75, [['Cost', 205]]),
+    makeLineAt(45, [['Combined', 105], ['12', 205]]),
+    makeLineAt(15, [['Paper', 5], ['4', 105], ['8', 205]]),
+  ];
+  const table = _p2eExtractPage(lines, [grid], 1).tables[0];
+  expect(table.rows).toEqual([['Combined', '', 'Cost'], ['', '', '12'], ['Paper', '4', '8']]);
+  expect(table.merges).toEqual([{ row: 0, from: 0, to: 1, rowSpan: 2 }]);
+});
+
+test('a partial horizontal stroke prevents an ambiguous vertical merge', () => {
+  const grid = { ...GRID, rowDividers: [
+    { y: 60, spans: [[0, 300]] }, { y: 30, spans: [[20, 300]] },
+  ] };
+  const lines = [
+    makeLineAt(75, [['Name', 5], ['Qty', 105]]),
+    makeLineAt(45, [['Paper', 5], ['3', 105]]),
+    makeLineAt(15, [['4', 105]]),
+  ];
+  expect(_p2eExtractPage(lines, [grid], 1).tables[0].merges).toEqual([]);
 });
 
 test('a lone ruled box with one line of text is not a table — its text goes to the Text sheet', () => {
@@ -376,7 +442,7 @@ test('a wrapped row\'s bold total is still bold: bold rows follow the rows, not 
 // ── _p2eStitchTables: one table across pages → one worksheet ──
 console.log('\n_p2eStitchTables:');
 
-const T = (page, rows, colXs) => ({ page, rows, confidence: 1, boldRows: new Set(), colXs });
+const T = (page, rows, colXs) => ({ page, rows, confidence: 1, boldRows: new Set(), colXs, clearBelow: true, clearAbove: true });
 
 // Borderless tables (user report 2026-10-08: "put into multiple tabs Table1,
 // Table 2"): pages run through _p2eExtractPage, then stitched.
@@ -420,11 +486,58 @@ test('a borderless table followed by text on its page, or with other columns on 
 test('a ruled table continuing on the next page becomes one table; a reprinted header is dropped', () => {
   const out = _p2eStitchTables([
     T(1, [['No', 'Name'], ['1', 'A']], [0, 100, 200]),
-    T(2, [['No', 'Name'], ['2', 'B']], [1, 101, 199]),   // same columns within snap tolerance
-    T(3, [['3', 'C']], [0, 100, 200]),
+    { ...T(2, [['No', 'Name'], ['2', 'B']], [1, 101, 199]), atBottom: true },   // same columns within snap tolerance
+    { ...T(3, [['3', 'C']], [0, 100, 200]), atTop: true },
   ]);
   expect(out.length).toBe(1);
   expect(out[0].rows).toEqual([['No', 'Name'], ['1', 'A'], ['2', 'B'], ['3', 'C']]);
+});
+
+test('repeated header is skipped and identical data rows keep their values and bold style', () => {
+  const cols = [40, 140, 240];
+  const head = ['Item', 'Qty'];
+  const duplicate = ['Paper', '3'];
+  const last = ['Ink', '8'];
+  const out = _p2eStitchTables([
+    T(1, [head, duplicate, ['Pens', '4']], cols),
+    { ...T(2, [head, duplicate, last], cols), boldRows: new Set([1]) },
+  ]);
+  expect(out.map(table => table.rows)).toEqual([[head, duplicate, ['Pens', '4'], duplicate, last]]);
+  expect([...out[0].boldRows]).toEqual([3]);
+});
+
+test('ruled tables with matching columns and a separate section title stay separate', () => {
+  const grid = { colXs: [40, 140, 240], rowYs: [90, 60, 30, 0] };
+  const rows = [
+    makeLineAt(75, [['Item', 45], ['Qty', 145]]),
+    makeLineAt(45, [['Paper', 45], ['3', 145]]),
+    makeLineAt(15, [['Ink', 45], ['5', 145]]),
+  ];
+  const out = _p2eStitchTables([
+    ..._p2eExtractPage(rows, [grid], 1).tables,
+    ..._p2eExtractPage([makeLineAt(120, [['Expenses', 45]]), ...rows], [grid], 2).tables,
+  ]);
+  expect(out.length).toBe(2);
+});
+
+test('different headers keep tables with matching columns apart', () => {
+  const cols = [40, 140, 240];
+  const out = _p2eStitchTables([
+    { ...T(1, [['Item', 'Qty'], ['Paper', '3']], cols), atBottom: true },
+    { ...T(2, [['Code', 'Rate'], ['A', '7']], cols), atTop: true },
+  ]);
+  expect(out.length).toBe(2);
+});
+
+test('equal text rows without evidence of a header survive a continuation at the page break', () => {
+  const cols = [40, 140, 240];
+  const first = [['London', 'North'], ['Oslo', 'West']];
+  const second = [['London', 'North'], ['Riga', 'East']];
+  const out = _p2eStitchTables([
+    { ...T(1, first, cols), atBottom: true },
+    { ...T(2, second, cols), atTop: true },
+  ]);
+  expect(out.map(t => t.rows)).toEqual([[...first, ...second]]);
 });
 
 test('different columns, a skipped page, or a text-detected table are NOT stitched', () => {
@@ -435,6 +548,247 @@ test('different columns, a skipped page, or a text-detected table are NOT stitch
     T(5, [['i', 'j', 'k']], undefined),                   // text-detected, no rules
   ]);
   expect(out.length).toBe(4);
+});
+
+function deferred() {
+  let resolve;
+  const promise = new Promise(done => { resolve = done; });
+  return { promise, resolve };
+}
+
+async function testCancelThenRetry(stage) {
+  const { doProcess, cancelProcess } = await import('../js/processor.js');
+  const { selectedFiles, isFilesLocked } = await import('../js/files.js');
+  const { registerTool } = await import('../js/toolRegistry.js');
+  const { clearLongOpHint } = await import('../js/ui.js');
+  registerTool('pdf2excel', { runner: 'pdf2excel' });
+  const element = { style: { setProperty() {} }, classList: { add() {}, remove() {} }, setAttribute() {} };
+  const files = name => ({ name, size: 8, _decryptedBuffer: new ArrayBuffer(8) });
+  const reachedOld = deferred();
+  const reachedNew = deferred();
+  const oldWork = deferred();
+  const newWrite = deferred();
+  const successes = [];
+  const destroyed = [];
+  let loads = 0;
+  let writes = 0;
+  let graphicsReads = 0;
+  let oldRun;
+  let newRun;
+
+  document.getElementById = key => key === 'toast' ? null : element;
+  document.dispatchEvent = event => { if (event.type === 'pdfree:success') successes.push(event.detail.filename); };
+  const oldFetch = global.fetch;
+  const OldCustomEvent = global.CustomEvent;
+  global.CustomEvent = class {
+    constructor(type, { detail } = {}) { this.type = type; this.detail = detail; }
+  };
+  global.fetch = async () => new Response(new ArrayBuffer(0));
+  window.pdfjsLib = {
+    getDocument() {
+      const index = ++loads;
+      const doc = {
+        numPages: index === 2 ? 1 : 0,
+        getPage: async () => ({
+          getTextContent: async () => ({ items: [], styles: {} }),
+          getOperatorList: async () => { graphicsReads++; return { fnArray: [], argsArray: [] }; },
+        }),
+      };
+      if (index === 1 && stage === 'loading') reachedOld.resolve();
+      return {
+        promise: index === 1 && stage === 'loading' ? oldWork.promise.then(() => doc) : Promise.resolve(doc),
+        destroy: async () => { destroyed.push(index); },
+      };
+    },
+  };
+  window.ExcelJS = {
+    Workbook: class {
+      addWorksheet() { return { addRow() {} }; }
+      get xlsx() {
+        return { writeBuffer: () => {
+          writes++;
+          if (stage === 'writing' && writes === 1) {
+            reachedOld.resolve();
+            return oldWork.promise;
+          }
+          reachedNew.resolve();
+          return newWrite.promise;
+        } };
+      }
+    },
+  };
+
+  try {
+    selectedFiles.push(files('first.pdf'));
+    oldRun = doProcess('pdf2excel');
+    await Promise.race([reachedOld.promise, oldRun.then(() => { throw new Error('First run exited before the pause'); })]);
+    cancelProcess('pdf2excel');
+    selectedFiles.splice(0, 1, files('second.pdf'));
+    newRun = doProcess('pdf2excel');
+    await Promise.race([reachedNew.promise, newRun.then(() => { throw new Error('Retry exited before the pause'); })]);
+    oldWork.resolve(new ArrayBuffer(8));
+    // On the old loading path the cancelled run may also wait on newWrite.
+    // Give it a turn to reach that point without blocking the retry.
+    await new Promise(resolve => setImmediate(resolve));
+    const whileRetrying = { originalReleased: destroyed.includes(1), locked: isFilesLocked(), results: [...successes] };
+    newWrite.resolve(new ArrayBuffer(8));
+    await Promise.all([oldRun, newRun]);
+    expect({ whileRetrying, successes, destroyed: [...destroyed].sort(), graphicsReads }).toEqual({
+      whileRetrying: { originalReleased: true, locked: true, results: [] },
+      successes: ['second.xlsx'],
+      destroyed: [1, 2],
+      graphicsReads: 0,
+    });
+  } finally {
+    oldWork.resolve(new ArrayBuffer(8));
+    newWrite.resolve(new ArrayBuffer(8));
+    await Promise.allSettled([oldRun, newRun]);
+    clearLongOpHint();
+    selectedFiles.length = 0;
+    global.fetch = oldFetch;
+    global.CustomEvent = OldCustomEvent;
+    delete window.ExcelJS;
+    delete window.pdfjsLib;
+    delete document.dispatchEvent;
+    document.getElementById = () => null;
+  }
+}
+
+for (const stage of ['loading', 'writing']) {
+  const name = `cancel while ${stage} releases the original PDF and keeps the retry isolated`;
+  try {
+    await testCancelThenRetry(stage);
+    console.log(`  ✓ ${name}`);
+    passed++;
+  } catch (error) {
+    console.error(`  ✗ ${name}\n    ${error.message}`);
+    failed++;
+  }
+}
+
+test('large image with only an outside heading needs a mixed-page warning', () => {
+  expect(_p2eHasUnrepresentedImage(
+    [{ x: 30, yTop: 700, width: 540, height: 600 }],
+    [{ x: 40, y: 760, str: 'Payroll register', width: 100 }],
+    [0, 0, 600, 800])).toBe(true);
+});
+
+test('logos, out-of-page images and searchable scans do not trigger the mixed-page warning', () => {
+  const view = [0, 0, 600, 800];
+  expect(_p2eHasUnrepresentedImage([{ x: 40, yTop: 760, width: 70, height: 50 }], [], view)).toBe(false);
+  expect(_p2eHasUnrepresentedImage([{ x: 650, yTop: 700, width: 600, height: 700 }], [], view)).toBe(false);
+  expect(_p2eHasUnrepresentedImage([{ x: 0, yTop: 800, width: 600, height: 800 }],
+    [{ x: 50, y: 600, width: 150, str: 'Extractable table with values 123 456' }], view)).toBe(false);
+  expect(_p2eHasUnrepresentedImage([], [], view)).toBe(false);
+});
+
+test('mixed-page warning stays visible without detected tables and links to OCR', () => {
+  const root = { style: {}, children: [], replaceChildren() { this.children = []; },
+    append(node) { this.children.push(node); } };
+  const oldDocument = { ...document };
+  const oldLocation = global.location;
+  document.getElementById = id => id === 'p2eConfidence' ? root : null;
+  document.createElement = () => ({ style: {}, children: [], append(...nodes) { this.children.push(...nodes); } });
+  global.location = { pathname: '/pdf-to-excel/' };
+  try {
+    renderP2eConfidence({ tableCount: 0, imagePages: [171] });
+    expect(root.style.display).toBe('');
+    expect(root.children[0].children[0].textContent.includes('171')).toBe(true);
+    expect(root.children[0].children[1].href).toBe('/ocr-pdf/');
+    renderP2eConfidence({ tableCount: 0 });
+    expect(root.children.length).toBe(0);
+    expect(root.style.display).toBe('none');
+  } finally {
+    Object.assign(document, oldDocument);
+    global.location = oldLocation;
+  }
+});
+
+test('sparse right-aligned ledger preserves all columns and opening balance', () => {
+  const lines = [{"y": 325.02734, "items": [{"str": "Date", "x": 33, "y": 325.02734, "width": 15.663719999999994, "fontSize": 8, "bold": false}, {"str": "Description", "x": 77, "y": 325.02734, "width": 39.27160000000001, "fontSize": 8, "bold": false}, {"str": "Withdrawals ($)", "x": 316.8877, "y": 325.02734, "width": 54.16670999999999, "fontSize": 8, "bold": false}, {"str": "Deposits ($)", "x": 419.58301, "y": 325.02734, "width": 41.455789999999936, "fontSize": 8, "bold": false}, {"str": "Balance ($)", "x": 543.63184, "y": 325.02734, "width": 38.399290000000065, "fontSize": 8, "bold": false}]}, {"y": 311.02734, "items": [{"str": "Opening balance", "x": 77.00001, "y": 311.02734, "width": 64.41231999999998, "fontSize": 9, "bold": false}, {"str": "4,247.14", "x": 546.63968, "y": 311.02734, "width": 35.361000000000004, "fontSize": 9, "bold": false}]}, {"y": 297.02734, "items": [{"str": "15 Mar", "x": 32.99995999999999, "y": 297.02729999999997, "width": 26.936840000000014, "fontSize": 9, "bold": false}, {"str": "Transfer", "x": 77.00977, "y": 297.02734, "width": 30.770479999999985, "fontSize": 9, "bold": false}, {"str": "85.00", "x": 438.30175, "y": 297.02734, "width": 22.698, "fontSize": 9, "bold": false}]}, {"y": 283.02734, "items": [{"str": "Interest paid", "x": 77.00109, "y": 283.02734, "width": 48.256889999999984, "fontSize": 9, "bold": false}, {"str": ".15", "x": 448.38192, "y": 283.02734, "width": 12.618000000000002, "fontSize": 9, "bold": false}]}, {"y": 269.02734, "items": [{"str": "ATM withdrawal", "x": 77, "y": 269.02734, "width": 60.11037999999998, "fontSize": 9, "bold": false}, {"str": "100.00", "x": 343.26160000000004, "y": 269.02734, "width": 27.738000000000003, "fontSize": 9, "bold": false}]}, {"y": 255.02734, "items": [{"str": "Interac purchase -1361 - Nasr Foods Inc.", "x": 77.00109, "y": 255.02734, "width": 153.08728000000002, "fontSize": 9, "bold": false}, {"str": "47.82", "x": 348.30174999999997, "y": 255.02734, "width": 22.698, "fontSize": 9, "bold": false}, {"str": "4,184.47", "x": 546.63964, "y": 255.02734, "width": 35.361000000000004, "fontSize": 9, "bold": false}]}, {"y": 241.02734, "items": [{"str": "17 Mar", "x": 33.00882, "y": 241.02734, "width": 26.936770000000003, "fontSize": 9, "bold": false}, {"str": "Overdraft interest", "x": 77.01855, "y": 241.02734, "width": 67.20206, "fontSize": 9, "bold": false}, {"str": "0.93", "x": 353.34182, "y": 241.02734, "width": 17.658, "fontSize": 9, "bold": false}, {"str": "4,183.54", "x": 546.63964, "y": 241.02734, "width": 35.361000000000004, "fontSize": 9, "bold": false}]}, {"y": 227.02734, "items": [{"str": "18 Mar", "x": 33.00882, "y": 227.02734, "width": 26.936770000000003, "fontSize": 9, "bold": false}, {"str": "Cheque #30", "x": 76.99987, "y": 227.02734, "width": 46.22400000000001, "fontSize": 9, "bold": false}, {"str": "40.00", "x": 348.30188, "y": 227.02734, "width": 22.698, "fontSize": 9, "bold": false}]}, {"y": 213.02734, "items": [{"str": "Cheque #31", "x": 77.00001, "y": 213.02734, "width": 46.22400000000001, "fontSize": 9, "bold": false}, {"str": "148.11", "x": 343.26175, "y": 213.02734, "width": 27.738000000000003, "fontSize": 9, "bold": false}, {"str": "3,995.43", "x": 546.63964, "y": 213.02734, "width": 35.361000000000004, "fontSize": 9, "bold": false}]}, {"y": 199.02734, "items": [{"str": "19 Mar", "x": 33.00882, "y": 199.02734, "width": 26.936770000000003, "fontSize": 9, "bold": false}, {"str": "ATM withdrawal", "x": 77.01855, "y": 199.02734, "width": 60.110379999999985, "fontSize": 9, "bold": false}, {"str": "60.00", "x": 348.30179, "y": 199.02734, "width": 22.698, "fontSize": 9, "bold": false}, {"str": "3,935.43", "x": 546.63964, "y": 199.02734, "width": 35.361000000000004, "fontSize": 9, "bold": false}]}, {"y": 185.02734, "items": [{"str": "22 Mar", "x": 32.999919999999975, "y": 185.0273, "width": 26.936880000000023, "fontSize": 9, "bold": false}, {"str": "ATM withdrawal", "x": 77.00977, "y": 185.02734, "width": 60.10987999999999, "fontSize": 9, "bold": false}, {"str": "20.00", "x": 348.30277, "y": 185.02734, "width": 22.698, "fontSize": 9, "bold": false}]}, {"y": 171.02734, "items": [{"str": "Interac purchase - 1361 - The Bay", "x": 77.00109, "y": 171.02734, "width": 126.78973, "fontSize": 9, "bold": false}, {"str": "125.13", "x": 343.2627, "y": 171.02734, "width": 27.738000000000003, "fontSize": 9, "bold": false}]}, {"y": 157.02734, "items": [{"str": "Interac purchase - 1361 - Highland Farms", "x": 77.00109, "y": 157.02734, "width": 156.55251000000004, "fontSize": 9, "bold": false}, {"str": "6.94", "x": 353.34182, "y": 157.02734, "width": 17.658, "fontSize": 9, "bold": false}, {"str": "3,783.36", "x": 546.63964, "y": 157.02734, "width": 35.361000000000004, "fontSize": 9, "bold": false}]}];
+  const { tables } = _p2eExtractPage(lines, [], 1);
+  expect(tables.length).toBe(1);
+  expect(tables[0].rows.length).toBe(13);
+  expect(tables[0].rows[0]).toEqual(['Date', 'Description', 'Withdrawals ($)', 'Deposits ($)', 'Balance ($)']);
+  expect(tables[0].rows[1]).toEqual(['', 'Opening balance', '', '', '4,247.14']);
+  expect(tables[0].rows[3]).toEqual(['', 'Interest paid', '', '.15', '']);
+  expect(tables[0].rows[12]).toEqual(['', 'Interac purchase - 1361 - Highland Farms', '6.94', '', '3,783.36']);
+});
+
+test('fractions without a leading zero remain usable numbers', () => {
+  expect(_p2eCellValue('.15')).toEqual({ value: 0.15 });
+  expect(_p2eCellValue('-,15')).toEqual({ value: -0.15 });
+});
+
+test('Excel result warns about skipped pages even when no table was found', () => {
+  const root = { style: {}, innerHTML: '', children: [], replaceChildren() { this.children = []; },
+    append(node) { this.children.push(node); } };
+  const originalDocument = { ...document };
+  const originalLocation = global.location;
+  document.getElementById = id => id === 'p2eConfidence' ? root : null;
+  document.createElement = () => ({ style: {}, children: [], append(...nodes) { this.children.push(...nodes); } });
+  global.location = { pathname: '/ar/pdf-ila-excel/' };
+  try {
+    renderP2eConfidence({ tableCount: 0, skippedPages: [2, 3, 4, 7] });
+    expect(root.style.display).toBe('');
+    const [warning] = root.children;
+    expect(warning.children[0].textContent.includes('2-4, 7')).toBe(true);
+    expect(warning.children[1].href).toBe('/ar/taarruf-dawi-pdf/');
+    renderP2eConfidence({ tableCount: 1, skippedPages: [], score: 100, level: 'high' });
+    expect(root.children.length).toBe(1);
+    expect(root.innerHTML.includes('100%')).toBe(false);
+  } finally {
+    Object.assign(document, originalDocument);
+    global.location = originalLocation;
+  }
+});
+
+const filenameFixture = '<b>NAME</b>.pdf';
+try {
+  const oldDocument = { ...document };
+  const oldPdfJs = window.pdfjsLib;
+  const nameNode = {};
+  const panel = {
+    style: {}, innerHTML: '',
+    querySelector: selector => selector === '.compress-info__name' ? nameNode : null,
+  };
+  document.getElementById = key => key === 'pdf2excelOptions' ? panel : null;
+  document.createElement = () => ({
+    set textContent(text) { this.innerHTML = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); },
+  });
+  window.pdfjsLib = { getDocument: () => ({ promise: Promise.resolve({ numPages: 0 }), destroy: async () => {} }) };
+  try {
+    await initPdf2ExcelOptions({ name: filenameFixture, _decryptedBuffer: new ArrayBuffer(8) });
+    expect(panel.innerHTML.includes(filenameFixture)).toBe(false);
+    expect(nameNode.textContent).toBe(filenameFixture);
+    expect(nameNode.title).toBe(filenameFixture);
+  } finally {
+    hidePdf2ExcelOptions();
+    Object.assign(document, oldDocument);
+    window.pdfjsLib = oldPdfJs;
+  }
+  console.log('  ✓ Excel preview treats the filename as text');
+  passed++;
+} catch (error) {
+  console.error(`  ✗ Excel preview treats the filename as text\n    ${error.message}`);
+  failed++;
+}
+
+test('an explicit decimal separator only resolves ambiguous values', () => {
+  expect(_p2eCellValue('1,234')).toEqual({ value: '1,234' });
+  expect(_p2eCellValue('1,234', 'comma')).toEqual({ value: 1.234 });
+  expect(_p2eCellValue('1,234', 'dot')).toEqual({ value: 1234 });
+  expect(_p2eCellValue('12,50', 'dot')).toEqual({ value: 12.5 });
+  expect(_p2eCellValue('00123', 'comma')).toEqual({ value: '00123' });
+});
+
+test('a stitched table reports each source page once', () => {
+  const cols = [40, 140, 240];
+  const tables = [
+    T(1, [['Item', 'Qty'], ['A', '1']], cols),
+    T(2, [['Item', 'Qty'], ['B', '2']], cols),
+  ];
+  expect(_p2eStitchTables(tables).map(table => table.sourcePages)).toEqual([[1, 2]]);
 });
 
 // ── Summary ────────────────────────────────────────────────

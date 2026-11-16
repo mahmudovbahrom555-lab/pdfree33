@@ -425,50 +425,66 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
   // Generation token — prevents stale 1500ms timeout from corrupting the next result.
   const _thisGen = ++_successGen;
 
-  // Auto-download: trigger immediately so user gets the file without an extra click.
-  // We do NOT revoke the blob here — the "Download again" button still needs it.
-  trackDownload(tool, blob.size);
-  recordDownload();
-  const _autoA = document.createElement('a');
-  _autoA.href = _capturedUrl; _autoA.download = filename;
-  document.body.appendChild(_autoA); _autoA.click(); document.body.removeChild(_autoA);
-  const _autoDownloadAtMs = Date.now();
+  const manualDownload = tool === 'pdf2excel';
+  const downloadSize = blob.size;
+  let _autoDownloadAtMs;
+  if (manualDownload) {
+    id('privacyCleared')?.classList.remove('visible');
+    hide('successAutoHint');
+    hide('successWhere');
+  } else {
+    // Auto-download: trigger immediately so user gets the file without an extra click.
+    // We do NOT revoke the blob here — the "Download again" button still needs it.
+    trackDownload(tool, blob.size);
+    recordDownload();
+    const _autoA = document.createElement('a');
+    _autoA.href = _capturedUrl; _autoA.download = filename;
+    document.body.appendChild(_autoA); _autoA.click(); document.body.removeChild(_autoA);
+    _autoDownloadAtMs = Date.now();
 
-  // Show hint + update button to "Download again" fallback. Truncated for
-  // DISPLAY only — a long OS-generated name (screenshots, camera exports)
-  // would otherwise wrap the confirmation onto 3+ lines; the actual saved
-  // file above still uses the full, untruncated filename.
-  const _displayName = truncateMiddle(filename);
-  const _hint = id('successAutoHint');
-  if (_hint) { _hint.textContent = t('auto_download_hint', { filename: _displayName }); _hint.style.display = ''; }
-  // Desktop browsers save silently into Downloads with a small toolbar icon:
-  // "Download again" was clicked within seconds after 2–3 % of successes,
-  // nearly all on desktop Edge/Chrome, none on iPhone (2026-10-13) — the
-  // file had very likely arrived. Where to find it, on a mouse-driven screen.
-  let _where = id('successWhere');
-  if (_hint && window.matchMedia('(pointer: fine)').matches) {
-    if (!_where) {
-      _where = document.createElement('div');
-      _where.id = 'successWhere';
-      _where.style.cssText = 'font-size:13px;color:var(--text2);margin-top:4px;';
-      _hint.after(_where);
+    // Show hint + update button to "Download again" fallback. Truncated for
+    // DISPLAY only — a long OS-generated name (screenshots, camera exports)
+    // would otherwise wrap the confirmation onto 3+ lines; the actual saved
+    // file above still uses the full, untruncated filename.
+    const _displayName = truncateMiddle(filename);
+    const _hint = id('successAutoHint');
+    if (_hint) { _hint.textContent = t('auto_download_hint', { filename: _displayName }); _hint.style.display = ''; }
+    // Desktop browsers save silently into Downloads with a small toolbar icon:
+    // "Download again" was clicked within seconds after 2–3 % of successes,
+    // nearly all on desktop Edge/Chrome, none on iPhone (2026-10-13) — the
+    // file had very likely arrived. Where to find it, on a mouse-driven screen.
+    let _where = id('successWhere');
+    if (_hint && window.matchMedia('(pointer: fine)').matches) {
+      if (!_where) {
+        _where = document.createElement('div');
+        _where.id = 'successWhere';
+        _where.style.cssText = 'font-size:13px;color:var(--text2);margin-top:4px;';
+        _hint.after(_where);
+      }
+      const mac = /Mac/i.test(navigator.userAgentData?.platform || navigator.platform || '');
+      _where.textContent = t('downloads_where_hint', { keys: mac ? '⌥⌘L' : 'Ctrl+J' });
     }
-    const mac = /Mac/i.test(navigator.userAgentData?.platform || navigator.platform || '');
-    _where.textContent = t('downloads_where_hint', { keys: mac ? '⌥⌘L' : 'Ctrl+J' });
-  }
 
-  // Second, more transient confirmation channel — slight delay so it
-  // doesn't visually compete with the auto-download/card update that
-  // just happened in the same instant.
-  setTimeout(() => showToast(t('download_toast', { filename: _displayName }), 3000), 400);
+    // Second, more transient confirmation channel — slight delay so it
+    // doesn't visually compete with the auto-download/card update that
+    // just happened in the same instant.
+    setTimeout(() => showToast(t('download_toast', { filename: _displayName }), 3000), 400);
+  }
   const _dlBtn = id('downloadBtn');
   if (_dlBtn) {
-    _dlBtn.textContent = t('download_again');
+    _dlBtn.textContent = t(manualDownload ? 'p2e_download' : 'download_again');
+    _dlBtn.disabled = false;
+    _dlBtn.style.opacity = '';
     _dlBtn.onclick = () => {
       // A manual click landing seconds after the automatic download fired
       // is the strongest available signal that the automatic one silently
       // failed (blocked, dismissed save dialog, iOS opening instead of saving).
-      checkAutoDownloadRecovery(tool, _autoDownloadAtMs);
+      if (manualDownload) {
+        trackDownload(tool, downloadSize);
+        recordDownload();
+      } else {
+        checkAutoDownloadRecovery(tool, _autoDownloadAtMs);
+      }
       // Disable immediately to prevent double-download on rapid re-click.
       _dlBtn.disabled = true;
       const a = document.createElement('a');
@@ -481,6 +497,7 @@ function _handleSuccess({ tool, blob, desc, filename, compressionReport, batchCo
         const banner = id('privacyCleared');
         if (banner) banner.classList.add('visible');
         _freeResultUrl();
+        if (manualDownload) id('p2ePreview')?.remove();
         _dlBtn.textContent    = t('saved_device');
         _dlBtn.disabled       = true;
         _dlBtn.style.opacity  = '0.5';
@@ -864,8 +881,18 @@ function initEvents() {
     }
   });
 
+  function invalidateExcelResult() {
+    ++_successGen;
+    _freeResultUrl();
+    hide('successCard');
+    const button = id('mergeBtn');
+    button.dataset.mode = 'process';
+    button.textContent = getLocalizedTool(TOOLS.pdf2excel).btn;
+  }
+
   // Tool-specific UI init — dispatched through registry
   document.addEventListener('pdfree:files-added', () => {
+    if (currentTool === 'pdf2excel') invalidateExcelResult();
     initToolOptions(currentTool, [...selectedFiles]);
   });
 
@@ -901,6 +928,7 @@ function initEvents() {
   // Re-init after a file is removed so the active tool always uses the current files[0].
   // Without this, tools like OCR keep a stale _file reference to the removed file.
   document.addEventListener('pdfree:file-removed', () => {
+    if (currentTool === 'pdf2excel') invalidateExcelResult();
     initToolOptions(currentTool, [...selectedFiles]);
     if (currentTool === 'compress' || currentTool === 'compress-email') {
       cancelCompressScan();
@@ -955,6 +983,10 @@ function initEvents() {
   // just on the next file add/remove.
   document.addEventListener('pdfree:wm-remove-changed', () => renderList(true));
   document.addEventListener('pdfree:merge-order-changed', () => renderList(true));
+
+  document.addEventListener('pdfree:excel-format-changed', () => {
+    if (currentTool === 'pdf2excel' && !isProcessing) invalidateExcelResult();
+  });
 
   document.addEventListener('pdfree:success', e => _successUnlessLocked(e.detail));
 

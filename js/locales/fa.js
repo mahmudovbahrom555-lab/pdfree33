@@ -11,6 +11,15 @@
 // `{ ...EN, ...PDFREE_LOCALE }` merge — intentional, not a gap to "finish"
 // without a real signal to justify it.
 window.PDFREE_LOCALE = {
+  p2e_mode_hint: "جدول‌های شناسایی‌شده در برگه‌های جداگانهٔ اکسل قرار می‌گیرند. سایر متن استخراج‌شده در برگهٔ «Text» قرار می‌گیرد.",
+  p2e_ocr_hint: "در صفحه‌های بررسی‌شده متن قابل استخراجی پیدا نشد. ",
+  p2e_image_pages: "تصاویر بزرگ در صفحه‌های {pages} ممکن است داده‌هایی داشته باشند که در Excel نیامده‌اند. این صفحه‌ها را بررسی کنید و در صورت نیاز از OCR استفاده کنید.",
+  p2e_skipped_pages: "صفحه‌های بدون متن قابل استخراج رد شدند: {pages}.",
+  p2e_ocr_scans: "اجرای OCR روی صفحه‌های اسکن‌شده",
+  p2e_number_format: "جداکنندهٔ اعشار",
+  p2e_number_auto: "خودکار",
+  p2e_preview_meta: "{n} ردیف · صفحه‌های PDF ‏{pages}",
+  p2e_download: "دانلود XLSX",
   wait_processing:     '⏳ لطفاً تا پایان پردازش صبر کنید',
   done_time:           '⚡ در {time} ثانیه انجام شد — پردازش محلی، چیزی آپلود نشد',
   done_no_time:        '⚡ پردازش محلی انجام شد — فایل هرگز از دستگاه شما خارج نشد',

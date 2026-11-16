@@ -1122,8 +1122,15 @@ window.PDFREE_LOCALE = {
   atlas_verdict_heavy:     'Ernstige problemen',
 
   // ── pdf2excelUI.js ───────────────────────────────────────
-  p2e_mode_hint:              '📊 Gedetecteerde tabellen worden omgezet in aparte Excel-werkbladen. Overige tekst blijft bewaard in een blad "Tekst", zodat niets verloren gaat.',
-  p2e_ocr_hint:               '⚠️ Geen tekstlaag gedetecteerd — dit PDF-bestand is een gescande afbeelding, waardoor er geen tabellen kunnen worden geëxtraheerd. ',
+  p2e_mode_hint: "Gevonden tabellen komen op afzonderlijke Excel-bladen. Overige geëxtraheerde tekst komt op het blad ‘Text’.",
+  p2e_ocr_hint: "Op de gecontroleerde pagina’s is geen extraheerbare tekst gevonden. ",
+  p2e_image_pages: "Grote afbeeldingen op pagina’s {pages} kunnen gegevens bevatten die ontbreken in Excel. Controleer deze pagina’s en gebruik zo nodig OCR.",
+  p2e_skipped_pages: "Pagina’s zonder extraheerbare tekst zijn overgeslagen: {pages}.",
+  p2e_ocr_scans: "OCR uitvoeren op gescande pagina’s",
+  p2e_number_format: "Decimaalteken",
+  p2e_number_auto: "Automatisch",
+  p2e_preview_meta: "{n} rijen · PDF-pagina’s {pages}",
+  p2e_download: "XLSX downloaden",
   p2e_ocr_to_get_extractable: ' om extraheerbare tekst te krijgen.',
   p2e_tables_detected_one:    '🗂️ {n} tabel gedetecteerd — wordt een eigen Excel-werkblad',
   p2e_tables_detected_many:   '🗂️ {n} tabellen gedetecteerd — elk wordt een eigen Excel-werkblad',

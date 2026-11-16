@@ -1145,8 +1145,15 @@ export const EN = {
   atlas_verdict_heavy:     'Heavy issues',
 
   // ── pdf2excelUI.js ─────────────────────────────────────────────
-  p2e_mode_hint:              '📊 Detected tables are converted into separate Excel sheets. Any other text is kept in a "Text" sheet so nothing is lost.',
-  p2e_ocr_hint:                '⚠️ No text layer detected — this PDF is a scanned image, so no tables can be extracted. ',
+  p2e_mode_hint: "Detected tables go into separate Excel sheets. Other extracted text goes into the “Text” sheet.",
+  p2e_ocr_hint: "No extractable text was found on the pages checked. ",
+  p2e_image_pages: "Large images on pages {pages} may contain data missing from Excel. Check these pages and use OCR if needed.",
+  p2e_skipped_pages: "Pages skipped because they have no extractable text: {pages}.",
+  p2e_ocr_scans: "Run OCR on scanned pages",
+  p2e_number_format: "Decimal separator",
+  p2e_number_auto: "Auto",
+  p2e_preview_meta: "{n} rows · PDF pages {pages}",
+  p2e_download: "Download XLSX",
   p2e_ocr_to_get_extractable:  ' to get extractable text.',
   p2e_tables_detected_one:     '🗂️ {n} table detected — will become its own Excel sheet',
   p2e_tables_detected_many:    '🗂️ {n} tables detected — each will become its own Excel sheet',

@@ -73,10 +73,13 @@ const MAX_H_CANDIDATES      = 300;        // safety cap: bail out of the O(n²) 
  * @returns {Promise<TableGrid[]>}
  */
 export async function detectTableGrids(page, { paintedOnly = false, matrix = null } = {}) {
-  const opList = await page.getOperatorList();
+  return tableGridsFromOperators(await page.getOperatorList(), page.getViewport({ scale: 1 }), { paintedOnly, matrix });
+}
+
+export function tableGridsFromOperators(opList, viewport, { paintedOnly = false, matrix = null } = {}) {
+  if (!opList) return [];
   let { hLines, vLines } = _extractSegments(opList, paintedOnly);
   if (matrix) ({ hLines, vLines } = _turnSegments(hLines, vLines, matrix));
-  const viewport = page.getViewport({ scale: 1 });
   return _buildGrids(hLines, vLines, viewport.width, viewport.height);
 }
 
@@ -416,24 +419,6 @@ function _buildGrids(hLines, vLines, pageW = Infinity, pageH = Infinity) {
       const yLo = hYs[lo];
       if (yHi - yLo < FRAME_MIN_HEIGHT) continue;
 
-      // Best-overlapping span pair between yHi's and yLo's h-line segments
-      // defines the candidate frame's left/right edges.
-      let left = null, right = null, bestOverlap = 0;
-      for (const [ax1, ax2] of hByY.get(yHi) || []) {
-        for (const [bx1, bx2] of hByY.get(yLo) || []) {
-          const overlap = Math.min(ax2, bx2) - Math.max(ax1, bx1);
-          if (overlap <= 0) continue;
-          const minSpan = Math.min(ax2 - ax1, bx2 - bx1);
-          if (overlap < FRAME_MIN_OVERLAP_ABS || overlap < minSpan * FRAME_OVERLAP_FRAC) continue;
-          if (overlap > bestOverlap) {
-            bestOverlap = overlap;
-            left  = Math.max(ax1, bx1);
-            right = Math.min(ax2, bx2);
-          }
-        }
-      }
-      if (left === null) continue;
-
       // Outer sides: a v-line near `left` and one near `right` must each
       // span (close to) the full candidate height [yLo, yHi].
       const findEdgeX = (target) => {
@@ -446,80 +431,101 @@ function _buildGrids(hLines, vLines, pageW = Infinity, pageH = Infinity) {
         }
         return null;
       };
-      const leftX  = findEdgeX(left);
-      const rightX = findEdgeX(right);
-      if (leftX === null || rightX === null || leftX === rightX) continue;
+      // Multiple tables can share the same top and bottom Y coordinates.
+      // Match each overlapping span pair to its own vertical sides.
+      const frames = new Map();
+      for (const [ax1, ax2] of hByY.get(yHi)) {
+        for (const [bx1, bx2] of hByY.get(yLo)) {
+          const left = Math.max(ax1, bx1);
+          const right = Math.min(ax2, bx2);
+          const minSpan = Math.min(ax2 - ax1, bx2 - bx1);
+          const overlap = right - left;
+          if (overlap < FRAME_MIN_OVERLAP_ABS || overlap < minSpan * FRAME_OVERLAP_FRAC) continue;
+          const leftX = findEdgeX(left);
+          const rightX = findEdgeX(right);
+          if (leftX !== null && rightX !== null && leftX < rightX) {
+            frames.set(`${leftX}:${rightX}`, [leftX, rightX]);
+          }
+        }
+      }
+      for (const [leftX, rightX] of frames.values()) {
+        // Reject the page's own crop/media box outline — many PDF generators
+        // draw a full-page border rectangle that technically satisfies every
+        // frame check above (its top/bottom edges span the "full width" and
+        // its sides span the "full height" — of the page itself). That is
+        // never a real table; it would otherwise swallow every genuine table
+        // on the page as "internal dividers" of one giant page-sized grid.
+        if ((rightX - leftX) >= pageW - SNAP * 4 && (yHi - yLo) >= pageH - SNAP * 4) continue;
 
-      // Reject the page's own crop/media box outline — many PDF generators
-      // draw a full-page border rectangle that technically satisfies every
-      // frame check above (its top/bottom edges span the "full width" and
-      // its sides span the "full height" — of the page itself). That is
-      // never a real table; it would otherwise swallow every genuine table
-      // on the page as "internal dividers" of one giant page-sized grid.
-      if ((rightX - leftX) >= pageW - SNAP * 4 && (yHi - yLo) >= pageH - SNAP * 4) continue;
+        // Reject candidates whose sides sit exactly at the page's own left/
+        // right edge UNLESS the candidate also spans (close to) the page's
+        // full height. A real table almost always has some horizontal
+        // margin; reusing the raw page boundary as a wall — combined with
+        // unrelated full-width rules elsewhere (section dividers, a 2-column
+        // layout's vertical rule) — can otherwise assemble a false "table"
+        // out of ordinary decorative lines that were never meant to be a
+        // table at all.
+        const sidesArePageEdge = leftX <= SNAP * 2 || rightX >= pageW - SNAP * 2;
+        if (sidesArePageEdge && (yHi - yLo) < pageH - SNAP * 4) continue;
 
-      // Reject candidates whose sides sit exactly at the page's own left/
-      // right edge UNLESS the candidate also spans (close to) the page's
-      // full height. A real table almost always has some horizontal
-      // margin; reusing the raw page boundary as a wall — combined with
-      // unrelated full-width rules elsewhere (section dividers, a 2-column
-      // layout's vertical rule) — can otherwise assemble a false "table"
-      // out of ordinary decorative lines that were never meant to be a
-      // table at all.
-      const sidesArePageEdge = leftX <= SNAP * 2 || rightX >= pageW - SNAP * 2;
-      if (sidesArePageEdge && (yHi - yLo) < pageH - SNAP * 4) continue;
+        // ── Internal dividers: once the frame is anchored, collect every row/
+        // column separator inside it regardless of how much of the width or
+        // height it actually spans — a merged cell (rowspan/colspan)
+        // legitimately breaks a divider into a partial-length segment. This is
+        // the one behaviour change from the old algorithm: previously an
+        // internal divider had to span the WHOLE opposite dimension, which is
+        // exactly why a real tariff table with merged product-name cells was
+        // silently rejected before (its internal column dividers only existed
+        // for some rows, never the table's full height).
+        //
+        // A single merged cell can break one divider into MULTIPLE partial
+        // segments (present for the rows above and below the merge, absent for
+        // the merged row itself) — each individually shorter than
+        // INTERNAL_MIN_OVERLAP even though the divider is clearly real. Sum
+        // every segment's overlap with the frame instead of requiring any ONE
+        // of them to independently clear the floor (found via a real 3-row,
+        // 3-column table with a compact ~12px row height and one merged cell:
+        // the column divider existed for 2 of 3 rows, each segment ~12px —
+        // below the old 20px `.some()` floor — so the whole divider was
+        // dropped, collapsing 3 columns to 2 and merging two UNRELATED cells'
+        // text together instead of just losing the one merged cell's split).
+        const _sumOverlap = (spans, lo, hi) => spans.reduce((sum, [a, b]) =>
+          sum + Math.max(0, Math.min(b, hi) - Math.max(a, lo)), 0);
+        const internalYs = hYs.filter(y => y > yLo + SNAP && y < yHi - SNAP &&
+          _sumOverlap(hByY.get(y) || [], leftX, rightX) >= INTERNAL_MIN_OVERLAP);
+        const internalXs = vXs.filter(x => x > leftX + SNAP && x < rightX - SNAP &&
+          _sumOverlap(vByX.get(x) || [], yLo, yHi) >= INTERNAL_MIN_OVERLAP);
 
-      // ── Internal dividers: once the frame is anchored, collect every row/
-      // column separator inside it regardless of how much of the width or
-      // height it actually spans — a merged cell (rowspan/colspan)
-      // legitimately breaks a divider into a partial-length segment. This is
-      // the one behaviour change from the old algorithm: previously an
-      // internal divider had to span the WHOLE opposite dimension, which is
-      // exactly why a real tariff table with merged product-name cells was
-      // silently rejected before (its internal column dividers only existed
-      // for some rows, never the table's full height).
-      //
-      // A single merged cell can break one divider into MULTIPLE partial
-      // segments (present for the rows above and below the merge, absent for
-      // the merged row itself) — each individually shorter than
-      // INTERNAL_MIN_OVERLAP even though the divider is clearly real. Sum
-      // every segment's overlap with the frame instead of requiring any ONE
-      // of them to independently clear the floor (found via a real 3-row,
-      // 3-column table with a compact ~12px row height and one merged cell:
-      // the column divider existed for 2 of 3 rows, each segment ~12px —
-      // below the old 20px `.some()` floor — so the whole divider was
-      // dropped, collapsing 3 columns to 2 and merging two UNRELATED cells'
-      // text together instead of just losing the one merged cell's split).
-      const _sumOverlap = (spans, lo, hi) => spans.reduce((sum, [a, b]) =>
-        sum + Math.max(0, Math.min(b, hi) - Math.max(a, lo)), 0);
-      const internalYs = hYs.filter(y => y > yLo + SNAP && y < yHi - SNAP &&
-        _sumOverlap(hByY.get(y) || [], leftX, rightX) >= INTERNAL_MIN_OVERLAP);
-      const internalXs = vXs.filter(x => x > leftX + SNAP && x < rightX - SNAP &&
-        _sumOverlap(vByX.get(x) || [], yLo, yHi) >= INTERNAL_MIN_OVERLAP);
+        const rowYs = [yHi, ...internalYs.sort((a, b) => b - a), yLo];
+        const colXs = [leftX, ...internalXs.sort((a, b) => a - b), rightX];
+        const rowCount = rowYs.length - 1;
+        const colCount = colXs.length - 1;
+        if (rowCount < MIN_ROWS || colCount < MIN_COLS) continue;
 
-      const rowYs = [yHi, ...internalYs.sort((a, b) => b - a), yLo];
-      const colXs = [leftX, ...internalXs.sort((a, b) => a - b), rightX];
-      const rowCount = rowYs.length - 1;
-      const colCount = colXs.length - 1;
-      if (rowCount < MIN_ROWS || colCount < MIN_COLS) continue;
+        // Per-divider Y-spans (clipped to the frame), for callers that need to
+        // know whether a specific internal column divider is actually present
+        // at a given row's Y — i.e. whether that row's cell is a colspan.
+        // Kept separate from colXs (which only needs to know a divider exists
+        // ANYWHERE in the table) so existing colCount/colXs consumers are
+        // unaffected.
+        const colDividers = internalXs.sort((a, b) => a - b).map(x => ({
+          x,
+          spans: (vByX.get(x) || [])
+            .map(([y1, y2]) => [Math.max(y1, yLo), Math.min(y2, yHi)])
+            .filter(([y1, y2]) => y2 > y1),
+        }));
 
-      // Per-divider Y-spans (clipped to the frame), for callers that need to
-      // know whether a specific internal column divider is actually present
-      // at a given row's Y — i.e. whether that row's cell is a colspan.
-      // Kept separate from colXs (which only needs to know a divider exists
-      // ANYWHERE in the table) so existing colCount/colXs consumers are
-      // unaffected.
-      const colDividers = internalXs.sort((a, b) => a - b).map(x => ({
-        x,
-        spans: (vByX.get(x) || [])
-          .map(([y1, y2]) => [Math.max(y1, yLo), Math.min(y2, yHi)])
-          .filter(([y1, y2]) => y2 > y1),
-      }));
-
-      candidates.push({
-        x: leftX, y: yLo, w: rightX - leftX, h: yHi - yLo,
-        colCount, rowCount, colXs, rowYs, colDividers,
-      });
+        candidates.push({
+          x: leftX, y: yLo, w: rightX - leftX, h: yHi - yLo,
+          colCount, rowCount, colXs, rowYs, colDividers,
+          rowDividers: rowYs.slice(1, -1).map(y => ({
+            y,
+            spans: (hByY.get(y) || [])
+              .map(([x1, x2]) => [Math.max(x1, leftX), Math.min(x2, rightX)])
+              .filter(([x1, x2]) => x2 > x1),
+          })),
+        });
+      }
     }
   }
 
