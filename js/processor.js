@@ -3811,7 +3811,20 @@ export function _p2eExtractPage(lines, grids, page, pageView) {
   // tables on the Korean article (2026-10-06), until then hidden only because
   // a false page-sized ruled grid (a clipping path, see pdf2wordBorders.js)
   // swallowed the whole page first.
-  const textTables = detectTables(rest)
+  // A statement's money columns are right-aligned under their headings, so
+  // left-edge column detection splits them apart (a bank statement came out
+  // as one text column, 2026-11-16); read those first, by right edges.
+  for (const ledger of _p2eLedgerTables(rest)) {
+    for (let i = ledger.startIdx; i <= ledger.endIdx; i++) consumedLines.add(restIdx[i]);
+    tables.push({
+      // Two amount columns ending at their headings' right edges (3 pt) and
+      // three rows placed whole are strong evidence — above the 0.85 gate,
+      // which a 0.8 put the statement back into the Text sheet (2026-11-17).
+      page, rows: ledger.rows, confidence: 0.9, boldRows: new Set(), colCenters: ledger.colCenters,
+      ...position(rest[ledger.startIdx].y, rest[ledger.endIdx].y, ledger.colCenters[0]),
+    });
+  }
+  const textTables = detectTables(rest.map((line, i) => consumedLines.has(restIdx[i]) ? { ...line, items: [] } : line))
     .filter(t => !looksLikeProseNotData(t.rows) && !looksLikeEnumeratedList(t.rows));
   for (const tbl of textTables) {
     const boldRows = new Set();
@@ -3833,6 +3846,62 @@ export function _p2eExtractPage(lines, grids, page, pageView) {
   });
   tables.sort((a, b) => b.top - a.top || a.left - b.left);
   return { tables, textRows };
+}
+
+const _P2E_AMOUNT_RE = /^[-−(]?[$€£¥]?\s?(?:\d[\d,. \u00A0]*|[.,]\d+)\)?$/;
+const _P2E_RIGHT_SLACK = 3;
+const _p2eRight = item => item.x + (item.width || 0);
+
+// Tables whose amount columns are right-aligned under a heading row: each
+// heading that has amounts ending at its right edge becomes an amount column,
+// the others (date, description) take text by their left edge. Read until the
+// first line that doesn't fit. Needs two amount columns and three rows.
+export function _p2eLedgerTables(lines) {
+  const out = [];
+  for (let h = 0; h < lines.length; h++) {
+    const head = [...lines[h].items].sort((a, b) => a.x - b.x);
+    if (head.length < 3 || head.some(item => _P2E_AMOUNT_RE.test(item.str.trim()))) continue;
+    const amountCols = new Set();
+    for (let i = h + 1; i < Math.min(lines.length, h + 6); i++) {
+      for (const item of lines[i].items) {
+        if (!_P2E_AMOUNT_RE.test(item.str.trim())) continue;
+        const col = head.findIndex(cell => Math.abs(_p2eRight(cell) - _p2eRight(item)) <= _P2E_RIGHT_SLACK);
+        if (col >= 0) amountCols.add(col);
+      }
+    }
+    if (amountCols.size < 2) continue;
+    const textCols = head.map((_, c) => c).filter(c => !amountCols.has(c));
+    const rows = [head.map(item => item.str.trim())];
+    let end = h;
+    for (let i = h + 1; i < lines.length; i++) {
+      const row = Array(head.length).fill('');
+      const fits = lines[i].items.every(item => {
+        const str = item.str.trim();
+        if (!str) return true;
+        let col = -1;
+        if (_P2E_AMOUNT_RE.test(str)) {
+          col = head.findIndex((cell, c) => amountCols.has(c) && Math.abs(_p2eRight(cell) - _p2eRight(item)) <= _P2E_RIGHT_SLACK);
+        }
+        if (col < 0) {
+          col = textCols.filter(c => head[c].x <= item.x + _P2E_RIGHT_SLACK).pop() ?? -1;
+          // text reaching into an amount column isn't this table's
+          const nextAmount = [...amountCols].filter(c => c > col).sort((a, b) => a - b)[0];
+          if (col >= 0 && nextAmount !== undefined && _p2eRight(item) > head[nextAmount].x + _P2E_RIGHT_SLACK
+            && head.findIndex((cell, c) => c > col && !amountCols.has(c) && cell.x <= item.x) < 0) col = -1;
+        }
+        if (col < 0) return false;
+        row[col] = row[col] ? `${row[col]} ${str}` : str;
+        return true;
+      });
+      if (!fits || !row.some(Boolean)) break;
+      rows.push(row);
+      end = i;
+    }
+    if (rows.length < 4) continue;
+    out.push({ startIdx: h, endIdx: end, rows, colCenters: head.map(item => item.x + (item.width || 0) / 2) });
+    h = end;
+  }
+  return out;
 }
 
 // A line that is only a page number ("3", "- 3 -", "Page 3 of 12", "صفحة ٣",
@@ -3908,8 +3977,8 @@ function _p2ePreviewCell({ value, numFmt }) {
 // format. Group separators must repeat consistently in groups of three.
 // Index 0 reads "." as the decimal mark, index 1 reads ",".
 const _P2E_NUMBER_FORMATS = [
-  /^(\d+|[1-9]\d{0,2}(?:,\d{3})+|[1-9]\d{0,2}(?: \d{3})+)(?:\.(\d+))?$/,
-  /^(\d+|[1-9]\d{0,2}(?:\.\d{3})+|[1-9]\d{0,2}(?: \d{3})+)(?:,(\d+))?$/,
+  /^(\d+|[1-9]\d{0,2}(?:,\d{3})+|[1-9]\d{0,2}(?: \d{3})+)?(?:\.(\d+))?$/,
+  /^(\d+|[1-9]\d{0,2}(?:\.\d{3})+|[1-9]\d{0,2}(?: \d{3})+)?(?:,(\d+))?$/,
   /^(\d+|[1-9]\d{0,2}(?:\u066C\d{3})+)(?:\u066B(\d+))?$/,
 ];
 const _P2E_MARKS = ['.', ',', null];
@@ -3927,8 +3996,9 @@ function _p2eReadings(magnitude) {
   const readings = new Map();
   _P2E_NUMBER_FORMATS.forEach((format, i) => {
     const match = format.exec(magnitude);
-    if (!match) return;
-    const integer = match[1].replace(/[., \u066C]/g, '');
+    // ".15" is 0.15 — statements print small amounts without the leading zero
+    if (!match || (!match[1] && !match[2])) return;
+    const integer = (match[1] ?? '').replace(/[., \u066C]/g, '') || '0';
     const number = match[2] ? `${integer}.${match[2]}` : integer;
     if (![...readings.values()].includes(number)) readings.set(_P2E_MARKS[i], number);
   });
