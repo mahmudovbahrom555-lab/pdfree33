@@ -41,7 +41,7 @@ import { _p2wBuildPageData, uprightMatrix, uprightBox } from './pdf2readCore.js'
 import { createOcrLayer } from './pdf2wordOcr.js';
 import { createActualTextReader } from './pdfActualText.js';
 import { createDigitFixReader, loadDigitTemplates } from './pdfDigitFix.js';
-import { detectTableGrids, lineInGrid, gridRowsOfLines, gridHoldsTable } from './pdf2wordBorders.js';
+import { tableGridsFromOperators, lineInGrid, gridRowsOfLines, gridHoldsTable } from './pdf2wordBorders.js';
 import { cjkJoin } from './cjkText.js';
 import { recognizeFormula } from './formulaOcr.js';
 import { docxToPdf, walkDomToPdfContent, pdfContentToBlob } from './docxToPdfCore.js';
@@ -3461,6 +3461,7 @@ async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
       name: `Table ${i + 1}`,
       rowCount: table.rows.length,
       pages: table.sourcePages,
+      merges: table.merges.filter(merge => merge.row < 5),
       rows: table.rows.slice(0, 5).map((row, ri) => ri === 0 ? row :
         row.map(text => _p2ePreviewCell(_p2eCellValue(text, _p2eTableMark(table.rows, decimalSeparator))))),
     })),
@@ -3534,6 +3535,9 @@ function _p2eBuildWorkbook(tables, textRows, decimalSeparator) {
       });
       col.width = Math.min(maxLen + 2, 60);
     });
+    for (const { row, from, to, rowSpan = 1 } of tbl.merges ?? []) {
+      sheet.mergeCells(row + 1, from + 1, row + rowSpan, to + 1);
+    }
   });
 
   if (textRows.length) {
@@ -3579,18 +3583,20 @@ async function _p2eExtractTables(pdfDoc, signal) {
 
     const page    = await pdfDoc.getPage(p);
     signal.throwIfAborted();
-    // getOperatorList() alongside getTextContent() forces pdf.js to resolve
-    // font objects into page.commonObjs — without it, _isFontBold below
-    // silently always returns false (same fix as pdf2readCore.js's own
-    // _p2wBuildPageData, see its comment for the real fixture this was
-    // found on: content.styles[...].fontFamily alone reports a generic
-    // "sans-serif" fallback for both a bold and a regular weight of the
-    // same embedded font, indistinguishable without the real PostScript name).
-    const [content] = await Promise.all([
-      page.getTextContent({ normalizeWhitespace: false }),
-      page.getOperatorList().catch(() => {}),
-    ]);
+    const content = await page.getTextContent({ normalizeWhitespace: false });
     signal.throwIfAborted();
+    const textItems = content.items.filter(item => 'str' in item && item.str.split('\u0000').join('').trim());
+    if (!textItems.length) { skippedPages.push(p); page.cleanup?.(); continue; }
+
+    // One operator list both resolves the fonts and supplies the table rules.
+    const operators = await page.getOperatorList().catch(() => null);
+    signal.throwIfAborted();
+    const viewport = page.getViewport({ scale: 1 });
+    const upright = uprightMatrix(page);
+    let grids = [];
+    try {
+      grids = tableGridsFromOperators(operators, viewport, { paintedOnly: true, matrix: upright });
+    } catch { /* malformed drawing operators: use the text detector */ }
     const _boldFontCache = new Map(); // fontName -> boolean, one commonObjs lookup per unique font per page
     const _isFontBold = fontName => {
       if (_boldFontCache.has(fontName)) return _boldFontCache.get(fontName);
@@ -3602,15 +3608,14 @@ async function _p2eExtractTables(pdfDoc, signal) {
       return bold;
     };
     const rtlVisual = rtlItemsAreVisual(content.items);
-    const items = content.items
-      .filter(item => 'str' in item && item.str.split(' ').join('').trim())
-      .map((item, seq) => {
+    const items = textItems      .map((item, seq) => {
         const fam = (content.styles[item.fontName]?.fontFamily || '').toLowerCase();
+        const [,,,, x, y] = item.transform;
         return {
           seq,      // content-stream order — see reorderVisualRtlLine
           str: toUnifiedIdeographs((item.dir === 'rtl' && rtlVisual) ? _visualRTLToLogical(item.str) : item.str).split(' ').join(''),
-          x: item.transform[4],
-          y: item.transform[5],
+          x: upright ? upright[0] * x + upright[2] * y + upright[4] : x,
+          y: upright ? upright[1] * x + upright[3] * y + upright[5] : y,
           width: item.width || 0,
           fontSize: (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10,
           bold: _isFontBold(item.fontName) || BOLD_FONT_NAME_RE.test(fam),
@@ -3619,10 +3624,6 @@ async function _p2eExtractTables(pdfDoc, signal) {
 
     const lines = groupItemsIntoLines(items);
 
-    if (!lines.length) { skippedPages.push(p); page.cleanup?.(); continue; }
-
-    const grids = await detectTableGrids(page, { paintedOnly: true }).catch(() => []);
-    signal.throwIfAborted();
     // An RTL line is read in runs, each in its reading order with harakat on
     // their letters, never across a table rule (lineRuns): cells joined item by
     // item came out reversed and letter-spaced for Chromium-printed Persian
@@ -3636,7 +3637,8 @@ async function _p2eExtractTables(pdfDoc, signal) {
         ln.items = joinTouchingItems(ln.items, cuts);
       }
     }
-    const pageResult = _p2eExtractPage(lines, grids, p, page.view);
+    const pageView = upright ? [0, 0, viewport.width, viewport.height] : page.view;
+    const pageResult = _p2eExtractPage(lines, grids, p, pageView);
     tables.push(...pageResult.tables);
     textRows.push(...pageResult.textRows);
 
@@ -3699,21 +3701,64 @@ export function _p2eExtractPage(lines, grids, page, pageView) {
 
     const rows = [];
     const boldRows = new Set();
-    for (const bandLines of bands) {
-      const cols = Array.from({ length: colXs.length - 1 }, () => []);
+    const merges = [];
+    for (const [band, bandLines] of bands.entries()) {
+      if (!bandLines.length && !grid.rowDividers) continue;
+      const boundaries = grid.colDividers?.length
+        ? _activeDividersForY(grid, (rowYs[band] + rowYs[band + 1]) / 2)
+        : null;
+      const anchors = colXs.map((_, c) => c).filter(c =>
+        c === 0 || c === colXs.length - 1 || !boundaries || boundaries[c - 1]);
+      const activeXs = anchors.map(c => colXs[c]);
+      const cols = Array.from({ length: activeXs.length - 1 }, () => []);
       for (const ln of bandLines) {
-        _assignLineToGridCols(ln.items, colXs).forEach((text, c) => { if (text) cols[c].push(text); });
+        _assignLineToGridCols(ln.items, activeXs).forEach((text, c) => { if (text) cols[c].push(text); });
       }
-      const row = cols.map(parts => parts.join('\n'));
-      if (!row.some(Boolean)) continue;
+      const row = Array(colXs.length - 1).fill('');
+      cols.forEach((parts, c) => { row[anchors[c]] = parts.join('\n'); });
+      if (!row.some(Boolean) && !grid.rowDividers) continue;
       if (_p2eAllBold(bandLines)) boldRows.add(rows.length);
+      for (let c = 0; c < anchors.length - 1; c++) {
+        if (anchors[c + 1] - anchors[c] > 1) merges.push({ row: rows.length, from: anchors[c], to: anchors[c + 1] - 1 });
+      }
       rows.push(row);
+    }
+    // Join only identically bounded cells with no drawn rule between them.
+    // Even a partial separator keeps cells independent.
+    if (grid.rowDividers) {
+      const cells = rows.map((row, r) => row.map((_, c) => {
+        const horizontal = merges.find(m => m.row === r && c >= m.from && c <= m.to);
+        return horizontal ?? { row: r, from: c, to: c };
+      }).filter((cell, c) => cell.from === c));
+      const covered = new Set();
+      const vertical = [];
+      for (let r = 0; r < rows.length; r++) {
+        for (const cell of cells[r]) {
+          if (covered.has(cell)) continue;
+          let end = r;
+          while (end + 1 < rows.length) {
+            const next = cells[end + 1].find(c => c.from === cell.from && c.to === cell.to);
+            const rule = grid.rowDividers[end];
+            if (!next || !rule || rule.spans.some(([a, b]) =>
+              Math.min(b, colXs[cell.to + 1]) - Math.max(a, colXs[cell.from]) > GRID_SLACK)) break;
+            end++;
+            covered.add(next);
+            const text = rows[end][cell.from];
+            if (text) rows[r][cell.from] = [rows[r][cell.from], text].filter(Boolean).join('\n');
+            rows[end][cell.from] = '';
+          }
+          if (end > r) vertical.push({ ...cell, rowSpan: end - r + 1 });
+        }
+      }
+      const replaced = new Set(vertical.map(m => `${m.row}:${m.from}`));
+      const horizontal = merges.filter(m => !covered.has(m) && !replaced.has(`${m.row}:${m.from}`));
+      merges.splice(0, merges.length, ...horizontal, ...vertical);
     }
     // A lone ruled box (a signature field, a boxed note) isn't a table.
     if (rows.length < 2) continue;
     claimed.forEach(item => consumedItems.add(item));
     tables.push({
-      page, rows, confidence: 1, boldRows, colXs,
+      page, rows, confidence: 1, boldRows, colXs, merges,
       ...position(rowYs[0], rowYs[rowYs.length - 1], left),
     });
   }
@@ -3789,6 +3834,8 @@ export function _p2eStitchTables(tables) {
 
     const header = _p2eHasHeader(tbl) ? tbl.rows[0].map(text => text.replace(/\s+/g, ' ').trim()) : null;
     const repeatedHeader = matchesColumns && header && lastHeader &&
+      !(tbl.merges ?? []).some(m => m.row === 0 && m.rowSpan > 1) &&
+      !(last.merges ?? []).some(m => m.row === 0 && m.rowSpan > 1) &&
       header.length === lastHeader.length && header.every((text, i) => text === lastHeader[i]);
 
     // Without a confirmed repeat, the tables must run into the page break
@@ -3798,11 +3845,16 @@ export function _p2eStitchTables(tables) {
     if (!continues) {
       last = { ...tbl, rows: [...tbl.rows], boldRows: new Set(tbl.boldRows) };
       last.sourcePages = [tbl.page];
+      last.merges = [...(tbl.merges ?? [])];
       lastHeader = header;
       out.push(last);
     } else {
       last.sourcePages.push(tbl.page);
       const skip = repeatedHeader ? 1 : 0;
+      const offset = last.rows.length - skip;
+      for (const merge of tbl.merges ?? []) {
+        if (merge.row >= skip) last.merges.push({ ...merge, row: merge.row + offset });
+      }
       for (let i = skip; i < tbl.rows.length; i++) {
         if (tbl.boldRows.has(i)) last.boldRows.add(last.rows.length);
         last.rows.push(tbl.rows[i]);

@@ -261,7 +261,7 @@ export function renderP2eConfidence({ tableCount, skippedPages = [], previews = 
     const preview = document.createElement('div');
     preview.id = 'p2ePreview';
     preview.className = 'p2e-preview';
-    previews.forEach(({ name, rows, rowCount, pages }, i) => {
+    previews.forEach(({ name, rows, rowCount, pages, merges = [] }, i) => {
       const details = document.createElement('details');
       details.open = i === 0;
       const summary = document.createElement('summary');
@@ -276,13 +276,22 @@ export function renderP2eConfidence({ tableCount, skippedPages = [], previews = 
       const head = table.createTHead();
       const body = table.createTBody();
       rows.forEach((row, index) => {
-        const tr = (index ? body : head).insertRow();
-        row.forEach(text => {
+        const spansHeader = merges.some(span => span.row === 0 && span.rowSpan > 1);
+        const tr = (index || spansHeader ? body : head).insertRow();
+        for (let col = 0; col < row.length; col++) {
+          if (merges.some(span => span.row < index && index < span.row + (span.rowSpan ?? 1) &&
+            col >= span.from && col <= span.to)) continue;
+          const merge = merges.find(span => span.row === index && span.from === col);
           const cell = document.createElement(index ? 'td' : 'th');
-          if (!index) cell.scope = 'col';
-          cell.textContent = text;
+          if (!index) cell.scope = merge ? 'colgroup' : 'col';
+          cell.textContent = row[col];
+          if (merge) {
+            cell.colSpan = merge.to - merge.from + 1;
+            cell.rowSpan = Math.min(merge.rowSpan ?? 1, rows.length - index);
+            col = merge.to;
+          }
           tr.append(cell);
-        });
+        }
       });
       scroll.append(table);
       details.append(summary, scroll);

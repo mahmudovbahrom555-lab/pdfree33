@@ -73,10 +73,13 @@ const MAX_H_CANDIDATES      = 300;        // safety cap: bail out of the O(n²) 
  * @returns {Promise<TableGrid[]>}
  */
 export async function detectTableGrids(page, { paintedOnly = false, matrix = null } = {}) {
-  const opList = await page.getOperatorList();
+  return tableGridsFromOperators(await page.getOperatorList(), page.getViewport({ scale: 1 }), { paintedOnly, matrix });
+}
+
+export function tableGridsFromOperators(opList, viewport, { paintedOnly = false, matrix = null } = {}) {
+  if (!opList) return [];
   let { hLines, vLines } = _extractSegments(opList, paintedOnly);
   if (matrix) ({ hLines, vLines } = _turnSegments(hLines, vLines, matrix));
-  const viewport = page.getViewport({ scale: 1 });
   return _buildGrids(hLines, vLines, viewport.width, viewport.height);
 }
 
@@ -515,6 +518,12 @@ function _buildGrids(hLines, vLines, pageW = Infinity, pageH = Infinity) {
         candidates.push({
           x: leftX, y: yLo, w: rightX - leftX, h: yHi - yLo,
           colCount, rowCount, colXs, rowYs, colDividers,
+          rowDividers: rowYs.slice(1, -1).map(y => ({
+            y,
+            spans: (hByY.get(y) || [])
+              .map(([x1, x2]) => [Math.max(x1, leftX), Math.min(x2, rightX)])
+              .filter(([x1, x2]) => x2 > x1),
+          })),
         });
       }
     }

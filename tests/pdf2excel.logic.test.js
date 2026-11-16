@@ -343,6 +343,78 @@ test('two grids own only their cells and preserve notes at the same heights', ()
   expect(textRows.map(row => row.text)).toEqual(['Memo', 'outside the right grid']);
 });
 
+test('a partial divider merges only the relevant row and preserves its left anchor', () => {
+  const grid = { ...GRID, colDividers: [
+    { x: 100, spans: [[0, 60]] }, { x: 200, spans: [[0, 90]] },
+  ] };
+  const lines = [
+    makeLineAt(75, [['Item details', 105], ['Cost', 205]]),
+    makeLineAt(45, [['Paper', 5], ['3', 105], ['12.5', 205]]),
+    makeLineAt(15, [['Ink', 5], ['4', 105], ['8', 205]]),
+  ];
+  const [table] = _p2eExtractPage(lines, [grid], 1).tables;
+  expect(table.rows[0]).toEqual(['Item details', '', 'Cost']);
+  expect(table.merges).toEqual([{ row: 0, from: 0, to: 1 }]);
+});
+
+test('vertical cells move wrapped text to the top anchor and preserve blank rows', () => {
+  const grid = { ...GRID, rowDividers: [
+    { y: 60, spans: [[0, 300]] }, { y: 30, spans: [[100, 300]] },
+  ] };
+  const lines = [
+    makeLineAt(75, [['Name', 5], ['Qty', 105], ['Cost', 205]]),
+    makeLineAt(45, [['Long', 5], ['3', 105], ['12', 205]]),
+    makeLineAt(15, [['name', 5], ['4', 105], ['8', 205]]),
+  ];
+  const table = _p2eExtractPage(lines, [grid], 1).tables[0];
+  expect(table.rows).toEqual([['Name', 'Qty', 'Cost'], ['Long\nname', '3', '12'], ['', '4', '8']]);
+  expect(table.merges).toEqual([{ row: 1, from: 0, to: 0, rowSpan: 2 }]);
+  const blank = _p2eExtractPage(lines.slice(0, 2), [grid], 1).tables[0];
+  expect(blank.rows.length).toBe(3);
+  expect(blank.merges).toEqual(table.merges);
+});
+
+test('drawn separators preserve independent blank cells', () => {
+  const grid = { ...GRID, rowDividers: [
+    { y: 60, spans: [[0, 300]] }, { y: 30, spans: [[0, 300]] },
+  ] };
+  const lines = [
+    makeLineAt(75, [['Name', 5], ['Qty', 105], ['Cost', 205]]),
+    makeLineAt(45, [['Paper', 5], ['3', 105]]),
+    makeLineAt(15, [['4', 105]]),
+  ];
+  const table = _p2eExtractPage(lines, [grid], 1).tables[0];
+  expect(table.rows).toEqual([['Name', 'Qty', 'Cost'], ['Paper', '3', ''], ['', '4', '']]);
+  expect(table.merges).toEqual([]);
+});
+
+test('a rectangular merge preserves text placed in its lower row', () => {
+  const grid = { ...GRID,
+    colDividers: [{ x: 100, spans: [[0, 30]] }, { x: 200, spans: [[0, 90]] }],
+    rowDividers: [{ y: 60, spans: [[200, 300]] }, { y: 30, spans: [[0, 300]] }],
+  };
+  const lines = [
+    makeLineAt(75, [['Cost', 205]]),
+    makeLineAt(45, [['Combined', 105], ['12', 205]]),
+    makeLineAt(15, [['Paper', 5], ['4', 105], ['8', 205]]),
+  ];
+  const table = _p2eExtractPage(lines, [grid], 1).tables[0];
+  expect(table.rows).toEqual([['Combined', '', 'Cost'], ['', '', '12'], ['Paper', '4', '8']]);
+  expect(table.merges).toEqual([{ row: 0, from: 0, to: 1, rowSpan: 2 }]);
+});
+
+test('a partial horizontal stroke prevents an ambiguous vertical merge', () => {
+  const grid = { ...GRID, rowDividers: [
+    { y: 60, spans: [[0, 300]] }, { y: 30, spans: [[20, 300]] },
+  ] };
+  const lines = [
+    makeLineAt(75, [['Name', 5], ['Qty', 105]]),
+    makeLineAt(45, [['Paper', 5], ['3', 105]]),
+    makeLineAt(15, [['4', 105]]),
+  ];
+  expect(_p2eExtractPage(lines, [grid], 1).tables[0].merges).toEqual([]);
+});
+
 test('a lone ruled box with one line of text is not a table — its text goes to the Text sheet', () => {
   const box = { x: 0, y: 0, w: 300, h: 30, colXs: [0, 300], rowYs: [30, 0] };
   const { tables, textRows } = _p2eExtractPage([makeLineAt(15, [['Signature:', 5]])], [box], 1);
@@ -520,6 +592,7 @@ async function testCancelThenRetry(stage) {
   const destroyed = [];
   let loads = 0;
   let writes = 0;
+  let graphicsReads = 0;
   let oldRun;
   let newRun;
 
@@ -534,7 +607,13 @@ async function testCancelThenRetry(stage) {
   window.pdfjsLib = {
     getDocument() {
       const index = ++loads;
-      const doc = { numPages: 0 };
+      const doc = {
+        numPages: index === 2 ? 1 : 0,
+        getPage: async () => ({
+          getTextContent: async () => ({ items: [], styles: {} }),
+          getOperatorList: async () => { graphicsReads++; return { fnArray: [], argsArray: [] }; },
+        }),
+      };
       if (index === 1 && stage === 'loading') reachedOld.resolve();
       return {
         promise: index === 1 && stage === 'loading' ? oldWork.promise.then(() => doc) : Promise.resolve(doc),
@@ -574,10 +653,11 @@ async function testCancelThenRetry(stage) {
     const whileRetrying = { originalReleased: destroyed.includes(1), locked: isFilesLocked(), results: [...successes] };
     newWrite.resolve(new ArrayBuffer(8));
     await Promise.all([oldRun, newRun]);
-    expect({ whileRetrying, successes, destroyed: [...destroyed].sort() }).toEqual({
+    expect({ whileRetrying, successes, destroyed: [...destroyed].sort(), graphicsReads }).toEqual({
       whileRetrying: { originalReleased: true, locked: true, results: [] },
       successes: ['second.xlsx'],
       destroyed: [1, 2],
+      graphicsReads: 0,
     });
   } finally {
     oldWork.resolve(new ArrayBuffer(8));
