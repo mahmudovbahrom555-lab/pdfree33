@@ -1148,6 +1148,7 @@ export const EN = {
   // ── pdf2excelUI.js ─────────────────────────────────────────────
   p2e_mode_hint: "Detected tables go into separate Excel sheets. Other extracted text goes into the “Text” sheet.",
   p2e_ocr_hint: "No extractable text was found on the pages checked. ",
+  p2e_image_pages: "Large images on pages {pages} may contain data missing from Excel. Check these pages and use OCR if needed.",
   p2e_skipped_pages: "Pages skipped because they have no extractable text: {pages}.",
   p2e_ocr_scans: "Run OCR on scanned pages",
   p2e_number_format: "Decimal separator",

@@ -1126,6 +1126,7 @@ window.PDFREE_LOCALE = {
   // ── pdf2excelUI.js ───────────────────────────────────────
   p2e_mode_hint: "Các bảng được phát hiện nằm ở các trang tính Excel riêng. Văn bản khác trích xuất được nằm ở trang tính “Text”.",
   p2e_ocr_hint: "Không tìm thấy văn bản có thể trích xuất trên các trang đã kiểm tra. ",
+  p2e_image_pages: "Ảnh lớn trên các trang {pages} có thể chứa dữ liệu chưa được đưa vào Excel. Kiểm tra các trang này và dùng OCR nếu cần.",
   p2e_skipped_pages: "Đã bỏ qua các trang không có văn bản có thể trích xuất: {pages}.",
   p2e_ocr_scans: "Chạy OCR trên các trang đã quét",
   p2e_number_format: "Dấu phân cách thập phân",

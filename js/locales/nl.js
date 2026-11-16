@@ -1125,6 +1125,7 @@ window.PDFREE_LOCALE = {
   // ── pdf2excelUI.js ───────────────────────────────────────
   p2e_mode_hint: "Gevonden tabellen komen op afzonderlijke Excel-bladen. Overige geëxtraheerde tekst komt op het blad ‘Text’.",
   p2e_ocr_hint: "Op de gecontroleerde pagina’s is geen extraheerbare tekst gevonden. ",
+  p2e_image_pages: "Grote afbeeldingen op pagina’s {pages} kunnen gegevens bevatten die ontbreken in Excel. Controleer deze pagina’s en gebruik zo nodig OCR.",
   p2e_skipped_pages: "Pagina’s zonder extraheerbare tekst zijn overgeslagen: {pages}.",
   p2e_ocr_scans: "OCR uitvoeren op gescande pagina’s",
   p2e_number_format: "Decimaalteken",

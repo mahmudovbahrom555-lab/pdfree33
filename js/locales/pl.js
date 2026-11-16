@@ -1125,6 +1125,7 @@ window.PDFREE_LOCALE = {
   // ── pdf2excelUI.js ───────────────────────────────────────
   p2e_mode_hint: "Wykryte tabele trafiają do oddzielnych arkuszy Excela. Pozostały wyodrębniony tekst trafia do arkusza „Text”.",
   p2e_ocr_hint: "Na sprawdzonych stronach nie znaleziono tekstu do wyodrębnienia. ",
+  p2e_image_pages: "Duże obrazy na stronach {pages} mogą zawierać dane, których brakuje w Excelu. Sprawdź te strony i w razie potrzeby użyj OCR.",
   p2e_skipped_pages: "Pominięto strony bez tekstu do wyodrębnienia: {pages}.",
   p2e_ocr_scans: "Uruchom OCR na zeskanowanych stronach",
   p2e_number_format: "Separator dziesiętny",

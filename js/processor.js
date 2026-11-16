@@ -3457,6 +3457,7 @@ async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
   const confidence = {
     tableCount: tables.length,
     skippedPages: extracted.skippedPages,
+    imagePages: extracted.imagePages,
     previews: tables.map((table, i) => ({
       name: `Table ${i + 1}`,
       rowCount: table.rows.length,
@@ -3557,10 +3558,35 @@ function _p2eBuildWorkbook(tables, textRows, decimalSeparator) {
 // Simplified line-grouping (no heading/RTL-paragraph/rotated-header handling —
 // none of that matters for cell data) + detectTables() per page. Lines not
 // consumed by a detected table are returned separately as fallback rows.
+// Conservative warning, not table recognition: a large raster region with
+// very little overlapping text may contain information absent from Excel.
+export function _p2eHasUnrepresentedImage(images, items, view) {
+  const [x0, y0, x1, y1] = view;
+  const pageArea = (x1 - x0) * (y1 - y0);
+  if (!(pageArea > 0)) return false;
+  return images.some(image => {
+    const left = Math.max(x0, image.x);
+    const right = Math.min(x1, image.x + image.width);
+    const bottom = Math.max(y0, image.yTop - image.height);
+    const top = Math.min(y1, image.yTop);
+    if (right <= left || top <= bottom || (right - left) * (top - bottom) < pageArea * 0.15) return false;
+    let characters = 0;
+    for (const item of items) {
+      const center = item.x + (item.width || 0) / 2;
+      if (center >= left && center <= right && item.y >= bottom && item.y <= top) {
+        characters += item.str.replace(/\s/g, '').length;
+        if (characters >= 20) return false;
+      }
+    }
+    return true;
+  });
+}
+
 async function _p2eExtractTables(pdfDoc, signal) {
   const tables = [];
   const textRows = [];
   const skippedPages = [];
+  const imagePages = [];
 
   // Checked at the TOP of each iteration (not the bottom, unlike
   // _p2wBuildPageData's identical idiom) because this loop has an early
@@ -3638,6 +3664,13 @@ async function _p2eExtractTables(pdfDoc, signal) {
       }
     }
     const pageView = upright ? [0, 0, viewport.width, viewport.height] : page.view;
+    try {
+      const placed = _detectPageImages(operators);
+      const images = upright ? placed.map(image => uprightBox(upright, image)) : placed;
+      if (_p2eHasUnrepresentedImage(images, items, pageView ?? [0, 0, viewport.width, viewport.height])) {
+        imagePages.push(p);
+      }
+    } catch { /* unreadable image operators: retain the extracted text */ }
     const pageResult = _p2eExtractPage(lines, grids, p, pageView);
     tables.push(...pageResult.tables);
     textRows.push(...pageResult.textRows);
@@ -3645,7 +3678,7 @@ async function _p2eExtractTables(pdfDoc, signal) {
     page.cleanup?.();
   }
 
-  return { tables: _p2eStitchTables(tables), textRows, totalPages: pdfDoc.numPages, skippedPages };
+  return { tables: _p2eStitchTables(tables), textRows, totalPages: pdfDoc.numPages, skippedPages, imagePages };
 }
 
 // A whole row is treated as bold only when EVERY item on it is bold —

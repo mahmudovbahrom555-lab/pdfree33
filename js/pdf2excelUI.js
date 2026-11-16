@@ -232,12 +232,12 @@ async function _scanTablesBackground(doc, gen) {
 
 // ── Confidence report ─────────────────────────────────────────────────────────
 
-export function renderP2eConfidence({ tableCount, skippedPages = [], previews = [] }) {
+export function renderP2eConfidence({ tableCount, skippedPages = [], imagePages = [], previews = [] }) {
   const el = id('p2eConfidence');
   if (!el) return;
 
   el.replaceChildren();
-  el.style.display = tableCount || skippedPages.length ? '' : 'none';
+  el.style.display = tableCount || skippedPages.length || imagePages.length ? '' : 'none';
   if (tableCount) {
     const count = document.createElement('div');
     count.className = 'p2w-confidence__row';
@@ -245,11 +245,12 @@ export function renderP2eConfidence({ tableCount, skippedPages = [], previews = 
     el.append(count);
   }
 
-  if (skippedPages.length) {
+  for (const [pages, key] of [[skippedPages, 'p2e_skipped_pages'], [imagePages, 'p2e_image_pages']]) {
+    if (!pages.length) continue;
     const warning = document.createElement('div');
     warning.className = 'compress-scan compress-scan--found';
     const message = document.createElement('span');
-    message.textContent = t('p2e_skipped_pages', { pages: `\u2066${pagesToRangeString(skippedPages)}\u2069` }) + ' ';
+    message.textContent = t(key, { pages: `\u2066${pagesToRangeString(pages)}\u2069` }) + ' ';
     const link = document.createElement('a');
     link.href = _crossToolHref(OCR_SLUGS);
     link.textContent = t('p2e_ocr_scans');

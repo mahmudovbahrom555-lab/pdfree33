@@ -28,7 +28,7 @@
     "name": "Can I convert a scanned PDF to Excel?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Not directly — a scanned PDF is an image with no text layer, so there's no data to detect a table in. Run OCR PDF first to add a text layer, then convert the result to Excel."
+      "text": "Not directly — a scanned PDF is an image with no text layer, so there's no data to detect a table in. Run OCR PDF first to add a text layer, then convert the result to Excel. A page can also combine selectable text with images. If a large image has little extractable text inside it, the result flags that page for review because some data may be missing from Excel."
     }
   },
   {
