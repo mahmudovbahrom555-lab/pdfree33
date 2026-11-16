@@ -819,7 +819,7 @@ function _applyRotation(angle) {
 // already-rotated pages, fixed in 3ff468c8) because it has no selection
 // state to go stale in the first place. See organize_rotate_not_working_bug_report
 // memory for the real user report this fixes and the competitor research
-// (iLovePDF/Smallpdf both use an equivalent per-card icon) behind this design.
+// (competitors A and B both use an equivalent per-card icon) behind this design.
 function _rotateOnePage(pos, angle) {
   if (isBlank(pos)) return; // rotation not supported for blanks — see _thumbInnerHTML's own comment
   _snapshotForUndo();

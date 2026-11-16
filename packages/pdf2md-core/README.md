@@ -5,14 +5,14 @@ Convert PDF to Markdown for AI/RAG — the same extraction engine behind
 locally as a library or CLI. Your files never leave your machine — not because
 of a policy, but because there's no server in the loop at all.
 
-Real output-quality numbers (91.6/100 avg, within 1.1 points of Docling, ahead
-of pymupdf4llm), methodology, and honest disclosure of where this engine loses
-to Docling/Marker: see [the benchmark write-up](https://pdfree.io/blog/pdf-to-markdown-benchmark/).
+Real output-quality numbers (91.6/100 avg, within 1.1 points of the closest of
+three widely-used open-source converters), methodology, and honest disclosure of
+where this engine loses to them: see [the benchmark write-up](https://pdfree.io/blog/pdf-to-markdown-benchmark/).
 
 ## Why this exists
 
 Searching for "PDF to Markdown for RAG" mostly surfaces developer tools you
-install and run yourself — Marker, Docling, HURIDOCS. pdfree.io's own tool is
+install and run yourself. pdfree.io's own tool is
 excellent for the same job but only reachable from a browser tab, one file at
 a time. This package is the same extraction logic (literally — see
 [Relationship to pdfree.io](#relationship-to-pdfreeio) below), packaged so it

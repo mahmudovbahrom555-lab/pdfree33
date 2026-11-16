@@ -16,7 +16,7 @@
 //  And pages with /Rotate (corpus class C1, 2026-10-18): a page a scanner or
 //  "rotate and save" left turned showed upright, but its text — drawn turned
 //  in the page's own space — was taken for rotated labels: an empty Word file
-//  (a Persian book of 62 such pages: 0 words, Smallpdf 90 %).
+//  (a Persian book of 62 such pages: 0 words, competitor A 90 %).
 //  Fixture: rotated-pages.pdf (make-rotated.mjs, rotated-pages.json).
 //  And digits a font's ToUnicode names wrongly (class C4, 2026-10-21): a
 //  page drawing "2011" read as "3122" by every text reader — 26 of 269

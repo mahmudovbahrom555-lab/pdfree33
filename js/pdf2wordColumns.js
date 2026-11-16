@@ -299,7 +299,7 @@ function _detectColumnRegions(lines, pageWidth, rtlAware, join) {
   // TABLE_GUARD_FRACTION, which silently discarded a real, correctly
   // detectable 2-column split and fell back to unsplit output — merged
   // rows of two independent columns read as scrambled, unreadable text
-  // (confirmed both live against iLovePDF/Smallpdf, which correctly split
+  // (confirmed both live against competitors A and B, which correctly split
   // the identical fixture, and via a direct detectTables()/
   // looksLikeProseNotData() trace on the same extracted lines). Without
   // this filter, prose cells (multi-word sentences, no numeric anchor)

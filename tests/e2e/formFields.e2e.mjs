@@ -737,7 +737,7 @@ await test('Cyrillic field name survives sanitization + a real Unicode font (not
 });
 
 await test('field-list sidebar lists every placed field and navigates to one on another page', async () => {
-  // Competitive-parity feature vs iLovePDF's own PDF-Forms "Form Field List"
+  // Competitive-parity feature vs competitor B's own PDF-Forms "Form Field List"
   // (checked live 2026-09-17). The sidebar's whole reason to exist is finding
   // a field in a document with many of them WITHOUT hunting across pages, so
   // the load-bearing assertion here is the cross-page jump — a same-page-only

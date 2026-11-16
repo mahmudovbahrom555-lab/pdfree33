@@ -212,7 +212,7 @@ function _removeWatermarks(pdf) {
 // untouched and still resolves).
 //
 // This keeps whichever bookmarks still point at a SURVIVING page, dropping
-// only the ones that pointed at excluded pages — matches Smallpdf's observed
+// only the ones that pointed at excluded pages — matches competitor A's observed
 // behavior (competitor comparison, 2026-09), a real UX improvement over
 // blanket-deleting every bookmark just because SOME page was removed.
 //
