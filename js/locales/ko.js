@@ -1127,6 +1127,7 @@ window.PDFREE_LOCALE = {
   // ── pdf2excelUI.js ───────────────────────────────────────
   p2e_mode_hint: "감지된 표는 각각 별도의 Excel 시트에 들어갑니다. 추출한 나머지 텍스트는 “Text” 시트에 들어갑니다.",
   p2e_ocr_hint: "확인한 페이지에서 추출할 수 있는 텍스트가 없습니다. ",
+  p2e_image_pages: "{pages}페이지의 큰 이미지에 Excel에 포함되지 않은 데이터가 있을 수 있습니다. 해당 페이지를 확인하고 필요한 경우 OCR을 사용하세요.",
   p2e_skipped_pages: "추출할 수 있는 텍스트가 없어 건너뛴 페이지: {pages}.",
   p2e_ocr_scans: "스캔 페이지에 OCR 실행",
   p2e_number_format: "소수점 구분 기호",

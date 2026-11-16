@@ -1170,6 +1170,7 @@ window.PDFREE_LOCALE = {
   // ── pdf2excelUI.js ─────────────────────────────────────────────
   p2e_mode_hint: "检测到的表格分别导出到独立的 Excel 工作表。提取的其他文本放在“Text”工作表中。",
   p2e_ocr_hint: "在已检查的页面中未找到可提取的文本。",
+  p2e_image_pages: "第 {pages} 页的大幅图片可能包含未导入 Excel 的数据。请检查这些页面，并在需要时使用 OCR。",
   p2e_skipped_pages: "以下页面没有可提取的文本，已跳过：{pages}。",
   p2e_ocr_scans: "对扫描页运行 OCR",
   p2e_number_format: "小数分隔符",

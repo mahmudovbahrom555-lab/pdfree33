@@ -1127,6 +1127,7 @@ window.PDFREE_LOCALE = {
   // ── pdf2excelUI.js ───────────────────────────────────────
   p2e_mode_hint: "As tabelas detetadas vão para folhas de Excel separadas. O restante texto extraído vai para a folha «Text».",
   p2e_ocr_hint: "Não foi encontrado texto extraível nas páginas verificadas. ",
+  p2e_image_pages: "Imagens grandes nas páginas {pages} podem conter dados ausentes no Excel. Confira essas páginas e use OCR se necessário.",
   p2e_skipped_pages: "Foram ignoradas as páginas sem texto extraível: {pages}.",
   p2e_ocr_scans: "Executar OCR nas páginas digitalizadas",
   p2e_number_format: "Separador decimal",

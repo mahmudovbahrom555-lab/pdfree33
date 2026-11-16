@@ -1128,6 +1128,7 @@ window.PDFREE_LOCALE = {
   // ── pdf2excelUI.js ───────────────────────────────────────
   p2e_mode_hint: "Erkannte Tabellen kommen in separate Excel-Tabellenblätter. Sonstiger extrahierter Text steht im Blatt „Text“.",
   p2e_ocr_hint: "Auf den geprüften Seiten wurde kein extrahierbarer Text gefunden. ",
+  p2e_image_pages: "Große Bilder auf den Seiten {pages} können Daten enthalten, die in Excel fehlen. Prüfen Sie diese Seiten und verwenden Sie bei Bedarf OCR.",
   p2e_skipped_pages: "Seiten ohne extrahierbaren Text wurden übersprungen: {pages}.",
   p2e_ocr_scans: "OCR für gescannte Seiten starten",
   p2e_number_format: "Dezimaltrennzeichen",

@@ -1126,6 +1126,7 @@ window.PDFREE_LOCALE = {
   // ── pdf2excelUI.js ───────────────────────────────────────
   p2e_mode_hint: "Tabel yang terdeteksi masuk ke lembar Excel terpisah. Teks lain yang diekstrak masuk ke lembar “Text”.",
   p2e_ocr_hint: "Tidak ditemukan teks yang dapat diekstrak pada halaman yang diperiksa. ",
+  p2e_image_pages: "Gambar besar di halaman {pages} mungkin berisi data yang tidak masuk ke Excel. Periksa halaman ini dan gunakan OCR jika perlu.",
   p2e_skipped_pages: "Halaman tanpa teks yang dapat diekstrak dilewati: {pages}.",
   p2e_ocr_scans: "Jalankan OCR pada halaman hasil pindai",
   p2e_number_format: "Pemisah desimal",

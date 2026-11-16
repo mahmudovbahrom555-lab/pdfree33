@@ -17,7 +17,7 @@ global.document = {
 global.window    = globalThis;
 global.Worker    = class { postMessage() {} terminate() {} addEventListener() {} };
 
-const { _p2eCellValue, _p2eDecimalMark, _p2eTableMark, _p2eExtractPage, _p2eStitchTables } = await import('../js/processor.js');
+const { _p2eHasUnrepresentedImage, _p2eCellValue, _p2eDecimalMark, _p2eTableMark, _p2eExtractPage, _p2eStitchTables } = await import('../js/processor.js');
 const { detectTables, groupItemsIntoLines } = await import('../js/pdf2wordTables.js');
 
 const { initPdf2ExcelOptions, hidePdf2ExcelOptions, renderP2eConfidence } = await import('../js/pdf2excelUI.js');
@@ -685,6 +685,44 @@ for (const stage of ['loading', 'writing']) {
     failed++;
   }
 }
+
+test('large image with only an outside heading needs a mixed-page warning', () => {
+  expect(_p2eHasUnrepresentedImage(
+    [{ x: 30, yTop: 700, width: 540, height: 600 }],
+    [{ x: 40, y: 760, str: 'Payroll register', width: 100 }],
+    [0, 0, 600, 800])).toBe(true);
+});
+
+test('logos, out-of-page images and searchable scans do not trigger the mixed-page warning', () => {
+  const view = [0, 0, 600, 800];
+  expect(_p2eHasUnrepresentedImage([{ x: 40, yTop: 760, width: 70, height: 50 }], [], view)).toBe(false);
+  expect(_p2eHasUnrepresentedImage([{ x: 650, yTop: 700, width: 600, height: 700 }], [], view)).toBe(false);
+  expect(_p2eHasUnrepresentedImage([{ x: 0, yTop: 800, width: 600, height: 800 }],
+    [{ x: 50, y: 600, width: 150, str: 'Extractable table with values 123 456' }], view)).toBe(false);
+  expect(_p2eHasUnrepresentedImage([], [], view)).toBe(false);
+});
+
+test('mixed-page warning stays visible without detected tables and links to OCR', () => {
+  const root = { style: {}, children: [], replaceChildren() { this.children = []; },
+    append(node) { this.children.push(node); } };
+  const oldDocument = { ...document };
+  const oldLocation = global.location;
+  document.getElementById = id => id === 'p2eConfidence' ? root : null;
+  document.createElement = () => ({ style: {}, children: [], append(...nodes) { this.children.push(...nodes); } });
+  global.location = { pathname: '/pdf-to-excel/' };
+  try {
+    renderP2eConfidence({ tableCount: 0, imagePages: [171] });
+    expect(root.style.display).toBe('');
+    expect(root.children[0].children[0].textContent.includes('171')).toBe(true);
+    expect(root.children[0].children[1].href).toBe('/ocr-pdf/');
+    renderP2eConfidence({ tableCount: 0 });
+    expect(root.children.length).toBe(0);
+    expect(root.style.display).toBe('none');
+  } finally {
+    Object.assign(document, oldDocument);
+    global.location = oldLocation;
+  }
+});
 
 test('Excel result warns about skipped pages even when no table was found', () => {
   const root = { style: {}, innerHTML: '', children: [], replaceChildren() { this.children = []; },

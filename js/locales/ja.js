@@ -1128,6 +1128,7 @@ window.PDFREE_LOCALE = {
   // ── pdf2excelUI.js ───────────────────────────────────────
   p2e_mode_hint: "検出した表は個別のExcelシートに入ります。その他の抽出テキストは「Text」シートに入ります。",
   p2e_ocr_hint: "確認したページに抽出できるテキストはありませんでした。",
+  p2e_image_pages: "ページ {pages} の大きな画像に、Excelに含まれていないデータがある可能性があります。ページを確認し、必要に応じてOCRを使用してください。",
   p2e_skipped_pages: "テキストを抽出できなかったため省略したページ：{pages}。",
   p2e_ocr_scans: "スキャンページにOCRを実行",
   p2e_number_format: "小数点の区切り記号",

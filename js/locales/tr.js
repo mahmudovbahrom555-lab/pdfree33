@@ -1125,6 +1125,7 @@ window.PDFREE_LOCALE = {
   // ── pdf2excelUI.js ───────────────────────────────────────
   p2e_mode_hint: "Algılanan tablolar ayrı Excel sayfalarına aktarılır. Çıkarılan diğer metinler “Text” sayfasına gider.",
   p2e_ocr_hint: "İncelenen sayfalarda çıkarılabilir metin bulunamadı. ",
+  p2e_image_pages: "{pages} sayfalarındaki büyük görseller, Excel’de eksik olan veriler içerebilir. Bu sayfaları kontrol edin ve gerekirse OCR kullanın.",
   p2e_skipped_pages: "Çıkarılabilir metin içermeyen sayfalar atlandı: {pages}.",
   p2e_ocr_scans: "Taranan sayfalarda OCR çalıştırın",
   p2e_number_format: "Ondalık ayırıcı",
