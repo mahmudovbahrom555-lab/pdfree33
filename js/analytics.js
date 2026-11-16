@@ -166,8 +166,8 @@ export function workProps({ pages, ocrPages = 0 }) {
 // file (privacy page: "for Compress's fit into a size"). The size asked for is
 // kept as typed (a portal's limit — "4 MB", "500 KB" — names no one).
 export function compressTargetProps({ targetBytes, inputSize, outputSize, met, step, runs }) {
-  const mb = targetBytes / 1048576;
-  const target = mb >= 1 ? `${+mb.toFixed(1)} MB` : `${Math.round(targetBytes / 1024)} KB`;
+  const mb = targetBytes / 1_000_000;
+  const target = mb >= 1 ? `${+mb.toFixed(1)} MB` : `${Math.round(targetBytes / 1_000)} KB`;
   const ratio = outputSize / targetBytes;
   const result = met ? 'fits' : ratio <= 1.1 ? 'over ≤10%' : ratio <= 1.5 ? 'over 10–50%' : ratio <= 2 ? 'over 50–100%' : 'over >2×';
   return { tool: 'compress', target, input_size: _sizeBucket(inputSize), result, step, runs };

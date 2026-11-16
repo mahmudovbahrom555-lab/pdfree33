@@ -388,6 +388,41 @@ function _cmykdPlacedCandidate(d, lookup, f, nc) {
   return { kind: f[0] === '/DCTDecode' ? 'rgb-dct' : 'rgb-raw', nc, invert: false };
 }
 
+// The main encoder sizes images against the median page. Only delegate scans
+// whose drawn dimensions agree with that reference. Smaller placed figures
+// still need the placement-aware encoder.
+function _cmykdMedianPage(pdf) {
+  const pages = pdf.getPages().map(page => {
+    const { width, height } = page.getSize();
+    return { width, height, rotation: page.getRotation().angle };
+  }).sort((a, b) => a.width * a.height - b.width * b.height);
+  const median = pages[Math.floor(pages.length / 2)];
+  return median?.rotation === 0 && median.width > 0 && median.height > 0 ? median : null;
+}
+
+// Check the JPEG frame without decoding pixels. Leave EXIF orientation,
+// embedded profiles and other application markers on the existing path.
+function _cmykdPlainRgbJpeg(bytes, width, height) {
+  if (bytes[0] !== 0xff || bytes[1] !== 0xd8) return false;
+  let matches = false;
+  for (let offset = 2; offset + 4 <= bytes.length;) {
+    if (bytes[offset] !== 0xff) return false;
+    const marker = bytes[offset + 1];
+    const length = bytes[offset + 2] * 256 + bytes[offset + 3];
+    if (length < 2 || offset + 2 + length > bytes.length) return false;
+    if (marker === 0xda) return matches;
+    if (marker >= 0xe1 && marker <= 0xef) return false;
+    if (marker === 0xc0) {
+      matches = length === 17 && bytes[offset + 4] === 8
+        && bytes[offset + 5] * 256 + bytes[offset + 6] === height
+        && bytes[offset + 7] * 256 + bytes[offset + 8] === width
+        && bytes[offset + 9] === 3;
+    }
+    offset += length + 2;
+  }
+  return false;
+}
+
 // ── The pass ─────────────────────────────────────────────────────────────────
 
 // opts: { target (dpi), quality, maxMegapixels,               — CMYK (D300)
@@ -437,6 +472,10 @@ async function cmykD(pdf, opts) {
   if (!cands.size) return { replaced: 0, jpx: 0, placed: 0, before: 0, after: 0, skipped };
 
   const { minInch, xobjectDicts } = _cmykdPlacements(pdf);
+  let medianPage = null;
+  if (opts.rgb?.preferNativeScans) {
+    try { medianPage = _cmykdMedianPage(pdf); } catch { /* malformed page box */ }
+  }
   const elsewhere = _cmykdUsedElsewhere(pdf, new Set(cands.keys()), xobjectDicts);
   const { JpegImage, JpxImage } = await import(opts.urls.decoders);
   const decode = (bytes) => {
@@ -448,7 +487,7 @@ async function cmykD(pdf, opts) {
   };
   const progressive = b => { for (let i = 2; i + 4 <= b.length && b[i] === 0xff;) { const m = b[i + 1]; if (m === 0xc2) return true; if (m === 0xda) return false; i += 2 + ((b[i + 2] << 8) | b[i + 3]); } return false; };
 
-  let replaced = 0, jpx = 0, placed = 0, before = 0, after = 0;
+  let replaced = 0, jpx = 0, placed = 0, deferred = 0, before = 0, after = 0;
   let pending = [], pendingBytes = 0;
   async function flush() {
     if (!pending.length) return;
@@ -513,6 +552,20 @@ async function cmykD(pdf, opts) {
     const shrink = target && eff > target * 1.1 && !matte;
     // placed figures: only those this pass downsamples — the rest stay with worker.js, decoded never
     if (c.kind.startsWith('rgb') && !shrink) { skip('placed: at or below the target'); continue; }
+    if (medianPage && c.kind === 'rgb-dct' && w * h <= 12_000_000 && Math.max(w, h) >= 600
+        && c.nc === 3 && !(d.get(PDFName.of('ColorSpace')) instanceof PDFArray)
+        && d.get(PDFName.of('Filter')) === PDFName.of('DCTDecode')
+        && !['Decode', 'DecodeParms', 'SMask', 'SMaskInData'].some(key => d.has(PDFName.of(key)))
+        && Math.abs(place.inchX * 72 / medianPage.width - 1) <= 0.01
+        && Math.abs(place.inchY * 72 / medianPage.height - 1) <= 0.01
+        && Math.abs((w / place.inchX) / (h / place.inchY) - 1) <= 0.01) {
+      const estimatedDpi = Math.round((w / medianPage.width + h / medianPage.height) * 36);
+      if (estimatedDpi > target * 1.1 && _cmykdPlainRgbJpeg(c.obj.contents, w, h)) {
+        // The main encoder can resize and encode this scan in one pass.
+        deferred++;
+        continue;
+      }
+    }
     let samples;
     try {
       if (c.kind === 'jpx') {
@@ -551,7 +604,7 @@ async function cmykD(pdf, opts) {
     if (pendingBytes >= CMYKD_BATCH_BYTES) await flush();
   }
   await flush();
-  return { replaced, jpx, placed, before, after, skipped };
+  return { replaced, jpx, placed, deferred, before, after, skipped };
 }
 
 // Published on the worker's global, as pdfEncrypt.js does (an unexported function

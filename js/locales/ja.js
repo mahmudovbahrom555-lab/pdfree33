@@ -314,6 +314,7 @@ window.PDFREE_LOCALE = {
   compress_target_lossless:  '画質は落ちていません。',
   compress_target_cost:      '画像: {dpi} dpi、画質 {quality}%。',
   compress_target_heavy:     '画像がはっきり柔らかくなっています — 送る前に小さな文字を確認してください。',
+  compress_target_qr_protected: 'QRコードの読み取りを保ったまま {target} 以下にできませんでした。保存サイズ：{size}。',
   compress_target_unreached: '⚠️ 最も強い設定でも {target} 未満にできませんでした。こちらは {size} — ほぼ同じ大きさの中で最も画質を保った版です。PDF を分割すると役立つ場合があります。',
   prog_target_try:           'サイズに収まる設定を探しています — {n} 回目…',
 

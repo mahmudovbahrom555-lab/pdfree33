@@ -27,12 +27,14 @@
 //  Run: node tests/e2e/compress.e2e.mjs
 // ============================================================
 
-import { chromium } from 'playwright';
+import { chromium, devices } from 'playwright';
+import JSZip from 'jszip';
 import { PDFDocument, PDFName, StandardFonts, pushGraphicsState, popGraphicsState, concatTransformationMatrix, drawObject } from 'pdf-lib';
 import zlib from 'zlib';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import { fileURLToPath } from 'node:url';
 import { trapCases, textPdf, firstImage, imagePdf, RAW_RGB, W as TW, H as TH } from '../corpus/traps.mjs';
 
 const BASE_URL = process.env.PDFREE_BASE_URL || 'http://localhost:8934';
@@ -395,9 +397,9 @@ await test('fit into a size: an image PDF fits 40 % of its size, and the cost is
   const bytes = await imagePdf(zlib.deflateSync(rgb), { Width: W, Height: H, ColorSpace: 'DeviceRGB', Filter: 'FlateDecode' });
   const file = path.join(tmp, 'photo-size.pdf');
   fs.writeFileSync(file, bytes);
-  const kb = Math.floor(bytes.length * 0.4 / 1024);
+  const kb = Math.floor(bytes.length * 0.4 / 1000);
   const { size, verdict } = await compressToSize(file, kb);
-  if (!(size <= kb * 1024)) throw new Error(`${size} bytes over ${kb} KB`);
+  if (!(size <= kb * 1000)) throw new Error(`${size} bytes over ${kb} KB`);
   if (!/fits/.test(verdict) || !/dpi|No quality lost/.test(verdict)) throw new Error(verdict);
 });
 
@@ -407,6 +409,342 @@ await test('fit into a size: an unreachable size is said plainly and a file is s
   const { size, verdict } = await compressToSize(file, 0.2);   // the text PDF is ~1 KB already
   expect(size > 0).toBe(true);
   if (!/Couldn't get under/.test(verdict)) throw new Error(verdict);
+});
+
+const realCorpus = new URL('../corpus/real/', import.meta.url);
+const realFiles = ['wikipedia-ar-pdf.pdf', 'irs-f1040-form.pdf'].map(corpusName => ({
+  name: 'report.pdf',
+  mimeType: 'application/pdf',
+  buffer: fs.readFileSync(new URL(corpusName, realCorpus)),
+}));
+
+async function batchWithTarget(context, kb) {
+  const page = await context.newPage();
+  await page.goto(`${BASE_URL}/compress-pdf/`);
+  await page.setInputFiles('#fileInput', realFiles);
+  await page.click('.compress-target [data-target="custom"]');
+  await page.selectOption('#compressTargetUnit', 'KB');
+  await page.fill('#compressTargetValue', String(kb));
+  await page.click('#mergeBtn');
+  const button = page.locator('#downloadBtn');
+  await button.waitFor({ timeout: 120000 });
+  const [download] = await Promise.all([page.waitForEvent('download'), button.click()]);
+  const zip = await JSZip.loadAsync(fs.readFileSync(await download.path()));
+  return { page, zip };
+}
+
+for (const [name, profile] of [
+  ['desktop light', { viewport: { width: 1440, height: 900 } }],
+  ['iPhone dark', { ...devices['iPhone 13'], colorScheme: 'dark' }],
+  ['Android light', devices['Pixel 7']],
+]) {
+  await test(`real PDFs, ${name}: preserves both same-name files and reports an unreachable target`, async () => {
+    const context = await browser.newContext({ ...profile, serviceWorkers: 'block', acceptDownloads: true });
+    try {
+      const { page, zip } = await batchWithTarget(context, 0.1);
+      const names = Object.keys(zip.files);
+      expect(names.sort().join('|')).toBe(['report-compressed (2).pdf', 'report-compressed.pdf'].join('|'));
+      for (let i = 0; i < realFiles.length; i++) {
+        const entry = i === 0 ? 'report-compressed.pdf' : 'report-compressed (2).pdf';
+        const output = await PDFDocument.load(await zip.file(entry).async('uint8array'));
+        const input = await PDFDocument.load(realFiles[i].buffer);
+        expect(output.getPageCount()).toBe(input.getPageCount());
+        expect(JSON.stringify(output.getPage(0).getSize())).toBe(JSON.stringify(input.getPage(0).getSize()));
+      }
+      const verdicts = await page.locator('#targetVerdict li').allTextContents();
+      expect(verdicts.length).toBe(2);
+      if (!verdicts.every(text => text.includes("Couldn't get under"))) throw new Error(verdicts.join('\n'));
+    } finally {
+      await context.close();
+    }
+  });
+}
+
+await test('real PDFs: reports a met target for each ZIP entry', async () => {
+  const context = await browser.newContext({ serviceWorkers: 'block', acceptDownloads: true });
+  try {
+    const { page, zip } = await batchWithTarget(context, 300);
+    const verdicts = await page.locator('#targetVerdict li').allTextContents();
+    expect(verdicts.length).toBe(2);
+    if (!verdicts.every(text => text.includes('fits'))) throw new Error(verdicts.join('\n'));
+    for (const entry of Object.values(zip.files)) {
+      const size = (await entry.async('uint8array')).byteLength;
+      if (size > 300_000) throw new Error(`${entry.name} exceeded target: ${size}`);
+    }
+  } finally {
+    await context.close();
+  }
+});
+
+await test('cancelled target compression cannot time out or interfere with a retry', async () => {
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    const page = await context.newPage();
+    await page.addInitScript(() => {
+      window.stallNextCompress = true;
+      window.compressRequests = 0;
+      const NativeWorker = window.Worker;
+      window.Worker = class extends NativeWorker {
+        postMessage(message, transfer) {
+          if (message.tool === 'compress') {
+            window.compressRequests++;
+            if (window.stallNextCompress) {
+              window.stallNextCompress = false;
+              return;
+            }
+          }
+          super.postMessage(message, transfer);
+        }
+      };
+    });
+    await page.goto(`${BASE_URL}/compress-pdf/`);
+    await page.setInputFiles('#fileInput', realFiles[0]);
+    await page.click('.compress-target [data-target="5"]');
+    await page.clock.install();
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.compressRequests === 1);
+    await page.click('#cancelBtn');
+    await page.clock.fastForward(46000);
+    expect(await page.getByText(/Compression timed out/).count()).toBe(0);
+    await page.click('#mergeBtn');
+    await page.locator('#downloadBtn').waitFor();
+    expect(await page.getByText(/Compression timed out/).count()).toBe(0);
+  } finally {
+    await context.close();
+  }
+});
+
+await test('real PDF: a timed-out worker is terminated before retry', async () => {
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    const page = await context.newPage();
+    await page.addInitScript(() => {
+      window.compressWorkers = [];
+      const NativeWorker = window.Worker;
+      window.Worker = class extends NativeWorker {
+        postMessage(message, transfer) {
+          if (message.tool === 'compress') {
+            window.compressWorkers.push(this);
+            if (window.compressWorkers.length === 1) return;
+          }
+          super.postMessage(message, transfer);
+        }
+
+        terminate() {
+          this.stopped = true;
+          super.terminate();
+        }
+      };
+    });
+    await page.goto(`${BASE_URL}/compress-pdf/`);
+    await page.setInputFiles('#fileInput', realFiles[0]);
+    await page.clock.install();
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.compressWorkers.length === 1);
+    await page.clock.fastForward(46000);
+    await page.getByText(/Compression timed out/).first().waitFor();
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.compressWorkers.length === 2);
+    const isolated = await page.evaluate(() => {
+      const [first, retry] = window.compressWorkers;
+      return first.stopped === true && first !== retry;
+    });
+    expect(isolated).toBe(true);
+    await page.locator('#downloadBtn').waitFor();
+  } finally {
+    await context.close();
+  }
+});
+
+async function testTargetSelection({ fittingQuality, attempts, dpi, exactLimit, refinement, fitBytes }) {
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    const page = await context.newPage();
+    const pdf = Array.from(await textPdf());
+    await page.addInitScript(BLOB_HOOK);
+    await page.addInitScript(({ pdf, fittingQuality, exactLimit, refinement, fitBytes }) => {
+      window.targetAttempts = [];
+      const NativeWorker = window.Worker;
+      window.Worker = class extends NativeWorker {
+        postMessage(message, transfer) {
+          if (message.tool !== 'compress') {
+            super.postMessage(message, transfer);
+            return;
+          }
+          const { quality } = message.options;
+          window.targetAttempts.push(quality);
+          const fits = quality === fittingQuality || (quality !== null && quality <= 0.60);
+          let size = exactLimit ? exactLimit + (fits ? 0 : 1) : pdf.length + (fits ? 0 : 1024);
+          if (fitBytes && quality === fittingQuality) size = fitBytes;
+          if (refinement && quality === 0.75) size = 460_000;
+          if (refinement && quality === 0.77) size = refinement;
+          const result = new Uint8Array(size).fill(32);
+          result.set(pdf);
+          setTimeout(() => this.onmessage?.({ data: {
+            type: 'done', result: result.buffer, compressedSize: size, report: {},
+          } }), 0);
+        }
+      };
+    }, { pdf, fittingQuality, exactLimit, refinement, fitBytes });
+    await page.goto(`${BASE_URL}/compress-pdf/`);
+    const input = exactLimit ? fileURLToPath(new URL('arxiv-2609.36796.pdf', realCorpus)) : realFiles[0];
+    await page.setInputFiles('#fileInput', input);
+    await page.click('.compress-target [data-target="custom"]');
+    await page.selectOption('#compressTargetUnit', 'KB');
+    await page.fill('#compressTargetValue', String(exactLimit ? exactLimit / 1000 : Math.ceil(pdf.length / 1000)));
+    await page.click('#mergeBtn');
+    await page.locator('#downloadBtn').waitFor();
+    if (exactLimit) {
+      const expected = refinement ? (refinement <= exactLimit ? refinement : 460_000) : (fitBytes ?? exactLimit);
+      expect(await page.evaluate(() => window.__blob.size)).toBe(expected);
+    }
+    expect(JSON.stringify(await page.evaluate(() => window.targetAttempts))).toBe(JSON.stringify(attempts));
+    if (!(await page.locator('#targetVerdict').innerText()).includes(`${dpi} dpi`)) {
+      throw new Error(`Expected the ${dpi} dpi result`);
+    }
+  } finally {
+    await context.close();
+  }
+}
+
+await test('target size checks a gentler fit even when the next preset grows', () =>
+  testTargetSelection({ fittingQuality: 0.85, attempts: [null, 0.85], dpi: 300 }));
+
+await test('target size lowers JPEG quality at 200 dpi before reducing resolution', () =>
+  testTargetSelection({ exactLimit: 500_000, fittingQuality: 0.70, attempts: [null, 0.85, 0.80, 0.75, 0.70], dpi: 200 }));
+
+
+await test('target size treats 500 KB as exactly 500000 bytes', () =>
+  testTargetSelection({ exactLimit: 500_000, fittingQuality: 0.75,
+    attempts: [null, 0.85, 0.80, 0.75], dpi: 200 }));
+
+for (const [description, refinement] of [
+  ['uses intermediate quality if it fits', 495_000],
+  ['keeps the first fit if intermediate quality exceeds the limit', 500_001],
+]) {
+  await test(`target size ${description}`, () => testTargetSelection({
+    exactLimit: 500_000, fittingQuality: 0.75, refinement,
+    attempts: [null, 0.85, 0.80, 0.75, 0.77], dpi: 200,
+  }));
+}
+
+await test('target size keeps the tested 70 percent preset when it fits with headroom', () =>
+  testTargetSelection({ exactLimit: 500_000, fittingQuality: 0.70, fitBytes: 460_000,
+    attempts: [null, 0.85, 0.80, 0.75, 0.70], dpi: 200 }));
+
+await test('mixed packet restores a sharper scan within budget and preserves the form', async () => {
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    const page = await context.newPage();
+    await page.goto(`${BASE_URL}/compress-pdf/`);
+    const jpeg = async size => page.evaluate(async size => {
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const draw = canvas.getContext('2d');
+      draw.fillStyle = '#f0dfb3';
+      draw.fillRect(0, 0, size, size);
+      draw.fillStyle = '#242833';
+      for (let y = 2; y < size; y += 8) draw.fillRect(5, y, size - 10, 2);
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.86));
+      return Array.from(new Uint8Array(await blob.arrayBuffer()));
+    }, size);
+    async function packet(size) {
+      const scan = await imagePdf(Uint8Array.from(await jpeg(size)), {
+        Width: size, Height: size, ColorSpace: 'DeviceRGB', Filter: 'DCTDecode',
+      });
+      const pdf = await PDFDocument.load(scan);
+      const electronic = pdf.addPage();
+      electronic.drawText('Electronic form', { x: 30, y: 740 });
+      const field = pdf.getForm().createTextField('reference');
+      field.setText('EXAMPLE-123');
+      field.addToPage(electronic, { x: 30, y: 700, width: 100, height: 18 });
+      return pdf.save();
+    }
+    const base = await packet(120);
+    const larger = await packet(240);
+    const hit = await page.evaluate(async ({ base, larger }) => {
+      const worker = new Worker('/js/compressPageRefineWorker.js');
+      try {
+        const run = targetBytes => new Promise((resolve, reject) => {
+          worker.onerror = event => reject(Error(event.message || 'Page refinement worker failed to load'));
+          worker.onmessage = ({ data }) => resolve(data);
+          worker.postMessage({ base: Uint8Array.from(base).buffer, larger: Uint8Array.from(larger).buffer, targetBytes });
+        });
+        const tooSmall = await run(base.length);
+        const result = await run(larger.length + 1024);
+        return { tooSmall, pages: result?.pages, pdf: result && Array.from(new Uint8Array(result.buffer)) };
+      } finally {
+        worker.terminate();
+      }
+    }, { base: Array.from(base), larger: Array.from(larger) });
+    expect(hit.tooSmall).toBe(null);
+    expect(JSON.stringify(hit.pages)).toBe('[1]');
+    expect(hit.pdf.length <= larger.length + 1024).toBe(true);
+    const pdf = await PDFDocument.load(Uint8Array.from(hit.pdf));
+    expect(pdf.getPageCount()).toBe(2);
+    expect(firstImage(pdf).dict.get(PDFName.of('Width')).asNumber()).toBe(240);
+    expect(pdf.getForm().getTextField('reference').getText()).toBe('EXAMPLE-123');
+  } finally {
+    await context.close();
+  }
+});
+
+await test('strong compression keeps a QR-readable scan when the smaller version loses its code', async () => {
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    const page = await context.newPage();
+    await page.goto(`${BASE_URL}/compress-pdf/`);
+    const pathToQr = new URL('../fixtures/compress-qr.png', import.meta.url);
+    const encoded = fs.readFileSync(pathToQr).toString('base64');
+    async function scan(withQr) {
+      const jpeg = await page.evaluate(async ({ encoded, withQr }) => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 520;
+        canvas.height = 736;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (withQr) {
+          const image = new Image();
+          image.src = 'data:image/png;base64,' + encoded;
+          await image.decode();
+          ctx.imageSmoothingEnabled = false;
+          ctx.drawImage(image, 65, 267, 132, 132);
+        }
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.85));
+        return Array.from(new Uint8Array(await blob.arrayBuffer()));
+      }, { encoded, withQr });
+      return imagePdf(Uint8Array.from(jpeg), {
+        Width: 520, Height: 736, ColorSpace: 'DeviceRGB', Filter: 'DCTDecode',
+      });
+    }
+    const readable = await scan(true);
+    const unreadable = await scan(false);
+    const verdict = await page.evaluate(async ({ readable, unreadable }) => {
+      const worker = new Worker('/js/compressPageRefineWorker.js');
+      try {
+        const check = bytes => new Promise((resolve, reject) => {
+          worker.onerror = () => reject(Error('QR verification worker failed'));
+          worker.onmessage = ({ data }) => resolve(data);
+          const original = Uint8Array.from(readable).buffer;
+          const base = Uint8Array.from(bytes).buffer;
+          const larger = Uint8Array.from(readable).buffer;
+          worker.postMessage({ original, base, larger }, [original, base, larger]);
+        });
+        const lost = await check(unreadable);
+        const retained = await check(readable);
+        return { protected: lost?.qrProtected, retained, bytes: lost?.buffer?.byteLength };
+      } finally {
+        worker.terminate();
+      }
+    }, { readable: Array.from(readable), unreadable: Array.from(unreadable) });
+    expect(verdict.protected).toBe(true);
+    expect(verdict.retained).toBe(null);
+    expect(verdict.bytes).toBe(readable.byteLength);
+  } finally {
+    await context.close();
+  }
 });
 
 await browser.close();
