@@ -3573,7 +3573,7 @@ async function _p2eExtractTables(pdfDoc) {
         ln.items = joinTouchingItems(ln.items, cuts);
       }
     }
-    const pageResult = _p2eExtractPage(lines, grids, p);
+    const pageResult = _p2eExtractPage(lines, grids, p, page.view);
     tables.push(...pageResult.tables);
     textRows.push(...pageResult.textRows);
 
@@ -3601,8 +3601,17 @@ const _p2eAllBold = lns => lns.some(ln => ln.items.length) &&
 // names glued onto the previous record). Lines outside every grid still go
 // through detectTables, unchanged — it remains the only option for
 // borderless tables. Anything neither claims becomes a Text-sheet row.
-export function _p2eExtractPage(lines, grids, page) {
-  const tables   = [];
+export function _p2eExtractPage(lines, grids, page, pageView) {
+  const tables = [];
+  const contentLines = lines.filter(line => !_p2ePageFurniture(line));
+  const edgeMargin = pageView ? Math.min(108, (pageView[3] - pageView[1]) * 0.18) : 0;
+  const position = (top, bottom, left) => ({
+    top, left,
+    clearAbove: !contentLines.some(line => line.y > top),
+    clearBelow: !contentLines.some(line => line.y < bottom),
+    atTop: !!pageView && top >= pageView[3] - edgeMargin,
+    atBottom: !!pageView && bottom <= pageView[1] + edgeMargin,
+  });
   const consumedItems = new Set();
 
   for (const grid of grids) {
@@ -3640,7 +3649,10 @@ export function _p2eExtractPage(lines, grids, page) {
     // A lone ruled box (a signature field, a boxed note) isn't a table.
     if (rows.length < 2) continue;
     claimed.forEach(item => consumedItems.add(item));
-    tables.push({ page, rows, confidence: 1, boldRows, colXs });
+    tables.push({
+      page, rows, confidence: 1, boldRows, colXs,
+      ...position(rowYs[0], rowYs[rowYs.length - 1], left),
+    });
   }
 
   const restIdx = [];
@@ -3663,17 +3675,12 @@ export function _p2eExtractPage(lines, grids, page) {
   for (const tbl of textTables) {
     const boldRows = new Set();
     tbl.rowLines.forEach((lis, r) => { if (_p2eAllBold(lis.map(li => rest[li]))) boldRows.add(r); });
-    const own = new Set();
-    for (let i = tbl.startIdx; i <= tbl.endIdx; i++) { consumedLines.add(restIdx[i]); own.add(restIdx[i]); }
-    // Whether anything but page furniture stands below / above the table on its
-    // page — a table can only continue onto the next page if nothing does (see
-    // _p2eStitchTables).
-    const ys = [...own].map(li => lines[li].y);
-    const top = Math.max(...ys), bottom = Math.min(...ys);
-    const others = lines.filter((ln, li) => !own.has(li) && !_p2ePageFurniture(ln));
+    for (let i = tbl.startIdx; i <= tbl.endIdx; i++) consumedLines.add(restIdx[i]);
+    const top = rest[tbl.startIdx].y;
+    const bottom = rest[tbl.endIdx].y;
     tables.push({
       page, rows: tbl.rows, confidence: tbl.confidence, boldRows, colCenters: tbl.colCenters,
-      clearBelow: !others.some(ln => ln.y < bottom), clearAbove: !others.some(ln => ln.y > top),
+      ...position(top, bottom, tbl.colCenters[0]),
     });
   }
 
@@ -3683,6 +3690,7 @@ export function _p2eExtractPage(lines, grids, page) {
     const text = ln.items.map(i => i.str).join(' ').trim();
     if (text) textRows.push({ page, text });
   });
+  tables.sort((a, b) => b.top - a.top || a.left - b.left);
   return { tables, textRows };
 }
 
@@ -3694,47 +3702,48 @@ export function _p2ePageFurniture(ln) {
   return _P2E_PAGE_NUMBER_RE.test(ln.items.map(i => i.str).join(' ').trim());
 }
 
-// Joins a table that continues onto the next page back into ONE table
-// (→ one worksheet), instead of one worksheet per page. Rows repeating the
-// first table's leading rows (a header reprinted on every page) are dropped
-// from the continuation.
-//   Ruled tables: the same drawn column rules (colXs) on consecutive pages.
-//   Borderless tables (detectTables): the same columns (colCenters, within
-//     8pt), and the table runs to the bottom of its page and the next one
-//     starts at the top — nothing but a page number below the first or above
-//     the second (clearBelow/clearAbove). A heading such as "Expenses" over a
-//     table with the same columns keeps them apart: two tables with matching
-//     columns are merged only when nothing but the page break separates them.
-//     User report 2026-10-08 ("put into multiple tabs Table1, Table 2"):
-//     borderless tables were never stitched, so a multi-page one became one
-//     sheet per page.
+// A repeated first row can itself be data. Treat its nonnumeric cells as
+// labels only if styled as a heading or if a label heads typed values below.
+function _p2eHasHeader(table) {
+  const [first] = table.rows;
+  const isTypedValue = text => typeof _p2eCellValue(text).value !== 'string';
+  if (!first?.some(text => text.trim()) || first.some(isTypedValue)) return false;
+  return table.boldRows.has(0) || table.rows.slice(1, 4).some(row =>
+    row.some((text, col) => first[col]?.trim() && isTypedValue(text)));
+}
+
 export function _p2eStitchTables(tables) {
   const out = [];
-  let last = null, lastPage = 0;
+  let last = null;
+  let previous = null;
+  let lastHeader = null;
   for (const tbl of tables) {
-    const next = last && tbl.page === lastPage + 1;
-    const ruled = next && tbl.colXs && last.colXs &&
-      tbl.colXs.length === last.colXs.length &&
-      tbl.colXs.every((x, i) => Math.abs(x - last.colXs[i]) <= 4);
-    const borderless = next && tbl.colCenters && last.colCenters && last.clearBelow && tbl.clearAbove &&
-      tbl.colCenters.length === last.colCenters.length &&
-      tbl.colCenters.every((x, i) => Math.abs(x - last.colCenters[i]) <= 8);
-    const continues = ruled || borderless;
+    const adjacent = previous && tbl.page === previous.page + 1 && previous.clearBelow && tbl.clearAbove;
+    const oldCols = tbl.colXs ? last?.colXs : last?.colCenters;
+    const newCols = tbl.colXs ?? tbl.colCenters;
+    const matchesColumns = adjacent && oldCols && newCols && oldCols.length === newCols.length &&
+      newCols.every((x, i) => Math.abs(x - oldCols[i]) <= (tbl.colXs ? 4 : 8));
+
+    const header = _p2eHasHeader(tbl) ? tbl.rows[0].map(text => text.replace(/\s+/g, ' ').trim()) : null;
+    const repeatedHeader = matchesColumns && header && lastHeader &&
+      header.length === lastHeader.length && header.every((text, i) => text === lastHeader[i]);
+
+    // Without a confirmed repeat, the tables must run into the page break
+    // and the continuation must begin with data.
+    const continues = repeatedHeader ||
+      (matchesColumns && !header && previous.atBottom && tbl.atTop);
     if (!continues) {
       last = { ...tbl, rows: [...tbl.rows], boldRows: new Set(tbl.boldRows) };
-      lastPage = tbl.page;
+      lastHeader = header;
       out.push(last);
-      continue;
+    } else {
+      const skip = repeatedHeader ? 1 : 0;
+      for (let i = skip; i < tbl.rows.length; i++) {
+        if (tbl.boldRows.has(i)) last.boldRows.add(last.rows.length);
+        last.rows.push(tbl.rows[i]);
+      }
     }
-    const header = last.rows.slice(0, 3).map(r => r.join('\u0001'));
-    let skip = 0;
-    while (skip < tbl.rows.length && header.includes(tbl.rows[skip].join('\u0001'))) skip++;
-    tbl.rows.slice(skip).forEach((row, i) => {
-      if (tbl.boldRows.has(i + skip)) last.boldRows.add(last.rows.length);
-      last.rows.push(row);
-    });
-    last.clearBelow = tbl.clearBelow;
-    lastPage = tbl.page;
+    previous = tbl;
   }
   return out;
 }
