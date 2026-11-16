@@ -312,6 +312,7 @@ window.PDFREE_LOCALE = {
   compress_target_lossless:  'Không giảm chất lượng.',
   compress_target_cost:      'Hình ảnh: {dpi} dpi, chất lượng {quality}%.',
   compress_target_heavy:     'Hình ảnh mềm hơn rõ rệt — hãy kiểm tra chữ nhỏ trước khi gửi.',
+  compress_target_qr_protected: 'Không thể đạt {target} mà vẫn giữ mã QR đọc được. Dung lượng đã lưu: {size}.',
   compress_target_unreached: '⚠️ Ngay cả với cài đặt mạnh nhất cũng không xuống dưới {target}. Đây là {size} — bản nhẹ tay nhất có kích thước gần như vậy. Tách PDF có thể giúp.',
   prog_target_try:           'Đang tìm cài đặt phù hợp — lần thử {n}…',
 

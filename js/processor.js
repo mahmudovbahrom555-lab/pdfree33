@@ -318,13 +318,14 @@ export function cancelMergeScan() {
 // sequential await loop instead of leaving it hung on a terminated worker.
 let _batchCancelReject = null;
 let _scanOcrAbort = null;
+let _compressAbort = null;
 
 export function cancelProcess(currentTool) {
   if (!isProcessing) return;
   _scanOcrAbort?.abort();
+  _compressAbort?.abort();
   if (_batchCancelReject) {
     const reject = _batchCancelReject;
-    _batchCancelReject = null;
     reject(new _BatchCancelled());
   }
   if (_compressPrepSettle) {
@@ -406,6 +407,9 @@ export async function doProcess(currentTool, extraParams = {}) {
   _processStartMs = Date.now();
 
   const filesSnapshot = [...selectedFiles];
+  const compressAbort = getRunner(currentTool) === 'compress' ? new AbortController() : null;
+  if (compressAbort) _compressAbort = compressAbort;
+  const signal = compressAbort?.signal;
 
   setFilesLocked(true);
   setButtonProcessing();
@@ -423,8 +427,9 @@ export async function doProcess(currentTool, extraParams = {}) {
   // identical to before batch processing existed.
   if (BATCH_TOOLS.has(currentTool) && filesSnapshot.length > 1) {
     try {
-      await _runBatch(currentTool, filesSnapshot, extraParams);
+      await _runBatch(currentTool, filesSnapshot, extraParams, signal);
     } catch (err) {
+      if (signal?.aborted) return;
       isProcessing = false;
       setFilesLocked(false);
       hideCancelBtn();
@@ -441,7 +446,7 @@ export async function doProcess(currentTool, extraParams = {}) {
   const runnerMap = {
     merge:    () => _runMerge(filesSnapshot, extraParams),
     split:    () => _runSplit(filesSnapshot, extraParams, currentTool),
-    compress: () => _runCompress(filesSnapshot, extraParams, currentTool),
+    compress: () => _runCompress(filesSnapshot, extraParams, currentTool, signal),
     jpg2pdf:  () => _runJpg2Pdf(filesSnapshot, extraParams, currentTool),
     pdf2jpg:  () => _runPdf2Jpg(filesSnapshot, extraParams),
     pdf2word: () => _runPdf2Word(filesSnapshot, extraParams),
@@ -475,6 +480,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     const run    = runnerMap[runner] ?? (() => _runStub(currentTool));
     await run();
   } catch (err) {
+    if (signal?.aborted) return;
     isProcessing = false;
     setFilesLocked(false);
     hideCancelBtn();
@@ -1815,9 +1821,8 @@ async function _notLarger(data, originalSize, file) {
 // stored with no /Filter are Flate-encoded before handleCompress, which
 // otherwise skips them entirely. Own dedicated worker, NOT the shared
 // `_worker` — js/worker.js is off-limits. Resolves with the buffer to
-// compress, or null if the user cancelled. Never rejects: a crash or hang
-// falls back to re-reading the original file, so this pass can only ever
-// add savings, never cost a compression.
+// compress, or null if cancelled. A crash or hang falls back to re-reading
+// the original. If that read fails, propagate the error to the caller.
 let _compressPrepWorker = null;
 let _compressPrepSettle = null;
 const _COMPRESS_PREP_TIMEOUT_MS = 60_000;
@@ -1851,19 +1856,29 @@ function _cmykDOptions(preset, file, manual = {}) {
       target: 'targetDpi' in manual ? manual.targetDpi : (preset === 'high' ? 96 : 150),
       quality: q || (preset === 'high' ? 72 : 82),
       maxMegapixels: isLargeDevice() ? 24 : 4,
+      ...(manual.preferNativeScans ? { preferNativeScans: true } : {}),
     },
   };
 }
 
 function _compressPrep(buffer, file, preset, manual) {
   _compressPrepXmp = 0;
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     let timer;
-    const settle = (val) => { clearTimeout(timer); _compressPrepSettle = null; resolve(val); };
-    const fallback = async () => {
+    let settled = false;
+    function finish(callback, value) {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      _compressPrepSettle = null;
+      callback(value);
+    }
+    const settle = value => finish(resolve, value);
+    const fallback = () => {
+      clearTimeout(timer);
       _compressPrepWorker?.terminate();
       _compressPrepWorker = null;
-      settle(await _readCompressBuffer(file));
+      _readCompressBuffer(file).then(settle, error => finish(reject, error));
     };
     if (!_compressPrepWorker) {
       _compressPrepWorker = new Worker(new URL('./compressPrepWorker.js', import.meta.url));
@@ -1881,7 +1896,11 @@ function _compressPrep(buffer, file, preset, manual) {
     // Light keeps every XMP, as handleCompress keeps the catalog's on Light.
     // CMYK Flate images re-deflated (lossless) on Standard/Maximum — never on a
     // signed file: its original images stay byte for byte (criteria v0.2, T12)
-    _compressPrepWorker.postMessage({ file: buffer, stripXmp: preset !== 'low', cmykFlate: preset !== 'low' && !file?._signed, cmykD: _cmykDOptions(preset, file, manual) }, [buffer]);
+    try {
+      _compressPrepWorker.postMessage({ file: buffer, stripXmp: preset !== 'low', cmykFlate: preset !== 'low' && !file?._signed, cmykD: _cmykDOptions(preset, file, manual) }, [buffer]);
+    } catch {
+      fallback();
+    }
   });
 }
 
@@ -1928,20 +1947,16 @@ function _compressSucceeded(file, originalSize, final, data, prepXmp, toolKey, e
   }
 }
 
-// ── Compress to a size: the least loss that fits (2026-11-13) ──
-// A person asked for "4 MB" (zh, a portal's limit). The old chips only set
-// Maximum + 96 dpi + one quality and hoped. Here the real compression runs
-// (pre-pass + worker, worker.js untouched) on a ladder from no loss to the
-// most, and the gentlest step whose file fits is kept. Halving 11 places
-// (no step fits … every step fits) pins that step in at most 4 runs, each
-// one proven: the step just gentler was run and didn't fit. Guessing the
-// first step from the size ratio or predicting steps from measured sizes
-// left a gentler step unrun on 2 of 7 fits (2026-11-13). When nothing fits,
-// the halving has run the strongest step, and that is said plainly.
+// ── Compress to a size ──────────────────────────────────────────────
+// Check the ladder in quality order. Re-encoding and the per-image size
+// guard can make a stronger setting produce a larger PDF.
 const _TARGET_LADDER = [
   { preset: 'low' },                                   // lossless: structure only
   { preset: 'medium', targetDpi: 300, quality: 0.85 },
   { preset: 'medium', targetDpi: 200, quality: 0.80 },
+  { preset: 'medium', targetDpi: 200, quality: 0.75 },
+  // Keep small print at 200 dpi if stronger JPEG compression is enough.
+  { preset: 'medium', targetDpi: 200, quality: 0.70 },
   { preset: 'medium', targetDpi: 150, quality: 0.75 },
   { preset: 'medium', targetDpi: 150, quality: 0.65 },
   { preset: 'medium', targetDpi: 120, quality: 0.60 },
@@ -1951,176 +1966,176 @@ const _TARGET_LADDER = [
   { preset: 'medium', targetDpi: 72,  quality: 0.30 },
 ];
 
-// One full compression at one ladder step → the worker's 'done' data (null if cancelled)
-async function _compressAttempt(original, file, step, { preserveText, removeWatermarks }, onProgress) {
-  const manual = step.preset === 'low' ? {} : { targetDpi: step.targetDpi, quality: step.quality };
-  const buffer = await _compressPrep(original.slice(0), file, step.preset, manual);
-  if (!buffer || !isProcessing) return null;
-  return new Promise((resolve, reject) => {
-    let watchdog;
-    const arm = () => {
-      clearTimeout(watchdog);
-      watchdog = setTimeout(() => reject(Object.assign(new Error(t('err_compress_timeout')), { type: 'timeout' })), 45_000);
-    };
-    arm();
-    _shared().onmessage = (e) => {
-      const data = e.data;
-      if (data.type === 'progress') { arm(); onProgress(data.value); }
-      else if (data.type === 'scan-report') arm();
-      else if (data.type === 'done') {
-        clearTimeout(watchdog);
-        if (data.result instanceof ArrayBuffer) resolve(data); else reject(new Error('Unexpected result type from worker'));
-      } else if (data.type === 'error') { clearTimeout(watchdog); reject(new Error(data.message)); }
-    };
-    _shared().onerror = (e) => { clearTimeout(watchdog); reject(new Error(e.message || 'Worker error')); };
-    _shared().postMessage({ tool: 'compress', file: buffer, options: {
-      preset: step.preset, preserveText, removeWatermarks,
-      targetDpi: step.targetDpi ?? null, quality: step.quality ?? null,
-    } }, [buffer]);
-  });
-}
-
-async function _runCompressToTarget(file, original, originalSize, targetSizeMb, opts, toolKey) {
-  const target = targetSizeMb * 1024 * 1024;
-  const steps = _TARGET_LADDER.length;
-  // lo: the strongest step known NOT to fit; hi: the gentlest known to fit
-  let lo = -1, hi = steps, run = 0;
-  const results = new Map();
-  const attempt = async index => {
-    setProgress(5 + run * 23, t('prog_target_try', { n: run + 1 }));
-    const tryNumber = run;
-    const data = await _compressAttempt(original, file, _TARGET_LADDER[index], opts,
-      value => setProgress(5 + tryNumber * 23 + Math.round(value * 0.22), t('prog_target_try', { n: tryNumber + 1 })));
-    run++;
-    if (data) results.set(index, data);
-    return data;
-  };
-  try {
-    // a file already within the size needs no loss at all: one lossless run
-    // (never a bigger file — _notLarger below gives its own bytes back)
-    if (originalSize <= target) {
-      if (!await attempt(0) || !isProcessing) return;
-      hi = 0;
-    }
-    while (hi - lo > 1) {
-      const step = Math.floor((lo + hi) / 2);
-      const data = await attempt(step);
-      if (!data || !isProcessing) return;
-      if (data.compressedSize <= target) hi = step; else lo = step;
-    }
-  } catch (err) {
-    isProcessing = false;
-    setFilesLocked(false);
-    hideCancelBtn();
-    _handleError('compress', err.message, err.type);
-    return;
-  }
-  // Nothing fits: the gentlest step within 3 % of the smallest file — the
-  // strongest step bought 1 % on a book of vector pages and blurred every
-  // picture for it (8.6 MB → 7.16 MB at 150 dpi, 7.07 MB at 72 dpi, 2026-11-13)
-  const smallest = Math.min(...[...results.values()].map(result => result.compressedSize));
-  const chosen = hi < steps ? hi
-    : Math.min(...[...results.keys()].filter(index => results.get(index).compressedSize <= smallest * 1.03));
-  const data = results.get(chosen);
-  const final = await _notLarger(data, originalSize, file);
-  const { targetDpi = null, quality = null } = _TARGET_LADDER[chosen];
-  _compressSucceeded(file, originalSize, final, data, 0, toolKey, {
-    targetSizeMb,
-    // tried: each step run and its size — whether the gentler step was really
-    // tried and missed (the measure of "least loss", scripts in wip-bench)
-    target: { met: final.compressedSize <= target, lossless: chosen === 0, dpi: targetDpi, quality, heavy: chosen >= 7,
-      step: chosen, tried: [...results].map(([index, result]) => [index, result.compressedSize]) },
-  });
-}
-
-async function _runCompress(filesSnapshot, { preset = 'medium', preserveText = true, removeWatermarks = false, targetDpi = null, quality = null, targetSizeMb = null } = {}, toolKey = 'compress') {
-  if (!_checkSize(filesSnapshot[0], maxFileMb('compress'))) { _abortUI(); return; }
-
-  const file     = filesSnapshot[0];
-  const original = await _readCompressBuffer(file);
-  // Captured BEFORE the pre-pass: the buffer is transferred (detached) and
-  // the worker then only sees the pre-passed bytes — savings must be
-  // reported against what the user actually uploaded.
-  const originalSize = original.byteLength;
-  if (targetSizeMb) {
-    await _runCompressToTarget(file, original, originalSize, targetSizeMb, { preserveText, removeWatermarks }, toolKey);
-    return;
-  }
-  setProgress(5, t('prog_loading_pdf'));
-  const buffer = await _compressPrep(original, file, preset, { targetDpi, quality });
-  if (!buffer || !isProcessing) return;
+async function _compressAttempt(original, file, step, options, signal, onProgress, onScan) {
+  signal.throwIfAborted();
+  const { preset, targetDpi, quality } = step;
+  const manual = preset === 'low' ? {} : { targetDpi, quality, preferNativeScans: step.preferNativeScans };
+  const buffer = await _compressPrep(original, file, preset, manual);
+  signal.throwIfAborted();
   const prepXmp = _compressPrepXmp;
+  const data = await _postToWorkerForBatch({
+    tool: 'compress', file: buffer,
+    options: { ...options, preset, targetDpi: targetDpi ?? null, quality: quality ?? null },
+  }, [buffer], onProgress, { signal, onScan, timeoutKey: 'err_compress_timeout' });
+  if (!(data.result instanceof ArrayBuffer)) throw new Error('Unexpected result type from worker');
+  return { data: { ...data, compressedSize: data.result.byteLength }, prepXmp };
+}
 
-  // Watchdog: if the worker goes silent for 45s (OOM crash or freeze),
-  // browsers don't reliably fire onerror — detect it ourselves.
-  const WATCHDOG_MS = 45_000;
-  let watchdog = setTimeout(() => {
-    if (!isProcessing) return;   // already cancelled — don't fire phantom error
-    isProcessing = false;
-    setFilesLocked(false);
-    hideCancelBtn();
-    _handleError('compress', t('err_compress_timeout'), 'timeout');
-  }, WATCHDOG_MS);
-  const _resetWatchdog = () => {
-    clearTimeout(watchdog);
-    watchdog = setTimeout(() => {
-      if (!isProcessing) return;   // already cancelled — don't fire phantom error
-      isProcessing = false;
-      setFilesLocked(false);
-      hideCancelBtn();
-      _handleError('compress', t('err_compress_timeout'), 'timeout');
-    }, WATCHDOG_MS);
-  };
+const _PAGE_REFINE_BUDGET_MS = 750;
 
-  // The result card, once the bytes are final: never a bigger file (see _notLarger).
-  const _finishCompress = async (data) => {
-    _compressSucceeded(file, originalSize, await _notLarger(data, originalSize, file), data, prepXmp, toolKey, {});
-  };
-
-  // ⚠️  TRANSFERABLE: buffer detached after this call — worker owns it until done.
-  _shared().postMessage(
-    { tool: 'compress', file: buffer, options: { preset, preserveText, removeWatermarks, targetDpi, quality } },
-    [buffer]
-  );
-
-  _shared().onmessage = (e) => {
-    const data = e.data;
-    if (data.type === 'progress') {
-      _resetWatchdog();
-      setProgress(data.value, data.label);
-    } else if (data.type === 'scan-report') {
-      _resetWatchdog();
-      document.dispatchEvent(new CustomEvent('pdfree:scan-report', {
-        detail: { toolKey, report: data.report },
-      }));
-    } else if (data.type === 'done') {
-      clearTimeout(watchdog);
-      // Guard: worker must return an ArrayBuffer. Any other type means
-      // something went wrong in serialisation (detached buffer, wrong transfer, etc.)
-      if (!(data.result instanceof ArrayBuffer)) {
-        isProcessing = false;
-        setFilesLocked(false);
-        hideCancelBtn();
-        _handleError('compress', 'Unexpected result type from worker');
-        return;
-      }
-      _finishCompress(data);
-    } else if (data.type === 'error') {
-      clearTimeout(watchdog);
-      isProcessing = false;
-      setFilesLocked(false);
-      hideCancelBtn();
-      _handleError('compress', data.message);
+function _runOptionalCompressCheck(buffers, targetBytes, signal, budget) {
+  return new Promise(resolve => {
+    let worker;
+    let timeout;
+    const finish = result => {
+      clearTimeout(timeout);
+      signal.removeEventListener('abort', cancel);
+      worker?.terminate();
+      resolve(result);
+    };
+    const cancel = () => finish(null);
+    try {
+      worker = new Worker(new URL('./compressPageRefineWorker.js', import.meta.url));
+      worker.onmessage = ({ data }) => finish(data);
+      worker.onerror = cancel;
+      signal.addEventListener('abort', cancel, { once: true });
+      timeout = setTimeout(cancel, budget);
+      const copies = Object.fromEntries(Object.entries(buffers).filter(([, bytes]) => bytes)
+        .map(([key, bytes]) => [key, bytes.slice(0)]));
+      worker.postMessage({ ...copies, targetBytes }, Object.values(copies));
+    } catch {
+      cancel();
     }
+  });
+}
+
+async function _compressToTarget(file, original, originalSize, targetBytes, options, signal, onProgress) {
+  const steps = _TARGET_LADDER.length;
+  const tried = [];
+  let smallest = null;
+  let chosen = null;
+  let qrFallback = null;
+  const mayCheckQr = !file._signed && !file._decryptedBuffer && originalSize <= 16 * MB;
+  const attempt = async (index, step = _TARGET_LADDER[index]) => {
+    const start = 5 + tried.length * 90 / (steps + 1);
+    const label = t('prog_target_try', { n: tried.length + 1 });
+    onProgress(Math.round(start), label);
+    const result = await _compressAttempt(original.slice(0), file, {
+      ...step, preferNativeScans: step.targetDpi >= 200 && !options.removeWatermarks && !file._decryptedBuffer,
+    }, options, signal,
+      value => onProgress(Math.round(start + value * 0.9 / (steps + 1)), label));
+    tried.push([index, result.data.compressedSize]);
+    return { ...result, index, step };
   };
 
-  _shared().onerror = (e) => {
-    clearTimeout(watchdog);
-    isProcessing = false;
-    setFilesLocked(false);
-    hideCancelBtn();
-    _handleError('compress', e.message || 'Worker error');
-  };
+  for (let index = 0; index < steps; index++) {
+    const result = await attempt(index);
+    const size = result.data.compressedSize;
+    // _notLarger can return the source as-is when it already fits.
+    if (size <= targetBytes || originalSize <= targetBytes) {
+      chosen = result;
+      break;
+    }
+    if (!smallest || size < smallest.data.compressedSize) smallest = result;
+    if (mayCheckQr && result.step.targetDpi >= 150 && size <= 8 * MB) qrFallback = result;
+  }
+
+  // Refine the tested 80% → 75% interval at 200 dpi. Other intervals can
+  // change recognition of fine print, even when the JPEG quality increases.
+  if (chosen?.step.targetDpi === 200 && chosen.step.quality === 0.75
+      && chosen.data.compressedSize < targetBytes * 0.95) {
+    try {
+      const refined = await attempt(chosen.index, { ...chosen.step, quality: 0.77 });
+      if (refined.data.compressedSize <= targetBytes) chosen = refined;
+    } catch {
+      // Keep the already fitting result if the optional pass fails.
+      signal.throwIfAborted();
+    }
+  }
+
+  if (!chosen) {
+    // Keep only the smallest result while searching. If the gentler fallback
+    // was discarded, reproduce it once to preserve the 3% quality tradeoff.
+    const limit = smallest.data.compressedSize * 1.03;
+    const [index] = tried.find(([, size]) => size <= limit);
+    chosen = smallest;
+    if (index !== smallest.index && smallest.data.compressedSize < originalSize) {
+      const gentler = await attempt(index);
+      if (gentler.data.compressedSize <= limit) chosen = gentler;
+    }
+  }
+
+  const { index, step } = chosen;
+  let { data, prepXmp } = chosen;
+  let final = await _notLarger(data, originalSize, file);
+  let keptOriginal = final.result !== data.result;
+  let pageRefined = null;
+  if (smallest?.step.targetDpi > step.targetDpi && !file._signed && !file._decryptedBuffer
+      && originalSize >= 2 * MB && originalSize <= 20 * MB
+      && smallest.data.compressedSize <= 10 * MB
+      && targetBytes - final.compressedSize >= 128 * 1024 && !keptOriginal) {
+    signal.throwIfAborted();
+    const refined = await _runOptionalCompressCheck({
+      base: final.result, larger: smallest.data.result,
+    }, targetBytes, signal, _PAGE_REFINE_BUDGET_MS);
+    if (refined?.buffer instanceof ArrayBuffer && refined.buffer.byteLength <= targetBytes) {
+      final = { result: refined.buffer, compressedSize: refined.buffer.byteLength };
+      pageRefined = refined.pages;
+    }
+  }
+  signal.throwIfAborted();
+  let qrProtected = false;
+  let finalStep = step;
+  let finalIndex = index;
+  if (mayCheckQr && !keptOriginal && step.targetDpi != null && step.targetDpi <= 150) {
+    const check = await _runOptionalCompressCheck({
+      original, base: final.result, larger: qrFallback?.data.result,
+    }, targetBytes, signal, 1800);
+    signal.throwIfAborted();
+    if (check?.qrProtected && check.buffer instanceof ArrayBuffer) {
+      final = { result: check.buffer, compressedSize: check.buffer.byteLength };
+      qrProtected = true;
+      pageRefined = null;
+      keptOriginal = !check.keptCandidate;
+      finalStep = check.keptCandidate ? qrFallback.step : _TARGET_LADDER[0];
+      finalIndex = check.keptCandidate ? qrFallback.index : 0;
+      data = check.keptCandidate ? qrFallback.data : { report: {} };
+      prepXmp = check.keptCandidate ? qrFallback.prepXmp : 0;
+    }
+  }
+  const { targetDpi = null, quality = null } = finalStep;
+  return { final, data, prepXmp, targetBytes, target: {
+    met: final.result.byteLength <= targetBytes, lossless: finalIndex === 0 || keptOriginal,
+    dpi: targetDpi, quality, heavy: targetDpi !== null && targetDpi <= 96 && quality <= 0.45 && !keptOriginal,
+    step: finalIndex, tried, pageRefined, qrProtected,
+  } };
+}
+
+async function _compressFile(file, params, signal, onProgress, onScan) {
+  const { preset = 'medium', preserveText = true, removeWatermarks = false,
+    targetDpi = null, quality = null, targetBytes = null } = params;
+  const original = await _readCompressBuffer(file);
+  signal.throwIfAborted();
+  const originalSize = original.byteLength;
+  const options = { preserveText, removeWatermarks };
+  if (targetBytes) {
+    return { originalSize, ...await _compressToTarget(file, original, originalSize, targetBytes, options, signal, onProgress) };
+  }
+  const { data, prepXmp } = await _compressAttempt(original, file, { preset, targetDpi, quality }, options, signal, onProgress, onScan);
+  const final = await _notLarger(data, originalSize, file);
+  signal.throwIfAborted();
+  return { originalSize, final, data, prepXmp };
+}
+
+async function _runCompress(filesSnapshot, params, toolKey, signal) {
+  const file = filesSnapshot[0];
+  if (!_checkSize(file, maxFileMb('compress'))) { _abortUI(); return; }
+  setProgress(5, t('prog_loading_pdf'));
+  const { originalSize, final, data, prepXmp, targetBytes, target } = await _compressFile(
+    file, params, signal, setProgress,
+    report => document.dispatchEvent(new CustomEvent('pdfree:scan-report', { detail: { toolKey, report } }))
+  );
+  _compressSucceeded(file, originalSize, final, data, prepXmp, toolKey, target ? { targetBytes, target } : {});
 }
 
 // ── JPG → PDF ──────────────────────────────────────────────────
@@ -2839,7 +2854,7 @@ const _BATCH_SUFFIX = {
   watermark: '-watermarked',
   protect: '-protected', pagenum: '-numbered', flatten: '-flattened',
 };
-const _BATCH_WATCHDOG_MS = 45_000; // same silent-hang guard as _runCompress's single-file watchdog
+const _BATCH_WATCHDOG_MS = 45_000;
 
 /**
  * postMessage → onmessage/onerror, wrapped as a promise for the batch
@@ -2847,52 +2862,55 @@ const _BATCH_WATCHDOG_MS = 45_000; // same silent-hang guard as _runCompress's s
  * runner in this file uses (progress/done/error message types, Transferable
  * buffer handoff) — just resolves/rejects instead of driving UI directly.
  */
-function _postToWorkerForBatch(msg, transfer, onProgress) {
+function _postToWorkerForBatch(msg, transfer, onProgress, { signal, onScan, timeoutKey = 'err_batch_timeout' } = {}) {
   return new Promise((resolve, reject) => {
+    const worker = _shared();
     let watchdog;
-    const arm = () => {
+    function settle(error, data) {
       clearTimeout(watchdog);
-      watchdog = setTimeout(() => settle(reject, new Error(t('err_batch_timeout'))), _BATCH_WATCHDOG_MS);
-    };
-    const settle = (fn, val) => {
-      clearTimeout(watchdog);
+      signal?.removeEventListener('abort', cancel);
       _batchCancelReject = null;
-      fn(val);
-    };
+      worker.onmessage = null;
+      worker.onerror = null;
+      if (error) {
+        worker.terminate();
+        if (_worker === worker) _worker = null;
+        reject(error);
+      } else {
+        resolve(data);
+      }
+    }
+    const cancel = () => settle(new _BatchCancelled());
+    function arm() {
+      clearTimeout(watchdog);
+      watchdog = setTimeout(() => settle(new Error(t(timeoutKey))), _BATCH_WATCHDOG_MS);
+    }
 
-    _shared().onmessage = (e) => {
-      const data = e.data;
-      if (data.type === 'progress') { arm(); onProgress?.(data.value, data.label); return; }
-      if (data.type === 'done')     { settle(resolve, data); return; }
-      if (data.type === 'error')    { settle(reject, new Error(data.message)); return; }
+    worker.onmessage = ({ data }) => {
+      if (data.type === 'progress') { arm(); onProgress?.(data.value, data.label); }
+      else if (data.type === 'scan-report' && signal) { arm(); onScan?.(data.report); }
+      else if (data.type === 'done') settle(null, data);
+      else if (data.type === 'error') settle(new Error(data.message));
     };
-    _shared().onerror = (e) => settle(reject, new Error(e.message || 'Worker error'));
-
-    _batchCancelReject = reject;
+    worker.onerror = event => settle(new Error(event.message || 'Worker error'));
+    if (signal) signal.addEventListener('abort', cancel, { once: true });
+    else _batchCancelReject = settle;
     arm();
-    _shared().postMessage(msg, transfer);
+    try {
+      worker.postMessage(msg, transfer);
+    } catch (error) {
+      settle(error);
+    }
   });
 }
 
-/** One file through the compress runner — returns { name, buffer } for the zip. */
-async function _batchCompressOne(file, params, onProgress) {
-  const original     = await _readCompressBuffer(file);
-  const originalSize = original.byteLength; // before the pre-pass detaches it — see _runCompress
-  const { preset = 'medium', preserveText = true, removeWatermarks = false, targetDpi = null, quality = null, targetSizeMb = null } = params;
-  const buffer       = await _compressPrep(original, file, preset);
-  if (!buffer) throw new _BatchCancelled();
-  const data = await _postToWorkerForBatch(
-    { tool: 'compress', file: buffer, options: { preset, preserveText, removeWatermarks, targetDpi, quality, targetSizeMb } },
-    [buffer],
-    onProgress
-  );
-  if (!(data.result instanceof ArrayBuffer)) throw new Error('Unexpected result type from worker');
-  const final = await _notLarger(data, originalSize, file);
+async function _batchCompressOne(file, params, onProgress, signal) {
+  const { final, originalSize, targetBytes, target } = await _compressFile(file, params, signal, onProgress);
   const baseName = file.name.replace(/\.pdf$/i, '');
-  // compressedSize comes straight from worker.js's compress handler; originalSize
-  // is the real uploaded size (not the pre-passed one worker.js saw) — _runBatch
-  // sums both across the whole batch for the aggregate "before → after" summary.
-  return { name: `${baseName}-compressed.pdf`, buffer: final.result, originalSize, compressedSize: final.compressedSize };
+  return {
+    name: `${baseName}-compressed.pdf`, buffer: final.result, originalSize,
+    compressedSize: final.compressedSize, targetBytes, target,
+  };
 }
 
 /** One file through a generic worker tool (watermark/protect/pagenum/flatten) — returns { name, buffer }. */
@@ -2912,7 +2930,7 @@ async function _batchWorkerToolOne(tool, file, params, onProgress) {
   return { name: `${base}${_BATCH_SUFFIX[tool] || '-processed'}.pdf`, buffer: data.result };
 }
 
-async function _runBatch(tool, filesSnapshot, extraParams) {
+async function _runBatch(tool, filesSnapshot, extraParams, signal) {
   const total = filesSnapshot.length;
   trackBatchStart(tool, total);
 
@@ -2936,7 +2954,7 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
     // between two files — after file i's promise settles and clears
     // _batchCancelReject, before file i+1 re-arms it — would otherwise go
     // undetected and let the loop run to completion. This check closes that gap.
-    if (!isProcessing) return;
+    if (!isProcessing || signal?.aborted) return;
 
     const file = filesSnapshot[i];
     file._batchStatus = 'processing';
@@ -2957,9 +2975,10 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
       };
 
       const result = tool === 'compress'
-        ? await _batchCompressOne(file, extraParams, onProgress)
+        ? await _batchCompressOne(file, extraParams, onProgress, signal)
         : await _batchWorkerToolOne(getWorkerTool(tool) ?? tool, file, extraParams, onProgress);
 
+      if (!isProcessing || signal?.aborted) return;
       zipEntries.push(result);
       file._batchStatus = 'done';
       succeeded++;
@@ -2968,7 +2987,7 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
         totalCompressedSize += result.compressedSize;
       }
     } catch (err) {
-      if (err instanceof _BatchCancelled) return; // cancelProcess() already cleaned up the UI
+      if (signal?.aborted || err instanceof _BatchCancelled) return; // cancelProcess() already cleaned up the UI
       file._batchStatus = 'error';
       failedNames.push(file.name);
       // with why: a bare 'batch_item_failed' (13 people a month) said nothing
@@ -2984,7 +3003,7 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
   // finished (every file already got its 'done'/'error' response) — check the
   // flag directly so a cancel landing in the zip-building tail doesn't let a
   // "cancelled" run finish anyway and hand the user an unexpected download.
-  if (!isProcessing) return;
+  if (!isProcessing || signal?.aborted) return;
 
   if (zipEntries.length === 0) {
     isProcessing = false;
@@ -2999,13 +3018,26 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
   await loadJSZip();
   const JSZip = window.JSZip;
   const zip = new JSZip();
-  for (const entry of zipEntries) zip.file(entry.name, entry.buffer);
+  const used = new Set();
+  for (const entry of zipEntries) {
+    const original = entry.name;
+    const dot = original.lastIndexOf('.');
+    const [stem, ext] = dot > 0 ? [original.slice(0, dot), original.slice(dot)] : [original, ''];
+    let name = original;
+    let suffix = 2;
+    while (used.has(name.normalize('NFC').toLowerCase())) {
+      name = `${stem} (${suffix++})${ext}`;
+    }
+    used.add(name.normalize('NFC').toLowerCase());
+    entry.name = name;
+    zip.file(name, entry.buffer);
+  }
   const blob = await zip.generateAsync(
     { type: 'blob', compression: 'DEFLATE' },
-    meta => setProgress(96 + Math.round(meta.percent / 100 * 4), t('prog_compressing'))
+    meta => { if (!signal?.aborted) setProgress(96 + Math.round(meta.percent / 100 * 4), t('prog_compressing')); }
   );
 
-  if (!isProcessing) return; // cancelled while zipping — don't finish/download a cancelled run
+  if (!isProcessing || signal?.aborted) return; // cancelled while zipping — don't finish/download a cancelled run
 
   isProcessing = false;
   setFilesLocked(false);
@@ -3036,7 +3068,10 @@ async function _runBatch(tool, filesSnapshot, extraParams) {
   // none of that sums meaningfully across a batch, so this is just the two
   // totals compressUI.js needs for the prominent "before → after" line.
   const batchCompressSummary = tool === 'compress' && totalOriginalSize > 0
-    ? { originalSize: totalOriginalSize, compressedSize: totalCompressedSize }
+    ? { originalSize: totalOriginalSize, compressedSize: totalCompressedSize,
+      targetResults: zipEntries.filter(entry => entry.target).map(({ name, compressedSize, targetBytes, target }) =>
+        ({ name, compressedSize, targetBytes, met: target.met, qrProtected: target.qrProtected })),
+    }
     : null;
 
   document.dispatchEvent(new CustomEvent('pdfree:success', {
@@ -3573,7 +3608,7 @@ async function _p2eExtractTables(pdfDoc) {
         ln.items = joinTouchingItems(ln.items, cuts);
       }
     }
-    const pageResult = _p2eExtractPage(lines, grids, p, page.view);
+    const pageResult = _p2eExtractPage(lines, grids, p);
     tables.push(...pageResult.tables);
     textRows.push(...pageResult.textRows);
 
@@ -3601,17 +3636,8 @@ const _p2eAllBold = lns => lns.some(ln => ln.items.length) &&
 // names glued onto the previous record). Lines outside every grid still go
 // through detectTables, unchanged — it remains the only option for
 // borderless tables. Anything neither claims becomes a Text-sheet row.
-export function _p2eExtractPage(lines, grids, page, pageView) {
-  const tables = [];
-  const contentLines = lines.filter(line => !_p2ePageFurniture(line));
-  const edgeMargin = pageView ? Math.min(108, (pageView[3] - pageView[1]) * 0.18) : 0;
-  const position = (top, bottom, left) => ({
-    top, left,
-    clearAbove: !contentLines.some(line => line.y > top),
-    clearBelow: !contentLines.some(line => line.y < bottom),
-    atTop: !!pageView && top >= pageView[3] - edgeMargin,
-    atBottom: !!pageView && bottom <= pageView[1] + edgeMargin,
-  });
+export function _p2eExtractPage(lines, grids, page) {
+  const tables   = [];
   const consumedItems = new Set();
 
   for (const grid of grids) {
@@ -3649,10 +3675,7 @@ export function _p2eExtractPage(lines, grids, page, pageView) {
     // A lone ruled box (a signature field, a boxed note) isn't a table.
     if (rows.length < 2) continue;
     claimed.forEach(item => consumedItems.add(item));
-    tables.push({
-      page, rows, confidence: 1, boldRows, colXs,
-      ...position(rowYs[0], rowYs[rowYs.length - 1], left),
-    });
+    tables.push({ page, rows, confidence: 1, boldRows, colXs });
   }
 
   const restIdx = [];
@@ -3675,12 +3698,17 @@ export function _p2eExtractPage(lines, grids, page, pageView) {
   for (const tbl of textTables) {
     const boldRows = new Set();
     tbl.rowLines.forEach((lis, r) => { if (_p2eAllBold(lis.map(li => rest[li]))) boldRows.add(r); });
-    for (let i = tbl.startIdx; i <= tbl.endIdx; i++) consumedLines.add(restIdx[i]);
-    const top = rest[tbl.startIdx].y;
-    const bottom = rest[tbl.endIdx].y;
+    const own = new Set();
+    for (let i = tbl.startIdx; i <= tbl.endIdx; i++) { consumedLines.add(restIdx[i]); own.add(restIdx[i]); }
+    // Whether anything but page furniture stands below / above the table on its
+    // page — a table can only continue onto the next page if nothing does (see
+    // _p2eStitchTables).
+    const ys = [...own].map(li => lines[li].y);
+    const top = Math.max(...ys), bottom = Math.min(...ys);
+    const others = lines.filter((ln, li) => !own.has(li) && !_p2ePageFurniture(ln));
     tables.push({
       page, rows: tbl.rows, confidence: tbl.confidence, boldRows, colCenters: tbl.colCenters,
-      ...position(top, bottom, tbl.colCenters[0]),
+      clearBelow: !others.some(ln => ln.y < bottom), clearAbove: !others.some(ln => ln.y > top),
     });
   }
 
@@ -3690,7 +3718,6 @@ export function _p2eExtractPage(lines, grids, page, pageView) {
     const text = ln.items.map(i => i.str).join(' ').trim();
     if (text) textRows.push({ page, text });
   });
-  tables.sort((a, b) => b.top - a.top || a.left - b.left);
   return { tables, textRows };
 }
 
@@ -3702,48 +3729,47 @@ export function _p2ePageFurniture(ln) {
   return _P2E_PAGE_NUMBER_RE.test(ln.items.map(i => i.str).join(' ').trim());
 }
 
-// A repeated first row can itself be data. Treat its nonnumeric cells as
-// labels only if styled as a heading or if a label heads typed values below.
-function _p2eHasHeader(table) {
-  const [first] = table.rows;
-  const isTypedValue = text => typeof _p2eCellValue(text).value !== 'string';
-  if (!first?.some(text => text.trim()) || first.some(isTypedValue)) return false;
-  return table.boldRows.has(0) || table.rows.slice(1, 4).some(row =>
-    row.some((text, col) => first[col]?.trim() && isTypedValue(text)));
-}
-
+// Joins a table that continues onto the next page back into ONE table
+// (→ one worksheet), instead of one worksheet per page. Rows repeating the
+// first table's leading rows (a header reprinted on every page) are dropped
+// from the continuation.
+//   Ruled tables: the same drawn column rules (colXs) on consecutive pages.
+//   Borderless tables (detectTables): the same columns (colCenters, within
+//     8pt), and the table runs to the bottom of its page and the next one
+//     starts at the top — nothing but a page number below the first or above
+//     the second (clearBelow/clearAbove). A heading such as "Expenses" over a
+//     table with the same columns keeps them apart: two tables with matching
+//     columns are merged only when nothing but the page break separates them.
+//     User report 2026-10-08 ("put into multiple tabs Table1, Table 2"):
+//     borderless tables were never stitched, so a multi-page one became one
+//     sheet per page.
 export function _p2eStitchTables(tables) {
   const out = [];
-  let last = null;
-  let previous = null;
-  let lastHeader = null;
+  let last = null, lastPage = 0;
   for (const tbl of tables) {
-    const adjacent = previous && tbl.page === previous.page + 1 && previous.clearBelow && tbl.clearAbove;
-    const oldCols = tbl.colXs ? last?.colXs : last?.colCenters;
-    const newCols = tbl.colXs ?? tbl.colCenters;
-    const matchesColumns = adjacent && oldCols && newCols && oldCols.length === newCols.length &&
-      newCols.every((x, i) => Math.abs(x - oldCols[i]) <= (tbl.colXs ? 4 : 8));
-
-    const header = _p2eHasHeader(tbl) ? tbl.rows[0].map(text => text.replace(/\s+/g, ' ').trim()) : null;
-    const repeatedHeader = matchesColumns && header && lastHeader &&
-      header.length === lastHeader.length && header.every((text, i) => text === lastHeader[i]);
-
-    // Without a confirmed repeat, the tables must run into the page break
-    // and the continuation must begin with data.
-    const continues = repeatedHeader ||
-      (matchesColumns && !header && previous.atBottom && tbl.atTop);
+    const next = last && tbl.page === lastPage + 1;
+    const ruled = next && tbl.colXs && last.colXs &&
+      tbl.colXs.length === last.colXs.length &&
+      tbl.colXs.every((x, i) => Math.abs(x - last.colXs[i]) <= 4);
+    const borderless = next && tbl.colCenters && last.colCenters && last.clearBelow && tbl.clearAbove &&
+      tbl.colCenters.length === last.colCenters.length &&
+      tbl.colCenters.every((x, i) => Math.abs(x - last.colCenters[i]) <= 8);
+    const continues = ruled || borderless;
     if (!continues) {
       last = { ...tbl, rows: [...tbl.rows], boldRows: new Set(tbl.boldRows) };
-      lastHeader = header;
+      lastPage = tbl.page;
       out.push(last);
-    } else {
-      const skip = repeatedHeader ? 1 : 0;
-      for (let i = skip; i < tbl.rows.length; i++) {
-        if (tbl.boldRows.has(i)) last.boldRows.add(last.rows.length);
-        last.rows.push(tbl.rows[i]);
-      }
+      continue;
     }
-    previous = tbl;
+    const header = last.rows.slice(0, 3).map(r => r.join('\u0001'));
+    let skip = 0;
+    while (skip < tbl.rows.length && header.includes(tbl.rows[skip].join('\u0001'))) skip++;
+    tbl.rows.slice(skip).forEach((row, i) => {
+      if (tbl.boldRows.has(i + skip)) last.boldRows.add(last.rows.length);
+      last.rows.push(row);
+    });
+    last.clearBelow = tbl.clearBelow;
+    lastPage = tbl.page;
   }
   return out;
 }

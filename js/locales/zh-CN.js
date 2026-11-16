@@ -316,6 +316,7 @@ window.PDFREE_LOCALE = {
   compress_target_lossless:  '未损失画质。',
   compress_target_cost:      '图片：{dpi} dpi，质量 {quality}%。',
   compress_target_heavy:     '图片会明显变模糊 — 发送前请检查小字。',
+  compress_target_qr_protected: '在保持二维码可识别的情况下无法达到 {target}。已保存文件大小：{size}。',
   compress_target_unreached: '⚠️ 即使用最强的设置也无法压缩到 {target} 以下。这是 {size} 的版本 — 在大小相近的结果中画质损失最少。拆分 PDF 可能有帮助。',
   prog_target_try:           '正在寻找符合大小的设置 — 第 {n} 次尝试…',
 

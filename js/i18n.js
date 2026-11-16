@@ -290,6 +290,7 @@ export const EN = {
   compress_target_lossless:  'No quality lost.',
   compress_target_cost:      'Images: {dpi} dpi, quality {quality} %.',
   compress_target_heavy:     'Images are noticeably softer — check small print before sending.',
+  compress_target_qr_protected: 'Could not meet {target} while keeping the QR code readable. Saved: {size}.',
   compress_target_unreached: '⚠️ Couldn\'t get under {target}, even at the strongest setting. Here is {size} — the gentlest version that is about as small. Splitting the PDF can help.',
   prog_target_try:           'Finding the setting that fits — try {n}…',
 

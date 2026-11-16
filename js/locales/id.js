@@ -312,6 +312,7 @@ window.PDFREE_LOCALE = {
   compress_target_lossless:  'Tanpa kehilangan kualitas.',
   compress_target_cost:      'Gambar: {dpi} dpi, kualitas {quality}%.',
   compress_target_heavy:     'Gambar jadi lebih lembut — periksa tulisan kecil sebelum mengirim.',
+  compress_target_qr_protected: 'Tidak dapat mencapai {target} dengan kode QR tetap terbaca. Ukuran tersimpan: {size}.',
   compress_target_unreached: '⚠️ Bahkan dengan pengaturan terkuat tidak bisa di bawah {target}. Ini {size} — versi paling ringan dengan ukuran hampir sama. Memisah PDF bisa membantu.',
   prog_target_try:           'Mencari pengaturan yang muat — percobaan {n}…',
 

@@ -366,6 +366,11 @@ async function _encodeRawImages(buffer, stripXmp = false, cmykFlate = false, dOp
     try {
       d = await self.cmykD(pdf, {
         ...dOpts,
+        rgb: dOpts.rgb && {
+          ...dOpts.rgb,
+          preferNativeScans: dOpts.rgb.preferNativeScans &&
+            typeof OffscreenCanvas !== 'undefined' && typeof createImageBitmap === 'function',
+        },
         urls: {
           decoders: new URL('./vendor/pdfjs-4.10.38/pdf.image_decoders.min.mjs', self.location.href).href,
           qpdfJs:   new URL('./vendor/qpdf/lib/qpdf.js', self.location.href).href,

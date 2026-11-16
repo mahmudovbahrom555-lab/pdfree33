@@ -329,7 +329,7 @@ registerTool('compress', {
     // Single file only: the scan covers selectedFiles[0] alone, so for a batch
     // it can't vouch for the other files (see compressUI.js's auto-select).
     if (p.targetMissing) return t('compress_target_enter');
-    if (scan && p.preset === 'low' && scan.opportunities === 0 && selectedFiles.length === 1 && !p.targetSizeMb) {
+    if (scan && p.preset === 'low' && scan.opportunities === 0 && selectedFiles.length === 1 && !p.targetBytes) {
       return t('val_light_no_savings');
     }
     return null;
@@ -337,8 +337,8 @@ registerTool('compress', {
   // preScan is this file's scan result, not a reusable setting; removeWatermarks
   // is a shared cross-tool toggle (watermarkRemoveUI.js) with no restore path
   // yet — both stripped, leaving only compressUI.js's own settings.
-  presetFilter: ({ preset, preserveText, targetDpi, quality, targetSizeMb }) =>
-    ({ preset, preserveText, targetDpi, quality, targetSizeMb }),
+  presetFilter: ({ preset, preserveText, targetDpi, quality, targetBytes }) =>
+    ({ preset, preserveText, targetDpi, quality, targetBytes }),
   onSuccess: ({ compressionReport, batchCompressSummary }) => {
     if (compressionReport) renderCompressionReport(compressionReport);
     else if (batchCompressSummary) renderBatchCompressionSummary(batchCompressSummary);

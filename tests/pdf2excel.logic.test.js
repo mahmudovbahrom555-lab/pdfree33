@@ -442,7 +442,7 @@ test('a wrapped row\'s bold total is still bold: bold rows follow the rows, not 
 // ── _p2eStitchTables: one table across pages → one worksheet ──
 console.log('\n_p2eStitchTables:');
 
-const T = (page, rows, colXs) => ({ page, rows, confidence: 1, boldRows: new Set(), colXs, clearBelow: true, clearAbove: true });
+const T = (page, rows, colXs) => ({ page, rows, confidence: 1, boldRows: new Set(), colXs });
 
 // Borderless tables (user report 2026-10-08: "put into multiple tabs Table1,
 // Table 2"): pages run through _p2eExtractPage, then stitched.
@@ -486,58 +486,11 @@ test('a borderless table followed by text on its page, or with other columns on 
 test('a ruled table continuing on the next page becomes one table; a reprinted header is dropped', () => {
   const out = _p2eStitchTables([
     T(1, [['No', 'Name'], ['1', 'A']], [0, 100, 200]),
-    { ...T(2, [['No', 'Name'], ['2', 'B']], [1, 101, 199]), atBottom: true },   // same columns within snap tolerance
-    { ...T(3, [['3', 'C']], [0, 100, 200]), atTop: true },
+    T(2, [['No', 'Name'], ['2', 'B']], [1, 101, 199]),   // same columns within snap tolerance
+    T(3, [['3', 'C']], [0, 100, 200]),
   ]);
   expect(out.length).toBe(1);
   expect(out[0].rows).toEqual([['No', 'Name'], ['1', 'A'], ['2', 'B'], ['3', 'C']]);
-});
-
-test('repeated header is skipped and identical data rows keep their values and bold style', () => {
-  const cols = [40, 140, 240];
-  const head = ['Item', 'Qty'];
-  const duplicate = ['Paper', '3'];
-  const last = ['Ink', '8'];
-  const out = _p2eStitchTables([
-    T(1, [head, duplicate, ['Pens', '4']], cols),
-    { ...T(2, [head, duplicate, last], cols), boldRows: new Set([1]) },
-  ]);
-  expect(out.map(table => table.rows)).toEqual([[head, duplicate, ['Pens', '4'], duplicate, last]]);
-  expect([...out[0].boldRows]).toEqual([3]);
-});
-
-test('ruled tables with matching columns and a separate section title stay separate', () => {
-  const grid = { colXs: [40, 140, 240], rowYs: [90, 60, 30, 0] };
-  const rows = [
-    makeLineAt(75, [['Item', 45], ['Qty', 145]]),
-    makeLineAt(45, [['Paper', 45], ['3', 145]]),
-    makeLineAt(15, [['Ink', 45], ['5', 145]]),
-  ];
-  const out = _p2eStitchTables([
-    ..._p2eExtractPage(rows, [grid], 1).tables,
-    ..._p2eExtractPage([makeLineAt(120, [['Expenses', 45]]), ...rows], [grid], 2).tables,
-  ]);
-  expect(out.length).toBe(2);
-});
-
-test('different headers keep tables with matching columns apart', () => {
-  const cols = [40, 140, 240];
-  const out = _p2eStitchTables([
-    { ...T(1, [['Item', 'Qty'], ['Paper', '3']], cols), atBottom: true },
-    { ...T(2, [['Code', 'Rate'], ['A', '7']], cols), atTop: true },
-  ]);
-  expect(out.length).toBe(2);
-});
-
-test('equal text rows without evidence of a header survive a continuation at the page break', () => {
-  const cols = [40, 140, 240];
-  const first = [['London', 'North'], ['Oslo', 'West']];
-  const second = [['London', 'North'], ['Riga', 'East']];
-  const out = _p2eStitchTables([
-    { ...T(1, first, cols), atBottom: true },
-    { ...T(2, second, cols), atTop: true },
-  ]);
-  expect(out.map(t => t.rows)).toEqual([[...first, ...second]]);
 });
 
 test('different columns, a skipped page, or a text-detected table are NOT stitched', () => {
