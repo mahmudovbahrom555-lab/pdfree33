@@ -29,9 +29,9 @@ export const EN = {
   sent:                '✓ Sent',
   process_again:       '↺ Process again',
   download_again:      '⬇ Download again',
-  auto_download_hint:  '✓ {filename} saved to your device',
+  auto_download_hint:  '⬇ {filename} — download started',
   downloads_where_hint: "Can't see it? Open your browser's downloads — {keys}",
-  download_toast:      '📥 {filename} downloaded',
+  download_toast:      '📥 Downloading {filename}…',
 
   // ── files.js ───────────────────────────────────────────────────
   split_one_only:  'Split works with one PDF only. Remove the current file first.',

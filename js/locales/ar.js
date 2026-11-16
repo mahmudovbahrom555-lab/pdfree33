@@ -57,9 +57,9 @@ window.PDFREE_LOCALE = {
   sent:                '✓ تم الإرسال',
   process_again:       '↺ معالجة مرة أخرى',
   download_again:      '⬇ تنزيل مرة أخرى',
-  auto_download_hint:  '✓ تم حفظ {filename} على جهازك',
+  auto_download_hint:  '⬇ بدأ تنزيل {filename}',
   downloads_where_hint: "لا ترى الملف؟ افتح تنزيلات المتصفح — {keys}",
-  download_toast:      '📥 تم تنزيل {filename}',
+  download_toast:      '📥 جارٍ تنزيل {filename}…',
 
   // ── files.js ───────────────────────────────────────────────────
   split_one_only:  'أداة التقسيم تعمل مع ملف PDF واحد فقط. يرجى إزالة الملف الحالي أولاً.',

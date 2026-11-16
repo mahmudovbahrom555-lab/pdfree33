@@ -54,9 +54,9 @@ window.PDFREE_LOCALE = {
   sent:             '✓ 전송됨',
   process_again:    '↺ 다시 처리하기',
   download_again:   '⬇ 다시 다운로드',
-  auto_download_hint: '✓ {filename} 파일이 기기에 저장되었습니다',
+  auto_download_hint: '⬇ {filename} 다운로드를 시작했습니다',
   downloads_where_hint: "파일이 보이지 않나요? 브라우저의 다운로드 목록을 여세요 — {keys}",
-  download_toast:     '📥 {filename} 파일이 다운로드되었습니다',
+  download_toast:     '📥 {filename} 다운로드 중…',
 
   // files
   split_one_only:  '분할은 PDF 하나만 지원합니다. 현재 파일을 먼저 제거해 주세요.',
