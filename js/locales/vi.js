@@ -53,9 +53,9 @@ window.PDFREE_LOCALE = {
   sent:             '✓ Đã gửi',
   process_again:    '↺ Xử lý lại',
   download_again:      '⬇ Tải về lại',
-  auto_download_hint:  '✓ Đã lưu {filename} vào thiết bị của bạn',
+  auto_download_hint:  '⬇ Đã bắt đầu tải {filename}',
   downloads_where_hint: "Không thấy tệp? Mở mục tải xuống của trình duyệt — {keys}",
-  download_toast:      '📥 Đã tải {filename} về',
+  download_toast:      '📥 Đang tải {filename}…',
 
   // files
   split_one_only:  'Tách chỉ hoạt động với một PDF. Vui lòng xóa file hiện tại trước.',

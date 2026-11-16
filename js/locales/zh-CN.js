@@ -55,9 +55,9 @@ window.PDFREE_LOCALE = {
   sent:                '✓ 已发送',
   process_again:       '↺ 再次处理',
   download_again:      '⬇ 重新下载',
-  auto_download_hint:  '✓ {filename} 已保存到您的设备',
+  auto_download_hint:  '⬇ 已开始下载 {filename}',
   downloads_where_hint: "找不到文件？请打开浏览器的下载列表 — {keys}",
-  download_toast:      '📥 {filename} 已下载',
+  download_toast:      '📥 正在下载 {filename}…',
 
   // ── files.js ───────────────────────────────────────────────────
   split_one_only:  '拆分工具一次仅支持一个 PDF 文件。请先移除当前文件。',

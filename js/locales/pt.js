@@ -52,9 +52,9 @@ window.PDFREE_LOCALE = {
   sent:             '✓ Enviado',
   process_again:    '↺ Processar novamente',
   download_again:      '⬇ Baixar novamente',
-  auto_download_hint:  '✓ {filename} guardado no seu dispositivo',
+  auto_download_hint:  '⬇ Download de {filename} iniciado',
   downloads_where_hint: "Não está vendo? Abra os downloads do navegador — {keys}",
-  download_toast:      '📥 {filename} baixado',
+  download_toast:      '📥 Download de {filename} em curso…',
 
   // files
   split_one_only:  'Split funciona apenas com um PDF. Remova o ficheiro atual primeiro.',
