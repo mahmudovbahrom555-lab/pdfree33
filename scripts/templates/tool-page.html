@@ -28,12 +28,16 @@
       overnight stress testing — Quick Edit PDF's Save step deterministically
       hit this on every document containing a docx-preview-rendered table
       border image, not a rare failure).
+    Document Scanner only: 'unsafe-eval' + connect-src data: for OpenCV.js
+      (js/vendor/opencv.js, loadOpenCv() in js/lazyLibs.js), media-src blob:
+      for the live camera — kept off every other tool page.
     ════════════════════════════════════════════════════════════════
   -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
     script-src  'self'
-                'wasm-unsafe-eval'
+                'wasm-unsafe-eval'{% if tool.id == 'scanDocument' %}
+                'unsafe-eval'{% endif %}
                 blob:
                 https://cdnjs.cloudflare.com
                 https://esm.sh
@@ -45,7 +49,8 @@
     font-src    'self';
     img-src     'self' data: blob: https:;
     connect-src 'self'
-                blob:
+                blob:{% if tool.id == 'scanDocument' %}
+                data:{% endif %}
                 https://cdnjs.cloudflare.com
                 https://cdn.jsdelivr.net
                 https://*.workers.dev
@@ -57,7 +62,8 @@
                 https://cloudflareinsights.com;
     frame-src   {% if worksheet %}'self' {% endif %}https://googleads.g.doubleclick.net
                 https://tpc.googlesyndication.com;
-    worker-src  'self' blob:;
+    worker-src  'self' blob:;{% if tool.id == 'scanDocument' %}
+    media-src   'self' blob:;{% endif %}
     object-src  'none';
   ">
   <title>{{ tool.titles[lang] }}</title>
@@ -266,6 +272,16 @@
       <label class="drop-btn" id="chooseFilesBtn" for="fileInput">{{ ui.chooseBtn }}</label>
     </div>
 
+    {% if tool.id == 'scanDocument' %}
+    {# Beside the drop zone, not inside #scanDocumentOptions (rendered only
+       once a file exists): usable for the first photo too. Bound at module
+       load in js/scanDocumentUI.js. #}
+    <div style="text-align:center;margin:12px 0 24px;">
+      <button type="button" class="split-action-btn" id="sdTakePhotoBtn" style="font-size:14px;padding:10px 20px;">{{ tool.photoBtn[lang] }}</button>
+      <input type="file" accept="image/*" capture="environment" id="sdTakePhotoInput" style="display:none">
+    </div>
+    {% endif %}
+
     <div id="privacyBadge" style="display:flex;align-items:center;gap:9px;margin:10px 0 4px;padding:9px 14px;background:var(--green-light);border:1px solid rgba(45,122,79,0.22);border-radius:10px;font-size:13px;color:var(--green-text);line-height:1.3;">
       <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;opacity:.85"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
       <span>{{ ui.privacyBadge }}</span>
@@ -279,6 +295,7 @@
     <div id="splitOptions"     class="split-options"   style="display:none" aria-label="Split options"></div>
     <div id="compressOptions"  class="compress-options" style="display:none" aria-label="Compression options"></div>
     <div id="jpg2pdfOptions"   class="j2p-options"     style="display:none" aria-label="JPG to PDF options"></div>
+    <div id="scanDocumentOptions" class="j2p-options"  style="display:none" aria-label="Document Scanner options"></div>
     <div id="pdf2jpgOptions"   class="j2p-options"     style="display:none" aria-label="PDF to JPG options"></div>
     <div id="watermarkOptions" class="j2p-options"     style="display:none" aria-label="Watermark options"></div>
     <div id="pageNumOptions"   class="j2p-options"     style="display:none" aria-label="Page numbers options"></div>

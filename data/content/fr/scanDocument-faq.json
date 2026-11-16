@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "Numériser un document l'envoie-t-il quelque part ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Chaque étape — la prise de vue, la détection des coins, le recadrage, la correction de perspective — se fait dans votre navigateur. Rien n'est envoyé aux serveurs de PDFree ni ailleurs. Vous pouvez le vérifier en ouvrant l'onglet Réseau des outils de développement du navigateur pendant la numérisation."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Pourquoi chaque photo ajoutée affiche-t-elle un écran de recadrage, même depuis la galerie ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Cet outil est fait pour numériser des documents : chaque photo — appareil photo ou galerie — passe donc par la même détection des bords et la même vérification du recadrage, comme dans une appli de scan. Pour simplement assembler des photos en PDF sans recadrage, utilisez l'outil « JPG en PDF » de PDFree : il n'a pas d'écran de vérification et va plus vite."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Et si la détection automatique des bords se trompe ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Faites glisser l'un des quatre coins pour ajuster le recadrage avant de confirmer. Si aucun bord fiable n'est trouvé, l'outil démarre avec un recadrage par défaut sûr, que vous pouvez modifier librement."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je ne pas recadrer une photo qui n'est pas un document ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Sur l'écran de vérification, choisissez « Ignorer — utiliser tel quel » au lieu de confirmer le recadrage : la photo d'origine est ajoutée au PDF sans traitement."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Ça marche en couleur ou seulement en noir et blanc ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Les deux, et plus. « Niveaux de gris » (par défaut) blanchit le fond et rend le texte plus net — idéal pour les documents ordinaires. « Couleur » corrige l'éclairage inégal en gardant les vraies couleurs de la page. « N&B » transforme la page en texte noir pur sur blanc. « Texte pâle » évite que l'écriture claire ou faible disparaisse. « Original » garde la photo telle quelle. Des curseurs de luminosité et de contraste affinent le résultat."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Le PDF numérisé peut-il être consultable par recherche ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Activez « Reconnaître le texte » et choisissez la langue du document : le texte est reconnu dans votre navigateur et enregistré dans le PDF, pour pouvoir le rechercher et le copier. Si la reconnaissance du texte n'est pas disponible sur votre appareil, un PDF ordinaire est enregistré et l'outil vous le signale."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "Puis-je numériser plusieurs pages dans un seul PDF ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Ajoutez autant de photos que nécessaire — appareil photo, galerie ou les deux —, réordonnez-les par glisser et elles sont réunies en un seul PDF à l'enregistrement."
+    }
+  }
+]

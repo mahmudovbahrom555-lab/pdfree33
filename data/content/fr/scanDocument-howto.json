@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Comment numériser un document en PDF",
+  "description": "Numérisez un document avec l'appareil photo ou une photo existante — détection automatique des bords et correction de perspective, gratuit, sans envoi de fichier.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Prenez une photo ou choisissez-en une dans la galerie",
+      "text": "Touchez « Prendre une photo » pour utiliser l'appareil photo, ou glissez / choisissez une photo existante d'un document."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Vérifiez le recadrage détecté",
+      "text": "Les bords du document sont détectés automatiquement. Faites glisser un coin pour ajuster, ou choisissez « Ignorer — utiliser tel quel » si la photo n'a pas besoin de recadrage."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Confirmez et enregistrez en PDF",
+      "text": "Ajoutez d'autres pages de la même façon si besoin, choisissez un filtre (« Niveaux de gris » par défaut) et enregistrez votre numérisation en PDF."
+    }
+  ]
+}

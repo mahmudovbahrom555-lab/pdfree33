@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Scan a Document to PDF",
+  "description": "Scan a document with your camera or an existing photo — automatic edge detection and perspective correction, free, no upload required.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Take a photo or choose one from your gallery",
+      "text": "Tap Take Photo to use your camera, or drop/choose an existing photo of a document."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Review the detected crop",
+      "text": "The document's edges are detected automatically. Drag any corner to adjust, or choose Skip if the photo doesn't need cropping."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Confirm and save as PDF",
+      "text": "Add more pages the same way if needed, pick a filter (Grayscale by default), then save your scan as a PDF."
+    }
+  ]
+}

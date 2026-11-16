@@ -1,0 +1,26 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Jak zeskanować dokument do PDF",
+  "description": "Zeskanuj dokument aparatem lub istniejącym zdjęciem — automatyczne wykrywanie krawędzi i korekcja perspektywy, za darmo, bez wysyłania plików.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Zrób zdjęcie lub wybierz je z galerii",
+      "text": "Dotknij „Zrób zdjęcie”, aby użyć aparatu, albo przeciągnij / wybierz istniejące zdjęcie dokumentu."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Sprawdź wykryty kadr",
+      "text": "Krawędzie dokumentu są wykrywane automatycznie. Przeciągnij dowolny narożnik, aby poprawić, albo wybierz „Pomiń — użyj bez zmian”, jeśli zdjęcie nie wymaga kadrowania."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Zatwierdź i zapisz do PDF",
+      "text": "W razie potrzeby dodaj kolejne strony w ten sam sposób, wybierz filtr (domyślnie „Skala szarości”) i zapisz skan jako PDF."
+    }
+  ]
+}

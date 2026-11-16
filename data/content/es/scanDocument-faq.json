@@ -1,0 +1,58 @@
+[
+  {
+    "@type": "Question",
+    "name": "¿Escanear un documento lo sube a algún sitio?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Cada paso —la captura, la detección de esquinas, el recorte, la corrección de perspectiva— ocurre en tu navegador. Nada se sube a los servidores de PDFree ni a ningún otro sitio. Puedes comprobarlo tú mismo abriendo la pestaña Red de las herramientas para desarrolladores del navegador mientras escaneas."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Por qué cada foto que añado muestra una pantalla de recorte, incluso desde la galería?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Esta herramienta está hecha para escanear documentos, así que cada foto —de la cámara o de la galería— pasa por la misma detección de bordes y revisión de recorte, como en una app de escáner. Si solo quieres unir fotos en un PDF sin recortarlas, usa la herramienta «JPG a PDF» de PDFree: no tiene pantalla de revisión y es más rápida."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Y si la detección automática de bordes se equivoca?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Arrastra cualquiera de las cuatro esquinas para ajustar el recorte antes de confirmar. Si no se encuentra ningún borde fiable, la herramienta empieza con un recorte seguro por defecto que puedes cambiar libremente."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo no recortar una foto que no es un documento?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. En la pantalla de revisión, elige «Omitir — usar tal cual» en lugar de confirmar el recorte: la foto original se añade al PDF sin procesar."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Funciona en color o solo en blanco y negro?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "En ambos, y más. «Escala de grises» (el predeterminado) blanquea el fondo y hace el texto más nítido, ideal para documentos normales. «Color» corrige la iluminación desigual y mantiene los colores reales de la página. «B/N» convierte la página en texto negro puro sobre blanco. «Texto tenue» evita que la escritura pálida o débil se pierda. «Original» deja la foto tal cual. Los controles de brillo y contraste afinan el resultado."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿El PDF escaneado puede tener texto buscable?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Activa «Reconocer texto» y elige el idioma del documento: el texto se reconoce en tu navegador y se guarda en el PDF, así puedes buscarlo y copiarlo. Si el reconocimiento de texto no está disponible en tu dispositivo, se guarda un PDF normal y la herramienta te lo indica."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo escanear varias páginas en un solo PDF?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Añade todas las fotos que necesites —de la cámara, de la galería o de ambas—, ordénalas arrastrándolas y se unirán en un solo PDF al guardar."
+    }
+  }
+]
