@@ -131,6 +131,18 @@ await test('a 3-row × 2-col grid with full-span internal dividers is detected',
   expect(grids[0].colCount).toBe(2);
 });
 
+await test('two separate grids sharing the same horizontal rule heights are detected', async () => {
+  const ops = [40, 260].flatMap(x => [
+    rectOp(x, 40, 160, 120),
+    lineOp(x, 80, x + 160, 80),
+    lineOp(x, 120, x + 160, 120),
+    lineOp(x + 80, 40, x + 80, 160),
+  ]);
+  const grids = await detectTableGrids(fakePage(ops));
+  expect(JSON.stringify(grids.map(g => g.colXs).sort((a, b) => a[0] - b[0])))
+    .toBe('[[40,120,200],[260,340,420]]');
+});
+
 // ── The actual bug: merged-cell table with a partial internal divider ──────
 console.log('\ndetectTableGrids — merged-cell table (the real page-18 tariff table shape):');
 

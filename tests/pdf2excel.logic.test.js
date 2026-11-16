@@ -19,7 +19,7 @@ global.document = {
 global.window    = globalThis;
 global.Worker    = class { postMessage() {} terminate() {} addEventListener() {} };
 
-const { _p2eCellValue, _p2eConfidence, _p2eExtractPage, _p2eStitchTables } = await import('../js/processor.js');
+const { _p2eCellValue, _p2eDecimalMark, _p2eConfidence, _p2eExtractPage, _p2eStitchTables } = await import('../js/processor.js');
 const { detectTables, groupItemsIntoLines } = await import('../js/pdf2wordTables.js');
 
 let passed = 0, failed = 0;
@@ -81,7 +81,7 @@ test('простой процент конвертируется в долю с 
 });
 
 test('процент с разделителем тысяч конвертируется корректно', () => {
-  expect(_p2eCellValue('1,234%')).toEqual({ value: 12.34, numFmt: '0.00%' });
+  expect(_p2eCellValue('1,234.0%')).toEqual({ value: 12.34, numFmt: '0.00%' });
 });
 
 // ── _p2eCellValue: даты ────────────────────────────────────
@@ -125,6 +125,55 @@ test('строка с пробелами по краям обрезается п
 
 test('текст, похожий на число с буквой, остаётся текстом', () => {
   expect(_p2eCellValue('42kg')).toEqual({ value: '42kg' });
+});
+
+test('локальные суммы записываются числами без изменения значения', () => {
+  for (const [source, value] of [
+    ['12,50', 12.5], ['€1.234,56', 1234.56], ['−1 234,56', -1234.56],
+    ['1.234.567', 1234567], ['1 234 567.89', 1234567.89],
+    ['١٢٫٣٤٥', 12.345], ['١٢٬٣٤٥', 12345],
+  ]) expect(_p2eCellValue(source)).toEqual({ value });
+});
+
+test('идентификаторы, неоднозначное и неточное число остаются текстом', () => {
+  for (const source of [
+    '00123', '۰۰۱۲۳', '12345678901234567', '1234567890123456',
+    '1,23,456', '1,234 567.89', '123456789.1234567',
+  ]) expect(_p2eCellValue(source)).toEqual({ value: source });
+  for (const source of ['1.234', '12,345', '1,234%']) expect(_p2eCellValue(source, null)).toEqual({ value: source });
+  expect(_p2eCellValue('0.123')).toEqual({ value: 0.123 });
+});
+
+test('одиночный разделитель читается по знаку дроби таблицы', () => {
+  // по умолчанию — как инструмент читал всегда: запятая разделяет тысячи
+  expect(_p2eCellValue('12,345')).toEqual({ value: 12345 });
+  expect(_p2eCellValue('1.234')).toEqual({ value: 1.234 });
+  expect(_p2eCellValue('1,234%')).toEqual({ value: 12.34, numFmt: '0.00%' });
+  expect(_p2eCellValue('12,345', ',')).toEqual({ value: 12.345 });
+  expect(_p2eCellValue('12.345', ',')).toEqual({ value: 12345 });
+  // однозначные числа знак таблицы не меняет
+  expect(_p2eCellValue('1,234.5', ',')).toEqual({ value: 1234.5 });
+  expect(_p2eCellValue('12,5', '.')).toEqual({ value: 12.5 });
+});
+
+test('знак дроби таблицы — по её однозначным числам', () => {
+  expect(_p2eDecimalMark([['Сумма'], ['1.234,56'], ['12,345']])).toBe(',');
+  expect(_p2eDecimalMark([['Amount'], ['1,234.56'], ['12,345']])).toBe('.');
+  expect(_p2eDecimalMark([['Amount'], ['12,345'], ['7']])).toBe(null);
+  // заголовок не голосует
+  expect(_p2eDecimalMark([['0,5'], ['12,345']])).toBe(null);
+});
+
+test('локальные проценты сохраняют значение и видимые знаки после запятой', () => {
+  expect(_p2eCellValue('12,5%')).toEqual({ value: 0.125, numFmt: '0.00%' });
+  expect(_p2eCellValue('12,3456%')).toEqual({ value: 0.123456, numFmt: '0.0000%' });
+});
+
+test('проверка календаря сохраняет невозможные даты как текст', () => {
+  for (const source of ['2026-02-31', '2025-02-29', '1900-02-29', '1899-12-31']) {
+    expect(_p2eCellValue(source)).toEqual({ value: source });
+  }
+  expect(_p2eCellValue('2024-02-29').value.toISOString()).toBe('2024-02-29T00:00:00.000Z');
 });
 
 // ── _p2eConfidence ──────────────────────────────────────────
@@ -325,8 +374,25 @@ test('a cell wrapped over two lines stays ONE cell in its own row, and an empty 
   ];
   const { tables, textRows } = _p2eExtractPage(lines, [GRID], 1);
   expect(tables.length).toBe(1);
-  expect(tables[0].rows).toEqual([['No', 'Name', 'Group'], ['1', 'Long name continued', '89'], ['2', '', '90']]);
+  expect(tables[0].rows).toEqual([['No', 'Name', 'Group'], ['1', 'Long name\ncontinued', '89'], ['2', '', '90']]);
   expect(textRows.map(r => r.text)).toEqual(['Report title']);
+});
+
+test('two grids own only their cells and preserve notes at the same heights', () => {
+  const left = { colXs: [40, 140, 240], rowYs: [90, 60, 30, 0] };
+  const right = { colXs: [320, 420, 520], rowYs: [90, 60, 30, 0] };
+  const lines = [
+    makeLineAt(75, [['Item', 45], ['Qty', 145], ['Code', 325], ['Rate', 425]]),
+    makeLineAt(50, [['Paper', 45], ['Memo', 245], ['A', 325], ['7', 425]]),
+    makeLineAt(40, [['ream', 45], ['outside the right grid', 530]]),
+    makeLineAt(15, [['Ink', 45], ['3', 145], ['B', 325], ['8', 425]]),
+  ];
+  const { tables, textRows } = _p2eExtractPage(lines, [left, right], 1);
+  expect(tables.map(t => t.rows)).toEqual([
+    [['Item', 'Qty'], ['Paper\nream', ''], ['Ink', '3']],
+    [['Code', 'Rate'], ['A', '7'], ['B', '8']],
+  ]);
+  expect(textRows.map(row => row.text)).toEqual(['Memo', 'outside the right grid']);
 });
 
 test('a lone ruled box with one line of text is not a table — its text goes to the Text sheet', () => {
