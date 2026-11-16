@@ -33,7 +33,7 @@ let _scanTask  = null;
 let _scanGen   = 0;    // incremented on each new file — cancels stale background scans
 
 export function getPdf2ExcelParams() {
-  return { pageCount: _pageCount, loading: _loading };
+  return { pageCount: _pageCount, loading: _loading, decimalSeparator: id('p2eDecimalSeparator')?.value };
 }
 
 function _releaseScan() {
@@ -115,6 +115,15 @@ function _render(file) {
       <span class="compress-info__meta">${tp(_pageCount, 'split_info_page', 'split_info_pages', { n: _pageCount })}</span>
     </div>
 
+    <label class="p2e-number-format" for="p2eDecimalSeparator">
+      ${t('p2e_number_format')}
+      <select id="p2eDecimalSeparator">
+        <option value="auto">${t('p2e_number_auto')}</option>
+        <option value="dot">. (1.23)</option>
+        <option value="comma">, (1,23)</option>
+      </select>
+    </label>
+
     <div id="p2eModeHint" class="compress-scan compress-scan--ok" role="status" aria-live="polite">
       ${t('p2e_mode_hint')}
     </div>
@@ -122,6 +131,10 @@ function _render(file) {
   const nameEl = el.querySelector('.compress-info__name');
   nameEl.title = file.name;
   nameEl.textContent = name;
+  id('p2eDecimalSeparator')?.addEventListener('change', () => {
+    clearP2eConfidence();
+    document.dispatchEvent(new Event('pdfree:excel-format-changed'));
+  });
 }
 
 function _esc(str) {
@@ -219,7 +232,7 @@ async function _scanTablesBackground(doc, gen) {
 
 // ── Confidence report ─────────────────────────────────────────────────────────
 
-export function renderP2eConfidence({ tableCount, skippedPages = [] }) {
+export function renderP2eConfidence({ tableCount, skippedPages = [], previews = [] }) {
   const el = id('p2eConfidence');
   if (!el) return;
 
@@ -242,6 +255,40 @@ export function renderP2eConfidence({ tableCount, skippedPages = [] }) {
     link.textContent = t('p2e_ocr_scans');
     warning.append(message, link);
     el.append(warning);
+  }
+
+  if (previews.length) {
+    const preview = document.createElement('div');
+    preview.id = 'p2ePreview';
+    preview.className = 'p2e-preview';
+    previews.forEach(({ name, rows, rowCount, pages }, i) => {
+      const details = document.createElement('details');
+      details.open = i === 0;
+      const summary = document.createElement('summary');
+      const pageRange = `\u2066${pagesToRangeString(pages)}\u2069`;
+      summary.textContent = `${name} · ${t('p2e_preview_meta', { n: rowCount, pages: pageRange })}`;
+      const scroll = document.createElement('div');
+      scroll.className = 'p2e-preview-scroll';
+      scroll.tabIndex = 0;
+      scroll.setAttribute('role', 'region');
+      scroll.setAttribute('aria-label', summary.textContent);
+      const table = document.createElement('table');
+      const head = table.createTHead();
+      const body = table.createTBody();
+      rows.forEach((row, index) => {
+        const tr = (index ? body : head).insertRow();
+        row.forEach(text => {
+          const cell = document.createElement(index ? 'td' : 'th');
+          if (!index) cell.scope = 'col';
+          cell.textContent = text;
+          tr.append(cell);
+        });
+      });
+      scroll.append(table);
+      details.append(summary, scroll);
+      preview.append(details);
+    });
+    el.append(preview);
   }
 }
 

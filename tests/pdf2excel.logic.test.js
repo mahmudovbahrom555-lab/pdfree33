@@ -17,7 +17,7 @@ global.document = {
 global.window    = globalThis;
 global.Worker    = class { postMessage() {} terminate() {} addEventListener() {} };
 
-const { _p2eCellValue, _p2eDecimalMark, _p2eExtractPage, _p2eStitchTables } = await import('../js/processor.js');
+const { _p2eCellValue, _p2eDecimalMark, _p2eTableMark, _p2eExtractPage, _p2eStitchTables } = await import('../js/processor.js');
 const { detectTables, groupItemsIntoLines } = await import('../js/pdf2wordTables.js');
 
 const { initPdf2ExcelOptions, hidePdf2ExcelOptions, renderP2eConfidence } = await import('../js/pdf2excelUI.js');
@@ -659,6 +659,31 @@ try {
   console.error(`  ✗ Excel preview treats the filename as text\n    ${error.message}`);
   failed++;
 }
+
+test('an explicit decimal separator only resolves ambiguous values', () => {
+  const comma = _p2eTableMark([['Amount'], ['1,234']], 'comma');
+  const dot = _p2eTableMark([['Amount'], ['1,234']], 'dot');
+  expect(_p2eCellValue('1,234', comma)).toEqual({ value: 1.234 });
+  expect(_p2eCellValue('1,234', dot)).toEqual({ value: 1234 });
+  expect(_p2eCellValue('12,50', dot)).toEqual({ value: 12.5 });
+  expect(_p2eCellValue('00123', comma)).toEqual({ value: '00123' });
+});
+
+test('Auto reads a table by its own numbers; a choice overrides them', () => {
+  const european = [['Summe'], ['1.234,56'], ['1,234']];
+  expect(_p2eTableMark(european, 'auto')).toBe(',');
+  expect(_p2eTableMark(european, 'dot')).toBe('.');
+  expect(_p2eTableMark([['Amount'], ['1,234']], 'auto')).toBe('.');
+});
+
+test('a stitched table reports each source page once', () => {
+  const cols = [40, 140, 240];
+  const tables = [
+    T(1, [['Item', 'Qty'], ['A', '1']], cols),
+    T(2, [['Item', 'Qty'], ['B', '2']], cols),
+  ];
+  expect(_p2eStitchTables(tables).map(table => table.sourcePages)).toEqual([[1, 2]]);
+});
 
 // ── Summary ────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);

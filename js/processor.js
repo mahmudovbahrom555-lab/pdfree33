@@ -457,7 +457,7 @@ export async function doProcess(currentTool, extraParams = {}) {
     jpg2pdf:  () => _runJpg2Pdf(filesSnapshot, extraParams, currentTool),
     pdf2jpg:  () => _runPdf2Jpg(filesSnapshot, extraParams),
     pdf2word: () => _runPdf2Word(filesSnapshot, extraParams),
-    pdf2excel: () => _runPdf2Excel(filesSnapshot, excelRun.signal),
+    pdf2excel: () => _runPdf2Excel(filesSnapshot, excelRun.signal, extraParams.decimalSeparator),
     pdf2ppt:  () => _runPdf2Ppt(filesSnapshot, extraParams),
     pdf2md:   () => _runPdf2Md(filesSnapshot, extraParams),
     docx2pdf: () => _runDocx2Pdf(filesSnapshot, extraParams),
@@ -3342,7 +3342,7 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150, stripMeta
 // table is appended to a catch-all "Text" sheet so nothing is silently
 // dropped, even on documents that turn out not to be spreadsheet-like.
 
-async function _runPdf2Excel(filesSnapshot, signal) {
+async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
   const file = filesSnapshot[0];
   if (!_checkSize(file, maxFileMb('pdf2excel'))) { _abortUI(); return; }
 
@@ -3399,7 +3399,7 @@ async function _runPdf2Excel(filesSnapshot, signal) {
   // Demoted rows are joined with a double space, same shape as a plain
   // text line — they're no longer claimed to be tabular data.
   const keptTables  = [];
-  let   textRows    = [...extracted.textRows];
+  const textRows    = [...extracted.textRows];
   for (const tbl of extracted.tables) {
     if (tbl.confidence >= _P2E_CONF_THRESHOLD) {
       keptTables.push(tbl);
@@ -3409,7 +3409,7 @@ async function _runPdf2Excel(filesSnapshot, signal) {
   }
   let tables = keptTables;
 
-  let workbook = _p2eBuildWorkbook(tables, textRows);
+  const workbook = _p2eBuildWorkbook(tables, textRows, decimalSeparator);
   let buffer   = await workbook.xlsx.writeBuffer();
   signal.throwIfAborted();
 
@@ -3429,16 +3429,17 @@ async function _runPdf2Excel(filesSnapshot, signal) {
       if (badSheetNames.size) {
         setProgress(95, 'Verifying table structure…');
         const survivors = [];
+        const demotedText = [...textRows];
         tables.forEach((tbl, i) => {
           if (badSheetNames.has(`Table ${i + 1}`)) {
-            for (const row of tbl.rows) textRows.push({ page: tbl.page, text: row.join('  ') });
+            for (const row of tbl.rows) demotedText.push({ page: tbl.page, text: row.join('  ') });
           } else {
             survivors.push(tbl);
           }
         });
-        tables   = survivors;
-        workbook = _p2eBuildWorkbook(tables, textRows);
-        buffer   = await workbook.xlsx.writeBuffer();
+        const verified = _p2eBuildWorkbook(survivors, demotedText, decimalSeparator);
+        buffer = await verified.xlsx.writeBuffer();
+        tables = survivors;
       }
     } catch {
       // ERI check is best-effort — never let a scoring failure block a
@@ -3453,7 +3454,17 @@ async function _runPdf2Excel(filesSnapshot, signal) {
 
   const baseName = file.name.replace(/\.pdf$/i, '');
   const filename = `${baseName}.xlsx`;
-  const confidence = { tableCount: tables.length, skippedPages: extracted.skippedPages };
+  const confidence = {
+    tableCount: tables.length,
+    skippedPages: extracted.skippedPages,
+    previews: tables.map((table, i) => ({
+      name: `Table ${i + 1}`,
+      rowCount: table.rows.length,
+      pages: table.sourcePages,
+      rows: table.rows.slice(0, 5).map((row, ri) => ri === 0 ? row :
+        row.map(text => _p2ePreviewCell(_p2eCellValue(text, _p2eTableMark(table.rows, decimalSeparator))))),
+    })),
+  };
   const tableNote = tables.length
     ? `${tables.length} table${tables.length !== 1 ? 's' : ''} found`
     : 'no tables found';
@@ -3474,7 +3485,7 @@ async function _runPdf2Excel(filesSnapshot, signal) {
 // _runPdf2Excel() can rebuild it a second time (cheap — no PDF re-parse,
 // no re-detection) after demoting whichever tables fail the post-build ERI
 // structural check.
-function _p2eBuildWorkbook(tables, textRows) {
+function _p2eBuildWorkbook(tables, textRows, decimalSeparator) {
   const workbook = new window.ExcelJS.Workbook();
   workbook.creator = 'PDFree';
 
@@ -3482,7 +3493,7 @@ function _p2eBuildWorkbook(tables, textRows) {
     const sheet = workbook.addWorksheet(`Table ${i + 1}`.slice(0, 31));
 
     // A table that writes 1.234,56 elsewhere reads its 1,234 the same way.
-    const decimalMark = _p2eDecimalMark(tbl.rows) ?? '.';
+    const decimalMark = _p2eTableMark(tbl.rows, decimalSeparator);
     tbl.rows.forEach((row, ri) => {
       if (ri === 0) { sheet.addRow(row); return; } // header stays plain text
       const parsed    = row.map(cell => _p2eCellValue(cell, decimalMark));
@@ -3786,9 +3797,11 @@ export function _p2eStitchTables(tables) {
       (matchesColumns && !header && previous.atBottom && tbl.atTop);
     if (!continues) {
       last = { ...tbl, rows: [...tbl.rows], boldRows: new Set(tbl.boldRows) };
+      last.sourcePages = [tbl.page];
       lastHeader = header;
       out.push(last);
     } else {
+      last.sourcePages.push(tbl.page);
       const skip = repeatedHeader ? 1 : 0;
       for (let i = skip; i < tbl.rows.length; i++) {
         if (tbl.boldRows.has(i)) last.boldRows.add(last.rows.length);
@@ -3798,6 +3811,12 @@ export function _p2eStitchTables(tables) {
     previous = tbl;
   }
   return out;
+}
+
+function _p2ePreviewCell({ value, numFmt }) {
+  if (value instanceof Date) return value.toISOString().slice(0, 10);
+  if (numFmt?.endsWith('%')) return `${(value * 100).toFixed(numFmt.length - 3)}%`;
+  return String(value ?? '');
 }
 
 // Each pattern captures the integer and fractional parts of a supported
@@ -3851,6 +3870,14 @@ export function _p2eDecimalMark(rows) {
   }));
   if (votes['.'] === votes[',']) return null;
   return votes['.'] > votes[','] ? '.' : ',';
+}
+
+// The decimal mark one table is read with: the person's choice ('dot' or
+// 'comma'), else ('auto') what the table's own numbers say, else ".".
+export function _p2eTableMark(rows, decimalSeparator = 'auto') {
+  if (decimalSeparator === 'dot') return '.';
+  if (decimalSeparator === 'comma') return ',';
+  return _p2eDecimalMark(rows) ?? '.';
 }
 
 // decimalMark settles a lone separator such as 1,234: "." reads it as one
