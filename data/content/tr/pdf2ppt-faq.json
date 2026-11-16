@@ -62,5 +62,13 @@
       "@type": "Answer",
       "text": "Evet. Her PDF sayfası, orijinal sayfa sırasında ayrı bir .pptx slaytına dönüşür."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Test veya çalışma kâğıdı için her slayta bir soru koyabilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. PDF'inizi seçin ve «Slayt başına bir soru» düğmesine basın. Her sorunun etrafına bir çerçeve çizin — «Çerçeve öner» tek sütunlu sayfalardaki numaraları okur ve birkaç sorunun ortak kullandığı bir resim ya da yönerge hepsine eklenebilir. Her slayt, sorusunu sayfadaki gibi, oradan kesilmiş olarak ve seçtiğiniz kadar çözüm alanıyla gösterir. Gösteride A–E seçeneklerini tıklanabilir yapmak için «Etkileşimli cevap»ı açın: doğru cevap açıklamanızı gösterir, yanlış cevap «Tekrar deneyin» der. Yazdırmak için her sayfada bir soru olan bir PDF de indirebilirsiniz. Her şey tarayıcınızda olur; PDF yüklenmez."
+    }
   }
 ]

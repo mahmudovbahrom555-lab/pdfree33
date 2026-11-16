@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Ya, meskipun jumlah halaman yang sangat besar otomatis menggunakan kualitas gambar lebih rendah agar browser tidak kehabisan memori. Untuk presentasi sangat besar, kualitas Compact adalah pilihan paling andal."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Bisakah saya membuat satu soal per slide, untuk kuis atau lembar kerja?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa. Pilih PDF Anda lalu tekan «Satu soal per slide». Gambar bingkai di sekitar setiap soal — «Sarankan bingkai» membaca nomor soal pada halaman satu kolom, dan gambar atau petunjuk yang dipakai beberapa soal bisa dilampirkan ke semuanya. Setiap slide menampilkan soalnya persis seperti di halaman, dipotong dari halaman itu, dengan ruang mengerjakan sebanyak yang Anda pilih. Aktifkan «Jawaban interaktif» agar pilihan A–E bisa diklik saat tayangan: jawaban benar menampilkan penjelasan Anda, jawaban salah menampilkan «Coba lagi». Anda juga bisa mengunduh PDF berisi satu soal per halaman untuk dicetak. Semuanya terjadi di browser Anda; PDF tidak diunggah."
+    }
   }
 ]

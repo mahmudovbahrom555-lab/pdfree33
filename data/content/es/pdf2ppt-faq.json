@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Sí, aunque los PDFs muy grandes utilizan automáticamente una calidad de imagen más baja para evitar que el navegador se quede sin memoria. Para un gran número de páginas, Compacto es la opción más fiable."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "¿Puedo poner una pregunta por diapositiva, para un cuestionario o una ficha?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Elige tu PDF y pulsa «Una pregunta por diapositiva». Dibuja un marco alrededor de cada pregunta: «Sugerir marcos» lee los números en páginas de una columna, y una imagen o instrucciones que comparten varias preguntas se pueden adjuntar a todas. Cada diapositiva muestra su pregunta tal como está en la página, recortada de ella, con el espacio para resolver que elijas. Activa «Respuesta interactiva» para que las opciones A–E se puedan pulsar en la presentación: una respuesta correcta muestra tu explicación y una incorrecta dice «Inténtalo de nuevo». También puedes descargar un PDF con una pregunta por página para imprimir. Todo ocurre en tu navegador; el PDF no se sube."
+    }
   }
 ]

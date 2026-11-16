@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Ja, hoewel zeer grote paginanummers automatisch een lagere afbeeldingskwaliteit gebruiken om te voorkomen dat je browser zonder geheugen komt te zitten. Voor enorme presentaties is Compact-kwaliteit de meest betrouwbare keuze."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kan ik één vraag per dia maken, voor een quiz of een werkblad?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Kies je PDF en druk op ‘Eén vraag per dia’. Teken een kader om elke vraag – ‘Kaders voorstellen’ leest de nummers op pagina's met één kolom, en een afbeelding of instructies die meerdere vragen delen, kun je aan allemaal koppelen. Elke dia toont de vraag precies zoals op de pagina, eruit geknipt, met zoveel ruimte om te werken als je kiest. Zet ‘Interactief antwoord’ aan om de keuzes A–E in de presentatie aanklikbaar te maken: een goed antwoord toont je uitleg, een fout antwoord zegt ‘Probeer het opnieuw’. Je kunt ook een PDF met één vraag per pagina downloaden om te printen. Alles gebeurt in je browser; de PDF wordt niet geüpload."
+    }
   }
 ]

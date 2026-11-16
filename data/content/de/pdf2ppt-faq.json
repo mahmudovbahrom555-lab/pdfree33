@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Ja, sehr große PDFs verwenden automatisch eine niedrigere Bildqualität, um einen Speicherüberlauf im Browser zu verhindern. Für sehr viele Seiten ist Kompakt die zuverlässigste Wahl."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Kann ich eine Aufgabe pro Folie machen – für ein Quiz oder ein Arbeitsblatt?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Wählen Sie Ihr PDF und tippen Sie auf „Eine Aufgabe pro Folie“. Ziehen Sie einen Rahmen um jede Aufgabe – „Rahmen vorschlagen“ liest die Nummern auf einspaltigen Seiten, und ein Bild oder Hinweise, die mehrere Aufgaben teilen, lassen sich allen zuordnen. Jede Folie zeigt ihre Aufgabe genau wie auf der Seite, daraus ausgeschnitten, mit so viel Platz zum Lösen, wie Sie wählen. Schalten Sie „Interaktive Antwort“ ein, damit die Antworten A–E in der Präsentation anklickbar sind: Eine richtige Antwort zeigt Ihre Erklärung, eine falsche „Noch einmal versuchen“. Sie können auch ein PDF mit einer Aufgabe pro Seite zum Drucken herunterladen. Alles geschieht in Ihrem Browser; das PDF wird nicht hochgeladen."
+    }
   }
 ]

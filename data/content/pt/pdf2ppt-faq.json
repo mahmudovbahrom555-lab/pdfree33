@@ -54,5 +54,13 @@
       "@type": "Answer",
       "text": "Sim, mas PDFs muito grandes usam automaticamente uma qualidade de imagem mais baixa para evitar que o navegador fique sem memória. Para um número muito grande de páginas, Compacto é a escolha mais confiável."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Posso colocar uma pergunta por slide, para um quiz ou uma folha de exercícios?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Escolha seu PDF e toque em «Uma pergunta por slide». Desenhe uma moldura em volta de cada pergunta: «Sugerir molduras» lê os números em páginas de uma coluna, e uma imagem ou instruções compartilhadas por várias perguntas podem ser anexadas a todas. Cada slide mostra a pergunta exatamente como na página, recortada dela, com o espaço para resolver que você escolher. Ative «Resposta interativa» para tornar as opções A–E clicáveis na apresentação: uma resposta certa mostra sua explicação, uma errada diz «Tente de novo». Você também pode baixar um PDF com uma pergunta por página para imprimir. Tudo acontece no seu navegador; o PDF não é enviado."
+    }
   }
 ]
