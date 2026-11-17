@@ -604,17 +604,24 @@ function _maybeShowPwaNudge() {
   if (!nudge) return;
   nudge.style.display = 'flex';
 
-  id('pwaNudgeBtn')?.addEventListener('click', async () => {
+  // onclick, not addEventListener: shown after every result, the nudge
+  // gathered one listener per result, and one click called prompt() once per
+  // listener — all but the first without the click's user activation
+  // ("prompt() method must be called with a user gesture", Split: 3 people,
+  // 2026-11-17). The event can prompt once, so it is let go at once.
+  const btn = id('pwaNudgeBtn');
+  if (btn) btn.onclick = () => {
     nudge.style.display = 'none';
-    _installPromptEvent.prompt();
-    const { outcome } = await _installPromptEvent.userChoice;
-    if (outcome === 'accepted') _installPromptEvent = null;
-  }, { once: true });
+    const ev = _installPromptEvent;
+    _installPromptEvent = null;
+    ev?.prompt();
+  };
 
-  id('pwaNudgeSkip')?.addEventListener('click', () => {
+  const skip = id('pwaNudgeSkip');
+  if (skip) skip.onclick = () => {
     nudge.style.display = 'none';
     _installPromptEvent = null;
-  }, { once: true });
+  };
 }
 
 

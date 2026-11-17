@@ -519,6 +519,21 @@ function _bindEvents() {
 
       _logoBytes = new Uint8Array(await file.arrayBuffer());
       _logoMime  = file.type;
+      // ".jpg" that isn't a JPEG inside (a WebP or PNG renamed — the browser
+      // types a file by its name and still shows it): pdf-lib reads only real
+      // JPEG bytes and stopped with "SOI not found in JPEG" (3 people,
+      // 2026-11-17). Such a file is drawn once and saved as a real JPEG.
+      if (!(_logoBytes[0] === 0xFF && _logoBytes[1] === 0xD8)) {
+        const canvas = document.createElement('canvas');
+        canvas.width  = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.92));
+        canvas.width = 0; canvas.height = 0;
+        if (!blob) { showToast(t('wm_toast_invalid_type')); return; }
+        _logoBytes = new Uint8Array(await blob.arrayBuffer());
+        _logoMime  = 'image/jpeg';
+      }
       _logoImg   = img;
       _clearLogoObjectUrl();  // revoke whatever logo (if any) was loaded before this one
       _logoObjectUrl = _rawObjectUrl;  // JPEG path uses the raw upload directly, no de-matte pass

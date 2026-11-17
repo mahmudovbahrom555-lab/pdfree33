@@ -5,7 +5,7 @@
 //  processor.js — PDF processing via Web Worker
 // ============================================================
 
-import { fmtSize } from './utils.js';
+import { fmtSize, throwIfAborted } from './utils.js';
 import { t, tp } from './i18n.js';
 import { setProgress, hideProgress, setButtonProcessing, setButtonReady,
          showCancelBtn, hideCancelBtn, showToast, startLongOpHint, clearLongOpHint } from './ui.js';
@@ -1976,11 +1976,11 @@ const _TARGET_LADDER = [
 ];
 
 async function _compressAttempt(original, file, step, options, signal, onProgress, onScan) {
-  signal.throwIfAborted();
+  throwIfAborted(signal);
   const { preset, targetDpi, quality } = step;
   const manual = preset === 'low' ? {} : { targetDpi, quality, preferNativeScans: step.preferNativeScans };
   const buffer = await _compressPrep(original, file, preset, manual);
-  signal.throwIfAborted();
+  throwIfAborted(signal);
   const prepXmp = _compressPrepXmp;
   const data = await _postToWorkerForBatch({
     tool: 'compress', file: buffer,
@@ -2058,7 +2058,7 @@ async function _compressToTarget(file, original, originalSize, targetBytes, opti
       if (refined.data.compressedSize <= targetBytes) chosen = refined;
     } catch {
       // Keep the already fitting result if the optional pass fails.
-      signal.throwIfAborted();
+      throwIfAborted(signal);
     }
   }
 
@@ -2083,7 +2083,7 @@ async function _compressToTarget(file, original, originalSize, targetBytes, opti
       && originalSize >= 2 * MB && originalSize <= 20 * MB
       && smallest.data.compressedSize <= 10 * MB
       && targetBytes - final.compressedSize >= 128 * 1024 && !keptOriginal) {
-    signal.throwIfAborted();
+    throwIfAborted(signal);
     const refined = await _runOptionalCompressCheck({
       base: final.result, larger: smallest.data.result,
     }, targetBytes, signal, _PAGE_REFINE_BUDGET_MS);
@@ -2092,7 +2092,7 @@ async function _compressToTarget(file, original, originalSize, targetBytes, opti
       pageRefined = refined.pages;
     }
   }
-  signal.throwIfAborted();
+  throwIfAborted(signal);
   let qrProtected = false;
   let finalStep = step;
   let finalIndex = index;
@@ -2100,7 +2100,7 @@ async function _compressToTarget(file, original, originalSize, targetBytes, opti
     const check = await _runOptionalCompressCheck({
       original, base: final.result, larger: qrFallback?.data.result,
     }, targetBytes, signal, 1800);
-    signal.throwIfAborted();
+    throwIfAborted(signal);
     if (check?.qrProtected && check.buffer instanceof ArrayBuffer) {
       final = { result: check.buffer, compressedSize: check.buffer.byteLength };
       qrProtected = true;
@@ -2124,7 +2124,7 @@ async function _compressFile(file, params, signal, onProgress, onScan) {
   const { preset = 'medium', preserveText = true, removeWatermarks = false,
     targetDpi = null, quality = null, targetBytes = null } = params;
   const original = await _readCompressBuffer(file);
-  signal.throwIfAborted();
+  throwIfAborted(signal);
   const originalSize = original.byteLength;
   const options = { preserveText, removeWatermarks };
   if (targetBytes) {
@@ -2132,7 +2132,7 @@ async function _compressFile(file, params, signal, onProgress, onScan) {
   }
   const { data, prepXmp } = await _compressAttempt(original, file, { preset, targetDpi, quality }, options, signal, onProgress, onScan);
   const final = await _notLarger(data, originalSize, file);
-  signal.throwIfAborted();
+  throwIfAborted(signal);
   return { originalSize, final, data, prepXmp };
 }
 
@@ -2240,7 +2240,7 @@ async function _finishJpg2Pdf(filesSnapshot, result, pageCount, skipped, toolKey
     const { signal } = controller;
     try {
       const { recognizeScanPdf } = await import('./ocrUI.js');
-      signal.throwIfAborted();
+      throwIfAborted(signal);
       const bytes = await recognizeScanPdf(blob, ocrLanguage, {
         signal,
         progress: (pct, label) => { if (!signal.aborted) setProgress(pct, label); },
@@ -3352,7 +3352,7 @@ async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
   } catch {
     throw new Error('Excel library unavailable — check your internet connection.');
   }
-  signal.throwIfAborted();
+  throwIfAborted(signal);
 
   if (!window.pdfjsLib) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
@@ -3364,7 +3364,7 @@ async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
   const rawBuf = file._decryptedBuffer
     ? file._decryptedBuffer.slice(0)
     : await preprocessPdfBuffer(await _readSelected(file));
-  signal.throwIfAborted();
+  throwIfAborted(signal);
   const task = window.pdfjsLib.getDocument({ isEvalSupported: false,
     data:              new Uint8Array(rawBuf),
     useSystemFonts:    false,
@@ -3383,13 +3383,13 @@ async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
   let extracted;
   try {
     const doc = await task.promise;
-    signal.throwIfAborted();
+    throwIfAborted(signal);
     extracted = await _p2eExtractTables(doc, signal);
   } finally {
     signal.removeEventListener('abort', destroy);
     await destroy();
   }
-  signal.throwIfAborted();
+  throwIfAborted(signal);
 
   setProgress(90, 'Building spreadsheet…');
 
@@ -3411,7 +3411,7 @@ async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
 
   const workbook = _p2eBuildWorkbook(tables, textRows, decimalSeparator);
   let buffer   = await workbook.xlsx.writeBuffer();
-  signal.throwIfAborted();
+  throwIfAborted(signal);
 
   // Gate 2: independent structural check computed from the ACTUAL produced
   // .xlsx bytes (eriScoreXlsx.js), not the detector's self-reported
@@ -3422,7 +3422,7 @@ async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
   if (tables.length) {
     try {
       const eri = await evaluateXlsxStructural(buffer);
-      signal.throwIfAborted();
+      throwIfAborted(signal);
       const badSheetNames = new Set(
         eri.sheets.filter(s => s.eri < _P2E_ERI_THRESHOLD).map(s => s.name)
       );
@@ -3447,7 +3447,7 @@ async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
     }
   }
 
-  signal.throwIfAborted();
+  throwIfAborted(signal);
   const blob = new Blob([buffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   });
@@ -3598,25 +3598,25 @@ async function _p2eExtractTables(pdfDoc, signal) {
   // _runPdf2Jpg already uses.
   let frameStart = performance.now();
   for (let p = 1; p <= pdfDoc.numPages; p++) {
-    signal.throwIfAborted();
+    throwIfAborted(signal);
     if (performance.now() - frameStart >= _FRAME_BUDGET_MS) {
       await _yieldToUI();
-      signal.throwIfAborted();
+      throwIfAborted(signal);
       frameStart = performance.now();
     }
     setProgress(10 + Math.round((p / pdfDoc.numPages) * 75),
                 `Reading page ${p}/${pdfDoc.numPages}…`);
 
     const page    = await pdfDoc.getPage(p);
-    signal.throwIfAborted();
+    throwIfAborted(signal);
     const content = await page.getTextContent({ normalizeWhitespace: false });
-    signal.throwIfAborted();
+    throwIfAborted(signal);
     const textItems = content.items.filter(item => 'str' in item && item.str.split('\u0000').join('').trim());
     if (!textItems.length) { skippedPages.push(p); page.cleanup?.(); continue; }
 
     // One operator list both resolves the fonts and supplies the table rules.
     const operators = await page.getOperatorList().catch(() => null);
-    signal.throwIfAborted();
+    throwIfAborted(signal);
     const viewport = page.getViewport({ scale: 1 });
     const upright = uprightMatrix(page);
     let grids = [];
