@@ -45,7 +45,7 @@ global.document = {
 
 // Импортируем тестируемые функции (CommonJS-совместимый вариант для node)
 // В реальном проекте используй: import { fmtSize, esc, isFileAccepted } from '../js/utils.js'
-const { fmtSize, esc, isFileAccepted } = await import('../js/utils.js');
+const { fmtSize, esc, isFileAccepted, throwIfAborted, abortReason } = await import('../js/utils.js');
 
 // ── fmtSize ────────────────────────────────────────────────
 console.log('\nfmtSize:');
@@ -89,6 +89,23 @@ test('отклоняет EXE как PDF',              () => expect(isFileAccept
 test('отклоняет DOCX как PDF',             () => expect(isFileAccepted(makeFile('doc.docx', 'application/vnd.openxmlformats'), '.pdf', MIME_MAP)).toBeFalsy());
 test('отклоняет PDF как image',            () => expect(isFileAccepted(makeFile('doc.pdf', 'application/pdf'), '.jpg,.jpeg,.png', MIME_MAP)).toBeFalsy());
 test('пропускает если нет карты для accept',() => expect(isFileAccepted(makeFile('any.xyz', ''), '.xyz', MIME_MAP)).toBeTruthy());
+
+// ── throwIfAborted: AbortSignal.throwIfAborted() is Chrome 100+ — an older
+// browser's signal, without it or signal.reason, must still stop the run ──
+console.log('\nthrowIfAborted:');
+test('a live signal goes on', () => { throwIfAborted({ aborted: false }); throwIfAborted(null); });
+test('an aborted signal without throwIfAborted or reason throws an AbortError', () => {
+  let err = null;
+  try { throwIfAborted({ aborted: true }); } catch (e) { err = e; }
+  expect(err?.name).toBe('AbortError');
+});
+test('the signal\'s own reason is thrown when it has one', () => {
+  const reason = new Error('timed out');
+  let err = null;
+  try { throwIfAborted({ aborted: true, reason }); } catch (e) { err = e; }
+  expect(err).toBe(reason);
+  expect(abortReason({ aborted: true, reason })).toBe(reason);
+});
 
 // ── Summary ────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);

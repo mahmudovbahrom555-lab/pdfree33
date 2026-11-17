@@ -102,3 +102,13 @@ export function isFileAccepted(file, acceptString, mimeMap) {
   const ext = file.name.split('.').pop()?.toLowerCase();
   return acceptString.split(',').some(a => a.trim() === '.' + ext);
 }
+
+// AbortSignal.throwIfAborted() and signal.reason are Chrome 100 / 98, Safari
+// 15.4: on an older browser Compress stopped with "throwIfAborted is not a
+// function" on 10–50 MB files (Analytics, 2026-11-17). The same, everywhere.
+export function abortReason(signal) {
+  return signal.reason ?? Object.assign(new Error('The operation was aborted.'), { name: 'AbortError' });
+}
+export function throwIfAborted(signal) {
+  if (signal?.aborted) throw abortReason(signal);
+}
