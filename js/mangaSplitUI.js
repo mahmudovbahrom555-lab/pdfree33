@@ -87,7 +87,10 @@ export async function initMangaSplitOptions(file) {
     const pagesForDetect = doc.getPages();
     for (let i = 0; i < pagesForDetect.length; i++) {
       const { width, height } = pagesForDetect[i].getSize();
-      if (width <= height) _skipped.add(i);
+      // A scanner may store a spread upright and turn it with /Rotate:
+      // judge the page as it is shown.
+      const turned = ((pagesForDetect[i].getRotation().angle % 180) + 180) % 180 === 90;
+      if ((turned ? height : width) <= (turned ? width : height)) _skipped.add(i);
     }
     _rtl = true;
     _thumbnailURLs = new Array(_pageCount).fill(null);

@@ -90,20 +90,31 @@ async function handleMangaSplit(fileBuffer, options) {
       const [copied] = await outDoc.copyPages(srcDoc, [i]);
       outDoc.addPage(copied);
     } else {
-      const halfW = w / 2;
-      const midX  = cropX + halfW;
-      // embedPage's boundingBox clips the source page in its own
-      // (untransformed) coordinate space and returns a reusable Form
-      // XObject — fully vector-preserving, no rasterization.
-      const leftEmbed  = await outDoc.embedPage(srcPage, { left: cropX, right: midX,      bottom: cropY, top: cropY + h });
-      const rightEmbed = await outDoc.embedPage(srcPage, { left: midX,  right: cropX + w, bottom: cropY, top: cropY + h });
+      // Cut down the middle of the page AS SHOWN. A spread stored upright
+      // and turned by /Rotate 90 or 270 is cut across its stored height;
+      // each half keeps the page's rotation, so it is shown the same way.
+      const angle = ((srcPage.getRotation().angle % 360) + 360) % 360;
+      const across = angle === 90 || angle === 270;
+      const [hw, hh] = across ? [w, h / 2] : [w / 2, h];
+      // One Form XObject per source page (vector-preserving, no
+      // rasterization), drawn on both halves shifted so that half fills
+      // the new page; the page's own edge clips the rest. Embedding each
+      // half separately copied a scan's image twice — output 2.00x the
+      // input (2026-11-17).
+      const embed = await outDoc.embedPage(srcPage, { left: cropX, right: cropX + w, bottom: cropY, top: cropY + h });
+      // shown left | right: 0° lower-x | upper-x, 90° bottom | top,
+      // 180° upper-x | lower-x, 270° top | bottom
+      const lower = { x: 0, y: 0 };
+      const upper = across ? { x: 0, y: -hh } : { x: -hw, y: 0 };
+      const [shownLeft, shownRight] = angle === 0 || angle === 90 ? [lower, upper] : [upper, lower];
 
       // Manga/manhwa reads right-to-left — the right half of the spread
       // is the FIRST page in reading order when rtl is true.
-      const halves = rtl ? [rightEmbed, leftEmbed] : [leftEmbed, rightEmbed];
-      for (const embed of halves) {
-        const newPage = outDoc.addPage([halfW, h]);
-        newPage.drawPage(embed, { x: 0, y: 0, width: halfW, height: h });
+      const halves = rtl ? [shownRight, shownLeft] : [shownLeft, shownRight];
+      for (const at of halves) {
+        const newPage = outDoc.addPage([hw, hh]);
+        newPage.drawPage(embed, { ...at, width: w, height: h });
+        if (angle) newPage.setRotation(self.PDFLib.degrees(angle));
       }
     }
 
