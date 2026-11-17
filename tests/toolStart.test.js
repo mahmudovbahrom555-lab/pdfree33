@@ -6,6 +6,8 @@ import assert from 'node:assert/strict';
 
 const sent = [];
 globalThis.window = globalThis;
+// Node 20 (CI) has no navigator; analytics reads navigator.webdriver like a browser does
+globalThis.navigator ??= { userAgent: 'node' };
 globalThis.document = { documentElement: { lang: 'en' }, hidden: false, addEventListener() {} };
 globalThis.fetch = (url, opts) => { sent.push({ url, body: JSON.parse(opts.body) }); return Promise.resolve(); };
 const { trackToolStart } = await import('../js/analytics.js');
