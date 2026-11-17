@@ -421,6 +421,19 @@ button,
 .merge-btn--processing::before {
   width: var(--fill-pct, 0%);
   transition: width 0.9s cubic-bezier(.33, 1, .68, 1);
+  /* a light running through the fill to its edge, over and over: the fill
+     moves only when the real percent does, and on a long step (PDF→Word
+     finding a scan's language: 44 s at one percent, 2026-11-17) the button
+     looked stuck — people left. The light never stops while work goes on. */
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.38) 50%, transparent 100%) no-repeat,
+    linear-gradient(90deg, var(--green-mid), var(--green));
+  background-size: 45% 100%, 100% 100%;
+  animation: merge-btn-run 1.8s linear infinite;
+}
+@keyframes merge-btn-run {
+  0%   { background-position: -120% 0, 0 0; }
+  100% { background-position:  220% 0, 0 0; }
 }
 .merge-btn--processing::after {
   opacity: 1;
@@ -438,7 +451,7 @@ button,
   50%      { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18), 0 0 0 9px rgba(76, 175, 120, 0); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .merge-btn--processing { animation: none; }
+  .merge-btn--processing, .merge-btn--processing::before { animation: none; }
   .merge-btn::before, .merge-btn::after { transition: none; }
 }
 
