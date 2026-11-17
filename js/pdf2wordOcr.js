@@ -11,10 +11,11 @@
 // The page image never leaves the device.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { loadTesseract, createOcrWorker, detectOcrLanguage, recognizePage, ocrLangForLocale, ocrProbesForBrowser, joinOcrWords } from './ocrEngine.js';
+import { loadTesseract, createOcrWorker, detectOcrLanguage, recognizePage, ocrLangForLocale, ocrProbesForBrowser, joinOcrWords, ocrLanes } from './ocrEngine.js';
 import { paddleWarm } from './ppocrEngine.js';
 import { cjkJoin } from './cjkText.js';
 import { getLang } from './config.js';
+import { _layerWantsOcr } from './pdf2readCore.js';
 
 // Text items for pdf2readCore from one recognized page (recognizePage output),
 // in Tesseract's reading order. A line's words are joined into runs — the
@@ -168,8 +169,55 @@ export async function layerScript(pdfDoc) {
 // today's behaviour (a picture of the page) instead of risking garbage text.
 // `rotated`: whether pages with /Rotate are read too — PDF→PowerPoint leaves
 // such a slide a picture, and has no use for its text.
+// Pages ahead are read while pdf2readCore works on this one, on `lanes`
+// workers (ocrLanes: 1 on a phone and for Chinese/Japanese in Chrome — there
+// nothing is read ahead, as before; 2–3 on a desktop). Ahead means up to
+// LOOK_AHEAD pages past the one asked for, a page that will likely be asked
+// for: no text at all, or a layer pdf2readCore reads again (_layerWantsOcr —
+// the one rule, asked here on the page's raw text layer). Whether a page is
+// OCRed is still pdf2readCore's call: a page read ahead that it never asks
+// for is dropped, and a page it asks for that was not read ahead is read
+// then. A page read ahead is read the same way — the same engine, language
+// and settings, its own worker (OCR tool, 2.7× on long scans: the same text).
+// Out of memory with pages read at once: read again when it is asked for.
+const LOOK_AHEAD = 8;
+const _outOfMemory = err => /memory|allocat|RangeError/i.test(String(err?.message ?? err));
 export function createOcrLayer(pdfDoc, { onPage = () => {}, rotated = true } = {}) {
   let engine = null;   // Promise<{ worker, lang } | null>
+  let closed = false;
+  const idle = [];      // workers free to read a page
+  const waiting = [];   // resolvers of reads waiting for a worker
+  const extras = [];    // Promises of the extra lanes' workers
+  const ahead = new Map();   // page number → Promise<{ items } | { error }>
+  let laneCount = 1;
+  let asked = 0, looked = 0, looking = null;   // last page asked for; pages up to `looked` checked
+  const release = w => { const next = waiting.shift(); next ? next(w) : idle.push(w); };
+  const acquire = () => idle.length ? Promise.resolve(idle.pop()) : new Promise(r => waiting.push(r));
+  const read = async (page, lang) => {
+    const w = await acquire();
+    try { return ocrItemsFromPage(await recognizePage(w, page, lang, { level: true })); }
+    finally { release(w); }
+  };
+  const likelyAsked = async page => {
+    if (!rotated && (page.rotate || 0) % 360) return false;
+    const content = await page.getTextContent({ normalizeWhitespace: false }).catch(() => null);
+    if (!content) return false;
+    const layerText = content.items.map(i => i.str ?? '').join(' ');
+    if (!layerText.trim()) return true;
+    return _layerWantsOcr(layerText, await page.getOperatorList().catch(() => null), page.view);
+  };
+  const readAhead = lang => {
+    looking ??= (async () => {
+      while (!closed && [...ahead.keys()].filter(q => q > asked).length < laneCount - 1) {
+        const q = Math.max(looked, asked) + 1;
+        if (q > pdfDoc.numPages || q > asked + LOOK_AHEAD) break;
+        looked = q;
+        const page = await pdfDoc.getPage(q).catch(() => null);
+        if (page && await likelyAsked(page)) ahead.set(q, read(page, lang).then(items => ({ items }), error => ({ error })));
+      }
+      looking = null;
+    })();
+  };
   const start = async () => {
     try {
       await loadTesseract();
@@ -181,6 +229,13 @@ export function createOcrLayer(pdfDoc, { onPage = () => {}, rotated = true } = {
       if (detection.lang !== 'eng') {
         await worker.terminate();
         worker = await createOcrWorker(detection.lang);
+      }
+      idle.push(worker);
+      laneCount = Math.min(ocrLanes(detection.lang), Math.max(1, pdfDoc.numPages));
+      for (let i = 1; i < laneCount; i++) {
+        extras.push(createOcrWorker(detection.lang)
+          .then(w => { if (closed) { w.terminate(); return null; } release(w); return w; })
+          .catch(() => null));   // fewer lanes: the others carry on
       }
       return { worker, lang: detection.lang };
     } catch {
@@ -194,16 +249,24 @@ export function createOcrLayer(pdfDoc, { onPage = () => {}, rotated = true } = {
       const ready = await engine;
       if (!ready) return null;
       onPage(pageNum, ready.lang);
+      const early = ahead.get(pageNum);
+      for (const q of ahead.keys()) if (q <= pageNum) ahead.delete(q);   // asked, or passed over
+      asked = Math.max(asked, pageNum);
+      if (laneCount > 1) readAhead(ready.lang);
+      const got = early && await early;
+      if (got?.items) return got.items;
+      if (got?.error && !_outOfMemory(got.error)) return null;   // this page's OCR failed
       try {
-        const rec = await recognizePage(ready.worker, page, ready.lang, { level: true });
-        return ocrItemsFromPage(rec);
+        return await read(page, ready.lang);
       } catch {
         return null;   // this page's OCR failed — it stays a picture, the rest goes on
       }
     },
     async close() {
+      closed = true;
       const ready = engine && await engine;
-      await ready?.worker.terminate();
+      const more = await Promise.all(extras);
+      await Promise.all([ready?.worker, ...more].filter(Boolean).map(w => w.terminate()));
     },
   };
 }
