@@ -3234,7 +3234,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
         }],
       }],
     },
-    sections: [{ ...furniture, children }],
+    sections: _p2wSections(children, furniture),
   });
 
   // toBlob() uses JSZip type:"blob" — browser-native, no polyfill needed.
@@ -5707,7 +5707,16 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     if (isCancelled()) break;
     _pageWideGaps.length = 0;
 
-    if (pi > 0) {
+    // A designed page (a certificate, a diploma, a flyer): kept as it looks,
+    // in a section of its own (_p2wLayeredPage)
+    const layered = _p2wDesignedPage(pageData[pi]) && !isCancelled()
+      ? await _p2wLayeredPage(pdfDoc, pi + 1, pageData[pi]).catch(() => null) : null;
+    if (layered) {
+      _flushPara();
+      paragraphs.push(layered);
+      continue;
+    }
+    if (pi > 0 && !paragraphs[paragraphs.length - 1]?.layered) {
       paragraphs.push(new Paragraph({ children: [], pageBreakBefore: true }));
     }
 
@@ -6617,6 +6626,192 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
 
 // Renders a PDF page that has no extractable text (diagram-only page) as a
 // single full-page ImageRun. Used when lines.length === 0 in text mode.
+// ── Designed pages ───────────────────────────────────────────────────────────
+// A certificate, a diploma, a flyer: a picture over the whole page and a few
+// lines of text set on it. Rebuilt as flowing paragraphs, such a page fell
+// apart — the picture cut into strips around the text, the text pulled to the
+// left margin, a two-place signature line joined (a teacher's certificate,
+// 2026-11-17, where another converter kept the page as it looks). Such a page
+// is laid out as PDF→PowerPoint lays a slide (js/pdf2pptLayered.js): the page
+// drawn without its text, behind the text, and the text in frames at its own
+// places — its size, weight, colour and alignment kept, still editable.
+const _P2W_DESIGNED_COVER = 0.5;   // pictures and coloured shapes over half the page or more
+const _P2W_DESIGNED_LINES = 80;    // and at most this many lines of text
+const _P2W_LAYER_DPI = 200;
+// Not a page one table holds: its coloured cells count as cover, but it is
+// data — a Word table edits better than frames (a water-quality report, 51 of
+// its 57 lines in one 48×11 grid, came out with its cells' text piled up).
+// One grid, not all of them: a flyer's floor plans and boxes are grids too,
+// each with a few of its lines (2026-11-17, cloud corpus).
+const _P2W_ONE_TABLE = 0.6;
+function _p2wDesignedPage(pd) {
+  if (pd.ocr || !(pd.cover >= _P2W_DESIGNED_COVER) || !pd.lines.length || pd.lines.length > _P2W_DESIGNED_LINES) return false;
+  return !(pd.borderGrids || []).some(g => g.rowCount >= 3 && g.colCount >= 3 &&
+    pd.lines.filter(ln => ln.y >= g.y && ln.y <= g.y + g.h).length >= _P2W_ONE_TABLE * pd.lines.length);
+}
+
+// The page as a section of its own: { layered, pageW, pageH, children } —
+// null for a turned page. Its text is the page's lines as ordinary
+// paragraphs, not frames: each line a paragraph at its own height (the space
+// above it), its first piece at the paragraph's
+// indent, the line's other pieces at tab stops — "A.Ismailov" at the left and
+// "18" at the right of one line. Edited as text and scored as text: in frames
+// the same page measured 54 % on the structure check ("100 % of text trapped
+// in text boxes"), another converter's flowing layout 92 %.
+const _P2W_LINE = 1.2;   // a line's height, em
+const _P2W_BASE = 0.95;  // its baseline under its top, em
+async function _p2wLayeredPage(pdfDoc, pageNum, pd) {
+  const { Paragraph, TextRun, ImageRun, Tab, AlignmentType } = window.__pdfreeDocxBuilder;
+  const page = await pdfDoc.getPage(pageNum);
+  const viewport = page.getViewport({ scale: _P2W_LAYER_DPI / 72 });
+  if (viewport.rotation !== 0) return null;
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.round(viewport.width);
+  canvas.height = Math.round(viewport.height);
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  const rows = pd.lines.map(ln => lineRunsForSlide(ln, cutsForLine(ln, pd.borderGrids || []))).filter(r => r.length);
+  const runs = rows.flat();
+  const capture = captureText(ctx, (x, y) => viewport.convertToPdfPoint(x, y), runs);
+  try {
+    await page.render({ canvasContext: ctx, viewport }).promise;
+  } finally {
+    capture.restore();
+  }
+  if (runs.some(r => r.color === null)) {
+    const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    if (eraseUnpaintedRuns(img, runs, (x, y) => viewport.convertToViewportPoint(x, y))) ctx.putImageData(img, 0, 0);
+  }
+  page.cleanup?.();
+  // text that is not drawn (a scan's hidden OCR layer): the page stays the
+  // flowing text it was — laid over its picture it would be invisible
+  if (runs.filter(r => r.color === null).length * 2 > runs.length) { canvas.width = 0; canvas.height = 0; return null; }
+  const fmt = _p2wDetectFormat(canvas);
+  const blob = await new Promise(res => canvas.toBlob(res, `image/${fmt}`, fmt === 'jpeg' ? 0.92 : undefined));
+  const measureCtx = document.createElement('canvas').getContext('2d');
+  canvas.width = 0; canvas.height = 0;
+  if (!blob) return null;
+  const pageW = viewport.width * 72 / _P2W_LAYER_DPI, pageH = viewport.height * 72 / _P2W_LAYER_DPI;
+  const px = pt => Math.round(pt * 96 / 72), tw = pt => Math.max(0, Math.round(pt * 20));
+  const background = new ImageRun({
+    data: await blob.arrayBuffer(), type: fmt === 'png' ? 'png' : 'jpg',
+    transformation: { width: px(pageW), height: px(pageH) },
+    floating: {
+      horizontalPosition: { relative: 'page', offset: 0 }, verticalPosition: { relative: 'page', offset: 0 },
+      behindDocument: true, allowOverlap: true, lockAnchor: true,
+    },
+  });
+  // a sans-serif font Word may not have (CircularStd, an embedded subset) is
+  // set in Arial — with no font named, Word and LibreOffice set it in their
+  // serif default (the certificate came out in Times)
+  // Arial for Latin, Cyrillic and Greek; a script Arial lacks keeps the
+  // theme's font for its language
+  const faceOf = r => (r.rtl || /[\u0590-\u1DFF\u2E80-\uFFFF]/.test(r.text) ? undefined : r.fontFace ?? 'Arial');
+  const sizeOf = r => fittedFontSize({ ...r, lines: [r.text] }, (text, size) => {
+    measureCtx.font = `${r.italic ? 'italic ' : ''}${r.bold ? 'bold ' : ''}${size}px "${faceOf(r) || 'Arial'}", sans-serif`;
+    return measureCtx.measureText(text).width;
+  });
+  // the picture in a paragraph of its own, 1 pt high: anchored in the first
+  // line, it went when that line's text was hidden (LibreOffice drew a
+  // poster's white text on white)
+  const children = [new Paragraph({ spacing: { before: 0, after: 0, line: 20, lineRule: 'exact' }, children: [background] })];
+  let bottom = 1;   // where the last line ends, points from the page's top
+  // lines of two columns side by side, a little apart in height, are one
+  // line here: one paragraph each, the columns' lines took more height than
+  // the page has and ran onto a second page (a two-column flyer: 74 lines,
+  // 73 of them closer than a line's height to the one before)
+  // A line of digits and marks only (an Urdu list's "1.") has no direction
+  // of its own: it joins the line beside it either way.
+  const lines = [];
+  const neutral = row => row.every(r => !/\p{L}/u.test(r.text));
+  for (const row of [...rows].sort((a, b) => b[0].y - a[0].y)) {
+    const last = lines[lines.length - 1];
+    const fsOf = r => r.fontSize || 10;
+    if (last && (last.rtl === row.some(r => r.rtl) || neutral(row) || last.neutral) &&
+        last.y - row[0].y < 0.85 * _P2W_LINE * Math.max(...last.pieces.map(fsOf), ...row.map(fsOf)) &&
+        row.every(r => last.pieces.every(q => r.x1 + 2 < q.x0 || q.x1 + 2 < r.x0))) {
+      last.pieces.push(...row);
+      last.rtl ||= row.some(r => r.rtl);
+      last.neutral &&= neutral(row);
+    } else lines.push({ y: row[0].y, rtl: row.some(r => r.rtl), neutral: neutral(row), pieces: [...row] });
+  }
+  for (const line of lines) {
+    const rtl = line.rtl;
+    const row = line.pieces;
+    const pieces = [...row].sort((a, b) => (rtl ? b.x1 - a.x1 : a.x0 - b.x0));
+    const sizes = pieces.map(sizeOf);
+    const fs = Math.max(...sizes);
+    const baseline = pageH - line.y;
+    // a line _P2W_LINE em high, its baseline _P2W_BASE em from its top; the
+    // space above it puts that baseline where the page has it. Not one tall
+    // exact line instead: where in it the text sits differs — LibreOffice
+    // sets it at the top, and the certificate's first line rose 60 pt
+    const lineH = _P2W_LINE * fs;
+    const before = Math.max(0, baseline - _P2W_BASE * fs - bottom);
+    bottom += before + lineH;
+    const runOf = (r, k) => styledParts(r).map(part => new TextRun({
+      text: part.text, bold: part.bold, italics: r.italic, size: Math.max(2, Math.round(sizes[k] * 2)),
+      ...(faceOf(r) ? { font: faceOf(r) } : {}),
+      ...(r.color === null ? { vanish: true } : { color: r.color ?? '000000' }),
+      ...(r.rtl ? { rightToLeft: true } : {}),
+    }));
+    // a right-to-left line of several pieces (an item's number and its text,
+    // two columns): each piece in a frame at its place. Tab stops are measured
+    // from the left edge in LibreOffice and from the right in Word in such a
+    // paragraph — an Urdu list's numbers went one way and its text the other
+    if (rtl && pieces.length > 1) {
+      // each frame from the page's left edge to its piece's right edge, the
+      // text set to the right: its right edge stays put, and a wider font
+      // than the page's (Urdu) runs left instead of wrapping onto the next line
+      pieces.forEach((r, k) => {
+        const right = Math.min(pageW, r.x1 + sizes[k] * 0.15);
+        children.push(new Paragraph({
+          frame: { type: 'absolute', position: { x: 0, y: tw(baseline - _P2W_BASE * sizes[k]) },
+            width: tw(right), height: tw(_P2W_LINE * sizes[k]), anchor: { horizontal: 'page', vertical: 'page' }, rule: 'atLeast', wrap: 'none' },
+          alignment: AlignmentType.RIGHT, bidirectional: true,
+          spacing: { before: 0, after: 0, line: Math.round(_P2W_LINE * sizes[k] * 20), lineRule: 'exact' },
+          children: runOf(r, k),
+        }));
+      });
+      bottom -= before + lineH;   // frames take no height of the page's flow
+      continue;
+    }
+    const at = r => (rtl ? pageW - r.x1 : r.x0);
+    // one piece centred on the page: centred, not set at its left edge — in
+    // Arial for the page's narrower font a centred title ran right
+    const centred = pieces.length === 1 && Math.abs((pieces[0].x0 + pieces[0].x1) / 2 - pageW / 2) <= 0.02 * pageW;
+    children.push(new Paragraph({
+      alignment: centred ? AlignmentType.CENTER : rtl ? AlignmentType.RIGHT : AlignmentType.LEFT,
+      ...(centred ? { ...(rtl ? { bidirectional: true } : {}), indent: { left: 0, right: 0 } }
+        : rtl ? { bidirectional: true, indent: { right: tw(at(pieces[0])), left: 0 } } : { indent: { left: tw(at(pieces[0])), right: 0 } }),
+      tabStops: pieces.slice(1).map(r => ({ type: 'left', position: tw(r.x0) })),
+      spacing: { before: Math.round(before * 20), after: 0, line: Math.round(lineH * 20), lineRule: 'exact' },
+      children: [
+        ...pieces.flatMap((r, k) => [...(k ? [new TextRun({ children: [new Tab()] })] : []), ...runOf(r, k)]),
+      ],
+    }));
+  }
+  return { layered: true, pageW, pageH, children };
+}
+
+// The document's sections: a designed page (_p2wLayeredPage) is one of its
+// own, its size, no margins; the pages around it flow as before.
+function _p2wSections(children, furniture) {
+  const sections = [];
+  let flow = [];
+  const close = () => { if (flow.length) sections.push({ ...furniture, children: flow }); flow = []; };
+  for (const c of children) {
+    if (!c?.layered) { flow.push(c); continue; }
+    close();
+    sections.push({
+      properties: { page: { size: { width: Math.round(c.pageW * 20), height: Math.round(c.pageH * 20) },
+        margin: { top: 0, right: 0, bottom: 0, left: 0, header: 0, footer: 0 } } },
+      children: c.children,
+    });
+  }
+  close();
+  return sections.length ? sections : [{ ...furniture, children: [] }];
+}
+
 async function _p2wRenderFullPage(pdfDoc, pageNum, ImageRun) {
   const _RENDER_DPI = 150;
   const _MAX_W_PX   = 594;

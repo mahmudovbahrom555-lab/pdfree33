@@ -7,7 +7,7 @@
 import { strict as assert } from 'assert';
 import { ocrItemsFromPage, layerScript } from '../js/pdf2wordOcr.js';
 import { _duplicateWords, _wordKey } from '../js/ocrEngine.js';
-import { _rasterCover, _layerWantsOcr } from '../js/pdf2readCore.js';
+import { _rasterCover, _layerWantsOcr, _paintCover } from '../js/pdf2readCore.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -139,6 +139,26 @@ test('a page-size scan covers the page; a photo inside a Form XObject is scaled 
   assert.ok(Math.abs(_rasterCover(small, view) - 0.125) < 1e-9, String(_rasterCover(small, view)));
   assert.equal(_rasterCover({ fnArray: [91], argsArray: [[]] }, view), 0);
   assert.equal(_rasterCover(null, view), 0);
+});
+
+// _paintCover: pictures and coloured shapes over the page — what PDF→Word's
+// designed-page check reads (a certificate's coloured plates, a poster's red
+// ground); white grounds and a table's rules are no ground
+test('a coloured ground covers the page; white and thin rules do not count', () => {
+  const view = [0, 0, 600, 800];
+  const rgb = (r, g, b) => Uint8ClampedArray.of(r, g, b);   // as pdf.js 4 passes it
+  const rect = (x0, y0, x1, y1) => [91, [[], [], [x0, y0, x1, y1]]];
+  const ops = list => ({ fnArray: list.map(o => o[0]), argsArray: list.map(o => o[1]) });
+  const red = ops([[59, rgb(220, 30, 30)], rect(0, 0, 600, 800), [22, null]]);
+  assert.ok(Math.abs(_paintCover(red, view) - 1) < 1e-9, String(_paintCover(red, view)));
+  const white = ops([[59, rgb(255, 255, 255)], rect(0, 0, 600, 800), [22, null]]);
+  assert.equal(_paintCover(white, view), 0);
+  // a table's rules: 1 pt high, page wide — no ground
+  const rules = ops([[59, rgb(0, 0, 0)], ...[100, 200, 300, 400].flatMap(y => [rect(0, y, 600, y + 1), [22, null]])]);
+  assert.equal(_paintCover(rules, view), 0);
+  // a picture over the top half
+  const pic = ops([[10, null], [12, [600, 0, 0, 400, 0, 400]], [85, ['img']], [11, null]]);
+  assert.ok(Math.abs(_paintCover(pic, view) - 0.5) < 0.03, String(_paintCover(pic, view)));
 });
 
 // _layerWantsOcr: the one rule for a text layer read again by OCR — asked by

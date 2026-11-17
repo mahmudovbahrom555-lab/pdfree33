@@ -44,7 +44,7 @@
     "name": "Will the formatting look the same in Word?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "In text mode, the text content and basic formatting (bold, italic, font size, headings, tables) are preserved. Complex multi-column layouts may not match exactly. For perfect layout fidelity, use image mode."
+      "text": "In text mode, the text content and basic formatting (bold, italic, font size, headings, tables) are preserved. A designed page — a certificate, a diploma, a flyer — keeps its look: its background stays behind the text, and the text stays editable at its own places. Complex multi-column layouts may not match exactly. For perfect layout fidelity, use image mode."
     }
   },
   {
