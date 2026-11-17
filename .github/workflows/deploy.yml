@@ -544,6 +544,36 @@ jobs:
         # result not twice the input, phone. See tests/e2e/manga-split.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 node tests/e2e/manga-split.e2e.mjs
 
+      - name: E2E — PDF to Word keeps a designed page as it looks
+        # A certificate on a coloured ground: one page of its own size, the page
+        # behind the text, every line a paragraph at its place; a plain page and a
+        # coloured table convert as before. See tests/e2e/pdf2word-designed.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:pdf2word-designed
+
+      - name: E2E — older browsers and odd uploads
+        # Compress to a size without AbortSignal.throwIfAborted, the install nudge
+        # prompting once per click, a Watermark logo named .jpg that isn't.
+        # See tests/e2e/browser-compat-uploads.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:browser-compat-uploads
+
+      - name: E2E — Merge takes pictures
+        # A PDF, a PNG and an EXIF-turned photo merge into 5 pages, the photo
+        # upright. See tests/e2e/merge-images.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 node tests/e2e/merge-images.e2e.mjs
+
+      - name: E2E — Fill with no fields goes on to Draw
+        # Counted, the same file, no click. See tests/e2e/fill-no-fields.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 node tests/e2e/fill-no-fields.e2e.mjs
+
+      - name: E2E — the process button keeps moving
+        # On a scan PDF to Word reads by OCR, the light runs the whole time and the
+        # language step is named. See tests/e2e/progress-motion.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:progress-motion
+
+      - name: E2E — Tool Leave says how far the work had come
+        # Numbers only; none after the result. See tests/e2e/tool-leave.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:tool-leave
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do
