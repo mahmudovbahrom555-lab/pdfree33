@@ -5,7 +5,7 @@
 //  processor.js — PDF processing via Web Worker
 // ============================================================
 
-import { fmtSize } from './utils.js';
+import { fmtSize, isMergeImage } from './utils.js';
 import { t, tp } from './i18n.js';
 import { setProgress, hideProgress, setButtonProcessing, setButtonReady,
          showCancelBtn, hideCancelBtn, showToast, startLongOpHint, clearLongOpHint } from './ui.js';
@@ -26,6 +26,7 @@ import { captureText, lineRunsForSlide, cutsForLine, groupRuns, fittedFontSize, 
 import { openFeedback } from './feedback.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
 import { isTiffFile } from './tiffDecode.js';
+import { readExifAngle } from './exifAngle.js';
 import { evaluateStructural } from './eriScore.js';
 import { evaluateXlsxStructural } from './eriScoreXlsx.js';
 import { evaluateMarkdownStructural } from './eriScoreMd.js';
@@ -537,9 +538,19 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilena
   if (!_checkTotalSize(filesSnapshot, maxFileMb('merge'))) { _abortUI(); return; }
   // Use pre-decrypted buffer when files.js already ran QPDF at file-add time.
   // .slice(0) copies so the cached buffer survives the postMessage transfer.
-  const buffers = await Promise.all(filesSnapshot.map(async f =>
-    f._decryptedBuffer ? f._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(f))
-  ));
+  // A picture becomes one PDF page first, by Images → PDF's own conversion
+  // (its page size and orientation, the photo's EXIF turn): one at a time on
+  // the shared worker. One it can't read is an empty buffer, which the merge
+  // worker skips and reports with the other unreadable files.
+  const buffers = [];
+  for (const f of filesSnapshot) {
+    if (!isMergeImage(f)) {
+      buffers.push(f._decryptedBuffer ? f._decryptedBuffer.slice(0) : await preprocessPdfBuffer(await _readSelected(f)));
+      continue;
+    }
+    const page = await _jpg2pdfShared([await _imageBuffer(f)], { pageSize: 'auto', orientation: 'auto', compress: true, quality: 0.82, exifAngles: [await readExifAngle(f)] });
+    buffers.push(page.type === 'done' && page.result instanceof ArrayBuffer && page.pageCount ? page.result : new ArrayBuffer(0));
+  }
   setProgress(10, t('prog_merging'));
 
   // Watchdog: mirrors _runCompress's — browsers don't reliably fire onerror
