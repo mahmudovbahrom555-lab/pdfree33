@@ -919,7 +919,10 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
     const columnRegions = pageW ? _splitCrossColumnLines(lines, pageW) : null;
 
     allSizes.push(...items.map(i => i.fontSize).filter(s => s > 0));
-    pageData.push({ lines, rotatedItems, borderGrids, pageH, pageW, items, columnRegions });
+    // cover: how much of the page raster images cover, ocr: its words read by
+    // OCR — what PDF→Word's designed-page check reads (_p2wDesignedPage)
+    pageData.push({ lines, rotatedItems, borderGrids, pageH, pageW, items, columnRegions,
+      cover: _rasterCover(opList, page.view), ocr: !!ocrItems?.length });
 
     // Accumulate confidence stats from this page
     _cs.totalLines += lines.length;

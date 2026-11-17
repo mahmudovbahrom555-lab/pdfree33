@@ -3234,7 +3234,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
         }],
       }],
     },
-    sections: [{ ...furniture, children }],
+    sections: _p2wSections(children, furniture),
   });
 
   // toBlob() uses JSZip type:"blob" — browser-native, no polyfill needed.
@@ -5707,7 +5707,16 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     if (isCancelled()) break;
     _pageWideGaps.length = 0;
 
-    if (pi > 0) {
+    // A designed page (a certificate, a diploma, a flyer): kept as it looks,
+    // in a section of its own (_p2wLayeredPage)
+    const layered = _p2wDesignedPage(pageData[pi]) && !isCancelled()
+      ? await _p2wLayeredPage(pdfDoc, pi + 1, pageData[pi]).catch(() => null) : null;
+    if (layered) {
+      _flushPara();
+      paragraphs.push(layered);
+      continue;
+    }
+    if (pi > 0 && !paragraphs[paragraphs.length - 1]?.layered) {
       paragraphs.push(new Paragraph({ children: [], pageBreakBefore: true }));
     }
 
@@ -6617,6 +6626,114 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
 
 // Renders a PDF page that has no extractable text (diagram-only page) as a
 // single full-page ImageRun. Used when lines.length === 0 in text mode.
+// ── Designed pages ───────────────────────────────────────────────────────────
+// A certificate, a diploma, a flyer: a picture over the whole page and a few
+// lines of text set on it. Rebuilt as flowing paragraphs, such a page fell
+// apart — the picture cut into strips around the text, the text pulled to the
+// left margin, a two-place signature line joined (a teacher's certificate,
+// 2026-11-17, where another converter kept the page as it looks). Such a page
+// is laid out as PDF→PowerPoint lays a slide (js/pdf2pptLayered.js): the page
+// drawn without its text, behind the text, and the text in frames at its own
+// places — its size, weight, colour and alignment kept, still editable.
+const _P2W_DESIGNED_COVER = 0.6;   // raster images over 60 % of the page or more
+const _P2W_DESIGNED_LINES = 40;    // and at most this many lines of text
+const _P2W_LAYER_DPI = 200;
+function _p2wDesignedPage(pd) {
+  return !pd.ocr && pd.cover >= _P2W_DESIGNED_COVER && pd.lines.length > 0 && pd.lines.length <= _P2W_DESIGNED_LINES;
+}
+
+// The page as a section of its own: { layered, pageW, pageH, children } —
+// null for a turned page (its text boxes would need turning too).
+async function _p2wLayeredPage(pdfDoc, pageNum, pd) {
+  const { Paragraph, TextRun, ImageRun, AlignmentType } = window.__pdfreeDocxBuilder;
+  const page = await pdfDoc.getPage(pageNum);
+  const viewport = page.getViewport({ scale: _P2W_LAYER_DPI / 72 });
+  if (viewport.rotation !== 0) return null;
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.round(viewport.width);
+  canvas.height = Math.round(viewport.height);
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  const runs = pd.lines.flatMap(ln => lineRunsForSlide(ln, cutsForLine(ln, pd.borderGrids || [])));
+  const capture = captureText(ctx, (x, y) => viewport.convertToPdfPoint(x, y), runs);
+  try {
+    await page.render({ canvasContext: ctx, viewport }).promise;
+  } finally {
+    capture.restore();
+  }
+  if (runs.some(r => r.color === null)) {
+    const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    if (eraseUnpaintedRuns(img, runs, (x, y) => viewport.convertToViewportPoint(x, y))) ctx.putImageData(img, 0, 0);
+  }
+  page.cleanup?.();
+  const fmt = _p2wDetectFormat(canvas);
+  const blob = await new Promise(res => canvas.toBlob(res, `image/${fmt}`, fmt === 'jpeg' ? 0.92 : undefined));
+  const measureCtx = document.createElement('canvas').getContext('2d');
+  canvas.width = 0; canvas.height = 0;
+  if (!blob) return null;
+  const pageW = viewport.width * 72 / _P2W_LAYER_DPI, pageH = viewport.height * 72 / _P2W_LAYER_DPI;
+  const px = pt => Math.round(pt * 96 / 72), tw = pt => Math.round(pt * 20);
+  const children = [new Paragraph({ children: [new ImageRun({
+    data: await blob.arrayBuffer(), type: fmt === 'png' ? 'png' : 'jpg',
+    transformation: { width: px(pageW), height: px(pageH) },
+    floating: {
+      horizontalPosition: { relative: 'page', offset: 0 }, verticalPosition: { relative: 'page', offset: 0 },
+      behindDocument: true, allowOverlap: true, lockAnchor: true,
+    },
+  })] })];
+  const ALIGN = { left: AlignmentType.LEFT, center: AlignmentType.CENTER, right: AlignmentType.RIGHT };
+  for (const b of groupRuns(runs, pd.borderGrids || [])) {
+    // a sans-serif font Word may not have (CircularStd, an embedded subset)
+    // is set in Arial — with no font named, Word and LibreOffice set it in
+    // their serif default (the certificate came out in Times)
+    const face = b.lang ? undefined : b.fontFace ?? 'Arial';
+    const fs = fittedFontSize(b, (text, size) => {
+      measureCtx.font = `${b.italic ? 'italic ' : ''}${b.bold ? 'bold ' : ''}${size}px "${face || 'Arial'}", sans-serif`;
+      return measureCtx.measureText(text).width;
+    });
+    const lineH = b.pitch ?? fs * _P2P_LINE;
+    const wPt = (b.x1 - b.x0) * 1.06 + fs * 0.3;
+    const leftPt = b.align === 'right' ? b.x1 + fs * 0.15 - wPt
+      : b.align === 'center' ? (b.x0 + b.x1 - wPt) / 2 : b.x0;
+    const above = _P2P_ASCENT * fs + (b.lines.length > 1 ? _P2P_LEAD * (lineH - _P2P_LINE * fs) : 0);
+    const frame = {
+      type: 'absolute', position: { x: tw(Math.max(0, leftPt)), y: tw(Math.max(0, pageH - b.y - above)) },
+      width: tw(wPt), height: tw((b.lines.length - 1) * lineH + fs * _P2P_LINE),
+      anchor: { horizontal: 'page', vertical: 'page' }, rule: 'atLeast', wrap: 'none',
+    };
+    b.runs.forEach(r => children.push(new Paragraph({
+      frame, alignment: ALIGN[b.align] ?? AlignmentType.LEFT,
+      spacing: { before: 0, after: 0, line: tw(lineH), lineRule: 'exact' },
+      ...(b.rtl ? { bidirectional: true } : {}),
+      children: styledParts(r).map(part => new TextRun({
+        text: part.text, bold: part.bold, italics: b.italic, size: Math.max(2, Math.round(fs * 2)),
+        ...(face ? { font: face } : {}),
+        ...(b.color === null ? { vanish: true } : { color: b.color ?? '000000' }),
+        ...(b.rtl ? { rightToLeft: true } : {}),
+      })),
+    })));
+  }
+  return { layered: true, pageW, pageH, children };
+}
+
+// The document's sections: a designed page (_p2wLayeredPage) is one of its
+// own, its size, no margins; the pages around it flow as before.
+function _p2wSections(children, furniture) {
+  const sections = [];
+  let flow = [];
+  const close = () => { if (flow.length) sections.push({ ...furniture, children: flow }); flow = []; };
+  for (const c of children) {
+    if (!c?.layered) { flow.push(c); continue; }
+    close();
+    sections.push({
+      properties: { page: { size: { width: Math.round(c.pageW * 20), height: Math.round(c.pageH * 20) },
+        margin: { top: 0, right: 0, bottom: 0, left: 0, header: 0, footer: 0 } } },
+      children: c.children,
+    });
+  }
+  close();
+  return sections.length ? sections : [{ ...furniture, children: [] }];
+}
+
 async function _p2wRenderFullPage(pdfDoc, pageNum, ImageRun) {
   const _RENDER_DPI = 150;
   const _MAX_W_PX   = 594;
