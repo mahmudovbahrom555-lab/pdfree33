@@ -95,11 +95,15 @@ export function trackToolOpen(tool) {
   _track('Tool Open', { tool });
 }
 
-/** Call when a tool starts processing — inputSize: bytes of the files it was given */
+/** Call when a tool starts processing — inputSize: bytes of the files it was given.
+ *  Sent as its own event (2026-11-17): without it, a person who added a file and
+ *  left at once and one who pressed the button, waited and closed the tab look
+ *  the same — no event after "File Added" (most of a week's no-result sessions). */
 export function trackToolStart(tool, inputSize = 0) {
   _timers[tool] = performance.now();
   _inputs[tool] = inputSize;
   _hiddenSinceStart = typeof document !== 'undefined' && document.hidden;
+  _track('Tool Start', { tool, size: _sizeBucket(inputSize) });
 }
 
 /**

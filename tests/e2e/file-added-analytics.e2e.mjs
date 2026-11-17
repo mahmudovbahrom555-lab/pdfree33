@@ -194,6 +194,34 @@ await test('Word to PDF turns a .doc away: File Rejected {tool, ext} with no nam
   } finally { await s.context.close(); }
 });
 
+await test('Merge: pressing the button sends one Tool Start before the success — tool and size band, no name', async () => {
+  const s = await open('/merge-pdf/');
+  try {
+    await s.page.setInputFiles('#fileInput', [A, B]); await s.settle();
+    await s.page.click('#mergeBtn');
+    await s.page.waitForFunction(() => document.querySelector('#successCard')?.offsetParent, null, { timeout: 30000 });
+    await s.settle();
+    const names = s.events.map(e => e.event);
+    const start = s.events.filter(e => e.event === 'Tool Start');
+    if (start.length !== 1) throw new Error(`${start.length} Tool Start`);
+    if (names.indexOf('Tool Start') > names.indexOf('Tool Success')) throw new Error(names.join(' > '));
+    const keys = Object.keys(start[0].props).sort().join(',');
+    if (keys !== 'locale,session,size,tool' || start[0].props.tool !== 'merge') throw new Error(JSON.stringify(start[0].props));
+  } finally { await s.context.close(); }
+});
+
+await test('Compare: two files compared send Tool Start and Tool Success (it sent nothing before)', async () => {
+  const s = await open('/compare-pdf/');
+  try {
+    await s.page.setInputFiles('#fileInput', [A, B]); await s.settle();   // the same file twice is one file
+    await s.page.click('#mergeBtn');
+    await s.page.waitForFunction(() => /Done/.test(document.querySelector('#progressLabel')?.textContent || '') || document.querySelector('#cmpAll, #cmpPrev'), null, { timeout: 60000 });
+    await s.settle();
+    const got = s.events.filter(e => e.props?.tool === 'compare').map(e => e.event);
+    if (!got.includes('Tool Start') || !got.includes('Tool Success')) throw new Error(got.join(', ') || 'no compare events');
+  } finally { await s.context.close(); }
+});
+
 await browser.close();
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed} failed`);

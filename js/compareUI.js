@@ -3,6 +3,7 @@
 
 import { loadPdfJs }  from './pdf2jpgUI.js';
 import { showToast, showCancelBtn, hideCancelBtn } from './ui.js';
+import { trackToolStart, trackToolSuccess, trackToolError } from './analytics.js';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const RENDER_SCALE   = 1.5;
@@ -141,10 +142,17 @@ function _bindCompareBtn() {
     if (bar) bar.hidden = false;
     showCancelBtn();
     _running = true;
+    // Self-managed like OCR: app.js's funnel never saw Compare (0 successes
+    // from 37 people with two files in a week, 2026-11-17).
+    trackToolStart('compare', _files[0].size + _files[1].size);
     try {
       await _runCompare();
+      if (!_cancelled && _pageData.length) trackToolSuccess('compare', { pages: _pageData.length });
     } catch (err) {
-      if (!_cancelled) showToast('Error: ' + err.message);
+      if (!_cancelled) {
+        trackToolError('compare', 'compare_failed');
+        showToast('Error: ' + err.message);
+      }
     } finally {
       _running = false;
       btn.disabled = false;
