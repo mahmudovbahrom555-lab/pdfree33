@@ -36,8 +36,17 @@ function _describeElement(el) {
 // #selSizeUp …) and buried the real ones (the Merge file name, #mergeBtn).
 // Matched by the camelCase ending of the id, so a new stepper is covered too.
 const _REPEAT_ID = /(?:^|[a-z])(?:Undo|Redo|Next|Prev|Up|Down|ZoomIn|ZoomOut)(?:Btn|Thumb|Page)?$/;
+// Text fields too: three clicks select a field's text to type over it, and a
+// number field's arrows are clicked again and again. The 2026-11-17 day's top
+// three Rage Clicks were fields (#compressTargetValue 14 people,
+// #extRangeInput 7, #mergeFilenameInput 5); Compress's size field, tried by
+// hand on a desktop and a phone in five browser languages, takes clicks,
+// focus and typing ("2,5" too) as it should.
+const _FIELD_TYPES = /^(?:text|number|search|email|tel|url|password|)$/i;
 export function isRepeatControl(el) {
-  return el?.tagName === 'CANVAS' || _REPEAT_ID.test(el?.id || '');
+  return el?.tagName === 'CANVAS' || _REPEAT_ID.test(el?.id || '') ||
+    el?.tagName === 'TEXTAREA' || el?.tagName === 'SELECT' ||
+    (el?.tagName === 'INPUT' && _FIELD_TYPES.test(el.type || ''));
 }
 
 export function initRageClickDetection() {

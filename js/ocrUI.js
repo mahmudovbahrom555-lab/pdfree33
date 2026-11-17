@@ -7,7 +7,7 @@ import { wireShareButton } from './shareButton.js';
 import { loadPdfLib, loadFontkit } from './lazyLibs.js';
 import { t } from './i18n.js';
 import { saveHandoff } from './handoff.js';
-import { truncateMiddle, esc } from './utils.js';
+import { truncateMiddle, esc, throwIfAborted, abortReason } from './utils.js';
 import { showCancelBtn, hideCancelBtn } from './ui.js';
 import { CJK_LANGS, COMPLEX_LANGS, primaryScript, loadTesseract, createOcrWorker, ocrLanes,
          detectOcrLanguage, recognizePage, ocrLangForLocale, ocrProbesForBrowser } from './ocrEngine.js';
@@ -1233,9 +1233,9 @@ export async function recognizeScanPdf(file, lang, { signal, progress }) {
   if (file.size > MAX_FILE_MB * 1024 * 1024) return null;
   progress(65, t('ocr_initializing_engine'));
   await Promise.all([loadPdfJs(), loadPdfLib(), loadTesseract()]);
-  signal.throwIfAborted();
+  throwIfAborted(signal);
   const bytes = await file.arrayBuffer();
-  signal.throwIfAborted();
+  throwIfAborted(signal);
   const task = window.pdfjsLib.getDocument({ data: new Uint8Array(bytes), isEvalSupported: false, disableJavaScript: true, verbosity: 0 });
   let worker;
   const stop = () => {
@@ -1247,13 +1247,13 @@ export async function recognizeScanPdf(file, lang, { signal, progress }) {
   signal.addEventListener('abort', stop, { once: true });
   try {
     const doc = await task.promise;
-    signal.throwIfAborted();
+    throwIfAborted(signal);
     if (/iphone|ipad|ipod/i.test(navigator.userAgent) && doc.numPages > MAX_PAGES_IOS) return null;
     worker = await createOcrWorker(lang);
-    signal.throwIfAborted();
+    throwIfAborted(signal);
     const pages = [];
     for (let p = 1; p <= doc.numPages; p++) {
-      signal.throwIfAborted();
+      throwIfAborted(signal);
       progress(70 + Math.round(24 * (p - 1) / doc.numPages), t('ocr_page_progress', {
         p, total: doc.numPages, lang: _getLangName(lang), eta: '',
       }));
@@ -1266,7 +1266,7 @@ export async function recognizeScanPdf(file, lang, { signal, progress }) {
       }
     }
     if (!pages.some(page => page.lines.some(line => line.words.some(word => word.kept && word.confidence >= 20)))) return null;
-    signal.throwIfAborted();
+    throwIfAborted(signal);
     return await _buildSearchablePdf(file, pages, lang, progress);
   } finally {
     signal.removeEventListener('abort', stop);
@@ -1277,10 +1277,10 @@ export async function recognizeScanPdf(file, lang, { signal, progress }) {
 
 // Terminating Tesseract can leave recognize() pending.
 async function _recognizeScanPage(worker, page, lang, signal) {
-  signal.throwIfAborted();
+  throwIfAborted(signal);
   let abort;
   const cancelled = new Promise((_, reject) => {
-    abort = () => reject(signal.reason);
+    abort = () => reject(abortReason(signal));
     signal.addEventListener('abort', abort, { once: true });
   });
   try {

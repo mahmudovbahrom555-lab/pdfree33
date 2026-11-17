@@ -17,8 +17,17 @@ test('steppers, undo, next/prev, zoom and canvases are left out', () => {
 });
 
 test('the controls whose repeats mean trouble still count', () => {
-  for (const id of ['mergeFilenameInput', 'mergeBtn', 'dropZone', 'extRangeApply', 'extRangeInput',
-    'compressTargetValue', 'markup', 'signup', 'heroFileName', '']) {
+  for (const id of ['mergeBtn', 'dropZone', 'extRangeApply', 'markup', 'signup', 'heroFileName', '']) {
     assert.equal(isRepeatControl(el(id)), false, id);
+  }
+});
+
+test('text fields are left out: clicked three times to select their text, a number field\'s arrows again and again', () => {
+  for (const [id, tagName, type] of [['compressTargetValue', 'INPUT', 'number'], ['extRangeInput', 'INPUT', 'text'],
+    ['mergeFilenameInput', 'INPUT', 'text'], ['', 'INPUT', ''], ['', 'TEXTAREA', ''], ['', 'SELECT', '']]) {
+    assert.equal(isRepeatControl({ id, tagName, type }), true, `${id} ${tagName} ${type}`);
+  }
+  for (const type of ['checkbox', 'file', 'submit', 'button']) {
+    assert.equal(isRepeatControl({ id: '', tagName: 'INPUT', type }), false, type);
   }
 });
