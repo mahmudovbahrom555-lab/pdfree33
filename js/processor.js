@@ -6719,15 +6719,20 @@ async function _p2wLayeredPage(pdfDoc, pageNum, pd) {
   // line here: one paragraph each, the columns' lines took more height than
   // the page has and ran onto a second page (a two-column flyer: 74 lines,
   // 73 of them closer than a line's height to the one before)
+  // A line of digits and marks only (an Urdu list's "1.") has no direction
+  // of its own: it joins the line beside it either way.
   const lines = [];
+  const neutral = row => row.every(r => !/\p{L}/u.test(r.text));
   for (const row of [...rows].sort((a, b) => b[0].y - a[0].y)) {
     const last = lines[lines.length - 1];
     const fsOf = r => r.fontSize || 10;
-    if (last && last.rtl === row.some(r => r.rtl) &&
+    if (last && (last.rtl === row.some(r => r.rtl) || neutral(row) || last.neutral) &&
         last.y - row[0].y < 0.85 * _P2W_LINE * Math.max(...last.pieces.map(fsOf), ...row.map(fsOf)) &&
         row.every(r => last.pieces.every(q => r.x1 + 2 < q.x0 || q.x1 + 2 < r.x0))) {
       last.pieces.push(...row);
-    } else lines.push({ y: row[0].y, rtl: row.some(r => r.rtl), pieces: [...row] });
+      last.rtl ||= row.some(r => r.rtl);
+      last.neutral &&= neutral(row);
+    } else lines.push({ y: row[0].y, rtl: row.some(r => r.rtl), neutral: neutral(row), pieces: [...row] });
   }
   for (const line of lines) {
     const rtl = line.rtl;
@@ -6743,6 +6748,33 @@ async function _p2wLayeredPage(pdfDoc, pageNum, pd) {
     const lineH = _P2W_LINE * fs;
     const before = Math.max(0, baseline - _P2W_BASE * fs - bottom);
     bottom += before + lineH;
+    const runOf = (r, k) => styledParts(r).map(part => new TextRun({
+      text: part.text, bold: part.bold, italics: r.italic, size: Math.max(2, Math.round(sizes[k] * 2)),
+      ...(faceOf(r) ? { font: faceOf(r) } : {}),
+      ...(r.color === null ? { vanish: true } : { color: r.color ?? '000000' }),
+      ...(r.rtl ? { rightToLeft: true } : {}),
+    }));
+    // a right-to-left line of several pieces (an item's number and its text,
+    // two columns): each piece in a frame at its place. Tab stops are measured
+    // from the left edge in LibreOffice and from the right in Word in such a
+    // paragraph — an Urdu list's numbers went one way and its text the other
+    if (rtl && pieces.length > 1) {
+      // each frame from the page's left edge to its piece's right edge, the
+      // text set to the right: its right edge stays put, and a wider font
+      // than the page's (Urdu) runs left instead of wrapping onto the next line
+      pieces.forEach((r, k) => {
+        const right = Math.min(pageW, r.x1 + sizes[k] * 0.15);
+        children.push(new Paragraph({
+          frame: { type: 'absolute', position: { x: 0, y: tw(baseline - _P2W_BASE * sizes[k]) },
+            width: tw(right), height: tw(_P2W_LINE * sizes[k]), anchor: { horizontal: 'page', vertical: 'page' }, rule: 'atLeast', wrap: 'none' },
+          alignment: AlignmentType.RIGHT, bidirectional: true,
+          spacing: { before: 0, after: 0, line: Math.round(_P2W_LINE * sizes[k] * 20), lineRule: 'exact' },
+          children: runOf(r, k),
+        }));
+      });
+      bottom -= before + lineH;   // frames take no height of the page's flow
+      continue;
+    }
     const at = r => (rtl ? pageW - r.x1 : r.x0);
     // one piece centred on the page: centred, not set at its left edge — in
     // Arial for the page's narrower font a centred title ran right
@@ -6751,18 +6783,10 @@ async function _p2wLayeredPage(pdfDoc, pageNum, pd) {
       alignment: centred ? AlignmentType.CENTER : rtl ? AlignmentType.RIGHT : AlignmentType.LEFT,
       ...(centred ? { ...(rtl ? { bidirectional: true } : {}), indent: { left: 0, right: 0 } }
         : rtl ? { bidirectional: true, indent: { right: tw(at(pieces[0])), left: 0 } } : { indent: { left: tw(at(pieces[0])), right: 0 } }),
-      tabStops: pieces.slice(1).map(r => ({ type: rtl ? 'right' : 'left', position: tw(rtl ? pageW - r.x1 : r.x0) })),
+      tabStops: pieces.slice(1).map(r => ({ type: 'left', position: tw(r.x0) })),
       spacing: { before: Math.round(before * 20), after: 0, line: Math.round(lineH * 20), lineRule: 'exact' },
       children: [
-        ...pieces.flatMap((r, k) => [
-          ...(k ? [new TextRun({ children: [new Tab()] })] : []),
-          ...styledParts(r).map(part => new TextRun({
-            text: part.text, bold: part.bold, italics: r.italic, size: Math.max(2, Math.round(sizes[k] * 2)),
-            ...(faceOf(r) ? { font: faceOf(r) } : {}),
-            ...(r.color === null ? { vanish: true } : { color: r.color ?? '000000' }),
-            ...(r.rtl ? { rightToLeft: true } : {}),
-          })),
-        ]),
+        ...pieces.flatMap((r, k) => [...(k ? [new TextRun({ children: [new Tab()] })] : []), ...runOf(r, k)]),
       ],
     }));
   }
