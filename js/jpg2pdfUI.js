@@ -23,6 +23,7 @@ import { presetRememberCard } from './uiComponents.js';
 import { loadPreset, clearPreset } from './presets.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
 import { isTiffFile, tiffPreview } from './tiffDecode.js';
+import { readExifAngle } from './exifAngle.js';
 
 // Soft, non-blocking heads-up — not a hard cap. Canvas thumbnail decoding
 // happens one file at a time (see _renderPreviews), so memory pressure is
@@ -92,7 +93,7 @@ export async function initJpg2PdfOptions(files) {
   container.style.display = 'block';
 
   // Read EXIF in parallel — fast, only first 64KB per file
-  const angles = await Promise.all(files.map(f => _readExifAngle(f)));
+  const angles = await Promise.all(files.map(f => readExifAngle(f)));
   if (generation !== _optionsGeneration) return;
   _exifAngles = angles;
 
@@ -462,53 +463,6 @@ function _bindThumbGridEvents(files) {
 //   1 = normal, 3 = 180°, 6 = 90° CW, 8 = 90° CCW
 // Это критично для фото с мобильных — без коррекции PDF выходит повёрнутым.
 
-async function _readExifAngle(file) {
-  if (!file.type.includes('jpeg') && !file.name.toLowerCase().endsWith('.jpg')) return 0;
-  try {
-    const slice = file.slice(0, 65536);
-    const buf   = await slice.arrayBuffer();
-    const view  = new DataView(buf);
-    // Check JPEG magic
-    if (view.getUint16(0) !== 0xFFD8) return 0;
-    let offset = 2;
-    while (offset < buf.byteLength - 1) {
-      const marker = view.getUint16(offset);
-      if (marker === 0xFFE1) { // APP1
-        const segLen = view.getUint16(offset + 2);
-        const exifHeader = String.fromCharCode(
-          view.getUint8(offset + 4), view.getUint8(offset + 5),
-          view.getUint8(offset + 6), view.getUint8(offset + 7)
-        );
-        if (exifHeader === 'Exif') {
-          return _extractOrientation(view, offset + 10);
-        }
-        offset += 2 + segLen;
-      } else if ((marker & 0xFF00) === 0xFF00) {
-        offset += 2 + view.getUint16(offset + 2);
-      } else break;
-    }
-  } catch { /* ignore — non-critical */ }
-  return 0;
-}
-
-function _extractOrientation(view, tiffStart) {
-  try {
-    const littleEndian = view.getUint16(tiffStart) === 0x4949;
-    const ifdOffset    = view.getUint32(tiffStart + 4, littleEndian);
-    const entryCount   = view.getUint16(tiffStart + ifdOffset, littleEndian);
-    for (let i = 0; i < entryCount; i++) {
-      const entryOffset = tiffStart + ifdOffset + 2 + i * 12;
-      if (view.getUint16(entryOffset, littleEndian) === 0x0112) {
-        const val = view.getUint16(entryOffset + 8, littleEndian);
-        return { 1: 0, 3: 180, 6: 90, 8: -90 }[val] ?? 0;
-      }
-    }
-    return 0;
-  } catch {
-    // Corrupted EXIF structure — safe fallback, no rotation applied
-    return 0;
-  }
-}
 
 // ── Helpers ────────────────────────────────────────────────────
 

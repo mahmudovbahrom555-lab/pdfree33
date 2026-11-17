@@ -10,7 +10,7 @@
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
 import { TOOLS, APP_VERSION, getLocalizedTool }   from './config.js';
-import { id, hide, setText, fmtSize, truncateMiddle } from './utils.js';
+import { id, hide, setText, fmtSize, truncateMiddle, isMergeImage } from './utils.js';
 import { wireShareButton, resetShareButton } from './shareButton.js';
 
 // Fires on every load — open DevTools Console to confirm active version.
@@ -954,6 +954,8 @@ function initEvents() {
   document.addEventListener('pdfree:files-added', async () => {
     if (currentTool !== 'merge') return;
     updateMergeDefaultFilename([...selectedFiles]);
+    // a picture is one page — the page-count scan reads PDFs only
+    for (const f of selectedFiles) if (f._mergePageCount == null && isMergeImage(f)) f._mergePageCount = 1;
     const unscanned = selectedFiles.filter(f => f._mergePageCount == null);
     if (unscanned.length === 0) return;
     const results = await startMergeBatchScan(unscanned);
