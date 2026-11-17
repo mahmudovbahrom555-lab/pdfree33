@@ -156,6 +156,12 @@ test('Rage Click with a tool: the tool takes its fixed slot, target stays blob4'
   expect(dp.blobs.slice(0, 5)).toEqual(['en', 'merge', 's2', 'target=#dropZone', 'country=US']);
 });
 
+test('Tool Leave: the progress and the seconds are numbers — double1 and double2, nothing in the blobs past the server\'s', () => {
+  const dp = _dataPointFromEvent('Tool Leave', { locale: 'fa', tool: 'ocr', session: 's4', x_pct: 30, x_after_s: 45, country: 'IR', device: 'desktop', browser: 'chrome', os: 'windows', app: 'none' });
+  expect(dp.blobs).toEqual(['fa', 'ocr', 's4', 'country=IR', 'device=desktop', 'browser=chrome', 'os=windows', 'app=none']);
+  expect(dp.doubles).toEqual([30, 45]);
+});
+
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);
 if (failed > 0) process.exit(1);

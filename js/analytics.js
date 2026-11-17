@@ -70,6 +70,8 @@ function _track(eventName, props = {}) {
     if (typeof fetch === 'function') {
       fetch('/api/analytics', {
         method: 'POST',
+        // delivered after the page is gone too (Tool Leave, sent as it closes)
+        keepalive: true,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ event: eventName, props: fullProps }),
       }).catch(() => { /* offline/adblock/etc — never let this break the app */ });
@@ -83,6 +85,25 @@ function _track(eventName, props = {}) {
 
 // ── Per-tool timing ───────────────────────────────────────────
 const _timers = {};
+
+// Tool Leave (from 2026-11-18): the page was closed, or left, while a tool
+// worked — after Tool Start, before its success, error or cancel. Numbers
+// only: the progress it had reached (x_pct, to the nearest 10 — OCR: 10 the
+// language, 10–50 the pages, 95 the file; double1) and the seconds since the
+// press (x_after_s, to 5 s; double2). Without it, three people who pressed
+// OCR and got nothing — no result, no error, no cancel — left no trace of
+// where they gave up (2026-11-17).
+function _progressPct() {
+  const fill = typeof document !== 'undefined' && document.getElementById('progressFill');
+  return Math.round((parseFloat(fill?.style.width) || 0) / 10) * 10;
+}
+if (typeof window !== 'undefined') {
+  window.addEventListener('pagehide', () => {
+    for (const tool of Object.keys(_timers)) {
+      _track('Tool Leave', { tool, x_pct: _progressPct(), x_after_s: _roundDuration(performance.now() - _timers[tool]) });
+    }
+  });
+}
 const _inputs = {};   // tool → bytes in, from trackToolStart (no caller passed a size: every success said "unknown")
 
 /**
