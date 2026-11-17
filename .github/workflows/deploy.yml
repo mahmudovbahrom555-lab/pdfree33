@@ -531,6 +531,19 @@ jobs:
         # a tap on a 390×664 phone reaches it. See tests/e2e/jpg2pdf-scan-hint.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:jpg2pdf-scan-hint
 
+      - name: E2E — PDF to Excel preview, automatic download, number format
+        # The XLSX downloads by itself and the card previews each table; Auto reads
+        # a lone 1,234 by the table's own numbers, a choice overrides it, and a new
+        # format hides the old result. Values read from the downloaded .xlsx.
+        # See tests/e2e/pdf2excel-preview.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:pdf2excel-preview
+
+      - name: E2E — Split Manga Pages (order, bleed, turned spreads, file size)
+        # Right half red, left half blue, read from pixels: reading order both ways,
+        # CropBox bleed, a single page kept whole, spreads turned 90/180/270, the
+        # result not twice the input, phone. See tests/e2e/manga-split.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 node tests/e2e/manga-split.e2e.mjs
+
       - name: Guard — no conflicting wrangler configs
         run: |
           for f in wrangler.jsonc wrangler.json; do
