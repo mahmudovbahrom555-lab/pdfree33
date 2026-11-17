@@ -7,7 +7,7 @@
 import { strict as assert } from 'assert';
 import { ocrItemsFromPage, layerScript } from '../js/pdf2wordOcr.js';
 import { _duplicateWords, _wordKey } from '../js/ocrEngine.js';
-import { _rasterCover } from '../js/pdf2readCore.js';
+import { _rasterCover, _layerWantsOcr } from '../js/pdf2readCore.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -139,6 +139,17 @@ test('a page-size scan covers the page; a photo inside a Form XObject is scaled 
   assert.ok(Math.abs(_rasterCover(small, view) - 0.125) < 1e-9, String(_rasterCover(small, view)));
   assert.equal(_rasterCover({ fnArray: [91], argsArray: [[]] }, view), 0);
   assert.equal(_rasterCover(null, view), 0);
+});
+
+// _layerWantsOcr: the one rule for a text layer read again by OCR — asked by
+// pdf2readCore for the page it builds and by pdf2wordOcr for pages it reads ahead
+test('a scan with a watermark is read again; a photo with its caption is not', () => {
+  const view = [0, 0, 595, 842];
+  const scan = { fnArray: [10, 12, 85, 11], argsArray: [[], [595, 0, 0, 842, 0, 0], ['img'], []] };
+  assert.equal(_layerWantsOcr('موقع الاوائل', scan, view), true);
+  assert.equal(_layerWantsOcr('A photo of the harbour at dawn, taken from the old lighthouse', scan, view), false);
+  assert.equal(_layerWantsOcr('Page 3', { fnArray: [91], argsArray: [[]] }, view), false);   // no picture under it
+  assert.equal(_layerWantsOcr('\x01\x02\x03\x04\x05\x06 ab', scan, view), true);   // glyph codes
 });
 
 // layerScript: the text layer's script, as OCR language detection's hint

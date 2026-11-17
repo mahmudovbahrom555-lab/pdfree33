@@ -668,6 +668,23 @@ function _hasSplitLigature(item) {
   return forms >= 2 && /[\u0621-\u063F\u0641-\u064A]{2,3}/.test(item.str);
 }
 
+// Whether a page's text layer is to be read again by OCR: broken
+// (textLayerLooksBroken: glyph codes instead of text), or a scan with a few
+// words over it. A site's watermark ("موقع الاوائل", 10 letters on each of 11
+// pages), a page number, or a strip of glyph codes kept the page from OCR,
+// and PDF→Word gave pictures with no text at all (11 of 34 short Arabic
+// documents, cloud corpus 2026-10-17). Half the page or more under raster
+// images, and at most 20 letters of text, or glyph codes. Not more: a
+// magazine page's photo with its 38–111 letters of headline and caption was
+// OCRed in their place, and its exact text came out with dots wrong. Also
+// asked by pdf2wordOcr.js, which reads such pages ahead.
+export function _layerWantsOcr(layerText, opList, view) {
+  if (textLayerLooksBroken(layerText)) return true;
+  const letters = (layerText.match(/\p{L}/gu) ?? []).length;
+  const codes = (layerText.match(_XML_ILLEGAL_CONTROL_RE) ?? []).length;
+  return (letters <= 20 || codes >= letters) && _rasterCover(opList, view) >= 0.5;
+}
+
 export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCancelled = () => false, ocrPage = null, actualText = null, digitFix = null } = {}) {
   const YTOL = 6;   // px — items within 6px on Y → same line (was 4; increased to group
                    //  characters with slight baseline variation, e.g. Cyrillic in some PDFs)
@@ -850,18 +867,7 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
     // not detected) is kept as it is.
     const hasText = allMapped.some(i => i.str.trim());
     const layerText = content.items.map(i => i.str ?? '').join(' ');
-    // A scan with a few words over it is a scan: a site's watermark ("موقع
-    // الاوائل", 10 letters on each of 11 pages), a page number, or a strip of
-    // glyph codes kept the page from OCR, and PDF→Word gave pictures with no
-    // text at all (11 of 34 short Arabic documents, cloud corpus 2026-10-17).
-    // Half the page or more under raster images, and at most 20 letters of
-    // text, or glyph codes. Not more: a magazine page's photo with its 38–111
-    // letters of headline and caption was OCRed in their place, and its exact
-    // text came out with dots wrong.
-    const letters = (layerText.match(/\p{L}/gu) ?? []).length;
-    const codes = (layerText.match(_XML_ILLEGAL_CONTROL_RE) ?? []).length;
-    const thinOverScan = hasText && (letters <= 20 || codes >= letters) && _rasterCover(opList, page.view) >= 0.5;
-    const broken  = hasText && (textLayerLooksBroken(layerText) || thinOverScan);
+    const broken  = hasText && _layerWantsOcr(layerText, opList, page.view);
     const ocrItems = (!hasText || broken) && ocrPage ? await ocrPage(page, p) : null;
     if (ocrItems?.length) {
       if (broken) { allMapped.length = 0; _cs.brokenLayerPages++; }
