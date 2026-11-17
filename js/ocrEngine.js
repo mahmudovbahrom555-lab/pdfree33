@@ -401,6 +401,16 @@ export function hasSpareCore(nav = globalThis.navigator) {
   return (nav.hardwareConcurrency ?? 0) >= 4 && (nav.deviceMemory ?? 4) >= 4;
 }
 
+// Pages recognized at once by the OCR tool, each on its own Tesseract worker
+// (a worker reads one image at a time). 1 on a phone or a weak machine, and
+// for Chinese and Japanese on a desktop: PP-OCR reads those pages, not
+// Tesseract. Otherwise 2, or 3 with 8+ cores and 8 GB. Every worker holds its
+// own copy of the language model (~5–50 MB).
+export function ocrLanes(lang, nav = globalThis.navigator) {
+  if (paddleWanted(lang, nav) || !hasSpareCore(nav)) return 1;
+  return (nav.hardwareConcurrency ?? 0) >= 8 && (nav.deviceMemory ?? 4) >= 8 ? 3 : 2;
+}
+
 // A model's confident words (70+): what decides between models, not the page's
 // mean confidence, which a page of two scripts holds down for every model.
 const _confidentWords = words => words.filter(w => w.text?.trim() && w.confidence >= 70);
@@ -694,7 +704,15 @@ function _ensureGrayscaleWorker() {
 let _enhanceWorker = null;
 // Also deskews (see cleanScanWorker's _estimateSkewDeg): resolves to
 // { canvas, skewDeg }, skewDeg the rotation applied about the canvas centre.
-async function _enhanceForOcrAsync(src, contrast = true) {
+// One worker answers through one onmessage: pages recognized at once (see
+// ocrLanes) take turns here, or a page could get another page's image.
+let _enhanceTurn = Promise.resolve();
+function _enhanceForOcrAsync(src, contrast) {
+  const run = _enhanceTurn.then(() => _enhanceOnce(src, contrast));
+  _enhanceTurn = run.catch(() => {});
+  return run;
+}
+async function _enhanceOnce(src, contrast = true) {
   _enhanceWorker ??= new Worker(new URL('./cleanScanWorker.js', import.meta.url));
   const bitmap = await createImageBitmap(src);
   const { data, width, height, skewDeg } = await new Promise((resolve, reject) => {
@@ -759,7 +777,14 @@ export function _duplicateWords(lines) {
   return dup;
 }
 
-async function _toGrayscaleAsync(src) {
+// Takes turns like _enhanceForOcrAsync — one worker, one onmessage.
+let _grayTurn = Promise.resolve();
+function _toGrayscaleAsync(src) {
+  const run = _grayTurn.then(() => _grayscaleOnce(src));
+  _grayTurn = run.catch(() => {});
+  return run;
+}
+async function _grayscaleOnce(src) {
   const w = src.width, h = src.height;
   const ctx = src.getContext('2d');
   const imageData = ctx.getImageData(0, 0, w, h);
