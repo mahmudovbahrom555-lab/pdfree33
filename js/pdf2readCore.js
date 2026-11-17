@@ -167,6 +167,54 @@ export function _rasterCover(opList, view) {
   return Math.min(1, area / pageArea);
 }
 
+// The share of the page that pictures and coloured shapes cover: raster
+// images and filled paths in a colour other than near-white (a certificate's
+// coloured plates, a poster's red ground, a flyer's boxes), counted on a
+// 48×48 grid of the page's view box so overlaps count once. A shading (a
+// gradient) covers the box of the path before it — the clip it fills. A
+// shape narrower or lower than a grid cell (a rule, a table's border) is no
+// ground and is left out: a table's grid measured up to 1.0. What
+// PDF→Word's designed-page check reads (_rasterCover sees pictures only: a
+// race certificate of coloured plates measured 0.49, a poster on a red
+// vector ground 0.47 — cloud corpus, 2026-11-17).
+const _PAINT_OPS = { constructPath: 91, fills: new Set([22, 23, 24, 25, 26, 27]), fillRgb: 59, shading: 62 };
+const _GRID = 48;
+export function _paintCover(opList, view) {
+  if (!opList?.fnArray || !view) return 0;
+  const [vx0, vy0, vx1, vy1] = view;
+  const cw = (vx1 - vx0) / _GRID, ch = (vy1 - vy0) / _GRID;
+  if (!(cw > 0 && ch > 0)) return 0;
+  const mul = (m, [a, b, c, d, e, f]) => [m[0] * a + m[2] * b, m[1] * a + m[3] * b, m[0] * c + m[2] * d, m[1] * c + m[3] * d,
+    m[0] * e + m[2] * f + m[4], m[1] * e + m[3] * f + m[5]];
+  const cells = new Uint8Array(_GRID * _GRID);
+  const mark = (m, x0, y0, x1, y1) => {
+    const xs = [x0, x1, x0, x1].map((x, i) => m[0] * x + m[2] * [y0, y0, y1, y1][i] + m[4]);
+    const ys = [x0, x1, x0, x1].map((x, i) => m[1] * x + m[3] * [y0, y0, y1, y1][i] + m[5]);
+    // a rule, a table's border: no ground — only a shape a cell wide and high counts
+    if (Math.max(...xs) - Math.min(...xs) < cw || Math.max(...ys) - Math.min(...ys) < ch) return;
+    const c0 = Math.max(0, Math.floor((Math.min(...xs) - vx0) / cw)), c1 = Math.min(_GRID - 1, Math.ceil((Math.max(...xs) - vx0) / cw) - 1);
+    const r0 = Math.max(0, Math.floor((Math.min(...ys) - vy0) / ch)), r1 = Math.min(_GRID - 1, Math.ceil((Math.max(...ys) - vy0) / ch) - 1);
+    for (let r = r0; r <= r1; r++) cells.fill(1, r * _GRID + c0, r * _GRID + c1 + 1);
+  };
+  const stack = [{ m: [1, 0, 0, 1, 0, 0], light: false }];
+  let box = null;
+  opList.fnArray.forEach((fn, k) => {
+    const top = stack[stack.length - 1], m = top.m, args = opList.argsArray[k];
+    if (fn === _OPS.save || fn === _OPS.formBegin) stack.push({ ...top, m: fn === _OPS.formBegin && Array.isArray(args?.[0]) && args[0].length === 6 ? mul(m, args[0]) : m });
+    else if ((fn === _OPS.restore || fn === _OPS.formEnd) && stack.length > 1) stack.pop();
+    else if (fn === _OPS.transform && Array.isArray(args) && args.length === 6) top.m = mul(m, args);
+    else if (fn === _PAINT_OPS.fillRgb) {
+      // pdf.js 4 passes r, g, b (0–255) in a Uint8ClampedArray; a hex string elsewhere
+      const rgb = typeof args?.[0] === 'string' ? [1, 3, 5].map(i => parseInt(args[0].slice(i, i + 2), 16)) : [args?.[0], args?.[1], args?.[2]];
+      top.light = rgb.every(v => v >= 0xF0);
+    } else if (fn === _PAINT_OPS.constructPath) box = Array.isArray(args?.[2]) && args[2].length === 4 ? args[2] : null;
+    else if (_PAINT_OPS.fills.has(fn) && box && !top.light) mark(m, ...box);
+    else if (fn === _PAINT_OPS.shading && box) mark(m, ...box);
+    else if (fn === _OPS.image || fn === _OPS.inlineImage || fn === _OPS.imageMask) mark(m, 0, 0, 1, 1);
+  });
+  return cells.reduce((s, c) => s + c, 0) / cells.length;
+}
+
 // ── Small private helpers ────────────────────────────────────────────────
 // Local copies, not imports — the originals in js/processor.js are still
 // used by other, unrelated call sites there (pdf2word's own paragraph
@@ -919,10 +967,10 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
     const columnRegions = pageW ? _splitCrossColumnLines(lines, pageW) : null;
 
     allSizes.push(...items.map(i => i.fontSize).filter(s => s > 0));
-    // cover: how much of the page raster images cover, ocr: its words read by
+    // cover: how much of the page pictures and coloured shapes cover, ocr: its words read by
     // OCR — what PDF→Word's designed-page check reads (_p2wDesignedPage)
     pageData.push({ lines, rotatedItems, borderGrids, pageH, pageW, items, columnRegions,
-      cover: _rasterCover(opList, page.view), ocr: !!ocrItems?.length });
+      cover: _paintCover(opList, page.view), ocr: !!ocrItems?.length });
 
     // Accumulate confidence stats from this page
     _cs.totalLines += lines.length;

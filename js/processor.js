@@ -6635,11 +6635,19 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
 // is laid out as PDF→PowerPoint lays a slide (js/pdf2pptLayered.js): the page
 // drawn without its text, behind the text, and the text in frames at its own
 // places — its size, weight, colour and alignment kept, still editable.
-const _P2W_DESIGNED_COVER = 0.6;   // raster images over 60 % of the page or more
-const _P2W_DESIGNED_LINES = 40;    // and at most this many lines of text
+const _P2W_DESIGNED_COVER = 0.5;   // pictures and coloured shapes over half the page or more
+const _P2W_DESIGNED_LINES = 80;    // and at most this many lines of text
 const _P2W_LAYER_DPI = 200;
+// Not a page one table holds: its coloured cells count as cover, but it is
+// data — a Word table edits better than frames (a water-quality report, 51 of
+// its 57 lines in one 48×11 grid, came out with its cells' text piled up).
+// One grid, not all of them: a flyer's floor plans and boxes are grids too,
+// each with a few of its lines (2026-11-17, cloud corpus).
+const _P2W_ONE_TABLE = 0.6;
 function _p2wDesignedPage(pd) {
-  return !pd.ocr && pd.cover >= _P2W_DESIGNED_COVER && pd.lines.length > 0 && pd.lines.length <= _P2W_DESIGNED_LINES;
+  if (pd.ocr || !(pd.cover >= _P2W_DESIGNED_COVER) || !pd.lines.length || pd.lines.length > _P2W_DESIGNED_LINES) return false;
+  return !(pd.borderGrids || []).some(g => g.rowCount >= 3 && g.colCount >= 3 &&
+    pd.lines.filter(ln => ln.y >= g.y && ln.y <= g.y + g.h).length >= _P2W_ONE_TABLE * pd.lines.length);
 }
 
 // The page as a section of its own: { layered, pageW, pageH, children } —
@@ -6665,6 +6673,9 @@ async function _p2wLayeredPage(pdfDoc, pageNum, pd) {
     if (eraseUnpaintedRuns(img, runs, (x, y) => viewport.convertToViewportPoint(x, y))) ctx.putImageData(img, 0, 0);
   }
   page.cleanup?.();
+  // text that is not drawn (a scan's hidden OCR layer): the page stays the
+  // flowing text it was — in frames it would be invisible
+  if (runs.filter(r => r.color === null).length * 2 > runs.length) { canvas.width = 0; canvas.height = 0; return null; }
   const fmt = _p2wDetectFormat(canvas);
   const blob = await new Promise(res => canvas.toBlob(res, `image/${fmt}`, fmt === 'jpeg' ? 0.92 : undefined));
   const measureCtx = document.createElement('canvas').getContext('2d');
