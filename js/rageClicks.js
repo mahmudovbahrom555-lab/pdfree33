@@ -40,6 +40,19 @@ export function isRepeatControl(el) {
   return el?.tagName === 'CANVAS' || _REPEAT_ID.test(el?.id || '');
 }
 
+// Text fields: three clicks select a field's text to type over it, and a
+// number field's arrows are clicked again and again. The 2026-11-17 day's top
+// three Rage Clicks were fields (#compressTargetValue 14 people,
+// #extRangeInput 7, #mergeFilenameInput 5) — trouble, or people selecting to
+// retype? Measured before deciding: such a click says whether the value then
+// changed ("edited").
+const EDIT_WAIT_MS = 2000;
+const _FIELD_TYPES = /^(?:text|number|search|email|tel|url|password|)$/i;
+export function isTextField(el) {
+  return el?.tagName === 'TEXTAREA' || el?.tagName === 'SELECT' ||
+    (el?.tagName === 'INPUT' && _FIELD_TYPES.test(el.type || ''));
+}
+
 export function initRageClickDetection() {
   const _clickLog        = new WeakMap(); // element -> recent click timestamps
   const _rageFiredRecently = new WeakMap(); // element -> last-fired timestamp
@@ -57,7 +70,14 @@ export function initRageClickDetection() {
       const lastFired = _rageFiredRecently.get(el) || 0;
       if (now - lastFired > RAGE_COOLDOWN_MS) {
         _rageFiredRecently.set(el, now);
-        trackRageClick(_describeElement(el));
+        if (isTextField(el)) {
+          // a field: was its value changed within 2 s — clicked to select
+          // and retype — or not, a field that didn't respond
+          const before = el.value;
+          setTimeout(() => trackRageClick(_describeElement(el), el.value !== before ? 'yes' : 'no'), EDIT_WAIT_MS);
+        } else {
+          trackRageClick(_describeElement(el), 'n/a');
+        }
       }
     }
   }, { passive: true });

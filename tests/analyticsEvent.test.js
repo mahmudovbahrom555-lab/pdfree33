@@ -156,6 +156,12 @@ test('Rage Click with a tool: the tool takes its fixed slot, target stays blob4'
   expect(dp.blobs.slice(0, 5)).toEqual(['en', 'merge', 's2', 'target=#dropZone', 'country=US']);
 });
 
+test('Rage Click on a field: x_edited goes last (blob10), country stays blob5', () => {
+  const dp = _dataPointFromEvent('Rage Click', { locale: 'en', tool: 'compress', session: 's3', target: '#compressTargetValue', x_edited: 'yes', country: 'CN', device: 'desktop', browser: 'chrome', os: 'windows', app: 'none' });
+  expect(dp.blobs).toEqual(['en', 'compress', 's3', 'target=#compressTargetValue', 'country=CN', 'device=desktop', 'browser=chrome',
+    'os=windows', 'app=none', 'x_edited=yes']);
+});
+
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);
 if (failed > 0) process.exit(1);

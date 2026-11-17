@@ -13,7 +13,9 @@
 --      blob8 os, blob9 app (wechat/qq/dingtalk/none), then from 2026-11-11
 --      blob10 x_size (size band), blob11 x_hidden (tab hidden since the run
 --      started), blob12 x_acted (a person pressed or typed on the page).
---    Rage Click: blob2 tool (from 2026-11-11; '' on the homepage), blob4 target.
+--    Rage Click: blob2 tool (from 2026-11-11; '' on the homepage), blob4 target,
+--      blob5 country … blob9 app, from 2026-11-18 blob10 x_edited (a text field's value
+--      changed within 2 s of the clicks: yes/no; n/a elsewhere).
 --    Tool Success, pdf2word: blob4 input_size, blob5 output_size, blob6 mode,
 --      from 2026-11-14 blob7 pages (1–5/6–20/21–100/> 100), blob8 ocr (yes/no),
 --      then country (blob9 — was blob7 before); double1 duration_s.
@@ -53,10 +55,11 @@ GROUP BY tool, error, size, hidden, acted ORDER BY people DESC LIMIT 80;
 
 
 -- 4. Rage clicks by tool and element (tool from 2026-11-11)
-SELECT blob2 AS tool, blob4 AS target, COUNT(DISTINCT blob3) AS people
+--    edited=yes on a field: clicked to select and retype, not trouble.
+SELECT blob2 AS tool, blob4 AS target, blob10 AS edited, COUNT(DISTINCT blob3) AS people
 FROM pdfree_events
 WHERE timestamp > NOW() - INTERVAL '7' DAY AND index1 = 'Rage Click'
-GROUP BY tool, target ORDER BY people DESC LIMIT 40;
+GROUP BY tool, target, edited ORDER BY people DESC LIMIT 40;
 
 
 -- 5. On-site search: what people look for and don't find (30 days)

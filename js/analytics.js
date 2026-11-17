@@ -467,10 +467,14 @@ export function trackHomepageScrollDepth(depth) {
  * for a dead button, confusing disabled control, or unresponsive UI.
  * @param {string} target — best-effort element descriptor (#id, tag.class, or bare tag)
  */
-export function trackRageClick(target) {
+// x_edited (from 2026-11-18): on a text field, whether its value changed
+// within 2 s of the clicks ('yes'/'no'); 'n/a' anywhere else. An x_ key goes
+// after the server's country/device/browser/os/app (blob10), so no saved
+// query's columns move.
+export function trackRageClick(target, edited = 'n/a') {
   // which tool's page (blob2, a fixed slot: nothing moves) — on the homepage none
   const onTool = typeof document !== 'undefined' && document.getElementById('toolArea')?.offsetParent;
-  _track('Rage Click', { tool: onTool ? _lastTool : '', target });
+  _track('Rage Click', { tool: onTool ? _lastTool : '', target, x_edited: edited });
 }
 
 // ── Manga Split post-use survey ──────────────────────────────────
