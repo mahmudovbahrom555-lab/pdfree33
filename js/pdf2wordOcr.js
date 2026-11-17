@@ -182,7 +182,9 @@ export async function layerScript(pdfDoc) {
 // Out of memory with pages read at once: read again when it is asked for.
 const LOOK_AHEAD = 8;
 const _outOfMemory = err => /memory|allocat|RangeError/i.test(String(err?.message ?? err));
-export function createOcrLayer(pdfDoc, { onPage = () => {}, rotated = true } = {}) {
+// onDetect: called as the language detection starts — tens of seconds on a
+// book of pictures (44 s, 2026-11-17), with nothing else on the screen moving.
+export function createOcrLayer(pdfDoc, { onPage = () => {}, onDetect = () => {}, rotated = true } = {}) {
   let engine = null;   // Promise<{ worker, lang } | null>
   let closed = false;
   const idle = [];      // workers free to read a page
@@ -220,6 +222,7 @@ export function createOcrLayer(pdfDoc, { onPage = () => {}, rotated = true } = {
   };
   const start = async () => {
     try {
+      onDetect();
       await loadTesseract();
       let worker = await createOcrWorker('eng');
       const detection = await detectOcrLanguage(pdfDoc, worker, { ignoreTextLayer: true, hint: ocrLangForLocale(getLang()), layerLang: await layerScript(pdfDoc), prefer: ocrProbesForBrowser() });

@@ -3175,8 +3175,8 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
     onProgress?.(10, 'Extracting text…');
     // Scanned pages: their text read with the shared OCR engine (pdf2wordOcr.js).
     const ocr = createOcrLayer(pdfDoc, {
-      onPage: (p, lang) => onProgress?.(10 + Math.round((p / pdfDoc.numPages) * 40),
-        `Recognizing text (${lang}) on page ${p}/${pdfDoc.numPages}…`),
+      onPage: _ocrPageLabel(pdfDoc.numPages, (pct, label) => onProgress?.(10 + Math.round(pct * 40), label)),
+      onDetect: () => onProgress?.(10, 'Finding the text\'s language…'),
     });
     try {
       ({ pageData, median, repeatTextSet, repeatPatternSet, cs } = await _p2wBuildPageData(pdfDoc, {
@@ -4358,8 +4358,8 @@ async function _runPdf2Ppt(filesSnapshot, { dpi = 150, mode = 'text' } = {}) {
     // as in PDF→Word — 88 of the 97 picture-only slides of the presentations
     // corpus were scans. Where it lands is eraseUnpaintedRuns' call.
     const ocr = createOcrLayer(pdfDoc, {
-      onPage: (p, lang) => setProgress(8 + Math.round((p / pdfDoc.numPages) * 40),
-        `Recognizing text (${lang}) on page ${p}/${pdfDoc.numPages}…`),
+      onPage: _ocrPageLabel(pdfDoc.numPages, (pct, label) => setProgress(8 + Math.round(pct * 40), label)),
+      onDetect: () => setProgress(8, 'Finding the text\'s language…'),
       rotated: false,   // a rotated slide stays a picture (below)
     });
     try {
@@ -6624,8 +6624,27 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
   return { gapRuns, inlineRuns: [...imageRuns, ...inlineRuns] };
 }
 
-// Renders a PDF page that has no extractable text (diagram-only page) as a
-// single full-page ImageRun. Used when lines.length === 0 in text mode.
+// PDF→Word's and PDF→PowerPoint's progress while scanned pages are read:
+// "Recognizing text (ara) on page 5/40 — about 3 min left". The time left from
+// the last few pages' pace (up to 6), once 3 are measured, shown when it is
+// half a minute or more: a 40-page scan took up to 51 min with only
+// "page 5/40" to go by, and people left before the end (Analytics,
+// 2026-11-17). The first page is left out — it waits for the other readers
+// to load, and with it a 24-page scan said 70 s where 35 s were left. Pages
+// with a text layer are not read and go faster: it can only come out sooner.
+const _ETA_PACE = 6;
+function _ocrPageLabel(total, show) {
+  const times = [];
+  return (p, lang) => {
+    times.push(performance.now());
+    const recent = times.slice(1).slice(-_ETA_PACE - 1);
+    const done = recent.length - 1;
+    const left = done >= 3 ? (recent[done] - recent[0]) / done * (total - p) / 1000 : 0;
+    const eta = left >= 30 ? ` — about ${left >= 90 ? `${Math.round(left / 60)} min` : `${Math.round(left / 10) * 10} s`} left` : '';
+    show(p / total, `Recognizing text (${lang}) on page ${p}/${total}${eta}…`);
+  };
+}
+
 // ── Designed pages ───────────────────────────────────────────────────────────
 // A certificate, a diploma, a flyer: a picture over the whole page and a few
 // lines of text set on it. Rebuilt as flowing paragraphs, such a page fell
@@ -6633,8 +6652,8 @@ async function _p2wRenderAllVisuals(pdfDoc, pageNum, pageH, gaps, textItems, bor
 // left margin, a two-place signature line joined (a teacher's certificate,
 // 2026-11-17, where another converter kept the page as it looks). Such a page
 // is laid out as PDF→PowerPoint lays a slide (js/pdf2pptLayered.js): the page
-// drawn without its text, behind the text, and the text in frames at its own
-// places — its size, weight, colour and alignment kept, still editable.
+// drawn without its text, behind the text, and the text at its own places
+// (_p2wLayeredPage) — its size, weight, colour and alignment kept, editable.
 const _P2W_DESIGNED_COVER = 0.5;   // pictures and coloured shapes over half the page or more
 const _P2W_DESIGNED_LINES = 80;    // and at most this many lines of text
 const _P2W_LAYER_DPI = 200;
@@ -6812,6 +6831,8 @@ function _p2wSections(children, furniture) {
   return sections.length ? sections : [{ ...furniture, children: [] }];
 }
 
+// Renders a PDF page that has no extractable text (diagram-only page) as a
+// single full-page ImageRun. Used when lines.length === 0 in text mode.
 async function _p2wRenderFullPage(pdfDoc, pageNum, ImageRun) {
   const _RENDER_DPI = 150;
   const _MAX_W_PX   = 594;
