@@ -129,6 +129,15 @@ test('a page with /Rotate: OCR boxes in the page as shown, y up — where its te
   assert.ok(Math.abs(it.x - 100) < 1e-9 && Math.abs(it.y - (1684 - 100) / 2) < 1e-9, `${it.x}, ${it.y}`);
 });
 
+test('a column of vertical text is sized by its width, not its length', () => {
+  // a Japanese newspaper's column: 24 px wide, 400 px tall — 20 pt type, not 333
+  const col = { words: [{ text: '日本語の縦書きの文章', kept: true, confidence: 90, bbox: { x0: 300, x1: 324, y0: 100, y1: 500 } }],
+    bbox: { x0: 300, x1: 324, y0: 100, y1: 500 }, baseline: { has_baseline: false } };
+  const items = ocrItemsFromPage(page([col]));
+  assert.equal(items.length, 1);
+  assert.ok(Math.abs(items[0].fontSize - 20) < 0.5, String(items[0].fontSize));
+});
+
 // _rasterCover: how much of a page raster images cover — a scan with a site's
 // watermark over it is OCRed like a scan (cloud corpus, 2026-10-17)
 test('a page-size scan covers the page; a photo inside a Form XObject is scaled by its matrix', () => {

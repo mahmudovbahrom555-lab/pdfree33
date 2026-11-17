@@ -863,14 +863,26 @@ export function startsAfterHardBreak(prevLn, ln, margins, localEdge) {
   if (m?.start === undefined || edge === undefined) return false;
   const em = _lineEm(prevLn);
   if (Math.abs(edge - m.start) < 10 * em) return false;
-  const atStart = Math.abs(_lineStart(prevLn) - m.start) <= _EDGE_TOLERANCE || lineIsIndented(prevLn, margins);
-  if (!atStart) return false;
-  const reach = prevLn.rtl ? _lineEnd(prevLn) - edge : edge - _lineEnd(prevLn);
   const text = ln.items.map(i => i.str).join('').trim();
   if (!text) return false;
   const firstWord = _isCjk(text) ? text.slice(0, 1) : text.split(/\s+/)[0];
   const charWidth = Math.abs(_lineEnd(ln) - _lineStart(ln)) / Math.max(text.length, 1);
-  return reach > firstWord.length * charWidth + 2 * em;
+  const need = firstWord.length * charWidth + 2 * em;
+  const atStart = Math.abs(_lineStart(prevLn) - m.start) <= _EDGE_TOLERANCE || lineIsIndented(prevLn, margins);
+  if (atStart) return (prevLn.rtl ? _lineEnd(prevLn) - edge : edge - _lineEnd(prevLn)) > need;
+  // A line set in the middle of the column, or against its far edge (C16b):
+  // the room it left is on both sides, or before it. A cover page's centred
+  // "Prepared for: / U.S. Department of Commerce / SSMC2, Room 11220 / …" and
+  // a report's right-set "Date: 12/3/2003 / GAIN Report Number: PO3025" ran
+  // into one paragraph — C16 measured only lines that start at the margin
+  // (structure round trip, 200 documents: merged paragraphs on 50 on both
+  // generators; 9 of 10 looked at by hand were such stacks, 2026-11-18).
+  const lo = Math.min(m.start, edge), hi = Math.max(m.start, edge);
+  const s = _lineStart(prevLn), e = _lineEnd(prevLn);
+  const free = (hi - lo) - Math.abs(e - s);
+  const centred = Math.abs((s + e) / 2 - (lo + hi) / 2) <= em;
+  const farSet = Math.abs(e - edge) <= _EDGE_TOLERANCE;
+  return (centred || farSet) && free > need;
 }
 
 // A numbered section heading set only a little larger than the text: a
