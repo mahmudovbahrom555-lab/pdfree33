@@ -51,6 +51,7 @@
     "test:e2e:pdf2word-arabic": "node tests/e2e/pdf2word-arabic.e2e.mjs",
     "test:e2e:pdf2word-designed": "node tests/e2e/pdf2word-designed.e2e.mjs",
     "test:e2e:progress-motion": "node tests/e2e/progress-motion.e2e.mjs",
+    "test:e2e:browser-compat-uploads": "node tests/e2e/browser-compat-uploads.e2e.mjs",
     "test:e2e:pdf2ppt-layered": "node tests/e2e/pdf2ppt-layered.e2e.mjs",
     "test:e2e:pdf2jpg-cbz": "node tests/e2e/pdf2jpg-cbz.e2e.mjs",
     "test:e2e:pdf2excel-preview": "node tests/e2e/pdf2excel-preview.e2e.mjs",
