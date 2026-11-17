@@ -48,6 +48,7 @@ import { trackToolNotice }   from './analytics.js';
 // REDACT_SLUGS table had for those two locales) — the link's translated
 // text still renders correctly, it just lands on the EN page, identical to
 // the pre-existing Redact case for those locales.
+const NO_FIELDS_TO_DRAW_MS = 1500;   // the no-fields notice, read before Draw opens
 const KNOWN_LOCALES = new Set(['de', 'es', 'fr', 'pt', 'id', 'vi', 'ru', 'ja', 'it', 'ko', 'nl', 'pl', 'tr']);
 const DRAW_SLUGS = { en: 'draw-on-pdf', de: 'de/pdf-zeichnen', es: 'es/dibujar-en-pdf', fr: 'fr/dessiner-sur-pdf', pt: 'pt/desenhar-no-pdf', id: 'id/gambar-pdf', vi: 'vi/ve-pdf', ru: 'ru/risovat-pdf', ja: 'ja/pdf-byouga', it: 'it/disegna-pdf', ko: 'ko/pdf-geurigi', nl: 'nl/pdf-tekenen', pl: 'pl/rysuj-pdf', tr: 'tr/pdf-ciz' };
 
@@ -180,6 +181,13 @@ async function _extractAndRender(file, container) {
       container.innerHTML = _noFieldsHTML();
       setButtonDisabled();
       trackToolNotice('fill', 'no_fields');
+      // Straight on to Draw on PDF with the same file, the notice read first:
+      // 5 of 8 people who brought Fill a file in a day brought one with no
+      // fields, and 1 followed the link (2026-11-17). The link's own click —
+      // the file handed over as a click hands it.
+      setTimeout(() => {
+        if (myGen === _generation) container.querySelector('a[data-handoff]')?.click();
+      }, NO_FIELDS_TO_DRAW_MS);
       return;
     }
 

@@ -9,6 +9,8 @@
 //  Draw empty, so the file had to be added again. Checks: the stop is sent
 //  as Tool Notice, the link is counted as a cross-sell, and Draw opens
 //  with the same file loaded.
+//  2026-11-18: 5 of 8 people a day brought a PDF with no fields and 1 followed
+//  the link — Fill now goes on to Draw by itself, the notice shown first.
 //  Run: node tests/e2e/fill-no-fields.e2e.mjs   (dist/ served on :8934)
 // ============================================================
 
@@ -48,7 +50,11 @@ try {
     if (n.length !== 1) throw new Error(`Tool Notice events: ${JSON.stringify(events.map(e => e.event))}`);
   });
 
-  await Promise.all([page.waitForURL('**/draw-on-pdf/**', { timeout: 15000 }), link.click()]);
+  await test('Fill goes on to Draw by itself, no click, after the notice is shown', async () => {
+    const t0 = Date.now();
+    await page.waitForURL('**/draw-on-pdf/**', { timeout: 15000 });
+    if (Date.now() - t0 < 800) throw new Error('Draw opened before the notice could be read');
+  });
 
   await test('Draw opens with the same file, no second upload', async () => {
     await page.waitForFunction(() => {
@@ -59,7 +65,7 @@ try {
       .catch(async () => { throw new Error(`page label "${await page.textContent('#pageLabel')}" — not the 3-page file`); });
   });
 
-  await test('the link is counted: Cross Sell Click fill → draw-pdf', async () => {
+  await test('the hand-off is counted: Cross Sell Click fill → draw-pdf', async () => {
     const c = events.filter(e => e.event === 'Cross Sell Click');
     if (c.length !== 1 || c[0].props.from !== 'fill' || c[0].props.to !== 'draw-pdf') throw new Error(JSON.stringify(c));
   });
