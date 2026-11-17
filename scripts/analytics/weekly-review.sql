@@ -144,8 +144,8 @@ GROUP BY tool, ext ORDER BY people DESC LIMIT 40;
 --     check that clickers get a scan (13b). A session id lives one page load, so the
 --     scanner marks the photo it received (Tool Notice photo_from_jpg2pdf).
 SELECT
-  COUNT(DISTINCT if(index1 = 'Tool Notice' AND blob2 = 'jpg2pdf' AND blob4 = 'notice=scan_hint', blob3, NULL)) AS shown,
-  COUNT(DISTINCT if(index1 = 'Cross Sell Click' AND blob4 = 'from=jpg2pdf' AND blob5 = 'to=scanDocument', blob3, NULL)) AS clicked
+  COUNT(DISTINCT if(index1 = 'Tool Notice' AND blob2 = 'jpg2pdf' AND blob4 = 'notice=scan_hint', blob3, '')) - max(if(index1 = 'Tool Notice' AND blob2 = 'jpg2pdf' AND blob4 = 'notice=scan_hint', 0, 1)) AS shown,
+  COUNT(DISTINCT if(index1 = 'Cross Sell Click' AND blob4 = 'from=jpg2pdf' AND blob5 = 'to=scanDocument', blob3, '')) - max(if(index1 = 'Cross Sell Click' AND blob4 = 'from=jpg2pdf' AND blob5 = 'to=scanDocument', 0, 1)) AS clicked
 FROM pdfree_events
 WHERE timestamp > toDateTime('2026-11-17 00:00:00');
 
@@ -156,3 +156,19 @@ SELECT blob3 AS session,
 FROM pdfree_events
 WHERE timestamp > toDateTime('2026-11-17 00:00:00') AND blob2 = 'scanDocument'
 GROUP BY session HAVING got_photo > 0 ORDER BY scanned LIMIT 200;
+
+
+-- 14. Funnel per tool — people (page loads) who opened, added a file, PRESSED the
+--     button (Tool Start, from 2026-11-17), got a result, hit an error, cancelled.
+--     Analytics Engine rejects NULL in if(): '' stands in and is taken off again.
+SELECT blob2 AS tool,
+  COUNT(DISTINCT if(index1 = 'Tool Open', blob3, ''))    - max(if(index1 = 'Tool Open', 0, 1))    AS opened,
+  COUNT(DISTINCT if(index1 = 'File Added', blob3, ''))   - max(if(index1 = 'File Added', 0, 1))   AS added_file,
+  COUNT(DISTINCT if(index1 = 'Tool Start', blob3, ''))   - max(if(index1 = 'Tool Start', 0, 1))   AS pressed,
+  COUNT(DISTINCT if(index1 = 'Tool Success', blob3, '')) - max(if(index1 = 'Tool Success', 0, 1)) AS succeeded,
+  COUNT(DISTINCT if(index1 = 'Tool Error', blob3, ''))   - max(if(index1 = 'Tool Error', 0, 1))   AS hit_error,
+  COUNT(DISTINCT if(index1 = 'Tool Cancel', blob3, ''))  - max(if(index1 = 'Tool Cancel', 0, 1))  AS cancelled
+FROM pdfree_events
+WHERE timestamp > toDateTime('2026-11-18 00:00:00') AND blob2 != ''
+GROUP BY tool ORDER BY opened DESC LIMIT 60;
+
