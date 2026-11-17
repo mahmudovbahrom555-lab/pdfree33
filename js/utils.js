@@ -112,3 +112,11 @@ export function abortReason(signal) {
 export function throwIfAborted(signal) {
   if (signal?.aborted) throw abortReason(signal);
 }
+
+// A photo or picture Merge takes alongside PDFs, each made one page by
+// Images → PDF's own conversion (2026-11-18: 4 people a day brought a .jpg to
+// Merge and were turned away). TIFF stays Images → PDF's own: it has a
+// decoding path of its own there.
+export function isMergeImage(file) {
+  return /^image\/(?:jpeg|png|webp|heic|heif)$/i.test(file.type || '') || /\.(?:jpe?g|png|webp|heic|heif)$/i.test(file.name || '');
+}
