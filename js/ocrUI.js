@@ -9,7 +9,7 @@ import { t } from './i18n.js';
 import { saveHandoff } from './handoff.js';
 import { truncateMiddle, esc } from './utils.js';
 import { showCancelBtn, hideCancelBtn } from './ui.js';
-import { CJK_LANGS, COMPLEX_LANGS, primaryScript, loadTesseract, createOcrWorker,
+import { CJK_LANGS, COMPLEX_LANGS, primaryScript, loadTesseract, createOcrWorker, ocrLanes,
          detectOcrLanguage, recognizePage, ocrLangForLocale, ocrProbesForBrowser } from './ocrEngine.js';
 import { paddleWarm } from './ppocrEngine.js';
 import { getLang } from './config.js';
@@ -711,6 +711,7 @@ async function _runOcr(file, gen) {
   }
 
   let worker;
+  const workers = [];   // the extra lanes' workers (see ocrLanes below)
   try {
   _updateProgress(13, t('ocr_initializing_engine'));
   _setBtnProgress(t('ocr_initializing_short'));
@@ -777,63 +778,99 @@ async function _runOcr(file, gen) {
   let   confCount     = 0;
   const pageDurationsMs = [];
 
-  for (let p = 1; p <= total; p++) {
-    const basePct = 15 + Math.round((p - 1) / total * 75);
+  // Pages are read `lanes` at a time, each lane on its own Tesseract worker
+  // (ocrLanes: 1 on phones, 2–3 on a desktop). OCR took up to 2.8 h for one
+  // file and people cancelled after 6 min … 2.7 h (Analytics, 2026-11-17).
+  // Lane 0 starts at once on the worker made above; the others join as their
+  // workers load. Results are kept by page number and joined in page order.
+  const lanes      = ocrLanes(resolvedLang);
+  workers.push(worker);
+  const byPage     = new Array(total + 1);
+  const retryPages = [];
+  let nextPage = 1, donePages = 0;
+
+  const readPage = async (w, p) => {
+    const page = await pdfDoc.getPage(p);
+    // Per-page hybrid detection: if this page already has a text layer,
+    // extract it directly instead of running Tesseract. This handles hybrid
+    // PDFs (e.g. text cover page + scanned appendix) without losing content.
+    const tc = await page.getTextContent();
+    const pageChars = tc.items.reduce((sum, i) => sum + i.str.trim().length, 0);
+    if (pageChars >= TEXT_CHAR_THRESHOLD) {
+      const lines = [];
+      for (const item of tc.items) {
+        if (!item.str.trim()) continue;
+        const iy = Math.round(item.transform[5]);
+        const last = lines[lines.length - 1];
+        if (last && Math.abs(last.y - iy) <= 4) { last.words.push(item.str); }
+        else { lines.push({ y: iy, words: [item.str] }); }
+      }
+      lines.sort((x, y) => y.y - x.y);
+      // Not an OCR page — the page already has a text layer, left unchanged
+      byPage[p] = { txt: `--- Page ${p} ---\n${lines.map(l => l.words.join(' ')).join('\n').trim()}` };
+      return;
+    }
+    const rec = await recognizePage(w, page, resolvedLang);
+    for (const word of rec.words) { confSum += word.confidence; confCount++; }
+    // Store viewport transform — used in _buildSearchablePdf to map canvas→PDF coords
+    // correctly for any page rotation (0, 90, 180, 270°)
+    byPage[p] = {
+      txt: `--- Page ${p} ---\n${rec.text}`,
+      ocr: { pageNum: p, lines: rec.lines, canvasW: rec.canvasW, canvasH: rec.canvasH,
+             vpTransform: rec.vpTransform, rotation: rec.rotation },
+    };
+  };
+
+  const showProgress = () => {
+    const p = Math.min(total, donePages + 1);
     let etaSuffix = '';
     if (pageDurationsMs.length > 0) {
-      const avgMs = pageDurationsMs.reduce((s, t) => s + t, 0) / pageDurationsMs.length;
-      const remainMs = avgMs * (total - p + 1);
+      const avgMs = pageDurationsMs.reduce((sum, ms) => sum + ms, 0) / pageDurationsMs.length;
+      const remainMs = avgMs * (total - donePages) / workers.length;
       etaSuffix = remainMs >= 60000
         ? t('ocr_eta_min', { n: Math.ceil(remainMs / 60000) })
         : t('ocr_eta_sec', { n: Math.round(remainMs / 1000) });
     }
-    _updateProgress(basePct, t('ocr_page_progress', { p, total, lang: langLabel, eta: etaSuffix }));
+    _updateProgress(15 + Math.round(donePages / total * 75), t('ocr_page_progress', { p, total, lang: langLabel, eta: etaSuffix }));
     _setBtnProgress(t('ocr_page_short', { p, total }));
-    const _pageT0 = Date.now();
+  };
 
-    try {
-      const page = await pdfDoc.getPage(p);
-
-      // Per-page hybrid detection: if this page already has a text layer,
-      // extract it directly instead of running Tesseract. This handles hybrid
-      // PDFs (e.g. text cover page + scanned appendix) without losing content.
-      const tc = await page.getTextContent();
-      const pageChars = tc.items.reduce((s, i) => s + i.str.trim().length, 0);
-      if (pageChars >= TEXT_CHAR_THRESHOLD) {
-        const lines = [];
-        for (const item of tc.items) {
-          if (!item.str.trim()) continue;
-          const iy = Math.round(item.transform[5]);
-          const last = lines[lines.length - 1];
-          if (last && Math.abs(last.y - iy) <= 4) { last.words.push(item.str); }
-          else { lines.push({ y: iy, words: [item.str] }); }
-        }
-        lines.sort((a, b) => b.y - a.y);
-        txtPages.push(`--- Page ${p} ---\n${lines.map(l => l.words.join(' ')).join('\n').trim()}`);
-        // Don't add to ocrPages — page already has a text layer, leave it unchanged
-        continue;
-      }
-
-      const rec = await recognizePage(worker, page, resolvedLang);
-      for (const w of rec.words) { confSum += w.confidence; confCount++; }
-      // Store viewport transform — used in _buildSearchablePdf to map canvas→PDF coords
-      // correctly for any page rotation (0, 90, 180, 270°)
-      ocrPages.push({
-        pageNum: p, lines: rec.lines,
-        canvasW: rec.canvasW, canvasH: rec.canvasH,
-        vpTransform: rec.vpTransform, rotation: rec.rotation,
-      });
-      txtPages.push(`--- Page ${p} ---\n${rec.text}`);
-
-    } catch (pageErr) {
-      // One bad page must not kill the whole job — skip and continue
-      pageErrors.push({ page: p, error: pageErr.message });
-    } finally {
-      pageDurationsMs.push(Date.now() - _pageT0);
-    }
-
+  const runLane = async w => {
     // Bail early if user started a new OCR (new file selected or button re-clicked)
+    while (nextPage <= total && gen === _generation) {
+      const p = nextPage++;
+      showProgress();
+      const t0 = Date.now();
+      try {
+        await readPage(w, p);
+      } catch (pageErr) {
+        // One bad page must not kill the whole job. Out of memory with
+        // pages read at once: read it again alone after the others.
+        if (workers.length > 1 && /memory|allocat|RangeError/i.test(String(pageErr?.message ?? pageErr))) retryPages.push(p);
+        else pageErrors.push({ page: p, error: pageErr.message });
+      } finally {
+        pageDurationsMs.push(Date.now() - t0);
+        donePages++;
+      }
+    }
+  };
+
+  const laneRuns = [runLane(worker)];
+  for (let i = 1; i < lanes; i++) {
+    laneRuns.push(createOcrWorker(resolvedLang)
+      .then(w => { workers.push(w); return runLane(w); })
+      .catch(() => { /* fewer lanes: the others carry on */ }));
+  }
+  await Promise.all(laneRuns);
+  for (const p of retryPages) {
     if (gen !== _generation) break;
+    try { await readPage(worker, p); } catch (pageErr) { pageErrors.push({ page: p, error: pageErr.message }); }
+  }
+  pageErrors.sort((x, y) => x.page - y.page);
+  for (let p = 1; p <= total; p++) {
+    if (!byPage[p]) continue;
+    txtPages.push(byPage[p].txt);
+    if (byPage[p].ocr) ocrPages.push(byPage[p].ocr);
   }
 
   if (gen === _generation) _updateProgress(92, t('ocr_complete'));
@@ -848,7 +885,7 @@ async function _runOcr(file, gen) {
   return { ocrPages, fullText: txtPages.join('\n\n'), avgConfidence };
   } finally {
     // Always terminate — prevents thread leak if recognize() or render() throws
-    await worker?.terminate();
+    await Promise.all([...new Set([worker, ...workers])].map(w => w?.terminate()));
     pdfDoc.destroy();
   }
 }
