@@ -172,3 +172,13 @@ FROM pdfree_events
 WHERE timestamp > toDateTime('2026-11-18 00:00:00') AND blob2 != ''
 GROUP BY tool ORDER BY opened DESC LIMIT 60;
 
+
+-- 15. Where people give up (from 2026-11-18): the page closed while a tool worked —
+--     after Tool Start, before success, error or cancel. double1 = progress reached
+--     (to 10 %), double2 = seconds since the press (to 5 s). OCR / PDF→Word: 10 = the
+--     language step, 10–50 the pages, 95 building the file.
+SELECT blob2 AS tool, double1 AS progress_pct,
+  COUNT(DISTINCT blob3) AS people, round(avg(double2)) AS avg_after_s, max(double2) AS max_after_s
+FROM pdfree_events
+WHERE timestamp > NOW() - INTERVAL '7' DAY AND index1 = 'Tool Leave'
+GROUP BY tool, progress_pct ORDER BY people DESC LIMIT 60;
