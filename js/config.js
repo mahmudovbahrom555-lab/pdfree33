@@ -490,7 +490,8 @@ export const TOOLS = {
     descs:  { en: 'Extract tables from PDF into an .xlsx spreadsheet — runs in your browser, no upload', es: 'Extrae tablas de PDF a una hoja de cálculo .xlsx — funciona en tu navegador, sin subida', pt: 'Extraia tabelas do PDF para uma planilha .xlsx — funciona no seu navegador, sem upload', de: 'Tabellen aus PDF in eine .xlsx-Datei extrahieren — läuft im Browser, kein Upload', fr: "Extraire les tableaux d'un PDF vers une feuille .xlsx — dans votre navigateur, sans envoi", id: 'Konversi tabel PDF ke file .xlsx nyata. Tanpa unggah, tanpa akun.', vi: 'Chuyển bảng PDF thành file .xlsx thực sự. Không tải lên, không cần tài khoản.', ru: 'Конвертируйте таблицы PDF в настоящий .xlsx файл. Без загрузки, без аккаунта.', ja: 'PDFの表を本物の.xlsxファイルに変換。アップロードなし、アカウント不要。', it: 'Converti le tabelle PDF in un vero file .xlsx. Senza caricamento, senza account.', ko: 'PDF 표를 실제 .xlsx 파일로 변환. 업로드 없음, 계정 불필요.', nl: 'Converteer PDF-tabellen naar een echt .xlsx-bestand. Zonder upload, zonder account.', pl: 'Konwertuj tabele PDF do prawdziwego pliku .xlsx. Bez przesyłania, bez konta.', tr: "PDF tablolarını Excel'e dönüştürün", 'zh-CN': '将 PDF 中的表格提取为 .xlsx 电子表格 —— 在浏览器中运行，无需上传', ar: 'استخرج الجداول من PDF إلى جدول بيانات ‎.xlsx‏ — يعمل في متصفحك، بدون رفع' },
     btns:   { en: '📊 Convert to Excel', es: '📊 Convertir a Excel', pt: '📊 Converter para Excel', de: '📊 In Excel konvertieren', fr: '📊 Convertir en Excel', id: '📊 PDF ke Excel', vi: '📊 PDF sang Excel', ru: '📊 PDF в Excel', ja: '📊 PDFからExcel', it: '📊 PDF in Excel', ko: '📊 PDF를 Excel로', nl: '📊 PDF naar Excel', pl: '📊 PDF do Excel', tr: "📊 PDF'den Excel'e", 'zh-CN': '📊 转换为 Excel', ar: '📊 تحويل إلى Excel' },
     btn:         '📊 Convert to Excel',
-    multi:       false,
+    multi:       true,
+    batch:       true, // 2+ files → sequential queue + ZIP (processor.js's BATCH_TOOLS)
     accept:      '.pdf,application/pdf',
     implemented: true,
   },

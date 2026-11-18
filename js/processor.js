@@ -434,10 +434,11 @@ export async function doProcess(currentTool, extraParams = {}) {
   // unchanged code below — single-file behavior is byte-for-byte
   // identical to before batch processing existed.
   if (BATCH_TOOLS.has(currentTool) && filesSnapshot.length > 1) {
+    const batchSignal = signal ?? excelRun?.signal;   // compress's or Excel's own cancel
     try {
-      await _runBatch(currentTool, filesSnapshot, extraParams, signal);
+      await _runBatch(currentTool, filesSnapshot, extraParams, batchSignal);
     } catch (err) {
-      if (signal?.aborted) return;
+      if (batchSignal?.aborted) return;
       isProcessing = false;
       setFilesLocked(false);
       hideCancelBtn();
@@ -2950,6 +2951,18 @@ async function _batchWorkerToolOne(tool, file, params, onProgress) {
   return { name: `${base}${_BATCH_SUFFIX[tool] || '-processed'}.pdf`, buffer: data.result };
 }
 
+/** One PDF → .xlsx in a batch (people convert 65–188 files a session one by one, 2026-11-18) — returns { name, buffer }. */
+async function _batchPdf2ExcelOne(file, params, onProgress, signal) {
+  try {
+    await loadExcelJs();
+  } catch {
+    throw new Error('Excel library unavailable — check your internet connection.');
+  }
+  if (!window.pdfjsLib) throw new Error('PDF engine not ready — reopen the tool.');
+  const { buffer } = await _pdf2ExcelFile(file, signal, params.decimalSeparator, pct => onProgress(pct));
+  return { name: `${file.name.replace(/\.pdf$/i, '')}.xlsx`, buffer };
+}
+
 async function _runBatch(tool, filesSnapshot, extraParams, signal) {
   const total = filesSnapshot.length;
   trackBatchStart(tool, total);
@@ -2996,6 +3009,8 @@ async function _runBatch(tool, filesSnapshot, extraParams, signal) {
 
       const result = tool === 'compress'
         ? await _batchCompressOne(file, extraParams, onProgress, signal)
+        : tool === 'pdf2excel'
+        ? await _batchPdf2ExcelOne(file, extraParams, onProgress, signal)
         : await _batchWorkerToolOne(getWorkerTool(tool) ?? tool, file, extraParams, onProgress);
 
       if (!isProcessing || signal?.aborted) return;
@@ -3358,25 +3373,11 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150, stripMeta
 // table is appended to a catch-all "Text" sheet so nothing is silently
 // dropped, even on documents that turn out not to be spreadsheet-like.
 
-async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
-  const file = filesSnapshot[0];
-  if (!_checkSize(file, maxFileMb('pdf2excel'))) { _abortUI(); return; }
-
-  setProgress(5, 'Loading libraries…');
-  try {
-    await loadExcelJs();
-  } catch {
-    throw new Error('Excel library unavailable — check your internet connection.');
-  }
-  throwIfAborted(signal);
-
-  if (!window.pdfjsLib) {
-    isProcessing = false; setFilesLocked(false); hideCancelBtn();
-    _handleError('pdf2excel', 'PDF engine not ready — reopen the tool.', 'renderer_not_loaded');
-    return;
-  }
-
-  setProgress(8, 'Loading PDF…');
+// One PDF → its .xlsx bytes, and what the success card says of them: the
+// single-file run and the batch (many files → a ZIP) both. `progress(pct,
+// label)` is setProgress for one file; a batch folds it into its own bar.
+async function _pdf2ExcelFile(file, signal, decimalSeparator, progress = setProgress) {
+  progress(8, 'Loading PDF…');
   const rawBuf = file._decryptedBuffer
     ? file._decryptedBuffer.slice(0)
     : await preprocessPdfBuffer(await _readSelected(file));
@@ -3400,14 +3401,14 @@ async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
   try {
     const doc = await task.promise;
     throwIfAborted(signal);
-    extracted = await _p2eExtractTables(doc, signal);
+    extracted = await _p2eExtractTables(doc, signal, progress);
   } finally {
     signal.removeEventListener('abort', destroy);
     await destroy();
   }
   throwIfAborted(signal);
 
-  setProgress(90, 'Building spreadsheet…');
+  progress(90, 'Building spreadsheet…');
 
   // Gate 1: detector's own confidence (pdf2wordTables.js already floors
   // emission at 0.72 — this raises the bar specifically for "does this
@@ -3443,7 +3444,7 @@ async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
         eri.sheets.filter(s => s.eri < _P2E_ERI_THRESHOLD).map(s => s.name)
       );
       if (badSheetNames.size) {
-        setProgress(95, 'Verifying table structure…');
+        progress(95, 'Verifying table structure…');
         const survivors = [];
         const demotedText = [...textRows];
         tables.forEach((tbl, i) => {
@@ -3463,6 +3464,28 @@ async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
     }
   }
 
+  return { buffer, tables, extracted };
+}
+
+async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
+  const file = filesSnapshot[0];
+  if (!_checkSize(file, maxFileMb('pdf2excel'))) { _abortUI(); return; }
+
+  setProgress(5, 'Loading libraries…');
+  try {
+    await loadExcelJs();
+  } catch {
+    throw new Error('Excel library unavailable — check your internet connection.');
+  }
+  throwIfAborted(signal);
+
+  if (!window.pdfjsLib) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('pdf2excel', 'PDF engine not ready — reopen the tool.', 'renderer_not_loaded');
+    return;
+  }
+
+  const { buffer, tables, extracted } = await _pdf2ExcelFile(file, signal, decimalSeparator);
   throwIfAborted(signal);
   const blob = new Blob([buffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -3598,7 +3621,7 @@ export function _p2eHasUnrepresentedImage(images, items, view) {
   });
 }
 
-async function _p2eExtractTables(pdfDoc, signal) {
+async function _p2eExtractTables(pdfDoc, signal, progress = setProgress) {
   const tables = [];
   const textRows = [];
   const skippedPages = [];
@@ -3620,8 +3643,8 @@ async function _p2eExtractTables(pdfDoc, signal) {
       throwIfAborted(signal);
       frameStart = performance.now();
     }
-    setProgress(10 + Math.round((p / pdfDoc.numPages) * 75),
-                `Reading page ${p}/${pdfDoc.numPages}…`);
+    progress(10 + Math.round((p / pdfDoc.numPages) * 75),
+             `Reading page ${p}/${pdfDoc.numPages}…`);
 
     const page    = await pdfDoc.getPage(p);
     throwIfAborted(signal);
