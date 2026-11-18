@@ -126,6 +126,61 @@ await test('a library that failed to load once (network blip) loads on the next 
   }
 });
 
+await test('PDF→Word: the connection lost once the work began does not cost the result (JSZip is loaded with docx, before it)', async () => {
+  // 2026-11-18: JSZip was loaded at the end — a person in India lost a
+  // 3-minute conversion to "Failed to load jsZip" at the last step
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  await page.addInitScript(() => {
+    const orig = URL.createObjectURL.bind(URL);
+    URL.createObjectURL = blob => { if (blob instanceof Blob) window.__blob = blob; return orig(blob); };
+    document.addEventListener('pdfree:error', e => { window.__error = e.detail.message; });
+  });
+  try {
+    await page.goto(`${BASE_URL}/pdf-to-word/`, { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', PDF);
+    await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 30000 });
+    await page.waitForTimeout(1500);
+    await page.evaluate(() => { window.__blob = null; });
+    await page.click('#mergeBtn');
+    // the work has begun ("Extracting text…", 10 %): from here the network is gone for JSZip
+    await page.waitForFunction(() => parseFloat(document.querySelector('#mergeBtn')?.style.getPropertyValue('--fill-pct')) >= 10, null, { timeout: 60000 });
+    await page.route('**/js/vendor/jszip.min.js', r => r.abort());
+    await page.waitForFunction(() => (window.__blob && /officedocument/.test(window.__blob.type)) || window.__error, null, { timeout: 90000 });
+    const err = await page.evaluate(() => window.__error);
+    if (err) throw new Error(`the result was lost: ${err}`);
+  } finally {
+    await context.close();
+  }
+});
+
+await test('PDF→Word: JSZip unreachable from the start says so before the work, not after it', async () => {
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  await page.route('**/js/vendor/jszip.min.js', r => r.abort());
+  await page.addInitScript(() => {
+    document.addEventListener('pdfree:error', e => { window.__error = e.detail.message; });
+    // the furthest the work got: the bar is reset when the error shows
+    window.__maxPct = 0;
+    setInterval(() => {
+      const v = parseFloat(document.querySelector('#mergeBtn')?.style.getPropertyValue('--fill-pct'));
+      if (v > window.__maxPct) window.__maxPct = v;
+    }, 20);
+  });
+  try {
+    await page.goto(`${BASE_URL}/pdf-to-word/`, { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', PDF);
+    await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 30000 });
+    await page.waitForTimeout(1500);
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__error, null, { timeout: 30000 });
+    const pct = await page.evaluate(() => window.__maxPct);
+    if (pct > 5) throw new Error(`the work got to ${pct} % before the error`);
+  } finally {
+    await context.close();
+  }
+});
+
 await test('opening pages loads none of them: docx and JSZip wait for the tool that needs them', async () => {
   const context = await browser.newContext({ serviceWorkers: 'block' });
   const page = await context.newPage();

@@ -3130,8 +3130,13 @@ async function _runBatch(tool, filesSnapshot, extraParams, signal) {
 export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, stripMetadata = true, preserveNumericFields = false, onProgress, isCancelled } = {}) {
   onProgress?.(5, 'Loading libraries…');
 
+  // JSZip with docx, before the work, not after it: loaded at the end, a
+  // connection lost during a 3-minute conversion threw "Failed to load
+  // jsZip" at the last step and the whole result was lost (a person in
+  // India, 2026-11-18). Now a dead connection is known in a second, and a
+  // live one leaves both in memory for the end.
   try {
-    await loadDocx();
+    await Promise.all([loadDocx(), loadJSZip()]);
   } catch {
     throw new Error('Word library unavailable — check your internet connection.');
   }
@@ -3250,7 +3255,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
 
   // toBlob() uses JSZip type:"blob" — browser-native, no polyfill needed.
   // toBuffer() uses type:"nodebuffer" which JSZip does not support in browsers.
-  await loadJSZip();
+  // JSZip itself was loaded with docx at the start.
   // characters past U+FFFF split between two JSZip chunks (js/ooxmlRepair.js)
   let blob = await repairSplitSurrogates(await Packer.toBlob(_buildDoc(paragraphs)), window.JSZip);
 
