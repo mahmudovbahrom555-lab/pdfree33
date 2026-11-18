@@ -123,6 +123,32 @@ await test('a page that is one coloured table stays a table, not a design', asyn
   if (/behindDoc="1"/.test(xml)) throw new Error('a coloured table was laid out as a designed page');
 });
 
+await test('an article in two columns over a coloured ground stays flowing text, read column by column', async () => {
+  // Arabic newsletters were laid out as designed pages and read across their
+  // columns, row by row (nightly Arabic run, 2026-11-18)
+  const doc = await PDFDocument.create();
+  const page = doc.addPage([595.28, 841.89]);
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  page.drawRectangle({ x: 0, y: 0, width: 595.28, height: 841.89, color: rgb(0.93, 0.96, 0.9) });
+  // running prose wrapped to each column's width — rows of one shape read as a table
+  const prose = col => (`${col} begins here. ` + (col.endsWith('A')
+      ? 'The council met on Tuesday to discuss the budget for the coming year, and members raised questions about school transport, the new library hours, road repairs on the eastern side of town and the cost of heating public buildings through the winter. A decision on most of these items was postponed until the next meeting, when officials will present revised figures and residents may speak about the plans for the market square. '
+      : 'Volunteers cleaned the river bank over the weekend and collected more than two hundred bags of rubbish, old tyres and a shopping trolley. The organisers thanked the local bakery for the coffee and promised another clean-up in the spring, this time along the canal path behind the station where walkers have complained about litter for months. ')
+    + `${col} ends here.`).split(' ');
+  const wrap = (words, width) => words.reduce((ls, w) => {
+    const last = ls[ls.length - 1];
+    if (last && font.widthOfTextAtSize(`${last} ${w}`, 8) <= width) ls[ls.length - 1] = `${last} ${w}`; else ls.push(w);
+    return ls;
+  }, []);
+  wrap(prose('Column A'), 190).forEach((t, i) => page.drawText(t, { x: 40, y: 780 - i * 12, size: 8, font }));
+  wrap(prose('Column B'), 190).forEach((t, i) => page.drawText(t, { x: 270, y: 780 - i * 12, size: 8, font }));
+  const xml = await docxXml(await doc.save());
+  if (/behindDoc="1"/.test(xml)) throw new Error('an article in columns was laid out as a designed page');
+  const text = paragraphs(xml).map(textOf).join('\n');
+  const a = text.indexOf('Column A ends here'), b = text.indexOf('Column B begins here');
+  if (a < 0 || b < 0 || a > b) throw new Error('not read column by column: column A does not end before column B begins');
+});
+
 await browser.close();
 console.log(`\nTests: ${passed + failed} | ✓ ${passed} | ${failed} failed`);
 if (failed) process.exit(1);
