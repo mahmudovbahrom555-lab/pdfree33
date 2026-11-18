@@ -7,7 +7,7 @@
 import { strict as assert } from 'assert';
 import { ocrItemsFromPage, layerScript } from '../js/pdf2wordOcr.js';
 import { _duplicateWords, _wordKey } from '../js/ocrEngine.js';
-import { _rasterCover, _layerWantsOcr, _paintCover } from '../js/pdf2readCore.js';
+import { _rasterCover, _layerWantsOcr, _paintCover, _fontSizeScale } from '../js/pdf2readCore.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -129,6 +129,15 @@ test('a page with /Rotate: OCR boxes in the page as shown, y up — where its te
   assert.ok(Math.abs(it.x - 100) < 1e-9 && Math.abs(it.y - (1684 - 100) / 2) < 1e-9, `${it.x}, ${it.y}`);
 });
 
+test('a column of vertical text is sized by its width, not its length', () => {
+  // a Japanese newspaper's column: 24 px wide, 400 px tall — 20 pt type, not 333
+  const col = { words: [{ text: '日本語の縦書きの文章', kept: true, confidence: 90, bbox: { x0: 300, x1: 324, y0: 100, y1: 500 } }],
+    bbox: { x0: 300, x1: 324, y0: 100, y1: 500 }, baseline: { has_baseline: false } };
+  const items = ocrItemsFromPage(page([col]));
+  assert.equal(items.length, 1);
+  assert.ok(Math.abs(items[0].fontSize - 20) < 0.5, String(items[0].fontSize));
+});
+
 // _rasterCover: how much of a page raster images cover — a scan with a site's
 // watermark over it is OCRed like a scan (cloud corpus, 2026-10-17)
 test('a page-size scan covers the page; a photo inside a Form XObject is scaled by its matrix', () => {
@@ -139,6 +148,28 @@ test('a page-size scan covers the page; a photo inside a Form XObject is scaled 
   assert.ok(Math.abs(_rasterCover(small, view) - 0.125) < 1e-9, String(_rasterCover(small, view)));
   assert.equal(_rasterCover({ fnArray: [91], argsArray: [[]] }, view), 0);
   assert.equal(_rasterCover(null, view), 0);
+});
+
+// _fontSizeScale: a font pdf.js reports far too large for the room its text
+// takes (wkhtmltopdf: 62 for 9 pt body text, 10 pages grew to 169 in Word)
+const ti = (str, width, size, fontName = 'f1', b = 0) => ({ str, width, height: size, fontName, transform: [size, b, 0, size, 0, 0] });
+test('a font whose text is ~5× narrower than its reported size is scaled down by that much; ordinary fonts are left', () => {
+  const words = ['quarterly', 'results', 'show', 'growth', 'across', 'regions'];
+  // 9 pt text: half an em a letter → width = 4.5 × letters; reported size 62
+  const big = words.map(w => ti(w, 4.5 * w.length, 62, 'big'));
+  const fine = words.map(w => ti(w, 5 * w.length, 10, 'fine'));
+  const scale = _fontSizeScale([...big, ...fine]);
+  assert.ok(Math.abs(scale.get('big') * 62 - 9) < 0.5, String(scale.get('big') * 62));
+  assert.equal(scale.has('fine'), false);
+});
+test('too few items, short strings or rotated text decide nothing', () => {
+  assert.equal(_fontSizeScale(['ab', 'cd', 'ef', 'gh', 'ij', 'kl'].map(w => ti(w, 1, 62))).size, 0, 'under 3 letters');
+  assert.equal(_fontSizeScale(['alpha', 'beta', 'gamma', 'delta'].map(w => ti(w, 2, 62))).size, 0, 'under 5 items');
+  assert.equal(_fontSizeScale(['alpha', 'bravo', 'charlie', 'delta', 'echo'].map(w => ti(w, 2, 62, 'r', 62))).size, 0, 'rotated');
+});
+test('Chinese counts a full em a character: a normal CJK font is not shrunk', () => {
+  const cjk = ['中华人民共和国', '国务院办公厅', '关于印发通知', '各省自治区直辖市', '人民政府'].map(w => ti(w, 12 * w.length, 12, 'cjk'));
+  assert.equal(_fontSizeScale(cjk).has('cjk'), false);
 });
 
 // _paintCover: pictures and coloured shapes over the page — what PDF→Word's
