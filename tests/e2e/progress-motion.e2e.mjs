@@ -64,6 +64,41 @@ await test('PDF→Word on a scan: the light runs the whole time, and the languag
   }
 });
 
+await test('PDF→Word on a scan, a slow line: the language step counts the megabytes of the OCR models as they come', async () => {
+  // two people in China left at "Finding the text's language… 10 %" after 70 s
+  // and 20 min (Tool Leave, 2026-11-18): the models were downloading, the bar
+  // stood still — at 400 KB/s for 58 s
+  const ctx = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    const page = await ctx.newPage();
+    await page.addInitScript(() => {
+      const orig = URL.createObjectURL.bind(URL);
+      URL.createObjectURL = b => { if (b instanceof Blob && /officedocument/.test(b.type)) window.__res = b; return orig(b); };
+    });
+    await page.goto(`${BASE_URL}/pdf-to-word/`, { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', SCAN);
+    await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled
+      && /Output mode/.test(document.querySelector('#pdf2wordOptions')?.textContent || ''), null, { timeout: 60000 });
+    const cdp = await ctx.newCDPSession(page);
+    await cdp.send('Network.enable');
+    await cdp.send('Network.emulateNetworkConditions', { offline: false, latency: 100, downloadThroughput: 1024 * 1024, uploadThroughput: 256 * 1024 });
+    await page.evaluate(() => {
+      window.__mb = [];
+      setInterval(() => {
+        const m = (document.querySelector('#progressLabel')?.textContent || '').match(/language… ([\d.]+) MB of the text reader loaded/);
+        if (m && window.__mb[window.__mb.length - 1] !== +m[1]) window.__mb.push(+m[1]);
+      }, 100);
+    });
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__res, null, { timeout: 300000 });
+    const mb = await page.evaluate(() => window.__mb);
+    if (mb.length < 3) throw new Error(`the language step showed ${mb.length} download figures: ${JSON.stringify(mb)}`);
+    if (mb.some((v, i) => i && v < mb[i - 1])) throw new Error(`the figures went back: ${JSON.stringify(mb)}`);
+  } finally {
+    await ctx.close();
+  }
+});
+
 await browser.close();
 console.log(`\nTests: ${passed + failed} | ✓ ${passed} | ${failed} failed`);
 if (failed) process.exit(1);

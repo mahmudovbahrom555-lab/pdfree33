@@ -23,6 +23,7 @@
 // ============================================================
 
 import { isLargeDevice } from './fileLimits.js';
+import { ocrDownloaded } from './ocrDownloads.js';
 
 const SCRIPTS = new Set(['chi_sim', 'chi_tra', 'jpn']);
 const IDLE_MS = 60000;
@@ -48,8 +49,13 @@ function _release() {
 
 function _spawn(detect) {
   const w = new Worker(new URL('./ppocrWorker.js', import.meta.url), { type: 'module' });
+  let loaded = 0;   // the worker's model bytes so far, for the progress label
   return new Promise((resolve, reject) => {
-    w.onmessage = e => (e.data.type === 'ready' ? resolve(w) : e.data.type === 'error' ? reject(new Error(e.data.message)) : null);
+    w.onmessage = e => {
+      if (e.data.type === 'progress') { ocrDownloaded(e.data.loaded - loaded); loaded = e.data.loaded; }
+      else if (e.data.type === 'ready') resolve(w);
+      else if (e.data.type === 'error') reject(new Error(e.data.message));
+    };
     w.onerror = e => reject(new Error(e.message || 'PP-OCR worker failed'));
     w.postMessage({ type: 'init', base: new URL('./', import.meta.url).href, detect });
   });

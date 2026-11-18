@@ -3192,7 +3192,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
     // Scanned pages: their text read with the shared OCR engine (pdf2wordOcr.js).
     const ocr = createOcrLayer(pdfDoc, {
       onPage: _ocrPageLabel(pdfDoc.numPages, (pct, label) => onProgress?.(10 + Math.round(pct * 40), label)),
-      onDetect: () => onProgress?.(10, 'Finding the text\'s language…'),
+      onDetect: mb => onProgress?.(10, mb ? `Finding the text's language… ${mb} MB of the text reader loaded` : 'Finding the text\'s language…'),
     });
     try {
       ({ pageData, median, repeatTextSet, repeatPatternSet, cs } = await _p2wBuildPageData(pdfDoc, {
