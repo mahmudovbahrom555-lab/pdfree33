@@ -307,12 +307,17 @@ export function fontLicenses(PDFLib, doc) {
 
 // ── the fonts of one document ─────────────────────────────
 
-// Scripts whose letters join or reorder (Arabic, Hebrew, Syriac, the Indic
-// scripts, Thai, Tibetan, Myanmar, Khmer): drawn from contextual forms the
-// font's shaping tables pick, and pdf.js's copy has none. Persian set in an
-// embedded font came out as a page of boxes in LibreOffice (multi-page
-// corpus, 2 of 188 documents, 2026-11-18); Word's own fonts shape them.
-const SHAPED_SCRIPT_RE = /[\u0590-\u08FF\u0900-\u0DFF\u0E00-\u0FFF\u1000-\u109F\u1780-\u17FF\uFB1D-\uFDFF\uFE70-\uFEFF]/;
+// Text left to Word's own fonts:
+// - scripts whose letters join or reorder (Arabic, Hebrew, Syriac, the Indic
+//   scripts, Thai, Tibetan, Myanmar, Khmer): drawn from contextual forms the
+//   font's shaping tables pick, and pdf.js's copy has none. Persian set in an
+//   embedded font came out as a page of boxes in LibreOffice (multi-page
+//   corpus, 2 of 188 documents, 2026-11-18);
+// - Chinese, Japanese, Korean: pdf.js's copy of such a font gave lines set
+//   close together, a Japanese letter's lines run into each other (2 of the
+//   same documents) — its line metrics are not the original's. A CJK system
+//   has these fonts.
+const LEFT_TO_WORD_RE = /[\u0590-\u08FF\u0900-\u0DFF\u0E00-\u0FFF\u1000-\u11FF\u1780-\u17FF\u2E80-\u9FFF\uA960-\uA97F\uAC00-\uD7FF\uF900-\uFAFF\uFB1D-\uFDFF\uFE30-\uFE4F\uFE70-\uFEFF\uFF00-\uFFEF\u{20000}-\u{3FFFF}]/u;
 
 const _isBold = s => /bold|black|heavy|semibold|demibold/i.test(s);
 const _isItalic = s => /italic|oblique/i.test(s);
@@ -391,7 +396,7 @@ export function createFontSet(licenses) {
         byLoaded.set(f.loadedName, r);
       }
       const r = byLoaded.get(f.loadedName);
-      if (!r || SHAPED_SCRIPT_RE.test(text)) return undefined;
+      if (!r || LEFT_TO_WORD_RE.test(text)) return undefined;
       for (const ch of text) if (!/\s/.test(ch) && !r.rec.uni.has(ch.codePointAt(0))) return undefined;
       r.rec.used = true;
       return { face: r.face, bold: r.bold, italic: r.italic };
