@@ -40,7 +40,8 @@ import { BULLET_RE, NUMBERED_RE, LETTERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
 import { _p2mdExtractText, _p2mdRender, _detectPageImages, browserCanvasFactory } from './pdf2mdCore.js';
 import { _p2wBuildPageData, uprightMatrix, uprightBox } from './pdf2readCore.js';
 import { createOcrLayer } from './pdf2wordOcr.js';
-import { createActualTextReader } from './pdfActualText.js';
+import { createActualTextReader, pdfLibDocOf } from './pdfActualText.js';
+import { createFontSet, fontLicenses, embedDocxFonts } from './docxFonts.js';
 import { createDigitFixReader, loadDigitTemplates } from './pdfDigitFix.js';
 import { tableGridsFromOperators, lineInGrid, gridRowsOfLines, gridHoldsTable } from './pdf2wordBorders.js';
 import { cjkJoin } from './cjkText.js';
@@ -3152,6 +3153,9 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
     useSystemFonts:    false,
     verbosity:         0,
     disableJavaScript: true,
+    // each font's code → Unicode and code → glyph maps, for its copy in the
+    // Word file (js/docxFonts.js)
+    fontExtraProperties: mode === 'text',
   }).promise;
 
   // Only read the source PDF's own metadata when the user opted OUT of the
@@ -3182,7 +3186,10 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
   let paragraphs;
   let confidence = null;
   let pageData, median, repeatTextSet, repeatPatternSet, cs;   // text mode only — kept for the ERI retry below
+  let fonts = null;   // the PDF's fonts the Word file carries (text mode)
   if (mode === 'text') {
+    const lib = await pdfLibDocOf(pdfDoc);
+    try { fonts = lib ? createFontSet(fontLicenses(window.PDFLib, lib)) : null; } catch { fonts = null; }
     onProgress?.(10, 'Extracting text…');
     // Scanned pages: their text read with the shared OCR engine (pdf2wordOcr.js).
     const ocr = createOcrLayer(pdfDoc, {
@@ -3196,6 +3203,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
         ocrPage:     ocr.ocrPage,
         actualText:  createActualTextReader(pdfDoc),
         digitFix:    createDigitFixReader(pdfDoc, loadDigitTemplates),
+        fonts,
       }));
     } finally {
       await ocr.close();
@@ -3252,7 +3260,10 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
   // toBuffer() uses type:"nodebuffer" which JSZip does not support in browsers.
   await loadJSZip();
   // characters past U+FFFF split between two JSZip chunks (js/ooxmlRepair.js)
-  let blob = await repairSplitSurrogates(await Packer.toBlob(_buildDoc(paragraphs)), window.JSZip);
+  // the PDF's fonts, read once for every variant written below
+  const fontFiles = fonts ? fonts.files() : [];
+  const pack = async children => embedDocxFonts(await repairSplitSurrogates(await Packer.toBlob(_buildDoc(children)), window.JSZip), window.JSZip, fontFiles);
+  let blob = await pack(paragraphs);
 
   // Atlas structural check — scores the ACTUAL shipped DOCX (tables real vs.
   // layout-mis-detected, paragraphs trapped in text boxes, flow chopped by
@@ -3280,7 +3291,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
         const retry = await _p2wBuildParagraphs(
           pdfDoc, pageData, median, repeatTextSet, cs, { useTables: false, repeatPatternSet, preserveNumericFields, isCancelled, onProgress }
         );
-        const retryBlob = await repairSplitSurrogates(await Packer.toBlob(_buildDoc(retry.paragraphs)), window.JSZip);
+        const retryBlob = await pack(retry.paragraphs);
         const retryEri = await evaluateStructural(await retryBlob.arrayBuffer());
         if (retryEri.eri > atlasEri.eri) {
           blob       = retryBlob;
@@ -5215,9 +5226,10 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
         }
         runs.push(new TextRun({
           text,
-          bold:    item.bold,
-          italics: item.italic,
+          bold:    item.bold || item.embed?.bold,
+          italics: item.italic || item.embed?.italic,
           size:    Math.max(16, Math.round(item.fontSize * 2)),
+          ...(item.embed ? { font: item.embed.face } : {}),
           ..._rtlRun(text),
         }));
       }
@@ -6735,11 +6747,13 @@ async function _p2wLayeredPage(pdfDoc, pageNum, pd) {
   // serif default (the certificate came out in Times)
   // Arial for Latin, Cyrillic and Greek; a script Arial lacks keeps the
   // theme's font for its language
-  const faceOf = r => (r.rtl || /[\u0590-\u1DFF\u2E80-\uFFFF]/.test(r.text) ? undefined : r.fontFace ?? 'Arial');
-  const sizeOf = r => fittedFontSize({ ...r, lines: [r.text] }, (text, size) => {
+  // the PDF's own font where the Word file carries it (js/docxFonts.js): its
+  // text as wide as on the page, at the page's size
+  const faceOf = r => (r.embed ? r.embed.face : r.rtl || /[\u0590-\u1DFF\u2E80-\uFFFF]/.test(r.text) ? undefined : r.fontFace ?? 'Arial');
+  const sizeOf = r => (r.embed ? r.fontSize || 10 : fittedFontSize({ ...r, lines: [r.text] }, (text, size) => {
     measureCtx.font = `${r.italic ? 'italic ' : ''}${r.bold ? 'bold ' : ''}${size}px "${faceOf(r) || 'Arial'}", sans-serif`;
     return measureCtx.measureText(text).width;
-  });
+  }));
   // the picture in a paragraph of its own, 1 pt high: anchored in the first
   // line, it went when that line's text was hidden (LibreOffice drew a
   // poster's white text on white)
@@ -6779,7 +6793,7 @@ async function _p2wLayeredPage(pdfDoc, pageNum, pd) {
     const before = Math.max(0, baseline - _P2W_BASE * fs - bottom);
     bottom += before + lineH;
     const runOf = (r, k) => styledParts(r).map(part => new TextRun({
-      text: part.text, bold: part.bold, italics: r.italic, size: Math.max(2, Math.round(sizes[k] * 2)),
+      text: part.text, bold: part.bold || r.embed?.bold, italics: r.italic || r.embed?.italic, size: Math.max(2, Math.round(sizes[k] * 2)),
       ...(faceOf(r) ? { font: faceOf(r) } : {}),
       ...(r.color === null ? { vanish: true } : { color: r.color ?? '000000' }),
       ...(r.rtl ? { rightToLeft: true } : {}),

@@ -143,6 +143,8 @@ export function lineRunsForSlide(line, cuts = []) {
       fontSize: sizes[sizes.length >> 1],
       bold: inside.every(it => it.bold), italic: inside.every(it => it.italic),
       fontFace: inside.find(it => it.fontFamily)?.fontFamily,
+      // the PDF's own font (PDF→Word embeds it): only when every piece has it
+      ...(inside.every(it => it.embed && it.embed.face === inside[0].embed.face && it.embed.bold === inside[0].embed.bold) ? { embed: inside[0].embed } : {}),
       rtl: _RTL_RE.test(text),
       partial: inside.some(it => it.partial),   // OCR left words out (pdf2wordOcr)
       ...(inside.some(it => it.conf !== undefined) ? { ocrConf: Math.min(...inside.map(it => it.conf ?? 100)) } : {}),

@@ -733,7 +733,7 @@ export function _layerWantsOcr(layerText, opList, view) {
   return (letters <= 20 || codes >= letters) && _rasterCover(opList, view) >= 0.5;
 }
 
-export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCancelled = () => false, ocrPage = null, actualText = null, digitFix = null } = {}) {
+export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCancelled = () => false, ocrPage = null, actualText = null, digitFix = null, fonts = null } = {}) {
   const YTOL = 6;   // px — items within 6px on Y → same line (was 4; increased to group
                    //  characters with slight baseline variation, e.g. Cyrillic in some PDFs)
 
@@ -847,6 +847,9 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
       _rawNameCache.set(fontName, name);
       return name;
     };
+    const _embedOf = (fontName, str) => {
+      try { return fonts.faceOf(page.commonObjs.get(fontName), str); } catch { return undefined; }
+    };
     // Real bug found via document-skeleton stress testing (list items in a
     // pdfmake-generated PDF, e.g. Quick Edit PDF's own round-trip output):
     // this used to require item.str.trim() to be truthy, dropping any
@@ -898,6 +901,8 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
           bold:     _isFontBold(item.fontName) || BOLD_FONT_NAME_RE.test(fam),
           italic:   /italic|oblique/.test(fam),
           fontFamily: _pptxSafeFontFace(_rawFontName(item.fontName), fam),
+          // the PDF's own font, for the Word file to embed (js/docxFonts.js)
+          ...(fonts ? { embed: _embedOf(item.fontName, str) } : {}),
         };
       });
 
