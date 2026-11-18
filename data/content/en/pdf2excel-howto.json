@@ -8,7 +8,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Open your PDF",
-      "text": "Click 'Choose file' or drag your PDF into the drop zone. PDFree scans the document and shows how many tables it found."
+      "text": "Click 'Choose file' or drag your PDF into the drop zone — or several PDFs, to get them all back in one ZIP. PDFree scans the document and shows how many tables it found."
     },
     {
       "@type": "HowToStep",
