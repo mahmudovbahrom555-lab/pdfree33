@@ -855,7 +855,7 @@ export function localLineEdges(lines, margins) {
   return edges;
 }
 
-export function startsAfterHardBreak(prevLn, ln, margins, localEdge) {
+export function startsAfterHardBreak(prevLn, ln, margins, localEdge, piece = false) {
   if (!prevLn || !ln || !prevLn.items.length || !ln.items.length || !!prevLn.rtl !== !!ln.rtl) return false;
   const m = margins[prevLn.rtl ? 'rtl' : 'ltr'];
   // the column's common end margin where its lines share one (justified
@@ -875,6 +875,8 @@ export function startsAfterHardBreak(prevLn, ln, margins, localEdge) {
   const need = firstWord.length * charWidth + 2 * em;
   const atStart = m.start !== undefined && (Math.abs(_lineStart(prevLn) - m.start) <= _EDGE_TOLERANCE || lineIsIndented(prevLn, margins));
   if (atStart) return (prevLn.rtl ? _lineEnd(prevLn) - edge : edge - _lineEnd(prevLn)) > need;
+  // a piece of a row (see the caller): where it starts and ends says nothing
+  if (piece) return false;
   // A line set in the middle of the column, or against its far edge (C16b):
   // the room it left is on both sides, or before it. A cover page's centred
   // "Prepared for: / U.S. Department of Commerce / SSMC2, Room 11220 / …" and
@@ -882,11 +884,22 @@ export function startsAfterHardBreak(prevLn, ln, margins, localEdge) {
   // into one paragraph — C16 measured only lines that start at the margin
   // (structure round trip, 200 documents: merged paragraphs on 50 on both
   // generators; 9 of 10 looked at by hand were such stacks, 2026-11-18).
+  // A word carried on from this line: the next starts in lower case, or this
+  // one ends in a hyphen — a narrow column's "Services for ‖ Aerosol- ‖
+  // Cloud-" came apart word by word (2026-11-18)
+  const prevText = prevLn.items.map(i => i.str).join('').trimEnd();
+  if (/^\p{Ll}/u.test(text) || /\p{L}-$/u.test(prevText)) return false;
   const lo = Math.min(start, edge), hi = Math.max(start, edge);
   const s = _lineStart(prevLn), e = _lineEnd(prevLn);
   const free = (hi - lo) - Math.abs(e - s);
-  const centred = Math.abs((s + e) / 2 - (lo + hi) / 2) <= em;
-  const farSet = Math.abs(e - edge) <= _EDGE_TOLERANCE;
+  // Centred only on a page with no start margin (a cover): on a page of body
+  // text a bullet's first line sits in the middle of the column by chance,
+  // its hanging indent starting elsewhere ("Promote product development and
+  // ‖ collaborations…")
+  const centred = m.start === undefined && Math.abs((s + e) / 2 - (lo + hi) / 2) <= em;
+  // Against the far edge, and short: a justified paragraph's lines all end
+  // there, a hanging indent starting them elsewhere
+  const farSet = Math.abs(e - edge) <= _EDGE_TOLERANCE && free >= 0.4 * (hi - lo);
   // …and the next line starts somewhere else: a set-in block of justified
   // text is centred or flush with its own edge too, but every line of it
   // starts at one x ("…Metadata describing the modes ‖ and properties of the
@@ -901,7 +914,9 @@ export function startsAfterHardBreak(prevLn, ln, margins, localEdge) {
   // Only where the page has a start margin and the stack sits well in from it
   // (4 em): measured from the nearest line where no margin was found, body
   // lines broke mid-sentence ("…the general goal ‖ NCDC will…").
-  if (m.start === undefined || (prevLn.rtl ? m.start - s : s - m.start) < 4 * em) return false;
+  // A line of 6 em and more: a narrow column's wrapped words ("Coordination
+  // ‖ Services for ‖ Aerosol-", 5 em) are no stack.
+  if (m.start === undefined || (prevLn.rtl ? m.start - s : s - m.start) < 4 * em || Math.abs(e - s) < 6 * em) return false;
   const room = prevLn.rtl ? e - edge : edge - e;
   return Math.abs(_lineStart(ln) - s) <= _EDGE_TOLERANCE && room > Math.max(need, 0.35 * Math.abs(edge - s));
 }

@@ -5279,6 +5279,19 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     // ordinary body text.
     const margins = lineStartMargins(lines); // first-line-indent paragraph breaks
     const lineEdges = localLineEdges(lines, margins); // lines broken by hand (startsAfterHardBreak)
+    // Pieces of one row: pdf.js splits a row at a sub- or superscript or a
+    // change of font into lines a little apart in height, and the pieces don't
+    // always come in order — "…determined by using the ‖ Any quantities…"
+    // read as a line set against the far edge. Such lines are judged only from
+    // the margin (startsAfterHardBreak's `piece`).
+    const rowPieces = new Set();
+    {
+      const byY = [...lines].sort((a, b) => a.y - b.y);
+      const emOf = ln => Math.max(...ln.items.map(i => i.fontSize || 10));
+      for (let i = 1; i < byY.length; i++) {
+        if (byY[i].y - byY[i - 1].y < 0.5 * Math.max(emOf(byY[i]), emOf(byY[i - 1]))) { rowPieces.add(byY[i]); rowPieces.add(byY[i - 1]); }
+      }
+    }
     _numberedHeads = numberedSectionHeads(lines, median);
     const pitch = linePitch(lines);          // gap vs this page's/column's own line spacing
     const ocrPitch = ocrLinePitch(lines);
@@ -5617,8 +5630,19 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
 
             // a heading too long for its column wraps: its lines stay one heading
             const wrapsHeading = isHead && lastIsHead && continuesWrappedHeading(lastLn, ln, margins);
+            // The whole of the last row, not its last piece: a subscript or a
+            // footnote mark cuts a row into lines at two heights, and the piece
+            // after it — set in mid-row, ending at the edge — read as a line
+            // set against the far edge or centred, so justified paragraphs
+            // broke mid-sentence ("…data sheet such ‖ as the one…", 2026-11-18:
+            // all 102 such breaks in the 15 documents with most were pieces).
+            // A next line on that same row continues it.
+            const rowTol  = 0.5 * lastMaxFont;
+            const sameRow = Math.abs(gap) < rowTol;
+            const lastRow = { ...lastLn, items: _paraBuffer.filter(l => Math.abs(l.y - lastLn.y) < rowTol).flatMap(l => l.items) };
+            const hardBreak = !sameRow && startsAfterHardBreak(lastRow, ln, margins, lineEdges.get(lastLn), rowPieces.has(lastLn) || rowPieces.has(ln));
             if (!wrapsHeading && (isHead || lastIsHead || gap > breakGap || startsIndentedParagraph(lastLn, ln, margins)
-                || startsSpacedParagraph(lastLn, ln, pitch, margins) || startsAfterHardBreak(lastLn, ln, margins, lineEdges.get(lastLn)) || isContentsEntry(lastLn) || isContentsEntry(ln))) _flushPara();
+                || startsSpacedParagraph(lastLn, ln, pitch, margins) || hardBreak || isContentsEntry(lastLn) || isContentsEntry(ln))) _flushPara();
           }
           _paraBuffer.push(ln);
         }

@@ -893,6 +893,34 @@ test('a stack of short lines of different lengths has no edge of its own: the pa
   assert.equal(startsAfterHardBreak(stack[0], stack[1], m, edges.get(stack[0])), true);
 });
 
+test('C16b: a cover page\'s centred stack and a right-set block are paragraphs of their own', () => {
+  // centred on a page with no start margin: "Prepared for: / U.S. Department of Commerce"
+  const cover = [bl(600, 'Annual Report on the Fisheries of the Region', 160, 290), bl(560, 'Prepared for:', 262, 86), bl(546, 'U.S. Department of Commerce', 216, 178), bl(532, 'SSMC2, Room 11220', 245, 120)];
+  const mc = lineStartMargins(cover);
+  assert.equal(mc.ltr.start, undefined, 'no dominant margin');
+  assert.equal(startsAfterHardBreak(cover[1], cover[2], mc), true);
+  // against the far edge, short, the next starting elsewhere: "Date: 12/3/2003 / GAIN Report Number: PO3025"
+  const m = lineStartMargins(column);
+  assert.equal(startsAfterHardBreak(bl(700, 'Date: 12/3/2003', 452, 88), bl(687, 'GAIN Report Number: PO3025', 380, 160), m), true);
+  // a stack set in 4 em and more: an address block
+  assert.equal(startsAfterHardBreak(bl(700, 'Margaret Torn, Scientist', 180, 130), bl(687, 'Earth Sciences Division', 180, 125), m), true);
+});
+
+test('C16b: what is not a stack — hanging indent, justified lines, a narrow column\'s carried words', () => {
+  const m = lineStartMargins(column);
+  // a bullet\'s first line in the middle of a body page by chance, its hanging indent starting left of it
+  assert.equal(startsAfterHardBreak(bl(700, 'Promote product development and', 234, 141, 10.2), bl(687, 'Collaborations within the geo-', 219, 152, 10.2), m), false);
+  // justified with a hanging indent: ends at the edge, but long
+  assert.equal(startsAfterHardBreak(bl(700, 'for the Extended-MODIS Validation Experiment', 153, 387), bl(687, '(EVE) in 2004, an airborne field campaign', 141, 399), m), false);
+  // a narrow column: the next line in lower case, or this one ending in a hyphen
+  assert.equal(startsAfterHardBreak(bl(700, 'Coordination of', 188, 43, 8), bl(690, 'services for', 188, 39, 8), m), false);
+  assert.equal(startsAfterHardBreak(bl(700, 'Aerosol-', 188, 28, 8), bl(690, 'Cloud-Radiation', 188, 23, 8), m), false);
+  // a narrow column's short lines (under 6 em) set in from the margin
+  assert.equal(startsAfterHardBreak(bl(700, 'Services for', 188, 39, 8), bl(690, 'Aerosol Goals', 188, 50, 8), m), false);
+  // a piece of a row pdf.js split (the caller knows): judged from the margin only
+  assert.equal(startsAfterHardBreak(bl(700, 'Date: 12/3/2003', 452, 88), bl(687, 'GAIN Report Number: PO3025', 380, 160), m, undefined, true), false);
+});
+
 test('Chinese: an options line that stops early, then the next question, is two paragraphs', () => {
   const cjk = Array.from({ length: 6 }, (_, i) => bl(600 - i * 16, '第三十題為題組圖一所示為表一表二表三之資料庫關聯圖說明', 56, 300, 12)); // 25 chars × 12
   const m = lineStartMargins(cjk);
