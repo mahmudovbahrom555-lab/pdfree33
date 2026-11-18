@@ -258,6 +258,29 @@ await test('a rectangle matching the full page size is NOT treated as a table, e
   expect(grids.length).toBe(0);
 });
 
+await test('a band the page\'s height along its side (a leaflet\'s coloured panel, boxes inside) ' +
+     'is NOT a table; a real table beside it is still found', async () => {
+  // an NHS Urdu leaflet: its side panel read as a 12×7 table once every frame of a
+  // row was weighed (#227) — reading order 0.846 → 0.795 (nightly Arabic run)
+  const ops = [
+    rectOp(0, 0, 600, 800),      // page border
+    rectOp(0, 0, 180, 800),      // side panel: left, top and bottom page edges
+    lineOp(0, 200, 180, 200),
+    lineOp(0, 400, 180, 400),
+    lineOp(0, 600, 180, 600),
+    lineOp(90, 0, 90, 800),
+    rectOp(300, 300, 200, 120),  // a real table, inside the page
+    lineOp(300, 340, 500, 340),
+    lineOp(300, 380, 500, 380),
+    lineOp(400, 300, 400, 420),
+  ];
+  const grids = await detectTableGrids(fakePage(ops, { width: 600, height: 800 }));
+  expect(grids.length).toBe(1);
+  expect(Math.round(grids[0].x)).toBe(300);
+  expect(grids[0].rowCount).toBe(3);
+  expect(grids[0].colCount).toBe(2);
+});
+
 await test('a real table drawn well inside the page is still found once the page ' +
      'border itself is excluded', async () => {
   const ops = [
