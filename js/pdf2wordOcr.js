@@ -13,6 +13,7 @@
 
 import { loadTesseract, createOcrWorker, detectOcrLanguage, recognizePage, ocrLangForLocale, ocrProbesForBrowser, joinOcrWords, ocrLanes } from './ocrEngine.js';
 import { paddleWarm } from './ppocrEngine.js';
+import { onOcrDownload } from './ocrDownloads.js';
 import { cjkJoin } from './cjkText.js';
 import { getLang } from './config.js';
 import { _layerWantsOcr } from './pdf2readCore.js';
@@ -191,6 +192,8 @@ const LOOK_AHEAD = 8;
 const _outOfMemory = err => /memory|allocat|RangeError/i.test(String(err?.message ?? err));
 // onDetect: called as the language detection starts — tens of seconds on a
 // book of pictures (44 s, 2026-11-17), with nothing else on the screen moving.
+// onDetect(mb) again while it downloads the OCR models: the megabytes so far
+// (whole once past 10) — on a slow line that is most of the wait.
 export function createOcrLayer(pdfDoc, { onPage = () => {}, onDetect = () => {}, rotated = true } = {}) {
   let engine = null;   // Promise<{ worker, lang } | null>
   let closed = false;
@@ -228,6 +231,13 @@ export function createOcrLayer(pdfDoc, { onPage = () => {}, onDetect = () => {},
     })();
   };
   const start = async () => {
+    let base = null, shown = '';
+    const stopCounting = onOcrDownload(total => {
+      base ??= total;
+      const mb = (total - base) / 1e6;
+      const label = mb < 10 ? mb.toFixed(1) : String(Math.round(mb));
+      if (label !== shown && mb >= 0.1) { shown = label; onDetect(label); }
+    });
     try {
       onDetect();
       await loadTesseract();
@@ -250,6 +260,8 @@ export function createOcrLayer(pdfDoc, { onPage = () => {}, onDetect = () => {},
       return { worker, lang: detection.lang };
     } catch {
       return null;   // engine or model unavailable (offline) — pages stay pictures
+    } finally {
+      stopCounting();   // the pages' own labels take over
     }
   };
   return {

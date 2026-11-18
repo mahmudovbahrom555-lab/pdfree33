@@ -10,6 +10,7 @@
 
 import { cjkJoin } from './cjkText.js';
 import { paddleWanted, paddleRecognize } from './ppocrEngine.js';
+import { ocrDownloaded } from './ocrDownloads.js';
 import { isLargeDevice } from './fileLimits.js';
 
 // tesseract.js 5.1.1, its worker, its WASM core and the language models come
@@ -154,8 +155,12 @@ async function _fetchWatched(url) {
       const res = await fetch(url, { signal: ctl.signal });
       if (!res.ok) throw new Error(`OCR download: ${res.status} ${url.split('/').pop()}`);
       const reader = res.body.getReader();
-      while (!(await reader.read()).done) arm();
-      return;
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) return;
+        arm();
+        ocrDownloaded(value.length);   // for the progress label (js/ocrDownloads.js)
+      }
     } catch (err) {
       if (attempt >= _ATTEMPTS) {
         throw ctl.signal.aborted ? new Error(`OCR download stalled: ${url.split('/').pop()}`) : err;
