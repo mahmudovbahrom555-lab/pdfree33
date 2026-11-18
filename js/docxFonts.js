@@ -307,6 +307,13 @@ export function fontLicenses(PDFLib, doc) {
 
 // ── the fonts of one document ─────────────────────────────
 
+// Scripts whose letters join or reorder (Arabic, Hebrew, Syriac, the Indic
+// scripts, Thai, Tibetan, Myanmar, Khmer): drawn from contextual forms the
+// font's shaping tables pick, and pdf.js's copy has none. Persian set in an
+// embedded font came out as a page of boxes in LibreOffice (multi-page
+// corpus, 2 of 188 documents, 2026-11-18); Word's own fonts shape them.
+const SHAPED_SCRIPT_RE = /[\u0590-\u08FF\u0900-\u0DFF\u0E00-\u0FFF\u1000-\u109F\u1780-\u17FF\uFB1D-\uFDFF\uFE70-\uFEFF]/;
+
 const _isBold = s => /bold|black|heavy|semibold|demibold/i.test(s);
 const _isItalic = s => /italic|oblique/i.test(s);
 
@@ -369,7 +376,7 @@ export function createFontSet(licenses) {
       total += size;
       fam[slot] = { key, tables, uni, fsType };
     }
-    return { face, bold, italic, uni: fam[slot].uni };
+    return { face, bold, italic, rec: fam[slot] };
   };
 
   return {
@@ -384,16 +391,18 @@ export function createFontSet(licenses) {
         byLoaded.set(f.loadedName, r);
       }
       const r = byLoaded.get(f.loadedName);
-      if (!r) return undefined;
-      for (const ch of text) if (!/\s/.test(ch) && !r.uni.has(ch.codePointAt(0))) return undefined;
+      if (!r || SHAPED_SCRIPT_RE.test(text)) return undefined;
+      for (const ch of text) if (!/\s/.test(ch) && !r.rec.uni.has(ch.codePointAt(0))) return undefined;
+      r.rec.used = true;
       return { face: r.face, bold: r.bold, italic: r.italic };
     },
+    // the fonts some run is set in
     files() {
-      return [...families].map(([face, fam]) => {
+      return [...families].filter(([, fam]) => SLOTS.some(([slot]) => fam[slot]?.used)).map(([face, fam]) => {
         const out = { face, codes: new Set() };
-        for (const slot of ['regular', 'bold', 'italic', 'boldItalic']) {
+        for (const [slot] of SLOTS) {
           const r = fam[slot];
-          if (!r) continue;
+          if (!r?.used) continue;
           const codes = [...r.uni.keys()];
           const t = new Map(r.tables);
           t.set('cmap', cmapTable(r.uni));

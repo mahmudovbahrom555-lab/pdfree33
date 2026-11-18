@@ -49,6 +49,15 @@ test('text with a character the font lacks is left to Word', () => {
   assert.ok(set.faceOf(f, 'A B'), 'spaces do not count');
 });
 
+test('text in a script that joins its letters (Arabic, Persian, Hebrew, Indic) is left to Word\'s fonts', () => {
+  const set = createFontSet(new Map([['LiberationSans', 0]]));
+  const f = pdfjsFont('g1', 'LiberationSans', [...ABC, [80, 'ب'], [81, 'א'], [82, 'क']]);
+  for (const t of ['Aب', 'א', 'Bक']) assert.equal(set.faceOf(f, t), undefined, t);
+  assert.equal(set.files().length, 0, 'a font no run is set in is not carried');
+  assert.ok(set.faceOf(f, 'ABC'));
+  assert.equal(set.files().length, 1);
+});
+
 test('the licence in the PDF decides: preview & print, restricted or unknown → not embedded', () => {
   for (const fsType of [2, 4, 0x200]) {
     const set = createFontSet(new Map([['LiberationSans', fsType]]));
