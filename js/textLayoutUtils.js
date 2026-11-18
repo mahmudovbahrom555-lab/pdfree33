@@ -727,8 +727,12 @@ export function lineStartMargins(lines) {
       return d >= -_EDGE_TOLERANCE && d <= 4 * _lineEm(ln);
     }).map(_lineEnd).sort((a, b) => (rtl ? a - b : b - a));   // farthest first
     const shared = body.find((e, i) => i + 1 < body.length && Math.abs(e - body[i + 1]) <= 2);
+    const starts = set.map(_lineStart);
     margins[rtl ? 'rtl' : 'ltr'] = {
       start,
+      // near: the nearest start of any line — the column's other side on a
+      // page with no start margin to measure from (a centred cover page)
+      near: starts.length ? (rtl ? Math.max(...starts) : Math.min(...starts)) : undefined,
       end: _dominant(ends),
       far: ends.length ? (rtl ? Math.min(...ends) : Math.max(...ends)) : undefined,
       bodyFar: shared ?? body[1] ?? body[0],
@@ -860,15 +864,16 @@ export function startsAfterHardBreak(prevLn, ln, margins, localEdge) {
   // to 555 pt against a body column ending at 489) made every body line look
   // short, and a wrapped Chinese paragraph came apart line by line (2026-10-27)
   const edge = localEdge ?? m?.end ?? m?.bodyFar ?? m?.far;
-  if (m?.start === undefined || edge === undefined) return false;
+  const start = m?.start ?? m?.near;
+  if (start === undefined || edge === undefined) return false;
   const em = _lineEm(prevLn);
-  if (Math.abs(edge - m.start) < 10 * em) return false;
+  if (Math.abs(edge - start) < 10 * em) return false;
   const text = ln.items.map(i => i.str).join('').trim();
   if (!text) return false;
   const firstWord = _isCjk(text) ? text.slice(0, 1) : text.split(/\s+/)[0];
   const charWidth = Math.abs(_lineEnd(ln) - _lineStart(ln)) / Math.max(text.length, 1);
   const need = firstWord.length * charWidth + 2 * em;
-  const atStart = Math.abs(_lineStart(prevLn) - m.start) <= _EDGE_TOLERANCE || lineIsIndented(prevLn, margins);
+  const atStart = m.start !== undefined && (Math.abs(_lineStart(prevLn) - m.start) <= _EDGE_TOLERANCE || lineIsIndented(prevLn, margins));
   if (atStart) return (prevLn.rtl ? _lineEnd(prevLn) - edge : edge - _lineEnd(prevLn)) > need;
   // A line set in the middle of the column, or against its far edge (C16b):
   // the room it left is on both sides, or before it. A cover page's centred
@@ -877,12 +882,28 @@ export function startsAfterHardBreak(prevLn, ln, margins, localEdge) {
   // into one paragraph — C16 measured only lines that start at the margin
   // (structure round trip, 200 documents: merged paragraphs on 50 on both
   // generators; 9 of 10 looked at by hand were such stacks, 2026-11-18).
-  const lo = Math.min(m.start, edge), hi = Math.max(m.start, edge);
+  const lo = Math.min(start, edge), hi = Math.max(start, edge);
   const s = _lineStart(prevLn), e = _lineEnd(prevLn);
   const free = (hi - lo) - Math.abs(e - s);
   const centred = Math.abs((s + e) / 2 - (lo + hi) / 2) <= em;
   const farSet = Math.abs(e - edge) <= _EDGE_TOLERANCE;
-  return (centred || farSet) && free > need;
+  // …and the next line starts somewhere else: a set-in block of justified
+  // text is centred or flush with its own edge too, but every line of it
+  // starts at one x ("…Metadata describing the modes ‖ and properties of the
+  // resulting file…" came apart line by line, 2026-11-18)
+  const ragged = Math.abs(_lineStart(ln) - s) > _EDGE_TOLERANCE;
+  if ((centred || farSet) && ragged && free > need) return true;
+  // A stack set in from the margin (an address block at 180 pt: "Margaret
+  // Torn, Scientist / Earth Sciences Division / Mail Stop 90-1116 / …"): the
+  // next line starts where this one does, and this one stops short of the
+  // edge by over a third of its width — a block quote's wrapped lines fill
+  // theirs.
+  // Only where the page has a start margin and the stack sits well in from it
+  // (4 em): measured from the nearest line where no margin was found, body
+  // lines broke mid-sentence ("…the general goal ‖ NCDC will…").
+  if (m.start === undefined || (prevLn.rtl ? m.start - s : s - m.start) < 4 * em) return false;
+  const room = prevLn.rtl ? e - edge : edge - e;
+  return Math.abs(_lineStart(ln) - s) <= _EDGE_TOLERANCE && room > Math.max(need, 0.35 * Math.abs(edge - s));
 }
 
 // A numbered section heading set only a little larger than the text: a

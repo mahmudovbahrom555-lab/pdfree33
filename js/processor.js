@@ -3245,6 +3245,9 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
         }],
       }],
     },
+    // Headings in the text's own black, not the Word default's blue (2E74B5):
+    // a school test's black title came out blue (owner's comparison, 2026-11-18)
+    styles: { default: Object.fromEntries([1, 2, 3, 4, 5, 6].map(n => [`heading${n}`, { run: { color: '000000' } }])) },
     sections: _p2wSections(children, furniture),
   });
 
@@ -5029,7 +5032,7 @@ async function _runUnlock(filesSnapshot, { password } = {}) {
 export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSet, cs, { useTables = true, repeatPatternSet = new Set(), preserveNumericFields = false, isCancelled = () => !isProcessing, onProgress = setProgress } = {}) {
   // window.__pdfreeDocxBuilder — see the namespace-collision comment on
   // _buildPdf2WordDocxBlob's own window.__pdfreeDocxBuilder read, above.
-  const { Paragraph, TextRun, HeadingLevel,
+  const { Paragraph, TextRun, HeadingLevel, AlignmentType,
           Table, TableRow, TableCell, WidthType, ImageRun } = window.__pdfreeDocxBuilder;
   const _repeatTextSet    = repeatTextSet;
   let _numberedHeads = new Set();   // this page's numbered section headings (set per page below)
@@ -5122,6 +5125,8 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
   };
 
   const paragraphs  = [];
+  let _curPageW = 0;   // the page being built's width (centred paragraphs)
+  let _visualRow = null;   // the last picture paragraph: { y, runs, at } — pictures side by side join it
   const _paraBuffer = [];   // accumulates lines that should be merged into one Paragraph
   let _edgeItems = new Set();   // the current page's edge lines' items (_p2wEdgeLines)
   // Word numbers a list itself, counting from 1: a numbered line becomes a
@@ -5224,8 +5229,18 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     }
 
     const hasCjk = _isCjk(allText);
+    // Centred on the page — a title, a class line ("Осенняя олимпиада 2018 /
+    // 2 класс") — and short: centred in Word too; it came out at the left
+    // margin (owner's comparison, 2026-11-18). Every line within 2 % of the
+    // page's middle and no wider than 60 % of the page: body text at full
+    // width, a line at the margin, a column's text keep their alignment.
+    const centred = _curPageW > 0 && _paraBuffer.every(ln => {
+      const x0 = Math.min(...ln.items.map(i => i.x)), x1 = Math.max(...ln.items.map(i => i.x + (i.width || 0)));
+      return x1 - x0 <= 0.6 * _curPageW && Math.abs((x0 + x1) / 2 - _curPageW / 2) <= 0.02 * _curPageW;
+    });
     paragraphs.push(new Paragraph({
       ...(heading !== undefined ? { heading } : {}),
+      ...(centred ? { alignment: AlignmentType.CENTER } : {}),
       ...(hasRtl ? { bidirectional: true } : {}),
       children: runs,
       // CJK paragraphs: zero spacing so merged lines don't overflow DOCX pages
@@ -5611,10 +5626,16 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
       } else if (event.type === 'visual-region') {
         // ── Visual region: diagram/graphic captured from canvas crop ──────────
         _flushPara();
-        paragraphs.push(new Paragraph({
-          children: [event.imgRun],
-          spacing:  { before: 60, after: 60 },
-        }));
+        // Pictures side by side on the page (the same top, nothing between
+        // them in the document): one paragraph, in a row — one under the
+        // other, a school test's two 5×5 grids and its two figures took a
+        // third page (owner's comparison, 2026-11-18). Word wraps them if
+        // the row is wider than the page.
+        const row = _visualRow && _visualRow.at === paragraphs.length - 1 && Math.abs(_visualRow.y - event.y) <= _SIDE_BY_SIDE_PT ? _visualRow : null;
+        const runs = row ? [...row.runs, new TextRun('  '), event.imgRun] : [event.imgRun];
+        const para = new Paragraph({ children: runs, spacing: { before: 60, after: 60 } });
+        if (row) paragraphs[row.at] = para; else paragraphs.push(para);
+        _visualRow = { y: event.y, runs, at: paragraphs.length - 1 };
 
       } else {
         // ── 'grid' event: border-detected table ────────────────────────────────
@@ -5732,6 +5753,7 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
     }
 
     const { lines, rotatedItems, borderGrids, items: textItems, pageH, columnRegions: regions } = pageData[pi];
+    _curPageW = pageData[pi].pageW || 0;
     const edge = _p2wEdgeLines(lines, pageH);
     _edgeItems = new Set([...edge.top, ...edge.bottom].flatMap(ln => ln.items));
 
@@ -6841,6 +6863,8 @@ function _p2wSections(children, furniture) {
   close();
   return sections.length ? sections : [{ ...furniture, children: [] }];
 }
+
+const _SIDE_BY_SIDE_PT = 6;   // pictures whose tops are this close sit side by side
 
 // Renders a PDF page that has no extractable text (diagram-only page) as a
 // single full-page ImageRun. Used when lines.length === 0 in text mode.
