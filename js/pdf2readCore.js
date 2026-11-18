@@ -215,6 +215,38 @@ export function _paintCover(opList, view) {
   return cells.reduce((s, c) => s + c, 0) / cells.length;
 }
 
+// A font whose size pdf.js reports far too large for the room its text takes:
+// the factor that sets it right, by font, for a page's text items. A PDF from
+// wkhtmltopdf (Qt) gave 62 for body text 9 pt high — its words 5.5× narrower
+// than that size makes them — and the Word file came out in 52 pt, 10 pages
+// grown to 169 (multi-page judge, Common Crawl, 2026-11-18). The width a size
+// gives: half an em a letter, a full em a CJK character; over 745 fonts of 266
+// documents the median width / that is 1.01, and 612 sit at 0.8–1.2 — those 3
+// fonts at 0.18, the next one at 0.40. Below 0.3 (5+ items of 3+ letters) the
+// size is that factor times what pdf.js says; rotated text is left out.
+const _WIDE_CHAR_RE = /[\u1100-\u11FF\u2E80-\u9FFF\uAC00-\uD7AF\uF900-\uFAFF\uFF00-\uFFEF]/;
+const _SIZE_TOO_BIG = 0.3;
+export function _fontSizeScale(items) {
+  const byFont = new Map();
+  for (const it of items) {
+    const text = (it.str || '').replace(/\s/g, '');
+    const t = it.transform || [];
+    const size = it.height > 0 ? it.height : Math.abs(t[3] || 0);
+    if (text.length < 3 || !(size > 0) || !(it.width > 0) || Math.abs(t[1] || 0) > Math.abs(t[0] || 0) * 0.5) continue;
+    const advance = [...text].reduce((a, ch) => a + (_WIDE_CHAR_RE.test(ch) ? 1 : 0.5), 0);
+    if (!byFont.has(it.fontName)) byFont.set(it.fontName, []);
+    byFont.get(it.fontName).push(it.width / (size * advance));
+  }
+  const scale = new Map();
+  for (const [font, ratios] of byFont) {
+    if (ratios.length < 5) continue;
+    ratios.sort((a, b) => a - b);
+    const median = ratios[ratios.length >> 1];
+    if (median < _SIZE_TOO_BIG) scale.set(font, median);
+  }
+  return scale;
+}
+
 // ── Small private helpers ────────────────────────────────────────────────
 // Local copies, not imports — the originals in js/processor.js are still
 // used by other, unrelated call sites there (pdf2word's own paragraph
@@ -862,10 +894,11 @@ export async function _p2wBuildPageData(pdfDoc, { onProgress = () => {}, isCance
     // Only drop items that are genuinely EMPTY after control-char-stripping;
     // a non-empty whitespace-only item is real inter-word spacing, not noise.
     const rtlVisual = !glyphsMended && rtlItemsAreVisual(content.items);
+    const sizeScale = _fontSizeScale(content.items);
     const allMapped = content.items
       .filter(item => 'str' in item && item.str.replace(_XML_ILLEGAL_CONTROL_RE, '') !== '')
       .map((item, seq) => {
-        const fontSize  = (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10;
+        const fontSize  = ((item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10) * (sizeScale.get(item.fontName) ?? 1);
         const style     = content.styles[item.fontName] || {};
         const fam       = (style.fontFamily || '').toLowerCase();
         // Rotation detected when b-component dominates a-component in the transform matrix.
