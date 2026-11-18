@@ -34,12 +34,12 @@ const ABC = [[36, 'A'], [37, 'B'], [38, 'C'], [70, 'c']];
 
 test('the rebuilt font maps each Unicode character to the glyph the PDF draws', () => {
   const set = createFontSet(new Map([['LiberationSans', 0]]));
-  assert.deepEqual(set.faceOf(pdfjsFont('g1', 'ABCDEF+LiberationSans', ABC), 'ABC'), { face: 'Liberation Sans', bold: false, italic: false });
+  assert.deepEqual(set.faceOf(pdfjsFont('g1', 'ABCDEF+LiberationSans', ABC), 'ABC'), { face: 'Liberation Sans (PDF)', bold: false, italic: false });
   const [fam] = set.files();
   const out = cmapGlyphs(sfntTables(fam.regular).get('cmap'));
   for (const ch of 'ABCc') assert.equal(out.get(ch.codePointAt(0)), sansGlyphs.get(ch.codePointAt(0)), ch);
   assert.equal(out.get('D'.codePointAt(0)), undefined, 'only what the PDF uses');
-  assert.deepEqual(fontNames(sfntTables(fam.regular).get('name')), { family: 'Liberation Sans', style: 'Regular' });
+  assert.deepEqual(fontNames(sfntTables(fam.regular).get('name')), { family: 'Liberation Sans (PDF)', style: 'Regular' }, 'its own name: never stands in for the system\'s or the theme\'s font');
 });
 
 test('text with a character the font lacks is left to Word', () => {
@@ -94,7 +94,7 @@ test('one font file the PDF holds twice is one font, its characters joined; a bo
   const set = createFontSet(new Map([['LiberationSans', 0], ['LiberationSans-Bold', 0]]));
   set.faceOf(pdfjsFont('g1', 'LiberationSans', [[36, 'A']]), 'A');
   set.faceOf(pdfjsFont('g2', 'LiberationSans', [[37, 'B']]), 'B');
-  assert.deepEqual(set.faceOf(pdfjsFont('g3', 'LiberationSans-Bold', [[38, 'C']], { bold: true }), 'C'), { face: 'Liberation Sans', bold: true, italic: false });
+  assert.deepEqual(set.faceOf(pdfjsFont('g3', 'LiberationSans-Bold', [[38, 'C']], { bold: true }), 'C'), { face: 'Liberation Sans (PDF)', bold: true, italic: false });
   const files = set.files();
   assert.equal(files.length, 1);
   const reg = cmapGlyphs(sfntTables(files[0].regular).get('cmap'));
@@ -124,7 +124,7 @@ test('the .docx: fonts, their entries in fontTable (self-closing as docx writes 
   const Zip = { loadAsync: b => JSZip.loadAsync(b.arrayBuffer()) };
   const out = await JSZip.loadAsync(await (await embedDocxFonts(blob, Zip, set.files())).arrayBuffer());
   const table = await out.file('word/fontTable.xml').async('string');
-  const key = table.match(/<w:font w:name="Liberation Sans">.*<w:embedRegular r:id="(rIdFont1)" w:fontKey="\{([0-9A-F-]{36})\}"\/><\/w:font><\/w:fonts>$/);
+  const key = table.match(/<w:font w:name="Liberation Sans \(PDF\)">.*<w:embedRegular r:id="(rIdFont1)" w:fontKey="\{([0-9A-F-]{36})\}"\/><\/w:font><\/w:fonts>$/);
   assert.ok(key, table);
   const rels = await out.file('word/_rels/fontTable.xml.rels').async('string');
   assert.match(rels, /Id="rIdFont1" Type="[^"]+\/font" Target="fonts\/font1\.odttf"/);

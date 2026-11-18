@@ -369,8 +369,12 @@ export function createFontSet(licenses) {
     // Bold) is one font, its characters joined; another subset of the same
     // face keeps other glyphs, so it takes a family of its own
     const glyf = tables.get('glyf'), key = `${glyf.length}:${checksum(glyf)}:${checksum(tables.get('loca') ?? glyf)}`;
-    let face = family;
-    for (let k = 2; families.get(face)?.[slot] && families.get(face)[slot].key !== key; k++) face = `${family} ${k}`;
+    // A name of its own, never the font's: a subset named "Calibri" stood in
+    // for Calibri wherever the document used it — the theme's default font —
+    // and LibreOffice set a whole journal article's other text from its
+    // few dozen glyphs, letter by letter (multi-page corpus, 2026-11-18)
+    let face = `${family} (PDF)`;
+    for (let k = 2; families.get(face)?.[slot] && families.get(face)[slot].key !== key; k++) face = `${family} (PDF ${k})`;
     if (!families.has(face)) families.set(face, {});
     const fam = families.get(face);
     if (fam[slot] && fam[slot].key === key) {

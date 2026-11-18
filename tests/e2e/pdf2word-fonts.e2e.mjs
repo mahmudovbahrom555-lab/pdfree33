@@ -67,7 +67,7 @@ const left = await convert(fixture('p2w_font_preview_only.pdf'));
 
 await test('an installable TrueType font goes into the .docx, linked so Word and LibreOffice read it', async () => {
   const table = await embedded.file('word/fontTable.xml').async('string');
-  const m = table.match(/<w:font w:name="Liberation Sans">.*?<w:embedRegular r:id="([^"]+)" w:fontKey="\{([0-9A-F-]{36})\}"\/>/);
+  const m = table.match(/<w:font w:name="Liberation Sans \(PDF\)">.*?<w:embedRegular r:id="([^"]+)" w:fontKey="\{([0-9A-F-]{36})\}"\/>/);
   if (!m) throw new Error(`no embedded Liberation Sans in fontTable.xml: ${table.slice(0, 400)}`);
   const rels = await embedded.file('word/_rels/fontTable.xml.rels').async('string');
   const target = rels.match(new RegExp(`Id="${m[1]}"[^>]*Target="([^"]+)"`))?.[1];
@@ -82,7 +82,7 @@ await test('an installable TrueType font goes into the .docx, linked so Word and
 
 await test('the text drawn in it is set in it', async () => {
   const xml = await embedded.file('word/document.xml').async('string');
-  if (!/<w:rFonts w:ascii="Liberation Sans"/.test(xml)) throw new Error('no run in Liberation Sans');
+  if (!/<w:rFonts w:ascii="Liberation Sans \(PDF\)"/.test(xml)) throw new Error('no run in Liberation Sans');
   if (!textOf(xml).includes('Quarterly report') || !textOf(xml).includes('Привет, мир')) throw new Error(`text changed: ${textOf(xml)}`);
 });
 

@@ -5226,8 +5226,8 @@ export async function _p2wBuildParagraphs(pdfDoc, pageData, median, repeatTextSe
         }
         runs.push(new TextRun({
           text,
-          bold:    item.bold || item.embed?.bold,
-          italics: item.italic || item.embed?.italic,
+          bold:    item.embed?.bold ? true : item.bold,
+          italics: item.embed?.italic ? true : item.italic,
           size:    Math.max(16, Math.round(item.fontSize * 2)),
           ...(item.embed ? { font: item.embed.face } : {}),
           ..._rtlRun(text),
@@ -6793,7 +6793,7 @@ async function _p2wLayeredPage(pdfDoc, pageNum, pd) {
     const before = Math.max(0, baseline - _P2W_BASE * fs - bottom);
     bottom += before + lineH;
     const runOf = (r, k) => styledParts(r).map(part => new TextRun({
-      text: part.text, bold: part.bold || r.embed?.bold, italics: r.italic || r.embed?.italic, size: Math.max(2, Math.round(sizes[k] * 2)),
+      text: part.text, bold: r.embed?.bold ? true : part.bold, italics: r.embed?.italic ? true : r.italic, size: Math.max(2, Math.round(sizes[k] * 2)),
       ...(faceOf(r) ? { font: faceOf(r) } : {}),
       ...(r.color === null ? { vanish: true } : { color: r.color ?? '000000' }),
       ...(r.rtl ? { rightToLeft: true } : {}),
