@@ -360,7 +360,8 @@ export function createFontSet(licenses) {
     }
     if (!uni.size) return undefined;
     const own = fontNames(tables.get('name'));
-    const family = (own.family || _baseName(f.name).replace(/[-,].*$/, '')).replace(/[^\p{L}\p{N} ]/gu, '').trim() || 'Embedded';
+    // the subset's tag goes ("TCHIDW+Verdana" in the font's own name table too)
+    const family = _baseName(own.family || _baseName(f.name).replace(/[-,].*$/, '')).replace(/[^\p{L}\p{N} ]/gu, '').trim() || 'Embedded';
     const style = own.style || _baseName(f.name);
     const bold = _isBold(style) || !!f.bold, italic = _isItalic(style) || !!f.italic;
     const slot = bold ? (italic ? 'boldItalic' : 'bold') : italic ? 'italic' : 'regular';
