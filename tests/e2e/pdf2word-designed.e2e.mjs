@@ -149,6 +149,23 @@ await test('an article in two columns over a coloured ground stays flowing text,
   if (a < 0 || b < 0 || a > b) throw new Error('not read column by column: column A does not end before column B begins');
 });
 
+await test('two long columns of short lines (bulleted lists) over a coloured ground stay flowing text, column by column', async () => {
+  // a newsletter page of lists: 34 lines a column at 35 letters a line —
+  // short lines, but no flyer holds a column that long (0525394 p. 5, 2026-11-19)
+  const doc = await PDFDocument.create();
+  const page = doc.addPage([595.28, 841.89]);
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  page.drawRectangle({ x: 0, y: 0, width: 595.28, height: 841.89, color: rgb(0.95, 0.95, 0.88) });
+  const items = col => Array.from({ length: 32 }, (_, i) => i === 0 ? `${col} begins here` : i === 31 ? `${col} ends here` : `- ${col} item ${i}: a short note`);
+  items('Column A').forEach((t, i) => page.drawText(t, { x: 40, y: 790 - i * 22, size: 9, font }));
+  items('Column B').forEach((t, i) => page.drawText(t, { x: 330, y: 790 - i * 22, size: 9, font }));
+  const xml = await docxXml(await doc.save());
+  if (/behindDoc="1"/.test(xml)) throw new Error('two long columns were laid out as a designed page');
+  const text = paragraphs(xml).map(textOf).join('\n');
+  const a = text.indexOf('Column A ends here'), b = text.indexOf('Column B begins here');
+  if (a < 0 || b < 0 || a > b) throw new Error('not read column by column: column A does not end before column B begins');
+});
+
 await browser.close();
 console.log(`\nTests: ${passed + failed} | ✓ ${passed} | ${failed} failed`);
 if (failed) process.exit(1);

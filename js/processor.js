@@ -6707,11 +6707,15 @@ const _P2W_ONE_TABLE = 0.6;
 // Arabic newsletters were read across their columns, row by row (nightly
 // Arabic run, 2026-11-18: reading order 0.93 → 0.67, 0.85 → 0.68, 0.96 → 0.72).
 // Prose columns: two or more, each of 8 lines and more of 40 letters a line
-// on average (a CJK character counts two). A flyer's pieces side by side are
-// a few lines, or short ones — on 12 designed pages the nearest held a column
-// of 33 letters a line, the newsletters' columns 44–86.
+// on average (a CJK character counts two), or of 30 lines and more however
+// long. A flyer's pieces side by side are a few lines, or short ones — on 12
+// designed pages the nearest held a column of 33 letters a line, and none a
+// column of more than 19 lines; the newsletters' columns 44–86 letters, and
+// a page of bulleted lists two columns of 34 lines at 35 and 44 (0525394
+// p. 5, read across its columns: order 0.927 → 0.894, 2026-11-19).
 const _P2W_PROSE_LINES = 8;
 const _P2W_PROSE_LETTERS = 40;
+const _P2W_LONG_COLUMN = 30;
 const _P2W_WIDE_RE = /[\u1100-\u11FF\u2E80-\u9FFF\uAC00-\uD7AF\uF900-\uFAFF\uFF00-\uFFEF]/;
 function _p2wProseColumns(pd) {
   const regions = pd.columnRegions;
@@ -6719,7 +6723,7 @@ function _p2wProseColumns(pd) {
   return regions.every((_, k) => {
     const lines = linesInRegion(pd.lines, regions, k);
     const letters = lines.reduce((n, ln) => n + [...ln.items.map(i => i.str).join('').trim()].reduce((a, ch) => a + (_P2W_WIDE_RE.test(ch) ? 2 : 1), 0), 0);
-    return lines.length >= _P2W_PROSE_LINES && letters / lines.length >= _P2W_PROSE_LETTERS;
+    return lines.length >= _P2W_LONG_COLUMN || (lines.length >= _P2W_PROSE_LINES && letters / lines.length >= _P2W_PROSE_LETTERS);
   });
 }
 function _p2wDesignedPage(pd) {
