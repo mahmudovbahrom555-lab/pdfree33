@@ -959,13 +959,18 @@ export function continuesWrappedHeading(prevLn, ln, margins) {
   if (_HEADING_END_RE.test(prevLn.items.map(i => i.str).join('').trimEnd())) return false;
   const m = margins[prevLn.rtl ? 'rtl' : 'ltr'];
   if (m?.start === undefined || m.far === undefined) return false;
-  const bodyWidth = Math.abs(m.far - m.start);
-  // it really wrapped: the room left before the column's farthest edge is less
-  // than the next line's first word (+1 em) — that word didn't fit. Stacked bold
+  // The column's body edge, not its farthest line: a title running past the
+  // column (1224 pt brief, the title to 927 pt, the body to 577) made every
+  // line of a bold intro paragraph look short — 12 lines, 12 headings, a
+  // chain that kept with its next pushed page 1 empty (2026-11-19, 3176344)
+  const far = m.bodyFar ?? m.far;
+  const bodyWidth = Math.abs(far - m.start);
+  // it really wrapped: the room left before the column's edge is less than
+  // the next line's first word (+1 em) — that word didn't fit. Stacked bold
   // labels (a Wikipedia infobox: "Filename extension" / "Internet media type")
   // leave far more room than that and stay apart. Word width is estimated from
   // the next line's average character width; CJK wraps per character.
-  const reach = prevLn.rtl ? _lineEnd(prevLn) - m.far : m.far - _lineEnd(prevLn);
+  const reach = prevLn.rtl ? _lineEnd(prevLn) - far : far - _lineEnd(prevLn);
   const text = ln.items.map(i => i.str).join('').trim();
   const firstWord = _isCjk(text) ? text.slice(0, 1) : text.split(/\s+/)[0];
   const charWidth = Math.abs(_lineEnd(ln) - _lineStart(ln)) / Math.max(text.length, 1);
