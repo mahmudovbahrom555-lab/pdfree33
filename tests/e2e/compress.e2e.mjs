@@ -388,6 +388,45 @@ async function compressToSize(file, kb) {
   }
 }
 
+await test('a size out of reach is said after one try, not after the whole ladder of 12', async () => {
+  // 43 % of the people who set a size in 14 days missed it, 3 in 4 by more
+  // than 2×; each try is a full pass (512 KB from a 74 MB scan: 11 tries,
+  // 144 s) — the strongest step goes first now (2026-11-19)
+  const W = 1200, H = 900, rgb = Buffer.alloc(W * H * 3);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const i = (y * W + x) * 3, n = (x * 13 + y * 7) % 19;
+    rgb[i] = 128 + 90 * Math.sin(x / 23) + n; rgb[i + 1] = 120 + 80 * Math.cos(y / 19) + n; rgb[i + 2] = 110 + n;
+  }
+  const file = path.join(tmp, 'out-of-reach.pdf');
+  fs.writeFileSync(file, await imagePdf(zlib.deflateSync(rgb), { Width: W, Height: H, ColorSpace: 'DeviceRGB', Filter: 'FlateDecode' }));
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    await page.addInitScript(BLOB_HOOK);
+    await page.addInitScript(() => {
+      window.__tries = new Set();
+      setInterval(() => {
+        const m = (document.querySelector('#progressLabel')?.textContent || '').match(/(\d+)\D*$/);
+        if (m && /fits/.test(document.querySelector('#progressLabel')?.textContent || '')) window.__tries.add(+m[1]);
+      }, 50);
+    });
+    await page.goto(`${BASE_URL}/compress-pdf/`, { waitUntil: 'load', timeout: 30000 });
+    await page.setInputFiles('#fileInput', file);
+    await page.waitForTimeout(3000);
+    await page.click('.compress-target [data-target="custom"]');
+    await page.selectOption('#compressTargetUnit', 'KB');
+    await page.fill('#compressTargetValue', '1');
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__blob, null, { timeout: 120000 });
+    const tries = await page.evaluate(() => Math.max(0, ...window.__tries));
+    const verdict = await page.locator('#targetVerdict').innerText();
+    if (tries !== 1) throw new Error(`answered after ${tries} tries`);
+    if (!verdict.includes("Couldn't get under")) throw new Error(verdict);
+  } finally {
+    await context.close();
+  }
+});
+
 await test('fit into a size: an image PDF fits 40 % of its size, and the cost is said', async () => {
   const W = 1600, H = 1200, rgb = Buffer.alloc(W * H * 3);
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
@@ -607,16 +646,18 @@ async function testTargetSelection({ fittingQuality, attempts, dpi, exactLimit, 
   }
 }
 
+// The strongest step (72 dpi, 30 %) is tried first since 2026-11-19 — a size out
+// of reach ends there; a reachable one goes down the ladder as before.
 await test('target size checks a gentler fit even when the next preset grows', () =>
-  testTargetSelection({ fittingQuality: 0.85, attempts: [null, 0.85], dpi: 300 }));
+  testTargetSelection({ fittingQuality: 0.85, attempts: [0.30, null, 0.85], dpi: 300 }));
 
 await test('target size lowers JPEG quality at 200 dpi before reducing resolution', () =>
-  testTargetSelection({ exactLimit: 500_000, fittingQuality: 0.70, attempts: [null, 0.85, 0.80, 0.75, 0.70], dpi: 200 }));
+  testTargetSelection({ exactLimit: 500_000, fittingQuality: 0.70, attempts: [0.30, null, 0.85, 0.80, 0.75, 0.70], dpi: 200 }));
 
 
 await test('target size treats 500 KB as exactly 500000 bytes', () =>
   testTargetSelection({ exactLimit: 500_000, fittingQuality: 0.75,
-    attempts: [null, 0.85, 0.80, 0.75], dpi: 200 }));
+    attempts: [0.30, null, 0.85, 0.80, 0.75], dpi: 200 }));
 
 for (const [description, refinement] of [
   ['uses intermediate quality if it fits', 495_000],
@@ -624,13 +665,13 @@ for (const [description, refinement] of [
 ]) {
   await test(`target size ${description}`, () => testTargetSelection({
     exactLimit: 500_000, fittingQuality: 0.75, refinement,
-    attempts: [null, 0.85, 0.80, 0.75, 0.77], dpi: 200,
+    attempts: [0.30, null, 0.85, 0.80, 0.75, 0.77], dpi: 200,
   }));
 }
 
 await test('target size keeps the tested 70 percent preset when it fits with headroom', () =>
   testTargetSelection({ exactLimit: 500_000, fittingQuality: 0.70, fitBytes: 460_000,
-    attempts: [null, 0.85, 0.80, 0.75, 0.70], dpi: 200 }));
+    attempts: [0.30, null, 0.85, 0.80, 0.75, 0.70], dpi: 200 }));
 
 await test('mixed packet restores a sharper scan within budget and preserves the form', async () => {
   const context = await browser.newContext({ serviceWorkers: 'block' });
