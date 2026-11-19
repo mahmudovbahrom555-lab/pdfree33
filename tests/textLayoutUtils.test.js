@@ -612,6 +612,18 @@ test('stacked labels in a narrow cell (~7 em) are not one wrapped heading', () =
   assert.equal(continuesWrappedHeading(hl(700, 'extension', 326, 70, true, 10.6), hl(686, 'Internet', 326, 40, true, 10.6), m), false);
 });
 
+test('a bold paragraph wrapped at its column\'s body edge continues, though a title runs past the column', () => {
+  // a 1224-pt brief: the title to 927 pt, the column\'s body to 577 — against
+  // the title\'s edge every bold line looked short, 12 lines became 12 headings
+  // and page 1 came out empty (3176344, 2026-11-19)
+  const col = [...Array.from({ length: 8 }, (_, i) => hl(600 - i * 30, 'body text that fills the column', 122, 455, false, 20)),
+    hl(1500, 'Law & Policy Progress on Human Rights,', 122, 805, true, 40)];
+  const m = lineStartMargins(col);
+  assert.ok(m.ltr.far > 900 && m.ltr.bodyFar < 600, JSON.stringify(m.ltr));
+  assert.equal(continuesWrappedHeading(hl(1300, 'The Global AIDS Strategy 2021-2026 recognizes', 122, 449, true, 20),
+    hl(1270, 'that ending inequalities is essential to ending', 122, 437, true, 20), m), true);
+});
+
 test('a heading line ending on sentence punctuation, or a different size, does not continue', () => {
   const m = lineStartMargins(body);
   assert.equal(continuesWrappedHeading(hl(700, 'A complete heading line of its own.', 56, 226), hl(679, 'Another', 56, 80), m), false);
