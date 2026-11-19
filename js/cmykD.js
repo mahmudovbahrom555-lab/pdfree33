@@ -796,10 +796,10 @@ async function cmykD(pdf, opts) {
       if (r === true) { replaced++; scans++; before += old; after += ctx.lookup(c.ref).contents.length; continue; }
       skip(r);   // then as any other figure
     }
-    const own = c.kind === 'bitonal' ? opts.bitonal : c.kind === 'jpx' || c.kind.startsWith('rgb') ? opts.rgb : opts;
-    if (w * h > own.maxMegapixels * 1e6) { skip('too large for this device'); continue; }
+    const cap = c.kind === 'bitonal' ? opts.bitonal.maxMegapixels : c.kind === 'jpx' ? opts.rgb.maxMegapixels : opts.maxMegapixels;
+    if (w * h > cap * 1e6) { skip('too large for this device'); continue; }
     const eff = Math.min(w / place.inchX, h / place.inchY);   // the smaller axis dpi: the conservative one
-    const { target, quality } = own;
+    const { target, quality } = c.kind === 'bitonal' ? opts.bitonal : c.kind === 'jpx' || c.kind.startsWith('rgb') ? opts.rgb : opts;
     // A soft mask may differ in size from its image (readers scale it), except one
     // with /Matte: its samples are pre-multiplied against the image's own pixels,
     // so the two must keep the same size — such an image is not downsampled.

@@ -427,6 +427,42 @@ await test('a size out of reach is said after one try, not after the whole ladde
   }
 });
 
+await test('a text scan under a tight size goes black and white at 200 dpi or more, not a 72 dpi JPEG (C37)', async () => {
+  // Below 150 dpi a JPEG text page stops reading (scripts/bench/scan_floor.py);
+  // in black and white it reads at 200 dpi and is no larger (2026-11-20)
+  const W = 2480, H = 3508, rgb = Buffer.alloc(W * H * 3);   // A4 at 300 dpi
+  let seed = 3;
+  const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const ink = y % 60 < 30 && ((Math.floor(x / 9) + Math.floor(y / 13)) % 4 === 0 || x % 37 < 3), n = (rnd() - 0.5) * 10;
+    const i = (y * W + x) * 3, v = ink ? [32, 30, 36] : [244, 241, 232];
+    for (let c = 0; c < 3; c++) rgb[i + c] = Math.max(0, Math.min(255, v[c] + n));
+  }
+  const file = path.join(tmp, 'text-scan.pdf');
+  fs.writeFileSync(file, await imagePdf(zlib.deflateSync(rgb), { Width: W, Height: H, ColorSpace: 'DeviceRGB', Filter: 'FlateDecode' }));
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    await page.addInitScript(BLOB_HOOK);
+    await page.goto(`${BASE_URL}/compress-pdf/`, { waitUntil: 'load', timeout: 30000 });
+    await page.setInputFiles('#fileInput', file);
+    await page.waitForTimeout(3000);
+    await page.click('.compress-target [data-target="custom"]');
+    await page.selectOption('#compressTargetUnit', 'KB');
+    await page.fill('#compressTargetValue', '150');
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__blob, null, { timeout: 180000 });
+    const out = Buffer.from(await page.evaluate(async () => Array.from(new Uint8Array(await window.__blob.arrayBuffer()))));
+    if (out.length > 150_000) throw new Error(`${out.length} bytes, over 150 KB`);
+    const d = firstImage(await PDFDocument.load(out)).dict;
+    const bpc = d.get(PDFName.of('BitsPerComponent')).asNumber(), w = d.get(PDFName.of('Width')).asNumber();
+    if (bpc !== 1 || d.get(PDFName.of('ColorSpace')).toString() !== '/DeviceGray') throw new Error(`not black and white: ${d}`);
+    if (w < 1600) throw new Error(`${w} px wide: under 200 dpi`);
+  } finally {
+    await context.close();
+  }
+});
+
 await test('fit into a size: an image PDF fits 40 % of its size, and the cost is said', async () => {
   const W = 1600, H = 1200, rgb = Buffer.alloc(W * H * 3);
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
