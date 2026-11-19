@@ -190,7 +190,7 @@ const _RUNNER_SCRIPTS = {
   // Merge: adding files starts its page-count scan in the shared worker
   // ("importScripts failed: /js/watermarkImage.js", 3 people, 2026-11-11)
   merge: ['mergeWorker.js', ..._SHARED_WORKER], split: ['splitWorker.js', 'pageTreeCounts.js'], organize: ['organizeWorker.js'],
-  compress: [..._SHARED_WORKER, 'compressPrepWorker.js', 'cmykD.js'], worker: _SHARED_WORKER,
+  compress: [..._SHARED_WORKER, 'compressPrepWorker.js', 'cmykD.js', 'vendor/UTIF.js'], worker: _SHARED_WORKER,
   jpg2pdf: [..._SHARED_WORKER, 'tiffWorker.js', 'vendor/UTIF.js', 'vendor/pako_inflate.min.js'],
   resize: ['resizeWorker.js'], nup: ['nupWorker.js', 'nupLayout.js'], mangaSplit: ['mangaSplitWorker.js'],
   fillOrder: ['fillOrderWorker.js'], cleanScan: ['cleanScanWorker.js'], ereader: ['ereaderWorker.js'],
@@ -1862,6 +1862,11 @@ let _compressPrepXmp = 0;   // XMP streams the last pre-pass removed (0 on fallb
 // misjudges from the page size — the dpi and quality worker.js uses for every
 // other RGB/grey image: the chosen resolution (null = keep), else the mode's
 // 150/96; the chosen quality, else 82/72.
+//
+// bitonal: 1-bit scans, still 1 bit (C36): 300 dpi, or the chosen resolution
+// (a size target's step too) but never below 200 — dense small print broke
+// apart at 150; "Original" (null) keeps them. One byte a pixel while worked
+// on, so 4× D300's pixels for the same memory.
 function _cmykDOptions(preset, file, manual = {}) {
   if (preset === 'low' || file?._signed) return null;
   const base = preset === 'high' ? 75 : 82;
@@ -1879,6 +1884,7 @@ function _cmykDOptions(preset, file, manual = {}) {
       maxMegapixels: isLargeDevice() ? 24 : 4,
       ...(manual.preferNativeScans ? { preferNativeScans: true } : {}),
     },
+    bitonal: { target: 'targetDpi' in manual ? manual.targetDpi && Math.max(200, manual.targetDpi) : 300, maxMegapixels: isLargeDevice() ? 256 : 64 },
   };
 }
 

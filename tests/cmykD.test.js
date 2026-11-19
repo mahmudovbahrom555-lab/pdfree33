@@ -12,7 +12,10 @@
 //     the original; an image over the device limit is left alone;
 //   - JPEG 2000 (class JPX): RGB / grey / ICCBased become JPEG at the mode's
 //     dpi under the same colour space; CMYK JPX and /Decode are left alone;
-//   - Standard/Maximum/Light/signed options (processor.js _cmykDOptions).
+//   - Standard/Maximum/Light/signed options (processor.js _cmykDOptions);
+//   - 1-bit scans (C36): CCITT G4 / Flate / image masks above the target → the
+//     target, still 1 bit, the area average cut half-way; at the target or a G4
+//     variant UTIF.js doesn't read → left alone; the target never below 200 dpi.
 //
 // Run: node tests/cmykD.test.js
 
@@ -21,6 +24,7 @@ import { dirname, join } from 'path';
 import { tmpdir } from 'os';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { createRequire } from 'module';
+import { runInNewContext } from 'vm';
 import { deflateSync } from 'zlib';
 import * as PDFLib from 'pdf-lib';
 
@@ -34,6 +38,8 @@ const tmp = mkdtempSync(join(tmpdir(), 'cmykd-'));
 writeFileSync(join(tmp, 'qpdf.cjs'), readFileSync(join(ROOT, 'js/vendor/qpdf/lib/qpdf.js')));
 globalThis.Module = createRequire(import.meta.url)(join(tmp, 'qpdf.cjs'));
 globalThis.importScripts = () => {};
+// UTIF.js (the G4 decoder) as a worker gets it: on self
+{ const sandbox = { self: { pako: {} } }; runInNewContext(readFileSync(join(ROOT, 'js/vendor/UTIF.js'), 'utf8'), sandbox); globalThis.UTIF = sandbox.self.UTIF; }
 const URLS = {
   decoders: pathToFileURL(join(ROOT, 'node_modules/pdfjs-dist/legacy/image_decoders/pdf.image_decoders.mjs')).href,
   qpdfJs: '', qpdfWasm: join(ROOT, 'js/vendor/qpdf/lib/qpdf.wasm'),
@@ -205,8 +211,11 @@ await test('options: Light and signed files never; manual dpi never below 300; m
   const isLargeDevice = () => false;
   const f = new Function('isLargeDevice', body + '\nreturn _cmykDOptions;')(isLargeDevice);
   assert(f('low', {}) === null && f('medium', { _signed: true }) === null, 'Light/signed');
-  assert(JSON.stringify(f('medium', {}, {})) === JSON.stringify({ target: 300, quality: 82, maxMegapixels: 16, rgb: { target: 150, quality: 82, maxMegapixels: 4 } }), 'Standard');
-  assert(JSON.stringify(f('high', {}, { targetDpi: 96, quality: 0.72 })) === JSON.stringify({ target: 300, quality: 75, maxMegapixels: 16, rgb: { target: 96, quality: 72, maxMegapixels: 4 } }), 'Maximum defaults');
+  assert(JSON.stringify(f('medium', {}, {})) === JSON.stringify({ target: 300, quality: 82, maxMegapixels: 16, rgb: { target: 150, quality: 82, maxMegapixels: 4 }, bitonal: { target: 300, maxMegapixels: 64 } }), 'Standard');
+  assert(JSON.stringify(f('high', {}, { targetDpi: 96, quality: 0.72 })) === JSON.stringify({ target: 300, quality: 75, maxMegapixels: 16, rgb: { target: 96, quality: 72, maxMegapixels: 4 }, bitonal: { target: 200, maxMegapixels: 64 } }), 'Maximum defaults');
+  // 1-bit: the chosen resolution, never below 200; "Original" keeps them
+  assert(f('medium', {}, { targetDpi: 300, quality: 0.85 }).bitonal.target === 300 && f('medium', {}, { targetDpi: 72, quality: 0.3 }).bitonal.target === 200, '1-bit floor');
+  assert(f('medium', {}, { targetDpi: null, quality: 0.9 }).bitonal.target === null && f('high', {}, { targetDpi: 400 }).bitonal.target === 400, '1-bit manual');
   // JPX follows the chosen resolution and quality, as worker.js does for RGB; "Original" (null) keeps its pixels
   assert(f('medium', {}, { targetDpi: null, quality: 0.9 }).rgb.target === null && f('medium', {}, { targetDpi: null, quality: 0.9 }).rgb.quality === 90, 'JPX manual');
   assert(f('high', {}, { targetDpi: 400, quality: 0.8 }).target === 400 && f('high', {}, { quality: 0.8 }).quality === 80, 'manual above the floor');
@@ -374,6 +383,80 @@ await test('target-size prep leaves page-sized RGB JPEGs to the browser encoder'
   const figure = await figurePage();
   const placed = await D.cmykD(figure.pdf, options);
   assert(placed.placed === 1 && !placed.deferred, JSON.stringify(placed));
+});
+
+// ── 1-bit scans (C36) ────────────────────────────────────────────────────────
+// The fixture's black pixels, by formula (tests/fixtures/ccitt/pattern-1200x800.g4
+// is this pattern as CCITT G4 — MuPDF decodes it to exactly these pixels):
+// strokes 1–3 px wide, as a scan's text.
+const G4 = readFileSync(join(ROOT, 'tests/fixtures/ccitt/pattern-1200x800.g4'));
+const patternBlack = (x, y) => (((Math.floor(x / 7) + Math.floor(y / 11)) % 5 === 0) && (y % 40 < 28)) || ((x % 97 < 2) && (y % 61 < 50)) || ((y % 53 === 0) && (x % 3 !== 0));
+// The PDF samples (1 = white unless /Decode says otherwise), area-averaged to nw × nh and cut half-way
+function expectedBits(w, h, nw, nh, black = patternBlack) {
+  const grey = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) grey[y * w + x] = black(x, y) ? 0 : 255;
+  const avg = D._cmykdDownsample(grey, w, h, 1, nw, nh), bpl = Math.ceil(nw / 8), out = new Uint8Array(bpl * nh);
+  for (let y = 0; y < nh; y++) for (let x = 0; x < nw; x++) if (avg[y * nw + x] >= 128) out[y * bpl + (x >> 3)] |= 0x80 >> (x & 7);
+  return out;
+}
+function packed(w, h, black = patternBlack) {   // 1-bit DeviceGray samples, 1 = white
+  const bpl = Math.ceil(w / 8), out = new Uint8Array(bpl * h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (!black(x, y)) out[y * bpl + (x >> 3)] |= 0x80 >> (x & 7);
+  return out;
+}
+async function bitonalPage(dict, bytes, ops = 'q 144 0 0 96 0 0 cm /Im0 Do Q') {   // 1200×800 drawn 2 × 1.33 in → 600 dpi
+  const pdf = await PDFDocument.create();
+  const img = pdf.context.register(PDFRawStream.of(pdf.context.obj({ Type: 'XObject', Subtype: 'Image', Width: 1200, Height: 800, ...dict }), bytes));
+  const page = pdf.addPage([600, 800]);
+  page.node.set(PDFName.of('Resources'), pdf.context.obj({ XObject: { Im0: img } }));
+  page.node.set(PDFName.of('Contents'), content(pdf, ops));
+  return { pdf, img };
+}
+const BITONAL_OPTS = { target: 300, quality: 82, maxMegapixels: 16, rgb: null, bitonal: { target: 300, maxMegapixels: 64 }, urls: URLS };
+const samplesOf = (pdf, img) => PDFLib.decodePDFRawStream(pdf.context.lookup(img)).decode();
+const same = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
+
+await test('1-bit: a 600 dpi CCITT G4 scan → 300 dpi, still 1-bit DeviceGray, the area average cut half-way', async () => {
+  const { pdf, img } = await bitonalPage({ ColorSpace: 'DeviceGray', BitsPerComponent: 1, Filter: 'CCITTFaxDecode', DecodeParms: { K: -1, Columns: 1200 } }, G4);
+  const r = await D.cmykD(pdf, BITONAL_OPTS);
+  assert(r.replaced === 1 && r.bitonal === 1 && r.after < r.before, JSON.stringify(r));
+  const d = pdf.context.lookup(img).dict;
+  assert(dims(pdf, img).join() === '600,400,/FlateDecode', dims(pdf, img).join());
+  assert(d.get(PDFName.of('BitsPerComponent')).asNumber() === 1 && d.get(PDFName.of('ColorSpace')).toString() === '/DeviceGray' && !d.has(PDFName.of('DecodeParms')), 'dictionary');
+  assert(same(samplesOf(pdf, img), expectedBits(1200, 800, 600, 400)), 'samples differ from the area average of the source');
+});
+
+await test('1-bit: /BlackIs1 true reads the same codes the other way round', async () => {
+  const { pdf, img } = await bitonalPage({ ColorSpace: 'DeviceGray', BitsPerComponent: 1, Filter: 'CCITTFaxDecode', DecodeParms: { K: -1, Columns: 1200, BlackIs1: true } }, G4);
+  const r = await D.cmykD(pdf, BITONAL_OPTS);
+  assert(r.bitonal === 1, JSON.stringify(r));
+  assert(same(samplesOf(pdf, img), expectedBits(1200, 800, 600, 400, (x, y) => !patternBlack(x, y))), 'samples');
+});
+
+await test('1-bit: an image mask (Flate) stays an image mask, its /Decode kept', async () => {
+  const { pdf, img } = await bitonalPage({ ImageMask: true, Decode: [1, 0], Filter: 'FlateDecode' }, deflateSync(packed(1200, 800)));
+  const r = await D.cmykD(pdf, BITONAL_OPTS);
+  assert(r.bitonal === 1, JSON.stringify(r));
+  const d = pdf.context.lookup(img).dict;
+  assert(d.get(PDFName.of('ImageMask')).toString() === 'true' && d.get(PDFName.of('Decode')).toString() === '[ 1 0 ]', d.toString());
+  assert(same(samplesOf(pdf, img), expectedBits(1200, 800, 600, 400)), 'samples');
+});
+
+await test('1-bit: at 300 dpi, or a G4 stream UTIF.js does not read (byte-aligned rows), left as it was', async () => {
+  const at300 = await bitonalPage({ ColorSpace: 'DeviceGray', BitsPerComponent: 1, Filter: 'CCITTFaxDecode', DecodeParms: { K: -1, Columns: 1200 } }, G4, 'q 288 0 0 192 0 0 cm /Im0 Do Q');
+  const r = await D.cmykD(at300.pdf, BITONAL_OPTS);
+  assert(r.replaced === 0 && r.skipped['1-bit: at or below the target'] === 1, JSON.stringify(r));
+  const aligned = await bitonalPage({ ColorSpace: 'DeviceGray', BitsPerComponent: 1, Filter: 'CCITTFaxDecode', DecodeParms: { K: -1, Columns: 1200, EncodedByteAlign: true } }, G4);
+  const before = aligned.pdf.context.lookup(aligned.img).contents;
+  const r2 = await D.cmykD(aligned.pdf, BITONAL_OPTS);
+  assert(r2.replaced === 0 && aligned.pdf.context.lookup(aligned.img).contents === before, JSON.stringify(r2));
+});
+
+await test('1-bit: without the bitonal option (Light, a signed file) nothing 1-bit is touched', async () => {
+  const { pdf, img } = await bitonalPage({ ColorSpace: 'DeviceGray', BitsPerComponent: 1, Filter: 'CCITTFaxDecode', DecodeParms: { K: -1, Columns: 1200 } }, G4);
+  const before = pdf.context.lookup(img).contents;
+  const r = await D.cmykD(pdf, { ...BITONAL_OPTS, bitonal: null });
+  assert(r.replaced === 0 && pdf.context.lookup(img).contents === before, JSON.stringify(r));
 });
 
 console.log(`\n${passed} passed, ${failed} failed`);
