@@ -1867,6 +1867,9 @@ let _compressPrepXmp = 0;   // XMP streams the last pre-pass removed (0 on fallb
 // (a size target's step too) but never below 200 — dense small print broke
 // apart at 150; "Original" (null) keeps them. One byte a pixel while worked
 // on, so 4× D300's pixels for the same memory.
+//
+// scan: only on a size target's strongest steps (scanDpi) — text scans to
+// black and white (C37); up to ~5 bytes a pixel while worked on.
 function _cmykDOptions(preset, file, manual = {}) {
   if (preset === 'low' || file?._signed) return null;
   const base = preset === 'high' ? 75 : 82;
@@ -1885,6 +1888,7 @@ function _cmykDOptions(preset, file, manual = {}) {
       ...(manual.preferNativeScans ? { preferNativeScans: true } : {}),
     },
     bitonal: { target: 'targetDpi' in manual ? manual.targetDpi && Math.max(200, manual.targetDpi) : 300, maxMegapixels: isLargeDevice() ? 256 : 64 },
+    ...(manual.scanDpi ? { scan: { dpi: manual.scanDpi, maxMegapixels: isLargeDevice() ? 64 : 16 } } : {}),
   };
 }
 
@@ -1986,17 +1990,20 @@ const _TARGET_LADDER = [
   { preset: 'medium', targetDpi: 200, quality: 0.70 },
   { preset: 'medium', targetDpi: 150, quality: 0.75 },
   { preset: 'medium', targetDpi: 150, quality: 0.65 },
-  { preset: 'medium', targetDpi: 120, quality: 0.60 },
-  { preset: 'medium', targetDpi: 96,  quality: 0.55 },
-  { preset: 'medium', targetDpi: 96,  quality: 0.45 },
-  { preset: 'medium', targetDpi: 72,  quality: 0.40 },
-  { preset: 'medium', targetDpi: 72,  quality: 0.30 },
+  // Below 150 dpi a JPEG text page stops reading; a text scan with no picture
+  // goes black and white instead, at 300 then 200 dpi — smaller, and it reads
+  // (scanDpi, js/cmykD.js C37). Pictures and photos keep these JPEG steps.
+  { preset: 'medium', targetDpi: 120, quality: 0.60, scanDpi: 300 },
+  { preset: 'medium', targetDpi: 96,  quality: 0.55, scanDpi: 300 },
+  { preset: 'medium', targetDpi: 96,  quality: 0.45, scanDpi: 200 },
+  { preset: 'medium', targetDpi: 72,  quality: 0.40, scanDpi: 200 },
+  { preset: 'medium', targetDpi: 72,  quality: 0.30, scanDpi: 200 },
 ];
 
 async function _compressAttempt(original, file, step, options, signal, onProgress, onScan) {
   throwIfAborted(signal);
   const { preset, targetDpi, quality } = step;
-  const manual = preset === 'low' ? {} : { targetDpi, quality, preferNativeScans: step.preferNativeScans };
+  const manual = preset === 'low' ? {} : { targetDpi, quality, preferNativeScans: step.preferNativeScans, scanDpi: step.scanDpi };
   const buffer = await _compressPrep(original, file, preset, manual);
   throwIfAborted(signal);
   const prepXmp = _compressPrepXmp;

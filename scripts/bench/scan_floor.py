@@ -15,9 +15,11 @@ pages: comma list, 0-based (default 0,1). One JSON line per page and variant:
 {"doc", "page", "lang", "variant", "bytes", "recall"} — variant "scan" is the
 300 dpi source scan itself. B…g4: one threshold for the page (Otsu); B…sv: a
 local one (Sauvola). PHONE=1 makes the scans phone photos (light falling off,
-soft blur); VARIANTS=a,b limits the variants run.
+soft blur); VARIANTS=a,b limits the variants run. T300k5 (not in the default
+set): the lite Sauvola a browser can afford (stats from a 4× smaller copy),
+dpi 300, k 0.5, sized as 1-bit Flate.
 """
-import io, json, subprocess, sys, tempfile, os
+import io, json, subprocess, sys, tempfile, os, zlib
 from multiprocessing import Pool
 
 import fitz  # PyMuPDF
@@ -118,6 +120,34 @@ def variants(src, only=None):
         yield f'B{dpi}sv', len(buf.getvalue()) - 200, Image.open(io.BytesIO(buf.getvalue()))
 
 
+def lite_sauvola(grey, k):
+    """Sauvola as the browser can afford it: local mean and deviation from a
+    copy 4× smaller (box windows of ~4 mm), looked up per pixel."""
+    a = np.asarray(grey, np.float64)
+    h, w = a.shape
+    sh, sw = max(1, h // 4), max(1, w // 4)
+    small = np.asarray(grey.resize((sw, sh), Image.BOX), np.float64)
+    r = max(2, round(min(sw, sh) * 0.02 * 4 / 4))   # 2 % of the short edge, in small pixels
+    def box(x):
+        ii = np.pad(x, ((1, 0), (1, 0))).cumsum(0).cumsum(1)
+        y0 = np.clip(np.arange(sh) - r, 0, sh); y1 = np.clip(np.arange(sh) + r + 1, 0, sh)
+        x0 = np.clip(np.arange(sw) - r, 0, sw); x1 = np.clip(np.arange(sw) + r + 1, 0, sw)
+        n = (y1 - y0)[:, None] * (x1 - x0)[None, :]
+        return (ii[y1][:, x1] - ii[y0][:, x1] - ii[y1][:, x0] + ii[y0][:, x0]) / n
+    m = box(small); sd = np.sqrt(np.maximum(0, box(small * small) - m * m))
+    t = m * (1 + k * (sd / 128 - 1))
+    ty = np.minimum(np.arange(h) * sh // h, sh - 1); tx = np.minimum(np.arange(w) * sw // w, sw - 1)
+    return a > t[ty][:, tx]
+
+
+def _lite_variant(src, name):
+    dpi, k = int(name[1:4]), int(name[5]) / 10
+    grey = _resize(src, dpi).convert('L')
+    bw = Image.fromarray((lite_sauvola(grey, k) * 255).astype(np.uint8)).convert('1')
+    raw = zlib.compress(bw.tobytes(), 9)
+    return name, len(raw), bw
+
+
 def ocr(img, lang):
     with tempfile.TemporaryDirectory() as tmp:
         path = os.path.join(tmp, 'p.png')
@@ -134,6 +164,8 @@ def job(args):
     src, src_bytes = scan(page, pno)
     if want == 'scan':
         name, size, img = 'scan', src_bytes, src
+    elif want.startswith('T'):   # T300k5: lite Sauvola at 300 dpi, k 0.5, Flate size
+        name, size, img = _lite_variant(src, want)
     else:
         name, size, img = next(v for v in variants(src, want) if v[0] == want)
     dpi = SCAN_DPI if want == 'scan' else int(''.join(c for c in want[1:4] if c.isdigit()))

@@ -15,7 +15,10 @@
 //   - Standard/Maximum/Light/signed options (processor.js _cmykDOptions);
 //   - 1-bit scans (C36): CCITT G4 / Flate / image masks above the target → the
 //     target, still 1 bit, the area average cut half-way; at the target or a G4
-//     variant UTIF.js doesn't read → left alone; the target never below 200 dpi.
+//     variant UTIF.js doesn't read → left alone; the target never below 200 dpi;
+//   - text scans to black and white on a size target's strongest steps (C37):
+//     ink kept, a coloured stamp keeps its colour (/Indexed), a page with a
+//     picture, under 200 dpi or without the option → left alone.
 //
 // Run: node tests/cmykD.test.js
 
@@ -216,6 +219,8 @@ await test('options: Light and signed files never; manual dpi never below 300; m
   // 1-bit: the chosen resolution, never below 200; "Original" keeps them
   assert(f('medium', {}, { targetDpi: 300, quality: 0.85 }).bitonal.target === 300 && f('medium', {}, { targetDpi: 72, quality: 0.3 }).bitonal.target === 200, '1-bit floor');
   assert(f('medium', {}, { targetDpi: null, quality: 0.9 }).bitonal.target === null && f('high', {}, { targetDpi: 400 }).bitonal.target === 400, '1-bit manual');
+  // text scans to black and white: only a size target's steps that say so
+  assert(f('medium', {}, { targetDpi: 72, quality: 0.3, scanDpi: 200 }).scan.dpi === 200 && !('scan' in f('medium', {}, { targetDpi: 72, quality: 0.3 })), 'scan');
   // JPX follows the chosen resolution and quality, as worker.js does for RGB; "Original" (null) keeps its pixels
   assert(f('medium', {}, { targetDpi: null, quality: 0.9 }).rgb.target === null && f('medium', {}, { targetDpi: null, quality: 0.9 }).rgb.quality === 90, 'JPX manual');
   assert(f('high', {}, { targetDpi: 400, quality: 0.8 }).target === 400 && f('high', {}, { quality: 0.8 }).quality === 80, 'manual above the floor');
@@ -458,6 +463,71 @@ await test('1-bit: without the bitonal option (Light, a signed file) nothing 1-b
   const r = await D.cmykD(pdf, { ...BITONAL_OPTS, bitonal: null });
   assert(r.replaced === 0 && pdf.context.lookup(img).contents === before, JSON.stringify(r));
 });
+
+// ── Text scans to black and white (C37) ──────────────────────────────────────
+// A text page as a scanner gives it: the pattern's strokes in near-black on
+// off-white paper, a little noise; 1500×1800 drawn 5 × 6 in → 300 dpi.
+function scanPage(w, h, { stamp = false, photo = false } = {}) {
+  const a = new Uint8Array(w * h * 3);
+  let seed = 5;
+  const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const i = (y * w + x) * 3, n = (rnd() - 0.5) * 8;
+    let rgb = patternBlack(x, y) ? [30, 30, 34] : [244, 241, 232];
+    if (stamp && Math.abs(Math.hypot(x - 1100, y - 1400) - 120) < 6) rgb = [200, 40, 50];   // a red ring
+    if (photo && x >= 200 && x < 600 && y >= 200 && y < 600) rgb = Array(3).fill(130 + 50 * Math.sin(x / 23) * Math.cos(y / 17));   // a grey photo
+    for (let c = 0; c < 3; c++) a[i + c] = Math.max(0, Math.min(255, rgb[c] + n));
+  }
+  return a;
+}
+async function scanPdf(w, h, samples, ops = 'q 360 0 0 432 0 0 cm /Im0 Do Q') {
+  const pdf = await PDFDocument.create();
+  const img = pdf.context.register(PDFRawStream.of(pdf.context.obj({ Type: 'XObject', Subtype: 'Image', Width: w, Height: h, ColorSpace: 'DeviceRGB', BitsPerComponent: 8, Filter: 'FlateDecode' }), deflateSync(samples)));
+  const page = pdf.addPage([612, 792]);
+  page.node.set(PDFName.of('Resources'), pdf.context.obj({ XObject: { Im0: img } }));
+  page.node.set(PDFName.of('Contents'), content(pdf, ops));
+  return { pdf, img };
+}
+const SCAN_OPTS = { target: 300, quality: 82, maxMegapixels: 16, rgb: { target: 72, quality: 30, maxMegapixels: 4 }, scan: { dpi: 200, maxMegapixels: 16 }, urls: URLS };
+
+await test('C37: a 300 dpi text scan on a strong target step → 200 dpi black and white, the ink where the text is', async () => {
+  const { pdf, img } = await scanPdf(1500, 1800, scanPage(1500, 1800));
+  const r = await D.cmykD(pdf, SCAN_OPTS);
+  assert(r.scans === 1 && r.replaced === 1 && r.after < r.before, JSON.stringify(r));
+  const d = pdf.context.lookup(img).dict;
+  assert(dims(pdf, img).join() === '1000,1200,/FlateDecode' && d.get(PDFName.of('ColorSpace')).toString() === '/DeviceGray' && d.get(PDFName.of('BitsPerComponent')).asNumber() === 1, d.toString());
+  const got = samplesOf(pdf, img), want = expectedBits(1500, 1800, 1000, 1200);
+  let same = 0;
+  for (let i = 0; i < want.length; i++) for (let b = 0; b < 8; b++) if (((got[i] ^ want[i]) >> b & 1) === 0) same++;
+  assert(same / (want.length * 8) > 0.97, `${(100 * same / (want.length * 8)).toFixed(1)} % of pixels as the source`);
+});
+
+await test('C37: a red stamp keeps its colour — 2-bit /Indexed: white, black and the stamp\'s colour', async () => {
+  const { pdf, img } = await scanPdf(1500, 1800, scanPage(1500, 1800, { stamp: true }));
+  const r = await D.cmykD(pdf, SCAN_OPTS);
+  assert(r.scans === 1, JSON.stringify(r));
+  const d = pdf.context.lookup(img).dict, cs = d.get(PDFName.of('ColorSpace'));
+  assert(d.get(PDFName.of('BitsPerComponent')).asNumber() === 2 && cs.get(0).toString() === '/Indexed' && cs.get(1).toString() === '/DeviceRGB', cs.toString());
+  const pal = cs.get(3).asBytes();
+  assert([...pal.slice(0, 6)].join() === '255,255,255,0,0,0', 'white, black first');
+  assert([6, 9].some(o => pal[o] > 150 && pal[o + 1] < 90 && pal[o + 2] < 90), `no red in ${[...pal]}`);
+  // the stamp's pixels are a mark colour (index 2 or 3), at 200 dpi: (1100, 1280)·2/3
+  const s = samplesOf(pdf, img), bpl = Math.ceil(1000 / 4), at = (x, y) => (s[y * bpl + (x >> 2)] >> (6 - 2 * (x & 3))) & 3;
+  assert(at(Math.round(1100 * 2 / 3), Math.round(1280 * 2 / 3)) >= 2, 'stamp pixel');
+});
+
+await test('C37: a page with a picture, a 150 dpi scan, or no scan option → not turned black and white', async () => {
+  const pic = await scanPdf(1500, 1800, scanPage(1500, 1800, { photo: true }));
+  const r1 = await D.cmykD(pic.pdf, SCAN_OPTS);
+  assert(!r1.scans && r1.skipped['scan: has a picture'] === 1, JSON.stringify(r1));
+  const low = await scanPdf(750, 900, scanPage(750, 900));   // 5 × 6 in → 150 dpi
+  const r2 = await D.cmykD(low.pdf, SCAN_OPTS);
+  assert(!r2.scans && r2.skipped['scan: under 200 dpi'] === 1, JSON.stringify(r2));
+  const none = await scanPdf(1500, 1800, scanPage(1500, 1800));
+  const r3 = await D.cmykD(none.pdf, { ...SCAN_OPTS, scan: null });
+  assert(!r3.scans && pdfCs(none) === '/DeviceRGB', JSON.stringify(r3));
+});
+function pdfCs({ pdf, img }) { return pdf.context.lookup(img).dict.get(PDFName.of('ColorSpace')).toString(); }
 
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed ? 1 : 0);
