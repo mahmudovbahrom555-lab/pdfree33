@@ -558,8 +558,15 @@ jobs:
 
       - name: E2E — Merge takes pictures
         # A PDF, a PNG and an EXIF-turned photo merge into 5 pages, the photo
-        # upright. See tests/e2e/merge-images.e2e.mjs.
+        # upright; a transparent picture's clear part comes out white. See
+        # tests/e2e/merge-images.e2e.mjs.
         run: PDFREE_BASE_URL=http://localhost:8934 node tests/e2e/merge-images.e2e.mjs
+
+      - name: E2E — PDF to Excel takes many files
+        # 3 PDFs -> a ZIP of 3 .xlsx; same names kept apart; a locked PDF
+        # skipped, the others back; one file as before. See
+        # tests/e2e/pdf2excel-batch.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 node tests/e2e/pdf2excel-batch.e2e.mjs
 
       - name: E2E — Fill with no fields goes on to Draw
         # Counted, the same file, no click. See tests/e2e/fill-no-fields.e2e.mjs.
