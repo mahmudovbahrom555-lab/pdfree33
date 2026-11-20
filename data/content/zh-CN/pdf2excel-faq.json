@@ -25,6 +25,14 @@
   },
   {
     "@type": "Question",
+    "name": "可以一次把多个 PDF 转换为 Excel 吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。一次选择或拖入多个 PDF，然后点击“转换为 Excel”：每个 PDF 都会生成单独的 .xlsx 文件，全部打包成一个 ZIP 下载。小数分隔符设置对每个文件都生效。受密码保护的 PDF 会被跳过，并在列表中标出。只有一个 PDF 时，仍然下载为一个 .xlsx，并显示表格预览。"
+    }
+  },
+  {
+    "@type": "Question",
     "name": "可以把扫描版 PDF 转换为 Excel 吗？",
     "acceptedAnswer": {
       "@type": "Answer",

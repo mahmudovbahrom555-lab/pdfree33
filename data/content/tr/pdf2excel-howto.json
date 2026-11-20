@@ -8,7 +8,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "PDF ekleyin",
-      "text": "Tablo içeren PDF'yi sürükleyin veya seçin."
+      "text": "Tablo içeren PDF'yi sürükleyin veya seçin. Birden fazla PDF'yi de aynı anda seçebilirsiniz — hepsi tek bir ZIP olarak gelir."
     },
     {
       "@type": "HowToStep",

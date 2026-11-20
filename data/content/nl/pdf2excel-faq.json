@@ -49,6 +49,14 @@
   },
   {
     "@type": "Question",
+    "name": "Kan ik meerdere PDF’s tegelijk naar Excel converteren?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Kies of sleep meerdere PDF’s tegelijk en klik op ‘PDF naar Excel’: elk wordt een eigen .xlsx-bestand, en je downloadt ze allemaal in één ZIP. De instelling voor het decimaalteken geldt voor elk bestand. Een met een wachtwoord beveiligde PDF wordt overgeslagen en in de lijst gemarkeerd. Eén PDF wordt nog steeds als één .xlsx gedownload, met een voorbeeld van de tabellen."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Kan ik een gescande PDF naar Excel converteren?",
     "acceptedAnswer": {
       "@type": "Answer",

@@ -8,7 +8,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "PDFを追加",
-      "text": "PDFファイルをドラッグするか、クリックして選択します。"
+      "text": "PDFファイルをドラッグするか、クリックして選択します。複数のPDFをまとめて選ぶこともでき、1つのZIPで受け取れます。"
     },
     {
       "@type": "HowToStep",

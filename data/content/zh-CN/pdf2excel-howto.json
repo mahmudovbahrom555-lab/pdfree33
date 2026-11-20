@@ -8,7 +8,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "打开您的 PDF",
-      "text": "点击“选择文件”或将 PDF 拖入拖放区域。PDFree 会扫描文档并显示发现了多少个表格。"
+      "text": "点击“选择文件”或将 PDF 拖入拖放区域。PDFree 会扫描文档并显示发现了多少个表格。也可以一次选择多个 PDF，结果打包成一个 ZIP。"
     },
     {
       "@type": "HowToStep",

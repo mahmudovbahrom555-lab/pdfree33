@@ -28,7 +28,7 @@
     "name": "Can I convert several PDFs to Excel at once?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. Choose or drop several PDFs together and press Convert to Excel: each one becomes its own .xlsx, and you download them all in one ZIP. The decimal-separator setting applies to every file. A single PDF still downloads as one .xlsx, with its tables previewed."
+      "text": "Yes. Choose or drop several PDFs together and press Convert to Excel: each one becomes its own .xlsx, and you download them all in one ZIP. The decimal-separator setting applies to every file. A password-protected PDF is skipped and marked in the list. A single PDF still downloads as one .xlsx, with its tables previewed."
     }
   },
   {

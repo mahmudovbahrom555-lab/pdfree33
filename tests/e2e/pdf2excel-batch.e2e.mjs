@@ -12,6 +12,7 @@
 import { chromium } from 'playwright';
 import JSZip from 'jszip';
 import { PDFDocument, StandardFonts } from 'pdf-lib';
+import fs from 'fs';
 
 const BASE_URL = process.env.PDFREE_BASE_URL || 'http://localhost:8934';
 
@@ -65,7 +66,10 @@ async function convert(files, typeRe) {
       for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode(...u.subarray(i, i + 0x8000));
       return btoa(s);
     });
-    return { bytes: Buffer.from(b64, 'base64'), hasPreview: await page.evaluate(() => !!document.querySelector('#p2ePreview')) };
+    return {
+      bytes: Buffer.from(b64, 'base64'), hasPreview: await page.evaluate(() => !!document.querySelector('#p2ePreview')),
+      marks: await page.evaluate(() => [...document.querySelectorAll('#fileList > *')].map(e => e.textContent.replace(/\s+/g, ' ')).join(' | ')),
+    };
   } finally {
     await ctx.close();
   }
@@ -109,6 +113,19 @@ await test('two files of one name come back as two files, not one over the other
   ], /zip/);
   const names = Object.keys((await JSZip.loadAsync(bytes)).files).sort();
   if (JSON.stringify(names) !== JSON.stringify(['report (2).xlsx', 'report.xlsx'])) throw new Error(`ZIP holds ${JSON.stringify(names)}`);
+});
+
+await test('a password-locked PDF among them is skipped and marked, the others come back', async () => {
+  // one locked file stopped the whole batch with a message naming none (2026-11-21)
+  const locked = fs.readFileSync(new URL('../corpus/synthetic/encrypted-user-password.pdf', import.meta.url));
+  const { bytes, marks } = await convert([
+    { name: 'march.pdf', mimeType: 'application/pdf', buffer: a },
+    { name: 'locked.pdf', mimeType: 'application/pdf', buffer: locked },
+    { name: 'may.pdf', mimeType: 'application/pdf', buffer: c },
+  ], /zip/);
+  const names = Object.keys((await JSZip.loadAsync(bytes)).files).sort();
+  if (JSON.stringify(names) !== JSON.stringify(['march.xlsx', 'may.xlsx'])) throw new Error(`ZIP holds ${JSON.stringify(names)}`);
+  if (!/locked\.pdf.*✗/.test(marks)) throw new Error(`the locked file is not marked as skipped: ${marks}`);
 });
 
 await test('one file is converted as before: an .xlsx, its tables previewed', async () => {
