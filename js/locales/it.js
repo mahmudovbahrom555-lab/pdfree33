@@ -313,6 +313,12 @@ window.PDFREE_LOCALE = {
   compress_target_heavy:     'Le immagini sono visibilmente più morbide: controlla il testo piccolo prima di inviare.',
   compress_target_qr_protected: 'Impossibile raggiungere {target} mantenendo leggibile il codice QR. Dimensione salvata: {size}.',
   compress_target_unreached: '⚠️ Nemmeno con l\'impostazione più forte si è scesi sotto {target}. Ecco {size}: la versione più delicata di dimensione quasi uguale. Dividere il PDF può aiutare.',
+  cmp_floor_title: 'Rendere difficile da leggere il testo piccolo?',
+  cmp_floor_body: 'Si arriva a {target} solo riducendo così tanto foto e pagine a colori che il testo piccolo può diventare illeggibile: un ufficio o un portale potrebbe rifiutare il file. Il file più piccolo che resta leggibile è di {readable}.',
+  cmp_floor_stop: 'Mantienilo leggibile ({readable})',
+  cmp_floor_go: 'Riduci comunque a {target}',
+  compress_target_floor: '⚠️ Impossibile scendere sotto {target} mantenendo il testo leggibile. Ecco {size}: la versione leggibile più piccola. Dividere il PDF può aiutare.',
+  compress_target_bw: 'Le pagine di testo scansionate sono state rese in bianco e nero per starci: il testo resta nitido.',
   prog_target_try:           'Ricerca dell\'impostazione adatta — tentativo {n}…',
 
   error_msg:           'Errore: {msg}',

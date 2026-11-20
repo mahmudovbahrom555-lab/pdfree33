@@ -120,3 +120,14 @@ export function throwIfAborted(signal) {
 export function isMergeImage(file) {
   return /^image\/(?:jpeg|png|webp|heic|heif)$/i.test(file.type || '') || /\.(?:jpe?g|png|webp|heic|heif)$/i.test(file.name || '');
 }
+
+// A size target as the user typed it: 500 KB is 500,000 bytes (not fmtSize's 1,024)
+export function formatTargetBytes(bytes) {
+  if (bytes < 1_000) return fmtSize(bytes);
+  const mb = bytes >= 1_000_000;
+  const value = bytes / (mb ? 1_000_000 : 1_000);
+  const number = new Intl.NumberFormat(document.documentElement.lang || undefined, {
+    maximumFractionDigits: mb ? 6 : 3,
+  }).format(value);
+  return `${number} ${mb ? 'MB' : 'KB'}`;
+}

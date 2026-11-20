@@ -388,17 +388,22 @@ async function compressToSize(file, kb) {
   }
 }
 
-await test('a size out of reach is said after one try, not after the whole ladder of 12', async () => {
-  // 43 % of the people who set a size in 14 days missed it, 3 in 4 by more
-  // than 2×; each try is a full pass (512 KB from a 74 MB scan: 11 tries,
-  // 144 s) — the strongest step goes first now (2026-11-19)
+// A colour photo filling the page: never black and white (C37), so its
+// strongest steps are JPEG under 150 dpi — below the readable floor
+async function photoPdf() {
   const W = 1200, H = 900, rgb = Buffer.alloc(W * H * 3);
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
     const i = (y * W + x) * 3, n = (x * 13 + y * 7) % 19;
     rgb[i] = 128 + 90 * Math.sin(x / 23) + n; rgb[i + 1] = 120 + 80 * Math.cos(y / 19) + n; rgb[i + 2] = 110 + n;
   }
-  const file = path.join(tmp, 'out-of-reach.pdf');
+  const file = path.join(tmp, 'photo-page.pdf');
   fs.writeFileSync(file, await imagePdf(zlib.deflateSync(rgb), { Width: W, Height: H, ColorSpace: 'DeviceRGB', Filter: 'FlateDecode' }));
+  return file;
+}
+
+// Compress photoPdf() to `kb`; answer the floor question with `answer`
+// ('go' | 'cancel' | null = must not be asked) → { size, verdict, asked, tries }
+async function photoToSize(file, kb, answer) {
   const context = await browser.newContext({ serviceWorkers: 'block' });
   const page = await context.newPage();
   try {
@@ -415,16 +420,44 @@ await test('a size out of reach is said after one try, not after the whole ladde
     await page.waitForTimeout(3000);
     await page.click('.compress-target [data-target="custom"]');
     await page.selectOption('#compressTargetUnit', 'KB');
-    await page.fill('#compressTargetValue', '1');
+    await page.fill('#compressTargetValue', String(kb));
     await page.click('#mergeBtn');
-    await page.waitForFunction(() => window.__blob, null, { timeout: 120000 });
-    const tries = await page.evaluate(() => Math.max(0, ...window.__tries));
-    const verdict = await page.locator('#targetVerdict').innerText();
-    if (tries !== 1) throw new Error(`answered after ${tries} tries`);
-    if (!verdict.includes("Couldn't get under")) throw new Error(verdict);
+    const asked = await page.waitForFunction(() => window.__blob || document.querySelector('#floorConfirmGo'), null, { timeout: 120000 })
+      .then(() => page.evaluate(() => !!document.querySelector('#floorConfirmGo')));
+    if (asked) {
+      if (!answer) throw new Error('asked, and must not be');
+      await page.click(answer === 'go' ? '#floorConfirmGo' : '#floorConfirmCancel');
+      await page.waitForFunction(() => window.__blob, null, { timeout: 120000 });
+    } else if (answer) throw new Error('not asked');
+    return {
+      size: await page.evaluate(() => window.__blob.size), asked,
+      verdict: await page.locator('#targetVerdict').innerText(),
+      tries: await page.evaluate(() => Math.max(0, ...window.__tries)),
+    };
   } finally {
     await context.close();
   }
+}
+
+await test('a size out of reach: the strongest try, then the smallest readable file — not a 72 dpi one', async () => {
+  // 43 % of the people who set a size in 14 days missed it, 3 in 4 by more
+  // than 2×; each try is a full pass (512 KB from a 74 MB scan: 11 tries,
+  // 144 s) — the strongest step goes first (2026-11-19); out of reach, the
+  // answer is the smallest file that still reads (owner, 2026-11-20)
+  const r = await photoToSize(await photoPdf(), 1, null);
+  if (r.tries !== 2) throw new Error(`answered after ${r.tries} tries`);
+  if (!r.verdict.includes("Couldn't get under") || !r.verdict.includes('readable')) throw new Error(r.verdict);
+});
+
+await test('a size reachable only below the readable floor: the user is asked — Cancel keeps it readable, the other button meets the size', async () => {
+  const file = await photoPdf();
+  const readable = (await photoToSize(file, 1, null)).size;
+  const kb = Math.floor(readable * 0.8 / 1000);
+  const kept = await photoToSize(file, kb, 'cancel');
+  if (Math.abs(kept.size - readable) > readable * 0.02) throw new Error(`kept ${kept.size}, readable was ${readable}`);
+  if (!kept.verdict.includes('readable')) throw new Error(kept.verdict);
+  const met = await photoToSize(file, kb, 'go');
+  if (met.size > kb * 1000) throw new Error(`${met.size} bytes, over ${kb} KB`);
 });
 
 await test('a text scan under a tight size goes black and white at 200 dpi or more, not a 72 dpi JPEG (C37)', async () => {
@@ -458,6 +491,8 @@ await test('a text scan under a tight size goes black and white at 200 dpi or mo
     const bpc = d.get(PDFName.of('BitsPerComponent')).asNumber(), w = d.get(PDFName.of('Width')).asNumber();
     if (bpc !== 1 || d.get(PDFName.of('ColorSpace')).toString() !== '/DeviceGray') throw new Error(`not black and white: ${d}`);
     if (w < 1600) throw new Error(`${w} px wide: under 200 dpi`);
+    const verdict = await page.locator('#targetVerdict').innerText();
+    if (!verdict.includes('black and white')) throw new Error(`the card doesn't say so: ${verdict}`);
   } finally {
     await context.close();
   }

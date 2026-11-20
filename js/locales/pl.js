@@ -313,6 +313,12 @@ window.PDFREE_LOCALE = {
   compress_target_heavy:     'Obrazy są wyraźnie bardziej miękkie — sprawdź drobny tekst przed wysłaniem.',
   compress_target_qr_protected: 'Nie udało się osiągnąć {target} przy zachowaniu czytelnego kodu QR. Zapisany rozmiar: {size}.',
   compress_target_unreached: '⚠️ Nawet przy najmocniejszym ustawieniu nie udało się zejść poniżej {target}. Oto {size} — najłagodniejsza wersja o prawie tym samym rozmiarze. Może pomóc podzielenie PDF.',
+  cmp_floor_title: 'Pogorszyć czytelność drobnego tekstu?',
+  cmp_floor_body: '{target} da się osiągnąć tylko, zmniejszając zdjęcia i kolorowe strony tak bardzo, że drobny tekst może stać się nieczytelny — urząd lub portal może odrzucić taki plik. Najmniejszy plik, który pozostaje czytelny, ma {readable}.',
+  cmp_floor_stop: 'Zachowaj czytelność ({readable})',
+  cmp_floor_go: 'Mimo to zmniejsz do {target}',
+  compress_target_floor: '⚠️ Nie udało się zejść poniżej {target} przy zachowaniu czytelnego tekstu. Oto {size} — najmniejsza czytelna wersja. Może pomóc podzielenie PDF.',
+  compress_target_bw: 'Zeskanowane strony z tekstem zamieniono na czarno-białe, aby się zmieścić — tekst pozostaje ostry.',
   prog_target_try:           'Szukanie ustawienia, które się zmieści — próba {n}…',
 
   error_msg:      'Błąd: {msg}',

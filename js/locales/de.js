@@ -314,6 +314,12 @@ window.PDFREE_LOCALE = {
   compress_target_heavy:     'Bilder sind deutlich weicher – prüfe Kleingedrucktes vor dem Senden.',
   compress_target_qr_protected: '{target} waren bei lesbarem QR-Code nicht erreichbar. Gespeichert: {size}.',
   compress_target_unreached: '⚠️ Selbst mit der stärksten Einstellung ging es nicht unter {target}. Hier sind {size} – die schonendste Version, die etwa so klein ist. Das PDF zu teilen kann helfen.',
+  cmp_floor_title: 'Kleinen Text schwer lesbar machen?',
+  cmp_floor_body: '{target} ist nur erreichbar, wenn Fotos und farbige Seiten so stark verkleinert werden, dass kleiner Text unlesbar werden kann – eine Behörde oder ein Portal lehnt eine solche Datei womöglich ab. Die kleinste Datei, die lesbar bleibt, hat {readable}.',
+  cmp_floor_stop: 'Lesbar lassen ({readable})',
+  cmp_floor_go: 'Trotzdem auf {target} verkleinern',
+  compress_target_floor: '⚠️ Unter {target} ging es nicht, ohne dass der Text unlesbar wird. Hier sind {size} – die kleinste lesbare Version. Das PDF zu teilen kann helfen.',
+  compress_target_bw: 'Gescannte Textseiten wurden schwarz-weiß gemacht, damit es passt – der Text bleibt scharf.',
   prog_target_try:           'Passende Einstellung wird gesucht – Versuch {n}…',
 
   error_msg:           'Fehler: {msg}',

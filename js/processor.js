@@ -5,7 +5,7 @@
 //  processor.js — PDF processing via Web Worker
 // ============================================================
 
-import { fmtSize, throwIfAborted, isMergeImage } from './utils.js';
+import { fmtSize, formatTargetBytes, throwIfAborted, isMergeImage } from './utils.js';
 import { t, tp } from './i18n.js';
 import { setProgress, hideProgress, setButtonProcessing, setButtonReady,
          showCancelBtn, hideCancelBtn, showToast, startLongOpHint, clearLongOpHint } from './ui.js';
@@ -24,6 +24,7 @@ import { detectTables, groupItemsIntoLines, looksLikeProseNotData, looksLikeEnum
 import { pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
 import { captureText, lineRunsForSlide, cutsForLine, groupRuns, fittedFontSize, eraseUnpaintedRuns, styledParts } from './pdf2pptLayered.js';
 import { openFeedback } from './feedback.js';
+import { confirmDialog } from './confirmDialog.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
 import { isTiffFile } from './tiffDecode.js';
 import { readExifAngle } from './exifAngle.js';
@@ -1849,6 +1850,7 @@ let _compressPrepSettle = null;
 const _COMPRESS_PREP_TIMEOUT_MS = 60_000;
 
 let _compressPrepXmp = 0;   // XMP streams the last pre-pass removed (0 on fallback)
+let _compressPrepScans = 0; // scanned pages the last pre-pass made black and white (C37)
 
 // Mode D300 for print (CMYK) images (js/cmykD.js), owner-approved 2026-11-06:
 // Standard 300 dpi q82, Maximum 300 dpi q75, Light never, a signed file
@@ -1894,6 +1896,7 @@ function _cmykDOptions(preset, file, manual = {}) {
 
 function _compressPrep(buffer, file, preset, manual) {
   _compressPrepXmp = 0;
+  _compressPrepScans = 0;
   return new Promise((resolve, reject) => {
     let timer;
     let settled = false;
@@ -1919,7 +1922,7 @@ function _compressPrep(buffer, file, preset, manual) {
     // file can take longer than one watchdog period as a whole)
     _compressPrepWorker.onmessage = (e) => {
       if (e.data.type === 'progress') { clearTimeout(timer); timer = setTimeout(fallback, _COMPRESS_PREP_TIMEOUT_MS); return; }
-      _compressPrepXmp = e.data.xmp || 0; settle(e.data.result);
+      _compressPrepXmp = e.data.xmp || 0; _compressPrepScans = e.data.d?.scans || 0; settle(e.data.result);
     };
     _compressPrepWorker.onerror   = fallback;
     timer = setTimeout(fallback, _COMPRESS_PREP_TIMEOUT_MS);
@@ -2006,13 +2009,13 @@ async function _compressAttempt(original, file, step, options, signal, onProgres
   const manual = preset === 'low' ? {} : { targetDpi, quality, preferNativeScans: step.preferNativeScans, scanDpi: step.scanDpi };
   const buffer = await _compressPrep(original, file, preset, manual);
   throwIfAborted(signal);
-  const prepXmp = _compressPrepXmp;
+  const prepXmp = _compressPrepXmp, prepScans = _compressPrepScans;
   const data = await _postToWorkerForBatch({
     tool: 'compress', file: buffer,
     options: { ...options, preset, targetDpi: targetDpi ?? null, quality: quality ?? null },
   }, [buffer], onProgress, { signal, onScan, timeoutKey: 'err_compress_timeout' });
   if (!(data.result instanceof ArrayBuffer)) throw new Error('Unexpected result type from worker');
-  return { data: { ...data, compressedSize: data.result.byteLength }, prepXmp };
+  return { data: { ...data, compressedSize: data.result.byteLength }, prepXmp, prepScans };
 }
 
 const _PAGE_REFINE_BUDGET_MS = 750;
@@ -2045,7 +2048,17 @@ function _runOptionalCompressCheck(buffers, targetBytes, signal, budget) {
 
 const _TARGET_CLEAR_MISS = 1.1;   // the strongest step over the target by more than this: out of reach
 
-async function _compressToTarget(file, original, originalSize, targetBytes, options, signal, onProgress) {
+// From this step on, pictures and colour pages are JPEG under 150 dpi, where
+// text stops reading (OCR recall held at 150, fell at 120/96/72 — 72 dpi: 2 of
+// 36 pages; scripts/bench/scan_floor.py, 2026-11-20). A document office may
+// refuse such a file; the user decides (owner, 2026-11-20). Text scans made
+// black and white on these steps (C37) still read, so they don't ask.
+const _TARGET_READABLE_FLOOR = _TARGET_LADDER.findIndex(s => s.targetDpi != null && s.targetDpi < 150);
+const _belowReadable = r => r.index >= _TARGET_READABLE_FLOOR && r.data.report?.imagesRecompressed > 0;
+
+// ask({ targetBytes, size, readableSize }) → Promise<boolean>: go below the
+// readable floor to meet the size? Without it (null), the old behaviour.
+async function _compressToTarget(file, original, originalSize, targetBytes, options, signal, onProgress, ask = null) {
   const steps = _TARGET_LADDER.length;
   const tried = [];
   let smallest = null;
@@ -2115,8 +2128,23 @@ async function _compressToTarget(file, original, originalSize, targetBytes, opti
     }
   }
 
+  // Under the readable floor: a size out of reach gets the smallest readable
+  // file; a size reachable only there is the user's call.
+  let floorStop = false;
+  if (ask && _belowReadable(chosen)) {
+    const readable = await attempt(_TARGET_READABLE_FLOOR - 1);
+    const fits = chosen.data.compressedSize <= targetBytes;
+    if (readable.data.compressedSize <= targetBytes) chosen = readable;
+    else if (!fits || !await ask({ targetBytes, size: chosen.data.compressedSize, readableSize: readable.data.compressedSize })) {
+      throwIfAborted(signal);
+      chosen = readable;
+      floorStop = true;
+    }
+    throwIfAborted(signal);
+  }
+
   const { index, step } = chosen;
-  let { data, prepXmp } = chosen;
+  let { data, prepXmp, prepScans } = chosen;
   let final = await _notLarger(data, originalSize, file);
   let keptOriginal = final.result !== data.result;
   let pageRefined = null;
@@ -2151,17 +2179,18 @@ async function _compressToTarget(file, original, originalSize, targetBytes, opti
       finalIndex = check.keptCandidate ? qrFallback.index : 0;
       data = check.keptCandidate ? qrFallback.data : { report: {} };
       prepXmp = check.keptCandidate ? qrFallback.prepXmp : 0;
+      prepScans = check.keptCandidate ? qrFallback.prepScans : 0;
     }
   }
   const { targetDpi = null, quality = null } = finalStep;
   return { final, data, prepXmp, targetBytes, target: {
     met: final.result.byteLength <= targetBytes, lossless: finalIndex === 0 || keptOriginal,
     dpi: targetDpi, quality, heavy: targetDpi !== null && targetDpi <= 96 && quality <= 0.45 && !keptOriginal,
-    step: finalIndex, tried, pageRefined, qrProtected,
+    step: finalIndex, tried, pageRefined, qrProtected, floorStop, blackAndWhite: prepScans > 0 && !keptOriginal,
   } };
 }
 
-async function _compressFile(file, params, signal, onProgress, onScan) {
+async function _compressFile(file, params, signal, onProgress, onScan, askBelowReadable = null) {
   const { preset = 'medium', preserveText = true, removeWatermarks = false,
     targetDpi = null, quality = null, targetBytes = null } = params;
   const original = await _readCompressBuffer(file);
@@ -2169,7 +2198,7 @@ async function _compressFile(file, params, signal, onProgress, onScan) {
   const originalSize = original.byteLength;
   const options = { preserveText, removeWatermarks };
   if (targetBytes) {
-    return { originalSize, ...await _compressToTarget(file, original, originalSize, targetBytes, options, signal, onProgress) };
+    return { originalSize, ...await _compressToTarget(file, original, originalSize, targetBytes, options, signal, onProgress, askBelowReadable) };
   }
   const { data, prepXmp } = await _compressAttempt(original, file, { preset, targetDpi, quality }, options, signal, onProgress, onScan);
   const final = await _notLarger(data, originalSize, file);
@@ -2183,7 +2212,8 @@ async function _runCompress(filesSnapshot, params, toolKey, signal) {
   setProgress(5, t('prog_loading_pdf'));
   const { originalSize, final, data, prepXmp, targetBytes, target } = await _compressFile(
     file, params, signal, setProgress,
-    report => document.dispatchEvent(new CustomEvent('pdfree:scan-report', { detail: { toolKey, report } }))
+    report => document.dispatchEvent(new CustomEvent('pdfree:scan-report', { detail: { toolKey, report } })),
+    _askBelowReadable,
   );
   _compressSucceeded(file, originalSize, final, data, prepXmp, toolKey, target ? { targetBytes, target } : {});
 }
@@ -2954,8 +2984,27 @@ function _postToWorkerForBatch(msg, transfer, onProgress, { signal, onScan, time
   });
 }
 
-async function _batchCompressOne(file, params, onProgress, signal) {
-  const { final, originalSize, targetBytes, target } = await _compressFile(file, params, signal, onProgress);
+// "Make the text hard to read to reach the size?" — Cancel keeps it readable
+function _askBelowReadable({ targetBytes, readableSize }) {
+  // whole KB (0.01 MB), up: "76.668 KB" reads as 76,668 in half the locales
+  const readable = formatTargetBytes(readableSize >= 1e6 ? Math.ceil(readableSize / 1e4) * 1e4 : Math.ceil(readableSize / 1e3) * 1e3);
+  return confirmDialog({
+    id: 'floorConfirm', icon: '🔍', title: t('cmp_floor_title'),
+    paragraphs: [t('cmp_floor_body', { target: formatTargetBytes(targetBytes), readable })],
+    cancel: t('cmp_floor_stop', { readable }),
+    go: t('cmp_floor_go', { target: formatTargetBytes(targetBytes) }),
+    safeIsPrimary: true,
+  });
+}
+
+// Asked once for a whole batch: the answer holds for every file after it
+function _askBelowReadableOnce() {
+  let answer = null;
+  return info => (answer ??= _askBelowReadable(info));
+}
+
+async function _batchCompressOne(file, params, onProgress, signal, askBelowReadable) {
+  const { final, originalSize, targetBytes, target } = await _compressFile(file, params, signal, onProgress, undefined, askBelowReadable);
   const baseName = file.name.replace(/\.pdf$/i, '');
   return {
     name: `${baseName}-compressed.pdf`, buffer: final.result, originalSize,
@@ -3009,6 +3058,7 @@ async function _runBatch(tool, filesSnapshot, extraParams, signal) {
   // (they don't shrink files on purpose), so left at 0 and unused there.
   let totalOriginalSize   = 0;
   let totalCompressedSize = 0;
+  const askBelowReadable = tool === 'compress' ? _askBelowReadableOnce() : null;
 
   for (let i = 0; i < total; i++) {
     // cancelProcess() rejects the CURRENT file's in-flight worker promise via
@@ -3037,7 +3087,7 @@ async function _runBatch(tool, filesSnapshot, extraParams, signal) {
       };
 
       const result = tool === 'compress'
-        ? await _batchCompressOne(file, extraParams, onProgress, signal)
+        ? await _batchCompressOne(file, extraParams, onProgress, signal, askBelowReadable)
         : tool === 'pdf2excel'
         ? await _batchPdf2ExcelOne(file, extraParams, onProgress, signal)
         : await _batchWorkerToolOne(getWorkerTool(tool) ?? tool, file, extraParams, onProgress);
@@ -3134,7 +3184,7 @@ async function _runBatch(tool, filesSnapshot, extraParams, signal) {
   const batchCompressSummary = tool === 'compress' && totalOriginalSize > 0
     ? { originalSize: totalOriginalSize, compressedSize: totalCompressedSize,
       targetResults: zipEntries.filter(entry => entry.target).map(({ name, compressedSize, targetBytes, target }) =>
-        ({ name, compressedSize, targetBytes, met: target.met, qrProtected: target.qrProtected })),
+        ({ name, compressedSize, targetBytes, met: target.met, qrProtected: target.qrProtected, floorStop: target.floorStop, blackAndWhite: target.blackAndWhite })),
     }
     : null;
 

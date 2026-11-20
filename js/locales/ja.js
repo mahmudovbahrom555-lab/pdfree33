@@ -316,6 +316,12 @@ window.PDFREE_LOCALE = {
   compress_target_heavy:     '画像がはっきり柔らかくなっています — 送る前に小さな文字を確認してください。',
   compress_target_qr_protected: 'QRコードの読み取りを保ったまま {target} 以下にできませんでした。保存サイズ：{size}。',
   compress_target_unreached: '⚠️ 最も強い設定でも {target} 未満にできませんでした。こちらは {size} — ほぼ同じ大きさの中で最も画質を保った版です。PDF を分割すると役立つ場合があります。',
+  cmp_floor_title: '小さな文字が読みにくくなってもよいですか？',
+  cmp_floor_body: '{target} にするには、写真やカラーのページを小さな文字が読めなくなるほど縮小する必要があります。役所やポータルで受け付けられないおそれがあります。読める状態を保った最小のファイルは {readable} です。',
+  cmp_floor_stop: '読める状態を保つ（{readable}）',
+  cmp_floor_go: 'それでも {target} に縮小',
+  compress_target_floor: '⚠️ 文字を読める状態に保ったまま {target} 未満にはできませんでした。こちらは {size} — 読める最小の版です。PDF を分割すると役立つ場合があります。',
+  compress_target_bw: 'スキャンした文字のページはサイズに収めるため白黒にしました。文字はくっきりしたままです。',
   prog_target_try:           'サイズに収まる設定を探しています — {n} 回目…',
 
   error_msg:           'エラー: {msg}',
