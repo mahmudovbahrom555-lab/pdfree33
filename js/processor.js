@@ -1872,6 +1872,9 @@ let _compressPrepScans = 0; // scanned pages the last pre-pass made black and wh
 //
 // scan: only on a size target's strongest steps (scanDpi) — text scans to
 // black and white (C37); up to ~5 bytes a pixel while worked on.
+//
+// cacheKey: one per size-target run — its passes reuse the pre-pass's
+// black-and-white pages (js/cmykD.js _cmykdRunCache).
 function _cmykDOptions(preset, file, manual = {}) {
   if (preset === 'low' || file?._signed) return null;
   const base = preset === 'high' ? 75 : 82;
@@ -1891,6 +1894,7 @@ function _cmykDOptions(preset, file, manual = {}) {
     },
     bitonal: { target: 'targetDpi' in manual ? manual.targetDpi && Math.max(200, manual.targetDpi) : 300, maxMegapixels: isLargeDevice() ? 256 : 64 },
     ...(manual.scanDpi ? { scan: { dpi: manual.scanDpi, maxMegapixels: isLargeDevice() ? 64 : 16 } } : {}),
+    ...(manual.cacheKey ? { cacheKey: manual.cacheKey } : {}),
   };
 }
 
@@ -2006,7 +2010,7 @@ const _TARGET_LADDER = [
 async function _compressAttempt(original, file, step, options, signal, onProgress, onScan) {
   throwIfAborted(signal);
   const { preset, targetDpi, quality } = step;
-  const manual = preset === 'low' ? {} : { targetDpi, quality, preferNativeScans: step.preferNativeScans, scanDpi: step.scanDpi };
+  const manual = preset === 'low' ? {} : { targetDpi, quality, preferNativeScans: step.preferNativeScans, scanDpi: step.scanDpi, cacheKey: step.cacheKey };
   const buffer = await _compressPrep(original, file, preset, manual);
   throwIfAborted(signal);
   const prepXmp = _compressPrepXmp, prepScans = _compressPrepScans;
@@ -2056,10 +2060,13 @@ const _TARGET_CLEAR_MISS = 1.1;   // the strongest step over the target by more 
 const _TARGET_READABLE_FLOOR = _TARGET_LADDER.findIndex(s => s.targetDpi != null && s.targetDpi < 150);
 const _belowReadable = r => r.index >= _TARGET_READABLE_FLOOR && r.data.report?.imagesRecompressed > 0;
 
+let _compressRunSeq = 0;   // a new cacheKey for each size-target run
+
 // ask({ targetBytes, size, readableSize }) → Promise<boolean>: go below the
 // readable floor to meet the size? Without it (null), the old behaviour.
 async function _compressToTarget(file, original, originalSize, targetBytes, options, signal, onProgress, ask = null) {
   const steps = _TARGET_LADDER.length;
+  const cacheKey = `run${++_compressRunSeq}`;
   const tried = [];
   let smallest = null;
   let chosen = null;
@@ -2070,7 +2077,7 @@ async function _compressToTarget(file, original, originalSize, targetBytes, opti
     const label = t('prog_target_try', { n: tried.length + 1 });
     onProgress(Math.round(start), label);
     const result = await _compressAttempt(original.slice(0), file, {
-      ...step, preferNativeScans: step.targetDpi >= 200 && !options.removeWatermarks && !file._decryptedBuffer,
+      ...step, preferNativeScans: step.targetDpi >= 200 && !options.removeWatermarks && !file._decryptedBuffer, cacheKey,
     }, options, signal,
       value => onProgress(Math.round(start + value * 0.9 / (steps + 1)), label));
     tried.push([index, result.data.compressedSize]);
