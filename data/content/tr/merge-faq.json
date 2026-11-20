@@ -57,6 +57,14 @@
   },
   {
     "@type": "Question",
+    "name": "Birleştirmeye JPG veya PNG resim ekleyebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Fotoğraflar ve resimler — JPG, PNG, WebP ve iPhone HEIC — PDF'lerinizle birlikte eklenebilir. Her biri, belirlediğiniz sırada, fotoğrafın çekildiği gibi dik çevrilmiş ayrı bir sayfa olur; Resimden PDF'e aracında olduğu gibi. Saydam arka plan beyaz olur."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "PDF'leri birleştirirken yer imleri ve bağlantılar korunur mu?",
     "acceptedAnswer": {
       "@type": "Answer",

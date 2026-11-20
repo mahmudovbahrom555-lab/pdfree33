@@ -73,6 +73,14 @@
   },
   {
     "@type": "Question",
+    "name": "Posso adicionar imagens JPG ou PNG a uma junção?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim. Fotos e imagens — JPG, PNG, WebP e HEIC do iPhone — podem entrar junto com seus PDFs. Cada uma vira uma página própria, na ordem que você definir, endireitada como a foto foi tirada, do mesmo jeito que a ferramenta de imagens para PDF. Um fundo transparente fica branco."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Os marcadores e links são preservados ao juntar PDFs?",
     "acceptedAnswer": {
       "@type": "Answer",

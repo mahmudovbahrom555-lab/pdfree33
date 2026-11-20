@@ -73,6 +73,14 @@
   },
   {
     "@type": "Question",
+    "name": "Bisakah saya menambahkan gambar JPG atau PNG ke penggabungan?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa. Foto dan gambar — JPG, PNG, WebP, dan HEIC dari iPhone — dapat dimasukkan bersama PDF Anda. Masing-masing menjadi satu halaman sendiri, sesuai urutan yang Anda atur, dan diputar tegak seperti saat foto diambil, sama seperti alat Gambar ke PDF. Latar belakang transparan menjadi putih."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Apakah bookmark dan tautan tetap ada setelah menggabungkan PDF?",
     "acceptedAnswer": {
       "@type": "Answer",

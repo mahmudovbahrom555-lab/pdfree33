@@ -2323,9 +2323,55 @@ async function _runJpg2Pdf(filesSnapshot, params, toolKey = 'jpg2pdf') {
 // Safari. A failed decode becomes a zero-length buffer, which worker.js's
 // own existing empty-buffer guard already skips and reports.
 async function _imageBuffer(f) {
-  if (!isHeicFile(f)) return _readSelected(f);
-  const jpegBlob = await decodeHeicToJpegBlob(f);
-  return jpegBlob ? jpegBlob.arrayBuffer() : new ArrayBuffer(0);
+  if (isHeicFile(f)) {
+    const jpegBlob = await decodeHeicToJpegBlob(f);
+    return jpegBlob ? jpegBlob.arrayBuffer() : new ArrayBuffer(0);
+  }
+  const buf = await _readSelected(f);
+  if (!_imageHasAlpha(new Uint8Array(buf, 0, Math.min(buf.byteLength, 1 << 16)))) return buf;
+  try { return await _imageOnWhite(buf); } catch { return buf; }
+}
+
+// A picture with see-through parts is laid on white first: Images to PDF and
+// Merge re-encode pictures as JPEG (worker.js, with compression on — Merge
+// always), which has no transparency, so the clear parts came out black (a
+// logo or a signature on a transparent background, 2026-11-21). Told from the
+// file's header — a picture without alpha costs nothing.
+function _imageHasAlpha(b) {
+  const at = (i, s) => [...s].every((c, k) => b[i + k] === c.charCodeAt(0));
+  if (b[0] === 0x89 && at(1, 'PNG')) {
+    if (b[25] === 4 || b[25] === 6) return true;               // grey + alpha, RGBA
+    for (let i = 8; i + 8 <= b.length;) {                       // a tRNS chunk before the pixels
+      const len = ((b[i] << 24) | (b[i + 1] << 16) | (b[i + 2] << 8) | b[i + 3]) >>> 0;
+      if (at(i + 4, 'tRNS')) return true;
+      if (at(i + 4, 'IDAT')) return false;
+      i += 12 + len;
+    }
+    return false;
+  }
+  if (at(0, 'RIFF') && at(8, 'WEBP')) {
+    if (at(12, 'VP8X')) return (b[20] & 0x10) !== 0;            // the alpha flag
+    if (at(12, 'VP8L')) return (b[24] & 0x10) !== 0;            // alpha_is_used, after 14 + 14 bits of size
+  }
+  return false;
+}
+
+async function _imageOnWhite(buf) {
+  const bitmap = await createImageBitmap(new Blob([buf]), { imageOrientation: 'from-image' });
+  try {
+    const canvas = typeof OffscreenCanvas !== 'undefined'
+      ? new OffscreenCanvas(bitmap.width, bitmap.height)
+      : Object.assign(document.createElement('canvas'), { width: bitmap.width, height: bitmap.height });
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, bitmap.width, bitmap.height);
+    ctx.drawImage(bitmap, 0, 0);
+    const blob = canvas.convertToBlob ? await canvas.convertToBlob({ type: 'image/png' })
+      : await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+    return blob.arrayBuffer();
+  } finally {
+    bitmap.close();
+  }
 }
 
 // One jpg2pdf job on the shared worker, awaited.

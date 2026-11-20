@@ -57,6 +57,14 @@
   },
   {
     "@type": "Question",
+    "name": "Czy mogę dodać obrazy JPG lub PNG do łączenia?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Zdjęcia i obrazy — JPG, PNG, WebP i HEIC z iPhone’a — można dodać razem z plikami PDF. Każdy staje się osobną stroną, w ustalonej przez Ciebie kolejności, obróconą tak, jak zrobiono zdjęcie — tak samo jak w narzędziu Obrazy do PDF. Przezroczyste tło staje się białe."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Czy zakładki i linki są zachowywane podczas łączenia plików PDF?",
     "acceptedAnswer": {
       "@type": "Answer",

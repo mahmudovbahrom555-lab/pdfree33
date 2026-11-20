@@ -73,6 +73,14 @@
   },
   {
     "@type": "Question",
+    "name": "Tôi có thể thêm ảnh JPG hoặc PNG vào khi ghép không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Ảnh chụp và hình ảnh — JPG, PNG, WebP và HEIC từ iPhone — có thể thêm cùng với các tệp PDF. Mỗi ảnh thành một trang riêng, theo thứ tự bạn sắp xếp, được xoay thẳng đúng như lúc chụp, giống công cụ Ảnh sang PDF. Nền trong suốt sẽ thành màu trắng."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Dấu trang và liên kết có được giữ lại khi ghép PDF không?",
     "acceptedAnswer": {
       "@type": "Answer",

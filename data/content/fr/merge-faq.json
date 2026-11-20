@@ -89,6 +89,14 @@
   },
   {
     "@type": "Question",
+    "name": "Puis-je ajouter des images JPG ou PNG à une fusion ?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Oui. Les photos et images — JPG, PNG, WebP et HEIC d’iPhone — peuvent être ajoutées avec vos PDF. Chacune devient une page à part, dans l’ordre que vous choisissez, redressée comme la photo a été prise, comme le fait l’outil Images en PDF. Un fond transparent devient blanc."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Les signets et les liens sont-ils conservés lors de la fusion des PDF ?",
     "acceptedAnswer": {
       "@type": "Answer",
