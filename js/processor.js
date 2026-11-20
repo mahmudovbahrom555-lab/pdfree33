@@ -2051,6 +2051,8 @@ function _runOptionalCompressCheck(buffers, targetBytes, signal, budget) {
 }
 
 const _TARGET_CLEAR_MISS = 1.1;   // the strongest step over the target by more than this: out of reach
+const _TARGET_ONE_BY_ONE = 3;     // gentle steps tried in order before halving the rest
+const _TARGET_LAST_200 = _TARGET_LADDER.findLastIndex(s => s.targetDpi === 200);
 
 // From this step on, pictures and colour pages are JPEG under 150 dpi, where
 // text stops reading (OCR recall held at 150, fell at 120/96/72 — 72 dpi: 2 of
@@ -2089,8 +2091,9 @@ async function _compressToTarget(file, original, originalSize, targetBytes, opti
   // of the people who set a size in 14 days missed it, 3 in 4 of them by more
   // than 2×; 512 KB from a 74 MB scan: 11 passes, 144 s). A stronger step can
   // come out larger than a gentler one (re-encoding, the per-image guard), so
-  // only a clear miss (over 10 %) ends the search here; a near one, or a fit,
-  // goes down the ladder as before, the strongest pass kept for its last rung.
+  // only a clear miss (over 10 %) ends the search here; a near one goes down
+  // the ladder as before, the strongest pass kept for its last rung; a fit is
+  // searched below.
   let strongest = null;
   if (originalSize > targetBytes) {
     strongest = await attempt(steps - 1);
@@ -2098,16 +2101,46 @@ async function _compressToTarget(file, original, originalSize, targetBytes, opti
     if (strongest.data.compressedSize > targetBytes * _TARGET_CLEAR_MISS) chosen = strongest;
   }
 
+  const missed = result => {   // a step that didn't fit, kept for the fallbacks below
+    const size = result.data.compressedSize;
+    if (!smallest || size < smallest.data.compressedSize) smallest = result;
+    // the QR fallback: the strongest step at 150 dpi or more that ran and didn't fit
+    if (mayCheckQr && result.step.targetDpi >= 150 && size <= 8 * MB && (!qrFallback || result.index > qrFallback.index)) qrFallback = result;
+  };
+  // The strongest step fits: the gentle steps go one by one, as before (half
+  // the targets fit there, in 3.2 passes either way); past them the rest is
+  // halved, which runs the answer's gentler neighbour. Halving assumes a
+  // stronger step is smaller; at the same dpi it is, but dropping from 200 to
+  // 150 dpi can come out larger (150 dpi at q 0.75 against 200 dpi at q 0.70),
+  // so an answer under 200 dpi also tries the last 200 dpi step. On the step
+  // sizes of 60 documents (1500 targets) this picks the step the one-by-one
+  // search picks every time, in 5.7 passes on average, not 6.5 — strong fits
+  // 8.0 instead of 10.3 (2026-11-21).
+  if (!chosen && strongest && strongest.data.compressedSize <= targetBytes) {
+    for (let index = 0; index < _TARGET_ONE_BY_ONE && !chosen; index++) {
+      const result = await attempt(index);
+      if (result.data.compressedSize <= targetBytes) chosen = result; else missed(result);
+    }
+    let lo = _TARGET_ONE_BY_ONE, hi = steps - 1, fit = strongest;
+    while (!chosen && lo < hi) {
+      const mid = (lo + hi) >> 1;
+      const result = await attempt(mid);
+      if (result.data.compressedSize <= targetBytes) { hi = mid; fit = result; } else { lo = mid + 1; missed(result); }
+    }
+    if (!chosen && fit.step.targetDpi < 200 && !tried.some(([i]) => i === _TARGET_LAST_200)) {
+      const result = await attempt(_TARGET_LAST_200);
+      if (result.data.compressedSize <= targetBytes) fit = result; else missed(result);
+    }
+    chosen ??= fit;
+  }
   for (let index = 0; index < steps && !chosen; index++) {
     const result = index === steps - 1 && strongest ? strongest : await attempt(index);
-    const size = result.data.compressedSize;
     // _notLarger can return the source as-is when it already fits.
-    if (size <= targetBytes || originalSize <= targetBytes) {
+    if (result.data.compressedSize <= targetBytes || originalSize <= targetBytes) {
       chosen = result;
       break;
     }
-    if (!smallest || size < smallest.data.compressedSize) smallest = result;
-    if (mayCheckQr && result.step.targetDpi >= 150 && size <= 8 * MB) qrFallback = result;
+    missed(result);
   }
 
   // Refine the tested 80% → 75% interval at 200 dpi. Other intervals can
