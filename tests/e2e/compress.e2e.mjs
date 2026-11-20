@@ -667,12 +667,13 @@ await test('real PDF: a timed-out worker is terminated before retry', async () =
 });
 
 async function testTargetSelection({ fittingQuality, attempts, dpi, exactLimit, refinement, fitBytes }) {
+  const fitDpi = dpi;
   const context = await browser.newContext({ serviceWorkers: 'block' });
   try {
     const page = await context.newPage();
     const pdf = Array.from(await textPdf());
     await page.addInitScript(BLOB_HOOK);
-    await page.addInitScript(({ pdf, fittingQuality, exactLimit, refinement, fitBytes }) => {
+    await page.addInitScript(({ pdf, fittingQuality, exactLimit, refinement, fitBytes, fitDpi }) => {
       window.targetAttempts = [];
       const NativeWorker = window.Worker;
       window.Worker = class extends NativeWorker {
@@ -681,9 +682,13 @@ async function testTargetSelection({ fittingQuality, attempts, dpi, exactLimit, 
             super.postMessage(message, transfer);
             return;
           }
-          const { quality } = message.options;
+          const { quality, targetDpi } = message.options;
           window.targetAttempts.push(quality);
-          const fits = quality === fittingQuality || (quality !== null && quality <= 0.60);
+          // at the same dpi a lower quality is never larger (a real PDF's way, which
+          // the halving search relies on); across a dpi drop it can be (150 dpi at
+          // 0.75 larger than 200 dpi at 0.70 — the case these tests keep)
+          const fits = quality === fittingQuality || (quality !== null && quality <= 0.60)
+            || (targetDpi === 200 && fitDpi === 200 && quality !== null && quality <= fittingQuality);
           let size = exactLimit ? exactLimit + (fits ? 0 : 1) : pdf.length + (fits ? 0 : 1024);
           if (fitBytes && quality === fittingQuality) size = fitBytes;
           if (refinement && quality === 0.75) size = 460_000;
@@ -695,7 +700,7 @@ async function testTargetSelection({ fittingQuality, attempts, dpi, exactLimit, 
           } }), 0);
         }
       };
-    }, { pdf, fittingQuality, exactLimit, refinement, fitBytes });
+    }, { pdf, fittingQuality, exactLimit, refinement, fitBytes, fitDpi });
     await page.goto(`${BASE_URL}/compress-pdf/`);
     const input = exactLimit ? fileURLToPath(new URL('arxiv-2609.36796.pdf', realCorpus)) : realFiles[0];
     await page.setInputFiles('#fileInput', input);
@@ -718,17 +723,18 @@ async function testTargetSelection({ fittingQuality, attempts, dpi, exactLimit, 
 }
 
 // The strongest step (72 dpi, 30 %) is tried first since 2026-11-19 — a size out
-// of reach ends there; a reachable one goes down the ladder as before.
+// of reach ends there. A reachable one: the 3 gentle steps one by one, then
+// halving (60, then 75/65 at 150 dpi), then the last 200 dpi step (2026-11-21).
 await test('target size checks a gentler fit even when the next preset grows', () =>
   testTargetSelection({ fittingQuality: 0.85, attempts: [0.30, null, 0.85], dpi: 300 }));
 
 await test('target size lowers JPEG quality at 200 dpi before reducing resolution', () =>
-  testTargetSelection({ exactLimit: 500_000, fittingQuality: 0.70, attempts: [0.30, null, 0.85, 0.80, 0.75, 0.70], dpi: 200 }));
+  testTargetSelection({ exactLimit: 500_000, fittingQuality: 0.70, attempts: [0.30, null, 0.85, 0.80, 0.60, 0.75, 0.65, 0.70], dpi: 200 }));
 
 
 await test('target size treats 500 KB as exactly 500000 bytes', () =>
   testTargetSelection({ exactLimit: 500_000, fittingQuality: 0.75,
-    attempts: [0.30, null, 0.85, 0.80, 0.75], dpi: 200 }));
+    attempts: [0.30, null, 0.85, 0.80, 0.60, 0.75, 0.70, 0.75], dpi: 200 }));
 
 for (const [description, refinement] of [
   ['uses intermediate quality if it fits', 495_000],
@@ -736,13 +742,13 @@ for (const [description, refinement] of [
 ]) {
   await test(`target size ${description}`, () => testTargetSelection({
     exactLimit: 500_000, fittingQuality: 0.75, refinement,
-    attempts: [0.30, null, 0.85, 0.80, 0.75, 0.77], dpi: 200,
+    attempts: [0.30, null, 0.85, 0.80, 0.60, 0.75, 0.70, 0.75, 0.77], dpi: 200,
   }));
 }
 
 await test('target size keeps the tested 70 percent preset when it fits with headroom', () =>
   testTargetSelection({ exactLimit: 500_000, fittingQuality: 0.70, fitBytes: 460_000,
-    attempts: [0.30, null, 0.85, 0.80, 0.75, 0.70], dpi: 200 }));
+    attempts: [0.30, null, 0.85, 0.80, 0.60, 0.75, 0.65, 0.70], dpi: 200 }));
 
 await test('mixed packet restores a sharper scan within budget and preserves the form', async () => {
   const context = await browser.newContext({ serviceWorkers: 'block' });
