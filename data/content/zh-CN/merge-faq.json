@@ -81,6 +81,14 @@
   },
   {
     "@type": "Question",
+    "name": "合并时可以加入 JPG 或 PNG 图片吗？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "可以。照片和图片（JPG、PNG、WebP 以及 iPhone 的 HEIC）可以和 PDF 一起加入。每张图片会成为单独的一页，按您排列的顺序，并按拍摄时的方向自动摆正，与“图片转 PDF”工具的做法相同。透明背景会变成白色。"
+    }
+  },
+  {
+    "@type": "Question",
     "name": "可以在每个合并文件之间插入空白页吗？",
     "acceptedAnswer": {
       "@type": "Answer",

@@ -10,7 +10,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Añada sus archivos PDF",
-      "text": "Haga clic en \"Elegir archivos\" o arrastre sus archivos PDF a la zona de carga. Añada tantos archivos como necesite — 2, 50 o 100+ — no hay límite de número de archivos."
+      "text": "Haga clic en \"Elegir archivos\" o arrastre sus archivos PDF a la zona de carga. Añada tantos archivos como necesite — 2, 50 o 100+ — no hay límite de número de archivos. También puedes añadir fotos e imágenes (JPG, PNG, WebP, HEIC): cada una será una página."
     },
     {
       "@type": "HowToStep",

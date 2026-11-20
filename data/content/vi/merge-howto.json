@@ -10,7 +10,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Thêm file PDF của bạn",
-      "text": "Nhấp 'Chọn file' hoặc kéo file PDF vào vùng thả. Thêm bao nhiêu file tùy ý — 2, 50 hoặc 100+ — không có giới hạn số lượng file."
+      "text": "Nhấp 'Chọn file' hoặc kéo file PDF vào vùng thả. Thêm bao nhiêu file tùy ý — 2, 50 hoặc 100+ — không có giới hạn số lượng file. Bạn cũng có thể thêm ảnh (JPG, PNG, WebP, HEIC) — mỗi ảnh thành một trang."
     },
     {
       "@type": "HowToStep",

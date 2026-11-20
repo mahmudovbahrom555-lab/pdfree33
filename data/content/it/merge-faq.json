@@ -57,6 +57,14 @@
   },
   {
     "@type": "Question",
+    "name": "Posso aggiungere immagini JPG o PNG a un’unione?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Foto e immagini — JPG, PNG, WebP e HEIC dell’iPhone — possono essere aggiunte insieme ai PDF. Ognuna diventa una pagina a sé, nell’ordine che scegli, raddrizzata come è stata scattata la foto, proprio come fa lo strumento Immagini in PDF. Uno sfondo trasparente diventa bianco."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "I segnalibri e i link vengono mantenuti unendo i PDF?",
     "acceptedAnswer": {
       "@type": "Answer",

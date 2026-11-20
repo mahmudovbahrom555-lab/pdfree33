@@ -12,7 +12,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "PDF 추가",
-      "text": "pdfree.io/ko/pdf-hapchigi/를 열고 파일 선택을 클릭하거나 PDF를 드래그하세요.",
+      "text": "pdfree.io/ko/pdf-hapchigi/를 열고 파일 선택을 클릭하거나 PDF를 드래그하세요. 사진과 이미지(JPG, PNG, WebP, HEIC)도 추가할 수 있으며, 각각 한 페이지가 됩니다.",
       "url": "https://pdfree.io/ko/pdf-hapchigi/#step1"
     },
     {

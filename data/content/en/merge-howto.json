@@ -10,7 +10,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Add your PDF files",
-      "text": "Click 'Choose files' or drag your PDF files into the drop zone. Add as many files as you need — 2, 50, or 100+ — there is no file count limit."
+      "text": "Click 'Choose files' or drag your PDF files into the drop zone. Add as many files as you need — 2, 50, or 100+ — there is no file count limit. Photos and pictures (JPG, PNG, WebP, HEIC) can go in too — each becomes a page."
     },
     {
       "@type": "HowToStep",
