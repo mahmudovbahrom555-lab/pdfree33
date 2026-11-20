@@ -313,6 +313,12 @@ window.PDFREE_LOCALE = {
   compress_target_heavy:     'Görseller belirgin biçimde yumuşadı — göndermeden önce küçük yazıları kontrol edin.',
   compress_target_qr_protected: 'QR kodu okunabilir kalırken {target} sınırına ulaşılamadı. Kaydedilen boyut: {size}.',
   compress_target_unreached: '⚠️ En güçlü ayarla bile {target} altına inilemedi. İşte {size} — neredeyse aynı boyuttaki en yumuşak sürüm. PDF\'i bölmek yardımcı olabilir.',
+  cmp_floor_title: 'Küçük yazılar zor okunur hale gelsin mi?',
+  cmp_floor_body: '{target} ancak fotoğraflar ve renkli sayfalar küçük yazıların okunamayacağı kadar küçültülerek elde edilebilir — bir kurum ya da portal böyle bir dosyayı reddedebilir. Okunabilir kalan en küçük dosya {readable}.',
+  cmp_floor_stop: 'Okunabilir kalsın ({readable})',
+  cmp_floor_go: 'Yine de {target} boyutuna küçült',
+  compress_target_floor: '⚠️ Metin okunabilir kalarak {target} altına inilemedi. İşte {size} — okunabilir en küçük sürüm. PDF’yi bölmek yardımcı olabilir.',
+  compress_target_bw: 'Taranmış metin sayfaları sığması için siyah beyaz yapıldı — metin net kalıyor.',
   prog_target_try:           'Sığan ayar aranıyor — deneme {n}…',
 
   error_msg:      'Hata: {msg}',

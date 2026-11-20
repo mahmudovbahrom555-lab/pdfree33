@@ -314,6 +314,12 @@ window.PDFREE_LOCALE = {
   compress_target_heavy:     'Hình ảnh mềm hơn rõ rệt — hãy kiểm tra chữ nhỏ trước khi gửi.',
   compress_target_qr_protected: 'Không thể đạt {target} mà vẫn giữ mã QR đọc được. Dung lượng đã lưu: {size}.',
   compress_target_unreached: '⚠️ Ngay cả với cài đặt mạnh nhất cũng không xuống dưới {target}. Đây là {size} — bản nhẹ tay nhất có kích thước gần như vậy. Tách PDF có thể giúp.',
+  cmp_floor_title: 'Chấp nhận chữ nhỏ khó đọc?',
+  cmp_floor_body: 'Chỉ đạt được {target} khi thu nhỏ ảnh và trang màu đến mức chữ nhỏ có thể không đọc được — cơ quan hoặc cổng dịch vụ công có thể từ chối tệp như vậy. Tệp nhỏ nhất vẫn đọc được là {readable}.',
+  cmp_floor_stop: 'Giữ dễ đọc ({readable})',
+  cmp_floor_go: 'Vẫn nén xuống {target}',
+  compress_target_floor: '⚠️ Không thể xuống dưới {target} mà vẫn giữ chữ đọc được. Đây là {size} — bản nhỏ nhất vẫn đọc được. Chia nhỏ PDF có thể giúp ích.',
+  compress_target_bw: 'Các trang văn bản quét đã được chuyển sang đen trắng để vừa dung lượng — chữ vẫn sắc nét.',
   prog_target_try:           'Đang tìm cài đặt phù hợp — lần thử {n}…',
 
   error_msg:           'Lỗi: {msg}',

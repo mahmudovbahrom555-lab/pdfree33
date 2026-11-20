@@ -314,6 +314,12 @@ window.PDFREE_LOCALE = {
   compress_target_heavy:     'Gambar jadi lebih lembut — periksa tulisan kecil sebelum mengirim.',
   compress_target_qr_protected: 'Tidak dapat mencapai {target} dengan kode QR tetap terbaca. Ukuran tersimpan: {size}.',
   compress_target_unreached: '⚠️ Bahkan dengan pengaturan terkuat tidak bisa di bawah {target}. Ini {size} — versi paling ringan dengan ukuran hampir sama. Memisah PDF bisa membantu.',
+  cmp_floor_title: 'Buat tulisan kecil sulit dibaca?',
+  cmp_floor_body: '{target} hanya bisa dicapai dengan mengecilkan foto dan halaman berwarna sampai tulisan kecil mungkin tidak terbaca — instansi atau portal bisa menolak file seperti itu. File terkecil yang tetap terbaca berukuran {readable}.',
+  cmp_floor_stop: 'Tetap terbaca ({readable})',
+  cmp_floor_go: 'Tetap kecilkan ke {target}',
+  compress_target_floor: '⚠️ Tidak bisa di bawah {target} dengan teks tetap terbaca. Ini {size} — versi terkecil yang masih terbaca. Memisah PDF bisa membantu.',
+  compress_target_bw: 'Halaman teks hasil pindai dijadikan hitam-putih agar muat — teksnya tetap tajam.',
   prog_target_try:           'Mencari pengaturan yang muat — percobaan {n}…',
 
   error_msg:           'Kesalahan: {msg}',
