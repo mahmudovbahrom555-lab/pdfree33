@@ -485,6 +485,17 @@ function _cmykdBitonalSamples(c, w, h, urls) {
   return out;
 }
 
+// A 1-bit image replaced by its smaller version ({ flat, w, h }), still 1 bit
+function _bitonalApply(c, made, ctx) {
+  const { PDFName, PDFNumber, PDFRawStream } = PDFLib;
+  const dict = c.obj.dict;
+  dict.set(PDFName.of('Filter'), PDFName.of('FlateDecode'));
+  dict.delete(PDFName.of('DecodeParms'));
+  dict.set(PDFName.of('Width'), PDFNumber.of(made.w));
+  dict.set(PDFName.of('Height'), PDFNumber.of(made.h));
+  ctx.assign(c.ref, PDFRawStream.of(dict, made.flat));
+}
+
 // Area-averaged samples → 1 bit again, cut half-way; rows padded to a byte
 function _cmykdPackBits(samples, w, h) {
   const bpl = Math.ceil(w / 8), out = new Uint8Array(bpl * h);
@@ -629,20 +640,65 @@ function _scanToBitonal(samples, nc, w, h) {
   return { bpc: 2, palette: Uint8Array.from([255, 255, 255, 0, 0, 0, ...c[0], ...c[1]]), bits };
 }
 
+// ── One compression's passes share their conversions ────────────────────────
+// A size target runs the whole pass up to 5 times on the same file; the steps
+// from 120 dpi down ask for the same black-and-white pages at 300 or 200 dpi
+// (~0.5 s a page to decode, threshold and deflate), and a 1-bit page comes out
+// the same on every step that asks 200 dpi. Kept here, keyed by the run
+// (processor.js passes a new cacheKey for each compression) and by the image's
+// object number, which every pass of the same bytes gives the same.
+const CMYKD_CACHE_BYTES = 64 * 1024 * 1024;
+let _cmykdCache = { key: null, map: new Map(), bytes: 0 };
+function _cmykdRunCache(key) {
+  if (!key) return null;
+  if (_cmykdCache.key !== key) _cmykdCache = { key, map: new Map(), bytes: 0 };
+  const c = _cmykdCache;
+  return {
+    get: k => c.map.get(k),
+    set: (k, v) => {
+      const n = v.flat?.length || 0;
+      if (c.bytes + n > CMYKD_CACHE_BYTES) return;
+      c.map.set(k, v); c.bytes += n;
+    },
+  };
+}
+
 // One page-sized RGB/grey scan (a placed-figure candidate) to black and white
 // at `dpi` → true when replaced, else the reason it stays
-function _scanReplace(c, w, h, eff, dpi, JpegImage, ctx) {
+function _scanReplace(c, w, h, eff, dpi, JpegImage, ctx, cache) {
   const { PDFName, PDFNumber, PDFRawStream, PDFHexString } = PDFLib;
-  if (eff < 180) return 'scan: under 200 dpi';   // 1 bit below 200 dpi breaks small print
+  const key = `scan|${c.ref.tag}|${dpi}`;
+  let made = cache?.get(key);
+  if (!made) {
+    made = _scanMake(c, w, h, eff, dpi, JpegImage, ctx);
+    cache?.set(key, made);
+  }
+  if (made.stays) return made.stays;
+  const dict = c.obj.dict;
+  dict.set(PDFName.of('ColorSpace'), made.palette
+    ? ctx.obj([PDFName.of('Indexed'), PDFName.of('DeviceRGB'), 3, PDFHexString.of([...made.palette].map(v => v.toString(16).padStart(2, '0')).join(''))])
+    : PDFName.of('DeviceGray'));
+  dict.set(PDFName.of('BitsPerComponent'), PDFNumber.of(made.bpc));
+  dict.set(PDFName.of('Filter'), PDFName.of('FlateDecode'));
+  for (const name of ['DecodeParms', 'Decode', 'SMaskInData']) dict.delete(PDFName.of(name));
+  dict.set(PDFName.of('Width'), PDFNumber.of(made.w));
+  dict.set(PDFName.of('Height'), PDFNumber.of(made.h));
+  ctx.assign(c.ref, PDFRawStream.of(dict, made.flat));
+  return true;
+}
+
+// → { bpc, palette, w, h, flat } or { stays: reason }
+function _scanMake(c, w, h, eff, dpi, JpegImage, ctx) {
+  if (eff < 180) return { stays: 'scan: under 200 dpi' };   // 1 bit below 200 dpi breaks small print
   let samples;
   if (c.kind === 'rgb-dct') {
     const j = new JpegImage();
     j.parse(c.obj.contents);
-    if (j.numComponents !== c.nc || j.width !== w || j.height !== h) return 'scan: JPEG does not match its dictionary';
+    if (j.numComponents !== c.nc || j.width !== w || j.height !== h) return { stays: 'scan: JPEG does not match its dictionary' };
     samples = j.getData({ width: w, height: h, forceRGB: false, isSourcePDF: true });
   } else {
     samples = PDFLib.decodePDFRawStream(c.obj).decode();
-    if (samples.length !== w * h * c.nc) return 'scan: raw length';
+    if (samples.length !== w * h * c.nc) return { stays: 'scan: raw length' };
   }
   let nw = w, nh = h;
   if (eff > dpi * 1.1) {
@@ -650,20 +706,10 @@ function _scanReplace(c, w, h, eff, dpi, JpegImage, ctx) {
     samples = _cmykdDownsample(samples, w, h, c.nc, nw, nh);
   }
   const bw = _scanToBitonal(samples, c.nc, nw, nh);
-  if (bw.stays) return bw.stays;
+  if (bw.stays) return bw;
   const flat = ctx.flateStream(bw.bits).contents;
-  if (flat.length >= c.obj.contents.length) return 'scan: not smaller';
-  const dict = c.obj.dict;
-  dict.set(PDFName.of('ColorSpace'), bw.palette
-    ? ctx.obj([PDFName.of('Indexed'), PDFName.of('DeviceRGB'), 3, PDFHexString.of([...bw.palette].map(v => v.toString(16).padStart(2, '0')).join(''))])
-    : PDFName.of('DeviceGray'));
-  dict.set(PDFName.of('BitsPerComponent'), PDFNumber.of(bw.bpc));
-  dict.set(PDFName.of('Filter'), PDFName.of('FlateDecode'));
-  for (const key of ['DecodeParms', 'Decode', 'SMaskInData']) dict.delete(PDFName.of(key));
-  dict.set(PDFName.of('Width'), PDFNumber.of(nw));
-  dict.set(PDFName.of('Height'), PDFNumber.of(nh));
-  ctx.assign(c.ref, PDFRawStream.of(dict, flat));
-  return true;
+  if (flat.length >= c.obj.contents.length) return { stays: 'scan: not smaller' };
+  return { bpc: bw.bpc, palette: bw.palette, w: nw, h: nh, flat };
 }
 
 // ── The pass ─────────────────────────────────────────────────────────────────
@@ -672,12 +718,14 @@ function _scanReplace(c, w, h, eff, dpi, JpegImage, ctx) {
 //         rgb: { target (dpi) | null, quality, maxMegapixels } | null,  — JPX and placed RGB/grey figures
 //         bitonal: { target (dpi), maxMegapixels } | null,     — 1-bit scans (C36)
 //         scan: { dpi, maxMegapixels } | null,                 — text scans to black and white (C37)
-//         urls: { decoders, qpdfJs, qpdfWasm, utif }, onProgress }
+//         urls: { decoders, qpdfJs, qpdfWasm, utif }, onProgress,
+//         cacheKey }                                           — the same for every pass of one compression
 // → { replaced, jpx, placed, bitonal, scans, deferred, before, after, skipped: {reason: count} }   (jpx, placed, bitonal, scans: how many of `replaced`)
 async function cmykD(pdf, opts) {
   const { PDFName, PDFRawStream, PDFArray, PDFNumber, PDFRef, decodePDFRawStream } = PDFLib;
   const ctx = pdf.context;
   const lookup = v => (v instanceof PDFRef ? ctx.lookup(v) : v);
+  const cache = _cmykdRunCache(opts.cacheKey);
   const skipped = {};
   const skip = r => { skipped[r] = (skipped[r] || 0) + 1; };
   const filters = d => { const f = lookup(d.get(PDFName.of('Filter'))); return f instanceof PDFArray ? f.asArray().map(x => lookup(x)?.toString()) : f ? [f.toString()] : []; };
@@ -791,7 +839,7 @@ async function cmykD(pdf, opts) {
         && w * h <= opts.scan.maxMegapixels * 1e6) {
       const old = c.obj.contents.length;
       let r;
-      try { r = _scanReplace(c, w, h, Math.min(w / place.inchX, h / place.inchY), opts.scan.dpi, JpegImage, ctx); }
+      try { r = _scanReplace(c, w, h, Math.min(w / place.inchX, h / place.inchY), opts.scan.dpi, JpegImage, ctx, cache); }
       catch { r = 'scan: decode error'; }
       if (r === true) { replaced++; scans++; before += old; after += ctx.lookup(c.ref).contents.length; continue; }
       skip(r);   // then as any other figure
@@ -809,6 +857,14 @@ async function cmykD(pdf, opts) {
     // placed figures: only those this pass downsamples — the rest stay with worker.js, decoded never
     if (c.kind.startsWith('rgb') && !shrink) { skip('placed: at or below the target'); continue; }
     if (c.kind === 'bitonal' && !shrink) { skip('1-bit: at or below the target'); continue; }
+    const bitonalKey = c.kind === 'bitonal' ? `bitonal|${tag}|${target}` : null;
+    const madeBitonal = bitonalKey && cache?.get(bitonalKey);
+    if (madeBitonal) {
+      if (madeBitonal.stays) { skip(madeBitonal.stays); continue; }
+      _bitonalApply(c, madeBitonal, ctx);
+      replaced++; bitonal++; before += c.obj.contents.length; after += madeBitonal.flat.length;
+      continue;
+    }
     if (medianPage && c.kind === 'rgb-dct' && w * h <= 12_000_000 && Math.max(w, h) >= 600
         && c.nc === 3 && !(d.get(PDFName.of('ColorSpace')) instanceof PDFArray)
         && d.get(PDFName.of('Filter')) === PDFName.of('DCTDecode')
@@ -859,13 +915,10 @@ async function cmykD(pdf, opts) {
     }
     if (c.kind === 'bitonal') {   // still 1 bit, as Flate: not for the JPEG batch
       const flat = ctx.flateStream(_cmykdPackBits(samples, nw, nh)).contents;
-      if (flat.length >= c.obj.contents.length) { skip('1-bit: not smaller'); continue; }
-      const dict = c.obj.dict;
-      dict.set(PDFName.of('Filter'), PDFName.of('FlateDecode'));
-      dict.delete(PDFName.of('DecodeParms'));
-      dict.set(PDFName.of('Width'), PDFNumber.of(nw));
-      dict.set(PDFName.of('Height'), PDFNumber.of(nh));
-      ctx.assign(c.ref, PDFRawStream.of(dict, flat));
+      if (flat.length >= c.obj.contents.length) { cache?.set(bitonalKey, { stays: '1-bit: not smaller' }); skip('1-bit: not smaller'); continue; }
+      const made = { flat, w: nw, h: nh };
+      cache?.set(bitonalKey, made);
+      _bitonalApply(c, made, ctx);
       replaced++; bitonal++; before += c.obj.contents.length; after += flat.length;
       continue;
     }

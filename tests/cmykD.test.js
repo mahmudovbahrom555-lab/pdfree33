@@ -18,7 +18,8 @@
 //     variant UTIF.js doesn't read → left alone; the target never below 200 dpi;
 //   - text scans to black and white on a size target's strongest steps (C37):
 //     ink kept, a coloured stamp keeps its colour (/Indexed), a page with a
-//     picture, under 200 dpi or without the option → left alone.
+//     picture, under 200 dpi or without the option → left alone; the passes
+//     of one run reuse the work (cacheKey).
 //
 // Run: node tests/cmykD.test.js
 
@@ -528,6 +529,25 @@ await test('C37: a page with a picture, a 150 dpi scan, or no scan option → no
   assert(!r3.scans && pdfCs(none) === '/DeviceRGB', JSON.stringify(r3));
 });
 function pdfCs({ pdf, img }) { return pdf.context.lookup(img).dict.get(PDFName.of('ColorSpace')).toString(); }
+
+await test('the passes of one size-target run share their black-and-white pages (cacheKey); a new run works them out again', async () => {
+  const bytes = await (await scanPdf(1500, 1800, scanPage(1500, 1800))).pdf.save({ useObjectStreams: false });
+  const once = async key => {
+    const pdf = await PDFDocument.load(bytes);
+    const t0 = Date.now();
+    const r = await D.cmykD(pdf, { ...SCAN_OPTS, cacheKey: key });
+    const img = firstImageRef(pdf);
+    return { r, ms: Date.now() - t0, data: pdf.context.lookup(img).contents };
+  };
+  const a = await once('runA'), b = await once('runA'), c = await once('runB');
+  assert(a.r.scans === 1 && b.r.scans === 1 && c.r.scans === 1, JSON.stringify([a.r, b.r, c.r]));
+  assert(same(a.data, b.data) && same(a.data, c.data), 'the same bytes every time');
+  assert(b.ms * 3 < a.ms && c.ms * 3 > a.ms, `first ${a.ms} ms, cached ${b.ms} ms, new run ${c.ms} ms`);
+});
+function firstImageRef(pdf) {
+  for (const [ref, o] of pdf.context.enumerateIndirectObjects()) if (o instanceof PDFRawStream && o.dict.get(PDFName.of('Subtype'))?.toString() === '/Image') return ref;
+  return null;
+}
 
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed ? 1 : 0);
