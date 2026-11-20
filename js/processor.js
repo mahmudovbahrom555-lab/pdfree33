@@ -3118,6 +3118,8 @@ async function _runBatch(tool, filesSnapshot, extraParams, signal) {
     setProgress(base, fileLabel);
 
     try {
+      // locked: skipped and named like a failed file (app.js, before the run)
+      if (file._batchSkip) throw new Error(file._batchSkip === 'password' ? 'needs its password' : 'restrictions unremovable');
       if (!_checkSize(file, _BATCH_SIZE_LIMITS[tool] ?? maxFileMb(tool))) {
         throw new Error('File too large'); // _checkSize already toasted specifics
       }

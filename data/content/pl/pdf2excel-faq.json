@@ -49,6 +49,14 @@
   },
   {
     "@type": "Question",
+    "name": "Czy mogę przekonwertować kilka plików PDF do Excela naraz?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tak. Wybierz lub przeciągnij kilka plików PDF jednocześnie i naciśnij „PDF do Excel”: każdy stanie się osobnym plikiem .xlsx, a wszystkie pobierzesz w jednym pliku ZIP. Ustawienie separatora dziesiętnego dotyczy każdego pliku. PDF chroniony hasłem zostanie pominięty i oznaczony na liście. Pojedynczy PDF nadal pobiera się jako jeden plik .xlsx z podglądem tabel."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Czy mogę przekonwertować zeskanowany plik PDF na Excel?",
     "acceptedAnswer": {
       "@type": "Answer",

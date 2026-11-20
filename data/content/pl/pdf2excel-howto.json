@@ -8,7 +8,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Dodaj PDF",
-      "text": "Przeciągnij plik PDF lub kliknij, żeby wybrać z urządzenia."
+      "text": "Przeciągnij plik PDF lub kliknij, żeby wybrać z urządzenia. Możesz też wybrać kilka plików PDF naraz — wrócą w jednym pliku ZIP."
     },
     {
       "@type": "HowToStep",

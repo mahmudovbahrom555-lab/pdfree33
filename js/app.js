@@ -729,17 +729,27 @@ function _onMergeBtnClick() {
     // tool meant to receive it; it caches _decryptedBuffer, which clears this.
     if (currentTool !== 'unlock') {
       await _visiblyWait(Promise.all(selectedFiles.map(f => f._encryptionCheck)));
-      if (selectedFiles.some(f => f._needsPassword && !f._decryptedBuffer)) {
-        showToast(t('ocr_password_protected_inline'), 8000);
-        return;
-      }
       // Editing restrictions qpdf couldn't remove — out of memory on a stream
       // over ~4.5 MB (decryptPdf.js), no password asked. pdf.js opens such a
       // file itself, so the converters that only read it through pdf.js work
       // (checked one by one, 2026-10-25); the rest would write a file still
       // encrypted (Compress, Watermark, OCR's searchable PDF: unopenable) or
       // fail (Rotate, Split).
-      if (!_READS_RESTRICTED.has(currentTool) && selectedFiles.some(f => f._decryptFailed && !f._decryptedBuffer)) {
+      const blocked = f => (f._needsPassword && !f._decryptedBuffer ? 'password'
+        : !_READS_RESTRICTED.has(currentTool) && f._decryptFailed && !f._decryptedBuffer ? 'restrictions' : null);
+      // A batch goes on without them: one locked file among 50 stopped all 50,
+      // with a message naming none (2026-11-21). They are skipped and named
+      // like any file that fails (processor.js _runBatch); all of them locked,
+      // or one file, still stops here.
+      selectedFiles.forEach(f => { f._batchSkip = null; });
+      const reasons = selectedFiles.map(blocked);
+      const batch = TOOLS[currentTool]?.batch && selectedFiles.length > 1;
+      if (batch && reasons.some(r => !r)) {
+        selectedFiles.forEach((f, i) => { f._batchSkip = reasons[i]; });
+      } else if (reasons.includes('password')) {
+        showToast(t('ocr_password_protected_inline'), 8000);
+        return;
+      } else if (reasons.includes('restrictions')) {
         showToast(t('err_restrictions_unremovable'), 10000);
         return;
       }

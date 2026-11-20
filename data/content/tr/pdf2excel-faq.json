@@ -25,6 +25,14 @@
   },
   {
     "@type": "Question",
+    "name": "Birden fazla PDF'yi aynı anda Excel'e dönüştürebilir miyim?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Evet. Birkaç PDF'yi birlikte seçin veya sürükleyin ve «PDF'den Excel'e» düğmesine basın: her biri kendi .xlsx dosyası olur ve hepsini tek bir ZIP olarak indirirsiniz. Ondalık ayırıcı ayarı her dosyaya uygulanır. Parola korumalı bir PDF atlanır ve listede işaretlenir. Tek bir PDF yine tablo önizlemesiyle tek bir .xlsx olarak indirilir."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Taranmış PDF'yi Excel'e dönüştürebilir miyim?",
     "acceptedAnswer": {
       "@type": "Answer",

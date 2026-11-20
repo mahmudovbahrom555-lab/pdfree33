@@ -49,6 +49,14 @@
   },
   {
     "@type": "Question",
+    "name": "Bisakah saya mengonversi beberapa PDF ke Excel sekaligus?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Bisa. Pilih atau seret beberapa PDF sekaligus lalu tekan «PDF ke Excel»: masing-masing menjadi file .xlsx sendiri, dan Anda mengunduh semuanya dalam satu ZIP. Pengaturan pemisah desimal berlaku untuk setiap file. PDF yang dilindungi kata sandi dilewati dan ditandai di daftar. Satu PDF tetap diunduh sebagai satu .xlsx, dengan pratinjau tabelnya."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Bisakah saya mengonversi PDF hasil scan ke Excel?",
     "acceptedAnswer": {
       "@type": "Answer",

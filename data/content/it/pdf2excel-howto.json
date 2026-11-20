@@ -8,7 +8,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Aggiungi il PDF",
-      "text": "Trascina il file PDF o clicca per selezionarlo dal dispositivo."
+      "text": "Trascina il file PDF o clicca per selezionarlo dal dispositivo. Puoi anche scegliere più PDF insieme: tornano in un unico ZIP."
     },
     {
       "@type": "HowToStep",

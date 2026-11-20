@@ -8,7 +8,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "PDF 추가",
-      "text": "PDF 파일을 드래그하거나 클릭하여 기기에서 선택합니다."
+      "text": "PDF 파일을 드래그하거나 클릭하여 기기에서 선택합니다. 여러 PDF를 한 번에 선택할 수도 있으며, 하나의 ZIP으로 받습니다."
     },
     {
       "@type": "HowToStep",

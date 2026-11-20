@@ -49,6 +49,14 @@
   },
   {
     "@type": "Question",
+    "name": "Tôi có thể chuyển nhiều PDF sang Excel cùng lúc không?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Có. Chọn hoặc kéo thả nhiều PDF cùng lúc rồi nhấn «PDF sang Excel»: mỗi PDF thành một tệp .xlsx riêng và bạn tải tất cả về trong một tệp ZIP. Cài đặt dấu phân cách thập phân áp dụng cho mọi tệp. PDF có mật khẩu sẽ được bỏ qua và đánh dấu trong danh sách. Một PDF đơn lẻ vẫn tải về thành một tệp .xlsx, kèm bản xem trước các bảng."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Tôi có thể chuyển file PDF scan sang Excel không?",
     "acceptedAnswer": {
       "@type": "Answer",

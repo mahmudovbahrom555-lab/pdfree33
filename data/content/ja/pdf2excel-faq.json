@@ -49,6 +49,14 @@
   },
   {
     "@type": "Question",
+    "name": "複数のPDFをまとめてExcelに変換できますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "はい。複数のPDFをまとめて選択またはドロップし、「PDFからExcel」を押してください。それぞれが個別の.xlsxファイルになり、すべてを1つのZIPでダウンロードできます。小数点の区切り文字の設定はすべてのファイルに適用されます。パスワードで保護されたPDFはスキップされ、一覧に印が付きます。PDFが1つだけの場合は、これまでどおり表のプレビュー付きで1つの.xlsxとしてダウンロードされます。"
+    }
+  },
+  {
+    "@type": "Question",
     "name": "スキャンしたPDFをExcelに変換できますか？",
     "acceptedAnswer": {
       "@type": "Answer",
