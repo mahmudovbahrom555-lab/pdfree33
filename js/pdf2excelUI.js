@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) 2025 PDFree Contributors
 
+import { previewExcelStyle } from './pdf2excelStyles.js';
 import { id } from './utils.js';
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { preprocessPdfBuffer } from './decryptPdf.js';
@@ -262,7 +263,7 @@ export function renderP2eConfidence({ tableCount, skippedPages = [], imagePages 
     const preview = document.createElement('div');
     preview.id = 'p2ePreview';
     preview.className = 'p2e-preview';
-    previews.forEach(({ name, rows, rowCount, pages, merges = [] }, i) => {
+    previews.forEach(({ name, rows, rowCount, pages, merges = [], cellStyles = [], columnWidths = [], rowHeights = [] }, i) => {
       const details = document.createElement('details');
       details.open = i === 0;
       const summary = document.createElement('summary');
@@ -274,11 +275,23 @@ export function renderP2eConfidence({ tableCount, skippedPages = [], imagePages 
       scroll.setAttribute('role', 'region');
       scroll.setAttribute('aria-label', summary.textContent);
       const table = document.createElement('table');
+      if (columnWidths.length) {
+        table.style.width = `${columnWidths.reduce((sum, width) => sum + width * 7, 0)}px`;
+        table.style.tableLayout = 'fixed';
+        const group = document.createElement('colgroup');
+        columnWidths.forEach(width => {
+          const column = document.createElement('col');
+          column.style.width = `${width * 7}px`;
+          group.append(column);
+        });
+        table.append(group);
+      }
       const head = table.createTHead();
       const body = table.createTBody();
       rows.forEach((row, index) => {
         const spansHeader = merges.some(span => span.row === 0 && span.rowSpan > 1);
         const tr = (index || spansHeader ? body : head).insertRow();
+        if (rowHeights[index]) tr.style.height = rowHeights[index] + 'pt';
         for (let col = 0; col < row.length; col++) {
           if (merges.some(span => span.row < index && index < span.row + (span.rowSpan ?? 1) &&
             col >= span.from && col <= span.to)) continue;
@@ -286,6 +299,8 @@ export function renderP2eConfidence({ tableCount, skippedPages = [], imagePages 
           const cell = document.createElement(index ? 'td' : 'th');
           if (!index) cell.scope = merge ? 'colgroup' : 'col';
           cell.textContent = row[col];
+          if (columnWidths.length) cell.style.minWidth = '0';
+          previewExcelStyle(cell, cellStyles[index]?.[col]);
           if (merge) {
             cell.colSpan = merge.to - merge.from + 1;
             cell.rowSpan = Math.min(merge.rowSpan ?? 1, rows.length - index);

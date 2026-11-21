@@ -821,6 +821,111 @@ test('a stitched table reports each source page once', () => {
   expect(_p2eStitchTables(tables).map(table => table.sourcePages)).toEqual([[1, 2]]);
 });
 
+// Formatting must travel with values, including repeated-header removal.
+test('ruled table retains physical row bands for formatting', () => {
+  const lines = [90,70].map((y,r) => ({ y, items: [
+    {str:r ? 'A' : 'Item', x:10,y,width:20,fontSize:12,bold:false},
+    {str:r ? '2' : 'Qty', x:110,y,width:15,fontSize:12,bold:false},
+  ] }));
+  const result = _p2eExtractPage(lines,[{colXs:[0,100,150],rowYs:[100,80,60]}],1);
+  expect(result.tables[0].rowBands).toEqual([[100,80],[80,60]]);
+});
+test('continuation styles follow rows after removing repeated heading', () => {
+  const a = T(1, [['Item','Qty'],['A','1']], [0,100,150]);
+  const b = T(2, [['Item','Qty'],['B','2']], [0,100,150]);
+  a.cellStyles = [[{font:{size:12}}],[{font:{size:10}}]];
+  b.cellStyles = [[{font:{size:12}}],[{font:{size:9}}]];
+  a.rowHeights = [20,18]; b.rowHeights = [20,17];
+  const table = _p2eStitchTables([a,b])[0];
+  expect(table.cellStyles.length).toBe(3);
+  expect(table.cellStyles[2][0].font.size).toBe(9);
+  expect(table.rowHeights).toEqual([20,18,17]);
+});
+
+const { readExcelPaint, styleExcelTable, applyExcelStyles } = await import('../js/pdf2excelStyles.js');
+const paintOps = (...pairs) => ({fnArray:pairs.map(p=>p[0]),argsArray:pairs.map(p=>p[1])});
+const glyphs = text => [...text].map(unicode=>({unicode}));
+test('text colours require exact complete stream correspondence', () => {
+  const ops = paintOps([59,new Uint8ClampedArray([255,0,0])],[44,[glyphs('AB')]],[59,[0,0,255]],[44,[glyphs('CD')]]);
+  expect(readExcelPaint(ops,[{str:'AB'},{str:'CD'}]).colors).toEqual(['FF0000','0000FF']);
+  expect(readExcelPaint(ops,[{str:'ABC'},{str:'D'}]).colors).toEqual([null,'0000FF']);
+  expect(readExcelPaint(ops,[{str:'AXCD'}]).colors).toEqual([]);
+});
+test('rectangle fills respect transforms and graphics-state restore', () => {
+  const ops = paintOps([10,[]],[12,[2,0,0,2,10,20]],[59,[128,0,255]],
+    [91,[[19],[0,0,50,20]]],[22,[]],[11,[]],[44,[glyphs('A')]]);
+  const paint = readExcelPaint(ops,[{str:'A'}]);
+  expect(paint.fills[0]).toEqual({bounds:[10,20,110,60],color:'8000FF'});
+  expect(paint.colors).toEqual(['000000']);
+});
+test('clipping-only paths do not become backgrounds or borders', () => {
+  const paint = readExcelPaint(paintOps([91,[[19],[0,0,20,20]]],[29,[]],[28,[]]),[]);
+  expect(paint.fills).toEqual([]);expect(paint.rules).toEqual([]);
+});
+test('rectangular clipping intersects subsequent fills', () => {
+  const paint = readExcelPaint(paintOps([91,[[19],[0,0,20,20]]],[29,[]],[28,[]],
+    [91,[[19],[-10,-10,50,50]]],[22,[]]),[]);
+  expect(paint.fills[0].bounds).toEqual([0,0,20,20]);
+});
+test('transparency and hidden text never acquire invented opaque colours', () => {
+  const paint = readExcelPaint(paintOps([9,[[['ca',0.5]]]],[59,[255,0,0]],
+    [44,[glyphs('A')]],[91,[[19],[0,0,20,20]]],[22,[]]),[{str:'A'}]);
+  expect(paint.colors).toEqual([null]);expect(paint.fills[0].color).toBe(null);
+  expect(readExcelPaint(paintOps([38,[3]],[44,[glyphs('A')]]),[{str:'A'}]).colors).toEqual([null]);
+});
+test('small logo rectangle does not colour a larger table cell', () => {
+  const table={rows:[['A']],colXs:[0,100],rowBands:[[100,80]]};
+  styleExcelTable(table,[{str:'A',x:10,y:85,fontSize:12,bold:false}],{fills:[{bounds:[0,80,20,100],color:'FF0000'}]});
+  expect(table.cellStyles[0][0].fill).toBe(undefined);
+});
+test('font and fill metadata never changes values or numerical format', () => {
+  const table={rows:[['42']],colXs:[0,100],rowBands:[[100,80]]};
+  styleExcelTable(table,[{str:'42',x:10,y:85,fontSize:12,bold:true,italic:true,color:'FFFFFF'}],{fills:[{bounds:[0,80,100,100],color:'8000FF'}]});
+  const cell={value:42,numFmt:'0.00'};
+  const row={getCell:()=>cell};const column={};
+  applyExcelStyles({getRow:()=>row,getColumn:()=>column},table);
+  expect(cell.value).toBe(42);expect(cell.numFmt).toBe('0.00');expect(cell.font.size).toBe(12);
+  expect(cell.font.color.argb).toBe('FFFFFFFF');expect(cell.fill.fgColor.argb).toBe('FF8000FF');
+  expect(row.height).toBe(20);expect(table.rows).toEqual([['42']]);
+});
+test('white text without a recognised background stays readable', () => {
+  const table={rows:[['A']],colXs:[0,100],rowBands:[[100,80]]};
+  styleExcelTable(table,[{str:'A',x:10,y:85,fontSize:12,color:'FFFFFF'}],{fills:[]});
+  expect(table.cellStyles[0][0].font.color).toBe(undefined);
+});
+test('stroked rectangles transfer real border colour', () => {
+  const paint=readExcelPaint(paintOps([58,[0,0,255]],[91,[[19],[0,80,100,20]]],[20,[]]),[]);
+  const table={rows:[['A']],colXs:[0,100],rowBands:[[100,80]]};
+  styleExcelTable(table,[],paint);
+  expect(Object.keys(table.cellStyles[0][0].border).length).toBe(4);
+  expect(table.cellStyles[0][0].border.top.color.argb).toBe('FF0000FF');
+});
+
+test('borderless full-row stripe applies but a one-word highlight does not', () => {
+  const make=()=>({rows:[['Item','Qty']],colCenters:[20,120],rowBands:[[100,80]]});
+  const items=[{str:'Item',x:10,y:85,width:25,fontSize:12},{str:'Qty',x:110,y:85,width:20,fontSize:12}];
+  const table=make();styleExcelTable(table,items,{fills:[{bounds:[0,80,140,100],color:'336699'}]});
+  expect(table.cellStyles[0].map(s=>s.fill.fgColor.argb)).toEqual(['FF336699','FF336699']);
+  const highlighted=make();styleExcelTable(highlighted,items,{fills:[{bounds:[0,80,40,100],color:'FFFF00'}]});
+  expect(highlighted.cellStyles[0][0].fill).toBe(undefined);
+});
+test('form placement and quarter-turn rotation preserve rectangle bounds', () => {
+  const ops=paintOps([74,[[1,0,0,1,10,20],[0,0,100,100]]],[59,[20,40,60]],
+    [91,[[19],[0,0,30,40]]],[22,[]],[75,[]]);
+  const paint=readExcelPaint(ops,[],[0,1,-1,0,200,0]);
+  expect(paint.fills[0]).toEqual({bounds:[140,10,180,40],color:'14283C'});
+});
+test('optional formatting work is bounded without changing a large table', () => {
+  const table={rows:Array.from({length:2000},()=>['42']),colXs:[0,100],rowBands:Array.from({length:2000},()=>[100,80])};
+  styleExcelTable(table,Array.from({length:2000},()=>({str:'42',x:10,y:85})),{fills:[]});
+  expect(table.cellStyles).toBe(undefined);expect(table.rows.length).toBe(2000);
+});
+
+test('a curve does not invent a straight border from its old start point', () => {
+  const paint=readExcelPaint(paintOps([91,[[13,15,14],[0,80,0,80,100,80,100,100,0,100]]],[20,[]]),[]);
+  expect(paint.rules).toEqual([]);
+});
+
 // ── Summary ────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
 console.log(`Tests: ${passed + failed} | ✓ ${passed} | ${failed > 0 ? '✗ ' + failed : '0 failed'}`);

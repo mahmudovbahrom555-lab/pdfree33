@@ -70,5 +70,13 @@
       "@type": "Answer",
       "text": "Yes. Each detected table becomes its own sheet in the output .xlsx file, named and ordered to match its position in the PDF, so tables from different pages or sections don't get mixed together."
     }
+  },
+  {
+    "@type": "Question",
+    "name": "Will the spreadsheet keep the PDF table formatting?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "The converter preserves text size, bold and italic styling, and text colours where they can be matched reliably. It also carries over simple solid backgrounds, full-row colour bands, and ordinary borders. Ruled tables retain approximate column widths and row heights. Complex backgrounds, mixed styles within one cell, and exact PDF typography may differ. Check the preview and the downloaded workbook before relying on the result."
+    }
   }
 ]
