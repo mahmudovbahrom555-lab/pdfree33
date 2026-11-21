@@ -15,6 +15,7 @@
 
 import { chromium } from 'playwright';
 import JSZip from 'jszip';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -43,7 +44,7 @@ async function cells(file) {
   return out;
 }
 
-const browser = await chromium.launch();
+const browser = await chromium.launch(process.env.PDFREE_BROWSER_CHANNEL ? {channel:process.env.PDFREE_BROWSER_CHANNEL} : {});
 
 async function convert(page) {
   const [download] = await Promise.all([
@@ -56,11 +57,12 @@ async function convert(page) {
   return file;
 }
 
-async function open(viewport) {
+async function open(viewport, input = PDF) {
   const page = await (await browser.newContext({ serviceWorkers: 'block', acceptDownloads: true, ...(viewport ? { viewport } : {}) })).newPage();
+  if (process.env.PDFREE_EXCELJS_PATH) await page.route('**/exceljs@4.4.0/dist/exceljs.min.js', route => route.fulfill({path:process.env.PDFREE_EXCELJS_PATH,contentType:'application/javascript',headers:{'access-control-allow-origin':'*'}}));
   const errors = []; page.on('pageerror', e => errors.push(e.message));
   await page.goto(BASE_URL + '/pdf-to-excel/', { waitUntil: 'load' });
-  await page.setInputFiles('#fileInput', PDF);
+  await page.setInputFiles('#fileInput', input);
   await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 30000 });
   await page.waitForTimeout(800);
   return { page, errors };
@@ -90,6 +92,41 @@ await test('phone 390×844: downloads by itself, preview visible', async () => {
   const { page } = await open({ width: 390, height: 844 });
   const c = await cells(await convert(page));
   if (c.A2 !== 'Paper') throw new Error(`A2=${c.A2}`);
+});
+
+await test('source fills, text colour and size reach a valid XLSX without changing numbers', async () => {
+  const pdf = await PDFDocument.create();
+  const font = await pdf.embedFont(StandardFonts.Helvetica);
+  const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
+  const source = pdf.addPage([400,400]);
+  [['Item','Qty'],['Paper','42'],['Ink','7']].forEach((row,r) => {
+    row.forEach((text,c) => {
+      source.drawRectangle({x:40+c*140,y:320-r*30,width:140,height:30,
+        color:r===0 ? rgb(0.2,0.4,0.6) : rgb(1,1,1),borderColor:rgb(0,0,0),borderWidth:1});
+      source.drawText(text,{x:45+c*140,y:330-r*30,size:12,font:r===0?bold:font,
+        color:r===0?rgb(1,1,1):rgb(0,0,0)});
+    });
+  });
+  const input={name:'styles.pdf',mimeType:'application/pdf',buffer:Buffer.from(await pdf.save())};
+  const {page,errors}=await open(undefined,input);
+  const file=await convert(page);
+  const zip=await JSZip.loadAsync(fs.readFileSync(file));
+  const styles=await zip.file('xl/styles.xml').async('string');
+  if (!styles.includes('FF336699') || !styles.includes('FFFFFFFF')) throw new Error('source header colours missing');
+  if (!styles.includes('<sz val="12"')) throw new Error('source font size missing');
+  for (const match of styles.matchAll(/rgb="([^"]*)"/g)) if (!/^[0-9A-F]{8}$/i.test(match[1])) throw new Error('invalid XLSX colour: '+match[1]);
+  const c=await cells(file);
+  if(c.B2!==42||c.B3!==7)throw new Error('numeric cells changed');
+  const paint=await page.locator('#p2ePreview th').first().evaluate(el=>({background:getComputedStyle(el).backgroundColor,color:getComputedStyle(el).color}));
+  if(paint.background!=='rgb(51, 102, 153)'||paint.color!=='rgb(255, 255, 255)')throw new Error('preview does not match file: '+JSON.stringify(paint));
+  if(errors.length)throw new Error(errors.join('; '));
+  const {page:phone}=await open({width:390,height:844},input);
+  await convert(phone);
+  const layout=await phone.locator('.p2e-preview-scroll').evaluate(el=>{
+    el.scrollLeft=el.scrollWidth;
+    return {scroll:el.scrollLeft,pageWidth:document.documentElement.scrollWidth,viewport:innerWidth};
+  });
+  if(layout.scroll<=0||layout.pageWidth>layout.viewport)throw new Error('table must scroll inside the phone preview: '+JSON.stringify(layout));
 });
 
 await browser.close();

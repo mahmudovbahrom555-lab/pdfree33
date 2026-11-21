@@ -5,6 +5,7 @@
 //  processor.js — PDF processing via Web Worker
 // ============================================================
 
+import { readExcelPaint, styleExcelTable, applyExcelStyles } from './pdf2excelStyles.js';
 import { fmtSize, formatTargetBytes, throwIfAborted, isMergeImage } from './utils.js';
 import { t, tp } from './i18n.js';
 import { setProgress, hideProgress, setButtonProcessing, setButtonReady,
@@ -3669,6 +3670,9 @@ async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
       rowCount: table.rows.length,
       pages: table.sourcePages,
       merges: table.merges.filter(merge => merge.row < 5),
+      cellStyles: table.previewStyles,
+      columnWidths: table.previewColumnWidths,
+      rowHeights: table.rowHeights?.slice(0, 5),
       rows: table.rows.slice(0, 5).map((row, ri) => ri === 0 ? row :
         row.map(text => _p2ePreviewCell(_p2eCellValue(text, _p2eTableMark(table.rows, decimalSeparator))))),
     })),
@@ -3693,7 +3697,7 @@ async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
 // _runPdf2Excel() can rebuild it a second time (cheap — no PDF re-parse,
 // no re-detection) after demoting whichever tables fail the post-build ERI
 // structural check.
-function _p2eBuildWorkbook(tables, textRows, decimalSeparator) {
+export function _p2eBuildWorkbook(tables, textRows, decimalSeparator) {
   const workbook = new window.ExcelJS.Workbook();
   workbook.creator = 'PDFree';
 
@@ -3742,9 +3746,16 @@ function _p2eBuildWorkbook(tables, textRows, decimalSeparator) {
       });
       col.width = Math.min(maxLen + 2, 60);
     });
+    applyExcelStyles(sheet, tbl);
     for (const { row, from, to, rowSpan = 1 } of tbl.merges ?? []) {
-      sheet.mergeCells(row + 1, from + 1, row + rowSpan, to + 1);
+      sheet.mergeCellsWithoutStyle(row + 1, from + 1, row + rowSpan, to + 1);
     }
+    tbl.previewColumnWidths = sheet.columns.map(col => col.width);
+    tbl.previewStyles = tbl.rows.slice(0, 5).map((row,r) => row.map((_,c) => {
+      const cell = sheet.getCell(r + 1, c + 1);
+      return { font: cell.font, fill: cell.fill, border: cell.border,
+        alignment: { horizontal: typeof cell.value === 'number' ? 'right' : 'left', ...cell.alignment } };
+    }));
   });
 
   if (textRows.length) {
@@ -3839,11 +3850,17 @@ async function _p2eExtractTables(pdfDoc, signal, progress = setProgress) {
       _boldFontCache.set(fontName, bold);
       return bold;
     };
+    let paint = { fills: [], colors: [], rules: [] };
+    try { paint = readExcelPaint(operators, textItems, upright); }
+    catch { /* unsupported graphics must not block extraction of values */ }
     const rtlVisual = rtlItemsAreVisual(content.items);
     const items = textItems      .map((item, seq) => {
         const fam = (content.styles[item.fontName]?.fontFamily || '').toLowerCase();
         const [,,,, x, y] = item.transform;
         return {
+          color: paint.colors[seq],
+          fontFace: /mono/i.test(fam) ? 'Courier New' : /serif/i.test(fam) && !/sans/i.test(fam) ? 'Times New Roman' : 'Arial',
+          italic: /italic|oblique/i.test((() => { try { return page.commonObjs.get(item.fontName)?.name || fam; } catch { return fam; } })()),
           seq,      // content-stream order — see reorderVisualRtlLine
           str: toUnifiedIdeographs((item.dir === 'rtl' && rtlVisual) ? _visualRTLToLogical(item.str) : item.str).split(' ').join(''),
           x: upright ? upright[0] * x + upright[2] * y + upright[4] : x,
@@ -3878,6 +3895,10 @@ async function _p2eExtractTables(pdfDoc, signal, progress = setProgress) {
       }
     } catch { /* unreadable image operators: retain the extracted text */ }
     const pageResult = _p2eExtractPage(lines, grids, p, pageView);
+    for (const table of pageResult.tables) {
+      try { styleExcelTable(table, items, paint); }
+      catch { /* keep the extracted table when optional presentation is unreadable */ }
+    }
     tables.push(...pageResult.tables);
     textRows.push(...pageResult.textRows);
 
@@ -3939,6 +3960,7 @@ export function _p2eExtractPage(lines, grids, page, pageView) {
     }
 
     const rows = [];
+    const rowBands = [];
     const boldRows = new Set();
     const merges = [];
     for (const [band, bandLines] of bands.entries()) {
@@ -3961,6 +3983,7 @@ export function _p2eExtractPage(lines, grids, page, pageView) {
         if (anchors[c + 1] - anchors[c] > 1) merges.push({ row: rows.length, from: anchors[c], to: anchors[c + 1] - 1 });
       }
       rows.push(row);
+      rowBands.push([rowYs[band], rowYs[band + 1]]);
     }
     // Join only identically bounded cells with no drawn rule between them.
     // Even a partial separator keeps cells independent.
@@ -3997,7 +4020,7 @@ export function _p2eExtractPage(lines, grids, page, pageView) {
     if (rows.length < 2) continue;
     claimed.forEach(item => consumedItems.add(item));
     tables.push({
-      page, rows, confidence: 1, boldRows, colXs, merges,
+      page, rows, confidence: 1, boldRows, colXs, merges, rowBands,
       ...position(rowYs[0], rowYs[rowYs.length - 1], left),
     });
   }
@@ -4026,6 +4049,7 @@ export function _p2eExtractPage(lines, grids, page, pageView) {
       // Two amount columns ending at their headings' right edges (3 pt) and
       // three rows placed whole are strong evidence — above the 0.85 gate,
       // which a 0.8 put the statement back into the Text sheet (2026-11-17).
+      rowBands: _p2eLineBands(rest.slice(ledger.startIdx, ledger.endIdx + 1).map(line => [line])),
       page, rows: ledger.rows, confidence: 0.9, boldRows: new Set(), colCenters: ledger.colCenters,
       ...position(rest[ledger.startIdx].y, rest[ledger.endIdx].y, ledger.colCenters[0]),
     });
@@ -4039,6 +4063,7 @@ export function _p2eExtractPage(lines, grids, page, pageView) {
     const top = rest[tbl.startIdx].y;
     const bottom = rest[tbl.endIdx].y;
     tables.push({
+      rowBands: _p2eLineBands(tbl.rowLines.map(lis => lis.map(li => rest[li]))),
       page, rows: tbl.rows, confidence: tbl.confidence, boldRows, colCenters: tbl.colCenters,
       ...position(top, bottom, tbl.colCenters[0]),
     });
@@ -4052,6 +4077,13 @@ export function _p2eExtractPage(lines, grids, page, pageView) {
   });
   tables.sort((a, b) => b.top - a.top || a.left - b.left);
   return { tables, textRows };
+}
+
+function _p2eLineBands(rows) {
+  return rows.map(lines => {
+    const items = lines.flatMap(line => line.items);
+    return [Math.max(...items.map(item => item.y + (item.fontSize || 10))), Math.min(...items.map(item => item.y)) - 0.1];
+  });
 }
 
 const _P2E_AMOUNT_RE = /^[-−(]?[$€£¥]?\s?(?:\d[\d,. \u00A0]*|[.,]\d+)\)?$/;
@@ -4152,6 +4184,8 @@ export function _p2eStitchTables(tables) {
       (matchesColumns && !header && previous.atBottom && tbl.atTop);
     if (!continues) {
       last = { ...tbl, rows: [...tbl.rows], boldRows: new Set(tbl.boldRows) };
+      last.cellStyles = [...(tbl.cellStyles ?? tbl.rows.map(() => []))];
+      last.rowHeights = [...(tbl.rowHeights ?? tbl.rows.map(() => null))];
       last.sourcePages = [tbl.page];
       last.merges = [...(tbl.merges ?? [])];
       lastHeader = header;
@@ -4166,6 +4200,8 @@ export function _p2eStitchTables(tables) {
       for (let i = skip; i < tbl.rows.length; i++) {
         if (tbl.boldRows.has(i)) last.boldRows.add(last.rows.length);
         last.rows.push(tbl.rows[i]);
+        last.cellStyles.push(tbl.cellStyles?.[i] ?? []);
+        last.rowHeights.push(tbl.rowHeights?.[i] ?? null);
       }
     }
     previous = tbl;
