@@ -12,7 +12,7 @@
 //  3. "Already optimized" state: честное сообщение вместо "0% saved".
 // ============================================================
 
-import { id, fmtSize } from './utils.js';
+import { id, fmtSize, formatTargetBytes } from './utils.js';
 import { maxFileMb } from './fileLimits.js';
 import { showToast } from './ui.js';
 import { t, tp } from './i18n.js';
@@ -143,16 +143,6 @@ function _targetSizeRow() {
       </div>
       <p class="compress-target__hint" id="compressTargetHint" ${_targetBytes || _targetCustom ? '' : 'hidden'}>${t('compress_target_hint')}</p>
     </div>`;
-}
-
-function _formatTargetBytes(bytes) {
-  if (bytes < 1_000) return fmtSize(bytes);
-  const mb = bytes >= 1_000_000;
-  const value = bytes / (mb ? 1_000_000 : 1_000);
-  const number = new Intl.NumberFormat(document.documentElement.lang || undefined, {
-    maximumFractionDigits: mb ? 6 : 3,
-  }).format(value);
-  return `${number} ${mb ? 'MB' : 'KB'}`;
 }
 
 function _readTypedTarget() {
@@ -500,7 +490,7 @@ export function renderCompressionReport(data) {
   // Target Size: what fitting cost, said plainly — the setting chosen, a
   // warning when it's a heavy one, and the smallest size when nothing fit
   if (targetBytes && target) {
-    const targetLabel = _formatTargetBytes(targetBytes);
+    const targetLabel = formatTargetBytes(targetBytes);
     const cost = target.pageRefined || target.qrProtected ? '' : target.lossless ? t('compress_target_lossless')
       : t('compress_target_cost', { dpi: target.dpi, quality: Math.round(target.quality * 100) });
     const verdictEl   = document.createElement('div');
@@ -509,11 +499,12 @@ export function renderCompressionReport(data) {
     verdictEl.setAttribute('role', 'status');
     verdictEl.style.marginTop = '12px';
     const status = target.met
-      ? t('compress_target_met', { size: _formatTargetBytes(compressedSize), target: targetLabel })
-      : t(target.qrProtected ? 'compress_target_qr_protected' : 'compress_target_unreached',
-        { size: _formatTargetBytes(compressedSize), target: targetLabel });
+      ? t('compress_target_met', { size: formatTargetBytes(compressedSize), target: targetLabel })
+      : t(target.qrProtected ? 'compress_target_qr_protected' : target.floorStop ? 'compress_target_floor' : 'compress_target_unreached',
+        { size: formatTargetBytes(compressedSize), target: targetLabel });
     verdictEl.textContent = [status, cost].filter(Boolean).join(' · ')
-      + (target.met && target.heavy ? ` ${t('compress_target_heavy')}` : '');
+      + (target.met && target.heavy ? ` ${t('compress_target_heavy')}` : '')
+      + (target.blackAndWhite ? ` ${t('compress_target_bw')}` : '');
     div.insertAdjacentElement('afterend', verdictEl);
   }
 
@@ -550,12 +541,12 @@ export function renderBatchCompressionSummary({ originalSize, compressedSize, ta
     const verdict = document.createElement('ul');
     verdict.id = 'targetVerdict';
     verdict.setAttribute('role', 'status');
-    for (const { name, compressedSize, targetBytes, met, qrProtected } of targetResults) {
+    for (const { name, compressedSize, targetBytes, met, qrProtected, floorStop, blackAndWhite } of targetResults) {
       const item = document.createElement('li');
-      const message = t(met ? 'compress_target_met' : qrProtected ? 'compress_target_qr_protected' : 'compress_target_unreached', {
-        size: _formatTargetBytes(compressedSize), target: _formatTargetBytes(targetBytes),
+      const message = t(met ? 'compress_target_met' : qrProtected ? 'compress_target_qr_protected' : floorStop ? 'compress_target_floor' : 'compress_target_unreached', {
+        size: formatTargetBytes(compressedSize), target: formatTargetBytes(targetBytes),
       });
-      item.textContent = `${name} — ${message}`;
+      item.textContent = `${name} — ${message}${blackAndWhite ? ` ${t('compress_target_bw')}` : ''}`;
       verdict.append(item);
     }
     div.append(verdict);

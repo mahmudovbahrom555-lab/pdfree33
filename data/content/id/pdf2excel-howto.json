@@ -8,7 +8,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Unggah PDF",
-      "text": "Seret file PDF atau klik untuk memilih dari perangkat Anda."
+      "text": "Seret file PDF atau klik untuk memilih dari perangkat Anda. Anda juga bisa memilih beberapa PDF sekaligus — hasilnya dalam satu ZIP."
     },
     {
       "@type": "HowToStep",

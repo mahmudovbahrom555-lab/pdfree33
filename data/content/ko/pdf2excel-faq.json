@@ -49,6 +49,14 @@
   },
   {
     "@type": "Question",
+    "name": "여러 PDF를 한 번에 Excel로 변환할 수 있나요?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "네. 여러 PDF를 함께 선택하거나 끌어다 놓고 'PDF를 Excel로'를 누르세요. 각 PDF가 별도의 .xlsx 파일이 되며, 모두 하나의 ZIP으로 다운로드됩니다. 소수점 구분 기호 설정은 모든 파일에 적용됩니다. 비밀번호로 보호된 PDF는 건너뛰고 목록에 표시됩니다. PDF가 하나뿐이면 지금처럼 표 미리보기와 함께 .xlsx 하나로 다운로드됩니다."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "스캔한 PDF를 Excel로 변환할 수 있나요?",
     "acceptedAnswer": {
       "@type": "Answer",

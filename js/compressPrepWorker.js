@@ -63,14 +63,17 @@
 //  (JPX) RGB/grey images at the mode's own dpi and quality (`cmykD.rgb`) —
 //  nothing else in Compress reads JPX — and downsamples RGB/grey figures drawn
 //  smaller than the page above that dpi (C35: handleCompress judges dpi by
-//  the page size, so it left them).
+//  the page size, so it left them). And 1-bit scans come down to 300 dpi, or
+//  to the resolution asked for but never below 200, still 1 bit
+//  (`cmykD.bitonal`, C36) — handleCompress skips every 1-bit image.
 //
 //  Message contract:
 //   in  → { file: ArrayBuffer, stripXmp: boolean, cmykFlate: boolean,
-//           cmykD: { target, quality, maxMegapixels, rgb: { target, quality, maxMegapixels } | null } | null } [transferred]
+//           cmykD: { target, quality, maxMegapixels, rgb: { target, quality, maxMegapixels } | null,
+//                    bitonal: { target, maxMegapixels } | null } | null } [transferred]
 //   out → { type: 'progress', done, total } while D300 works (keeps the caller's watchdog awake)
 //         { type: 'done', result: ArrayBuffer, encoded: number, resolved: number, xmp: number, cmyk: number,
-//           d: { replaced, jpx, placed, before, after, skipped } | null } [transferred]
+//           d: { replaced, jpx, placed, bitonal, deferred, before, after, skipped } | null } [transferred]
 //         result is the original buffer when nothing was changed.
 //         Any failure also answers 'done' with the original buffer and
 //         encoded: 0 — this pass must never block a compression.
@@ -259,10 +262,13 @@ function _mayHaveBigImage(bytes) {
   return false;
 }
 function _mayHaveJpx(bytes) { return _mayHaveName(bytes, '/JPXDecode'); }
+// a 1-bit image (C36): a false "yes" only costs the parse
+function _mayHaveBitonal(bytes) { return _mayHaveName(bytes, /\/BitsPerComponent\s*1(?!\d)|\/ImageMask\s*true/); }
 function _mayHaveName(bytes, name) {
   const CHUNK = 1 << 20, latin1 = new TextDecoder('latin1');
+  const found = typeof name === 'string' ? t => t.includes(name) : t => name.test(t);
   for (let i = 0; i < bytes.length; i += CHUNK - 64) {
-    if (latin1.decode(bytes.subarray(i, Math.min(bytes.length, i + CHUNK))).includes(name)) return true;
+    if (found(latin1.decode(bytes.subarray(i, Math.min(bytes.length, i + CHUNK))))) return true;
   }
   return false;
 }
@@ -345,7 +351,7 @@ async function _encodeRawImages(buffer, stripXmp = false, cmykFlate = false, dOp
   const rawImages = _mayHaveRawImage(bytesIn), dimRefs = _mayHaveIndirectDims(bytesIn);
   const objectXmp = stripXmp && _mayHaveObjectXmp(bytesIn);
   const anyCmyk = (cmykFlate || dOpts) && _mayHaveCmyk(bytesIn);
-  const cmyk = cmykFlate && anyCmyk, wantD = !!dOpts && (anyCmyk || (!!dOpts.rgb && (_mayHaveJpx(bytesIn) || (!!dOpts.rgb.target && _mayHaveBigImage(bytesIn)))));
+  const cmyk = cmykFlate && anyCmyk, wantD = !!dOpts && (anyCmyk || (!!dOpts.rgb && (_mayHaveJpx(bytesIn) || (!!dOpts.rgb.target && _mayHaveBigImage(bytesIn)))) || (!!dOpts.bitonal && _mayHaveBitonal(bytesIn)));
   const none = { result: buffer, encoded: 0, resolved: 0, xmp: 0, cmyk: 0, d: null };
   if (!rawImages && !dimRefs && !objectXmp && !cmyk && !wantD) return none;
   // No yielding while parsing or writing: pdf-lib pauses every 100 objects
@@ -375,6 +381,7 @@ async function _encodeRawImages(buffer, stripXmp = false, cmykFlate = false, dOp
           decoders: new URL('./vendor/pdfjs-4.10.38/pdf.image_decoders.min.mjs', self.location.href).href,
           qpdfJs:   new URL('./vendor/qpdf/lib/qpdf.js', self.location.href).href,
           qpdfWasm: new URL('./vendor/qpdf/lib/qpdf.wasm', self.location.href).href,
+          utif:     new URL('./vendor/UTIF.js', self.location.href).href,
         },
         onProgress: (done, total) => self.postMessage({ type: 'progress', done, total }),
       });

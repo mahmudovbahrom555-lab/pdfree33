@@ -315,6 +315,12 @@ window.PDFREE_LOCALE = {
   compress_target_heavy:     '이미지가 눈에 띄게 부드러워졌습니다 — 보내기 전에 작은 글씨를 확인하세요.',
   compress_target_qr_protected: 'QR 코드를 읽을 수 있는 상태로 {target} 이하로 줄이지 못했습니다. 저장 크기: {size}.',
   compress_target_unreached: '⚠️ 가장 강한 설정으로도 {target} 아래로 줄이지 못했습니다. {size} 파일입니다 — 크기가 거의 같은 것 중 화질을 가장 잘 지킨 버전입니다. PDF를 나누면 도움이 될 수 있습니다.',
+  cmp_floor_title: '작은 글씨가 읽기 어려워져도 될까요?',
+  cmp_floor_body: '{target}에 맞추려면 사진과 컬러 페이지를 작은 글씨를 읽을 수 없을 만큼 줄여야 합니다. 기관이나 포털에서 이런 파일을 받지 않을 수 있습니다. 읽을 수 있는 가장 작은 파일은 {readable}입니다.',
+  cmp_floor_stop: '읽을 수 있게 유지 ({readable})',
+  cmp_floor_go: '그래도 {target}(으)로 줄이기',
+  compress_target_floor: '⚠️ 글씨를 읽을 수 있게 유지하면서 {target} 아래로 줄이지 못했습니다. {size} 파일입니다 — 읽을 수 있는 가장 작은 버전입니다. PDF를 나누면 도움이 될 수 있습니다.',
+  compress_target_bw: '스캔한 글자 페이지는 크기에 맞추기 위해 흑백으로 바꿨습니다 — 글씨는 선명하게 유지됩니다.',
   prog_target_try:           '크기에 맞는 설정을 찾는 중 — {n}번째 시도…',
 
   error_msg:      '오류: {msg}',

@@ -10,7 +10,7 @@
       "@type": "HowToStep",
       "position": 1,
       "name": "Ajoutez vos fichiers PDF",
-      "text": "Cliquez sur \" Sélectionner les fichiers \" ou faites glisser vos fichiers PDF dans la zone de dépôt. Ajoutez autant de fichiers que nécessaire — 2, 50 ou 100+ — il n'y a aucune limite de nombre de fichiers."
+      "text": "Cliquez sur \" Sélectionner les fichiers \" ou faites glisser vos fichiers PDF dans la zone de dépôt. Ajoutez autant de fichiers que nécessaire — 2, 50 ou 100+ — il n'y a aucune limite de nombre de fichiers. Vous pouvez aussi ajouter des photos et images (JPG, PNG, WebP, HEIC) : chacune devient une page."
     },
     {
       "@type": "HowToStep",

@@ -49,6 +49,14 @@
   },
   {
     "@type": "Question",
+    "name": "Posso convertire più PDF in Excel in una volta?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sì. Scegli o trascina più PDF insieme e premi «PDF in Excel»: ognuno diventa un proprio file .xlsx e li scarichi tutti in un unico ZIP. L’impostazione del separatore decimale vale per ogni file. Un PDF protetto da password viene saltato e segnalato nell’elenco. Un singolo PDF si scarica ancora come un unico .xlsx, con l’anteprima delle tabelle."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Posso convertire un PDF scansionato in Excel?",
     "acceptedAnswer": {
       "@type": "Answer",

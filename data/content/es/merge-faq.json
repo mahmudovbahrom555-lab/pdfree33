@@ -73,6 +73,14 @@
   },
   {
     "@type": "Question",
+    "name": "¿Puedo añadir imágenes JPG o PNG a la unión?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Fotos e imágenes —JPG, PNG, WebP y HEIC del iPhone— pueden ir junto con tus PDF. Cada una se convierte en su propia página, en el orden que elijas y enderezada como se tomó la foto, igual que en la herramienta de imágenes a PDF. Un fondo transparente queda en blanco."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "¿Se conservan los marcadores y los enlaces al combinar PDF?",
     "acceptedAnswer": {
       "@type": "Answer",

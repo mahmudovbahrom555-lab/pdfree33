@@ -313,6 +313,12 @@ window.PDFREE_LOCALE = {
   compress_target_heavy:     'Afbeeldingen zijn merkbaar zachter — controleer kleine tekst voor het versturen.',
   compress_target_qr_protected: '{target} was niet haalbaar met een leesbare QR-code. Opgeslagen: {size}.',
   compress_target_unreached: '⚠️ Zelfs met de sterkste instelling lukte het niet onder {target}. Hier is {size} — de zachtste versie die ongeveer even klein is. De PDF splitsen kan helpen.',
+  cmp_floor_title: 'Kleine tekst moeilijk leesbaar maken?',
+  cmp_floor_body: '{target} is alleen haalbaar door foto’s en kleurenpagina’s zo sterk te verkleinen dat kleine tekst onleesbaar kan worden — een instantie of portaal kan zo’n bestand weigeren. Het kleinste bestand dat leesbaar blijft is {readable}.',
+  cmp_floor_stop: 'Leesbaar houden ({readable})',
+  cmp_floor_go: 'Toch verkleinen tot {target}',
+  compress_target_floor: '⚠️ Onder {target} lukte niet zonder dat de tekst onleesbaar wordt. Hier is {size} — de kleinste leesbare versie. De PDF splitsen kan helpen.',
+  compress_target_bw: 'Gescande tekstpagina’s zijn zwart-wit gemaakt zodat het past — de tekst blijft scherp.',
   prog_target_try:           'Instelling zoeken die past — poging {n}…',
 
   error_msg:      'Fout: {msg}',

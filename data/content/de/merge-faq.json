@@ -73,6 +73,14 @@
   },
   {
     "@type": "Question",
+    "name": "Kann ich JPG- oder PNG-Bilder zum Zusammenfügen hinzufügen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Fotos und Bilder – JPG, PNG, WebP und HEIC vom iPhone – kannst du zusammen mit deinen PDFs hinzufügen. Jedes wird zu einer eigenen Seite, in der Reihenfolge, die du festlegst, und so aufgerichtet, wie das Foto aufgenommen wurde – genau wie beim Werkzeug „JPG zu PDF“. Ein transparenter Hintergrund wird weiß."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Bleiben Lesezeichen und Links beim Zusammenführen erhalten?",
     "acceptedAnswer": {
       "@type": "Answer",

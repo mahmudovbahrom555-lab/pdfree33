@@ -25,6 +25,14 @@
   },
   {
     "@type": "Question",
+    "name": "¿Puedo convertir varios PDF a Excel a la vez?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sí. Elige o arrastra varios PDF juntos y pulsa «Convertir a Excel»: cada uno se convierte en su propio .xlsx y los descargas todos en un solo ZIP. El ajuste del separador decimal se aplica a todos los archivos. Un PDF protegido con contraseña se omite y se marca en la lista. Un solo PDF se sigue descargando como un único .xlsx, con la vista previa de sus tablas."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "¿Puedo convertir un PDF escaneado a Excel?",
     "acceptedAnswer": {
       "@type": "Answer",

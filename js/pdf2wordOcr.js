@@ -13,6 +13,7 @@
 
 import { loadTesseract, createOcrWorker, detectOcrLanguage, recognizePage, ocrLangForLocale, ocrProbesForBrowser, joinOcrWords, ocrLanes } from './ocrEngine.js';
 import { paddleWarm } from './ppocrEngine.js';
+import { onOcrDownload } from './ocrDownloads.js';
 import { cjkJoin } from './cjkText.js';
 import { getLang } from './config.js';
 import { _layerWantsOcr } from './pdf2readCore.js';
@@ -70,6 +71,7 @@ const RUN_GAP_EM = 0.8;
 // into runs there, a space at each (2026-10-10). Still under a column's.
 const CJK_RUN_GAP_EM = 1.25;
 const ROW_TO_FONT = 1 / 1.2;
+const VERTICAL = 2;   // a line box this many times taller than wide is a column of vertical text
 export function ocrItemsFromPage(rec) {
   // rotation 0: the page's own space, x' = a·x + e, y' = d·y + f; a page with
   // /Rotate: the page as shown, y up (pdf2readCore's uprightMatrix) — where
@@ -79,17 +81,23 @@ export function ocrItemsFromPage(rec) {
   const toX = rec.rotation ? cx => cx / scale : cx => (cx - e) / a;
   const toY = rec.rotation ? cy => (rec.canvasH - cy) / scale : cy => (cy - f) / d;
   const items = [];
-  const rows = rec.lines.map(line => line.bbox.y1 - line.bbox.y0).sort((p, q) => p - q);
+  // A line of vertical text (Japanese newspapers) is a column: its box is
+  // tall and narrow, and its type is as large as the column is wide. Sized by
+  // its height, 4 pages of a scanned newspaper came out at 29–131 pt, 691
+  // pages in Word (multi-page judge, Common Crawl, 2026-11-18).
+  const rowOf = b => (b.y1 - b.y0 > VERTICAL * (b.x1 - b.x0) ? b.x1 - b.x0 : b.y1 - b.y0);
+  const rows = rec.lines.map(line => rowOf(line.bbox)).sort((p, q) => p - q);
   const medianRow = rows[Math.floor(rows.length / 2)] || 0;
   const median = vals => [...vals].sort((p, q) => p - q)[Math.floor(vals.length / 2)];
   const boldStroke = rec.lines.length >= BOLD_MIN_LINES ? BOLD_STROKE * median(rec.lines.map(line => line.stroke)) : Infinity;
-  const boldRow = median(rec.lines.filter(line => line.stroke >= boldStroke).map(line => line.bbox.y1 - line.bbox.y0)) ?? 0;
+  const boldRow = median(rec.lines.filter(line => line.stroke >= boldStroke).map(line => rowOf(line.bbox))) ?? 0;
   for (const line of rec.lines) {
     const base = line.baseline && line.baseline.has_baseline !== false
       ? (line.baseline.y0 + line.baseline.y1) / 2
       : line.bbox.y1;
     const lineBottom = median(line.words.map(w => w.bbox.y1));
-    const height = line.bbox.y1 - line.bbox.y0;
+    const height = rowOf(line.bbox);
+    const vertical = height !== line.bbox.y1 - line.bbox.y0;
     // A piece's size from its own words' box: a line Tesseract joined across
     // two columns spans both columns' lines, 1.5× and more the median, and
     // its body text came out at heading size (fa-cols2). Bold text is sized
@@ -136,7 +144,7 @@ export function ocrItemsFromPage(rec) {
       items.push({
         str: joinOcrWords(run.words) + (i < kept.length - 1 ? ' ' : ''),
         x: run.x0, y: toY(ownLevel ? base + median(bottoms) - lineBottom : base),
-        width: run.x1 - run.x0, fontSize: sizeOf(Math.max(...bottoms) - top, bold), bold,
+        width: run.x1 - run.x0, fontSize: vertical ? fontSize : sizeOf(Math.max(...bottoms) - top, bold), bold,
         // some of its line's words were too unsure to keep: what is left is a
         // guess (PDF→PowerPoint keeps such a run invisible over the picture)
         ...(partial ? { partial: true } : {}),
@@ -184,6 +192,8 @@ const LOOK_AHEAD = 8;
 const _outOfMemory = err => /memory|allocat|RangeError/i.test(String(err?.message ?? err));
 // onDetect: called as the language detection starts — tens of seconds on a
 // book of pictures (44 s, 2026-11-17), with nothing else on the screen moving.
+// onDetect(mb) again while it downloads the OCR models: the megabytes so far
+// (whole once past 10) — on a slow line that is most of the wait.
 export function createOcrLayer(pdfDoc, { onPage = () => {}, onDetect = () => {}, rotated = true } = {}) {
   let engine = null;   // Promise<{ worker, lang } | null>
   let closed = false;
@@ -221,6 +231,13 @@ export function createOcrLayer(pdfDoc, { onPage = () => {}, onDetect = () => {},
     })();
   };
   const start = async () => {
+    let base = null, shown = '';
+    const stopCounting = onOcrDownload(total => {
+      base ??= total;
+      const mb = (total - base) / 1e6;
+      const label = mb < 10 ? mb.toFixed(1) : String(Math.round(mb));
+      if (label !== shown && mb >= 0.1) { shown = label; onDetect(label); }
+    });
     try {
       onDetect();
       await loadTesseract();
@@ -243,6 +260,8 @@ export function createOcrLayer(pdfDoc, { onPage = () => {}, onDetect = () => {},
       return { worker, lang: detection.lang };
     } catch {
       return null;   // engine or model unavailable (offline) — pages stay pictures
+    } finally {
+      stopCounting();   // the pages' own labels take over
     }
   };
   return {

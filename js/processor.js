@@ -5,7 +5,7 @@
 //  processor.js — PDF processing via Web Worker
 // ============================================================
 
-import { fmtSize, throwIfAborted, isMergeImage } from './utils.js';
+import { fmtSize, formatTargetBytes, throwIfAborted, isMergeImage } from './utils.js';
 import { t, tp } from './i18n.js';
 import { setProgress, hideProgress, setButtonProcessing, setButtonReady,
          showCancelBtn, hideCancelBtn, showToast, startLongOpHint, clearLongOpHint } from './ui.js';
@@ -24,6 +24,7 @@ import { detectTables, groupItemsIntoLines, looksLikeProseNotData, looksLikeEnum
 import { pageIsRtl, linesInRegion } from './pdf2wordColumns.js';
 import { captureText, lineRunsForSlide, cutsForLine, groupRuns, fittedFontSize, eraseUnpaintedRuns, styledParts } from './pdf2pptLayered.js';
 import { openFeedback } from './feedback.js';
+import { confirmDialog } from './confirmDialog.js';
 import { isHeicFile, decodeHeicToJpegBlob } from './heicDecode.js';
 import { isTiffFile } from './tiffDecode.js';
 import { readExifAngle } from './exifAngle.js';
@@ -190,7 +191,7 @@ const _RUNNER_SCRIPTS = {
   // Merge: adding files starts its page-count scan in the shared worker
   // ("importScripts failed: /js/watermarkImage.js", 3 people, 2026-11-11)
   merge: ['mergeWorker.js', ..._SHARED_WORKER], split: ['splitWorker.js', 'pageTreeCounts.js'], organize: ['organizeWorker.js'],
-  compress: [..._SHARED_WORKER, 'compressPrepWorker.js', 'cmykD.js'], worker: _SHARED_WORKER,
+  compress: [..._SHARED_WORKER, 'compressPrepWorker.js', 'cmykD.js', 'vendor/UTIF.js'], worker: _SHARED_WORKER,
   jpg2pdf: [..._SHARED_WORKER, 'tiffWorker.js', 'vendor/UTIF.js', 'vendor/pako_inflate.min.js'],
   resize: ['resizeWorker.js'], nup: ['nupWorker.js', 'nupLayout.js'], mangaSplit: ['mangaSplitWorker.js'],
   fillOrder: ['fillOrderWorker.js'], cleanScan: ['cleanScanWorker.js'], ereader: ['ereaderWorker.js'],
@@ -434,10 +435,11 @@ export async function doProcess(currentTool, extraParams = {}) {
   // unchanged code below — single-file behavior is byte-for-byte
   // identical to before batch processing existed.
   if (BATCH_TOOLS.has(currentTool) && filesSnapshot.length > 1) {
+    const batchSignal = signal ?? excelRun?.signal;   // compress's or Excel's own cancel
     try {
-      await _runBatch(currentTool, filesSnapshot, extraParams, signal);
+      await _runBatch(currentTool, filesSnapshot, extraParams, batchSignal);
     } catch (err) {
-      if (signal?.aborted) return;
+      if (batchSignal?.aborted) return;
       isProcessing = false;
       setFilesLocked(false);
       hideCancelBtn();
@@ -1848,6 +1850,7 @@ let _compressPrepSettle = null;
 const _COMPRESS_PREP_TIMEOUT_MS = 60_000;
 
 let _compressPrepXmp = 0;   // XMP streams the last pre-pass removed (0 on fallback)
+let _compressPrepScans = 0; // scanned pages the last pre-pass made black and white (C37)
 
 // Mode D300 for print (CMYK) images (js/cmykD.js), owner-approved 2026-11-06:
 // Standard 300 dpi q82, Maximum 300 dpi q75, Light never, a signed file
@@ -1861,6 +1864,17 @@ let _compressPrepXmp = 0;   // XMP streams the last pre-pass removed (0 on fallb
 // misjudges from the page size — the dpi and quality worker.js uses for every
 // other RGB/grey image: the chosen resolution (null = keep), else the mode's
 // 150/96; the chosen quality, else 82/72.
+//
+// bitonal: 1-bit scans, still 1 bit (C36): 300 dpi, or the chosen resolution
+// (a size target's step too) but never below 200 — dense small print broke
+// apart at 150; "Original" (null) keeps them. One byte a pixel while worked
+// on, so 4× D300's pixels for the same memory.
+//
+// scan: only on a size target's strongest steps (scanDpi) — text scans to
+// black and white (C37); up to ~5 bytes a pixel while worked on.
+//
+// cacheKey: one per size-target run — its passes reuse the pre-pass's
+// black-and-white pages (js/cmykD.js _cmykdRunCache).
 function _cmykDOptions(preset, file, manual = {}) {
   if (preset === 'low' || file?._signed) return null;
   const base = preset === 'high' ? 75 : 82;
@@ -1878,11 +1892,15 @@ function _cmykDOptions(preset, file, manual = {}) {
       maxMegapixels: isLargeDevice() ? 24 : 4,
       ...(manual.preferNativeScans ? { preferNativeScans: true } : {}),
     },
+    bitonal: { target: 'targetDpi' in manual ? manual.targetDpi && Math.max(200, manual.targetDpi) : 300, maxMegapixels: isLargeDevice() ? 256 : 64 },
+    ...(manual.scanDpi ? { scan: { dpi: manual.scanDpi, maxMegapixels: isLargeDevice() ? 64 : 16 } } : {}),
+    ...(manual.cacheKey ? { cacheKey: manual.cacheKey } : {}),
   };
 }
 
 function _compressPrep(buffer, file, preset, manual) {
   _compressPrepXmp = 0;
+  _compressPrepScans = 0;
   return new Promise((resolve, reject) => {
     let timer;
     let settled = false;
@@ -1908,7 +1926,7 @@ function _compressPrep(buffer, file, preset, manual) {
     // file can take longer than one watchdog period as a whole)
     _compressPrepWorker.onmessage = (e) => {
       if (e.data.type === 'progress') { clearTimeout(timer); timer = setTimeout(fallback, _COMPRESS_PREP_TIMEOUT_MS); return; }
-      _compressPrepXmp = e.data.xmp || 0; settle(e.data.result);
+      _compressPrepXmp = e.data.xmp || 0; _compressPrepScans = e.data.d?.scans || 0; settle(e.data.result);
     };
     _compressPrepWorker.onerror   = fallback;
     timer = setTimeout(fallback, _COMPRESS_PREP_TIMEOUT_MS);
@@ -1979,26 +1997,29 @@ const _TARGET_LADDER = [
   { preset: 'medium', targetDpi: 200, quality: 0.70 },
   { preset: 'medium', targetDpi: 150, quality: 0.75 },
   { preset: 'medium', targetDpi: 150, quality: 0.65 },
-  { preset: 'medium', targetDpi: 120, quality: 0.60 },
-  { preset: 'medium', targetDpi: 96,  quality: 0.55 },
-  { preset: 'medium', targetDpi: 96,  quality: 0.45 },
-  { preset: 'medium', targetDpi: 72,  quality: 0.40 },
-  { preset: 'medium', targetDpi: 72,  quality: 0.30 },
+  // Below 150 dpi a JPEG text page stops reading; a text scan with no picture
+  // goes black and white instead, at 300 then 200 dpi — smaller, and it reads
+  // (scanDpi, js/cmykD.js C37). Pictures and photos keep these JPEG steps.
+  { preset: 'medium', targetDpi: 120, quality: 0.60, scanDpi: 300 },
+  { preset: 'medium', targetDpi: 96,  quality: 0.55, scanDpi: 300 },
+  { preset: 'medium', targetDpi: 96,  quality: 0.45, scanDpi: 200 },
+  { preset: 'medium', targetDpi: 72,  quality: 0.40, scanDpi: 200 },
+  { preset: 'medium', targetDpi: 72,  quality: 0.30, scanDpi: 200 },
 ];
 
 async function _compressAttempt(original, file, step, options, signal, onProgress, onScan) {
   throwIfAborted(signal);
   const { preset, targetDpi, quality } = step;
-  const manual = preset === 'low' ? {} : { targetDpi, quality, preferNativeScans: step.preferNativeScans };
+  const manual = preset === 'low' ? {} : { targetDpi, quality, preferNativeScans: step.preferNativeScans, scanDpi: step.scanDpi, cacheKey: step.cacheKey };
   const buffer = await _compressPrep(original, file, preset, manual);
   throwIfAborted(signal);
-  const prepXmp = _compressPrepXmp;
+  const prepXmp = _compressPrepXmp, prepScans = _compressPrepScans;
   const data = await _postToWorkerForBatch({
     tool: 'compress', file: buffer,
     options: { ...options, preset, targetDpi: targetDpi ?? null, quality: quality ?? null },
   }, [buffer], onProgress, { signal, onScan, timeoutKey: 'err_compress_timeout' });
   if (!(data.result instanceof ArrayBuffer)) throw new Error('Unexpected result type from worker');
-  return { data: { ...data, compressedSize: data.result.byteLength }, prepXmp };
+  return { data: { ...data, compressedSize: data.result.byteLength }, prepXmp, prepScans };
 }
 
 const _PAGE_REFINE_BUDGET_MS = 750;
@@ -2029,8 +2050,25 @@ function _runOptionalCompressCheck(buffers, targetBytes, signal, budget) {
   });
 }
 
-async function _compressToTarget(file, original, originalSize, targetBytes, options, signal, onProgress) {
+const _TARGET_CLEAR_MISS = 1.1;   // the strongest step over the target by more than this: out of reach
+const _TARGET_ONE_BY_ONE = 3;     // gentle steps tried in order before halving the rest
+const _TARGET_LAST_200 = _TARGET_LADDER.findLastIndex(s => s.targetDpi === 200);
+
+// From this step on, pictures and colour pages are JPEG under 150 dpi, where
+// text stops reading (OCR recall held at 150, fell at 120/96/72 — 72 dpi: 2 of
+// 36 pages; scripts/bench/scan_floor.py, 2026-11-20). A document office may
+// refuse such a file; the user decides (owner, 2026-11-20). Text scans made
+// black and white on these steps (C37) still read, so they don't ask.
+const _TARGET_READABLE_FLOOR = _TARGET_LADDER.findIndex(s => s.targetDpi != null && s.targetDpi < 150);
+const _belowReadable = r => r.index >= _TARGET_READABLE_FLOOR && r.data.report?.imagesRecompressed > 0;
+
+let _compressRunSeq = 0;   // a new cacheKey for each size-target run
+
+// ask({ targetBytes, size, readableSize }) → Promise<boolean>: go below the
+// readable floor to meet the size? Without it (null), the old behaviour.
+async function _compressToTarget(file, original, originalSize, targetBytes, options, signal, onProgress, ask = null) {
   const steps = _TARGET_LADDER.length;
+  const cacheKey = `run${++_compressRunSeq}`;
   const tried = [];
   let smallest = null;
   let chosen = null;
@@ -2041,23 +2079,68 @@ async function _compressToTarget(file, original, originalSize, targetBytes, opti
     const label = t('prog_target_try', { n: tried.length + 1 });
     onProgress(Math.round(start), label);
     const result = await _compressAttempt(original.slice(0), file, {
-      ...step, preferNativeScans: step.targetDpi >= 200 && !options.removeWatermarks && !file._decryptedBuffer,
+      ...step, preferNativeScans: step.targetDpi >= 200 && !options.removeWatermarks && !file._decryptedBuffer, cacheKey,
     }, options, signal,
       value => onProgress(Math.round(start + value * 0.9 / (steps + 1)), label));
     tried.push([index, result.data.compressedSize]);
     return { ...result, index, step };
   };
 
-  for (let index = 0; index < steps; index++) {
-    const result = await attempt(index);
+  // The strongest step first: a target out of reach was learned only after
+  // all 12 full passes — minutes on a big scan, and "over" at the end (43 %
+  // of the people who set a size in 14 days missed it, 3 in 4 of them by more
+  // than 2×; 512 KB from a 74 MB scan: 11 passes, 144 s). A stronger step can
+  // come out larger than a gentler one (re-encoding, the per-image guard), so
+  // only a clear miss (over 10 %) ends the search here; a near one goes down
+  // the ladder as before, the strongest pass kept for its last rung; a fit is
+  // searched below.
+  let strongest = null;
+  if (originalSize > targetBytes) {
+    strongest = await attempt(steps - 1);
+    smallest = strongest;
+    if (strongest.data.compressedSize > targetBytes * _TARGET_CLEAR_MISS) chosen = strongest;
+  }
+
+  const missed = result => {   // a step that didn't fit, kept for the fallbacks below
     const size = result.data.compressedSize;
+    if (!smallest || size < smallest.data.compressedSize) smallest = result;
+    // the QR fallback: the strongest step at 150 dpi or more that ran and didn't fit
+    if (mayCheckQr && result.step.targetDpi >= 150 && size <= 8 * MB && (!qrFallback || result.index > qrFallback.index)) qrFallback = result;
+  };
+  // The strongest step fits: the gentle steps go one by one, as before (half
+  // the targets fit there, in 3.2 passes either way); past them the rest is
+  // halved, which runs the answer's gentler neighbour. Halving assumes a
+  // stronger step is smaller; at the same dpi it is, but dropping from 200 to
+  // 150 dpi can come out larger (150 dpi at q 0.75 against 200 dpi at q 0.70),
+  // so an answer under 200 dpi also tries the last 200 dpi step. On the step
+  // sizes of 60 documents (1500 targets) this picks the step the one-by-one
+  // search picks every time, in 5.7 passes on average, not 6.5 — strong fits
+  // 8.0 instead of 10.3 (2026-11-21).
+  if (!chosen && strongest && strongest.data.compressedSize <= targetBytes) {
+    for (let index = 0; index < _TARGET_ONE_BY_ONE && !chosen; index++) {
+      const result = await attempt(index);
+      if (result.data.compressedSize <= targetBytes) chosen = result; else missed(result);
+    }
+    let lo = _TARGET_ONE_BY_ONE, hi = steps - 1, fit = strongest;
+    while (!chosen && lo < hi) {
+      const mid = (lo + hi) >> 1;
+      const result = await attempt(mid);
+      if (result.data.compressedSize <= targetBytes) { hi = mid; fit = result; } else { lo = mid + 1; missed(result); }
+    }
+    if (!chosen && fit.step.targetDpi < 200 && !tried.some(([i]) => i === _TARGET_LAST_200)) {
+      const result = await attempt(_TARGET_LAST_200);
+      if (result.data.compressedSize <= targetBytes) fit = result; else missed(result);
+    }
+    chosen ??= fit;
+  }
+  for (let index = 0; index < steps && !chosen; index++) {
+    const result = index === steps - 1 && strongest ? strongest : await attempt(index);
     // _notLarger can return the source as-is when it already fits.
-    if (size <= targetBytes || originalSize <= targetBytes) {
+    if (result.data.compressedSize <= targetBytes || originalSize <= targetBytes) {
       chosen = result;
       break;
     }
-    if (!smallest || size < smallest.data.compressedSize) smallest = result;
-    if (mayCheckQr && result.step.targetDpi >= 150 && size <= 8 * MB) qrFallback = result;
+    missed(result);
   }
 
   // Refine the tested 80% → 75% interval at 200 dpi. Other intervals can
@@ -2085,8 +2168,23 @@ async function _compressToTarget(file, original, originalSize, targetBytes, opti
     }
   }
 
+  // Under the readable floor: a size out of reach gets the smallest readable
+  // file; a size reachable only there is the user's call.
+  let floorStop = false;
+  if (ask && _belowReadable(chosen)) {
+    const readable = await attempt(_TARGET_READABLE_FLOOR - 1);
+    const fits = chosen.data.compressedSize <= targetBytes;
+    if (readable.data.compressedSize <= targetBytes) chosen = readable;
+    else if (!fits || !await ask({ targetBytes, size: chosen.data.compressedSize, readableSize: readable.data.compressedSize })) {
+      throwIfAborted(signal);
+      chosen = readable;
+      floorStop = true;
+    }
+    throwIfAborted(signal);
+  }
+
   const { index, step } = chosen;
-  let { data, prepXmp } = chosen;
+  let { data, prepXmp, prepScans } = chosen;
   let final = await _notLarger(data, originalSize, file);
   let keptOriginal = final.result !== data.result;
   let pageRefined = null;
@@ -2121,17 +2219,18 @@ async function _compressToTarget(file, original, originalSize, targetBytes, opti
       finalIndex = check.keptCandidate ? qrFallback.index : 0;
       data = check.keptCandidate ? qrFallback.data : { report: {} };
       prepXmp = check.keptCandidate ? qrFallback.prepXmp : 0;
+      prepScans = check.keptCandidate ? qrFallback.prepScans : 0;
     }
   }
   const { targetDpi = null, quality = null } = finalStep;
   return { final, data, prepXmp, targetBytes, target: {
     met: final.result.byteLength <= targetBytes, lossless: finalIndex === 0 || keptOriginal,
     dpi: targetDpi, quality, heavy: targetDpi !== null && targetDpi <= 96 && quality <= 0.45 && !keptOriginal,
-    step: finalIndex, tried, pageRefined, qrProtected,
+    step: finalIndex, tried, pageRefined, qrProtected, floorStop, blackAndWhite: prepScans > 0 && !keptOriginal,
   } };
 }
 
-async function _compressFile(file, params, signal, onProgress, onScan) {
+async function _compressFile(file, params, signal, onProgress, onScan, askBelowReadable = null) {
   const { preset = 'medium', preserveText = true, removeWatermarks = false,
     targetDpi = null, quality = null, targetBytes = null } = params;
   const original = await _readCompressBuffer(file);
@@ -2139,7 +2238,7 @@ async function _compressFile(file, params, signal, onProgress, onScan) {
   const originalSize = original.byteLength;
   const options = { preserveText, removeWatermarks };
   if (targetBytes) {
-    return { originalSize, ...await _compressToTarget(file, original, originalSize, targetBytes, options, signal, onProgress) };
+    return { originalSize, ...await _compressToTarget(file, original, originalSize, targetBytes, options, signal, onProgress, askBelowReadable) };
   }
   const { data, prepXmp } = await _compressAttempt(original, file, { preset, targetDpi, quality }, options, signal, onProgress, onScan);
   const final = await _notLarger(data, originalSize, file);
@@ -2153,7 +2252,8 @@ async function _runCompress(filesSnapshot, params, toolKey, signal) {
   setProgress(5, t('prog_loading_pdf'));
   const { originalSize, final, data, prepXmp, targetBytes, target } = await _compressFile(
     file, params, signal, setProgress,
-    report => document.dispatchEvent(new CustomEvent('pdfree:scan-report', { detail: { toolKey, report } }))
+    report => document.dispatchEvent(new CustomEvent('pdfree:scan-report', { detail: { toolKey, report } })),
+    _askBelowReadable,
   );
   _compressSucceeded(file, originalSize, final, data, prepXmp, toolKey, target ? { targetBytes, target } : {});
 }
@@ -2223,9 +2323,55 @@ async function _runJpg2Pdf(filesSnapshot, params, toolKey = 'jpg2pdf') {
 // Safari. A failed decode becomes a zero-length buffer, which worker.js's
 // own existing empty-buffer guard already skips and reports.
 async function _imageBuffer(f) {
-  if (!isHeicFile(f)) return _readSelected(f);
-  const jpegBlob = await decodeHeicToJpegBlob(f);
-  return jpegBlob ? jpegBlob.arrayBuffer() : new ArrayBuffer(0);
+  if (isHeicFile(f)) {
+    const jpegBlob = await decodeHeicToJpegBlob(f);
+    return jpegBlob ? jpegBlob.arrayBuffer() : new ArrayBuffer(0);
+  }
+  const buf = await _readSelected(f);
+  if (!_imageHasAlpha(new Uint8Array(buf, 0, Math.min(buf.byteLength, 1 << 16)))) return buf;
+  try { return await _imageOnWhite(buf); } catch { return buf; }
+}
+
+// A picture with see-through parts is laid on white first: Images to PDF and
+// Merge re-encode pictures as JPEG (worker.js, with compression on — Merge
+// always), which has no transparency, so the clear parts came out black (a
+// logo or a signature on a transparent background, 2026-11-21). Told from the
+// file's header — a picture without alpha costs nothing.
+function _imageHasAlpha(b) {
+  const at = (i, s) => [...s].every((c, k) => b[i + k] === c.charCodeAt(0));
+  if (b[0] === 0x89 && at(1, 'PNG')) {
+    if (b[25] === 4 || b[25] === 6) return true;               // grey + alpha, RGBA
+    for (let i = 8; i + 8 <= b.length;) {                       // a tRNS chunk before the pixels
+      const len = ((b[i] << 24) | (b[i + 1] << 16) | (b[i + 2] << 8) | b[i + 3]) >>> 0;
+      if (at(i + 4, 'tRNS')) return true;
+      if (at(i + 4, 'IDAT')) return false;
+      i += 12 + len;
+    }
+    return false;
+  }
+  if (at(0, 'RIFF') && at(8, 'WEBP')) {
+    if (at(12, 'VP8X')) return (b[20] & 0x10) !== 0;            // the alpha flag
+    if (at(12, 'VP8L')) return (b[24] & 0x10) !== 0;            // alpha_is_used, after 14 + 14 bits of size
+  }
+  return false;
+}
+
+async function _imageOnWhite(buf) {
+  const bitmap = await createImageBitmap(new Blob([buf]), { imageOrientation: 'from-image' });
+  try {
+    const canvas = typeof OffscreenCanvas !== 'undefined'
+      ? new OffscreenCanvas(bitmap.width, bitmap.height)
+      : Object.assign(document.createElement('canvas'), { width: bitmap.width, height: bitmap.height });
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, bitmap.width, bitmap.height);
+    ctx.drawImage(bitmap, 0, 0);
+    const blob = canvas.convertToBlob ? await canvas.convertToBlob({ type: 'image/png' })
+      : await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+    return blob.arrayBuffer();
+  } finally {
+    bitmap.close();
+  }
 }
 
 // One jpg2pdf job on the shared worker, awaited.
@@ -2924,8 +3070,27 @@ function _postToWorkerForBatch(msg, transfer, onProgress, { signal, onScan, time
   });
 }
 
-async function _batchCompressOne(file, params, onProgress, signal) {
-  const { final, originalSize, targetBytes, target } = await _compressFile(file, params, signal, onProgress);
+// "Make the text hard to read to reach the size?" — Cancel keeps it readable
+function _askBelowReadable({ targetBytes, readableSize }) {
+  // whole KB (0.01 MB), up: "76.668 KB" reads as 76,668 in half the locales
+  const readable = formatTargetBytes(readableSize >= 1e6 ? Math.ceil(readableSize / 1e4) * 1e4 : Math.ceil(readableSize / 1e3) * 1e3);
+  return confirmDialog({
+    id: 'floorConfirm', icon: '🔍', title: t('cmp_floor_title'),
+    paragraphs: [t('cmp_floor_body', { target: formatTargetBytes(targetBytes), readable })],
+    cancel: t('cmp_floor_stop', { readable }),
+    go: t('cmp_floor_go', { target: formatTargetBytes(targetBytes) }),
+    safeIsPrimary: true,
+  });
+}
+
+// Asked once for a whole batch: the answer holds for every file after it
+function _askBelowReadableOnce() {
+  let answer = null;
+  return info => (answer ??= _askBelowReadable(info));
+}
+
+async function _batchCompressOne(file, params, onProgress, signal, askBelowReadable) {
+  const { final, originalSize, targetBytes, target } = await _compressFile(file, params, signal, onProgress, undefined, askBelowReadable);
   const baseName = file.name.replace(/\.pdf$/i, '');
   return {
     name: `${baseName}-compressed.pdf`, buffer: final.result, originalSize,
@@ -2950,6 +3115,18 @@ async function _batchWorkerToolOne(tool, file, params, onProgress) {
   return { name: `${base}${_BATCH_SUFFIX[tool] || '-processed'}.pdf`, buffer: data.result };
 }
 
+/** One PDF → .xlsx in a batch (people convert 65–188 files a session one by one, 2026-11-18) — returns { name, buffer }. */
+async function _batchPdf2ExcelOne(file, params, onProgress, signal) {
+  try {
+    await loadExcelJs();
+  } catch {
+    throw new Error('Excel library unavailable — check your internet connection.');
+  }
+  if (!window.pdfjsLib) throw new Error('PDF engine not ready — reopen the tool.');
+  const { buffer } = await _pdf2ExcelFile(file, signal, params.decimalSeparator, pct => onProgress(pct));
+  return { name: `${file.name.replace(/\.pdf$/i, '')}.xlsx`, buffer };
+}
+
 async function _runBatch(tool, filesSnapshot, extraParams, signal) {
   const total = filesSnapshot.length;
   trackBatchStart(tool, total);
@@ -2967,6 +3144,7 @@ async function _runBatch(tool, filesSnapshot, extraParams, signal) {
   // (they don't shrink files on purpose), so left at 0 and unused there.
   let totalOriginalSize   = 0;
   let totalCompressedSize = 0;
+  const askBelowReadable = tool === 'compress' ? _askBelowReadableOnce() : null;
 
   for (let i = 0; i < total; i++) {
     // cancelProcess() rejects the CURRENT file's in-flight worker promise via
@@ -2986,6 +3164,8 @@ async function _runBatch(tool, filesSnapshot, extraParams, signal) {
     setProgress(base, fileLabel);
 
     try {
+      // locked: skipped and named like a failed file (app.js, before the run)
+      if (file._batchSkip) throw new Error(file._batchSkip === 'password' ? 'needs its password' : 'restrictions unremovable');
       if (!_checkSize(file, _BATCH_SIZE_LIMITS[tool] ?? maxFileMb(tool))) {
         throw new Error('File too large'); // _checkSize already toasted specifics
       }
@@ -2995,7 +3175,9 @@ async function _runBatch(tool, filesSnapshot, extraParams, signal) {
       };
 
       const result = tool === 'compress'
-        ? await _batchCompressOne(file, extraParams, onProgress, signal)
+        ? await _batchCompressOne(file, extraParams, onProgress, signal, askBelowReadable)
+        : tool === 'pdf2excel'
+        ? await _batchPdf2ExcelOne(file, extraParams, onProgress, signal)
         : await _batchWorkerToolOne(getWorkerTool(tool) ?? tool, file, extraParams, onProgress);
 
       if (!isProcessing || signal?.aborted) return;
@@ -3090,7 +3272,7 @@ async function _runBatch(tool, filesSnapshot, extraParams, signal) {
   const batchCompressSummary = tool === 'compress' && totalOriginalSize > 0
     ? { originalSize: totalOriginalSize, compressedSize: totalCompressedSize,
       targetResults: zipEntries.filter(entry => entry.target).map(({ name, compressedSize, targetBytes, target }) =>
-        ({ name, compressedSize, targetBytes, met: target.met, qrProtected: target.qrProtected })),
+        ({ name, compressedSize, targetBytes, met: target.met, qrProtected: target.qrProtected, floorStop: target.floorStop, blackAndWhite: target.blackAndWhite })),
     }
     : null;
 
@@ -3130,8 +3312,13 @@ async function _runBatch(tool, filesSnapshot, extraParams, signal) {
 export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, stripMetadata = true, preserveNumericFields = false, onProgress, isCancelled } = {}) {
   onProgress?.(5, 'Loading libraries…');
 
+  // JSZip with docx, before the work, not after it: loaded at the end, a
+  // connection lost during a 3-minute conversion threw "Failed to load
+  // jsZip" at the last step and the whole result was lost (a person in
+  // India, 2026-11-18). Now a dead connection is known in a second, and a
+  // live one leaves both in memory for the end.
   try {
-    await loadDocx();
+    await Promise.all([loadDocx(), loadJSZip()]);
   } catch {
     throw new Error('Word library unavailable — check your internet connection.');
   }
@@ -3187,7 +3374,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
     // Scanned pages: their text read with the shared OCR engine (pdf2wordOcr.js).
     const ocr = createOcrLayer(pdfDoc, {
       onPage: _ocrPageLabel(pdfDoc.numPages, (pct, label) => onProgress?.(10 + Math.round(pct * 40), label)),
-      onDetect: () => onProgress?.(10, 'Finding the text\'s language…'),
+      onDetect: mb => onProgress?.(10, mb ? `Finding the text's language… ${mb} MB of the text reader loaded` : 'Finding the text\'s language…'),
     });
     try {
       ({ pageData, median, repeatTextSet, repeatPatternSet, cs } = await _p2wBuildPageData(pdfDoc, {
@@ -3250,7 +3437,7 @@ export async function _buildPdf2WordDocxBlob(file, { mode = 'text', dpi = 150, s
 
   // toBlob() uses JSZip type:"blob" — browser-native, no polyfill needed.
   // toBuffer() uses type:"nodebuffer" which JSZip does not support in browsers.
-  await loadJSZip();
+  // JSZip itself was loaded with docx at the start.
   // characters past U+FFFF split between two JSZip chunks (js/ooxmlRepair.js)
   let blob = await repairSplitSurrogates(await Packer.toBlob(_buildDoc(paragraphs)), window.JSZip);
 
@@ -3353,25 +3540,11 @@ async function _runPdf2Word(filesSnapshot, { mode = 'text', dpi = 150, stripMeta
 // table is appended to a catch-all "Text" sheet so nothing is silently
 // dropped, even on documents that turn out not to be spreadsheet-like.
 
-async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
-  const file = filesSnapshot[0];
-  if (!_checkSize(file, maxFileMb('pdf2excel'))) { _abortUI(); return; }
-
-  setProgress(5, 'Loading libraries…');
-  try {
-    await loadExcelJs();
-  } catch {
-    throw new Error('Excel library unavailable — check your internet connection.');
-  }
-  throwIfAborted(signal);
-
-  if (!window.pdfjsLib) {
-    isProcessing = false; setFilesLocked(false); hideCancelBtn();
-    _handleError('pdf2excel', 'PDF engine not ready — reopen the tool.', 'renderer_not_loaded');
-    return;
-  }
-
-  setProgress(8, 'Loading PDF…');
+// One PDF → its .xlsx bytes, and what the success card says of them: the
+// single-file run and the batch (many files → a ZIP) both. `progress(pct,
+// label)` is setProgress for one file; a batch folds it into its own bar.
+async function _pdf2ExcelFile(file, signal, decimalSeparator, progress = setProgress) {
+  progress(8, 'Loading PDF…');
   const rawBuf = file._decryptedBuffer
     ? file._decryptedBuffer.slice(0)
     : await preprocessPdfBuffer(await _readSelected(file));
@@ -3395,14 +3568,14 @@ async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
   try {
     const doc = await task.promise;
     throwIfAborted(signal);
-    extracted = await _p2eExtractTables(doc, signal);
+    extracted = await _p2eExtractTables(doc, signal, progress);
   } finally {
     signal.removeEventListener('abort', destroy);
     await destroy();
   }
   throwIfAborted(signal);
 
-  setProgress(90, 'Building spreadsheet…');
+  progress(90, 'Building spreadsheet…');
 
   // Gate 1: detector's own confidence (pdf2wordTables.js already floors
   // emission at 0.72 — this raises the bar specifically for "does this
@@ -3438,7 +3611,7 @@ async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
         eri.sheets.filter(s => s.eri < _P2E_ERI_THRESHOLD).map(s => s.name)
       );
       if (badSheetNames.size) {
-        setProgress(95, 'Verifying table structure…');
+        progress(95, 'Verifying table structure…');
         const survivors = [];
         const demotedText = [...textRows];
         tables.forEach((tbl, i) => {
@@ -3458,6 +3631,28 @@ async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
     }
   }
 
+  return { buffer, tables, extracted };
+}
+
+async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
+  const file = filesSnapshot[0];
+  if (!_checkSize(file, maxFileMb('pdf2excel'))) { _abortUI(); return; }
+
+  setProgress(5, 'Loading libraries…');
+  try {
+    await loadExcelJs();
+  } catch {
+    throw new Error('Excel library unavailable — check your internet connection.');
+  }
+  throwIfAborted(signal);
+
+  if (!window.pdfjsLib) {
+    isProcessing = false; setFilesLocked(false); hideCancelBtn();
+    _handleError('pdf2excel', 'PDF engine not ready — reopen the tool.', 'renderer_not_loaded');
+    return;
+  }
+
+  const { buffer, tables, extracted } = await _pdf2ExcelFile(file, signal, decimalSeparator);
   throwIfAborted(signal);
   const blob = new Blob([buffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -3593,7 +3788,7 @@ export function _p2eHasUnrepresentedImage(images, items, view) {
   });
 }
 
-async function _p2eExtractTables(pdfDoc, signal) {
+async function _p2eExtractTables(pdfDoc, signal, progress = setProgress) {
   const tables = [];
   const textRows = [];
   const skippedPages = [];
@@ -3615,8 +3810,8 @@ async function _p2eExtractTables(pdfDoc, signal) {
       throwIfAborted(signal);
       frameStart = performance.now();
     }
-    setProgress(10 + Math.round((p / pdfDoc.numPages) * 75),
-                `Reading page ${p}/${pdfDoc.numPages}…`);
+    progress(10 + Math.round((p / pdfDoc.numPages) * 75),
+             `Reading page ${p}/${pdfDoc.numPages}…`);
 
     const page    = await pdfDoc.getPage(p);
     throwIfAborted(signal);
@@ -6674,8 +6869,33 @@ const _P2W_LAYER_DPI = 200;
 // One grid, not all of them: a flyer's floor plans and boxes are grids too,
 // each with a few of its lines (2026-11-17, cloud corpus).
 const _P2W_ONE_TABLE = 0.6;
+// Not an article in columns over a coloured ground: a designed page's lines
+// are set one under another, side-by-side columns' lines joined into one, and
+// Arabic newsletters were read across their columns, row by row (nightly
+// Arabic run, 2026-11-18: reading order 0.93 → 0.67, 0.85 → 0.68, 0.96 → 0.72).
+// Prose columns: two or more, each of 8 lines and more of 40 letters a line
+// on average (a CJK character counts two), or of 30 lines and more however
+// long. A flyer's pieces side by side are a few lines, or short ones — on 12
+// designed pages the nearest held a column of 33 letters a line, and none a
+// column of more than 19 lines; the newsletters' columns 44–86 letters, and
+// a page of bulleted lists two columns of 34 lines at 35 and 44 (0525394
+// p. 5, read across its columns: order 0.927 → 0.894, 2026-11-19).
+const _P2W_PROSE_LINES = 8;
+const _P2W_PROSE_LETTERS = 40;
+const _P2W_LONG_COLUMN = 30;
+const _P2W_WIDE_RE = /[\u1100-\u11FF\u2E80-\u9FFF\uAC00-\uD7AF\uF900-\uFAFF\uFF00-\uFFEF]/;
+function _p2wProseColumns(pd) {
+  const regions = pd.columnRegions;
+  if (!(regions?.length > 1)) return false;
+  return regions.every((_, k) => {
+    const lines = linesInRegion(pd.lines, regions, k);
+    const letters = lines.reduce((n, ln) => n + [...ln.items.map(i => i.str).join('').trim()].reduce((a, ch) => a + (_P2W_WIDE_RE.test(ch) ? 2 : 1), 0), 0);
+    return lines.length >= _P2W_LONG_COLUMN || (lines.length >= _P2W_PROSE_LINES && letters / lines.length >= _P2W_PROSE_LETTERS);
+  });
+}
 function _p2wDesignedPage(pd) {
   if (pd.ocr || !(pd.cover >= _P2W_DESIGNED_COVER) || !pd.lines.length || pd.lines.length > _P2W_DESIGNED_LINES) return false;
+  if (_p2wProseColumns(pd)) return false;
   return !(pd.borderGrids || []).some(g => g.rowCount >= 3 && g.colCount >= 3 &&
     pd.lines.filter(ln => ln.y >= g.y && ln.y <= g.y + g.h).length >= _P2W_ONE_TABLE * pd.lines.length);
 }

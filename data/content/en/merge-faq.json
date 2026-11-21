@@ -12,7 +12,7 @@
     "name": "Can I add JPG or PNG images to a merge?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. Photos and pictures — JPG, PNG, WebP and iPhone HEIC — can go in alongside your PDFs. Each one becomes a page of its own, in the order you arrange, turned upright as the photo was taken, the same way the Images to PDF tool makes its pages."
+      "text": "Yes. Photos and pictures — JPG, PNG, WebP and iPhone HEIC — can go in alongside your PDFs. Each one becomes a page of its own, in the order you arrange, turned upright as the photo was taken, the same way the Images to PDF tool makes its pages. A transparent background comes out white."
     }
   },
   {

@@ -73,6 +73,14 @@
   },
   {
     "@type": "Question",
+    "name": "Kan ik JPG- of PNG-afbeeldingen toevoegen aan het samenvoegen?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Foto’s en afbeeldingen — JPG, PNG, WebP en HEIC van de iPhone — kunnen samen met je PDF’s worden toegevoegd. Elke afbeelding wordt een eigen pagina, in de volgorde die je kiest, rechtop gezet zoals de foto is gemaakt, net als bij de tool Afbeeldingen naar PDF. Een transparante achtergrond wordt wit."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Blijven bladwijzers en links behouden bij het samenvoegen van PDF's?",
     "acceptedAnswer": {
       "@type": "Answer",

@@ -467,6 +467,13 @@ function _buildGrids(hLines, vLines, pageW = Infinity, pageH = Infinity) {
         // table at all.
         const sidesArePageEdge = leftX <= SNAP * 2 || rightX >= pageW - SNAP * 2;
         if (sidesArePageEdge && (yHi - yLo) < pageH - SNAP * 4) continue;
+        // …nor a band the page's height along one of its sides: a leaflet's
+        // coloured side panel, its boxes inside read as a 12×7 table. Seen
+        // once each frame of a row of boxes was weighed (#227), not only the
+        // widest — that one was the page outline, rejected above (nightly
+        // Arabic run 2026-11-17: an NHS Urdu leaflet's reading order
+        // 0.846 → 0.795, its text poured into empty cells).
+        if (sidesArePageEdge && (yHi - yLo) >= pageH - SNAP * 4 && (rightX - leftX) < pageW - SNAP * 4) continue;
 
         // ── Internal dividers: once the frame is anchored, collect every row/
         // column separator inside it regardless of how much of the width or

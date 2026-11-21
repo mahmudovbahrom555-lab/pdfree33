@@ -292,6 +292,12 @@ export const EN = {
   compress_target_heavy:     'Images are noticeably softer — check small print before sending.',
   compress_target_qr_protected: 'Could not meet {target} while keeping the QR code readable. Saved: {size}.',
   compress_target_unreached: '⚠️ Couldn\'t get under {target}, even at the strongest setting. Here is {size} — the gentlest version that is about as small. Splitting the PDF can help.',
+  cmp_floor_title: 'Make small text hard to read?',
+  cmp_floor_body: '{target} can only be reached by shrinking photos and colour pages so far that small text may become unreadable — an office or portal may refuse such a file. The smallest file that stays readable is {readable}.',
+  cmp_floor_stop: 'Keep it readable ({readable})',
+  cmp_floor_go: 'Shrink to {target} anyway',
+  compress_target_floor: '⚠️ Couldn\'t get under {target} and keep the text readable. Here is {size} — the smallest readable version. Splitting the PDF can help.',
+  compress_target_bw: 'Scanned text pages were made black and white to fit — the text stays sharp.',
   prog_target_try:           'Finding the setting that fits — try {n}…',
 
   error_msg:            'Error: {msg}',

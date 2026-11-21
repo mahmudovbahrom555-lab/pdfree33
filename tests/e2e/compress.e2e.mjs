@@ -388,6 +388,116 @@ async function compressToSize(file, kb) {
   }
 }
 
+// A colour photo filling the page: never black and white (C37), so its
+// strongest steps are JPEG under 150 dpi — below the readable floor
+async function photoPdf() {
+  const W = 1200, H = 900, rgb = Buffer.alloc(W * H * 3);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const i = (y * W + x) * 3, n = (x * 13 + y * 7) % 19;
+    rgb[i] = 128 + 90 * Math.sin(x / 23) + n; rgb[i + 1] = 120 + 80 * Math.cos(y / 19) + n; rgb[i + 2] = 110 + n;
+  }
+  const file = path.join(tmp, 'photo-page.pdf');
+  fs.writeFileSync(file, await imagePdf(zlib.deflateSync(rgb), { Width: W, Height: H, ColorSpace: 'DeviceRGB', Filter: 'FlateDecode' }));
+  return file;
+}
+
+// Compress photoPdf() to `kb`; answer the floor question with `answer`
+// ('go' | 'cancel' | null = must not be asked) → { size, verdict, asked, tries }
+async function photoToSize(file, kb, answer) {
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    await page.addInitScript(BLOB_HOOK);
+    await page.addInitScript(() => {
+      window.__tries = new Set();
+      setInterval(() => {
+        const m = (document.querySelector('#progressLabel')?.textContent || '').match(/(\d+)\D*$/);
+        if (m && /fits/.test(document.querySelector('#progressLabel')?.textContent || '')) window.__tries.add(+m[1]);
+      }, 50);
+    });
+    await page.goto(`${BASE_URL}/compress-pdf/`, { waitUntil: 'load', timeout: 30000 });
+    await page.setInputFiles('#fileInput', file);
+    await page.waitForTimeout(3000);
+    await page.click('.compress-target [data-target="custom"]');
+    await page.selectOption('#compressTargetUnit', 'KB');
+    await page.fill('#compressTargetValue', String(kb));
+    await page.click('#mergeBtn');
+    const asked = await page.waitForFunction(() => window.__blob || document.querySelector('#floorConfirmGo'), null, { timeout: 120000 })
+      .then(() => page.evaluate(() => !!document.querySelector('#floorConfirmGo')));
+    if (asked) {
+      if (!answer) throw new Error('asked, and must not be');
+      await page.click(answer === 'go' ? '#floorConfirmGo' : '#floorConfirmCancel');
+      await page.waitForFunction(() => window.__blob, null, { timeout: 120000 });
+    } else if (answer) throw new Error('not asked');
+    return {
+      size: await page.evaluate(() => window.__blob.size), asked,
+      verdict: await page.locator('#targetVerdict').innerText(),
+      tries: await page.evaluate(() => Math.max(0, ...window.__tries)),
+    };
+  } finally {
+    await context.close();
+  }
+}
+
+await test('a size out of reach: the strongest try, then the smallest readable file — not a 72 dpi one', async () => {
+  // 43 % of the people who set a size in 14 days missed it, 3 in 4 by more
+  // than 2×; each try is a full pass (512 KB from a 74 MB scan: 11 tries,
+  // 144 s) — the strongest step goes first (2026-11-19); out of reach, the
+  // answer is the smallest file that still reads (owner, 2026-11-20)
+  const r = await photoToSize(await photoPdf(), 1, null);
+  if (r.tries !== 2) throw new Error(`answered after ${r.tries} tries`);
+  if (!r.verdict.includes("Couldn't get under") || !r.verdict.includes('readable')) throw new Error(r.verdict);
+});
+
+await test('a size reachable only below the readable floor: the user is asked — Cancel keeps it readable, the other button meets the size', async () => {
+  const file = await photoPdf();
+  const readable = (await photoToSize(file, 1, null)).size;
+  const kb = Math.floor(readable * 0.8 / 1000);
+  const kept = await photoToSize(file, kb, 'cancel');
+  if (Math.abs(kept.size - readable) > readable * 0.02) throw new Error(`kept ${kept.size}, readable was ${readable}`);
+  if (!kept.verdict.includes('readable')) throw new Error(kept.verdict);
+  const met = await photoToSize(file, kb, 'go');
+  if (met.size > kb * 1000) throw new Error(`${met.size} bytes, over ${kb} KB`);
+});
+
+await test('a text scan under a tight size goes black and white at 200 dpi or more, not a 72 dpi JPEG (C37)', async () => {
+  // Below 150 dpi a JPEG text page stops reading (scripts/bench/scan_floor.py);
+  // in black and white it reads at 200 dpi and is no larger (2026-11-20)
+  const W = 2480, H = 3508, rgb = Buffer.alloc(W * H * 3);   // A4 at 300 dpi
+  let seed = 3;
+  const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const ink = y % 60 < 30 && ((Math.floor(x / 9) + Math.floor(y / 13)) % 4 === 0 || x % 37 < 3), n = (rnd() - 0.5) * 10;
+    const i = (y * W + x) * 3, v = ink ? [32, 30, 36] : [244, 241, 232];
+    for (let c = 0; c < 3; c++) rgb[i + c] = Math.max(0, Math.min(255, v[c] + n));
+  }
+  const file = path.join(tmp, 'text-scan.pdf');
+  fs.writeFileSync(file, await imagePdf(zlib.deflateSync(rgb), { Width: W, Height: H, ColorSpace: 'DeviceRGB', Filter: 'FlateDecode' }));
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    await page.addInitScript(BLOB_HOOK);
+    await page.goto(`${BASE_URL}/compress-pdf/`, { waitUntil: 'load', timeout: 30000 });
+    await page.setInputFiles('#fileInput', file);
+    await page.waitForTimeout(3000);
+    await page.click('.compress-target [data-target="custom"]');
+    await page.selectOption('#compressTargetUnit', 'KB');
+    await page.fill('#compressTargetValue', '150');
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__blob, null, { timeout: 180000 });
+    const out = Buffer.from(await page.evaluate(async () => Array.from(new Uint8Array(await window.__blob.arrayBuffer()))));
+    if (out.length > 150_000) throw new Error(`${out.length} bytes, over 150 KB`);
+    const d = firstImage(await PDFDocument.load(out)).dict;
+    const bpc = d.get(PDFName.of('BitsPerComponent')).asNumber(), w = d.get(PDFName.of('Width')).asNumber();
+    if (bpc !== 1 || d.get(PDFName.of('ColorSpace')).toString() !== '/DeviceGray') throw new Error(`not black and white: ${d}`);
+    if (w < 1600) throw new Error(`${w} px wide: under 200 dpi`);
+    const verdict = await page.locator('#targetVerdict').innerText();
+    if (!verdict.includes('black and white')) throw new Error(`the card doesn't say so: ${verdict}`);
+  } finally {
+    await context.close();
+  }
+});
+
 await test('fit into a size: an image PDF fits 40 % of its size, and the cost is said', async () => {
   const W = 1600, H = 1200, rgb = Buffer.alloc(W * H * 3);
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
@@ -557,12 +667,13 @@ await test('real PDF: a timed-out worker is terminated before retry', async () =
 });
 
 async function testTargetSelection({ fittingQuality, attempts, dpi, exactLimit, refinement, fitBytes }) {
+  const fitDpi = dpi;
   const context = await browser.newContext({ serviceWorkers: 'block' });
   try {
     const page = await context.newPage();
     const pdf = Array.from(await textPdf());
     await page.addInitScript(BLOB_HOOK);
-    await page.addInitScript(({ pdf, fittingQuality, exactLimit, refinement, fitBytes }) => {
+    await page.addInitScript(({ pdf, fittingQuality, exactLimit, refinement, fitBytes, fitDpi }) => {
       window.targetAttempts = [];
       const NativeWorker = window.Worker;
       window.Worker = class extends NativeWorker {
@@ -571,9 +682,13 @@ async function testTargetSelection({ fittingQuality, attempts, dpi, exactLimit, 
             super.postMessage(message, transfer);
             return;
           }
-          const { quality } = message.options;
+          const { quality, targetDpi } = message.options;
           window.targetAttempts.push(quality);
-          const fits = quality === fittingQuality || (quality !== null && quality <= 0.60);
+          // at the same dpi a lower quality is never larger (a real PDF's way, which
+          // the halving search relies on); across a dpi drop it can be (150 dpi at
+          // 0.75 larger than 200 dpi at 0.70 — the case these tests keep)
+          const fits = quality === fittingQuality || (quality !== null && quality <= 0.60)
+            || (targetDpi === 200 && fitDpi === 200 && quality !== null && quality <= fittingQuality);
           let size = exactLimit ? exactLimit + (fits ? 0 : 1) : pdf.length + (fits ? 0 : 1024);
           if (fitBytes && quality === fittingQuality) size = fitBytes;
           if (refinement && quality === 0.75) size = 460_000;
@@ -585,7 +700,7 @@ async function testTargetSelection({ fittingQuality, attempts, dpi, exactLimit, 
           } }), 0);
         }
       };
-    }, { pdf, fittingQuality, exactLimit, refinement, fitBytes });
+    }, { pdf, fittingQuality, exactLimit, refinement, fitBytes, fitDpi });
     await page.goto(`${BASE_URL}/compress-pdf/`);
     const input = exactLimit ? fileURLToPath(new URL('arxiv-2609.36796.pdf', realCorpus)) : realFiles[0];
     await page.setInputFiles('#fileInput', input);
@@ -607,16 +722,19 @@ async function testTargetSelection({ fittingQuality, attempts, dpi, exactLimit, 
   }
 }
 
+// The strongest step (72 dpi, 30 %) is tried first since 2026-11-19 — a size out
+// of reach ends there. A reachable one: the 3 gentle steps one by one, then
+// halving (60, then 75/65 at 150 dpi), then the last 200 dpi step (2026-11-21).
 await test('target size checks a gentler fit even when the next preset grows', () =>
-  testTargetSelection({ fittingQuality: 0.85, attempts: [null, 0.85], dpi: 300 }));
+  testTargetSelection({ fittingQuality: 0.85, attempts: [0.30, null, 0.85], dpi: 300 }));
 
 await test('target size lowers JPEG quality at 200 dpi before reducing resolution', () =>
-  testTargetSelection({ exactLimit: 500_000, fittingQuality: 0.70, attempts: [null, 0.85, 0.80, 0.75, 0.70], dpi: 200 }));
+  testTargetSelection({ exactLimit: 500_000, fittingQuality: 0.70, attempts: [0.30, null, 0.85, 0.80, 0.60, 0.75, 0.65, 0.70], dpi: 200 }));
 
 
 await test('target size treats 500 KB as exactly 500000 bytes', () =>
   testTargetSelection({ exactLimit: 500_000, fittingQuality: 0.75,
-    attempts: [null, 0.85, 0.80, 0.75], dpi: 200 }));
+    attempts: [0.30, null, 0.85, 0.80, 0.60, 0.75, 0.70, 0.75], dpi: 200 }));
 
 for (const [description, refinement] of [
   ['uses intermediate quality if it fits', 495_000],
@@ -624,13 +742,13 @@ for (const [description, refinement] of [
 ]) {
   await test(`target size ${description}`, () => testTargetSelection({
     exactLimit: 500_000, fittingQuality: 0.75, refinement,
-    attempts: [null, 0.85, 0.80, 0.75, 0.77], dpi: 200,
+    attempts: [0.30, null, 0.85, 0.80, 0.60, 0.75, 0.70, 0.75, 0.77], dpi: 200,
   }));
 }
 
 await test('target size keeps the tested 70 percent preset when it fits with headroom', () =>
   testTargetSelection({ exactLimit: 500_000, fittingQuality: 0.70, fitBytes: 460_000,
-    attempts: [null, 0.85, 0.80, 0.75, 0.70], dpi: 200 }));
+    attempts: [0.30, null, 0.85, 0.80, 0.60, 0.75, 0.65, 0.70], dpi: 200 }));
 
 await test('mixed packet restores a sharper scan within budget and preserves the form', async () => {
   const context = await browser.newContext({ serviceWorkers: 'block' });

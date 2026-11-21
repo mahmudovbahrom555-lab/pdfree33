@@ -49,6 +49,14 @@
   },
   {
     "@type": "Question",
+    "name": "結合にJPGやPNGの画像を追加できますか？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "はい。写真や画像（JPG、PNG、WebP、iPhoneのHEIC）をPDFと一緒に追加できます。それぞれが1ページになり、並べた順に、撮影したときの向きに正しく回転されます。画像からPDFへのツールと同じ仕組みです。透明な背景は白になります。"
+    }
+  },
+  {
+    "@type": "Question",
     "name": "オフラインでもPDF結合はできますか？",
     "acceptedAnswer": {
       "@type": "Answer",
