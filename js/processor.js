@@ -677,6 +677,8 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilena
 // per-page PDF into one array — holding N pages in RAM at once — before
 // sending them all back in a single message. This worker instead streams
 // each page back the instant it's ready.
+const _partsBucket = n => n <= 2 ? '2' : n <= 5 ? '3-5' : n <= 10 ? '6-10' : '11+';
+
 let _splitWorker = null;
 function _ensureSplitWorker() {
   if (!_splitWorker) {
@@ -772,13 +774,17 @@ async function _runSplit(filesSnapshot, { pages, mode, removeWatermarks = false 
           filename = 'split_pages.zip';
           streamZip = null;
         }
+        // What the person got: one PDF, or a ZIP of how many files — on a phone
+        // a ZIP is harder to find and open (zh report, 2026-11-21); before
+        // changing the ZIP, see how often and on which devices it is given.
+        const mode = data.mode === 'single' ? 'pdf' : `zip_${_partsBucket(data.totalPages)}`;
 
         isProcessing = false;
         setFilesLocked(false);
         hideCancelBtn();
         setProgress(100, t('prog_done'));
         document.dispatchEvent(new CustomEvent('pdfree:success', {
-          detail: { tool: toolKey, blob, desc, filename }
+          detail: { tool: toolKey, blob, desc, filename, mode }
         }));
       } catch (err) {
         isProcessing = false;
