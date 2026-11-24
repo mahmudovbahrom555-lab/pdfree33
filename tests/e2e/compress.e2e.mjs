@@ -37,6 +37,13 @@ import path from 'path';
 import { fileURLToPath } from 'node:url';
 import { trapCases, textPdf, firstImage, imagePdf, RAW_RGB, W as TW, H as TH } from '../corpus/traps.mjs';
 
+// The size field shows the file's own unit (KB under 1 MB, else MB); typing
+// into it is what turns compress-to-size on (owner, 2026-11-24).
+async function setTargetKb(page, kb) {
+  const unit = (await page.textContent('.compress-target__unit')).trim();
+  await page.fill('#compressTargetValue', String(unit === 'KB' ? Number(kb) : Number(kb) / 1000));
+}
+
 const BASE_URL = process.env.PDFREE_BASE_URL || 'http://localhost:8934';
 
 let passed = 0, failed = 0;
@@ -375,9 +382,7 @@ async function compressToSize(file, kb) {
     await page.goto(`${BASE_URL}/compress-pdf/`, { waitUntil: 'load', timeout: 30000 });
     await page.setInputFiles('#fileInput', file);
     await page.waitForTimeout(3000);
-    await page.click('.compress-target [data-target="custom"]');
-    await page.selectOption('#compressTargetUnit', 'KB');
-    await page.fill('#compressTargetValue', String(kb));
+    await setTargetKb(page, String(kb));
     await page.click('#mergeBtn');
     await page.waitForFunction(() => window.__blob, null, { timeout: 120000 });
     const size = await page.evaluate(() => window.__blob.size);
@@ -418,9 +423,7 @@ async function photoToSize(file, kb, answer) {
     await page.goto(`${BASE_URL}/compress-pdf/`, { waitUntil: 'load', timeout: 30000 });
     await page.setInputFiles('#fileInput', file);
     await page.waitForTimeout(3000);
-    await page.click('.compress-target [data-target="custom"]');
-    await page.selectOption('#compressTargetUnit', 'KB');
-    await page.fill('#compressTargetValue', String(kb));
+    await setTargetKb(page, String(kb));
     await page.click('#mergeBtn');
     const asked = await page.waitForFunction(() => window.__blob || document.querySelector('#floorConfirmGo'), null, { timeout: 120000 })
       .then(() => page.evaluate(() => !!document.querySelector('#floorConfirmGo')));
@@ -480,9 +483,7 @@ await test('a text scan under a tight size goes black and white at 200 dpi or mo
     await page.goto(`${BASE_URL}/compress-pdf/`, { waitUntil: 'load', timeout: 30000 });
     await page.setInputFiles('#fileInput', file);
     await page.waitForTimeout(3000);
-    await page.click('.compress-target [data-target="custom"]');
-    await page.selectOption('#compressTargetUnit', 'KB');
-    await page.fill('#compressTargetValue', '150');
+    await setTargetKb(page, '150');
     await page.click('#mergeBtn');
     await page.waitForFunction(() => window.__blob, null, { timeout: 180000 });
     const out = Buffer.from(await page.evaluate(async () => Array.from(new Uint8Array(await window.__blob.arrayBuffer()))));
@@ -532,9 +533,7 @@ async function batchWithTarget(context, kb) {
   const page = await context.newPage();
   await page.goto(`${BASE_URL}/compress-pdf/`);
   await page.setInputFiles('#fileInput', realFiles);
-  await page.click('.compress-target [data-target="custom"]');
-  await page.selectOption('#compressTargetUnit', 'KB');
-  await page.fill('#compressTargetValue', String(kb));
+  await setTargetKb(page, String(kb));
   await page.click('#mergeBtn');
   const button = page.locator('#downloadBtn');
   await button.waitFor({ timeout: 120000 });
@@ -609,7 +608,7 @@ await test('cancelled target compression cannot time out or interfere with a ret
     });
     await page.goto(`${BASE_URL}/compress-pdf/`);
     await page.setInputFiles('#fileInput', realFiles[0]);
-    await page.click('.compress-target [data-target="5"]');
+    await setTargetKb(page, 5000);
     await page.clock.install();
     await page.click('#mergeBtn');
     await page.waitForFunction(() => window.compressRequests === 1);
@@ -704,9 +703,7 @@ async function testTargetSelection({ fittingQuality, attempts, dpi, exactLimit, 
     await page.goto(`${BASE_URL}/compress-pdf/`);
     const input = exactLimit ? fileURLToPath(new URL('arxiv-2609.36796.pdf', realCorpus)) : realFiles[0];
     await page.setInputFiles('#fileInput', input);
-    await page.click('.compress-target [data-target="custom"]');
-    await page.selectOption('#compressTargetUnit', 'KB');
-    await page.fill('#compressTargetValue', String(exactLimit ? exactLimit / 1000 : Math.ceil(pdf.length / 1000)));
+    await setTargetKb(page, String(exactLimit ? exactLimit / 1000 : Math.ceil(pdf.length / 1000)));
     await page.click('#mergeBtn');
     await page.locator('#downloadBtn').waitFor();
     if (exactLimit) {
@@ -862,6 +859,43 @@ await test('strong compression keeps a QR-readable scan when the smaller version
     expect(verdict.bytes).toBe(readable.byteLength);
   } finally {
     await context.close();
+  }
+});
+
+// The size field (owner, 2026-11-24): at the top, above the mode cards; no
+// preset buttons; the file's own unit (KB under 1 MB, else MB); it starts at
+// the file's size less 20 % and does nothing until the person changes it;
+// − steps down; choosing a mode card turns it off again.
+await test('size field: on top, own unit, −20 %, off until changed, − steps down, a mode card turns it off', async () => {
+  const tests = new URL('../', import.meta.url);
+  for (const [name, unit] of [['corpus/real/wikipedia-tr-pdf.pdf', 'KB'], ['fixtures/clean-scan/stamp-red.pdf', 'MB']]) {
+    const file = fileURLToPath(new URL(name, tests));
+    const page = await (await browser.newContext({ serviceWorkers: 'block' })).newPage();
+    await page.goto(`${BASE_URL}/compress-pdf/`);
+    await page.setInputFiles('#fileInput', file);
+    await page.waitForSelector('.compress-target__unit');
+    const s = await page.evaluate(() => {
+      const box = document.querySelector('#compressTarget');
+      return {
+        unit: box.querySelector('.compress-target__unit').textContent.trim(),
+        value: Number(document.querySelector('#compressTargetValue').value),
+        aboveCards: !!(box.compareDocumentPosition(document.querySelector('.compress-presets')) & Node.DOCUMENT_POSITION_FOLLOWING),
+        chips: box.querySelectorAll('[data-target], select').length,
+        on: box.classList.contains('compress-target--on'),
+      };
+    });
+    const size = fs.statSync(file).size;
+    // −20 % of the size the page shows (1 KB = 1024 bytes): "737 KB" offers 589
+    const want = unit === 'KB' ? Math.floor(size * 0.8 / 1024) : Math.floor(size * 0.8 / 1_048_576 * 10) / 10;
+    if (s.unit !== unit || s.value !== want || !s.aboveCards || s.chips || s.on) throw new Error(`${name}: ${JSON.stringify(s)}, want ${want} ${unit}`);
+    await page.click('.compress-target__step[data-step="-1"]');
+    const after = await page.evaluate(() => ({ value: Number(document.querySelector('#compressTargetValue').value),
+      on: document.querySelector('#compressTarget').classList.contains('compress-target--on') }));
+    const step = unit === 'KB' ? (want > 100 ? 10 : 1) : (want > 10 ? 1 : 0.1);
+    if (!after.on || Math.abs(after.value - Math.round((want - step) * 10) / 10) > 1e-9) throw new Error(`${name} after −: ${JSON.stringify(after)}`);
+    await page.click('.compress-preset[data-preset="high"]');
+    if (await page.evaluate(() => document.querySelector('#compressTarget').classList.contains('compress-target--on'))) throw new Error(`${name}: a mode card left the size on`);
+    await page.context().close();
   }
 });
 

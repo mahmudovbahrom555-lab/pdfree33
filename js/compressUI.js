@@ -41,9 +41,9 @@ let _preset       = 'medium';  // 'low' | 'medium' | 'high'
 let _preserveText = true;
 let _targetDpi    = 150;       // null = no downsampling | 96 | 150
 let _quality      = 82;        // JPEG quality %, 60–95 (sent as 0–1 to worker)
-let _targetBytes = null;      // Integer byte limit, or null for normal presets.
-let _targetCustom = false;     // "Other size" chosen: the size comes from the field below the chips
-let _targetUnit   = 'MB';      // the field's unit: 'MB' | 'KB'
+let _targetBytes = null;      // Integer byte limit from the size field
+let _targetOn    = false;     // the person changed the size: compress to it, not by the mode
+let _targetUnit  = 'MB';      // the field's unit, from the file's own size: 'MB' | 'KB'
 let _lastScan     = null;      // scan report (background or worker), null until scan arrives
 let _presetAutoSelected = false; // true once the preset is settled (scan pick, saved or user choice) — scan won't override
 let _presetFromScan = false;     // true only while the CURRENT preset came from the scan's recommendation
@@ -109,44 +109,55 @@ function _timeEstimate(scan, preset) {
   return sec < 60 ? `${sec}s` : `${Math.round(sec / 60)}min`;
 }
 
-// Target Size Mode chip row (shown below DPI row). A size — a chip or any
-// size typed under "Other size" — makes the run search for the gentlest
-// setting whose file fits (processor.js _runCompressToTarget)
-function _targetSizeRow() {
-  const opts = [
-    { value: null, label: t('compress_target_best'), hint: '' },
-    { value: 25,   label: t('compress_target_email'), hint: '≤ 25 MB' },
-    { value: 10,   label: t('compress_target_web'),   hint: '≤ 10 MB' },
-    { value: 5,    label: t('compress_target_small'), hint: '≤ 5 MB'  },
-    { value: 'custom', label: t('compress_target_other'), hint: '' },
-  ];
-  const activeValue = _targetCustom ? 'custom' : (_targetBytes === null ? null : _targetBytes / 1_000_000);
-  const typed = _targetCustom && _targetBytes ? _targetBytes / (_targetUnit === 'KB' ? 1_000 : 1_000_000) : '';
+// The size field, at the top (owner, 2026-11-24): in the file's own unit,
+// starting at the file's size less 20 %, stepped down a little at a time.
+// It shows but does nothing until the person changes it — the mode cards
+// below stay the quick default; a changed size makes the run search for the
+// gentlest setting whose file fits (processor.js _runCompressToTarget).
+// a step of about a tenth of the number's own digit: 10 KB above 100 KB,
+// 0.1 MB under 10 MB — small enough to land on a limit like 1.5 MB
+function _targetStep(value) {
+  if (_targetUnit === 'KB') return value > 100 ? 10 : 1;
+  return value > 10 ? 1 : 0.1;
+}
+
+// −20 % of the size as the page shows it (fmtSize, 1 KB = 1024 bytes), so
+// "737 KB" offers 589; the field's KB/MB are the limit's (1 KB = 1000 bytes),
+// which keeps the target at least 20 % under the file
+function _targetDefault(fileSize) {
+  _targetUnit = fileSize < 1_048_576 ? 'KB' : 'MB';
+  const value = fileSize * 0.8 / (_targetUnit === 'KB' ? 1_024 : 1_048_576);
+  const shown = _targetUnit === 'KB' || value >= 10 ? Math.floor(value) : Math.floor(value * 10) / 10;
+  return Math.max(shown, _targetUnit === 'KB' ? 1 : 0.1);
+}
+
+function _targetSizeRow(file) {
+  const value = _targetOn && _targetBytes
+    ? _targetBytes / (_targetUnit === 'KB' ? 1_000 : 1_000_000)
+    : _targetDefault(file.size);
+  if (!_targetOn) _readTypedTarget(value);
   return `
-    <div class="compress-dpi compress-target" role="group" aria-label="${t('compress_target_label')}">
-      <span class="compress-dpi__label">${t('compress_target_label')}</span>
-      <div class="compress-dpi__chips">
-        ${opts.map(o => `
-          <label class="compress-dpi__chip ${activeValue === o.value ? 'active' : ''}" data-target="${o.value ?? 'null'}">
-            <input type="radio" name="compressTarget" value="${o.value ?? 'null'}" ${activeValue === o.value ? 'checked' : ''}>
-            <span>${o.label}</span>
-            ${o.hint ? `<span class="compress-dpi__hint">${o.hint}</span>` : ''}
-          </label>`).join('')}
+    <div class="compress-target${_targetOn ? ' compress-target--on' : ''}" id="compressTarget">
+      <label class="compress-dpi__label" for="compressTargetValue">${t('compress_target_label')}</label>
+      <div class="compress-target__custom">
+        <button type="button" class="compress-target__step" data-step="-1" aria-label="${t('compress_target_smaller')}">−</button>
+        <input type="number" id="compressTargetValue" inputmode="decimal" min="0" step="any" value="${value}">
+        <span class="compress-target__unit">${_targetUnit}</span>
+        <button type="button" class="compress-target__step" data-step="1" aria-label="${t('compress_target_larger')}">+</button>
       </div>
-      <div class="compress-target__custom" id="compressTargetCustom" ${_targetCustom ? '' : 'hidden'}>
-        <input type="number" id="compressTargetValue" inputmode="decimal" min="0.01" step="any" value="${typed}"
-          placeholder="4" aria-label="${t('compress_target_other')}">
-        <select id="compressTargetUnit" aria-label="${t('compress_target_unit')}">
-          <option value="MB" ${_targetUnit === 'MB' ? 'selected' : ''}>MB</option>
-          <option value="KB" ${_targetUnit === 'KB' ? 'selected' : ''}>KB</option>
-        </select>
-      </div>
-      <p class="compress-target__hint" id="compressTargetHint" ${_targetBytes || _targetCustom ? '' : 'hidden'}>${t('compress_target_hint')}</p>
+      <p class="compress-target__hint" id="compressTargetHint">${t(_targetOn ? 'compress_target_hint' : 'compress_target_off')}</p>
     </div>`;
 }
 
-function _readTypedTarget() {
-  const value = Number(id('compressTargetValue')?.value);
+function _setTargetOn(on) {
+  _targetOn = on;
+  id('compressTarget')?.classList.toggle('compress-target--on', on);
+  const hint = id('compressTargetHint');
+  if (hint) hint.textContent = t(on ? 'compress_target_hint' : 'compress_target_off');
+}
+
+function _readTypedTarget(typed) {
+  const value = Number(typed ?? id('compressTargetValue')?.value);
   // Shift the decimal point before rounding down to whole bytes.
   const [mantissa, exponent = '0'] = String(value).split('e');
   const bytes = Math.floor(Number(`${mantissa}e${Number(exponent) + (_targetUnit === 'KB' ? 3 : 6)}`));
@@ -211,10 +222,10 @@ export function getCompressParams() {
     preserveText: _preserveText,
     targetDpi:    _targetDpi,
     quality:      _quality / 100,
-    targetBytes: _targetBytes,
-    // "Other size" chosen with no usable number — compress mustn't run as if
-    // no size had been asked for (toolRegistrations' validate stops it)
-    targetMissing: _targetCustom && !_targetBytes,
+    targetBytes: _targetOn ? _targetBytes : null,
+    // a changed size with no usable number — compress mustn't run as if no
+    // size had been asked for (toolRegistrations' validate stops it)
+    targetMissing: _targetOn && !_targetBytes,
   };
 }
 
@@ -266,13 +277,6 @@ export function initCompressOptions(file) {
       _preserveText = saved.preserveText ?? _preserveText;
       _targetDpi    = saved.targetDpi    ?? _targetDpi;
       _quality      = saved.quality != null ? Math.round(saved.quality * 100) : _quality;
-      // Older presets saved expressed MB, dividing typed KB by 1024.
-      const legacy = saved.targetSizeMb;
-      _targetBytes = saved.targetBytes ?? (legacy > 0
-        ? Math.round(legacy * (legacy < 1 ? 1_024_000 : 1_000_000)) : _targetBytes);
-      // a remembered size that isn't a chip came from "Other size"
-      _targetCustom = !!_targetBytes && ![25_000_000, 10_000_000, 5_000_000].includes(_targetBytes);
-      if (_targetCustom && _targetBytes < 1_000_000) _targetUnit = 'KB';
       _presetAutoSelected = true; // saved choice counts as explicit — don't let scan auto-override it
       _presetFromScan     = false;
     }
@@ -374,7 +378,7 @@ export function hideCompressOptions() {
   _targetDpi          = 150;
   _quality            = 82;
   _targetBytes       = null;
-  _targetCustom       = false;
+  _targetOn          = false;
   _lastScan           = null;
   _presetAutoSelected = false;
   _presetFromScan     = false;
@@ -568,6 +572,8 @@ function _render(file, scan) {
       ${scan?.isEncrypted ? '<span class="compress-info__badge compress-info__badge--warn">🔒 encrypted</span>' : ''}
     </div>
 
+    ${_targetSizeRow(file)}
+
     ${scan ? _buildScanBanner(scan, _targetDpi) : `<div class="compress-scan compress-scan--info" id="compressScanBanner" role="status">🔍 ${t('compress_placeholder')}</div>`}
 
     <div class="compress-presets">
@@ -583,8 +589,6 @@ function _render(file, scan) {
     <div class="compress-scan compress-scan--warn" id="compressDpiNote" role="status" hidden></div>
 
     ${_dpiRow()}
-
-    ${_targetSizeRow()}
 
     ${checkbox({
       id:       'preserveTextCheck',
@@ -743,8 +747,6 @@ function _bindEvents() {
       _preset             = e.target.value;
       _presetAutoSelected = true; // user explicitly chose — don't override on next scan
       _presetFromScan     = false;
-      _targetBytes       = null; // reset target size when preset changes manually
-      _targetCustom       = false;
       document.querySelectorAll('.compress-preset').forEach(el => {
         el.classList.toggle('j2p-chip--active', el.dataset.preset === _preset);
       });
@@ -796,27 +798,6 @@ function _bindEvents() {
         chip.classList.toggle('active', val === _targetDpi);
       });
     }
-    if (e.target.name === 'compressTarget') {
-      // A size no longer forces Maximum: the run itself searches for the
-      // gentlest setting that fits (processor.js), so the mode stays as chosen
-      const raw = e.target.value;
-      _targetCustom = raw === 'custom';
-      if (_targetCustom) _readTypedTarget();
-      else _targetBytes = raw === 'null' ? null : Number(raw) * 1_000_000;
-      document.querySelectorAll('.compress-target .compress-dpi__chip').forEach(chip => {
-        chip.classList.toggle('active', chip.dataset.target === raw);
-      });
-      const custom = id('compressTargetCustom');
-      if (custom) custom.hidden = !_targetCustom;
-      const hint = id('compressTargetHint');
-      if (hint) hint.hidden = raw === 'null';
-      if (_targetCustom) id('compressTargetValue')?.focus();
-      _updateTimeEstimate();
-    }
-    if (e.target.id === 'compressTargetUnit') {
-      _targetUnit = e.target.value;
-      _readTypedTarget();
-    }
     if (e.target.id === 'preserveTextCheck') {
       _preserveText = e.target.checked;
     }
@@ -830,8 +811,24 @@ function _bindEvents() {
   });
 
   // Slider needs 'input' (fires while dragging), not 'change' (fires on release only)
+  id('compressOptions').addEventListener('click', e => {
+    // a mode card — even the one already chosen — means "by the mode"
+    if (e.target.closest('.compress-preset')) _setTargetOn(false);
+    const step = e.target.closest('.compress-target__step');
+    const field = id('compressTargetValue');
+    if (!step || !field) return;
+    const value = Number(field.value);
+    const smallest = _targetUnit === 'KB' ? 1 : 0.1;
+    const next = Math.max(smallest, Math.round((value + Number(step.dataset.step) * _targetStep(value)) * 10) / 10);
+    field.value = String(next);
+    _setTargetOn(true);
+    _readTypedTarget();
+    _updateTimeEstimate();
+    _syncDpiNote();
+  });
+
   id('compressOptions').addEventListener('input', e => {
-    if (e.target.id === 'compressTargetValue') _readTypedTarget();
+    if (e.target.id === 'compressTargetValue') { _setTargetOn(true); _readTypedTarget(); _updateTimeEstimate(); }
     if (e.target.id === 'qualitySlider') {
       _quality = Number(e.target.value);
       const val = id('qualityVal');
@@ -909,7 +906,7 @@ export function hideCompressEmailOptions() {
   _targetDpi          = 150;
   _quality            = 82;
   _targetBytes       = null;
-  _targetCustom       = false;
+  _targetOn          = false;
   _lastScan           = null;
   _presetAutoSelected = false;
   _presetFromScan     = false;

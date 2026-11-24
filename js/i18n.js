@@ -278,14 +278,11 @@ export const EN = {
 
   // ── compressUI — Target Size Mode ─────────────────────────────
   compress_target_label:     'Compress to',
-  compress_target_best:      'Best quality',
-  compress_target_email:     'Email',
-  compress_target_web:       'Web',
-  compress_target_small:     'Small',
   compress_target_met:       '✅ {size} — fits {target} limit',
-  compress_target_other:     'Other size',
-  compress_target_unit:      'Unit',
   compress_target_hint:      'PDFree tries settings from the gentlest up and keeps the first one whose file fits.',
+  compress_target_off:       'Change the size and the file is made to fit it. Until you do, the mode below is used.',
+  compress_target_smaller:   'Smaller',
+  compress_target_larger:    'Larger',
   compress_target_enter:     'Type the size the file must fit into, e.g. 4 MB.',
   compress_target_lossless:  'No quality lost.',
   compress_target_cost:      'Images: {dpi} dpi, quality {quality} %.',

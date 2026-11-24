@@ -18,6 +18,13 @@ import { chromium } from 'playwright';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+// The size field shows the file's own unit (KB under 1 MB, else MB); typing
+// into it is what turns compress-to-size on (owner, 2026-11-24).
+async function setTargetKb(page, kb) {
+  const unit = (await page.textContent('.compress-target__unit')).trim();
+  await page.fill('#compressTargetValue', String(unit === 'KB' ? Number(kb) : Number(kb) / 1000));
+}
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE_URL = process.env.PDFREE_BASE_URL || 'http://localhost:8934';
 const base = BASE_URL;
@@ -42,9 +49,7 @@ await test('Compress to a size on a browser without AbortSignal.throwIfAborted o
   await page.goto(base + '/compress-pdf/', { waitUntil: 'load' });
   await page.setInputFiles('#fileInput', FIX);
   await page.waitForFunction(() => !document.querySelector('#mergeBtn')?.disabled, null, { timeout: 60000 });
-  await page.click('.compress-target [data-target="custom"]');
-  await page.selectOption('#compressTargetUnit', 'KB');
-  await page.fill('#compressTargetValue', '60');
+  await setTargetKb(page, '60');
   await page.click('#mergeBtn');
   const r = await page.waitForFunction(() => window.__res ? 'ok' : (/throwIfAborted|wrong|error/i.test(document.querySelector('#toast')?.textContent || '') ? document.querySelector('#toast').textContent : null), null, { timeout: 180000 }).then(h => h.jsonValue()).catch(() => 'timeout');
   if (r !== 'ok') throw new Error(`no result: ${r}`);
