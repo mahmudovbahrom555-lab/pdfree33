@@ -17,6 +17,15 @@
    "summary": "Today the 5 / 10 / 25 MB choices apply fixed settings and don't check the result. We measured it: the target was met for 13–50 % of large files. We are building a size check that keeps small print, stamps and Chinese text readable, and says so honestly when a size can't be reached."
   },
   {
+   "id": "C38",
+   "tool": "compress",
+   "status": "fixed",
+   "date": "2026-11-25",
+   "verified": "2026-11-25, compress e2e on pdfree.io; a 62.5 MB print PDF now 0.62 MB on Maximum (was 31.8 MB)",
+   "title": "Compressed files kept data nothing used",
+   "summary": "When Compress removed editing data that design programs leave in a PDF, the data itself could stay in the file, unused. In one print file it was 31 of 32 MB. It is now removed too. Every page looks exactly as before."
+  },
+  {
    "id": "C35",
    "tool": "compress",
    "status": "fixed",
