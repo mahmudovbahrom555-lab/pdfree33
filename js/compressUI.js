@@ -140,13 +140,36 @@ function _targetSizeRow(file) {
     <div class="compress-target${_targetOn ? ' compress-target--on' : ''}" id="compressTarget">
       <label class="compress-dpi__label" for="compressTargetValue">${t('compress_target_label')}</label>
       <div class="compress-target__custom">
-        <button type="button" class="compress-target__step" data-step="-1" aria-label="${t('compress_target_smaller')}">−</button>
+        <button type="button" class="compress-target__step" id="compressTargetDown" data-step="-1" aria-label="${t('compress_target_smaller')}">−</button>
         <input type="number" id="compressTargetValue" inputmode="decimal" min="0" step="any" value="${value}">
         <span class="compress-target__unit">${_targetUnit}</span>
-        <button type="button" class="compress-target__step" data-step="1" aria-label="${t('compress_target_larger')}">+</button>
+        <button type="button" class="compress-target__step" id="compressTargetUp" data-step="1" aria-label="${t('compress_target_larger')}">+</button>
       </div>
       <p class="compress-target__hint" id="compressTargetHint">${t(_targetOn ? 'compress_target_hint' : 'compress_target_off')}</p>
     </div>`;
+}
+
+let _holdTimer = null;
+let _heldSteps = 0;      // steps taken by the current hold of − / +
+let _holdEndedAt = 0;    // when a hold that stepped ended: its closing click then does nothing
+
+function _stopHold() {
+  clearTimeout(_holdTimer);
+  _holdTimer = null;
+  if (_heldSteps) _holdEndedAt = Date.now();
+  _heldSteps = 0;
+}
+
+function _stepTarget(direction, times) {
+  const field = id('compressTargetValue');
+  if (!field) return;
+  const value = Number(field.value);
+  const smallest = _targetUnit === 'KB' ? 1 : 0.1;
+  field.value = String(Math.max(smallest, Math.round((value + direction * times * _targetStep(value)) * 10) / 10));
+  _setTargetOn(true);
+  _readTypedTarget();
+  _updateTimeEstimate();
+  _syncDpiNote();
 }
 
 function _setTargetOn(on) {
@@ -815,17 +838,28 @@ function _bindEvents() {
     // a mode card — even the one already chosen — means "by the mode"
     if (e.target.closest('.compress-preset')) _setTargetOn(false);
     const step = e.target.closest('.compress-target__step');
-    const field = id('compressTargetValue');
-    if (!step || !field) return;
-    const value = Number(field.value);
-    const smallest = _targetUnit === 'KB' ? 1 : 0.1;
-    const next = Math.max(smallest, Math.round((value + Number(step.dataset.step) * _targetStep(value)) * 10) / 10);
-    field.value = String(next);
-    _setTargetOn(true);
-    _readTypedTarget();
-    _updateTimeEstimate();
-    _syncDpiNote();
+    if (!step) return;
+    if (Date.now() - _holdEndedAt < 500) return;   // a hold already stepped; its closing click doesn't
+    _stepTarget(Number(step.dataset.step), 1);
   });
+
+  // Held down, − / + keep stepping, five times larger after ~1.5 s: going
+  // from 5.2 MB to 2 MB took 32 presses, and 24 people pressed fast and
+  // often in the first half day (Rage Clicks, 2026-11-24)
+  id('compressOptions').addEventListener('pointerdown', e => {
+    const step = e.target.closest('.compress-target__step');
+    if (!step || e.button !== 0) return;
+    _stopHold();
+    _heldSteps = 0;
+    _holdTimer = setTimeout(function repeat() {
+      _heldSteps++;
+      _stepTarget(Number(step.dataset.step), _heldSteps > 15 ? 5 : 1);
+      _holdTimer = setTimeout(repeat, 90);
+    }, 400);
+  });
+  for (const type of ['pointerup', 'pointercancel', 'pointerleave']) {
+    id('compressOptions').addEventListener(type, e => { if (e.target.closest?.('.compress-target__step')) _stopHold(); });
+  }
 
   id('compressOptions').addEventListener('input', e => {
     if (e.target.id === 'compressTargetValue') { _setTargetOn(true); _readTypedTarget(); _updateTimeEstimate(); }

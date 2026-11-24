@@ -893,6 +893,19 @@ await test('size field: on top, own unit, −20 %, off until changed, − steps 
       on: document.querySelector('#compressTarget').classList.contains('compress-target--on') }));
     const step = unit === 'KB' ? (want > 100 ? 10 : 1) : (want > 10 ? 1 : 0.1);
     if (!after.on || Math.abs(after.value - Math.round((want - step) * 10) / 10) > 1e-9) throw new Error(`${name} after −: ${JSON.stringify(after)}`);
+    // − / + are steppers, not rage (rageClicks.js); held, − keeps stepping
+    // and steps 5× after ~1.5 s; its closing click adds no extra step
+    if (!(await page.evaluate(async () => (await import('/js/rageClicks.js')).isRepeatControl(document.querySelector('#compressTargetDown'))))) throw new Error(`${name}: − counted as a rage click`);
+    const held = after.value;
+    const box = await page.locator('#compressTargetDown').boundingBox();
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down(); await page.waitForTimeout(2600); await page.mouse.up();
+    await page.waitForTimeout(600);
+    const afterHold = Number(await page.inputValue('#compressTargetValue'));
+    if (!(afterHold < held - 15 * step)) throw new Error(`${name}: holding − went ${held} → ${afterHold}`);
+    await page.click('#compressTargetUp');
+    const one = Number(await page.inputValue('#compressTargetValue'));
+    if (Math.abs(one - afterHold - (unit === 'KB' ? (afterHold >= 100 ? 10 : 1) : (afterHold >= 10 ? 1 : 0.1))) > 1e-9 && afterHold > (unit === 'KB' ? 1 : 0.1)) throw new Error(`${name}: one + after a hold went ${afterHold} → ${one}`);
     await page.click('.compress-preset[data-preset="high"]');
     if (await page.evaluate(() => document.querySelector('#compressTarget').classList.contains('compress-target--on'))) throw new Error(`${name}: a mode card left the size on`);
     await page.context().close();
