@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (C) 2025 PDFree Contributors  https://github.com/mahmudovbahrom555-lab/pdfree33
 
-// Scores PDF→Excel against tests/corpus/groundtruth/tables/ — invoices rendered
+// Scores PDF→Excel or PDF→Markdown against tests/corpus/groundtruth/tables/ — invoices rendered
 // from known cells (make_tables.mjs), so every cell's true text, place and value
 // is exact. Runs the real tool page (file input, Convert, the downloaded .xlsx),
 // or scores another converter's .xlsx files (--from-dir). Per document:
@@ -20,7 +20,11 @@
 //            tokens with letters only: a number's text depends on how it is stored
 //   pf       Arabic presentation forms left in the cells (see gtCommon.mjs)
 //
+// Markdown mode compares normalized cell text at fixed row and column positions,
+// with a full column reversal allowed for RTL. It also checks the shape and blanks.
+//
 // Usage: node scripts/corpus-diff/groundtruth-tables.mjs [base-url] [--json out.json]
+//        node scripts/corpus-diff/groundtruth-tables.mjs [base-url] --tool pdf2md [--json out.json]
 //        node scripts/corpus-diff/groundtruth-tables.mjs --from-dir <dir> [--json out.json]
 //   base-url defaults to http://localhost:8934 (python3 -m http.server 8934 --directory dist)
 
@@ -34,8 +38,13 @@ const args = process.argv.slice(2);
 const base = (args.find(a => /^https?:/.test(a)) || 'http://localhost:8934').replace(/\/$/, '');
 const jsonOut = args.includes('--json') ? args[args.indexOf('--json') + 1] : null;
 const fromDir = args.includes('--from-dir') ? args[args.indexOf('--from-dir') + 1] : null;
+const tool = args.includes('--tool') ? args[args.indexOf('--tool') + 1] : 'pdf2excel';
+if (!['pdf2excel', 'pdf2md'].includes(tool)) throw new Error(`unknown --tool ${tool}`);
+const markdown = tool === 'pdf2md';
 const DIR = new URL('../../tests/corpus/groundtruth/tables/', import.meta.url);
 const PDF2EXCEL = { slug: 'pdf-to-excel', panel: '#pdf2excelOptions', ready: /page/, mime: /spreadsheetml/ };
+
+const PDF2MD = { slug: 'pdf-to-markdown', panel: '#pdf2mdOptions', ready: /Markdown|formula/i, mime: /markdown|zip/ };
 
 const xmlText = x => x.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
   .replace(/&apos;/g, "'").replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(+n)).replace(/&amp;/g, '&');
@@ -78,6 +87,59 @@ const DIGITS = /[\u0660-\u0669\u06F0-\u06F9]/g;
 const norm = s => String(s ?? '').normalize('NFKC')
   .replace(DIGITS, d => String((d.charCodeAt(0) & 0xF) % 10)).replace(/\u066C/g, ',').replace(/\u066B/g, '.')
   .replace(/[\p{Mn}\u0640\u200C\u200E\u200F]/gu, '').replace(/\s+/g, ' ').trim().toLowerCase();
+// The converter emits GFM rows with outer pipes and escapes literal pipes.
+function markdownRow(line) {
+  const row = line.trim();
+  if (!row.startsWith('|') || !row.endsWith('|')) return null;
+  const cells = [''];
+  for (const token of row.slice(1, -1).match(/\\.|[^\\]/g) || []) {
+    if (token === '|') cells.push('');
+    else cells[cells.length - 1] += token.replace(/^\\([\\`*_\[\]|])$/, '$1');
+  }
+  return cells.map(cell => cell.trim());
+}
+
+async function markdownTables(buf) {
+  const text = buf.subarray(0, 2).toString() === 'PK'
+    ? await (await JSZip.loadAsync(buf)).file('document.md').async('string')
+    : buf.toString('utf8');
+  const lines = text.split(/\r?\n/).map(markdownRow);
+  const tables = [];
+  for (let i = 0; i + 1 < lines.length; i++) {
+    const header = lines[i], separator = lines[i + 1];
+    if (!header || !separator || separator.length !== header.length
+      || !separator.every(cell => /^:?-{3,}:?$/.test(cell))) continue;
+    const table = [header];
+    for (i += 2; i < lines.length && lines[i]; i++) table.push(lines[i]);
+    tables.push(table);
+  }
+  return tables;
+}
+
+function scoreMarkdown(truth, tables) {
+  const rows = truth.rows.length;
+  const cols = truth.rows[0].length;
+  const cells = truth.rows.flat().filter(Boolean).length;
+  const numbers = truth.values.flat().filter(value => value !== null).length;
+  let best = { cells: 0, numbers: 0, blanks: 0, order: '-', shape: false };
+  for (const table of tables) {
+    for (const order of truth.dir === 'rtl' ? ['visual', 'logical'] : ['logical']) {
+      const result = { cells: 0, numbers: 0, blanks: 0, order,
+        shape: table.length === rows && table.every(row => row.length === cols) };
+      truth.rows.forEach((row, r) => row.forEach((expected, c) => {
+        const actual = table[r]?.[order === 'visual' ? cols - 1 - c : c];
+        if (actual === undefined || norm(actual) !== norm(expected)) return;
+        if (expected) result.cells++;
+        else result.blanks++;
+        if (truth.values[r][c] !== null) result.numbers++;
+      }));
+      if (result.cells > best.cells) best = result;
+    }
+  }
+  return { cells: best.cells / cells, numbers: best.numbers / numbers, order: best.order,
+    shape: best.shape, blanks: best.blanks, expectedBlanks: rows * cols - cells, tables: tables.length };
+}
+
 const DATE_RE = /^\d{4}[/-]\d{2}[/-]\d{2}$/;
 // Excel serial date → yyyy/mm/dd (a converter may store a date as a date)
 const serialDate = n => new Date(Date.UTC(1899, 11, 30) + n * 864e5).toISOString().slice(0, 10).replace(/-/g, '/');
@@ -151,21 +213,29 @@ let skipped = 0;
 for (const { name, truth } of docs) {
   let buf;
   if (fromDir) {
-    const file = `${fromDir.replace(/\/$/, '')}/${name}.xlsx`;
+    const file = `${fromDir.replace(/\/$/, '')}/${name}.${markdown ? 'md' : 'xlsx'}`;
     if (!existsSync(file)) { skipped++; continue; }
     buf = readFileSync(file);
   } else {
-    buf = Buffer.from(await convertOnToolPage(browser, base, PDF2EXCEL, fileURLToPath(new URL(`${name}.pdf`, DIR))), 'base64');
+    buf = Buffer.from(await convertOnToolPage(browser, base, markdown ? PDF2MD : PDF2EXCEL, fileURLToPath(new URL(`${name}.pdf`, DIR))), 'base64');
   }
-  rows.push({ name, lang: truth.lang, layout: truth.layout, digits: truth.digits, ...score(truth, await xlsxSheets(buf)) });
+  const scores = markdown ? scoreMarkdown(truth, await markdownTables(buf)) : score(truth, await xlsxSheets(buf));
+  rows.push({ name, lang: truth.lang, layout: truth.layout, digits: truth.digits, ...scores });
 }
 await browser?.close();
 
 const pct = v => (v * 100).toFixed(0).padStart(4);
-console.log(`table ground truth — ${fromDir ? `xlsx files in ${fromDir}` : `pdf2excel on ${base}`}`);
-console.log('document              cells numbers  order    sheetRTL looks  words    pf sheets');
-for (const r of rows) {
-  console.log(`${r.name.padEnd(20)} ${pct(r.cells)}% ${pct(r.numbers)}%   ${r.order.padEnd(8)} ${String(r.sheetRTL).padEnd(8)} ${(r.looks ? 'yes' : 'NO').padEnd(5)} ${pct(r.words)}% ${pct(r.pf)}% ${String(r.sheets).padStart(5)}`);
+console.log(`table ground truth — ${fromDir ? `files in ${fromDir}` : `${tool} on ${base}`}`);
+if (markdown) {
+  console.log('document              cells numbers  order    shape  blanks tables');
+  for (const r of rows) {
+    console.log(`${r.name.padEnd(20)} ${pct(r.cells)}% ${pct(r.numbers)}%   ${r.order.padEnd(8)} ${r.shape ? 'yes  ' : 'NO   '}  ${r.blanks}/${r.expectedBlanks}    ${r.tables}`);
+  }
+} else {
+  console.log('document              cells numbers  order    sheetRTL looks  words    pf sheets');
+  for (const r of rows) {
+    console.log(`${r.name.padEnd(20)} ${pct(r.cells)}% ${pct(r.numbers)}%   ${r.order.padEnd(8)} ${String(r.sheetRTL).padEnd(8)} ${(r.looks ? 'yes' : 'NO').padEnd(5)} ${pct(r.words)}% ${pct(r.pf)}% ${String(r.sheets).padStart(5)}`);
+  }
 }
-if (skipped) console.log(`\n${skipped} document(s) skipped — no .xlsx in ${fromDir}`);
+if (skipped) console.log(`\n${skipped} document(s) skipped — missing export in ${fromDir}`);
 if (jsonOut) writeFileSync(jsonOut, JSON.stringify(rows, null, 1));

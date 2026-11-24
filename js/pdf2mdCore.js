@@ -49,7 +49,7 @@ import { BULLET_RE, NUMBERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, _isCjk,
          lineStartMargins, startsIndentedParagraph, linePitch, startsSpacedParagraph,
          lineEndsParagraph, continuesWrappedHeading,
-         joinHyphenatedLineEnd } from './textLayoutUtils.js';
+         joinHyphenatedLineEnd, lineRuns } from './textLayoutUtils.js';
 
 // Latin typographic ligatures (Unicode "Alphabetic Presentation Forms" block,
 // U+FB00-FB06) — a PDF commonly encodes "fi"/"fl"/"ffi" etc. as ONE of these
@@ -293,6 +293,7 @@ export async function _p2mdExtractText(pdfDoc, {
   const YTOL = 6;
   const pageData = [];
   const allSizes = [];
+  const rtlTableItems = new WeakMap();
 
   // Formula detection — "honest flattening" only (see pdf2md analysis memory):
   // real LaTeX reconstruction needs OCR/ML (out of scope, no in-browser math
@@ -471,6 +472,9 @@ export async function _p2mdExtractText(pdfDoc, {
       ln.rtl = rtlCnt > 0;
       if (rtlCnt === 0) ln.items.sort((a, b) => a.x - b.x);
       else {
+        // The prose reorder mutates runs. Preserve their original geometry
+        // and text for table-local ordering, even if the line splits later.
+        for (const item of ln.items) rtlTableItems.set(item, { ...item });
         reorderVisualRtlLine(ln.items);
         for (const item of ln.items) item.str = toArabicBaseLetters(item.str);
       }
@@ -790,14 +794,15 @@ export async function _p2mdExtractText(pdfDoc, {
     const margins = lineStartMargins(lines); // first-line-indent paragraph breaks
     const pitch = linePitch(lines);          // gap vs this column's own line spacing
     let lastHeading = null;                  // { block, ln } — for wrapped headings
-    // Same text-based detector pdf2excel uses (no border-grid pass — that's
-    // only worth the extra render cost in pdf2word's richer visual pipeline).
-    // Filtered through looksLikeProseNotData(): two unrelated prose lists
-    // (e.g. a resume's Skills/Interests columns) can pass detectTables()'s
-    // own alignment/fill checks cleanly — there's no built file afterward
-    // to score, like pdf2excel's post-build ERI check has, so this has to
-    // gate here, before the candidate is ever treated as a table.
-    const tables = detectTables(lines).filter(t => !looksLikeProseNotData(t.rows));
+    // Merge contiguous RTL fragments before inferring table columns. This
+    // keeps an embedded LTR token such as A4 inside its surrounding cell.
+    // Use copies because lineRuns may update the fragments as it orders them.
+    const tableLines = lines.map(ln => {
+      if (!ln.rtl || ln.isImage) return ln;
+      const items = ln.items.map(item => rtlTableItems.get(item) ?? { ...item });
+      return { ...ln, items: lineRuns(items).map(run => ({ ...run, str: toArabicBaseLetters(run.str) })) };
+    });
+    const tables = detectTables(tableLines).filter(t => !looksLikeProseNotData(t.rows));
     const lineToTable = new Map();
     for (const t of tables) {
       for (let li = t.startIdx; li <= t.endIdx; li++) lineToTable.set(li, t);
