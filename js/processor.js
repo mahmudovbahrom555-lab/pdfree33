@@ -6,7 +6,7 @@
 // ============================================================
 
 import { readExcelPaint, styleExcelTable, applyExcelStyles } from './pdf2excelStyles.js';
-import { fmtSize, formatTargetBytes, throwIfAborted, isMergeImage } from './utils.js';
+import { fmtSize, formatTargetBytes, throwIfAborted, isMergeImage, startWatchdog } from './utils.js';
 import { t, tp } from './i18n.js';
 import { setProgress, hideProgress, setButtonProcessing, setButtonReady,
          showCancelBtn, hideCancelBtn, showToast, startLongOpHint, clearLongOpHint } from './ui.js';
@@ -563,24 +563,15 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilena
   // this, a silently-dead worker leaves the UI stuck in "processing"
   // forever with no error and no merged file — indistinguishable from
   // "nothing happened" from the user's side.
+  // Time in a background tab doesn't count (startWatchdog).
   const WATCHDOG_MS = 45_000;
-  let watchdog = setTimeout(() => {
+  const watchdog = startWatchdog(() => {
     if (!isProcessing) return;   // already cancelled — don't fire phantom error
     isProcessing = false;
     setFilesLocked(false);
     hideCancelBtn();
     _handleError('merge', t('err_merge_timeout'), 'timeout');
   }, WATCHDOG_MS);
-  const _resetWatchdog = () => {
-    clearTimeout(watchdog);
-    watchdog = setTimeout(() => {
-      if (!isProcessing) return;
-      isProcessing = false;
-      setFilesLocked(false);
-      hideCancelBtn();
-      _handleError('merge', t('err_merge_timeout'), 'timeout');
-    }, WATCHDOG_MS);
-  };
 
   // ⚠️  TRANSFERABLE: all buffers in `buffers` are transferred to the worker.
   //     They are DETACHED here immediately after postMessage — do not read them.
@@ -593,10 +584,10 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilena
   worker.onmessage = (e) => {
     const data = e.data;
     if (data.type === 'progress') {
-      _resetWatchdog();
+      watchdog.reset();
       setProgress(data.value, data.label);
     } else if (data.type === 'done') {
-      clearTimeout(watchdog);
+      watchdog.stop();
       if (!(data.result instanceof ArrayBuffer)) {
         _handleError('merge', 'Unexpected result type from worker'); return;
       }
@@ -639,7 +630,7 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilena
         );
       }
     } else if (data.type === 'error') {
-      clearTimeout(watchdog);
+      watchdog.stop();
       isProcessing = false;
       setFilesLocked(false);
       hideCancelBtn();
@@ -647,7 +638,7 @@ async function _runMerge(filesSnapshot, { removeWatermarks = false, outputFilena
     }
   };
   worker.onerror = (e) => {
-    clearTimeout(watchdog);
+    watchdog.stop();
     isProcessing = false;
     setFilesLocked(false);
     hideCancelBtn();
@@ -3038,9 +3029,9 @@ const _BATCH_WATCHDOG_MS = 45_000;
 function _postToWorkerForBatch(msg, transfer, onProgress, { signal, onScan, timeoutKey = 'err_batch_timeout' } = {}) {
   return new Promise((resolve, reject) => {
     const worker = _shared();
-    let watchdog;
+    let watchdog = null;
     function settle(error, data) {
-      clearTimeout(watchdog);
+      watchdog?.stop();
       signal?.removeEventListener('abort', cancel);
       _batchCancelReject = null;
       worker.onmessage = null;
@@ -3054,9 +3045,10 @@ function _postToWorkerForBatch(msg, transfer, onProgress, { signal, onScan, time
       }
     }
     const cancel = () => settle(new _BatchCancelled());
+    // Time in a background tab doesn't count (startWatchdog).
     function arm() {
-      clearTimeout(watchdog);
-      watchdog = setTimeout(() => settle(new Error(t(timeoutKey))), _BATCH_WATCHDOG_MS);
+      if (watchdog) watchdog.reset();
+      else watchdog = startWatchdog(() => settle(new Error(t(timeoutKey))), _BATCH_WATCHDOG_MS);
     }
 
     worker.onmessage = ({ data }) => {
