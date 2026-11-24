@@ -113,6 +113,45 @@ export function throwIfAborted(signal) {
   if (signal?.aborted) throw abortReason(signal);
 }
 
+// A worker watchdog that does not count time the tab spent in the background.
+// A browser starves a hidden tab of CPU (Edge's efficiency mode most), so a big
+// file's step can go quiet far past the limit while nothing is wrong: Compress
+// timed out for 14 of 15 people with the tab hidden at some point, 12 of them on
+// files over 50 MB (Analytics, 2026-11-24). Due while hidden → wait for the tab
+// to come back, then a full `ms` again; due after the tab was hidden since the
+// last reset → a full `ms` again. A worker that truly hangs still times out:
+// `ms` of silence with the tab in view. reset() on each sign of progress;
+// stop() when the work ends.
+export function startWatchdog(onTimeout, ms, doc = globalThis.document) {
+  let timer = null;
+  let wasHidden = !!doc?.hidden;
+  const onVisibility = () => {
+    if (doc.hidden) { wasHidden = true; return; }
+    if (timer === null) { wasHidden = false; arm(); }   // it came due while hidden
+  };
+  function arm() {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      timer = null;
+      if (doc?.hidden) return;           // onVisibility re-arms on return
+      if (wasHidden) { wasHidden = false; arm(); return; }
+      stop();
+      onTimeout();
+    }, ms);
+  }
+  function stop() {
+    clearTimeout(timer);
+    timer = null;
+    doc?.removeEventListener?.('visibilitychange', onVisibility);
+  }
+  doc?.addEventListener?.('visibilitychange', onVisibility);
+  arm();
+  return {
+    reset() { wasHidden = !!doc?.hidden; arm(); },
+    stop,
+  };
+}
+
 // A photo or picture Merge takes alongside PDFs, each made one page by
 // Images → PDF's own conversion (2026-11-18: 4 people a day brought a .jpg to
 // Merge and were turned away). TIFF stays Images → PDF's own: it has a

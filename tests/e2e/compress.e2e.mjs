@@ -912,6 +912,53 @@ await test('size field: on top, own unit, −20 %, off until changed, − steps 
   }
 });
 
+// A background tab: the browser starves it of CPU, so the worker goes quiet for
+// longer than the 45 s watchdog while nothing is wrong. 14 of 15 people whose
+// Compress timed out had the tab hidden (Analytics, 2026-11-24). Here the tab is
+// hidden and the compress worker's messages held back for 50 s, then the tab comes back
+// and the messages arrive: the file must come out, with no timeout.
+await test('a background tab whose worker goes quiet past 45 s still gets its file', async () => {
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  const page = await context.newPage();
+  try {
+    await page.addInitScript(BLOB_HOOK);
+    await page.addInitScript(() => {
+      window.__hidden = false; window.__held = [];
+      Object.defineProperty(document, 'hidden', { configurable: true, get: () => window.__hidden });
+      Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => (window.__hidden ? 'hidden' : 'visible') });
+      const Real = window.Worker;
+      window.Worker = class extends Real {
+        constructor(...args) {
+          super(...args);
+          // the compress worker only: the prep worker's own limit falls back, it never errs
+          const main = /\/worker\.js/.test(String(args[0]));
+          let handler = null;
+          super.onmessage = e => { if (main && window.__hidden) window.__held.push(() => handler?.(e)); else handler?.(e); };
+          Object.defineProperty(this, 'onmessage', { configurable: true, get: () => handler, set: fn => { handler = fn; } });
+        }
+      };
+      window.__setHidden = hidden => {
+        window.__hidden = hidden;
+        document.dispatchEvent(new Event('visibilitychange'));
+        if (!hidden) for (const deliver of window.__held.splice(0)) deliver();
+      };
+    });
+    await page.goto(`${BASE_URL}/compress-pdf/`, { waitUntil: 'load', timeout: 30000 });
+    await page.setInputFiles('#fileInput', await photoPdf());
+    await page.waitForTimeout(3000);
+    await page.click('#mergeBtn');
+    await page.evaluate(() => window.__setHidden(true));
+    await page.waitForTimeout(50_000);
+    const toastWhileHidden = await page.evaluate(() => document.querySelector('#toast')?.textContent || '');
+    await page.evaluate(() => window.__setHidden(false));
+    await page.waitForFunction(() => window.__blob, null, { timeout: 60000 });
+    const toast = toastWhileHidden + await page.evaluate(() => document.querySelector('#toast')?.textContent || '');
+    if (/timed out/i.test(toast)) throw new Error(`timed out: ${toast.slice(0, 80)}`);
+  } finally {
+    await context.close();
+  }
+});
+
 await browser.close();
 fs.rmSync(tmp, { recursive: true, force: true });
 

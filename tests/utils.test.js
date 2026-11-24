@@ -45,7 +45,7 @@ global.document = {
 
 // Импортируем тестируемые функции (CommonJS-совместимый вариант для node)
 // В реальном проекте используй: import { fmtSize, esc, isFileAccepted } from '../js/utils.js'
-const { fmtSize, esc, isFileAccepted, throwIfAborted, abortReason } = await import('../js/utils.js');
+const { fmtSize, esc, isFileAccepted, throwIfAborted, abortReason, startWatchdog } = await import('../js/utils.js');
 
 // ── fmtSize ────────────────────────────────────────────────
 console.log('\nfmtSize:');
@@ -106,6 +106,67 @@ test('the signal\'s own reason is thrown when it has one', () => {
   expect(err).toBe(reason);
   expect(abortReason({ aborted: true, reason })).toBe(reason);
 });
+
+// ── startWatchdog ──────────────────────────────────────────
+// Compress timed out for 14 of 15 people with the tab in the background
+// (Analytics, 2026-11-24): a hidden tab's time must not count.
+console.log('\nstartWatchdog:');
+function fakeDoc(hidden) {
+  const listeners = new Set();
+  return {
+    hidden,
+    addEventListener: (type, fn) => listeners.add(fn),
+    removeEventListener: (type, fn) => listeners.delete(fn),
+    show() { this.hidden = false; for (const fn of [...listeners]) fn(); },
+    hide() { this.hidden = true; for (const fn of [...listeners]) fn(); },
+    listeners,
+  };
+}
+const wait = ms => new Promise(r => setTimeout(r, ms));
+{
+  const doc = fakeDoc(false); let fired = 0;
+  startWatchdog(() => fired++, 20, doc);
+  await wait(40);
+  test('a visible tab: fires after its time', () => expect(fired).toBe(1));
+}
+{
+  const doc = fakeDoc(true); let fired = 0;
+  startWatchdog(() => fired++, 20, doc);
+  await wait(60);
+  test('a hidden tab: does not fire however long it stays hidden', () => expect(fired).toBe(0));
+  doc.show();
+  await wait(10);
+  test('back in view: the full time again, not at once', () => expect(fired).toBe(0));
+  await wait(25);
+  test('back in view and still silent: fires after one full time, not two', () => expect(fired).toBe(1));
+  test('no listener left behind', () => expect(doc.listeners.size).toBe(0));
+}
+{
+  const doc = fakeDoc(false); let fired = 0;
+  const w = startWatchdog(() => fired++, 30, doc);
+  doc.hide(); await wait(10); doc.show(); await wait(30);
+  test('hidden for a while, back before the time ran out: that time does not count', () => expect(fired).toBe(0));
+  await wait(20);
+  test('then a full visible time of silence: fires', () => expect(fired).toBe(1));
+  w.stop();
+  test('stop: no listener left', () => expect(doc.listeners.size).toBe(0));
+}
+{
+  const doc = fakeDoc(false); let fired = 0;
+  const w = startWatchdog(() => fired++, 30, doc);
+  await wait(20); w.reset(); await wait(20);
+  test('reset: progress restarts the time', () => expect(fired).toBe(0));
+  w.stop(); await wait(40);
+  test('stop: never fires', () => expect(fired).toBe(0));
+}
+{
+  const doc = fakeDoc(true); let fired = 0;
+  const w = startWatchdog(() => fired++, 10, doc);
+  await wait(20); w.stop(); doc.show(); await wait(20);
+  test('stopped while waiting for the tab: never fires, no listener left', () => {
+    expect(fired).toBe(0); expect(doc.listeners.size).toBe(0);
+  });
+}
 
 // ── Summary ────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(40)}`);
