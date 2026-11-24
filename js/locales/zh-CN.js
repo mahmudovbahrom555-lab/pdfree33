@@ -304,14 +304,11 @@ window.PDFREE_LOCALE = {
 
   // ── compressUI — Target Size Mode ─────────────────────────────
   compress_target_label:     '压缩至',
-  compress_target_best:      '最佳质量',
-  compress_target_email:     '邮件',
-  compress_target_web:       '网页',
-  compress_target_small:     '最小',
   compress_target_met:       '✅ {size} — 符合{target}限制',
-  compress_target_other:     '其他大小',
-  compress_target_unit:      '单位',
   compress_target_hint:      'PDFree 从最轻的设置开始尝试，保留第一个符合大小的结果。',
+  compress_target_off:       '修改大小后，文件会被压缩到该大小以内。未修改时，使用下方的模式。',
+  compress_target_smaller:   '减小',
+  compress_target_larger:    '增大',
   compress_target_enter:     '请输入文件需要符合的大小，例如 4 MB。',
   compress_target_lossless:  '未损失画质。',
   compress_target_cost:      '图片：{dpi} dpi，质量 {quality}%。',

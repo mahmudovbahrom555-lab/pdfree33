@@ -76,7 +76,7 @@
     "name": "Kann ich ein PDF auf eine genaue Größe komprimieren, etwa 4 MB oder 500 KB?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ja. Wähle bei „Komprimieren auf“ eine Größe oder „Andere Größe“ und gib sie in MB oder KB ein. PDFree probiert die Einstellungen ab der schonendsten und behält die schonendste, bei der die Datei passt; danach sagt es, was das gekostet hat – etwa Bilder mit 150 dpi und 75 % Qualität oder gar kein Qualitätsverlust. Die echte Komprimierung läuft bis zu viermal, eine große Datei dauert also länger. Reicht selbst die stärkste Einstellung nicht, sagt PDFree offen, dass diese Größe nicht erreichbar ist, und gibt dir die nächstliegende Datei; das PDF zu teilen kann helfen."
+      "text": "Ja. Stelle oben bei „Komprimieren auf“ die Größe ein: Sie beginnt 20 % unter deiner Datei, in deren eigener Einheit (KB oder MB); gib eine Zahl ein oder verringere sie mit −. PDFree probiert die Einstellungen ab der schonendsten und behält die schonendste, bei der die Datei passt; danach sagt es, was das gekostet hat – etwa Bilder mit 150 dpi und 75 % Qualität oder gar kein Qualitätsverlust. Die echte Komprimierung läuft bis zu viermal, eine große Datei dauert also länger. Reicht selbst die stärkste Einstellung nicht, sagt PDFree offen, dass diese Größe nicht erreichbar ist, und gibt dir die nächstliegende Datei; das PDF zu teilen kann helfen."
     }
   }
 ]

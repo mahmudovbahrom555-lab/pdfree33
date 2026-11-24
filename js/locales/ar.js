@@ -306,14 +306,11 @@ window.PDFREE_LOCALE = {
 
   // ── compressUI — Target Size Mode ─────────────────────────────
   compress_target_label:     'الضغط إلى',
-  compress_target_best:      'أفضل جودة',
-  compress_target_email:     'البريد الإلكتروني',
-  compress_target_web:       'الويب',
-  compress_target_small:     'صغير',
   compress_target_met:       '✅ {size} — يتوافق مع حد {target}',
-  compress_target_other:     'حجم آخر',
-  compress_target_unit:      'الوحدة',
   compress_target_hint:      'يجرّب PDFree الإعدادات من الأخف ويحتفظ بأول إعداد يجعل الملف ضمن الحجم.',
+  compress_target_off:       'غيّر الحجم وسيُضغط الملف ليناسبه. ما لم تغيّره، يُستخدم الوضع أدناه.',
+  compress_target_smaller:   'أصغر',
+  compress_target_larger:    'أكبر',
   compress_target_enter:     'اكتب الحجم الذي يجب أن يتسع له الملف، مثل 4 MB.',
   compress_target_lossless:  'لم تُفقد أي جودة.',
   compress_target_cost:      'الصور: {dpi} dpi، الجودة {quality}٪.',
