@@ -18,7 +18,7 @@
 //  Run: node tests/analyticsEvent.test.js
 // ============================================================
 
-import { _classifyUserAgent, _classifyPlatform, _dataPointFromEvent } from '../src/index.js';
+import { _classifyUserAgent, _classifyPlatform, _classifyAgent, _dataPointFromEvent } from '../src/index.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -160,6 +160,29 @@ test('Tool Leave: the progress and the seconds are numbers — double1 and doubl
   const dp = _dataPointFromEvent('Tool Leave', { locale: 'fa', tool: 'ocr', session: 's4', x_pct: 30, x_after_s: 45, country: 'IR', device: 'desktop', browser: 'chrome', os: 'windows', app: 'none' });
   expect(dp.blobs).toEqual(['fa', 'ocr', 's4', 'country=IR', 'device=desktop', 'browser=chrome', 'os=windows', 'app=none']);
   expect(dp.doubles).toEqual([30, 45]);
+});
+
+// AI agents that say who they are (2026-11-24): ChatGPT's cloud browser signs
+// its requests with Signature-Agent: "https://chatgpt.com"; Cloudflare names
+// verified bots. Only when one is named does an event carry x_agent, so
+// every other event keeps its blobs exactly as before.
+test('Signature-Agent "https://chatgpt.com" (quotes and all) → chatgpt.com', () => {
+  expect(_classifyAgent('"https://chatgpt.com"', undefined)).toBe('chatgpt.com');
+});
+test('another signed agent → its host, lower case; a malformed value → signed', () => {
+  expect(_classifyAgent('"https://Agent.Example.org/bots"', undefined)).toBe('agent.example.org');
+  expect(_classifyAgent('not a url', undefined)).toBe('signed');
+});
+test('no signature, a Cloudflare verified-bot category → bot:<category>', () => {
+  expect(_classifyAgent(null, 'AI Assistant')).toBe('bot:AI Assistant');
+});
+test('a person: no signature, no category → empty (no x_agent)', () => {
+  expect(_classifyAgent(null, undefined)).toBe('');
+  expect(_classifyAgent('', '')).toBe('');
+});
+test('x_agent goes after the server\'s blobs — Tool Open\'s is blob9', () => {
+  const dp = _dataPointFromEvent('Tool Open', { locale: 'en', session: 's5', tool: 'merge', country: 'US', device: 'desktop', browser: 'chrome', os: 'linux', app: 'none', x_agent: 'chatgpt.com' });
+  expect(dp.blobs).toEqual(['en', 'merge', 's5', 'country=US', 'device=desktop', 'browser=chrome', 'os=linux', 'app=none', 'x_agent=chatgpt.com']);
 });
 
 console.log(`\n${'─'.repeat(40)}`);

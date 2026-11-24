@@ -63,7 +63,13 @@ function _track(eventName, props = {}) {
     // re-check), and automated bots would skew the numbers the same way. A test
     // that must see a real event can override the flag in an init script:
     // Object.defineProperty(navigator, 'webdriver', { get: () => false }).
-    if (navigator.webdriver) return;
+    // An AI agent's cloud browser may be automated too (2026-11-24): Tool Open
+    // and Tool Success still go out, marked, and the server keeps them only
+    // when the request is signed by an agent (src/index.js _classifyAgent).
+    if (navigator.webdriver) {
+      if (eventName !== 'Tool Open' && eventName !== 'Tool Success') return;
+      props = { ...props, x_webdriver: 'yes' };
+    }
     // locale/session first — no caller ever passes these explicitly, but
     // this keeps the merge order intentional rather than accidental.
     const fullProps = { locale: getLang(), session: _sessionId, ...props };

@@ -613,6 +613,21 @@ export function _classifyPlatform(ua) {
   return { os, app };
 }
 
+// AI agents that say who they are (2026-11-24) — to count how many people send
+// an agent to do the work, before deciding whether to build for agents.
+// ChatGPT's cloud browser signs every request (Web Bot Auth, RFC 9421) with
+// Signature-Agent: "https://chatgpt.com"; Cloudflare names verified bots in
+// request.cf. An agent that drives a person's own browser looks like the
+// person and is not counted: this is a floor, not the whole number.
+export function _classifyAgent(signatureAgent, verifiedBotCategory) {
+  const sig = String(signatureAgent || '').replace(/"/g, '').trim();
+  if (sig) {
+    try { return new URL(sig).hostname.toLowerCase().slice(0, 60); } catch { return 'signed'; }
+  }
+  if (verifiedBotCategory) return `bot:${String(verifiedBotCategory).slice(0, 60)}`;
+  return '';
+}
+
 export function _dataPointFromEvent(eventName, props) {
   const { locale = '', tool = '', session = '', ...rest } = props;
   const blobs = [String(locale).slice(0, 100), String(tool).slice(0, 100), String(session).slice(0, 100)];
@@ -717,6 +732,14 @@ async function handleAnalytics(request, env) {
   const { os, app } = _classifyPlatform(request.headers.get('User-Agent'));
   props.os  = os;
   props.app = app;
+  // only when an agent is named; x_ keeps it after every blob above
+  const agent = _classifyAgent(request.headers.get('Signature-Agent'), request.cf?.verifiedBotCategory);
+  // an automated browser no agent signed is a test run or a bot: not counted
+  const automated = props.x_webdriver === 'yes';
+  delete props.x_webdriver;
+  if (automated && !agent) return new Response('OK', { status: 200 });
+  if (agent) props.x_agent = agent;
+  else delete props.x_agent;   // never client-supplied
 
   if (!env.ANALYTICS) {
     console.log(`[analytics] ANALYTICS binding missing, event=${eventName} — dropped`);
