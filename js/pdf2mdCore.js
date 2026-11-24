@@ -794,19 +794,29 @@ export async function _p2mdExtractText(pdfDoc, {
     const margins = lineStartMargins(lines); // first-line-indent paragraph breaks
     const pitch = linePitch(lines);          // gap vs this column's own line spacing
     let lastHeading = null;                  // { block, ln } — for wrapped headings
-    // Merge contiguous RTL fragments before inferring table columns. This
-    // keeps an embedded LTR token such as A4 inside its surrounding cell.
-    // Use copies because lineRuns may update the fragments as it orders them.
-    const tableLines = lines.map(ln => {
-      if (!ln.rtl || ln.isImage) return ln;
-      const items = ln.items.map(item => rtlTableItems.get(item) ?? { ...item });
-      return { ...ln, items: lineRuns(items).map(run => ({ ...run, str: toArabicBaseLetters(run.str) })) };
-    });
-    const tables = detectTables(tableLines).filter(t => !looksLikeProseNotData(t.rows));
     const lineToTable = new Map();
-    for (const t of tables) {
-      for (let li = t.startIdx; li <= t.endIdx; li++) lineToTable.set(li, t);
+    const registerTables = (tables) => {
+      for (const table of tables) {
+        if (looksLikeProseNotData(table.rows)) continue;
+        const indexes = Array.from({ length: table.endIdx - table.startIdx + 1 }, (_, i) => table.startIdx + i);
+        if (indexes.some(i => lineToTable.has(i))) continue;
+        for (const i of indexes) lineToTable.set(i, table);
+      }
+    };
+
+    if (lines.some(ln => ln.rtl)) {
+      // Merge contiguous RTL fragments before inferring table columns so an
+      // embedded LTR token such as A4 stays in its cell.
+      const tableLines = lines.map(ln => {
+        if (!ln.rtl || ln.isImage) return ln;
+        const items = ln.items.map(item => rtlTableItems.get(item) ?? { ...item });
+        return { ...ln, items: lineRuns(items).map(run => ({ ...run, str: toArabicBaseLetters(run.str) })) };
+      });
+      // Require a complete header for candidates promoted by RTL regrouping.
+      // A sidebar next to prose can align by chance with a column of body text.
+      registerTables(detectTables(tableLines).filter(t => t.rows[0].every(cell => cell.trim())));
     }
+    registerTables(detectTables(lines));
 
     for (let li = 0; li < lines.length; li++) {
       const ln = lines[li];
