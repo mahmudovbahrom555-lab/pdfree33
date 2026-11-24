@@ -182,3 +182,13 @@ SELECT blob2 AS tool, double1 AS progress_pct,
 FROM pdfree_events
 WHERE timestamp > NOW() - INTERVAL '7' DAY AND index1 = 'Tool Leave'
 GROUP BY tool, progress_pct ORDER BY people DESC LIMIT 60;
+
+
+-- 16. AI agents (from 2026-11-24): tools opened by an agent that says who it is.
+--     blob9 = x_agent on Tool Open: 'chatgpt.com' (ChatGPT's signed cloud browser),
+--     another signer's host, or 'bot:<Cloudflare category>'. A floor: an agent
+--     driving a person's own browser looks like that person and is not counted.
+SELECT blob9 AS agent, blob2 AS tool, COUNT() AS opens, COUNT(DISTINCT blob3) AS sessions
+FROM pdfree_events
+WHERE timestamp > NOW() - INTERVAL '7' DAY AND index1 = 'Tool Open' AND blob9 LIKE 'x_agent=%'
+GROUP BY agent, tool ORDER BY opens DESC LIMIT 50;
