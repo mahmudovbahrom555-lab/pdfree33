@@ -31,6 +31,7 @@ import { chromium, devices } from 'playwright';
 import JSZip from 'jszip';
 import { PDFDocument, PDFName, StandardFonts, pushGraphicsState, popGraphicsState, concatTransformationMatrix, drawObject } from 'pdf-lib';
 import zlib from 'zlib';
+import { randomBytes } from 'crypto';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -957,6 +958,23 @@ await test('a background tab whose worker goes quiet past 45 s still gets its fi
   } finally {
     await context.close();
   }
+});
+
+// C38: the worker removes a page's /PieceInfo (an editor's private data) and
+// pdf-lib still wrote what it pointed to — 31 of 32 MB of one Maximum output
+// (2026-11-25). The stream nobody references must not come out.
+await test('C38: private data the worker unhooks leaves the file (Maximum)', async () => {
+  const pdf = await PDFDocument.create();
+  const page = pdf.addPage([300, 300]);
+  page.drawText('C38', { x: 40, y: 150, size: 30 });
+  const junk = pdf.context.register(pdf.context.stream(randomBytes(400000)));   // random: no filter can shrink it
+  page.node.set(PDFName.of('PieceInfo'), pdf.context.obj({ Illustrator: { Private: junk } }));
+  const file = path.join(tmp, 'c38-pieceinfo.pdf');
+  fs.writeFileSync(file, await pdf.save());
+  const out = await compressViaUi(browser, file, 'high');
+  const doc = await PDFDocument.load(out);
+  expect(doc.getPageCount()).toBe(1);
+  if (!(out.length < 50000)) throw new Error(`private data kept: ${out.length} bytes`);
 });
 
 await browser.close();

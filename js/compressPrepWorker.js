@@ -82,6 +82,12 @@
 importScripts('./vendor/pdf-lib.min.js', './cmykD.js');   // cmykD.js sets self.cmykD
 
 self.onmessage = async (e) => {
+  if (e.data.orphans) {   // after the worker (C38)
+    const input = e.data.file;
+    const out = await _dropOrphans(input);
+    self.postMessage({ type: 'done', ...out }, [out.result]);
+    return;
+  }
   const buffer = e.data.file;
   let out = { result: buffer, encoded: 0, resolved: 0, xmp: 0, cmyk: 0, d: null };
   try {
@@ -232,6 +238,27 @@ function _dropUnreachable(pdf) {
   let dropped = 0;
   for (const [ref] of ctx.enumerateIndirectObjects()) if (!seen.has(ref)) { ctx.delete(ref); dropped++; }
   return dropped;
+}
+
+// C38 (2026-11-25): the worker's output, again. handleCompress removes
+// /PieceInfo, thumbnails and the like, and pdf-lib writes every object it
+// still holds — so what those pointed to stayed in the file: 31 of 32 MB of
+// one Maximum output (Illustrator private data), 13–34 % of Wikipedia ones,
+// 1–3 % of most (28 outputs, 2026-11-25). Nothing references them, so no
+// reader shows them. Saved the way the worker saves; used only when smaller.
+// Encrypted files, and any failure, give the worker's bytes back unchanged.
+async function _dropOrphans(buffer) {
+  const same = { result: buffer, dropped: 0 };
+  try {
+    const pdf = await PDFLib.PDFDocument.load(buffer, { ignoreEncryption: true, updateMetadata: false });
+    if (pdf.context.trailerInfo.Encrypt) return same;
+    const dropped = _dropUnreachable(pdf);
+    if (!dropped) return same;
+    const bytes = await pdf.save({ useObjectStreams: true, addDefaultPage: false, updateFieldAppearances: false });
+    return bytes.byteLength < buffer.byteLength ? { result: bytes.buffer, dropped } : same;
+  } catch {
+    return same;
+  }
 }
 
 // Cheap scans: "/DeviceCMYK" or "/JPXDecode" anywhere in the plain text. An

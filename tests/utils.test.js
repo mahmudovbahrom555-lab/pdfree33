@@ -146,7 +146,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   const w = startWatchdog(() => fired++, 30, doc);
   doc.hide(); await wait(10); doc.show(); await wait(30);
   test('hidden for a while, back before the time ran out: that time does not count', () => expect(fired).toBe(0));
-  await wait(20);
+  await wait(35);   // due at 60 ms from the start (30 after the return); checked at 75, not on the edge
   test('then a full visible time of silence: fires', () => expect(fired).toBe(1));
   w.stop();
   test('stop: no listener left', () => expect(doc.listeners.size).toBe(0));
