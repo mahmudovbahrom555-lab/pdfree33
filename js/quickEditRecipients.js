@@ -1,4 +1,4 @@
-import { copyText } from './quickEditCopyText.js';
+import { t } from './i18n.js';
 import { loadExcelReader } from './lazyLibs.js';
 
 export const RECIPIENT_LIMIT = 100;
@@ -53,12 +53,12 @@ export function parseRecipientTable(input) {
     } else if (!cell && !closed && char === '"') {
       quoted = true;
     } else if (closed && char !== ' ') {
-      throw new Error(copyText('The table contains a malformed quoted value.', "表格中有一处带引号的数据格式不正确。"));
+      throw new Error(t('rc_bad_quote'));
     } else if (!closed) {
       cell += char;
     }
   }
-  if (quoted) throw new Error(copyText('The table contains an unclosed quoted value.', "表格中有一处引号未闭合。"));
+  if (quoted) throw new Error(t('rc_unclosed_quote'));
   finishRow();
   return rows;
 }
@@ -71,12 +71,15 @@ function columnName(index) {
   return name;
 }
 
+// Name columns are ticked, one or several: surname, first name and
+// patronymic in their own columns are joined with spaces, in column order
+// ("Shukurov" + "Murod" + "Akbaraliyevich", owner 2026-11-24).
 export function bindRecipientImport(panel, names, status) {
   const fileInput = panel.querySelector('[data-recipient-file]');
   const options = panel.querySelector('[data-import-options]');
   const sheet = options.querySelector('[data-import-sheet]');
   const start = options.querySelector('[data-import-start]');
-  const column = options.querySelector('[data-import-column]');
+  const columns = options.querySelector('[data-import-column]');
   const preview = options.querySelector('[data-import-preview]');
   const apply = options.querySelector('[data-import-apply]');
   let sheets = [];
@@ -86,12 +89,17 @@ export function bindRecipientImport(panel, names, status) {
     return sheets[Number(sheet.value)]?.data ?? [];
   }
 
+  function chosenColumns() {
+    return [...columns.querySelectorAll('input:checked')].map(box => Number(box.value)).sort((a, b) => a - b);
+  }
+
   function selectedNames() {
-    const index = Number(column.value);
+    const chosen = chosenColumns();
     const first = Number(start.value);
-    if (!Number.isInteger(first) || first < 1 || !column.value) return [];
-    return selectedRows().slice(first - 1).map(row => row[index]).filter(value => typeof value === 'string')
-      .map(value => value.trim()).filter(Boolean);
+    if (!Number.isInteger(first) || first < 1 || !chosen.length) return [];
+    return selectedRows().slice(first - 1)
+      .map(row => chosen.map(i => row[i]).filter(value => typeof value === 'string').map(value => value.trim()).filter(Boolean).join(' '))
+      .filter(Boolean);
   }
 
   function refreshPreview() {
@@ -101,35 +109,43 @@ export function bindRecipientImport(panel, names, status) {
     const duplicates = values.length - new Set(values).size;
     const skipped = Number.isInteger(first) && first > 0 ? Math.max(0, rows.length - first + 1 - values.length) : 0;
     const notes = [
-      skipped ? copyText(`${skipped} blank or non-text rows skipped`, `已跳过 ${skipped} 个空白或非文本行`) : '',
-      duplicates ? copyText(`${duplicates} repeated names kept as separate copies`, `保留 ${duplicates} 个重复姓名，每行生成一份副本`) : '',
+      skipped ? t('rc_skipped', { n: skipped }) : '',
+      duplicates ? t('rc_duplicates', { n: duplicates }) : '',
     ].filter(Boolean);
     const multiline = values.some(value => /[\r\n]/.test(value));
     apply.disabled = !values.length || values.length > RECIPIENT_LIMIT || multiline;
-    preview.textContent = multiline ? copyText('The selected column contains names on multiple lines.', "所选列中有跨多行的姓名。")
-      : values.length > RECIPIENT_LIMIT ? copyText(`This column has ${values.length} names. The limit is ${RECIPIENT_LIMIT}.`, `此列有 ${values.length} 个姓名，最多支持 ${RECIPIENT_LIMIT} 个。`)
-      : values.length ? copyText(`${values.length} names · ${[...values.slice(0, 3), ...notes].join(' · ')}`, `${values.length} 个姓名 · ${[...values.slice(0, 3), ...notes].join(' · ')}`)
-      : copyText('No text values in this column from the selected row.', "从所选行开始，此列没有文本值。");
+    preview.textContent = !chosenColumns().length ? t('rc_tick_columns')
+      : multiline ? t('rc_multiline')
+      : values.length > RECIPIENT_LIMIT ? t('rc_too_many', { n: values.length, max: RECIPIENT_LIMIT })
+      : values.length ? t('rc_preview', { n: values.length, list: [...values.slice(0, 3), ...notes].join(' · ') })
+      : t('rc_no_values');
   }
 
   function refreshColumns() {
     const rows = selectedRows();
     const first = Number(start.value);
-    const previous = column.value;
+    const previous = new Set(chosenColumns());
     const width = rows.reduce((max, row) => Math.max(max, row.length), 0);
     const header = rows[first - 2] ?? [];
-    column.replaceChildren(new window.Option(copyText('Choose a column', "请选择一列"), ''), ...Array.from({ length: width }, (_, index) =>
-      new window.Option(`${columnName(index)}${header[index] ? ' · ' + String(header[index]).slice(0, 80) : ''}`, String(index))));
-    column.value = previous;
+    const sample = rows[first - 1] ?? [];
+    columns.replaceChildren(...Array.from({ length: width }, (_, index) => {
+      const label = document.createElement('label');
+      const box = Object.assign(document.createElement('input'), { type: 'checkbox', value: String(index) });
+      box.checked = previous.has(index) || width === 1;
+      const title = [columnName(index), header[index], sample[index]].filter(v => v != null && v !== '')
+        .map(v => String(v).slice(0, 60)).join(' · ');
+      label.append(box, ` ${title}`);
+      return label;
+    }));
     refreshPreview();
   }
 
   function show(data) {
     sheets = data.filter(entry => entry.data.some(row => row.some(value => value != null && value !== '')));
-    if (!sheets.length) throw new Error(copyText('The table is empty.', "表格为空。"));
+    if (!sheets.length) throw new Error(t('rc_empty'));
     sheet.replaceChildren(...sheets.map((entry, index) => new window.Option(entry.sheet, String(index))));
     options.hidden = false;
-    column.value = '';
+    columns.replaceChildren();
     start.value = selectedRows().length > 1 ? '2' : '1';
     refreshColumns();
   }
@@ -140,23 +156,21 @@ export function bindRecipientImport(panel, names, status) {
     const request = ++generation;
     fileInput.value = '';
     options.hidden = true;
-    status.textContent = copyText('Reading recipients locally…', "正在本地读取收件人…");
+    status.textContent = t('rc_reading');
     try {
-      if (file.size > 5 * 1024 * 1024) throw new Error(copyText('Choose a spreadsheet smaller than 5 MB.', "请选择小于 5 MB 的表格。"));
+      if (file.size > 5 * 1024 * 1024) throw new Error(t('rc_too_big'));
       let data;
       if (/\.xlsx$/i.test(file.name)) {
         await loadExcelReader();
         data = await window.readXlsxFile(file);
       } else if (/\.(csv|tsv)$/i.test(file.name)) {
-        data = [{ sheet: copyText('Imported table', "导入的表格"), data: parseRecipientTable(await file.text()) }];
+        data = [{ sheet: t('rc_imported_table'), data: parseRecipientTable(await file.text()) }];
       } else {
-        throw new Error(copyText('Choose an XLSX, CSV, or TSV file.', "请选择 XLSX、CSV 或 TSV 文件。"));
+        throw new Error(t('rc_wrong_type'));
       }
       if (request !== generation || !panel.isConnected) return;
       show(data);
-      status.textContent = /\.xlsx$/i.test(file.name)
-        ? copyText('Choose the first data row and the full-name column. Hidden rows can be included; review the resulting list.', "请选择姓名起始行和所在列。隐藏行也可能被导入，请核对列表。")
-        : copyText('Choose the first data row and the column containing full names.', "请选择姓名起始行和所在列。");
+      status.textContent = /\.xlsx$/i.test(file.name) ? t('rc_choose_hidden_rows') : t('rc_choose');
     } catch (error) {
       if (request === generation && panel.isConnected) status.textContent = error.message;
     }
@@ -168,30 +182,30 @@ export function bindRecipientImport(panel, names, status) {
     event.preventDefault();
     generation++;
     try {
-      show([{ sheet: copyText('Pasted table', "粘贴的表格"), data: parseRecipientTable(text) }]);
-      status.textContent = copyText('Choose the first data row and the column containing full names.', "请选择姓名起始行和所在列。");
+      show([{ sheet: t('rc_pasted_table'), data: parseRecipientTable(text) }]);
+      status.textContent = t('rc_choose');
     } catch (error) {
       status.textContent = error.message;
     }
   });
 
   sheet.addEventListener('change', () => {
-    column.value = '';
+    columns.replaceChildren();
     start.value = selectedRows().length > 1 ? '2' : '1';
     refreshColumns();
   });
   start.addEventListener('input', refreshColumns);
-  column.addEventListener('change', refreshPreview);
+  columns.addEventListener('change', refreshPreview);
   apply.addEventListener('click', () => {
     if (apply.disabled) return;
     names.value = selectedNames().join('\n');
     sheets = [];
     sheet.replaceChildren();
-    column.replaceChildren();
+    columns.replaceChildren();
     preview.textContent = '';
     options.hidden = true;
     names.dispatchEvent(new Event('input'));
-    status.textContent = copyText('Recipient list imported.', "收件人列表已导入。");
+    status.textContent = t('rc_done');
     names.focus();
   });
 }

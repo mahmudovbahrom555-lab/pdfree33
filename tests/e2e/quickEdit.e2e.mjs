@@ -266,11 +266,11 @@ await test('personalized copies replace only selected text and export one PDF pe
       name: 'recipients.csv', mimeType: 'text/csv',
       buffer: Buffer.from('Group,Full name\nA,Anna Example\nB,Boris Example\nC,Anna Example\nD,'),
     });
-    await page.locator('[data-import-column]').selectOption('1');
+    await page.locator('[data-import-column] input[value="1"]').check();
     const importSummary = await page.locator('[data-import-preview]').innerText();
     expect(importSummary.includes('1 blank or non-text rows skipped')).toBeTruthy();
     expect(importSummary.includes('1 repeated names kept as separate copies')).toBeTruthy();
-    await page.getByRole('button', { name: 'Use this column' }).click();
+    await page.getByRole('button', { name: 'Use these names' }).click();
     expect(await page.locator('#qeCopies textarea').inputValue()).toBe('Anna Example\nBoris Example\nAnna Example');
     await page.locator('#qeCopies textarea').fill('Anna Example\nBoris Example');
     expect(await page.locator('[data-recipient-count]').innerText()).toBe('2 recipients');
@@ -559,10 +559,10 @@ await test('Simplified Chinese copies localizes import, overflow and cancellatio
     await page.locator('[data-recipient-file]').setInputFiles({
       name: 'recipients.csv', mimeType: 'text/csv', buffer: Buffer.from('姓名\n王小明'),
     });
-    await page.locator('[data-import-column]').selectOption('0');
-    await page.getByRole('button', { name: '使用此列' }).click();
+    await page.locator('[data-import-column] input[value="0"]').check();
+    await page.getByRole('button', { name: '使用这些姓名' }).click();
     const status = page.locator('#qeCopies [role=status]');
-    expect(await status.innerText()).toBe('收件人列表已导入。');
+    expect(await status.innerText()).toBe('名单已导入。');
     const field = page.locator('.qe-original-line').filter({ hasText: /^1$/ });
     await field.evaluate(span => {
       const range = document.createRange();
@@ -711,7 +711,7 @@ await test('Watermark personalized copies: one PDF per name, the name in each wa
     expect(await page.locator('#wmText').inputValue()).toBe('Copy for {name}');
     await page.locator('#wmRecipientFile').setInputFiles({ name: 'people.csv', mimeType: 'text/csv',
       buffer: Buffer.from('Group,Full name\nA,Anna Example\nB,Борис Пример\nC,张小明\nD,Anna Example') });
-    await page.locator('#wmRecipientColumn').selectOption('1');
+    await page.locator('#wmCopiesBody [data-import-column] input[value="1"]').check();
     await page.locator('#wmCopiesBody [data-import-apply]').click();
     expect(await page.locator('#wmNames').inputValue()).toBe('Anna Example\nБорис Пример\n张小明\nAnna Example');
     expect(await page.locator('#wmNamesCount').innerText()).toBe('4 copies');
@@ -745,6 +745,60 @@ await test('Watermark personalized copies: one PDF per name, the name in each wa
     expect(byName['quickedit_extractable_text-Anna Example.pdf'].images).toBe(0);
     // the original text is still there under the watermark
     expect(byName['quickedit_extractable_text-张小明.pdf'].text.length > 20).toBeTruthy();
+  } finally {
+    await page.close();
+  }
+});
+
+// Owner 2026-11-24: the list upload right under the text turns copies on;
+// surname, first name and patronymic in three columns become one name; a
+// watermark too long for the page goes onto more lines, all on the page.
+await test('Watermark copies: upload button, three name columns joined, a long name wrapped inside the page', async () => {
+  const page = await browser.newPage();
+  try {
+    await page.addInitScript(() => {
+      window.__blob = null;
+      const original = URL.createObjectURL.bind(URL);
+      URL.createObjectURL = blob => { if (blob instanceof Blob && /zip/.test(blob.type)) window.__blob = blob; return original(blob); };
+    });
+    await page.goto(`${BASE_URL}/watermark-pdf/`);
+    await page.setInputFiles('#fileInput', EXTRACTABLE_PDF);
+    await page.locator('#wmUpload').waitFor();
+    const [chooser] = await Promise.all([page.waitForEvent('filechooser'), page.click('#wmUpload')]);
+    expect(await page.locator('#wmCopies').isChecked()).toBeTruthy();
+    expect((await page.locator('#wmText').inputValue()).includes('{name}')).toBeTruthy();
+    await chooser.setFiles({ name: 'fio.csv', mimeType: 'text/csv',
+      buffer: Buffer.from('Familiya,Ism,Otasining ismi\nShukurov,Murod,Akbaraliyevich\nIvanova,Anna,Petrovna') });
+    for (const c of ['0', '1', '2']) await page.locator(`#wmCopiesBody [data-import-column] input[value="${c}"]`).check();
+    expect((await page.locator('#wmCopiesBody [data-import-preview]').innerText()).includes('Shukurov Murod Akbaraliyevich')).toBeTruthy();
+    await page.locator('#wmCopiesBody [data-import-apply]').click();
+    expect(await page.locator('#wmNames').inputValue()).toBe('Shukurov Murod Akbaraliyevich\nIvanova Anna Petrovna');
+    await page.locator('#wmText').fill('WATERMARK — {name}');
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__blob, null, { timeout: 60000 });
+    const lines = await page.evaluate(async () => {
+      const zip = await window.JSZip.loadAsync(await window.__blob.arrayBuffer());
+      const pdfjs = await import('/js/vendor/pdfjs-4.10.38/pdf.min.js');
+      pdfjs.GlobalWorkerOptions.workerSrc = '/js/vendor/pdfjs-4.10.38/pdf.worker.min.js';
+      const name = Object.keys(zip.files).find(n => n.includes('Shukurov'));
+      const doc = await pdfjs.getDocument({ data: await zip.files[name].async('uint8array') }).promise;
+      const p1 = await doc.getPage(1);
+      const [, , W, H] = p1.view;
+      const items = (await p1.getTextContent()).items.filter(i => /WATERMARK|Shukurov|Murod|Akbaraliyevich/.test(i.str));
+      return items.map(i => {
+        const [a, b, , , e, f] = i.transform;
+        const ang = Math.atan2(b, a);
+        return { str: i.str, x0: e, y0: f, x1: e + i.width * Math.cos(ang), y1: f + i.width * Math.sin(ang), W, H };
+      });
+    });
+    const text = lines.map(l => l.str).join(' ');
+    expect(text.includes('Akbaraliyevich')).toBeTruthy();
+    expect(lines.length >= 2).toBeTruthy();   // more than one line
+    for (const l of lines) {
+      for (const [x, y] of [[l.x0, l.y0], [l.x1, l.y1]]) {
+        if (x < 0 || y < 0 || x > l.W || y > l.H) throw new Error(`"${l.str}" leaves the page: ${JSON.stringify(l)}`);
+      }
+    }
   } finally {
     await page.close();
   }
