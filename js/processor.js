@@ -2017,7 +2017,36 @@ async function _compressAttempt(original, file, step, options, signal, onProgres
     options: { ...options, preset, targetDpi: targetDpi ?? null, quality: quality ?? null },
   }, [buffer], onProgress, { signal, onScan, timeoutKey: 'err_compress_timeout' });
   if (!(data.result instanceof ArrayBuffer)) throw new Error('Unexpected result type from worker');
+  if (preset !== 'low') data.result = await _compressDropOrphans(data.result);
+  throwIfAborted(signal);
   return { data: { ...data, compressedSize: data.result.byteLength }, prepXmp, prepScans };
+}
+
+// C38: objects the worker's own clean-up left unreferenced (compressPrepWorker
+// _dropOrphans). A copy goes over, so a failure or a time-out keeps the
+// worker's bytes; never larger (the pass only answers smaller bytes).
+function _compressDropOrphans(buffer) {
+  return new Promise(resolve => {
+    let worker;
+    let done = false;
+    const finish = result => {
+      if (done) return;
+      done = true;
+      watchdog.stop();
+      worker?.terminate();
+      resolve(result);
+    };
+    const watchdog = startWatchdog(() => finish(buffer), _COMPRESS_PREP_TIMEOUT_MS);
+    try {
+      worker = new Worker(new URL('./compressPrepWorker.js', import.meta.url));
+      worker.onmessage = e => finish(e.data.result instanceof ArrayBuffer && e.data.result.byteLength < buffer.byteLength ? e.data.result : buffer);
+      worker.onerror = () => finish(buffer);
+      const copy = buffer.slice(0);
+      worker.postMessage({ orphans: true, file: copy }, [copy]);
+    } catch {
+      finish(buffer);
+    }
+  });
 }
 
 const _PAGE_REFINE_BUDGET_MS = 750;
