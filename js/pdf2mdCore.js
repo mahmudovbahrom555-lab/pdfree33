@@ -586,8 +586,9 @@ export async function _p2mdExtractText(pdfDoc, {
     // once every page has already been visited and cleaned up. Sequential
     // (not Promise.all'd) deliberately — caps peak memory to one decoded
     // image at a time instead of every image on the page at once.
+    const pageImages = opList ? _detectPageImages(opList) : [];
     if (opList) {
-      for (const d of _detectPageImages(opList)) {
+      for (const d of pageImages) {
         const blob = await _p2mdExtractImageBlob(page, d.imgId, canvasFactory).catch(() => null);
         if (!blob) continue; // graceful degradation — dropped silently, not
                               // inserted as a broken Markdown image reference
@@ -601,7 +602,8 @@ export async function _p2mdExtractText(pdfDoc, {
     }
 
     allSizes.push(...items.map(i => i.fontSize).filter(s => s > 0));
-    pageData.push({ lines, pageW, pageH });
+    pageData.push({ lines, pageW, pageH, hasText: items.length > 0,
+      imageOnlyPage: !items.length && pageImages.length ? p : null });
     page.cleanup?.();
   }
 
@@ -1002,7 +1004,12 @@ export async function _p2mdExtractText(pdfDoc, {
   // this false-positive class.
   const FOOTNOTE_MAX_FORMULA_FRACTION = 0.5;
 
-  for (const { lines, pageW, pageH } of pageData) {
+  const hasTextPages = pageData.some(page => page.hasText);
+  for (const { lines, pageW, pageH, imageOnlyPage } of pageData) {
+    if (hasTextPages && imageOnlyPage !== null) {
+      _flushPara();
+      blocks.push({ type: 'ocr-note', page: imageOnlyPage });
+    }
     let bodyLines = lines;
     let footnoteLines = [];
     if (pageH) {
@@ -1074,7 +1081,7 @@ export async function _p2mdExtractText(pdfDoc, {
   // recover real, searchable text. Checking "no block carries real text"
   // (not just "no blocks at all") catches that case too — prepended, not
   // replacing the image, so no extracted content is lost either way.
-  const hasRealText = blocks.some(b => b.type !== 'image');
+  const hasRealText = blocks.some(b => b.type !== 'image' && b.type !== 'ocr-note');
   if (!hasRealText) {
     blocks.unshift({
       type: 'para',
@@ -1164,6 +1171,9 @@ export function _p2mdRender(blocks) {
     } else if (b.type === 'image') {
       if (lines.length) lines.push('');
       lines.push(`![${b.alt || ''}](${b.filename})`);
+    } else if (b.type === 'ocr-note') {
+      if (lines.length) lines.push('');
+      lines.push(`> **Page ${b.page}:** No extractable text. If the image contains text, run OCR on this page.`);
     } else if (b.type === 'formula-latex') {
       // Always-visible disclosure, not a silent HTML comment — there is no
       // confidence signal for this model (see ocrFormula's comment above),

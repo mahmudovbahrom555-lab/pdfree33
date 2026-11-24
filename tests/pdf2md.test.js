@@ -991,6 +991,27 @@ await test('a page with real extractable text is NOT given the OCR hint, even if
   expect(md.includes('No extractable text was found')).toBe(false);
 });
 
+await test('a mixed PDF flags only the image-only page, even without Canvas', async () => {
+  const [text, blank] = await Promise.all([
+    makeFakePdfDoc([[makeItem('Before the scan, the PDF has searchable text.', 50, 700)]]).getPage(1),
+    makeFakePdfDoc([[]]).getPage(1),
+  ]);
+  const scan = makeFakeImageOnlyPage();
+  const illustrated = { ...makeFakeImageOnlyPage(), getTextContent: text.getTextContent };
+  const pages = [text, blank, scan, illustrated];
+  const pdfDoc = { numPages: pages.length, getPage: async page => pages[page - 1] };
+  const blocks = await _p2mdExtractText(pdfDoc);
+  const note = blocks.findIndex(b => b.type === 'ocr-note');
+  expect(blocks[note + 1].filename.startsWith('images/page3-')).toBeTruthy();
+  const textOnly = await _p2mdExtractText(pdfDoc, { canvasFactory: null });
+  for (const result of [blocks, textOnly]) {
+    const md = _p2mdRender(result);
+    expect(result.filter(b => b.type === 'ocr-note').map(b => b.page).join(',')).toBe('3');
+    expect(md.includes('> **Page 3:** No extractable text.')).toBeTruthy();
+    expect(md.includes('No extractable text was found in this PDF')).toBe(false);
+  }
+});
+
 // ── NFC Unicode normalization — real bug found by scripts/*/agent research: ──
 // a PDF commonly encodes diacritic-heavy scripts as decomposed (NFD)
 // combining-character sequences; the DOCX path (eriAnatomy.js) already had to
