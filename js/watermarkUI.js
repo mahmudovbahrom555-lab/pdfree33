@@ -19,10 +19,10 @@ import { chipGroup, sliderRow, group, presetRememberCard } from './uiComponents.
 import { loadPdfJs } from './pdf2jpgUI.js';
 import { computeWatermarkLayout } from './watermarkLayout.js';
 import { showToast } from './ui.js';
-import { t } from './i18n.js';
+import { t, tp } from './i18n.js';
 import { loadPreset, clearPreset } from './presets.js';
 import { bindRecipientImport, RECIPIENT_LIMIT } from './quickEditRecipients.js';
-import { copyText } from './quickEditCopyText.js';
+import './watermarkWrap.js';   // sets globalThis.pdfreeWatermarkWrap, shared with watermarkTextWorker.js
 
 const LOGO_MAX_MB = 10;
 
@@ -554,36 +554,40 @@ function _names() {
 function _namesCountText() {
   const n = _names().length;
   return n > RECIPIENT_LIMIT
-    ? copyText(`${n} names — the limit is ${RECIPIENT_LIMIT}.`, `${n} 个姓名，最多支持 ${RECIPIENT_LIMIT} 个。`)
-    : copyText(`${n} ${n === 1 ? 'copy' : 'copies'}`, `${n} 份副本`);
+    ? t('wmc_limit', { n, max: RECIPIENT_LIMIT })
+    : tp(n, 'wmc_count_one', 'wmc_count_many', { n });
 }
 
+// The list upload sits right under the text (owner, 2026-11-24): one button
+// opens the file picker and turns personalized copies on.
 function _copiesSection() {
-  return `<div class="wm-copies">
+  return `<div class="wm-copies" id="wmCopiesPanel">
+    <input type="file" id="wmRecipientFile" class="sr-only" data-recipient-file accept=".xlsx,.csv,.tsv">
+    <label for="wmRecipientFile" class="wm-copies__upload" id="wmUpload">📄 ${t('wmc_upload')}</label>
     <label class="wm-copies__toggle">
       <input type="checkbox" id="wmCopies" ${_copies ? 'checked' : ''}>
-      <span>${copyText('Personalized copies — one PDF per person', '个性化副本 — 每人一份 PDF')}</span>
+      <span>${t('wmc_toggle')}</span>
     </label>
     <div id="wmCopiesBody" class="wm-copies__body" ${_copies ? '' : 'hidden'}>
-      <p id="wmNamesHint" class="wm-hint">${copyText(`Write ${NAME_TOKEN} in the watermark text: each copy gets one name from the list. Up to ${RECIPIENT_LIMIT} names; they stay on this device.`, `在水印文字中写入 ${NAME_TOKEN}：每份副本替换为名单中的一个姓名。最多 ${RECIPIENT_LIMIT} 个，姓名只保存在本设备。`)}</p>
-      <button type="button" id="wmInsertName" class="wm-copies__btn">${copyText(`Insert ${NAME_TOKEN}`, `插入 ${NAME_TOKEN}`)}</button>
-      <label for="wmNames" class="wm-copies__label">${copyText('Names, one per line', '姓名（每行一个）')}</label>
-      <textarea id="wmNames" class="wm-copies__names" rows="4" spellcheck="false" aria-describedby="wmNamesHint"
-        placeholder="${copyText('Anna Example&#10;Boris Example', '张小明&#10;李晓华')}">${_escAttr(_namesText)}</textarea>
-      <p id="wmNamesCount" class="wm-hint">${_namesCountText()}</p>
-      <label for="wmRecipientFile" class="wm-copies__label">${copyText('Import Excel or CSV', '导入 Excel 或 CSV')}</label>
-      <input type="file" id="wmRecipientFile" data-recipient-file accept=".xlsx,.csv,.tsv">
-      <div data-import-options hidden class="wm-copies__import">
-        <label for="wmRecipientSheet">${copyText('Sheet', '工作表')}</label>
-        <select id="wmRecipientSheet" data-import-sheet></select>
-        <label for="wmRecipientStart">${copyText('First row with a name', '姓名起始行')}</label>
-        <input id="wmRecipientStart" data-import-start type="number" min="1" value="2">
-        <label for="wmRecipientColumn">${copyText('Name column', '姓名所在列')}</label>
-        <select id="wmRecipientColumn" data-import-column></select>
-        <p data-import-preview class="wm-hint"></p>
-        <button type="button" class="wm-copies__btn" data-import-apply disabled>${copyText('Use this column', '使用此列')}</button>
-      </div>
       <p id="wmImportStatus" class="wm-hint" role="status"></p>
+      <div data-import-options hidden class="wm-copies__import">
+        <label for="wmRecipientSheet">${t('rc_sheet')}</label>
+        <select id="wmRecipientSheet" data-import-sheet></select>
+        <label for="wmRecipientStart">${t('rc_first_row')}</label>
+        <input id="wmRecipientStart" data-import-start type="number" min="1" value="2">
+        <fieldset class="rc-columns">
+          <legend>${t('rc_columns')}</legend>
+          <div data-import-column></div>
+        </fieldset>
+        <p data-import-preview class="wm-hint"></p>
+        <button type="button" class="wm-copies__btn" data-import-apply disabled>${t('rc_use')}</button>
+      </div>
+      <p id="wmNamesHint" class="wm-hint">${t('wmc_hint', { token: NAME_TOKEN, max: RECIPIENT_LIMIT })}</p>
+      <button type="button" id="wmInsertName" class="wm-copies__btn">${t('wmc_insert', { token: NAME_TOKEN })}</button>
+      <label for="wmNames" class="wm-copies__label">${t('wmc_names_label')}</label>
+      <textarea id="wmNames" class="wm-copies__names" rows="4" spellcheck="false" aria-describedby="wmNamesHint"
+        placeholder="${_escAttr(t('wmc_names_placeholder'))}">${_escAttr(_namesText)}</textarea>
+      <p id="wmNamesCount" class="wm-hint">${_namesCountText()}</p>
     </div>
   </div>`;
 }
@@ -592,6 +596,10 @@ function _bindCopies() {
   const toggle = id('wmCopies');
   if (!toggle) return;
   const body = id('wmCopiesBody'), names = id('wmNames'), text = id('wmText');
+  // the upload button: copies on, then the browser opens the picker (label for=)
+  id('wmUpload').addEventListener('click', () => {
+    if (!toggle.checked) { toggle.checked = true; toggle.dispatchEvent(new Event('change')); }
+  });
   toggle.addEventListener('change', () => {
     _copies = toggle.checked;
     body.hidden = !_copies;
@@ -613,7 +621,7 @@ function _bindCopies() {
     id('wmNamesCount').textContent = _namesCountText();
     _schedulePreview();
   });
-  bindRecipientImport(body, names, id('wmImportStatus'));
+  bindRecipientImport(id('wmCopiesPanel'), names, id('wmImportStatus'));
 }
 
 // ── Canvas size helper ─────────────────────────────────────────
@@ -741,7 +749,7 @@ function _drawWatermarkLayer(ctx, W, H) {
     return;
   }
 
-  const text     = (_text || t('wm_default_text')).replaceAll(NAME_TOKEN, (_copies && _names()[0]) || copyText('Name', '姓名'));
+  const text     = (_text || t('wm_default_text')).replaceAll(NAME_TOKEN, (_copies && _names()[0]) || t('wmc_name'));
   const scaleX   = W / _pageW;
   const scaleY   = H / _pageH;
   const colorStr = (COLOR_MAP[_color] || COLOR_MAP.gray) + _opacity + ')';
@@ -756,15 +764,24 @@ function _drawWatermarkLayer(ctx, W, H) {
 
   ctx.save();
   ctx.fillStyle    = colorStr;
-  ctx.textBaseline = 'middle';
   ctx.textAlign    = 'center';
 
+  // Centre/top/bottom: the same lines as the PDF (watermarkWrap.js), each
+  // on its own baseline across the turned text
+  ctx.font = 'bold 100px sans-serif';
+  const measure = str => ctx.measureText(str).width / 100;
+  const { maxLineWidth, wrapWatermark, lineBaselines } = globalThis.pdfreeWatermarkWrap;
+
   for (const { x, y, angle, size } of items) {
+    const { lines, size: lineSize } = _position === 'tile'
+      ? { lines: [text], size }
+      : wrapWatermark(text, measure, size, maxLineWidth(_pageW, _pageH, angle * 180 / Math.PI));
+    const baselines = _position === 'tile' ? [-size * 0.35] : lineBaselines(lines.length, lineSize, _position);
     ctx.save();
-    ctx.font = `bold ${Math.round(size * scaleX)}px sans-serif`;
+    ctx.font = `bold ${Math.round(lineSize * scaleX)}px sans-serif`;
     ctx.translate(x * scaleX, H - y * scaleY);
     ctx.rotate(-angle);  // y-axis flip (PDF y-up → canvas y-down) reverses rotation
-    ctx.fillText(text, 0, 0);
+    lines.forEach((line, i) => ctx.fillText(line, 0, -baselines[i] * scaleY));
     ctx.restore();
   }
 

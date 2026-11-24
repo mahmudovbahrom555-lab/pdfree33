@@ -411,14 +411,16 @@ async function _openModal(docContainer, originalOnly = false) {
             <label for="qeRecipientFile">${copyText('Import Excel or CSV', '导入 Excel 或 CSV')}</label>
             <input type="file" id="qeRecipientFile" data-recipient-file accept=".xlsx,.csv,.tsv">
             <div data-import-options hidden>
-              <label for="qeRecipientSheet">${copyText('Sheet', '工作表')}</label>
+              <label for="qeRecipientSheet">${t('rc_sheet')}</label>
               <select id="qeRecipientSheet" data-import-sheet></select>
-              <label for="qeRecipientStart">${copyText('First row with a name', '姓名起始行')}</label>
+              <label for="qeRecipientStart">${t('rc_first_row')}</label>
               <input id="qeRecipientStart" data-import-start type="number" min="1" value="2">
-              <label for="qeRecipientColumn">${copyText('Full name column', '姓名所在列')}</label>
-              <select id="qeRecipientColumn" data-import-column></select>
+              <fieldset class="rc-columns">
+                <legend>${t('rc_columns')}</legend>
+                <div data-import-column></div>
+              </fieldset>
               <p data-import-preview></p>
-              <button type="button" class="qe-copies__button" data-import-apply disabled>${copyText('Use this column', '使用此列')}</button>
+              <button type="button" class="qe-copies__button" data-import-apply disabled>${t('rc_use')}</button>
             </div>
           </div>
 

@@ -56,6 +56,7 @@
 
 importScripts('./vendor/pdf-lib.min.js');
 importScripts('./vendor/fontkit.umd.js');
+importScripts('./watermarkWrap.js');
 
 const WM_COLORS = {
   gray:  [0.5, 0.5, 0.5],
@@ -159,6 +160,11 @@ function _renderTextToPng(text, fontSize, colorRgb) {
   }));
 }
 
+// The point a centre/top/bottom watermark is turned about (pt, y up)
+function _anchor(position, width, height) {
+  return [width / 2, position === 'top' ? height - 50 : position === 'bottom' ? 30 : height / 2];
+}
+
 // Vector path — verbatim port of worker.js's handleWatermark() text-drawing
 // logic, only the font source changed (embedded Liberation TTF instead of
 // StandardFonts.HelveticaBold). Kept in sync manually, same precedent as
@@ -179,12 +185,18 @@ function _drawVectorText(pages, { text, opacity, position, fontSize, font, rgb, 
             y: row * tileGapY, size: fontSize * 0.7, font,
             color: rgb(r, g, b), opacity, rotate: rot });
     } else {
-      const tw = font.widthOfTextAtSize(text, fontSize);
-      const rot = degrees(_resolveRotationDeg(rotation, position === 'center' ? -25 : 0));
-      const pos = position === 'top'    ? { x: (width-tw)/2, y: height-50, rotate: rot }
-                : position === 'bottom' ? { x: (width-tw)/2, y: 30,        rotate: rot }
-                :                        { x: width/2-tw/2,  y: height/2,  rotate: rot };
-      page.drawText(text, { size: fontSize, font, color: rgb(r, g, b), opacity, ...pos });
+      // Too long for the page → more lines (watermarkWrap.js); turned about
+      // the anchor, line by line, as the preview draws it
+      const deg = _resolveRotationDeg(rotation, position === 'center' ? -25 : 0);
+      const { maxLineWidth, wrapWatermark, lineBaselines } = self.pdfreeWatermarkWrap;
+      const { lines, size } = wrapWatermark(text, str => font.widthOfTextAtSize(str, 1), fontSize, maxLineWidth(width, height, deg));
+      const [cx, cy] = _anchor(position, width, height);
+      const a = deg * Math.PI / 180, cos = Math.cos(a), sin = Math.sin(a);
+      lineBaselines(lines.length, size, position).forEach((ly, i) => {
+        const lx = -font.widthOfTextAtSize(lines[i], size) / 2;
+        page.drawText(lines[i], { x: cx + lx * cos - ly * sin, y: cy + lx * sin + ly * cos,
+          size, font, color: rgb(r, g, b), opacity, rotate: degrees(deg) });
+      });
     }
     if (layer === 'behind') _moveWatermarkBehind(page);
   }
@@ -196,12 +208,21 @@ function _drawVectorText(pages, { text, opacity, position, fontSize, font, rgb, 
 // adapted for an image instead of text: an image's (x,y) is its bottom-left
 // corner, not a text baseline, so center/top/bottom offsets are adjusted
 // to keep the image visually centered on the same target point.
-async function _drawImageText(pdf, pages, pngBytes, imgW, imgH, { opacity, position, degrees, rotation, layer }) {
-  const embeddedImage = await pdf.embedPng(pngBytes);
+async function _drawImageText(pdf, pages, { text, fontSize, rgb255, opacity, position, degrees, rotation, layer }) {
+  let tile = null;   // the whole text as one image — only the tile position uses it
+  const lineImages = new Map();   // "line|size" → { image, width, height }, shared across pages
+  const probe = new OffscreenCanvas(1, 1).getContext('2d');
+  probe.font = 'bold 100px sans-serif';
+  const measure = str => probe.measureText(str).width / 100;
 
   for (const page of pages) {
     const { width, height } = _safeSize(page);
     if (position === 'tile') {
+      if (!tile) {
+        const png = await _renderTextToPng(text, fontSize, rgb255);
+        tile = { image: await pdf.embedPng(png.bytes), width: png.width, height: png.height };
+      }
+      const { image: embeddedImage, width: imgW, height: imgH } = tile;
       const gapX = width / 2.5, gapY = 120;
       const cols = Math.ceil(width / gapX) + 2;
       const rows = Math.ceil(height / gapY) + 2;
@@ -217,13 +238,25 @@ async function _drawImageText(pdf, pages, pngBytes, imgW, imgH, { opacity, posit
             width: w, height: h, opacity, rotate: rot,
           });
     } else {
-      const rot = degrees(_resolveRotationDeg(rotation, position === 'center' ? -25 : 0));
-      const pos = position === 'top'
-        ? { x: (width - imgW) / 2, y: height - 50 - imgH / 2, rotate: rot }
-        : position === 'bottom'
-        ? { x: (width - imgW) / 2, y: 30 - imgH / 2, rotate: rot }
-        : { x: (width - imgW) / 2, y: (height - imgH) / 2, rotate: rot };
-      page.drawImage(embeddedImage, { width: imgW, height: imgH, opacity, ...pos });
+      // Same lines and turn as the vector path; each line an image whose
+      // middle sits 0.35 em above its baseline
+      const deg = _resolveRotationDeg(rotation, position === 'center' ? -25 : 0);
+      const { maxLineWidth, wrapWatermark, lineBaselines } = self.pdfreeWatermarkWrap;
+      const { lines, size } = wrapWatermark(text, measure, fontSize, maxLineWidth(width, height, deg));
+      const [cx, cy] = _anchor(position, width, height);
+      const a = deg * Math.PI / 180, cos = Math.cos(a), sin = Math.sin(a);
+      const baselines = lineBaselines(lines.length, size, position);
+      for (let i = 0; i < lines.length; i++) {
+        const key = `${lines[i]}|${size}`;
+        if (!lineImages.has(key)) {
+          const png = await _renderTextToPng(lines[i], size, rgb255);
+          lineImages.set(key, { image: await pdf.embedPng(png.bytes), width: png.width, height: png.height });
+        }
+        const { image, width: iw, height: ih } = lineImages.get(key);
+        const lx = -iw / 2, ly = baselines[i] + size * 0.35 - ih / 2;
+        page.drawImage(image, { x: cx + lx * cos - ly * sin, y: cy + lx * sin + ly * cos,
+          width: iw, height: ih, opacity, rotate: degrees(deg) });
+      }
     }
     if (layer === 'behind') _moveWatermarkBehind(page);
   }
@@ -262,9 +295,8 @@ self.onmessage = async (e) => {
     } else {
       progress(15, 'Rendering text…');
       const [r, g, b] = (WM_COLORS[color] || WM_COLORS.gray).map(v => Math.round(v * 255));
-      const { bytes: pngBytes, width: imgW, height: imgH } = await _renderTextToPng(text, fontSize, [r, g, b]);
       progress(30, 'Watermarking…');
-      await _drawImageText(pdf, targetPages, pngBytes, imgW, imgH, { opacity, position, degrees, rotation, layer });
+      await _drawImageText(pdf, targetPages, { text, fontSize, rgb255: [r, g, b], opacity, position, degrees, rotation, layer });
     }
 
     progress(92, 'Saving…');
