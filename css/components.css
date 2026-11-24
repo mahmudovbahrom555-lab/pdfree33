@@ -1638,6 +1638,8 @@ button,
 .compress-target__custom input { flex: 1 1 auto; min-width: 0; min-height: 44px; padding: 0 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); font-size: 16px; }
 .compress-target { margin: 0 0 14px; }
 .compress-target__custom { align-items: center; }
+/* − number + side by side, not the field stretched across a wide panel */
+.compress-target .compress-target__custom input { flex: 0 1 120px; text-align: center; }
 .compress-target__step { flex: 0 0 44px; min-height: 44px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); font-size: 20px; cursor: pointer; }
 .compress-target__unit { color: var(--text2); font-size: 15px; }
 .compress-target--on .compress-target__custom input { border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
