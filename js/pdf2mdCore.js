@@ -12,7 +12,7 @@
 //  browser, or packages/pdf2md-core/src/index.js in Node) owns loading the
 //  PDF and producing that object.
 //
-//  Browser-coupling is limited to 4 injectable seams, all optional:
+//  Browser-coupling is limited to 5 injectable seams, all optional:
 //    onProgress(pct, label)   — UI progress callback; no-op by default.
 //    isCancelled()            — mid-run cancellation check; never-cancel default.
 //    canvasFactory(w, h)      — returns a canvas-shaped object (.getContext,
@@ -41,6 +41,11 @@
 //                               change for every existing caller (Node/CLI/
 //                               Docker packages, and the browser tool with
 //                               its opt-in toggle off).
+//    actualText(pageNum)      — optional reader for marked-content
+//                               /ActualText. It restores real Arabic-script
+//                               letters that pdf.js drops from shaped glyphs;
+//                               omitted by standalone callers that do not
+//                               bundle pdf-lib.
 // ============================================================
 
 import { detectTables, looksLikeProseNotData } from './pdf2wordTables.js';
@@ -49,7 +54,7 @@ import { BULLET_RE, NUMBERED_RE, BOLD_FONT_NAME_RE, MONEY_TOKEN_RE,
          _visualRTLToLogical, rtlItemsAreVisual, reorderVisualRtlLine, toArabicBaseLetters, toUnifiedIdeographs, _splitCrossColumnLines, _isCjk,
          lineStartMargins, startsIndentedParagraph, linePitch, startsSpacedParagraph,
          lineEndsParagraph, continuesWrappedHeading,
-         joinHyphenatedLineEnd, lineRuns } from './textLayoutUtils.js';
+         joinHyphenatedLineEnd, lineRuns, applyActualText } from './textLayoutUtils.js';
 
 // Latin typographic ligatures (Unicode "Alphabetic Presentation Forms" block,
 // U+FB00-FB06) — a PDF commonly encodes "fi"/"fl"/"ffi" etc. as ONE of these
@@ -289,6 +294,7 @@ export async function _p2mdExtractText(pdfDoc, {
   isCancelled = () => false,
   canvasFactory = (typeof document !== 'undefined' ? browserCanvasFactory : null),
   ocrFormula = null,
+  actualText = null,
 } = {}) {
   const YTOL = 6;
   const pageData = [];
@@ -344,9 +350,13 @@ export async function _p2mdExtractText(pdfDoc, {
     // contract where headings were same-size-but-bold and indistinguishable
     // from body text by fontFamily alone).
     const [content, opList] = await Promise.all([
-      page.getTextContent({ normalizeWhitespace: false }),
+      page.getTextContent({ normalizeWhitespace: false, includeMarkedContent: !!actualText }),
       page.getOperatorList().catch(() => null),
     ]);
+    if (actualText) {
+      const needs = content.items.some(item => /[\0\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/.test(item.str ?? ''));
+      content.items = applyActualText(content.items, needs ? await actualText(p).catch(() => null) : null);
+    }
     // Greek-letter formula signal, gated per page — real STEM formulas use
     // Greek variables constantly (θ, λ, α, β, Ω, Σ...) and MATH_GLYPH_RE's
     // curated symbol set doesn't cover them, but a bare Greek-letter check

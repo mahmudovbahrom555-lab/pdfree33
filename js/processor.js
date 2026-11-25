@@ -4930,6 +4930,7 @@ async function _runPdf2Md(filesSnapshot, { enableFormulaOcr = false } = {}) {
       isCancelled:   () => !isProcessing,
       canvasFactory: browserCanvasFactory,
       ocrFormula:    _ocrState?.fn,
+      actualText:    createActualTextReader(pdfDoc),
     });
   } catch (err) {
     isProcessing = false; setFilesLocked(false); hideCancelBtn();
