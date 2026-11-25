@@ -99,8 +99,11 @@ test('дата в формате DD/MM/YYYY НЕ парсится как дат�
   expect(_p2eCellValue('01/02/2026')).toEqual({ value: '01/02/2026' });
 });
 
-test('дата в формате DD.MM.YYYY НЕ парсится как дата', () => {
-  expect(_p2eCellValue('15.01.2026')).toEqual({ value: '15.01.2026' });
+// DD.MM.YYYY was left as text here (6455bd2e recorded the behaviour, with no
+// reason given). Changed 2026-11-25: a dotted date is day first in every
+// locale that writes it, unlike DD/MM — see the dotted-date tests below.
+test('дата в формате DD.MM.YYYY — дата (день первым), как напечатано', () => {
+  expect(_p2eCellValue('15.01.2026').value.toISOString()).toBe('2026-01-15T00:00:00.000Z');
 });
 
 // ── _p2eCellValue: текст и края ─────────────────────────────
@@ -174,6 +177,23 @@ test('проверка календаря сохраняет невозможн�
     expect(_p2eCellValue(source)).toEqual({ value: source });
   }
   expect(_p2eCellValue('2024-02-29').value.toISOString()).toBe('2024-02-29T00:00:00.000Z');
+});
+
+// Day.month.year (2026-11-25): 94 % of dd.mm.yyyy cells of 60 printed
+// spreadsheets stayed text, so they couldn't be sorted or filtered by date.
+// A dotted date is day first wherever it is written (de, ru, pl, tr, …);
+// a slashed one is ambiguous (01/02/2024) and stays text.
+test('a dotted date (dd.mm.yyyy) is a date, shown as it was printed', () => {
+  const v = _p2eCellValue('30.12.2024');
+  expect(v.value.toISOString()).toBe('2024-12-30T00:00:00.000Z');
+  expect(v.numFmt).toBe('dd.mm.yyyy');
+  expect(_p2eCellValue('1.2.2024').value.toISOString()).toBe('2024-02-01T00:00:00.000Z');
+  expect(_p2eCellValue('29.02.2024').value.toISOString()).toBe('2024-02-29T00:00:00.000Z');
+});
+test('impossible or ambiguous day-month dates stay text', () => {
+  for (const source of ['31.02.2024', '29.02.2025', '13.13.2024', '01/02/2024', '30.12.24', '1.2.3.2024']) {
+    expect(_p2eCellValue(source)).toEqual({ value: source });
+  }
 });
 
 // ── groupItemsIntoLines (общая для preview-скана и реальной конвертации) ────
