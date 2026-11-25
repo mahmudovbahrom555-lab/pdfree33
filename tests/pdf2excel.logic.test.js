@@ -477,6 +477,56 @@ test('fractions without a leading zero remain usable numbers', () => {
   expect(_p2eCellValue('-,15')).toEqual({ value: -0.15 });
 });
 
+// ── A spreadsheet printed to PDF (2026-11-25) ─────────────────
+// Real geometry (LibreOffice 26.2, A4, 6 columns of width 14): heading
+// labels sit at each cell's LEFT edge, numbers at its RIGHT edge, so "Date"
+// starts 2 pt after the ID numbers end. The heading went to the Text sheet
+// on every page, and a reprinted heading or a "Sheet1" / "Page 2 of 7" line
+// above the table blocked the page-break join: 7 sheets for one table.
+console.log('\n_p2eExtractPage + _p2eStitchTables — a printed spreadsheet:');
+const SHEET_VIEW = [0, 0, 595, 842];
+const at = (y, cells) => ({ y, items: cells.map(([str, x, right]) => ({ str, x, width: right - x, fontSize: 10 })) });
+const SHEET_HEAD = y => at(y, [['ID', 55, 66.6], ['Date', 132.7, 156.2], ['Category', 210.4, 255.3], ['Amount', 288.1, 328.5], ['Qty', 365.8, 383.3], ['Rate', 443.5, 466.5]]);
+const SHEET_ROWS = (y0, n, first) => Array.from({ length: n }, (_, k) => at(y0 - 15 * k, [
+  [String(first + k), 108.4, 130.6], [`2025-02-${String(10 + k).padStart(2, '0')}`, 157, 208.3], [k % 2 ? 'Food' : 'Software', 210.4, 250.4],
+  [`${9000 + k}.98`, 327.5, 363.7], [String(400 + k), 424.7, 441.4], [`0.${600 + k}`, 494.1, 519.1]]));
+test('the heading row of a printed spreadsheet is the table\'s first row, not a Text-sheet line', () => {
+  const { tables, textRows } = _p2eExtractPage([SHEET_HEAD(769), ...SHEET_ROWS(754, 4, 1000)], [], 1, SHEET_VIEW);
+  expect(tables.length).toBe(1);
+  expect(tables[0].rows[0]).toEqual(['ID', 'Date', 'Category', 'Amount', 'Qty', 'Rate']);
+  expect(tables[0].rows.length).toBe(5);
+  expect(textRows.length).toBe(0);
+});
+test('a heading reprinted on every page: one table, the heading once', () => {
+  const out = _p2eStitchTables([
+    ..._p2eExtractPage([SHEET_HEAD(769), ...SHEET_ROWS(754, 48, 1000)], [], 1, SHEET_VIEW).tables,
+    ..._p2eExtractPage([SHEET_HEAD(769), ...SHEET_ROWS(754, 10, 1048)], [], 2, SHEET_VIEW).tables,
+  ]);
+  expect(out.length).toBe(1);
+  expect(out[0].rows.length).toBe(59);
+  expect(out[0].rows[0][0]).toBe('ID');
+  expect(out[0].rows[49][0]).toBe('1048');
+});
+test('a running header ("Sheet1") and footer ("Page N of 2") on every page don\'t split the table', () => {
+  const page = (n, first, count) => _p2eExtractPage([at(805, [['Sheet1', 280, 310]]), ...(n === 1 ? [SHEET_HEAD(769)] : []),
+    ...SHEET_ROWS(n === 1 ? 754 : 769, count, first), at(30, [[`Page ${n} of 2`, 270, 325]])], [], n, SHEET_VIEW).tables;
+  const out = _p2eStitchTables([...page(1, 1000, 48), ...page(2, 1048, 10)]);
+  expect(out.length).toBe(1);
+  expect(out[0].rows.length).toBe(59);
+});
+test('a title line above a table is not taken for its heading', () => {
+  const { tables, textRows } = _p2eExtractPage([at(790, [['Quarterly', 55, 100], ['report', 104, 135]]), ...SHEET_ROWS(754, 4, 1000)], [], 1, SHEET_VIEW);
+  expect(tables[0].rows[0][0]).toBe('1000');
+  expect(textRows.length).toBe(1);
+});
+test('a line that is only on the next page still keeps the tables apart', () => {
+  const out = _p2eStitchTables([
+    ..._p2eExtractPage([SHEET_HEAD(769), ...SHEET_ROWS(754, 48, 1000)], [], 1, SHEET_VIEW).tables,
+    ..._p2eExtractPage([at(805, [['Expenses', 55, 100]]), SHEET_HEAD(769), ...SHEET_ROWS(754, 10, 1048)], [], 2, SHEET_VIEW).tables,
+  ]);
+  expect(out.length).toBe(2);
+});
+
 // ── _p2eStitchTables: one table across pages → one worksheet ──
 console.log('\n_p2eStitchTables:');
 
