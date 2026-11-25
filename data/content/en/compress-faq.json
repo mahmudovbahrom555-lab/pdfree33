@@ -17,6 +17,14 @@
   },
   {
     "@type": "Question",
+    "name": "Is there a setting that makes print-ready PDFs smaller for email?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes — Screen & email. It does everything Maximum does and also converts print colours (CMYK images, as in brochures and print-ready reports) to screen colours at 150 DPI. On 15 print PDFs we tested it was smaller than Maximum on every one — typically by about a third, on some by more than half. It is meant for sending and viewing on screens, not for professional printing: the print colour data is replaced."
+    }
+  },
+  {
+    "@type": "Question",
     "name": "Will compression damage the text quality?",
     "acceptedAnswer": {
       "@type": "Answer",

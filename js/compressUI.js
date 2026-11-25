@@ -37,7 +37,7 @@ function _splitHref() {
 }
 
 // ── State ──────────────────────────────────────────────────────
-let _preset       = 'medium';  // 'low' | 'medium' | 'high'
+let _preset       = 'medium';  // 'low' | 'medium' | 'high' | 'screen'
 let _preserveText = true;
 let _targetDpi    = 150;       // null = no downsampling | 96 | 150
 let _quality      = 82;        // JPEG quality %, 60–95 (sent as 0–1 to worker)
@@ -51,8 +51,8 @@ let _eventsBound  = false;     // listeners live on the persistent #compressOpti
 let _rememberLoaded = false;   // "Remember my settings" applied once per tool session — see initCompressOptions
 
 // Defaults applied when user switches presets
-const _dpiDefaults     = { low: null, medium: 150, high: 96 };
-const _qualityDefaults = { medium: 82, high: 72 };
+const _dpiDefaults     = { low: null, medium: 150, high: 96, screen: 96 };
+const _qualityDefaults = { medium: 82, high: 72, screen: 72 };   // screen: Maximum's own, + CMYK → RGB
 
 
 // ── Document classification + recommendation logic ─────────────
@@ -603,6 +603,7 @@ function _render(file, scan) {
       ${_presetCard('low',    '🪶', t('cmp_preset_light_name'),    t('cmp_preset_light_desc'))}
       ${_presetCard('medium', '⚡', t('cmp_preset_standard_name'), t('cmp_preset_standard_desc'), _lastScan && _recommendedPreset(_lastScan) === 'medium')}
       ${_presetCard('high',   '🔥', t('cmp_preset_maximum_name'),  t('cmp_preset_maximum_desc'),  _lastScan && _recommendedPreset(_lastScan) === 'high')}
+      ${_presetCard('screen', '📧', t('cmp_preset_screen_name'),   t('cmp_preset_screen_desc'))}
     </div>
 
     ${_qualityRow()}
@@ -680,7 +681,7 @@ function _buildScanBanner(scan, targetDpi = null) {
 }
 
 function _qualityRow() {
-  if (_preset === 'low') return '';
+  if (_preset === 'low' || _preset === 'screen') return '';
   return sliderRow({
     id:          'qualitySlider',
     containerId: 'qualityRow',
@@ -700,7 +701,7 @@ function _qualityRow() {
 // read at higher compression. Only relevant once images actually get
 // recompressed (Light preset does no image recompression at all).
 function _qualityNote() {
-  if (_preset === 'low') return '';
+  if (_preset === 'low' || _preset === 'screen') return '';
   return `<div class="compress-scan compress-scan--info" id="compressQualityNote" role="status">${t('cmp_quality_note')}</div>`;
 }
 
@@ -738,7 +739,7 @@ function _presetCard(value, icon, label, desc, isRecommended = false) {
 }
 
 function _dpiRow() {
-  if (_preset === 'low') return '';
+  if (_preset === 'low' || _preset === 'screen') return '';
   const opts = [
     { value: 96,   label: t('cmp_dpi_email'),    hint: t('cmp_dpi_email_hint') },
     { value: 150,  label: t('cmp_dpi_web'),      hint: t('cmp_dpi_web_hint') },
@@ -776,12 +777,12 @@ function _bindEvents() {
       // preserveText only has effect on High preset — dim the label otherwise
       const preserveLabel = document.querySelector('.compress-preserve');
       if (preserveLabel) {
-        preserveLabel.classList.toggle('compress-preserve--inactive', _preset !== 'high');
+        preserveLabel.classList.toggle('compress-preserve--inactive', _preset !== 'high' && _preset !== 'screen');
       }
       // Apply preset quality default and sync slider
       const qualityRow  = id('qualityRow');
       const qualityNote = id('compressQualityNote');
-      if (_preset === 'low') {
+      if (_preset === 'low' || _preset === 'screen') {   // screen: the validated settings only
         if (qualityRow)  qualityRow.style.display  = 'none';
         if (qualityNote) qualityNote.style.display = 'none';
       } else {
@@ -799,7 +800,7 @@ function _bindEvents() {
       // Apply preset DPI default and update DPI row visibility
       _targetDpi = _dpiDefaults[_preset] ?? null;
       const dpiRow = document.querySelector('.compress-dpi');
-      if (_preset === 'low') {
+      if (_preset === 'low' || _preset === 'screen') {
         if (dpiRow) dpiRow.style.display = 'none';
       } else {
         if (dpiRow) {

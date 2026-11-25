@@ -1025,6 +1025,8 @@ window.PDFREE_LOCALE = {
   cmp_preset_standard_desc:  'Usuwa metadane i kompresuje obrazy ponownie. Dostosuj jakość poniżej.',
   cmp_preset_maximum_name:   'Maksymalne',
   cmp_preset_maximum_desc:   'Agresywne czyszczenie struktury + ponowna kompresja obrazów. Dostosuj jakość poniżej.',
+  cmp_preset_screen_name:    'Ekran i e-mail',
+  cmp_preset_screen_desc:    'Najmniejszy plik do wysłania. Kolory druku (CMYK) są przekształcane na ekranowe — nie do druku.',
   cmp_preserve_title:     'Zachowaj tekst i dostępność',
   cmp_preserve_sub:       'Przy Maksymalnym: zachowuje nienaruszone tagowanie PDF (wyłącz dla najmniejszego pliku)',
   cmp_preserve_aria:      'Zachowaj jakość tekstu — zachowuje nienaruszone tagowanie i drzewa struktury PDF',

@@ -17,7 +17,7 @@
       "@type": "HowToStep",
       "position": 2,
       "name": "Choose a compression level",
-      "text": "Select Light (removes metadata only, images unchanged), Standard (removes metadata and recompresses images — best for most files), or Maximum (most aggressive — best for scanned documents). PDFree analyses your PDF and recommends the best preset automatically.",
+      "text": "Select Light (removes metadata only, images unchanged), Standard (removes metadata and recompresses images — best for most files), or Maximum (most aggressive — best for scanned documents). PDFree analyses your PDF and recommends the best preset automatically. For a print-ready file you only need to send, Screen & email also converts print colours (CMYK) for screens — the smallest file, not for printing.",
       "url": "https://pdfree.io/compress-pdf/#step2"
     },
     {

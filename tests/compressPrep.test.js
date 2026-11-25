@@ -22,7 +22,7 @@ const src = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '../js/co
   .replace(/importScripts\([^)]+\);?/g, 'void 0;')
   .replace(/self\.onmessage\s*=[\s\S]*?^};/m, '');
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
-const { _encodeRawImages, _mayHaveObjectXmp, _dropOrphans } = await new AsyncFunction(src + '\nreturn { _encodeRawImages, _mayHaveObjectXmp, _dropOrphans };')();
+const { _encodeRawImages, _mayHaveObjectXmp, _afterWorker } = await new AsyncFunction(src + '\nreturn { _encodeRawImages, _mayHaveObjectXmp, _afterWorker };')();
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -224,9 +224,9 @@ await test('already as small as the encoder makes it: not touched', async () => 
 
 // C38 (2026-11-25): the worker removes /PieceInfo and the like after this
 // pass, and pdf-lib writes every object it holds — a Maximum output kept
-// 31 of 32 MB nothing referenced (Illustrator private data). _dropOrphans
+// 31 of 32 MB nothing referenced (Illustrator private data). _afterWorker
 // runs on the worker's result.
-console.log('\n_dropOrphans (after the worker):');
+console.log('\n_afterWorker (after the worker):');
 async function withOrphan(kb) {
   const pdf = await PDFDocument.create();
   pdf.addPage([200, 200]).drawText('kept', { x: 20, y: 100, size: 20 });
@@ -235,7 +235,7 @@ async function withOrphan(kb) {
 }
 await test('an orphaned 300 KB stream is gone; the page and its text stay', async () => {
   const before = await withOrphan(300);
-  const out = await _dropOrphans(before.slice(0));
+  const out = await _afterWorker(before.slice(0));
   assert(out.dropped === 1, `dropped ${out.dropped}`);
   assert(out.result.byteLength < before.byteLength - 300 * 1024, `${before.byteLength} → ${out.result.byteLength}`);
   const doc = await PDFDocument.load(out.result);
@@ -244,13 +244,13 @@ await test('an orphaned 300 KB stream is gone; the page and its text stay', asyn
 });
 await test('nothing orphaned: the very same bytes, no re-save', async () => {
   const before = await withOrphan(0);
-  const out = await _dropOrphans(before);
+  const out = await _afterWorker(before);
   assert(out.dropped === 0, `dropped ${out.dropped}`);
   assert(out.result === before, 'same buffer');
 });
 await test('not a PDF: the same bytes back, no throw', async () => {
   const junk = new Uint8Array([1, 2, 3]).buffer;
-  const out = await _dropOrphans(junk);
+  const out = await _afterWorker(junk);
   assert(out.result === junk && out.dropped === 0, 'unchanged');
 });
 

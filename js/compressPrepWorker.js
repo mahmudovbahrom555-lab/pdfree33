@@ -84,7 +84,7 @@ importScripts('./vendor/pdf-lib.min.js', './cmykD.js');   // cmykD.js sets self.
 self.onmessage = async (e) => {
   if (e.data.orphans) {   // after the worker (C38)
     const input = e.data.file;
-    const out = await _dropOrphans(input);
+    const out = await _afterWorker(input, e.data.screen || null);
     self.postMessage({ type: 'done', ...out }, [out.result]);
     return;
   }
@@ -247,18 +247,41 @@ function _dropUnreachable(pdf) {
 // 1–3 % of most (28 outputs, 2026-11-25). Nothing references them, so no
 // reader shows them. Saved the way the worker saves; used only when smaller.
 // Encrypted files, and any failure, give the worker's bytes back unchanged.
-async function _dropOrphans(buffer) {
-  const same = { result: buffer, dropped: 0 };
+//
+// screen (Screen & email, 2026-11-25): CMYK images → RGB through the ICC table
+// at screen.target dpi, on this, the Maximum output — the chain the holdout of
+// 15 print PDFs passed (wip-bench SCREEN-PREREG.md).
+async function _afterWorker(buffer, screen = null) {
+  const same = { result: buffer, dropped: 0, screen: 0 };
   try {
     const pdf = await PDFLib.PDFDocument.load(buffer, { ignoreEncryption: true, updateMetadata: false });
     if (pdf.context.trailerInfo.Encrypt) return same;
+    let converted = 0;
+    if (screen && (_mayHaveCmyk(new Uint8Array(buffer)) || _mayHaveName(new Uint8Array(buffer), '/ICCBased'))) {
+      if (!self.cmykRgbLut) importScripts('./cmykRgbLut.js');   // Screen & email only: 263 KB
+      const d = await self.cmykD(pdf, {
+        screen: { ...screen, lut: self.cmykRgbLut }, target: screen.target, quality: screen.quality,
+        maxMegapixels: screen.maxMegapixels, urls: _cmykdUrls(),
+        onProgress: (done, total) => self.postMessage({ type: 'progress', done, total }),
+      });
+      converted = d.replaced;
+    }
     const dropped = _dropUnreachable(pdf);
-    if (!dropped) return same;
+    if (!dropped && !converted) return same;
     const bytes = await pdf.save({ useObjectStreams: true, addDefaultPage: false, updateFieldAppearances: false });
-    return bytes.byteLength < buffer.byteLength ? { result: bytes.buffer, dropped } : same;
+    return bytes.byteLength < buffer.byteLength ? { result: bytes.buffer, dropped, screen: converted } : same;
   } catch {
     return same;
   }
+}
+
+function _cmykdUrls() {
+  return {
+    decoders: new URL('./vendor/pdfjs-4.10.38/pdf.image_decoders.min.mjs', self.location.href).href,
+    qpdfJs:   new URL('./vendor/qpdf/lib/qpdf.js', self.location.href).href,
+    qpdfWasm: new URL('./vendor/qpdf/lib/qpdf.wasm', self.location.href).href,
+    utif:     new URL('./vendor/UTIF.js', self.location.href).href,
+  };
 }
 
 // Cheap scans: "/DeviceCMYK" or "/JPXDecode" anywhere in the plain text. An
@@ -404,12 +427,7 @@ async function _encodeRawImages(buffer, stripXmp = false, cmykFlate = false, dOp
           preferNativeScans: dOpts.rgb.preferNativeScans &&
             typeof OffscreenCanvas !== 'undefined' && typeof createImageBitmap === 'function',
         },
-        urls: {
-          decoders: new URL('./vendor/pdfjs-4.10.38/pdf.image_decoders.min.mjs', self.location.href).href,
-          qpdfJs:   new URL('./vendor/qpdf/lib/qpdf.js', self.location.href).href,
-          qpdfWasm: new URL('./vendor/qpdf/lib/qpdf.wasm', self.location.href).href,
-          utif:     new URL('./vendor/UTIF.js', self.location.href).href,
-        },
+        urls: _cmykdUrls(),
         onProgress: (done, total) => self.postMessage({ type: 'progress', done, total }),
       });
     } catch { d = null; }   // D300 failed as a whole: the document as the steps above left it

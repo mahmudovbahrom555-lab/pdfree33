@@ -1072,6 +1072,8 @@ window.PDFREE_LOCALE = {
   cmp_preset_standard_desc:  'يزيل البيانات الوصفية + يعيد ضغط الصور. يمكن ضبط الجودة أدناه.',
   cmp_preset_maximum_name:   'أقصى',
   cmp_preset_maximum_desc:   'تنظيف بنيوي مكثّف + إعادة ضغط الصور. يمكن ضبط الجودة أدناه.',
+  cmp_preset_screen_name:    'للشاشة والبريد',
+  cmp_preset_screen_desc:    'أصغر ملف للإرسال. تُحوَّل ألوان الطباعة (CMYK) لتناسب الشاشات — ليس للطباعة.',
   cmp_preserve_title:     'الحفاظ على النص وسهولة الوصول',
   cmp_preserve_sub:       'في النمط "أقصى": يحافظ على بنية وسوم PDF سليمة (أوقفه للحصول على أصغر ملف)',
   cmp_preserve_aria:      'الحفاظ على جودة النص — يحافظ على وسوم PDF وأشجار البنية سليمة',

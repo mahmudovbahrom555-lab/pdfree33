@@ -17,7 +17,7 @@
           <div style="background:var(--green);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">2</div>
           <div>
             <strong style="color:var(--text);font-size:15px;">Pick a compression level</strong>
-            <p style="margin:6px 0 0;font-size:14px;">Select <strong>Light</strong> (removes metadata only — best quality, no image changes), <strong>Standard</strong> (removes metadata + recompresses images at 82% quality — 30–50% smaller), or <strong>Maximum</strong> (aggressive — 50–70% smaller, best for scanned documents). Standard works for most emails and web uploads.</p>
+            <p style="margin:6px 0 0;font-size:14px;">Select <strong>Light</strong> (removes metadata only — best quality, no image changes), <strong>Standard</strong> (removes metadata + recompresses images at 82% quality — 30–50% smaller), or <strong>Maximum</strong> (aggressive — 50–70% smaller, best for scanned documents). Standard works for most emails and web uploads. For a print-ready brochure or report you only need to send, <strong>Screen &amp; email</strong> also converts print colours (CMYK) for screens — the smallest file, not for printing.</p>
           </div>
         </div>
         <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;">
@@ -107,6 +107,10 @@
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">How much does PDF compression reduce file size?</h3>
           <p style="margin:0;font-size:14px;">Typical reduction is 20–70%. PDFs full of high-resolution images (scans, photos, brochures) compress the most — often 50–80%. Text-only PDFs see less reduction since text is already stored efficiently. The Maximum preset reduces image quality to 72%, giving the largest size savings.</p>
+        </div>
+        <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Is there a setting that makes print-ready PDFs smaller for email?</h3>
+          <p style="margin:0;font-size:14px;">Yes — Screen & email. It does everything Maximum does and also converts print colours (CMYK images, as in brochures and print-ready reports) to screen colours at 150 DPI. On 15 print PDFs we tested it was smaller than Maximum on every one — typically by about a third, on some by more than half. It is meant for sending and viewing on screens, not for professional printing: the print colour data is replaced.</p>
         </div>
         <div style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
           <h3 style="font-size:16px;color:var(--text);margin:0 0 8px;font-weight:600;">Will compression damage the text quality?</h3>

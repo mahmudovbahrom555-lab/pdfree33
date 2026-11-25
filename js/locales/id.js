@@ -1026,6 +1026,8 @@ window.PDFREE_LOCALE = {
   cmp_preset_standard_desc:  'Menghapus metadata + mengompres ulang gambar. Sesuaikan kualitas di bawah.',
   cmp_preset_maximum_name:   'Maksimum',
   cmp_preset_maximum_desc:   'Pembersihan struktur agresif + kompresi ulang gambar. Sesuaikan kualitas di bawah.',
+  cmp_preset_screen_name:    'Layar & email',
+  cmp_preset_screen_desc:    'File terkecil untuk dikirim. Warna cetak (CMYK) diubah untuk layar — bukan untuk dicetak.',
   cmp_preserve_title:     'Pertahankan teks & aksesibilitas',
   cmp_preserve_sub:       'Pada Maksimum: menjaga tag PDF tetap utuh (matikan untuk file terkecil)',
   cmp_preserve_aria:      'Pertahankan kualitas teks — menjaga tag PDF dan struktur pohon tetap utuh',

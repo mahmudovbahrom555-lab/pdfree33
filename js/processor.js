@@ -1941,7 +1941,7 @@ function _compressPrep(buffer, file, preset, manual) {
 }
 
 // The result card for a compressed file whose bytes are final
-function _compressSucceeded(file, originalSize, final, data, prepXmp, toolKey, extra) {
+function _compressSucceeded(file, originalSize, final, data, prepXmp, toolKey, extra, mode) {
   isProcessing = false;
   setFilesLocked(false);
   hideCancelBtn();
@@ -1963,6 +1963,7 @@ function _compressSucceeded(file, originalSize, final, data, prepXmp, toolKey, e
   document.dispatchEvent(new CustomEvent('pdfree:success', {
     detail: {
       tool: toolKey,  // actual tool key (compress or compress-email) for registry dispatch
+      mode,           // 'screen' only; other presets send none, as before
       blob,
       desc,
       filename,
@@ -2017,15 +2018,18 @@ async function _compressAttempt(original, file, step, options, signal, onProgres
     options: { ...options, preset, targetDpi: targetDpi ?? null, quality: quality ?? null },
   }, [buffer], onProgress, { signal, onScan, timeoutKey: 'err_compress_timeout' });
   if (!(data.result instanceof ArrayBuffer)) throw new Error('Unexpected result type from worker');
-  if (preset !== 'low') data.result = await _compressDropOrphans(data.result);
+  if (preset !== 'low') data.result = await _compressAfterWorker(data.result, step.screen);
   throwIfAborted(signal);
   return { data: { ...data, compressedSize: data.result.byteLength }, prepXmp, prepScans };
 }
 
-// C38: objects the worker's own clean-up left unreferenced (compressPrepWorker
-// _dropOrphans). A copy goes over, so a failure or a time-out keeps the
-// worker's bytes; never larger (the pass only answers smaller bytes).
-function _compressDropOrphans(buffer) {
+// After the worker (compressPrepWorker _afterWorker): C38, objects the worker's
+// own clean-up left unreferenced; and for Screen & email (screen = its dpi),
+// CMYK images → RGB on the Maximum output — the very chain the 15 held-out
+// print PDFs passed (before the worker, its RGB pass would take them to 96 dpi).
+// A copy goes over, so a failure or a time-out keeps the worker's bytes;
+// never larger (the pass only answers smaller bytes).
+function _compressAfterWorker(buffer, screen) {
   return new Promise(resolve => {
     let worker;
     let done = false;
@@ -2039,10 +2043,14 @@ function _compressDropOrphans(buffer) {
     const watchdog = startWatchdog(() => finish(buffer), _COMPRESS_PREP_TIMEOUT_MS);
     try {
       worker = new Worker(new URL('./compressPrepWorker.js', import.meta.url));
-      worker.onmessage = e => finish(e.data.result instanceof ArrayBuffer && e.data.result.byteLength < buffer.byteLength ? e.data.result : buffer);
+      worker.onmessage = e => {
+        if (e.data.type === 'progress') { watchdog.reset(); return; }   // Screen & email works image by image
+        finish(e.data.result instanceof ArrayBuffer && e.data.result.byteLength < buffer.byteLength ? e.data.result : buffer);
+      };
       worker.onerror = () => finish(buffer);
       const copy = buffer.slice(0);
-      worker.postMessage({ orphans: true, file: copy }, [copy]);
+      worker.postMessage({ orphans: true, file: copy,
+        ...(screen ? { screen: { target: screen, quality: 72, maxMegapixels: isLargeDevice() ? 64 : 16 } } : {}) }, [copy]);
     } catch {
       finish(buffer);
     }
@@ -2267,7 +2275,10 @@ async function _compressFile(file, params, signal, onProgress, onScan, askBelowR
   if (targetBytes) {
     return { originalSize, ...await _compressToTarget(file, original, originalSize, targetBytes, options, signal, onProgress, askBelowReadable) };
   }
-  const { data, prepXmp } = await _compressAttempt(original, file, { preset, targetDpi, quality }, options, signal, onProgress, onScan);
+  // Screen & email (2026-11-25): Maximum as it is, and CMYK images → RGB at 150 dpi —
+  // the chain the holdout of 15 print PDFs passed (wip-bench SCREEN-PREREG.md)
+  const step = preset === 'screen' ? { preset: 'high', targetDpi, quality, screen: 150 } : { preset, targetDpi, quality };
+  const { data, prepXmp } = await _compressAttempt(original, file, step, options, signal, onProgress, onScan);
   const final = await _notLarger(data, originalSize, file);
   throwIfAborted(signal);
   return { originalSize, final, data, prepXmp };
@@ -2282,7 +2293,8 @@ async function _runCompress(filesSnapshot, params, toolKey, signal) {
     report => document.dispatchEvent(new CustomEvent('pdfree:scan-report', { detail: { toolKey, report } })),
     _askBelowReadable,
   );
-  _compressSucceeded(file, originalSize, final, data, prepXmp, toolKey, target ? { targetBytes, target } : {});
+  _compressSucceeded(file, originalSize, final, data, prepXmp, toolKey, target ? { targetBytes, target } : {},
+    params.preset === 'screen' ? 'screen' : undefined);   // Screen & email demand (Tool Success mode)
 }
 
 // ── JPG → PDF ──────────────────────────────────────────────────

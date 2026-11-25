@@ -1070,6 +1070,8 @@ window.PDFREE_LOCALE = {
   cmp_preset_standard_desc:  '移除元数据 + 重新压缩图片。下方可调整质量。',
   cmp_preset_maximum_name:   '最大',
   cmp_preset_maximum_desc:   '深度结构清理 + 重新压缩图片。下方可调整质量。',
+  cmp_preset_screen_name:    '屏幕与邮件',
+  cmp_preset_screen_desc:    '发送用的最小文件。印刷颜色（CMYK）会转换为屏幕颜色——不适合打印。',
   cmp_preserve_title:     '保留文本与无障碍功能',
   cmp_preserve_sub:       '"最大"预设下：保留 PDF 标签结构完整（关闭可获得最小文件）',
   cmp_preserve_aria:      '保留文本质量 — 保持 PDF 标签及结构树完整',
