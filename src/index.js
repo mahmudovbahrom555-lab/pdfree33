@@ -624,8 +624,19 @@ export function _classifyAgent(signatureAgent, verifiedBotCategory) {
   if (sig) {
     try { return new URL(sig).hostname.toLowerCase().slice(0, 60); } catch { return 'signed'; }
   }
-  if (verifiedBotCategory) return `bot:${String(verifiedBotCategory).slice(0, 60)}`;
+  // Only Cloudflare's AI categories are agents. A Security scanner or a search
+  // crawler isn't (week 1, 2026-11-26: 103 Merge opens from "Security") —
+  // _isVerifiedBot drops those events instead.
+  if (_AI_BOT_CATEGORY_RE.test(String(verifiedBotCategory || ''))) return `bot:${String(verifiedBotCategory).slice(0, 60)}`;
   return '';
+}
+
+const _AI_BOT_CATEGORY_RE = /^AI\b/i;
+
+// A verified bot that is no agent (no signature, not an AI category) is not a
+// person: its events are not written, as before agents were counted.
+export function _isVerifiedBot(signatureAgent, verifiedBotCategory) {
+  return !String(signatureAgent || '').trim() && !!verifiedBotCategory && !_AI_BOT_CATEGORY_RE.test(String(verifiedBotCategory));
 }
 
 export function _dataPointFromEvent(eventName, props) {
@@ -733,6 +744,9 @@ async function handleAnalytics(request, env) {
   props.os  = os;
   props.app = app;
   // only when an agent is named; x_ keeps it after every blob above
+  if (_isVerifiedBot(request.headers.get('Signature-Agent'), request.cf?.verifiedBotCategory)) {
+    return new Response('OK', { status: 200 });
+  }
   const agent = _classifyAgent(request.headers.get('Signature-Agent'), request.cf?.verifiedBotCategory);
   // an automated browser no agent signed is a test run or a bot: not counted
   const automated = props.x_webdriver === 'yes';
