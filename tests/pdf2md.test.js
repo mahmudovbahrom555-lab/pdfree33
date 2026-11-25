@@ -1028,6 +1028,18 @@ await test('Arabic /ActualText restores letters that the visible glyph mapping d
   expect(allText(blocks).includes('يُسطّح')).toBeTruthy();
 });
 
+await test('Arabic /ActualText does not replace logical brackets with mirrored drawn brackets', async () => {
+  const begin = { type: 'beginMarkedContentProps', tag: 'Span' };
+  const end = { type: 'endMarkedContent' };
+  const drawn = { ...makeItem('(PDF)', 50, 700), dir: 'rtl' };
+  const page = makeFakePage([]);
+  page.getTextContent = async () => ({ items: [begin, drawn, end], styles: { F1: { fontFamily: 'sans-serif' } } });
+  const pdfDoc = { numPages: 1, getPage: async () => page };
+  const blocks = await _p2mdExtractText(pdfDoc, { actualText: async () => [')PDF('] });
+  expect(allText(blocks).includes('(PDF)')).toBeTruthy();
+  expect(allText(blocks).includes(')PDF(')).toBe(false);
+});
+
 // ── NFC Unicode normalization — real bug found by scripts/*/agent research: ──
 // a PDF commonly encodes diacritic-heavy scripts as decomposed (NFD)
 // combining-character sequences; the DOCX path (eriAnatomy.js) already had to
