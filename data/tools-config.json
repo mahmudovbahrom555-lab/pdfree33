@@ -600,7 +600,7 @@
         "ar": "daght-pdf"
       },
       "titles": {
-        "en": "Compress PDF Free — No Daily Limit, No Quality Loss | PDFree",
+        "en": "Compress PDF Free — No Daily Limit, No Upload | PDFree",
         "es": "Comprimir PDF Gratis — Reducir Tamaño, Sin Subir | PDFree",
         "pt": "Comprimir PDF Grátis — Reduzir Tamanho, sem Upload | PDFree",
         "de": "PDF Komprimieren Kostenlos — 20–80% kleiner | PDFree",
@@ -618,14 +618,14 @@
         "ar": "ضغط ملف PDF مجانًا — تقليل الحجم بدون فقدان الجودة | PDFree"
       },
       "descs": {
-        "en": "Reduce PDF file size without losing quality. Processed locally in your browser — files never uploaded.",
+        "en": "Reduce PDF file size in your browser — no daily limit, no upload, no signup. Stronger settings can reduce image quality. Up to 500 MB in a desktop Chrome or Edge with 8 GB+ memory, 150 MB elsewhere.",
         "es": "Reduce el tamaño del PDF sin perder calidad. Procesado en tu navegador — archivos nunca subidos. Gratis, sin límites.",
         "pt": "Reduza o tamanho do PDF sem perder qualidade. Processado localmente no seu navegador — sem uploads.",
         "de": "PDF-Dateigröße reduzieren ohne Qualitätsverlust. Vollständig im Browser verarbeitet — keine Uploads, keine Registrierung. Kostenlos.",
         "fr": "Compresser vos fichiers PDF gratuitement en ligne. Trois niveaux de qualité. Les fichiers restent sur votre appareil — aucun envoi, sans inscription, sans limite.",
         "id": "Kurangi ukuran file PDF tanpa kehilangan kualitas. Diproses lokal di browser Anda — file tidak pernah diunggah.",
         "vi": "Giảm dung lượng file PDF mà không mất chất lượng. Xử lý ngay trong trình duyệt — file không bao giờ được tải lên.",
-        "ru": "Уменьшайте размер PDF файла без потери качества. Обрабатывается локально в браузере — файлы не загружаются.",
+        "ru": "Уменьшайте размер PDF в браузере — без дневного лимита, без отправки на сервер. Сильное сжатие может снижать качество изображений. До 500 МБ в Chrome или Edge на компьютере с 8 ГБ памяти и больше, 150 МБ в остальных случаях.",
         "ja": "PDFのファイルサイズを品質を落とさずに削減します。ブラウザ内でローカルに処理 — ファイルはアップロードされません。",
         "it": "Riduci le dimensioni del PDF senza perdita di qualità. Elaborato nel browser, nessun upload.",
         "ko": "품질 손실 없이 PDF 파일 크기를 줄입니다. 브라우저에서 처리, 업로드 없음.",
@@ -708,14 +708,14 @@
         "ar": "ضغط PDF"
       },
       "metaDescs": {
-        "en": "Reduce PDF size 20–80% without visible quality loss — free, no daily limit, no signup. Runs in your browser, nothing uploaded. Up to 500 MB on a computer.",
+        "en": "Compress PDF free in your browser — no daily limit, no upload, no signup. Choose a compression level for email or sharing; results depend on the file and settings. Up to 500 MB in a desktop Chrome or Edge with 8 GB+ memory, 150 MB elsewhere.",
         "es": "Reduce el tamaño del PDF un 20–80 % sin pérdida de calidad — compresor PDF gratuito en tu navegador. Nada subido ni almacenado, sin registro.",
         "pt": "Reduza o tamanho do PDF em 20–80 % sem perda de qualidade — compressor PDF gratuito no navegador. Nada enviado ou armazenado, sem cadastro.",
         "de": "PDF-Dateigröße um 20–80 % reduzieren — kostenloser PDF-Kompressor im Browser. Nichts hochgeladen, nichts gespeichert, keine Anmeldung, keine Limits.",
         "fr": "Réduire la taille d'un PDF de 20–80 % sans perte de qualité — compresseur PDF gratuit dans votre navigateur. Rien téléchargé ni stocké, sans inscription.",
         "id": "Kurangi ukuran PDF 20–80% tanpa kehilangan kualitas — kompresor PDF gratis di browser. Tidak ada unggahan, tidak ada penyimpanan, tanpa daftar.",
         "vi": "Giảm kích thước PDF 20–80% không mất chất lượng — công cụ nén PDF miễn phí trong trình duyệt. Không tải lên, không lưu trữ, không đăng ký.",
-        "ru": "Уменьшить PDF на 20–80% без потери качества — бесплатный компрессор PDF в браузере. Ничего не загружается и не сохраняется, без регистрации.",
+        "ru": "Сжать PDF бесплатно в браузере — без дневного лимита, без отправки на сервер и регистрации. Выберите уровень сжатия; результат зависит от файла и настроек. До 500 МБ в Chrome или Edge на компьютере с 8 ГБ памяти и больше, 150 МБ в остальных случаях.",
         "ja": "PDFサイズを画質を落とさず20–80%削減 — 無料PDFコンプレッサー、ブラウザで動作。アップロードなし、保存なし、登録不要、制限なし。",
         "it": "Riduci le dimensioni del PDF del 20–80% senza perdita di qualità — compressore PDF gratuito nel browser. Niente caricato né memorizzato, senza registrazione.",
         "ko": "PDF 크기를 화질 손실 없이 20–80% 줄이기 — 브라우저에서 실행되는 무료 PDF 압축기. 업로드 없음, 저장 없음, 가입 없음, 제한 없음.",
@@ -726,14 +726,14 @@
         "ar": "ضغط ملف PDF مجانًا: قلّل حجمه بنسبة 20–80% بدون فقدان الجودة. لا يُرفع ملفك إلى أي خادم — يعمل داخل متصفحك. بدون تسجيل، بدون حد يومي."
       },
       "ogTitles": {
-        "en": "Compress PDF Free — Smaller File, No Quality Loss, No Upload",
+        "en": "Compress PDF Free — No Daily Limit, No Upload",
         "es": "Comprimir PDF Gratis — Archivo más Pequeño, sin Pérdida de Calidad",
         "pt": "Comprimir PDF Grátis — Ficheiro Menor, sem Perda de Qualidade",
         "de": "PDF Komprimieren Kostenlos — 20–80% kleiner, Kein Upload",
         "fr": "Compresser PDF Gratuit — Taille Réduite, sans Perte de Qualité",
         "id": "Kompres PDF di Browser Anda — File Tidak Pernah Meninggalkan Perangkat",
         "vi": "Nén PDF Trong Trình Duyệt — File Không Bao Giờ Rời Thiết Bị Của Bạn",
-        "ru": "Сжать PDF бесплатно — файл уменьшается на 20–80%, ничего не загружается",
+        "ru": "Сжать PDF бесплатно — без дневного лимита и загрузки на сервер",
         "ja": "PDF圧縮 無料 — 20〜80%サイズ削減、アップロード不要、品質ロスなし",
         "it": "Comprimi PDF Gratis — Senza Upload | PDFree",
         "ko": "PDF 압축 무료 — 업로드 없이 | PDFree",
@@ -744,14 +744,14 @@
         "ar": "ضغط ملف PDF مجانًا — حجم أصغر، بدون فقدان الجودة، بدون رفع"
       },
       "ogDescs": {
-        "en": "Free PDF compressor — reduce file size for email, web forms, or storage. 20–80% smaller. Runs in your browser, files never uploaded. No signup.",
+        "en": "Reduce PDF file size locally — no daily limit, no upload, no signup. Stronger settings can reduce image quality.",
         "es": "Reduce el tamaño del PDF sin perder calidad. Procesado en tu navegador — archivos nunca subidos. Gratis, sin límites.",
         "pt": "Reduza o tamanho do PDF sem perder qualidade. Processado localmente no seu navegador — sem uploads.",
         "de": "PDF-Dateigröße reduzieren ohne Qualitätsverlust. Vollständig im Browser verarbeitet — keine Uploads, keine Registrierung. Kostenlos.",
         "fr": "Compresser vos fichiers PDF gratuitement en ligne. Trois niveaux de qualité. Les fichiers restent sur votre appareil — aucun envoi, sans inscription, sans limite.",
         "id": "Kurangi ukuran file PDF tanpa kehilangan kualitas. Diproses di browser — file tidak pernah diunggah. Gratis.",
         "vi": "Giảm dung lượng file PDF mà không mất chất lượng. Xử lý trong trình duyệt — file không bao giờ được tải lên. Miễn phí.",
-        "ru": "Уменьшайте размер PDF без потери качества. Обрабатывается в браузере — файлы не загружаются. Бесплатно.",
+        "ru": "Уменьшайте размер PDF без дневного лимита и без отправки на сервер. Сильное сжатие может снижать качество изображений. Без регистрации.",
         "ja": "品質を落とさずにPDFのサイズを削減します。ブラウザ内で処理 — ファイルはアップロードされません。無料。",
         "it": "Riduci le dimensioni del PDF all'istante. I file non lasciano mai il tuo browser.",
         "ko": "PDF 파일 크기를 즉시 줄입니다. 파일이 브라우저를 절대 벗어나지 않습니다.",
