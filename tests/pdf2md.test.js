@@ -1012,6 +1012,22 @@ await test('a mixed PDF flags only the image-only page, even without Canvas', as
   }
 });
 
+await test('Arabic /ActualText restores letters that the visible glyph mapping drops', async () => {
+  const begin = { type: 'beginMarkedContentProps', tag: 'Span' };
+  const end = { type: 'endMarkedContent' };
+  const drawn = { ...makeItem('سطّح', 50, 700), dir: 'rtl' };
+  let requestedMarkedContent = false;
+  const page = makeFakePage([]);
+  page.getTextContent = async options => {
+    requestedMarkedContent = options.includeMarkedContent === true;
+    return { items: [begin, drawn, end], styles: { F1: { fontFamily: 'sans-serif' } } };
+  };
+  const pdfDoc = { numPages: 1, getPage: async () => page };
+  const blocks = await _p2mdExtractText(pdfDoc, { actualText: async () => ['يُسطّح'] });
+  expect(requestedMarkedContent).toBe(true);
+  expect(allText(blocks).includes('يُسطّح')).toBeTruthy();
+});
+
 // ── NFC Unicode normalization — real bug found by scripts/*/agent research: ──
 // a PDF commonly encodes diacritic-heavy scripts as decomposed (NFD)
 // combining-character sequences; the DOCX path (eriAnatomy.js) already had to
