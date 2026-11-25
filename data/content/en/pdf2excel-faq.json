@@ -44,7 +44,7 @@
     "name": "How does PDFree know what's a table and what isn't?",
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": "If the table has drawn borders, PDFree uses those lines as the exact cell boundaries — wrapped text stays in its own cell, and a table that continues across pages becomes one sheet. For tables without borders, it checks whether text lines line up into consistent columns across at least 3 rows — the same signal a human eye uses to spot a table. Each candidate gets a confidence score; low-confidence guesses are rejected rather than shown as a broken table, so you don't have to clean up false positives."
+      "text": "If the table has drawn borders, PDFree uses those lines as the exact cell boundaries — wrapped text stays in its own cell, and a table that continues across pages becomes one sheet. A spreadsheet printed to PDF — its heading repeated on every page, a sheet name or page number at the top or bottom — also comes back as one table on one sheet, with its heading as the first row. For tables without borders, it checks whether text lines line up into consistent columns across at least 3 rows — the same signal a human eye uses to spot a table. Each candidate gets a confidence score; low-confidence guesses are rejected rather than shown as a broken table, so you don't have to clean up false positives."
     }
   },
   {

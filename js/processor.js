@@ -3955,6 +3955,56 @@ async function _p2eExtractTables(pdfDoc, signal, progress = setProgress) {
 const _p2eAllBold = lns => lns.some(ln => ln.items.length) &&
   lns.every(ln => ln.items.every(it => it.bold));
 
+// A line as the running-line test sees it: its text with digits as '#' (so
+// "Page 1 of 7" and "Page 2 of 7" are the same line) and its height.
+const _p2eLineKey = line => ({ key: line.items.map(i => i.str).join(' ').replace(/[0-9\u0660-\u0669\u06F0-\u06F9]+/g, '#').trim(), y: line.y });
+
+// Every line in `lines` also stands at the same height on the other page —
+// a running header or footer, or a heading reprinted on every page.
+function _p2eRunning(lines, other) {
+  return !!lines && !!other && lines.every(a => other.some(b => b.key === a.key && Math.abs(b.y - a.y) <= 3));
+}
+
+// The heading row of a table detected by alignment (2026-11-25). A printed
+// spreadsheet sets labels at each cell's left edge and numbers at its right
+// edge, so a label starts just after the column before it ends — "Date" 2 pt
+// after the ID numbers; by nearest column centre it fell into the ID column,
+// so the heading never joined the table (cf. Camelot's network parser: header
+// candidates are the text just above the body that fits its columns).
+// A label belongs to column j when it starts after column j-1's data ends and
+// no later than column j's data end. The line must be right above the table
+// (within 2.5 row pitches), cover at least half the columns with one label
+// each, and be mostly words, not numbers.
+function _p2eHeadingAbove(rest, tbl, isFree) {
+  const h = tbl.startIdx - 1;
+  if (h < 0 || !isFree(h) || tbl.rowLines.length < 2) return null;
+  const n = tbl.colCenters.length;
+  const rowYs = tbl.rowLines.map(lis => rest[lis[0]].y);
+  const pitch = rowYs.slice(1).map((y, i) => rowYs[i] - y).sort((a, b) => a - b)[Math.floor((rowYs.length - 1) / 2)];
+  if (!(pitch > 0) || rest[h].y - rowYs[0] > pitch * 2.5) return null;
+  const right = Array(n).fill(-Infinity);
+  for (const lis of tbl.rowLines) for (const li of lis) for (const item of rest[li].items) {
+    const cx = item.x + (item.width || 0) / 2;
+    let j = 0;
+    for (let c = 1; c < n; c++) if (Math.abs(tbl.colCenters[c] - cx) < Math.abs(tbl.colCenters[j] - cx)) j = c;
+    right[j] = Math.max(right[j], item.x + (item.width || 0));
+  }
+  if (right.some(r => r === -Infinity)) return null;
+  const cells = Array(n).fill('');
+  let last = -1;
+  for (const item of [...rest[h].items].sort((a, b) => a.x - b.x)) {
+    const j = right.findIndex((r, c) => item.x <= r + 2 && (c === 0 || item.x >= right[c - 1] - 2));
+    if (j < 0 || j < last) return null;
+    if (j === last) cells[j] = `${cells[j]} ${item.str.trim()}`;   // a label of two words
+    else cells[j] = item.str.trim();
+    last = j;
+  }
+  const filled = cells.filter(Boolean);
+  if (filled.length < Math.max(2, Math.ceil(n / 2))) return null;
+  if (filled.filter(text => typeof _p2eCellValue(text).value !== 'string').length * 2 > filled.length) return null;
+  return { index: h, cells };
+}
+
 // One page → { tables, textRows }. Ruled grids (detectTableGrids) come
 // first: their drawn rules ARE the cell boundaries, so every text line is
 // placed by its position against them — a cell's wrapped second line lands
@@ -3973,6 +4023,10 @@ export function _p2eExtractPage(lines, grids, page, pageView) {
     top, left,
     clearAbove: !contentLines.some(line => line.y > top),
     clearBelow: !contentLines.some(line => line.y < bottom),
+    // what stands between the table and the page edges, to tell a running
+    // header/footer (the same on every page) from real content (_p2eRunning)
+    linesAbove: contentLines.filter(line => line.y > top).map(_p2eLineKey),
+    linesBelow: contentLines.filter(line => line.y < bottom).map(_p2eLineKey),
     atTop: !!pageView && top >= pageView[3] - edgeMargin,
     atBottom: !!pageView && bottom <= pageView[1] + edgeMargin,
   });
@@ -4096,6 +4150,12 @@ export function _p2eExtractPage(lines, grids, page, pageView) {
   const textTables = detectTables(rest.map((line, i) => consumedLines.has(restIdx[i]) ? { ...line, items: [] } : line))
     .filter(t => !looksLikeProseNotData(t.rows) && !looksLikeEnumeratedList(t.rows));
   for (const tbl of textTables) {
+    const head = _p2eHeadingAbove(rest, tbl, i => !consumedLines.has(restIdx[i]) && !_p2ePageFurniture(rest[i]));
+    if (head) {
+      tbl.rows.unshift(head.cells);
+      tbl.rowLines.unshift([head.index]);
+      tbl.startIdx = head.index;
+    }
     const boldRows = new Set();
     tbl.rowLines.forEach((lis, r) => { if (_p2eAllBold(lis.map(li => rest[li]))) boldRows.add(r); });
     for (let i = tbl.startIdx; i <= tbl.endIdx; i++) consumedLines.add(restIdx[i]);
@@ -4205,7 +4265,11 @@ export function _p2eStitchTables(tables) {
   let previous = null;
   let lastHeader = null;
   for (const tbl of tables) {
-    const adjacent = previous && tbl.page === previous.page + 1 && previous.clearBelow && tbl.clearAbove;
+    // Nothing between the tables and the page break but lines that run on
+    // every page (a header/footer, a reprinted heading) — 2026-11-25.
+    const adjacent = previous && tbl.page === previous.page + 1 &&
+      (previous.clearBelow || _p2eRunning(previous.linesBelow, tbl.linesBelow)) &&
+      (tbl.clearAbove || _p2eRunning(tbl.linesAbove, previous.linesAbove));
     const oldCols = tbl.colXs ? last?.colXs : last?.colCenters;
     const newCols = tbl.colXs ?? tbl.colCenters;
     const matchesColumns = adjacent && oldCols && newCols && oldCols.length === newCols.length &&

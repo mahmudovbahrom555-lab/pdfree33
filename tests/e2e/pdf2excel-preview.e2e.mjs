@@ -88,6 +88,20 @@ await test('choosing "dot" hides the old result; converting again reads 1,234 as
   if (c.B2 !== 1234 || c.B3 !== 12.5) throw new Error(`dot read B2=${c.B2} B3=${c.B3}`);
 });
 
+// One spreadsheet table printed to PDF (LibreOffice, 2 pages): its heading
+// repeated on each page, "Sheet1" above and "Page N of 2" below. Production
+// gave one sheet per page and the heading on the Text sheet (2026-11-25).
+await test('a spreadsheet printed over 2 pages comes back as ONE table, its heading in row 1', async () => {
+  const { page } = await open(null, path.join(__dirname, '..', 'fixtures', 'pdf2excel', 'printed-sheet.pdf'));
+  const file = await convert(page);
+  const zip = await JSZip.loadAsync(fs.readFileSync(file));
+  const names = [...(await zip.file('xl/workbook.xml').async('string')).matchAll(/<sheet [^>]*name="([^"]+)"/g)].map(m => m[1]);
+  if (names.filter(n => n.startsWith('Table')).length !== 1) throw new Error(`sheets: ${names.join(', ')}`);
+  const c = await cells(file);
+  if (c.A1 !== 'ID' || c.F1 !== 'Rate') throw new Error(`heading A1=${c.A1} F1=${c.F1}`);
+  if (c.A2 !== 1000 || c.A61 !== 1059 || c.A62 !== undefined) throw new Error(`rows A2=${c.A2} A61=${c.A61} A62=${c.A62}`);
+});
+
 await test('phone 390×844: downloads by itself, preview visible', async () => {
   const { page } = await open({ width: 390, height: 844 });
   const c = await cells(await convert(page));
