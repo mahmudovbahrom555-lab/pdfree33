@@ -102,6 +102,23 @@ await test('a spreadsheet printed over 2 pages comes back as ONE table, its head
   if (c.A2 !== 1000 || c.A61 !== 1059 || c.A62 !== undefined) throw new Error(`rows A2=${c.A2} A61=${c.A61} A62=${c.A62}`);
 });
 
+// A table too wide for the page (LibreOffice, 10 columns, A4): ID and Q1–Q5 on
+// pages 1–2, Q6–Q9 on pages 3–4, the same rows at the same heights. The
+// second band is numbers only: its labels must sit over their own numbers.
+await test('a wide spreadsheet printed in two column bands comes back as ONE table of 10 columns', async () => {
+  const { page } = await open(null, path.join(__dirname, '..', 'fixtures', 'pdf2excel', 'printed-wide.pdf'));
+  const file = await convert(page);
+  const zip = await JSZip.loadAsync(fs.readFileSync(file));
+  const names = [...(await zip.file('xl/workbook.xml').async('string')).matchAll(/<sheet [^>]*name="([^"]+)"/g)].map(m => m[1]);
+  if (names.filter(n => n.startsWith('Table')).length !== 1) throw new Error(`sheets: ${names.join(', ')}`);
+  const c = await cells(file);
+  const head = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'].map(col => c[col + '1']);
+  if (head.join() !== 'ID,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9') throw new Error(`heading ${head.join()}`);
+  const r2 = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'].map(col => c[col + '2']);
+  if (r2.join() !== '1000,5306,2472,6469,792,1187,8780,1543,5992,9549') throw new Error(`row 2 ${r2.join()}`);
+  if (c.A61 !== 1059 || c.J61 !== 18 || c.A62 !== undefined) throw new Error(`last row A61=${c.A61} J61=${c.J61}`);
+});
+
 await test('phone 390×844: downloads by itself, preview visible', async () => {
   const { page } = await open({ width: 390, height: 844 });
   const c = await cells(await convert(page));

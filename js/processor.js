@@ -3944,7 +3944,7 @@ async function _p2eExtractTables(pdfDoc, signal, progress = setProgress) {
     page.cleanup?.();
   }
 
-  return { tables: _p2eStitchTables(tables), textRows, totalPages: pdfDoc.numPages, skippedPages, imagePages };
+  return { tables: _p2eStitchTables(_p2eJoinColumnBands(tables)), textRows, totalPages: pdfDoc.numPages, skippedPages, imagePages };
 }
 
 // A whole row is treated as bold only when EVERY item on it is bold —
@@ -3993,7 +3993,9 @@ function _p2eHeadingAbove(rest, tbl, isFree) {
   const cells = Array(n).fill('');
   let last = -1;
   for (const item of [...rest[h].items].sort((a, b) => a.x - b.x)) {
-    const j = right.findIndex((r, c) => item.x <= r + 2 && (c === 0 || item.x >= right[c - 1] - 2));
+    // starting past column j's data end, a label belongs to a later column (0.5 pt, not 2: LibreOffice
+    // puts the next label 2 pt after the numbers' end)
+    const j = right.findIndex((r, c) => item.x <= r + 0.5 && (c === 0 || item.x >= right[c - 1] - 2));
     if (j < 0 || j < last) return null;
     if (j === last) cells[j] = `${cells[j]} ${item.str.trim()}`;   // a label of two words
     else cells[j] = item.str.trim();
@@ -4003,6 +4005,28 @@ function _p2eHeadingAbove(rest, tbl, isFree) {
   if (filled.length < Math.max(2, Math.ceil(n / 2))) return null;
   if (filled.filter(text => typeof _p2eCellValue(text).value !== 'string').length * 2 > filled.length) return null;
   return { index: h, cells };
+}
+
+// detectTables can take a printed spreadsheet's heading in by left edges:
+// "Q1" at its cell's left, its numbers at the right, so each label lands one
+// column left of its numbers (2026-11-25, a numbers-only band of a wide
+// print). The sign: a column only the heading fills AND a column only numbers
+// fill (no label). Then the heading row is taken out, the heading-only columns
+// go, and _p2eHeadingAbove places the labels again by cell layout. A column
+// merely empty on this page (sparse data) has its label, so it isn't touched.
+function _p2eDropMisplacedHeading(tbl) {
+  if (tbl.rows.length < 3) return;
+  const [first, ...data] = tbl.rows;
+  const filled = (row, j) => !!(row[j] ?? '').trim();
+  const headOnly = first.map((_, j) => filled(first, j) && !data.some(r => filled(r, j)));
+  const dataOnly = first.map((_, j) => !filled(first, j) && data.some(r => filled(r, j)));
+  if (!headOnly.some(Boolean) || !dataOnly.some(Boolean)) return;
+  if (first.some(c => c.trim() && typeof _p2eCellValue(c).value !== 'string')) return;
+  const keep = first.map((_, j) => !headOnly[j]);
+  tbl.rows = data.map(r => r.filter((_, j) => keep[j]));
+  tbl.colCenters = tbl.colCenters.filter((_, j) => keep[j]);
+  tbl.rowLines = tbl.rowLines.slice(1);
+  tbl.startIdx = tbl.rowLines[0][0];
 }
 
 // One page → { tables, textRows }. Ruled grids (detectTableGrids) come
@@ -4150,6 +4174,7 @@ export function _p2eExtractPage(lines, grids, page, pageView) {
   const textTables = detectTables(rest.map((line, i) => consumedLines.has(restIdx[i]) ? { ...line, items: [] } : line))
     .filter(t => !looksLikeProseNotData(t.rows) && !looksLikeEnumeratedList(t.rows));
   for (const tbl of textTables) {
+    _p2eDropMisplacedHeading(tbl);
     const head = _p2eHeadingAbove(rest, tbl, i => !consumedLines.has(restIdx[i]) && !_p2ePageFurniture(rest[i]));
     if (head) {
       tbl.rows.unshift(head.cells);
@@ -4257,6 +4282,104 @@ function _p2eHasHeader(table) {
   if (!first?.some(text => text.trim()) || first.some(isTypedValue)) return false;
   return table.boldRows.has(0) || table.rows.slice(1, 4).some(row =>
     row.some((text, col) => first[col]?.trim() && isTypedValue(text)));
+}
+
+// A wide spreadsheet printed on several pages across (2026-11-25): the columns
+// that don't fit print on later pages — "down, then over" (all rows of columns
+// A–F, then of G–L) or "over, then down" — with the same rows at the same
+// heights. 14 columns came back as 4 sheets of 6, 6 and 2 (LibreOffice prints).
+// A run of consecutive pages, one table each, whose tables fall into B ≥ 2
+// column layouts ("bands") of K pages each, the k-th page of every band
+// matching the k-th of the first row for row (count, and each row's top
+// within 1.5 pt), is one table: its rows are put side by side, band after
+// band, a first column that repeats the first band's (print titles) kept
+// once. Anything that doesn't line up like that is left as it was.
+export function _p2eJoinColumnBands(tables) {
+  const sameCols = (a, b) => {
+    const x = a.colXs ?? a.colCenters, y = b.colXs ?? b.colCenters;
+    return !!x && !!y && x.length === y.length && x.every((v, i) => Math.abs(v - y[i]) <= (a.colXs ? 4 : 8));
+  };
+  const tops = t => (t.rowBands ?? []).map(b => b[0]);
+  const sameRows = (a, b) => a.rows.length === b.rows.length && tops(a).length === a.rows.length &&
+    tops(a).every((y, i) => Math.abs(y - tops(b)[i]) <= 1.5);
+  const out = [];
+  let i = 0;
+  while (i < tables.length) {
+    // the run: one table per page, pages consecutive
+    let j = i;
+    while (j + 1 < tables.length && tables[j + 1].page === tables[j].page + 1) j++;
+    const run = tables.slice(i, j + 1);
+    const pages = new Set(run.map(t => t.page));
+    const joined = pages.size === run.length && run.length >= 2 ? _p2eJoinRun(run, sameCols, sameRows) : null;
+    if (joined) out.push(joined); else out.push(...run);
+    i = j + 1;
+  }
+  return out;
+}
+
+function _p2eJoinRun(run, sameCols, sameRows) {
+  // Bands by their heading: every band's first page starts with its own
+  // heading row; a page that continues a band has none, or repeats its band's
+  // (print titles). Equal column widths can't tell bands apart (6 + 6 columns).
+  const heading = t => (_p2eHasHeader(t) ? t.rows[0].map(c => c.replace(/\s+/g, ' ').trim()).join('\u0001') : null);
+  const heads = run.map(heading);
+  let bands = null;
+  const distinct = [...new Set(heads.filter(Boolean))];
+  if (distinct.length >= 2 && heads[0]) {
+    const B = distinct.length;
+    const overFirst = heads.slice(0, B).every((h, b) => h === distinct[b]);   // over, then down
+    bands = distinct.map(() => []);
+    let current = 0;
+    run.forEach((t, n) => {
+      if (overFirst) bands[n % B].push(t);
+      else { if (heads[n]) current = distinct.indexOf(heads[n]); bands[current].push(t); }
+    });
+    // a repeated heading must be its band's own
+    if (run.some((t, n) => heads[n] && bands[distinct.indexOf(heads[n])].indexOf(t) < 0)) return null;
+  } else {
+    bands = [];   // no headings to go by: column layout
+    for (const t of run) {
+      const band = bands.find(b => sameCols(b[0], t));
+      if (band) band.push(t); else bands.push([t]);
+    }
+  }
+  const K = bands[0].length;
+  if (bands.length < 2 || bands.some(b => b.length !== K)) return null;
+  for (let k = 0; k < K; k++) if (bands.some(b => !sameRows(bands[0][k], b[k]))) return null;
+  // a band's first column repeating the first band's, row for row (print titles)
+  const repeats = bands.map((b, n) => n > 0 && b.every((t, k) =>
+    t.rows.every((row, r) => (row[0] ?? '').trim() === (bands[0][k].rows[r][0] ?? '').trim())));
+  const first = bands[0][0];
+  const header = first.rows[0].map(c => c.trim());
+  const table = { ...first, rows: [], boldRows: new Set(), cellStyles: [], rowHeights: [], merges: [], sourcePages: run.map(t => t.page) };
+  const widths = [];
+  bands.forEach((b, n) => widths.push(...(b[0].columnWidths ?? b[0].rows[0].map(() => null)).slice(repeats[n] ? 1 : 0)));
+  if (widths.some(w => w != null)) table.columnWidths = widths;
+  for (let k = 0; k < K; k++) {
+    // a heading reprinted on each page of a band is kept once
+    const skip = k > 0 && bands[0][k].rows[0].every((c, x) => c.trim() === header[x]) ? 1 : 0;
+    for (let r = skip; r < bands[0][k].rows.length; r++) {
+      const row = [], styles = [];
+      let offset = 0;
+      bands.forEach((b, n) => {
+        const t = b[k], cut = repeats[n] ? 1 : 0;
+        row.push(...t.rows[r].slice(cut));
+        styles.push(...(t.cellStyles?.[r] ?? t.rows[r].map(() => null)).slice(cut));
+        for (const m of t.merges ?? []) {
+          if (m.row === r && m.from >= cut) table.merges.push({ ...m, row: table.rows.length, from: m.from - cut + offset, to: m.to - cut + offset });
+        }
+        offset += t.rows[r].length - cut;
+      });
+      if (bands[0][k].boldRows?.has(r)) table.boldRows.add(table.rows.length);
+      table.rows.push(row);
+      table.cellStyles.push(styles);
+      table.rowHeights.push(bands[0][k].rowHeights?.[r] ?? null);
+    }
+  }
+  // the page edges of the whole printed table, for joining what follows it
+  const last = run[run.length - 1];
+  return { ...table, page: last.page, clearBelow: last.clearBelow, atBottom: last.atBottom, linesBelow: last.linesBelow,
+    colXs: undefined, colCenters: table.rows[0].map((_, c) => c) };
 }
 
 export function _p2eStitchTables(tables) {

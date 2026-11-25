@@ -17,7 +17,7 @@ global.document = {
 global.window    = globalThis;
 global.Worker    = class { postMessage() {} terminate() {} addEventListener() {} };
 
-const { _p2eHasUnrepresentedImage, _p2eCellValue, _p2eDecimalMark, _p2eTableMark, _p2eExtractPage, _p2eStitchTables } = await import('../js/processor.js');
+const { _p2eHasUnrepresentedImage, _p2eCellValue, _p2eDecimalMark, _p2eTableMark, _p2eExtractPage, _p2eStitchTables, _p2eJoinColumnBands } = await import('../js/processor.js');
 const { detectTables, groupItemsIntoLines } = await import('../js/pdf2wordTables.js');
 
 const { initPdf2ExcelOptions, hidePdf2ExcelOptions, renderP2eConfidence } = await import('../js/pdf2excelUI.js');
@@ -565,6 +565,81 @@ test('a line that is only on the next page still keeps the tables apart', () => 
     ..._p2eExtractPage([at(805, [['Expenses', 55, 100]]), SHEET_HEAD(769), ...SHEET_ROWS(754, 10, 1048)], [], 2, SHEET_VIEW).tables,
   ]);
   expect(out.length).toBe(2);
+});
+
+// ── A wide spreadsheet printed "down, then over" or "over, then down" ──
+// (2026-11-25) Columns that don't fit the page width print on later pages, the
+// same rows at the same heights. 14 columns came back as 4 sheets of 6, 6, 2.
+console.log('\n_p2eJoinColumnBands — a wide printed spreadsheet:');
+const band = (page, cols, first, n, head) => {
+  const rows = [], rowBands = [];
+  if (head) { rows.push(cols.map(c => `${c}`)); rowBands.push([780, 768]); }
+  for (let k = 0; k < n; k++) { rows.push(cols.map(c => (c === 'ID' ? String(first + k) : `${c}${first + k}`))); rowBands.push([766 - 15 * k, 754 - 15 * k]); }
+  const colXs = cols.map((_, i) => 50 + i * 80).concat(50 + cols.length * 80);
+  return { page, rows, rowBands, colXs, confidence: 1, boldRows: new Set(head ? [0] : []), clearAbove: true, clearBelow: true, atTop: true, atBottom: n === 45 };
+};
+test('down, then over: pages 1–2 columns A–C, pages 3–4 columns D–E → one table of 5 columns', () => {
+  const out = _p2eStitchTables(_p2eJoinColumnBands([
+    band(1, ['ID', 'A', 'B'], 1000, 45, true), band(2, ['ID', 'A', 'B'], 1045, 10, false),
+    band(3, ['D', 'E'], 1000, 45, true), band(4, ['D', 'E'], 1045, 10, false),
+  ]));
+  expect(out.length).toBe(1);
+  expect(out[0].rows.length).toBe(56);
+  expect(out[0].rows[0]).toEqual(['ID', 'A', 'B', 'D', 'E']);
+  expect(out[0].rows[55]).toEqual(['1054', 'A1054', 'B1054', 'D1054', 'E1054']);
+});
+test('over, then down: the same table in the other page order → the same result', () => {
+  const out = _p2eStitchTables(_p2eJoinColumnBands([
+    band(1, ['ID', 'A', 'B'], 1000, 45, true), band(2, ['D', 'E'], 1000, 45, true),
+    band(3, ['ID', 'A', 'B'], 1045, 10, false), band(4, ['D', 'E'], 1045, 10, false),
+  ]));
+  expect(out.length).toBe(1);
+  expect(out[0].rows[0]).toEqual(['ID', 'A', 'B', 'D', 'E']);
+  expect(out[0].rows[55][4]).toBe('E1054');
+});
+test('a repeated first column (print titles: ID on every page) is kept once', () => {
+  const out = _p2eStitchTables(_p2eJoinColumnBands([
+    band(1, ['ID', 'A'], 1000, 45, true), band(2, ['ID', 'D'], 1000, 45, true),
+  ]));
+  expect(out[0].rows[0]).toEqual(['ID', 'A', 'D']);
+  expect(out[0].rows[45]).toEqual(['1044', 'A1044', 'D1044']);
+});
+test('two different tables on two pages that don\'t share their rows are left apart', () => {
+  const a = band(1, ['ID', 'A', 'B'], 1000, 45, true), b = band(2, ['X', 'Y'], 1, 30, true);
+  expect(_p2eJoinColumnBands([a, b]).length).toBe(2);
+});
+test('bands of different lengths are left apart', () => {
+  const parts = [band(1, ['ID', 'A'], 1000, 45, true), band(2, ['ID', 'A'], 1045, 10, false), band(3, ['D'], 1000, 45, true)];
+  expect(_p2eJoinColumnBands(parts).length).toBe(3);
+});
+
+// Right-aligned numbers of different lengths (2026-11-25): "649" starts 5.5 pt
+// right of "5627" — the same right edge — and the column split in two by its
+// left edges, shifting every value after it (LibreOffice print, a 14-column
+// table's second band).
+// A band of numbers only (LibreOffice, page 8 of a 14-column print): detectTables
+// takes the heading in by left edges — "Q1" at the cell's left, its numbers at
+// the right — so each label sat one column left of its numbers, a column held
+// only the heading and another only numbers (2026-11-25).
+const BAND2 = [at(768.8, [["Q1", 55.0, 69.1], ["Q2", 132.7, 146.8], ["Q3", 210.4, 224.5], ["Q4", 288.1, 302.2], ["Q5", 365.8, 379.9], ["Q6", 443.5, 457.6]]),
+  at(754.2, [["7813", 108.4, 130.6], ["5627", 186.1, 208.3], ["6326", 263.8, 286.0], ["136", 347.0, 363.7], ["5847", 419.2, 441.4], ["1653", 496.9, 519.1]]),
+  at(739.2, [["3358", 108.4, 130.6], ["9997", 186.1, 208.3], ["7756", 263.8, 286.0], ["4112", 341.5, 363.7], ["2578", 419.2, 441.4], ["9202", 496.9, 519.1]]),
+  at(724.2, [["2770", 108.4, 130.6], ["649", 191.6, 208.3], ["2004", 263.8, 286.0], ["4207", 341.5, 363.7], ["7539", 419.2, 441.4], ["4158", 496.9, 519.1]]),
+  at(709.2, [["2802", 108.4, 130.6], ["4460", 186.1, 208.3], ["1304", 263.8, 286.0], ["7358", 341.5, 363.7], ["8704", 419.2, 441.4], ["4541", 496.9, 519.1]]),
+  at(694.2, [["6823", 108.4, 130.6], ["9342", 186.1, 208.3], ["649", 269.3, 286.0], ["2837", 341.5, 363.7], ["637", 424.7, 441.4], ["1322", 496.9, 519.1]]),
+  at(679.2, [["6817", 108.4, 130.6], ["65", 197.2, 208.4], ["2986", 263.8, 286.0], ["1616", 341.5, 363.7], ["7000", 419.2, 441.4], ["3307", 496.9, 519.1]]),
+  at(664.2, [["1264", 108.4, 130.6], ["6573", 186.1, 208.3], ["6410", 263.8, 286.0], ["1094", 341.5, 363.7], ["572", 424.7, 441.4], ["2672", 496.9, 519.1]]),
+  at(649.2, [["8353", 108.4, 130.6], ["5942", 186.1, 208.3], ["7988", 263.8, 286.0], ["6291", 341.5, 363.7], ["7687", 419.2, 441.4], ["5938", 496.9, 519.1]]),
+  at(634.2, [["8414", 108.4, 130.6], ["2783", 186.1, 208.3], ["120", 269.3, 286.0], ["9516", 341.5, 363.7], ["8774", 419.2, 441.4], ["4572", 496.9, 519.1]]),
+  at(619.2, [["8285", 108.4, 130.6], ["294", 191.6, 208.3], ["6719", 263.8, 286.0], ["6332", 341.5, 363.7], ["4105", 419.2, 441.4], ["3241", 496.9, 519.1]]),
+  at(604.2, [["6459", 108.4, 130.6], ["9674", 186.1, 208.3], ["2579", 263.8, 286.0], ["1033", 341.5, 363.7], ["177", 424.7, 441.4], ["2142", 496.9, 519.1]]),
+  at(589.2, [["7264", 108.4, 130.6], ["5537", 186.1, 208.3], ["1533", 263.8, 286.0], ["8575", 341.5, 363.7], ["7222", 419.2, 441.4], ["2348", 496.9, 519.1]]),
+  at(574.2, [["651", 114.0, 130.6], ["1814", 186.1, 208.3], ["4207", 263.8, 286.0], ["5106", 341.5, 363.7], ["4666", 419.2, 441.4], ["7205", 496.9, 519.1]])];
+test('a numbers-only band: each label over its own numbers, no empty first column', () => {
+  const { tables } = _p2eExtractPage(BAND2, [], 8, SHEET_VIEW);
+  expect(tables.length).toBe(1);
+  expect(tables[0].rows[0]).toEqual(['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6']);
+  expect(tables[0].rows[3]).toEqual(['2770', '649', '2004', '4207', '7539', '4158']);
 });
 
 // ── _p2eStitchTables: one table across pages → one worksheet ──
