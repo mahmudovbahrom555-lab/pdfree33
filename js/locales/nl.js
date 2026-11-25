@@ -1025,6 +1025,8 @@ window.PDFREE_LOCALE = {
   cmp_preset_standard_desc:  'Verwijdert metadata en comprimeert afbeeldingen opnieuw. Pas de kwaliteit hieronder aan.',
   cmp_preset_maximum_name:   'Maximaal',
   cmp_preset_maximum_desc:   'Agressieve structuuropschoning + hercompressie van afbeeldingen. Pas de kwaliteit hieronder aan.',
+  cmp_preset_screen_name:    'Scherm & e-mail',
+  cmp_preset_screen_desc:    'Het kleinste bestand om te versturen. Drukkleuren (CMYK) worden omgezet voor schermen — niet voor drukwerk.',
   cmp_preserve_title:     'Tekst en toegankelijkheid behouden',
   cmp_preserve_sub:       'Bij Maximaal: houdt PDF-tagging intact (uitschakelen voor kleinste bestand)',
   cmp_preserve_aria:      'Tekstkwaliteit behouden — houdt PDF-tagging en structuurbomen intact',

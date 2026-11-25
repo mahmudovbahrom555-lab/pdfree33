@@ -1026,6 +1026,8 @@ window.PDFREE_LOCALE = {
   cmp_preset_standard_desc:  'Loại bỏ metadata + nén lại hình ảnh. Điều chỉnh chất lượng bên dưới.',
   cmp_preset_maximum_name:   'Tối đa',
   cmp_preset_maximum_desc:   'Dọn dẹp cấu trúc mạnh + nén lại hình ảnh. Điều chỉnh chất lượng bên dưới.',
+  cmp_preset_screen_name:    'Màn hình & email',
+  cmp_preset_screen_desc:    'Tệp nhỏ nhất để gửi. Màu in (CMYK) được chuyển cho màn hình — không dùng để in.',
   cmp_preserve_title:     'Giữ văn bản & khả năng truy cập',
   cmp_preserve_sub:       'Ở chế độ Tối đa: giữ nguyên gắn thẻ PDF (tắt để có file nhỏ nhất)',
   cmp_preserve_aria:      'Giữ chất lượng văn bản — giữ nguyên gắn thẻ và cây cấu trúc PDF',

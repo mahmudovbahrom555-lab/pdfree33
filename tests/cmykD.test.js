@@ -52,7 +52,10 @@ const URLS = {
 // the file is one function scope (see its header); the test reads its inner functions
 const src = readFileSync(join(ROOT, 'js/cmykD.js'), 'utf8').replace(/^\(\(\) => \{$/m, '').replace(/^\}\)\(\);\s*$/m, '');
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
-const D = await new AsyncFunction(src + '\nreturn { cmykD, _cmykdDownsample, _cmykdPlacements, _cmykdUsedElsewhere };')();
+const D = await new AsyncFunction(src + '\nreturn { cmykD, _cmykdDownsample, _cmykdPlacements, _cmykdUsedElsewhere, _cmykdLutRgb };')();
+// the Screen & email table, loaded as the prep worker loads it
+runInNewContext(readFileSync(join(ROOT, 'js/cmykRgbLut.js'), 'utf8'), { self: globalThis, atob, Uint8Array });
+const LUT = globalThis.cmykRgbLut;
 
 let passed = 0, failed = 0;
 async function test(name, fn) {
@@ -548,6 +551,56 @@ function firstImageRef(pdf) {
   for (const [ref, o] of pdf.context.enumerateIndirectObjects()) if (o instanceof PDFRawStream && o.dict.get(PDFName.of('Subtype'))?.toString() === '/Image') return ref;
   return null;
 }
+
+// Screen & email (2026-11-25, owner): CMYK becomes RGB through the ICC table
+// (js/cmykRgbLut.js), then the usual area average and JPEG — 150 dpi, q72.
+console.log('\nScreen & email — CMYK → RGB:');
+await test('the table: white stays white, pure cyan is ICC cyan (0,174,239), K 100 % is near black', () => {
+  const px = D._cmykdLutRgb(new Uint8Array([0, 0, 0, 0, 255, 0, 0, 0, 0, 0, 0, 255]), 3, LUT);
+  assert(px[0] === 255 && px[1] === 255 && px[2] === 255, `white → ${px.slice(0, 3)}`);
+  assert(px[3] === 0 && px[4] === 174 && px[5] === 239, `cyan → ${px.slice(3, 6)}`);
+  assert(px[6] < 50 && px[7] < 50 && px[8] < 50, `black → ${px.slice(6, 9)}`);
+});
+async function screenRun(colorSpace, decode) {
+  const w = 600, h = 400, a = photo(w, h);
+  const { pdf, img } = await onePage(w, h, a, 'q 72 0 0 48 0 0 cm /Im0 Do Q');   // 1 × 0.667 in → 600 ppi
+  const d = pdf.context.lookup(img).dict;
+  if (colorSpace) d.set(PDFName.of('ColorSpace'), colorSpace(pdf));
+  if (decode) {
+    d.set(PDFName.of('Decode'), pdf.context.obj([1, 0, 1, 0, 1, 0, 1, 0]));
+    for (let i = 0; i < a.length; i++) a[i] = 255 - a[i];
+    pdf.context.assign(img, PDFRawStream.of(d, deflateSync(a)));
+    for (let i = 0; i < a.length; i++) a[i] = 255 - a[i];
+  }
+  const r = await D.cmykD(pdf, { target: 300, quality: 75, maxMegapixels: 64, urls: URLS, screen: { target: 150, quality: 72, lut: LUT } });
+  return { r, o: pdf.context.lookup(img), a, w, h };
+}
+async function checkRgb({ r, o, a, w, h }) {
+  assert(r.replaced === 1, JSON.stringify(r));
+  const d = o.dict;
+  assert(d.get(PDFName.of('ColorSpace')).toString() === '/DeviceRGB', `colour space ${d.get(PDFName.of('ColorSpace'))}`);
+  assert(!d.has(PDFName.of('Decode')), '/Decode kept');
+  assert(d.get(PDFName.of('Width')).asNumber() === 150 && d.get(PDFName.of('Height')).asNumber() === 100, 'size: 150 dpi');
+  const { JpegImage } = await import(URLS.decoders);
+  const j = new JpegImage(); j.parse(o.contents);
+  assert(j.numComponents === 3, `${j.numComponents} channels`);
+  const back = j.getData({ width: 150, height: 100, forceRGB: true, isSourcePDF: true });
+  const ref = referenceDownsample(D._cmykdLutRgb(a, w * h, LUT), w, h, 3, 150, 100);
+  let sum = 0; for (let i = 0; i < ref.length; i++) sum += Math.abs(ref[i] - back[i]);
+  assert(sum / ref.length < 6, `mean |Δ| ${(sum / ref.length).toFixed(2)} from the table's colours`);
+}
+await test('a 600-ppi DeviceCMYK photo → a 150-dpi DeviceRGB JPEG, the table\'s colours', async () => checkRgb(await screenRun()));
+await test('ICCBased CMYK (N 4) is converted too, and becomes DeviceRGB', async () => checkRgb(await screenRun(pdf =>
+  pdf.context.obj([PDFName.of('ICCBased'), pdf.context.register(PDFRawStream.of(pdf.context.obj({ N: 4 }), new Uint8Array(16)))]))));
+await test('inverted /Decode [1 0 …] is read the way a reader shows it', async () => checkRgb(await screenRun(null, true)));
+await test('without the screen option, CMYK stays CMYK (print modes unchanged)', async () => {
+  const w = 600, h = 400;
+  const { pdf, img } = await onePage(w, h, photo(w, h), 'q 72 0 0 48 0 0 cm /Im0 Do Q');
+  await D.cmykD(pdf, { target: 300, quality: 75, maxMegapixels: 64, urls: URLS });
+  assert(pdf.context.lookup(img).dict.get(PDFName.of('ColorSpace')).toString() === '/DeviceCMYK', 'converted without asking');
+});
+
+
 
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed ? 1 : 0);

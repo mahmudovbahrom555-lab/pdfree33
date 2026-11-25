@@ -1025,6 +1025,8 @@ window.PDFREE_LOCALE = {
   cmp_preset_standard_desc:  'Meta verileri kaldırır ve görselleri yeniden sıkıştırır. Kaliteyi aşağıdan ayarlayın.',
   cmp_preset_maximum_name:   'Maksimum',
   cmp_preset_maximum_desc:   'Agresif yapı temizliği + görsel yeniden sıkıştırma. Kaliteyi aşağıdan ayarlayın.',
+  cmp_preset_screen_name:    'Ekran ve e-posta',
+  cmp_preset_screen_desc:    'Göndermek için en küçük dosya. Baskı renkleri (CMYK) ekran için dönüştürülür — baskı için değildir.',
   cmp_preserve_title:     'Metni ve erişilebilirliği koru',
   cmp_preserve_sub:       'Maksimum\'da: PDF etiketlemesini olduğu gibi korur (en küçük dosya için kapatın)',
   cmp_preserve_aria:      'Metin kalitesini koru — PDF etiketlemesini ve yapı ağaçlarını olduğu gibi korur',

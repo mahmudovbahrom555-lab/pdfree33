@@ -1044,6 +1044,8 @@ export const EN = {
   cmp_preset_standard_desc:  'Removes metadata + recompresses images. Adjust quality below.',
   cmp_preset_maximum_name:   'Maximum',
   cmp_preset_maximum_desc:   'Aggressive structure cleanup + image recompression. Adjust quality below.',
+  cmp_preset_screen_name:    'Screen & email',
+  cmp_preset_screen_desc:    'The smallest file for sending. Print colours (CMYK) are converted for screens — not for print.',
   cmp_preserve_title:     'Preserve text &amp; accessibility',
   cmp_preserve_sub:       'On Maximum: keeps PDF tagging intact (turn off for smallest file)',
   cmp_preserve_aria:      'Preserve text quality — keeps PDF tagging and structure trees intact',

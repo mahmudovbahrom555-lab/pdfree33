@@ -721,6 +721,46 @@ function _scanMake(c, w, h, eff, dpi, JpegImage, ctx) {
 //         urls: { decoders, qpdfJs, qpdfWasm, utif }, onProgress,
 //         cacheKey }                                           — the same for every pass of one compression
 // → { replaced, jpx, placed, bitonal, scans, deferred, before, after, skipped: {reason: count} }   (jpx, placed, bitonal, scans: how many of `replaced`)
+// ── Screen & email: CMYK → RGB (owner, 2026-11-25) ───────────────────────────
+// Through js/cmykRgbLut.js: MuPDF's ICC-managed conversion at 16 nodes per
+// channel (step 17), read with quadrilinear interpolation — the chain the
+// holdout of 15 print PDFs passed (wip-bench SCREEN-PREREG.md).
+function _cmykdLutRgb(src, n, lut) {
+  const out = new Uint8Array(n * 3);
+  const G = 16, S3 = G * G * G * 3, S2 = G * G * 3, S1 = G * 3;
+  const idx = new Int32Array(4), fr = new Float32Array(4);
+  for (let p = 0; p < n; p++) {
+    for (let k = 0; k < 4; k++) {
+      const x = src[p * 4 + k] / 17;
+      const i = x >= 15 ? 14 : Math.floor(x);
+      idx[k] = i; fr[k] = x - i;
+    }
+    const base = idx[0] * S3 + idx[1] * S2 + idx[2] * S1 + idx[3] * 3;
+    let r = 0, g = 0, b = 0;
+    for (let corner = 0; corner < 16; corner++) {
+      let wgt = 1, off = base;
+      if (corner & 1) { wgt *= fr[0]; off += S3; } else wgt *= 1 - fr[0];
+      if (corner & 2) { wgt *= fr[1]; off += S2; } else wgt *= 1 - fr[1];
+      if (corner & 4) { wgt *= fr[2]; off += S1; } else wgt *= 1 - fr[2];
+      if (corner & 8) { wgt *= fr[3]; off += 3; } else wgt *= 1 - fr[3];
+      if (wgt === 0) continue;
+      r += wgt * lut[off]; g += wgt * lut[off + 1]; b += wgt * lut[off + 2];
+    }
+    out[p * 3] = Math.round(r); out[p * 3 + 1] = Math.round(g); out[p * 3 + 2] = Math.round(b);
+  }
+  return out;
+}
+
+// DeviceCMYK; with the screen option also ICCBased with N 4 — converted to RGB,
+// its profile can't travel with the new samples (a print mode keeps it as it is).
+function _cmykdIsCmyk(d, lookup, screen) {
+  const { PDFName, PDFArray } = PDFLib;
+  const cs = lookup(d.get(PDFName.of('ColorSpace')));
+  if (cs?.toString() === '/DeviceCMYK') return true;
+  if (!screen || !(cs instanceof PDFArray) || cs.size() !== 2 || lookup(cs.get(0))?.toString() !== '/ICCBased') return false;
+  return lookup(lookup(cs.get(1))?.dict?.get(PDFName.of('N')))?.asNumber?.() === 4;
+}
+
 async function cmykD(pdf, opts) {
   const { PDFName, PDFRawStream, PDFArray, PDFNumber, PDFRef, decodePDFRawStream } = PDFLib;
   const ctx = pdf.context;
@@ -744,7 +784,7 @@ async function cmykD(pdf, opts) {
     if (opts.rgb && filters(d).join() === '/JPXDecode') { const j = _cmykdJpxCandidate(d, lookup, smasks.has(ref.tag), skip); if (j) cands.set(ref.tag, { ref, obj, ...j }); continue; }
     const rgbNc = opts.rgb?.target ? _cmykdRgbChannels(d, lookup) : 0;
     if (rgbNc) { const p = !smasks.has(ref.tag) && _cmykdPlacedCandidate(d, lookup, filters(d), rgbNc); if (p) cands.set(ref.tag, { ref, obj, ...p }); continue; }
-    if (lookup(d.get(PDFName.of('ColorSpace')))?.toString() !== '/DeviceCMYK') continue;
+    if (!_cmykdIsCmyk(d, lookup, !!opts.screen)) continue;
     if (smasks.has(ref.tag)) { skip('is an SMask'); continue; }
     if (lookup(d.get(PDFName.of('BitsPerComponent')))?.toString() !== '8') { skip('bpc'); continue; }
     if (d.has(PDFName.of('Mask')) || lookup(d.get(PDFName.of('ImageMask')))?.toString() === 'true') { skip('mask'); continue; }
@@ -801,7 +841,7 @@ async function cmykD(pdf, opts) {
     batch.forEach((b, k) => {
       const jpg = jpegs.get(k);
       if (!jpg) { skip('not encoded'); return; }
-      const rgb = b.c.kind === 'jpx' || b.c.kind.startsWith('rgb');
+      const rgb = b.screen || b.c.kind === 'jpx' || b.c.kind.startsWith('rgb');
       if (jpg.length >= b.old) { skip(b.c.kind === 'jpx' ? 'JPX: not smaller' : rgb ? 'placed: not smaller' : 'not smaller'); return; }
       if (rgb) {
         // read back: the size qpdf wrote must be the size the dictionary will say
@@ -820,6 +860,7 @@ async function cmykD(pdf, opts) {
       dict.set(PDFName.of('Width'), PDFNumber.of(b.w));
       dict.set(PDFName.of('Height'), PDFNumber.of(b.h));
       dict.delete(PDFName.of('SMaskInData'));   // a JPX-only key (always absent or 0 here)
+      if (b.screen) dict.set(PDFName.of('ColorSpace'), PDFName.of('DeviceRGB'));
       ctx.assign(b.c.ref, PDFRawStream.of(dict, jpg));
       replaced++; before += b.old; after += jpg.length;
       if (b.c.kind === 'jpx') jpx++; else if (rgb) placed++;
@@ -847,7 +888,8 @@ async function cmykD(pdf, opts) {
     const cap = c.kind === 'bitonal' ? opts.bitonal.maxMegapixels : c.kind === 'jpx' ? opts.rgb.maxMegapixels : opts.maxMegapixels;
     if (w * h > cap * 1e6) { skip('too large for this device'); continue; }
     const eff = Math.min(w / place.inchX, h / place.inchY);   // the smaller axis dpi: the conservative one
-    const { target, quality } = c.kind === 'bitonal' ? opts.bitonal : c.kind === 'jpx' || c.kind.startsWith('rgb') ? opts.rgb : opts;
+    const screen = !!opts.screen && (c.kind === 'dct' || c.kind === 'raw');   // a CMYK image → RGB
+    const { target, quality } = screen ? opts.screen : c.kind === 'bitonal' ? opts.bitonal : c.kind === 'jpx' || c.kind.startsWith('rgb') ? opts.rgb : opts;
     // A soft mask may differ in size from its image (readers scale it), except one
     // with /Matte: its samples are pre-multiplied against the image's own pixels,
     // so the two must keep the same size — such an image is not downsampled.
@@ -907,11 +949,13 @@ async function cmykD(pdf, opts) {
       }
     } catch { skip('decode error'); continue; }
     if (c.invert) for (let i = 0; i < samples.length; i++) samples[i] = 255 - samples[i];
+    let nc = c.nc;
+    if (screen) { samples = _cmykdLutRgb(samples, w * h, opts.screen.lut); nc = 3; }   // convert, then downsample: the validated order
     let nw = w, nh = h;
     if (shrink) {
       const s = target / eff;
       nw = Math.max(1, Math.round(w * s)); nh = Math.max(1, Math.round(h * s));
-      samples = _cmykdDownsample(samples, w, h, c.nc, nw, nh);
+      samples = _cmykdDownsample(samples, w, h, nc, nw, nh);
     }
     if (c.kind === 'bitonal') {   // still 1 bit, as Flate: not for the JPEG batch
       const flat = ctx.flateStream(_cmykdPackBits(samples, nw, nh)).contents;
@@ -924,7 +968,7 @@ async function cmykD(pdf, opts) {
     }
     if (pending.length && (pending[0].quality !== quality ||
         pendingBytes + samples.length > CMYKD_BATCH_BYTES)) await flush();
-    pending.push({ c, nc: c.nc, quality, w: nw, h: nh, samples, old: c.obj.contents.length });
+    pending.push({ c, nc, screen, quality, w: nw, h: nh, samples, old: c.obj.contents.length });
     pendingBytes += samples.length;
     if (pendingBytes >= CMYKD_BATCH_BYTES) await flush();
   }

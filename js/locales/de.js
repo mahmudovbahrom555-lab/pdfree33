@@ -1028,6 +1028,8 @@ window.PDFREE_LOCALE = {
   cmp_preset_standard_desc:  'Entfernt Metadaten und komprimiert Bilder neu. Qualität unten anpassen.',
   cmp_preset_maximum_name:   'Maximal',
   cmp_preset_maximum_desc:   'Aggressive Strukturbereinigung + Bildneukomprimierung. Qualität unten anpassen.',
+  cmp_preset_screen_name:    'Bildschirm & E-Mail',
+  cmp_preset_screen_desc:    'Die kleinste Datei zum Versenden. Druckfarben (CMYK) werden für Bildschirme umgewandelt – nicht für den Druck.',
   cmp_preserve_title:     'Text &amp; Barrierefreiheit erhalten',
   cmp_preserve_sub:       'Bei Maximal: erhält die PDF-Tags (für kleinste Datei ausschalten)',
   cmp_preserve_aria:      'Textqualität erhalten — behält PDF-Tags und Strukturbäume intakt',

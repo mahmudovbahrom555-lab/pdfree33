@@ -1027,6 +1027,8 @@ window.PDFREE_LOCALE = {
   cmp_preset_standard_desc:  '메타데이터를 제거하고 이미지를 재압축합니다. 아래에서 품질을 조정하세요.',
   cmp_preset_maximum_name:   '최대',
   cmp_preset_maximum_desc:   '적극적인 구조 정리 + 이미지 재압축. 아래에서 품질을 조정하세요.',
+  cmp_preset_screen_name:    '화면 및 이메일',
+  cmp_preset_screen_desc:    '전송용 가장 작은 파일. 인쇄 색상(CMYK)을 화면용으로 변환합니다 — 인쇄용이 아닙니다.',
   cmp_preserve_title:     '텍스트 및 접근성 유지',
   cmp_preserve_sub:       '최대 프리셋에서: PDF 태그를 그대로 유지합니다 (최소 파일을 원하면 꺼주세요)',
   cmp_preserve_aria:      '텍스트 품질 유지 — PDF 태그 및 구조 트리를 그대로 유지합니다',

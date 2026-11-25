@@ -1025,6 +1025,8 @@ window.PDFREE_LOCALE = {
   cmp_preset_standard_desc:  'Rimuove i metadati e ricomprime le immagini. Regola la qualità qui sotto.',
   cmp_preset_maximum_name:   'Massimo',
   cmp_preset_maximum_desc:   'Pulizia aggressiva della struttura + ricompressione delle immagini. Regola la qualità qui sotto.',
+  cmp_preset_screen_name:    'Schermo ed e-mail',
+  cmp_preset_screen_desc:    'Il file più leggero da inviare. I colori di stampa (CMYK) vengono convertiti per lo schermo: non per la stampa.',
   cmp_preserve_title:     'Preserva testo e accessibilità',
   cmp_preserve_sub:       'Su Massimo: mantiene intatto il tagging del PDF (disattiva per il file più piccolo)',
   cmp_preserve_aria:      'Preserva la qualità del testo — mantiene intatti tagging e alberi di struttura del PDF',

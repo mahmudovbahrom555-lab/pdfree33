@@ -977,6 +977,51 @@ await test('C38: private data the worker unhooks leaves the file (Maximum)', asy
   if (!(out.length < 50000)) throw new Error(`private data kept: ${out.length} bytes`);
 });
 
+// Screen & email (owner, 2026-11-25): a 4th card; CMYK images become RGB at
+// 150 dpi (the chain 15 held-out print PDFs passed), the rest as Maximum.
+// Its line says "not for print", on a phone and on a desktop.
+async function textPdfFile() {
+  const file = path.join(tmp, 'screen-text.pdf');
+  fs.writeFileSync(file, await textPdf());
+  return file;
+}
+async function cmykPhotoPdf() {
+  const W = 2480, H = 3508, cmyk = Buffer.alloc(W * H * 4);   // A4 at 300 dpi, a photo-like field
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const i = (y * W + x) * 4, n = (x * 13 + y * 7) % 23;
+    cmyk[i] = 90 + 60 * Math.sin(x / 41) + n; cmyk[i + 1] = 80 + 50 * Math.cos(y / 37) + n; cmyk[i + 2] = 70 + n; cmyk[i + 3] = 20 + (n >> 1);
+  }
+  const file = path.join(tmp, 'screen-cmyk.pdf');
+  fs.writeFileSync(file, await imagePdf(zlib.deflateSync(cmyk), { Width: W, Height: H, ColorSpace: 'DeviceCMYK', Filter: 'FlateDecode' }));
+  return file;
+}
+await test('Screen & email: CMYK → DeviceRGB at 150 dpi, smaller than Maximum; Maximum keeps CMYK', async () => {
+  const file = await cmykPhotoPdf();
+  const screen = await compressViaUi(browser, file, 'screen');
+  const max = await compressViaUi(browser, file, 'high');
+  const s = firstImage(await PDFDocument.load(screen)), m = firstImage(await PDFDocument.load(max));
+  expect(String(s.dict.get(PDFName.of('ColorSpace')))).toBe('/DeviceRGB');
+  expect(String(m.dict.get(PDFName.of('ColorSpace')))).toBe('/DeviceCMYK');
+  expect(String(s.dict.get(PDFName.of('Width')))).toBe('1240');   // 8.27 in × 150
+  if (!(screen.length < max.length)) throw new Error(`screen ${screen.length} ≥ maximum ${max.length}`);
+});
+for (const [vp, w, h] of [['phone', 390, 844], ['desktop', 1440, 900]]) {
+  await test(`Screen & email card shows its "not for print" line (${vp})`, async () => {
+    const context = await browser.newContext({ serviceWorkers: 'block', viewport: { width: w, height: h } });
+    const page = await context.newPage();
+    try {
+      await page.goto(`${BASE_URL}/compress-pdf/`, { waitUntil: 'load', timeout: 30000 });
+      await page.setInputFiles('#fileInput', await textPdfFile());
+      const card = page.locator('label[data-preset="screen"]');
+      await card.waitFor({ state: 'visible', timeout: 15000 });
+      const text = await card.innerText();
+      if (!/not for print/i.test(text)) throw new Error(`card text: ${text}`);
+      await card.click();
+      if (await page.locator('#qualityRow').isVisible()) throw new Error('manual quality shown for Screen & email');
+    } finally { await context.close(); }
+  });
+}
+
 await browser.close();
 fs.rmSync(tmp, { recursive: true, force: true });
 

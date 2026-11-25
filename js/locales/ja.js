@@ -1028,6 +1028,8 @@ window.PDFREE_LOCALE = {
   cmp_preset_standard_desc:  'メタデータを削除し、画像を再圧縮します。品質は下で調整できます。',
   cmp_preset_maximum_name:   '最大',
   cmp_preset_maximum_desc:   '積極的な構造クリーンアップと画像再圧縮。品質は下で調整できます。',
+  cmp_preset_screen_name:    '画面・メール用',
+  cmp_preset_screen_desc:    '送信用に最も小さいファイル。印刷用の色（CMYK）を画面用に変換します — 印刷には向きません。',
   cmp_preserve_title:     'テキストとアクセシビリティを保持',
   cmp_preserve_sub:       '「最大」時: PDFタグ付けを維持します（最小ファイルにするにはオフにしてください）',
   cmp_preserve_aria:      'テキスト品質を保持 — PDFタグ付けと構造ツリーを維持します',
