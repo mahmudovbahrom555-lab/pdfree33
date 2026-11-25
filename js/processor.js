@@ -4353,7 +4353,16 @@ function _p2eReadings(magnitude) {
   return readings;
 }
 
+// Accounting negatives (2026-11-25): "(2,945.15)", "($1,200)", "$(1,200.50)"
+// are minus amounts — every one stayed text in 60 printed spreadsheets. Only
+// an amount counts (decimals, a thousands group or a currency sign inside the
+// brackets): "(500)" and "(2021)" stay text, as a note number or a year would.
+const _P2E_BRACKET_AMOUNT_RE = /^([$€£¥] ?)?\( *([$€£¥] ?)?([0-9][0-9., \u066B\u066C]*) *\)$/;
 function _p2eMagnitude(text) {
+  const bracket = _P2E_BRACKET_AMOUNT_RE.exec(text);
+  if (bracket && (bracket[1] || bracket[2] || /[.,\u066B\u066C ][0-9]/.test(bracket[3]))) {
+    return { percent: false, negative: true, magnitude: bracket[3].trim() };
+  }
   const percent = text.endsWith('%');
   const unsigned = percent ? text.slice(0, -1) : text.replace(/^[$€£¥] ?/, '');
   return { percent, negative: unsigned.startsWith('-'), magnitude: unsigned.replace(/^[-+]/, '') };
