@@ -18,7 +18,7 @@
 //  Run: node tests/analyticsEvent.test.js
 // ============================================================
 
-import { _classifyUserAgent, _classifyPlatform, _classifyAgent, _dataPointFromEvent } from '../src/index.js';
+import { _classifyUserAgent, _classifyPlatform, _classifyAgent, _isVerifiedBot, _dataPointFromEvent } from '../src/index.js';
 
 let passed = 0, failed = 0;
 function test(name, fn) {
@@ -173,8 +173,23 @@ test('another signed agent → its host, lower case; a malformed value → signe
   expect(_classifyAgent('"https://Agent.Example.org/bots"', undefined)).toBe('agent.example.org');
   expect(_classifyAgent('not a url', undefined)).toBe('signed');
 });
-test('no signature, a Cloudflare verified-bot category → bot:<category>', () => {
+test('no signature, a Cloudflare AI category → bot:<category>', () => {
   expect(_classifyAgent(null, 'AI Assistant')).toBe('bot:AI Assistant');
+  expect(_classifyAgent(null, 'AI Search')).toBe('bot:AI Search');
+});
+// Week 1 (2026-11-26): "Security" scanners (103 Merge opens) and search-engine
+// crawlers came in as agents and counted as people. Not agents, not people:
+// their events are not written at all, as before #282.
+test('other verified bots (Security, Search Engine Crawler) are no agent, and are bots to drop', () => {
+  expect(_classifyAgent(null, 'Security')).toBe('');
+  expect(_classifyAgent(null, 'Search Engine Crawler')).toBe('');
+  expect(_isVerifiedBot(null, 'Security')).toBe(true);
+  expect(_isVerifiedBot(null, 'Search Engine Crawler')).toBe(true);
+});
+test('a person, a signed agent and an AI category are not dropped', () => {
+  expect(_isVerifiedBot(null, undefined)).toBe(false);
+  expect(_isVerifiedBot('"https://chatgpt.com"', 'Security')).toBe(false);
+  expect(_isVerifiedBot(null, 'AI Assistant')).toBe(false);
 });
 test('a person: no signature, no category → empty (no x_agent)', () => {
   expect(_classifyAgent(null, undefined)).toBe('');

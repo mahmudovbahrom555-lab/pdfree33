@@ -186,7 +186,8 @@ GROUP BY tool, progress_pct ORDER BY people DESC LIMIT 60;
 
 -- 16. AI agents (from 2026-11-24): tools opened by an agent that says who it is.
 --     blob9 = x_agent on Tool Open: 'chatgpt.com' (ChatGPT's signed cloud browser),
---     another signer's host, or 'bot:<Cloudflare category>'. A floor: an agent
+--     another signer's host, or 'bot:<Cloudflare AI category>' (other verified
+--     bots — Security scanners, search crawlers — are not written, from 2026-11-26). A floor: an agent
 --     driving a person's own browser looks like that person and is not counted.
 SELECT blob9 AS agent, blob2 AS tool, COUNT() AS opens, COUNT(DISTINCT blob3) AS sessions
 FROM pdfree_events
