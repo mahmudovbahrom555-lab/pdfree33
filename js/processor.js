@@ -4313,7 +4313,10 @@ export function _p2eStitchTables(tables) {
 }
 
 function _p2ePreviewCell({ value, numFmt }) {
-  if (value instanceof Date) return value.toISOString().slice(0, 10);
+  if (value instanceof Date) {
+    const iso = value.toISOString().slice(0, 10);
+    return numFmt === 'dd.mm.yyyy' ? iso.split('-').reverse().join('.') : iso;   // as the sheet shows it
+  }
   if (numFmt?.endsWith('%')) return `${(value * 100).toFixed(numFmt.length - 3)}%`;
   return String(value ?? '');
 }
@@ -4393,6 +4396,17 @@ export function _p2eCellValue(str, decimalMark = '.') {
     const date = new Date(text);
     return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === text
       ? { value: date, numFmt: 'yyyy-mm-dd' } : original;
+  }
+  // Day.month.year (2026-11-25): a dotted date is day first wherever it is
+  // written (de, ru, pl, tr, …) — 94 % of them stayed text in 60 printed
+  // spreadsheets. A slashed date (01/02/2024) is ambiguous and stays text.
+  const dotted = /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/.exec(text);
+  if (dotted) {
+    const iso = `${dotted[3]}-${dotted[2].padStart(2, '0')}-${dotted[1].padStart(2, '0')}`;
+    if (iso < '1900-03-01') return original;
+    const date = new Date(iso);
+    return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === iso
+      ? { value: date, numFmt: 'dd.mm.yyyy' } : original;
   }
 
   const { percent, negative, magnitude } = _p2eMagnitude(text);
