@@ -196,6 +196,26 @@ test('impossible or ambiguous day-month dates stay text', () => {
   }
 });
 
+// Accounting negatives (2026-11-25): "(2,945.15)" is −2,945.15 — every such
+// cell (48 % of an accounting-format column) stayed text in 60 printed
+// spreadsheets. Only an amount: decimals, a thousands group or a currency
+// sign inside; "(500)", "(2021)" stay text (a note number, a year).
+test('an amount in brackets is negative: (2,945.15), ($1,200), $(1,200.50), (1.234,56)', () => {
+  expect(_p2eCellValue('(2,945.15)')).toEqual({ value: -2945.15 });
+  expect(_p2eCellValue('($1,200)')).toEqual({ value: -1200 });
+  expect(_p2eCellValue('$(1,200.50)')).toEqual({ value: -1200.5 });
+  expect(_p2eCellValue('(1.234,56)', ',')).toEqual({ value: -1234.56 });
+  expect(_p2eCellValue('( 75.00 )')).toEqual({ value: -75 });
+});
+test('brackets around a bare number, a year or text stay text', () => {
+  for (const source of ['(500)', '(2021)', '(see note 3)', '-(5.00)', '((5.00))', '(5.00']) {
+    expect(_p2eCellValue(source)).toEqual({ value: source });
+  }
+});
+test('bracket negatives vote for the decimal mark like any amount', () => {
+  expect(_p2eDecimalMark([['Amount'], ['(1.234,56)'], ['(12,50)']])).toBe(',');
+});
+
 // ── groupItemsIntoLines (общая для preview-скана и реальной конвертации) ────
 console.log('\ngroupItemsIntoLines:');
 
