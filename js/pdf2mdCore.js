@@ -355,7 +355,14 @@ export async function _p2mdExtractText(pdfDoc, {
     ]);
     if (actualText) {
       const needs = content.items.some(item => /[\0\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/.test(item.str ?? ''));
-      content.items = applyActualText(content.items, needs ? await actualText(p).catch(() => null) : null);
+      const spans = needs ? await actualText(p).catch(() => null) : null;
+      // Parentheses/brackets in Arabic /ActualText can describe the mirrored
+      // glyphs as drawn, not their logical Unicode characters. Replacing a
+      // whole span with that value turns (PDF) into )PDF( and [7] into ]7[.
+      // Keep those spans as pdf.js read them; letter-only spans still recover
+      // the missing Arabic letters and vowel marks this seam is for.
+      const safeSpans = spans?.map(value => typeof value === 'string' && /[()[\]{}<>]/.test(value) ? null : value);
+      content.items = applyActualText(content.items, safeSpans);
     }
     // Greek-letter formula signal, gated per page — real STEM formulas use
     // Greek variables constantly (θ, λ, α, β, Ω, Σ...) and MATH_GLYPH_RE's
