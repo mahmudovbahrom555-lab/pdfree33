@@ -692,6 +692,63 @@ test('a sparse first row stays in the table, and the heading above it too', () =
   expect(textRows.length).toBe(0);
 });
 
+// Wrapped cells (2026-11-26): a cell's text wrapped over several lines sits
+// ABOVE the row's other values (cells align to the bottom — LibreOffice's and
+// Excel's default). Each wrapped line became a row of its own and one table
+// fell apart into dozens of sheets (71 for a 3-column sheet). Real geometry,
+// LibreOffice print, 11 pt (w1_020 of the corpus study): "Notes" 6 wide.
+const W020 = [at(509.3, [["ID", 73.0, 84.6], ["Food 1", 150.7, 184.8], ["Notes", 245.0, 273.7]]),
+  at(495.6, [["audit", 245.0, 270.5]]),
+  at(484.5, [["south", 245.0, 272.8]]),
+  at(473.4, [["desk", 245.0, 268.0]]),
+  at(462.3, [["chair", 245.0, 269.5]]),
+  at(451.2, [["review", 245.0, 277.6]]),
+  at(440.0, [["desk", 245.0, 268.0]]),
+  at(428.9, [["cable", 245.0, 271.2]]),
+  at(417.8, [["north", 245.0, 272.3]]),
+  at(406.7, [["office", 245.0, 272.3]]),
+  at(395.6, [["paper", 245.0, 273.6]]),
+  at(384.5, [["lamp", 245.0, 269.8]]),
+  at(373.4, [["10000", 120.8, 148.6], ["4,635.17", 204.0, 242.9], ["chair", 245.0, 267.0]]),
+  at(359.7, [["food", 245.0, 268.2]]),
+  at(348.5, [["audit", 245.0, 270.5]]),
+  at(337.4, [["desk", 245.0, 268.0]]),
+  at(326.3, [["office", 245.0, 272.3]]),
+  at(315.2, [["travel", 245.0, 273.2]]),
+  at(304.1, [["south", 245.0, 272.8]]),
+  at(293.0, [["chair", 245.0, 269.5]]),
+  at(281.9, [["hardwa", 245.0, 278.8]]),
+  at(270.8, [["re chair", 245.0, 281.3]]),
+  at(259.6, [["south", 245.0, 272.8]]),
+  at(248.5, [["review", 245.0, 277.6]]),
+  at(237.4, [["desk", 245.0, 268.0]]),
+  at(226.3, [["review", 245.0, 277.6]]),
+  at(215.2, [["10001", 120.8, 148.6], ["(4,585.63)", 197.4, 242.9], ["east", 245.0, 263.7]]),
+  at(202.4, [["ink", 245.0, 260.8]]),
+  at(191.3, [["west", 245.0, 268.8]]),
+  at(180.2, [["10002", 120.8, 148.6], ["(185.28)", 205.7, 242.9], ["chair", 245.0, 267.0]]),
+  at(167.0, [["review", 245.0, 277.6]]),
+  at(155.9, [["food", 245.0, 268.2]]),
+  at(144.8, [["office", 245.0, 272.3]]),
+  at(133.7, [["ink", 245.0, 260.8]]),
+  at(122.6, [["travel", 245.0, 273.2]]),
+  at(111.5, [["cable", 245.0, 271.2]]),
+  at(100.3, [["10003", 120.8, 148.6], ["(1,839.33)", 197.4, 242.9], ["chair", 245.0, 267.0]])];   // the whole page, text runs (spans) as pdf.js gives them
+test('a wrapped cell joins its row: one row per record, the text in one cell', () => {
+  const { tables, textRows } = _p2eExtractPage(W020, [], 1, SHEET_VIEW);
+  expect(tables.length).toBe(1);
+  expect(tables[0].rows[0]).toEqual(['ID', 'Food 1', 'Notes']);
+  expect(tables[0].rows[1]).toEqual(['10000', '4,635.17', 'audit south desk chair review desk cable north office paper lamp chair']);
+  expect(tables[0].rows[2][0]).toBe('10001');
+  expect(textRows.length).toBe(0);
+});
+test('a paragraph line above a table is not glued into its first cell', () => {
+  const lines = [at(820, [['Notes on the data below', 120.8, 230]]), ...W020];
+  const { tables, textRows } = _p2eExtractPage(lines, [], 1, SHEET_VIEW);
+  expect(textRows.map(r => r.text)).toEqual(['Notes on the data below']);
+  expect(tables[0].rows[0][0]).toBe('ID');
+});
+
 // ── _p2eStitchTables: one table across pages → one worksheet ──
 console.log('\n_p2eStitchTables:');
 

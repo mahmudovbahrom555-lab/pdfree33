@@ -4103,6 +4103,60 @@ export function _p2eSmallPrintScale(textItems) {
   return median < 6 ? 10 / median : 1;
 }
 
+// Wrapped cells (2026-11-26): a cell whose text wraps over several lines is
+// printed ABOVE the row's other values — cells align to the bottom, the
+// LibreOffice and Excel default — so each wrapped line read as a row of its
+// own, and one table fell apart into dozens of sheets (71 for 3 columns). Going
+// up from a line of ≥ 2 values, a line right above it (within 1.35 × its text
+// size of the line below) whose every value starts where one of that line's
+// values starts (2 pt), never the first, joins it: its text goes in front of
+// that value. The first column is left out: a paragraph above a table starts
+// at the table's left edge. Lines inside a ruled grid are left to the grid.
+function _p2eMergeWrappedLines(lines, grids) {
+  const inGrid = ln => grids.some(g => ln.y >= g.y - 1 && ln.y <= g.y + g.h + 1);
+  const out = [];
+  let target = null;
+  let lastY = null;
+  for (let i = lines.length - 1; i >= 0; i--) {
+    const line = lines[i];
+    // pdf.js also gives blank items ("" and " " spacers): they take no part
+    const words = line.items.filter(it => it.str.trim());
+    if (target && words.length && words.length < target.words.length && !inGrid(line)) {
+      const em = Math.max(...words.map(it => it.fontSize || 10));
+      const at = words.map(a => target.words.findIndex((b, k) => k > 0 && Math.abs(b.x - a.x) <= 2));
+      if (line.y - lastY <= 1.35 * em && at.every(k => k > 0) && new Set(at).size === at.length) {
+        words.forEach((a, n) => {
+          const b = target.words[at[n]];
+          b.str = `${a.str.trim()} ${b.str.trim()}`;
+          b.width = Math.max(b.width || 0, a.x + (a.width || 0) - b.x);
+        });
+        target.top = line.y;   // the row starts at its first wrapped line (page-edge test, stitching)
+        lastY = line.y;
+        continue;
+      }
+    }
+    const copy = words.length >= 2 && !inGrid(line) ? { ...line, items: line.items.map(it => ({ ...it })) } : line;
+    if (copy !== line) copy.words = copy.items.filter(it => it.str.trim());
+    out.push(copy);
+    target = copy === line ? null : copy;
+    lastY = line.y;
+  }
+  return out.reverse();
+}
+
+// A table with a long-text column (wrapped notes) reads like prose to
+// looksLikeProseNotData (2026-11-26) — but prose has no column of numbers.
+// Two columns whose cells are ≥ 80 % numbers or dates keep it a table.
+function _p2eHasDataColumns(rows) {
+  const data = rows.slice(1);
+  if (data.length < 2) return false;
+  const typed = (rows[0] ?? []).map((_, c) => {
+    const cells = data.map(r => (r[c] ?? '').trim()).filter(Boolean);
+    return cells.length >= 2 && cells.filter(v => typeof _p2eCellValue(v).value !== 'string').length >= 0.8 * cells.length;
+  });
+  return typed.filter(Boolean).length >= 2;
+}
+
 // One page → { tables, textRows }. Ruled grids (detectTableGrids) come
 // first: their drawn rules ARE the cell boundaries, so every text line is
 // placed by its position against them — a cell's wrapped second line lands
@@ -4114,6 +4168,7 @@ export function _p2eSmallPrintScale(textItems) {
 // through detectTables, unchanged — it remains the only option for
 // borderless tables. Anything neither claims becomes a Text-sheet row.
 export function _p2eExtractPage(lines, grids, page, pageView, scale = 1) {
+  lines = _p2eMergeWrappedLines(lines, grids);
   const tables = [];
   const contentLines = lines.filter(line => !_p2ePageFurniture(line));
   // 108 pt at print size: a small-print page read enlarged (scale) keeps the same margin
@@ -4247,7 +4302,7 @@ export function _p2eExtractPage(lines, grids, page, pageView, scale = 1) {
     });
   }
   const textTables = detectTables(rest.map((line, i) => consumedLines.has(restIdx[i]) ? { ...line, items: [] } : line))
-    .filter(t => !looksLikeProseNotData(t.rows) && !looksLikeEnumeratedList(t.rows));
+    .filter(t => !(looksLikeProseNotData(t.rows) && !_p2eHasDataColumns(t.rows)) && !looksLikeEnumeratedList(t.rows));
   const inOtherTable = (i, self) => textTables.some(t => t !== self && i >= t.startIdx && i <= t.endIdx);
   for (const tbl of textTables) {
     _p2eGrowSparseRows(tbl, rest, i => !consumedLines.has(restIdx[i]) && !_p2ePageFurniture(rest[i]) && !inOtherTable(i, tbl));
@@ -4261,7 +4316,7 @@ export function _p2eExtractPage(lines, grids, page, pageView, scale = 1) {
     const boldRows = new Set();
     tbl.rowLines.forEach((lis, r) => { if (_p2eAllBold(lis.map(li => rest[li]))) boldRows.add(r); });
     for (let i = tbl.startIdx; i <= tbl.endIdx; i++) consumedLines.add(restIdx[i]);
-    const top = rest[tbl.startIdx].y;
+    const top = rest[tbl.startIdx].top ?? rest[tbl.startIdx].y;   // a wrapped first row starts higher
     const bottom = rest[tbl.endIdx].y;
     tables.push({
       rowBands: _p2eLineBands(tbl.rowLines.map(lis => lis.map(li => rest[li]))),
