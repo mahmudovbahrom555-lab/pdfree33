@@ -3880,7 +3880,15 @@ async function _p2eExtractTables(pdfDoc, signal, progress = setProgress) {
     const operators = await page.getOperatorList().catch(() => null);
     throwIfAborted(signal);
     const viewport = page.getViewport({ scale: 1 });
-    const upright = uprightMatrix(page);
+    // Small print (2026-11-26): a sheet printed "fit to width" with 13–19
+    // columns sets 3.2 pt text 4.3 pt apart. The table detector's distances
+    // are in points (rows within 6 pt are one line, columns within 25 pt one
+    // column), so rows merged and columns ran together: no table, or columns
+    // in pairs. The page is read at the size its text was written: text,
+    // rules, fills and images scaled together until the median text is 10 pt.
+    const k = _p2eSmallPrintScale(textItems);
+    const baseUpright = uprightMatrix(page);
+    const upright = k === 1 ? baseUpright : (baseUpright ?? [1, 0, 0, 1, 0, 0]).map(v => v * k);
     let grids = [];
     try {
       grids = tableGridsFromOperators(operators, viewport, { paintedOnly: true, matrix: upright });
@@ -3910,8 +3918,8 @@ async function _p2eExtractTables(pdfDoc, signal, progress = setProgress) {
           str: toUnifiedIdeographs((item.dir === 'rtl' && rtlVisual) ? _visualRTLToLogical(item.str) : item.str).split(' ').join(''),
           x: upright ? upright[0] * x + upright[2] * y + upright[4] : x,
           y: upright ? upright[1] * x + upright[3] * y + upright[5] : y,
-          width: item.width || 0,
-          fontSize: (item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10,
+          width: (item.width || 0) * k,
+          fontSize: ((item.height > 0 ? item.height : Math.abs(item.transform[3])) || 10) * k,
           bold: _isFontBold(item.fontName) || BOLD_FONT_NAME_RE.test(fam),
         };
       });
@@ -3931,7 +3939,7 @@ async function _p2eExtractTables(pdfDoc, signal, progress = setProgress) {
         ln.items = joinTouchingItems(ln.items, cuts);
       }
     }
-    const pageView = upright ? [0, 0, viewport.width, viewport.height] : page.view;
+    const pageView = baseUpright ? [0, 0, viewport.width * k, viewport.height * k] : page.view.map(v => v * k);
     try {
       const placed = _detectPageImages(operators);
       const images = upright ? placed.map(image => uprightBox(upright, image)) : placed;
@@ -3939,7 +3947,7 @@ async function _p2eExtractTables(pdfDoc, signal, progress = setProgress) {
         imagePages.push(p);
       }
     } catch { /* unreadable image operators: retain the extracted text */ }
-    const pageResult = _p2eExtractPage(lines, grids, p, pageView);
+    const pageResult = _p2eExtractPage(lines, grids, p, pageView, k);
     for (const table of pageResult.tables) {
       try { styleExcelTable(table, items, paint); }
       catch { /* keep the extracted table when optional presentation is unreadable */ }
@@ -4035,6 +4043,15 @@ function _p2eDropMisplacedHeading(tbl) {
   tbl.startIdx = tbl.rowLines[0][0];
 }
 
+// How much to enlarge a page whose text is small: 1, or what brings the median
+// text height to 10 pt when it is under 6 pt.
+export function _p2eSmallPrintScale(textItems) {
+  const sizes = textItems.map(i => (i.height > 0 ? i.height : Math.abs(i.transform?.[3] ?? 0))).filter(v => v > 0).sort((a, b) => a - b);
+  if (!sizes.length) return 1;
+  const median = sizes[Math.floor(sizes.length / 2)];
+  return median < 6 ? 10 / median : 1;
+}
+
 // One page → { tables, textRows }. Ruled grids (detectTableGrids) come
 // first: their drawn rules ARE the cell boundaries, so every text line is
 // placed by its position against them — a cell's wrapped second line lands
@@ -4045,10 +4062,11 @@ function _p2eDropMisplacedHeading(tbl) {
 // names glued onto the previous record). Lines outside every grid still go
 // through detectTables, unchanged — it remains the only option for
 // borderless tables. Anything neither claims becomes a Text-sheet row.
-export function _p2eExtractPage(lines, grids, page, pageView) {
+export function _p2eExtractPage(lines, grids, page, pageView, scale = 1) {
   const tables = [];
   const contentLines = lines.filter(line => !_p2ePageFurniture(line));
-  const edgeMargin = pageView ? Math.min(108, (pageView[3] - pageView[1]) * 0.18) : 0;
+  // 108 pt at print size: a small-print page read enlarged (scale) keeps the same margin
+  const edgeMargin = pageView ? Math.min(108 * scale, (pageView[3] - pageView[1]) * 0.18) : 0;
   const position = (top, bottom, left) => ({
     top, left,
     clearAbove: !contentLines.some(line => line.y > top),

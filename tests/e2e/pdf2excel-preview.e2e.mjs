@@ -119,6 +119,22 @@ await test('a wide spreadsheet printed in two column bands comes back as ONE tab
   if (c.A61 !== 1059 || c.J61 !== 18 || c.A62 !== undefined) throw new Error(`last row A61=${c.A61} J61=${c.J61}`);
 });
 
+// A sheet printed "fit to width" (LibreOffice, 16 columns, 5.2 pt text) — the
+// detector's distances are in points, so rows merged and columns ran together:
+// no table, or columns in pairs (2026-11-26). The page is now read enlarged.
+await test('a spreadsheet printed "fit to width" in small print comes back as ONE table of 16 columns', async () => {
+  const { page } = await open(null, path.join(__dirname, '..', 'fixtures', 'pdf2excel', 'printed-fit.pdf'));
+  const file = await convert(page);
+  const zip = await JSZip.loadAsync(fs.readFileSync(file));
+  const names = [...(await zip.file('xl/workbook.xml').async('string')).matchAll(/<sheet [^>]*name="([^"]+)"/g)].map(m => m[1]);
+  if (names.filter(n => n.startsWith('Table')).length !== 1) throw new Error(`sheets: ${names.join(', ')}`);
+  const c = await cells(file);
+  const head = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P'].map(col => c[col + '1']).join();
+  if (head !== 'ID,C1,C2,C3,C4,C5,C6,C7,C8,C9,C10,C11,C12,C13,C14,C15') throw new Error(`heading ${head}`);
+  if (['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P'].map(col => c[col + '2']).join() !== '5000,7511,9271,7729,7502,8420,9723,3211,3125,8487,7894,3150,1642,7416,5070,2423') throw new Error('row 2 wrong');
+  if (c.A131 !== 5129 || c.P131 !== 5585 || c.A132 !== undefined) throw new Error(`last row A=${c.A131} P=${c.P131}`);
+});
+
 await test('phone 390×844: downloads by itself, preview visible', async () => {
   const { page } = await open({ width: 390, height: 844 });
   const c = await cells(await convert(page));
