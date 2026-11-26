@@ -17,7 +17,7 @@ global.document = {
 global.window    = globalThis;
 global.Worker    = class { postMessage() {} terminate() {} addEventListener() {} };
 
-const { _p2eHasUnrepresentedImage, _p2eCellValue, _p2eDecimalMark, _p2eTableMark, _p2eExtractPage, _p2eStitchTables, _p2eJoinColumnBands, _p2eSmallPrintScale } = await import('../js/processor.js');
+const { _p2eHasUnrepresentedImage, _p2eCellValue, _p2eDecimalMark, _p2eTableMark, _p2eExtractPage, _p2eStitchTables, _p2eJoinColumnBands, _p2eSmallPrintScale, _p2eJoinBandsByKey } = await import('../js/processor.js');
 const { detectTables, groupItemsIntoLines } = await import('../js/pdf2wordTables.js');
 
 const { initPdf2ExcelOptions, hidePdf2ExcelOptions, renderP2eConfidence } = await import('../js/pdf2excelUI.js');
@@ -747,6 +747,33 @@ test('a paragraph line above a table is not glued into its first cell', () => {
   const { tables, textRows } = _p2eExtractPage(lines, [], 1, SHEET_VIEW);
   expect(textRows.map(r => r.text)).toEqual(['Notes on the data below']);
   expect(tables[0].rows[0][0]).toBe('ID');
+});
+
+// Bands joined by a repeated key column (2026-11-26): a wide sheet printed
+// with its ID column repeated on every band (print titles). One band lost a
+// row to another heuristic (172 rows vs 173), so the row-for-row band join
+// refused and the table stayed two sheets with every ID twice. The repeated
+// IDs are a better key than row positions.
+const keyed = (pages, head, ids, tag, drop = []) => ({
+  page: pages[pages.length - 1], sourcePages: pages, confidence: 1, boldRows: new Set([0]), merges: [],
+  rows: [head, ...ids.filter(id => !drop.includes(id)).map(id => [id, ...head.slice(1).map(h => `${h}-${id}`)])],
+  cellStyles: [], rowHeights: [],
+});
+const IDS = Array.from({ length: 40 }, (_, k) => String(10000 + k));
+test('two bands sharing a repeated ID column join by ID, one row each, the ID once', () => {
+  const out = _p2eJoinBandsByKey([keyed([1, 2], ['ID', 'A', 'B'], IDS, 'a', ['10038']), keyed([3, 4], ['ID', 'C', 'D'], IDS, 'c')]);
+  expect(out.length).toBe(1);
+  expect(out[0].rows[0]).toEqual(['ID', 'A', 'B', 'C', 'D']);
+  expect(out[0].rows[1]).toEqual(['10000', 'A-10000', 'B-10000', 'C-10000', 'D-10000']);
+  expect(out[0].rows.length).toBe(41);
+  expect(out[0].rows.find(r => r[0] === '10038')).toEqual(['10038', '', '', 'C-10038', 'D-10038']);
+});
+test('tables sharing a key but also other column names are not joined (two reports, one ID)', () => {
+  expect(_p2eJoinBandsByKey([keyed([1], ['ID', 'Total'], IDS, 'a'), keyed([2], ['ID', 'Total'], IDS, 'b')]).length).toBe(2);
+});
+test('tables whose keys mostly differ are not joined', () => {
+  const other = Array.from({ length: 40 }, (_, k) => String(20000 + k));
+  expect(_p2eJoinBandsByKey([keyed([1], ['ID', 'A'], IDS, 'a'), keyed([2], ['ID', 'C'], other, 'c')]).length).toBe(2);
 });
 
 // ── _p2eStitchTables: one table across pages → one worksheet ──
