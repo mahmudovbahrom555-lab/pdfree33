@@ -3958,7 +3958,7 @@ async function _p2eExtractTables(pdfDoc, signal, progress = setProgress) {
     page.cleanup?.();
   }
 
-  return { tables: _p2eStitchTables(_p2eJoinColumnBands(tables)), textRows, totalPages: pdfDoc.numPages, skippedPages, imagePages };
+  return { tables: _p2eJoinBandsByKey(_p2eStitchTables(_p2eJoinColumnBands(tables))), textRows, totalPages: pdfDoc.numPages, skippedPages, imagePages };
 }
 
 // A whole row is treated as bold only when EVERY item on it is bold —
@@ -4512,6 +4512,56 @@ function _p2eJoinRun(run, sameCols, sameRows) {
   const last = run[run.length - 1];
   return { ...table, page: last.page, clearBelow: last.clearBelow, atBottom: last.atBottom, linesBelow: last.linesBelow,
     colXs: undefined, colCenters: table.rows[0].map((_, c) => c) };
+}
+
+// Bands of a wide sheet whose first column is repeated on every band (print
+// titles) — the ID column — are joined by that key when the row-for-row band
+// join couldn't (2026-11-26: one band had lost a row, 172 vs 173, and the
+// table stayed two sheets, every ID twice). A table joins the one before when
+// its pages come later, both start with a heading whose first label is the
+// same, their other labels share nothing, the first table's keys are unique
+// and ≥ 95 % of the second's keys are among them. Rows are matched by key; a
+// key missing on one side leaves that side's cells empty.
+export function _p2eJoinBandsByKey(tables) {
+  const out = [];
+  for (const tbl of tables) {
+    const base = out[out.length - 1];
+    const joined = base && _p2eKeyJoin(base, tbl);
+    if (joined) out[out.length - 1] = joined; else out.push(tbl);
+  }
+  return out;
+}
+
+function _p2eKeyJoin(a, b) {
+  const head = t => t.rows[0]?.map(c => (c ?? '').replace(/\s+/g, ' ').trim());
+  const ha = head(a), hb = head(b);
+  if (!ha || !hb || !ha[0] || ha[0] !== hb[0] || a.rows.length < 3 || b.rows.length < 3) return null;
+  if (Math.min(...(b.sourcePages ?? [b.page])) <= Math.max(...(a.sourcePages ?? [a.page]))) return null;
+  const restA = new Set(ha.slice(1).filter(Boolean));
+  if (hb.slice(1).some(h => h && restA.has(h))) return null;
+  const keyA = a.rows.slice(1).map(r => (r[0] ?? '').trim()), keyB = b.rows.slice(1).map(r => (r[0] ?? '').trim());
+  const setA = new Set(keyA.filter(Boolean));
+  if (setA.size < keyA.filter(Boolean).length) return null;
+  const inA = keyB.filter(k => k && setA.has(k)).length;
+  if (inA < 0.95 * keyB.filter(Boolean).length || inA < 0.9 * setA.size) return null;
+  const byKey = new Map(b.rows.slice(1).map((r, i) => [keyB[i], i + 1]));
+  const width = hb.length - 1;
+  const rows = [[...a.rows[0], ...b.rows[0].slice(1)]];
+  const cellStyles = [[...(a.cellStyles?.[0] ?? []), ...(b.cellStyles?.[0] ?? []).slice(1)]];
+  for (let r = 1; r < a.rows.length; r++) {
+    const j = byKey.get(keyA[r - 1]);
+    rows.push([...a.rows[r], ...(j ? b.rows[j].slice(1) : Array(width).fill(''))]);
+    cellStyles.push([...(a.cellStyles?.[r] ?? []), ...(j ? (b.cellStyles?.[j] ?? []).slice(1) : [])]);
+    if (j) byKey.delete(keyA[r - 1]);
+  }
+  for (const [, j] of byKey) {   // keys only on the second side
+    rows.push([b.rows[j][0], ...Array(a.rows[0].length - 1).fill(''), ...b.rows[j].slice(1)]);
+    cellStyles.push([]);
+  }
+  const widths = a.columnWidths && b.columnWidths ? [...a.columnWidths, ...b.columnWidths.slice(1)] : a.columnWidths;
+  return { ...a, rows, cellStyles, columnWidths: widths, rowHeights: rows.map((_, r) => a.rowHeights?.[r] ?? null),
+    sourcePages: [...(a.sourcePages ?? [a.page]), ...(b.sourcePages ?? [b.page])], page: b.page,
+    clearBelow: b.clearBelow, atBottom: b.atBottom, linesBelow: b.linesBelow };
 }
 
 export function _p2eStitchTables(tables) {
