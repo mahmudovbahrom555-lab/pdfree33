@@ -1036,8 +1036,15 @@ await test('Chinese mobile: leave personalized copies, find a footer, undo, and 
     await page.setInputFiles('#fileInput', { name: '2026-11《中文电子书测试文件——页脚查找与替换》.pdf', mimeType: 'application/pdf', buffer: Buffer.from(bytes) });
     const switchMode = page.getByRole('button', { name: '在此 PDF 中查找和替换' });
     await switchMode.waitFor();
-    const bounds = await switchMode.boundingBox();
-    expect(bounds.y + bounds.height <= 664 && bounds.height >= 44).toBeTruthy();
+    const bounds = await switchMode.evaluate(async button => {
+      const card = button.closest('.qe-modal__card');
+      await Promise.allSettled(card.getAnimations().map(animation => animation.finished));
+      const { top, bottom } = button.getBoundingClientRect();
+      return { top, bottom, height: button.offsetHeight, viewportHeight: window.innerHeight };
+    });
+    if (bounds.top < 0 || bounds.bottom > bounds.viewportHeight || bounds.height < 44) {
+      throw new Error(`Find and Replace must fit the first screen with a 44 px tap target: ${JSON.stringify(bounds)}`);
+    }
     await page.locator('#qeCopies textarea').fill('王小明');
     await switchMode.tap();
     await page.locator('#qeLeaveCopiesCancel').tap();
