@@ -4021,6 +4021,57 @@ function _p2eHeadingAbove(rest, tbl, isFree) {
   return { index: h, cells };
 }
 
+// Sparse rows (2026-11-26): detectTables starts and ends a table where two
+// neighbouring rows share 80 % of their columns, so a page whose first row is
+// missing other cells than the next one (10 of 13 filled, a different 10)
+// began one row later — that row and the heading above it went to the Text
+// sheet, and the page didn't join the one before. A free line right above or
+// below the table, at its row pitch, joins it when each of its values lies
+// within the span of a different column (any alignment), it fills at least
+// 40 % of the columns, and it holds a number or a date: a data row. Headings
+// are left to _p2eHeadingAbove.
+function _p2eGrowSparseRows(tbl, rest, isFree) {
+  const n = tbl.colCenters.length;
+  if (n < 2 || tbl.rowLines.length < 2) return;
+  const nearest = cx => tbl.colCenters.reduce((b, c, j) => (Math.abs(c - cx) < Math.abs(tbl.colCenters[b] - cx) ? j : b), 0);
+  const span = tbl.colCenters.map(() => [Infinity, -Infinity]);
+  for (const lis of tbl.rowLines) for (const li of lis) for (const it of rest[li].items) {
+    const j = nearest(it.x + (it.width || 0) / 2);
+    span[j][0] = Math.min(span[j][0], it.x); span[j][1] = Math.max(span[j][1], it.x + (it.width || 0));
+  }
+  const ys = tbl.rowLines.map(lis => rest[lis[0]].y);
+  const pitch = ys.slice(1).map((y, i) => ys[i] - y).sort((a, b) => a - b)[Math.floor((ys.length - 1) / 2)];
+  if (!(pitch > 0)) return;
+  const asRow = line => {
+    const cells = Array(n).fill('');
+    for (const it of line.items) {
+      const a = it.x, b = it.x + (it.width || 0);
+      const overlap = span.map(([l, r]) => Math.min(b, r) - Math.max(a, l));
+      const j = overlap.indexOf(Math.max(...overlap));
+      if (!(overlap[j] > 0) || cells[j]) return null;
+      cells[j] = it.str.trim();
+    }
+    const filled = cells.filter(Boolean);
+    if (filled.length < Math.max(2, Math.ceil(n * 0.4))) return null;
+    return filled.some(c => typeof _p2eCellValue(c).value !== 'string') ? cells : null;
+  };
+  for (;;) {   // up
+    const i = tbl.startIdx - 1;
+    if (i < 0 || !isFree(i) || rest[i].y - rest[tbl.rowLines[0][0]].y > pitch * 1.5) break;
+    const cells = asRow(rest[i]);
+    if (!cells) break;
+    tbl.rows.unshift(cells); tbl.rowLines.unshift([i]); tbl.startIdx = i;
+  }
+  for (;;) {   // down
+    const i = tbl.endIdx + 1;
+    const last = tbl.rowLines[tbl.rowLines.length - 1];
+    if (i >= rest.length || !isFree(i) || rest[last[last.length - 1]].y - rest[i].y > pitch * 1.5) break;
+    const cells = asRow(rest[i]);
+    if (!cells) break;
+    tbl.rows.push(cells); tbl.rowLines.push([i]); tbl.endIdx = i;
+  }
+}
+
 // detectTables can take a printed spreadsheet's heading in by left edges:
 // "Q1" at its cell's left, its numbers at the right, so each label lands one
 // column left of its numbers (2026-11-25, a numbers-only band of a wide
@@ -4197,7 +4248,9 @@ export function _p2eExtractPage(lines, grids, page, pageView, scale = 1) {
   }
   const textTables = detectTables(rest.map((line, i) => consumedLines.has(restIdx[i]) ? { ...line, items: [] } : line))
     .filter(t => !looksLikeProseNotData(t.rows) && !looksLikeEnumeratedList(t.rows));
+  const inOtherTable = (i, self) => textTables.some(t => t !== self && i >= t.startIdx && i <= t.endIdx);
   for (const tbl of textTables) {
+    _p2eGrowSparseRows(tbl, rest, i => !consumedLines.has(restIdx[i]) && !_p2ePageFurniture(rest[i]) && !inOtherTable(i, tbl));
     _p2eDropMisplacedHeading(tbl);
     const head = _p2eHeadingAbove(rest, tbl, i => !consumedLines.has(restIdx[i]) && !_p2ePageFurniture(rest[i]));
     if (head) {
