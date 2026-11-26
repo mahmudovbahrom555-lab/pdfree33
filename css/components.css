@@ -230,6 +230,9 @@ button,
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* Keep a long book title from widening the viewport behind Quick Edit. */
+body[data-tool="quickEdit"] .file-item-info { flex: 1; min-width: 0; }
+body[data-tool="quickEdit"] .file-item-name { display: block; }
 .file-item-size {
   color: var(--text3);
   font-family: var(--font-mono);
@@ -6373,6 +6376,8 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
   color: var(--text2);
   border: none;
   font-size: 18px;
+  min-width: 44px;
+  min-height: 44px;
   cursor: pointer;
   padding: 6px 12px;
   border-radius: 8px;
@@ -6563,13 +6568,14 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 
 .qe-copies__button:disabled { opacity: .55; cursor: default; }
 .qe-copies__button:focus-visible,
+.qe-find input:focus-visible,
 .qe-copies :is(textarea, select, input[type="text"]):focus-visible {
   outline: 2px solid var(--green-text);
   outline-offset: 2px;
 }
 
 .qe-copies__status { min-height: 1.5em; }
-.qe-modal__footer [data-copies-toggle] { margin-inline-end: 8px; }
+.qe-modal__footer:not([hidden]) { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .qe-copy-field { outline: 2px solid var(--green-text); }
 
 @media (max-width: 680px) {
@@ -6615,10 +6621,20 @@ body:not(.has-files) #heroChipsLabel { display: none !important; }
 .qe-page-line--active, .qe-page-line--edited { color: #111; background: #fff; font-family: sans-serif; }
 .qe-page-line--active { outline: 2px solid var(--green-text); }
 .qe-page-line--edited { box-shadow: 0 0 0 2px #f5c542; }
-.qe-find { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; margin-block-end: 8px; }
-.qe-find input { flex: 1 1 140px; min-width: 0; min-height: 44px; padding: 0 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); font-size: 16px; }
-.qe-find .qe-copies__button { min-height: 44px; }
-.qe-find__status { flex-basis: 100%; margin: 0; min-height: 1.2em; text-align: center; color: var(--text2); font-size: 13px; }
+.qe-mode-switch { flex-shrink: 0; padding: 8px 16px; border-block-end: 1px solid var(--border); }
+.qe-mode-switch button { max-inline-size: 100%; color: var(--green-text); }
+.qe-mode-switch [role="status"] { margin: 6px 0 0; font-size: 13px; color: var(--text2); }
+.qe-mode-switch [role="status"]:empty { margin: 0; }
+.qe-find { display: grid; gap: 8px; margin-block-end: 12px; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+.qe-find__title { margin: 0; font-size: 16px; color: var(--text); }
+.qe-find__fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 135px), 1fr)); gap: 8px; }
+.qe-find__fields label { display: grid; align-content: end; gap: 4px; min-width: 0; font-size: 13px; color: var(--text); }
+.qe-find input { box-sizing: border-box; width: 100%; min-width: 0; min-height: 44px; padding: 0 10px; border: 1px solid var(--border-strong); border-radius: 8px; background: var(--surface); color: var(--text); font-size: 16px; }
+.qe-find__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.qe-find__actions button { max-inline-size: 100%; }
+.qe-find__status { margin: 0; color: var(--text2); font-size: 13px; }
+.qe-find__status:empty { margin-block-start: -8px; }
+.qe-page-line--match { outline: 2px solid #92400e; background: rgba(250, 204, 21, 0.27); }
 .qe-page-line--removed { color: #a00000; background: #fff; font-family: sans-serif; text-decoration: line-through; box-shadow: 0 0 0 2px #f5c542; }
 .qe-repeats { display: flex; flex-direction: column; gap: 8px; margin-block-end: 8px; }
 .qe-repeat { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
