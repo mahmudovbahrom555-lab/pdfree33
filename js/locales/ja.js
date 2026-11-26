@@ -84,6 +84,7 @@ window.PDFREE_LOCALE = {
   prog_packaging:    'パッケージ化しています...',
   prog_zip:          'ZIPを作成しています...',
   prog_compressing:  '圧縮しています...',
+  prog_compress_image: '画像を圧縮中 {n}/{total}…',
   prog_processing:   '処理しています...',
   prog_rendering:    'ページ {i}/{n} を描画しています...',
   prog_watermark:    '透かしを適用しています...',

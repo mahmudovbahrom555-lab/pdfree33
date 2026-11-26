@@ -83,6 +83,7 @@ window.PDFREE_LOCALE = {
   prog_packaging:    '패키징 중...',
   prog_zip:          'ZIP 생성 중...',
   prog_compressing:  '압축 중...',
+  prog_compress_image: '이미지 압축 중 {n}/{total}…',
   prog_processing:   '처리 중...',
   prog_rendering:    '{n}페이지 중 {i}페이지 렌더링 중...',
   prog_watermark:    '워터마크 적용 중...',

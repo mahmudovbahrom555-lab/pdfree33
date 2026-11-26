@@ -84,6 +84,7 @@ window.PDFREE_LOCALE = {
   prog_packaging:    '正在打包…',
   prog_zip:          '正在生成 ZIP…',
   prog_compressing:  '正在压缩…',
+  prog_compress_image: '正在压缩图片 {n}/{total}…',
   prog_processing:   '处理中…',
   prog_rendering:    '正在渲染第 {i} / {n} 页…',
   prog_watermark:    '正在添加水印…',

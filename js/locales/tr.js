@@ -81,6 +81,7 @@ window.PDFREE_LOCALE = {
   prog_packaging:    'Paketleniyor...',
   prog_zip:          'ZIP oluşturuluyor...',
   prog_compressing:  'Sıkıştırılıyor...',
+  prog_compress_image: 'Görsel sıkıştırılıyor {n}/{total}…',
   prog_processing:   'İşleniyor...',
   prog_rendering:    '{n} sayfadan {i}. sayfa işleniyor...',
   prog_watermark:    'Filigran ekleniyor...',

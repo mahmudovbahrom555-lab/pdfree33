@@ -82,6 +82,7 @@ window.PDFREE_LOCALE = {
   prog_packaging:    'Sedang mengemas...',
   prog_zip:          'Membuat ZIP...',
   prog_compressing:  'Sedang mengompres...',
+  prog_compress_image: 'Mengompres gambar {n} dari {total}…',
   prog_processing:   'Sedang memproses...',
   prog_rendering:    'Merender halaman {i} dari {n}...',
   prog_watermark:    'Menerapkan tanda air...',

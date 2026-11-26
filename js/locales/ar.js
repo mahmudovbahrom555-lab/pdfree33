@@ -86,6 +86,7 @@ window.PDFREE_LOCALE = {
   prog_packaging:    'جارٍ التجهيز…',
   prog_zip:          'جارٍ إنشاء ملف ZIP…',
   prog_compressing:  'جارٍ الضغط…',
+  prog_compress_image: 'ضغط الصورة {n} من {total}…',
   prog_processing:   'جارٍ المعالجة…',
   prog_rendering:    'جارٍ عرض الصفحة {i} من {n}…',
   prog_watermark:    'جارٍ إضافة العلامة المائية…',

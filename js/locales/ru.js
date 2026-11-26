@@ -82,6 +82,7 @@ window.PDFREE_LOCALE = {
   prog_packaging:    'Упаковка...',
   prog_zip:          'Создание ZIP...',
   prog_compressing:  'Сжатие...',
+  prog_compress_image: 'Сжатие изображения {n} из {total}…',
   prog_processing:   'Обработка...',
   prog_rendering:    'Рендеринг страницы {i} из {n}...',
   prog_watermark:    'Нанесение водяного знака...',

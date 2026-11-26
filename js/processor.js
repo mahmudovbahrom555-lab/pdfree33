@@ -1896,7 +1896,7 @@ function _cmykDOptions(preset, file, manual = {}) {
   };
 }
 
-function _compressPrep(buffer, file, preset, manual) {
+function _compressPrep(buffer, file, preset, manual, onProgress = null) {
   _compressPrepXmp = 0;
   _compressPrepScans = 0;
   return new Promise((resolve, reject) => {
@@ -1923,7 +1923,13 @@ function _compressPrep(buffer, file, preset, manual) {
     // 'progress' while D300 works: each one restarts the watchdog (a big print
     // file can take longer than one watchdog period as a whole)
     _compressPrepWorker.onmessage = (e) => {
-      if (e.data.type === 'progress') { clearTimeout(timer); timer = setTimeout(fallback, _COMPRESS_PREP_TIMEOUT_MS); return; }
+      if (e.data.type === 'progress') {
+        clearTimeout(timer); timer = setTimeout(fallback, _COMPRESS_PREP_TIMEOUT_MS);
+        // the bar moves through the pre-pass, 5 → 18 % (the main step starts at 18): it sat at
+        // "Loading PDF..." 100 s on a 34 MB report, and people left there (2026-11-26)
+        if (onProgress && e.data.total > 0) onProgress(5 + Math.round(13 * e.data.done / e.data.total), t('prog_compress_image', { n: e.data.done, total: e.data.total }));
+        return;
+      }
       _compressPrepXmp = e.data.xmp || 0; _compressPrepScans = e.data.d?.scans || 0; settle(e.data.result);
     };
     _compressPrepWorker.onerror   = fallback;
@@ -2010,7 +2016,7 @@ async function _compressAttempt(original, file, step, options, signal, onProgres
   throwIfAborted(signal);
   const { preset, targetDpi, quality } = step;
   const manual = preset === 'low' ? {} : { targetDpi, quality, preferNativeScans: step.preferNativeScans, scanDpi: step.scanDpi, cacheKey: step.cacheKey };
-  const buffer = await _compressPrep(original, file, preset, manual);
+  const buffer = await _compressPrep(original, file, preset, manual, onProgress);
   throwIfAborted(signal);
   const prepXmp = _compressPrepXmp, prepScans = _compressPrepScans;
   const data = await _postToWorkerForBatch({
