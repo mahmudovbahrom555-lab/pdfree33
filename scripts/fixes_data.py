@@ -10,10 +10,10 @@ import json, os, re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FIXES_JSON = os.path.join(ROOT, 'data', 'fixes.json')
 FIXES_TOOLS = {   # section order on the page
-    'compress': 'Compress PDF', 'pdf-to-word': 'PDF to Word', 'ocr': 'OCR (scanned PDFs)',
+    'compress': 'Compress PDF', 'pdf-to-word': 'PDF to Word', 'pdf-to-excel': 'PDF to Excel', 'ocr': 'OCR (scanned PDFs)',
     'clean-scan': 'Clean Scan', 'all': 'All tools',
 }
-FIXES_TOOL_IDS = {'compress': 'compress', 'pdf2word': 'pdf-to-word', 'ocr': 'ocr', 'cleanScan': 'clean-scan'}   # tools-config id → section
+FIXES_TOOL_IDS = {'compress': 'compress', 'pdf2word': 'pdf-to-word', 'pdf2excel': 'pdf-to-excel', 'ocr': 'ocr', 'cleanScan': 'clean-scan'}   # tools-config id → section
 
 
 def load_fixes():

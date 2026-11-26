@@ -17,6 +17,42 @@
    "summary": "Today the 5 / 10 / 25 MB choices apply fixed settings and don't check the result. We measured it: the target was met for 13–50 % of large files. We are building a size check that keeps small print, stamps and Chinese text readable, and says so honestly when a size can't be reached."
   },
   {
+   "id": "C42",
+   "tool": "pdf-to-excel",
+   "status": "fixed",
+   "date": "2026-11-26",
+   "verified": "2026-11-26, e2e on pdfree.io: a 4-page wide print comes back as one table of 10 columns",
+   "title": "A table too wide for the page came back in pieces",
+   "summary": "When a spreadsheet is too wide, printing puts the extra columns on later pages. PDF to Excel now puts those columns back next to the others, so a 14-column table is one table again, not four sheets."
+  },
+  {
+   "id": "C41",
+   "tool": "pdf-to-excel",
+   "status": "fixed",
+   "date": "2026-11-26",
+   "verified": "2026-11-26, a printed accounting sheet through pdfree.io: bracketed amounts are negative numbers",
+   "title": "Negative amounts in brackets stayed text",
+   "summary": "Accounting sheets write a minus as (2,945.15). PDF to Excel kept these as text, so the column couldn't be added up. They are now negative numbers."
+  },
+  {
+   "id": "C40",
+   "tool": "pdf-to-excel",
+   "status": "fixed",
+   "date": "2026-11-26",
+   "verified": "2026-11-26, a printed sheet through pdfree.io: its dd.mm.yyyy cells are dates",
+   "title": "Dates written 30.12.2024 stayed text",
+   "summary": "Dates written day.month.year came out as text, so they couldn't be sorted or filtered. They are now real dates, shown as they were printed."
+  },
+  {
+   "id": "C39",
+   "tool": "pdf-to-excel",
+   "status": "fixed",
+   "date": "2026-11-25",
+   "verified": "2026-11-25, e2e on pdfree.io: a 2-page printed table comes back as one sheet, its heading in row 1",
+   "title": "A table printed over several pages came back as one sheet per page",
+   "summary": "A long spreadsheet printed to PDF repeats its heading or a page footer on every page, and each page became its own sheet, without the heading. It now comes back as one table with its heading as the first row."
+  },
+  {
    "id": "C38",
    "tool": "compress",
    "status": "fixed",

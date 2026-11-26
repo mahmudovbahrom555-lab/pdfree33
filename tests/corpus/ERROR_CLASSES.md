@@ -1346,3 +1346,67 @@ vs pdfree.io 2df485fe, Standard + Maximum:
 **Status:** `verified` — #183 on pdfree.io (deploy 2dc4d02e, 2026-11-12; the first three deploys stopped on a
 CI apt outage and on #185's JSZip warm-up, see #189): compress e2e against the live site 23/23 (C35 tests
 included); arXiv 36525 0.36 MB, 36658 0.59 MB, gip-31 1.05 MB on Maximum — the same bytes as before the merge.
+
+## C38 — Compress leaves objects nothing references in its output
+
+Found 2026-11-25 while checking the Screen & email holdout: MuPDF's garbage collection alone shrank a Maximum output
+from 31.8 to 0.64 MB. worker.js removes /PieceInfo, /Thumb and the like, and pdf-lib still writes every object it
+holds; the pre-pass's `_dropUnreachable` runs before the worker, so it never saw them. 28 outputs: 1–3 % typical,
+Wikipedia 13–34 %, two print PDFs 66 % and 98 %. Sources: USGS, Wikipedia, IRS, arXiv, cloud corpus.
+**Fix** (#284): after the worker, Standard/Maximum, `compressPrepWorker._dropOrphans` (now `_afterWorker`) runs
+`_dropUnreachable` and saves the worker's way; used only when smaller. Prereg: wip-bench ORPHANS-PREREG.md.
+**Acceptance:** 65 real PDFs vs pdfree.io, every page (≤ 30) pixel-identical at 72 dpi, text identical, none larger,
+−58.6 MB; corpus gate 39/0 FAIL; e2e (a page's /PieceInfo → 400 KB private data gone) fails on pdfree.io before.
+Not compared with competitors (lossless removal of unused data).
+**Status:** `verified` — 072ca9a8 on pdfree.io 2026-11-25: e2e ✓, a 62.5 MB print PDF 31.8 → 0.62 MB on Maximum.
+
+## C39 — PDF→Excel: a spreadsheet printed to PDF comes back as one sheet per page, without its heading
+
+Found 2026-11-25 from a user's idea ("make a single sheet not multiple") and the owner's case: a long Excel table,
+one table in Excel, split over PDF pages. Cause, found by opening the outputs of LibreOffice prints: a printed
+spreadsheet sets labels at a cell's LEFT edge and numbers at its RIGHT edge, so "Date" starts 2 pt after the ID
+numbers end; by nearest column centre it fell into the ID column, so the heading never joined the table (Text
+sheet, on every page). A reprinted heading or a "Sheet1"/"Page 2 of 7" line then stood between the table and the
+page break and blocked the join. Prereg, cases, holdout, research: wip-bench scripts/excel-stitch/STITCH-PREREG.md.
+**Fix** (#289): `_p2eHeadingAbove` places labels by cell layout; `_p2eRunning` lets lines that repeat at the same
+height on both pages (digits aside) not block the join.
+**Acceptance:** dev cases (one 300-row table, 8 page setups) B and F 7 sheets → 1, heading in row 1 in all; holdout
+(seed 777, other sizes) production 7/12 → 11/12; groundtruth tables identical; e2e with a real 2-page print fails
+on pdfree.io before. Generator: LibreOffice only (Excel's AppleScript PDF export fails here; Numbers prints one
+tall page — no split). Not compared with competitors yet.
+**Status:** `verified` — 3c0a8777 on pdfree.io 2026-11-25 (e2e ✓; cases A–C, E–G PASS).
+
+## C40 — PDF→Excel: day.month.year dates stay text
+
+60 spreadsheets printed to PDF (random page setups): 93.7 % of dd.mm.yyyy cells were text (holdout 99.5 %), so
+they couldn't be sorted or filtered as dates. A dotted date is day first in every locale that writes it; a slashed
+one (01/02/2024) is ambiguous and stays text. **Fix** (#290) in `_p2eCellValue`, with calendar checks and the
+1900 guard; the preview shows them as the sheet does. A unit test that only recorded the old behaviour (6455bd2e,
+no reason given) was replaced, said so in the PR. **Acceptance:** dev 0.2 %, holdout 1.2 % wrong; other formats
+unchanged; groundtruth identical. **Status:** `verified` — 7da41412 on pdfree.io (dates typed on a holdout doc).
+
+## C41 — PDF→Excel: accounting negatives "(2,945.15)" stay text
+
+Every bracketed negative in an accounting column stayed text — 48 % of those cells (holdout 48.8 %), so the column
+couldn't be summed. **Fix** (#291) in `_p2eMagnitude`: brackets holding an amount (decimals, a thousands group or a
+currency sign) are a negative number; "(500)", "(2021)" stay text (a note number, a year). **Acceptance:** dev and
+holdout 0.0 % wrong; other formats unchanged; groundtruth identical. **Status:** `verified` — 20bdb16a on
+pdfree.io (21 negatives typed in a holdout doc's first rows, no bracket text left).
+
+## C42 — PDF→Excel: a table too wide for the page comes back in pieces
+
+A spreadsheet wider than the page prints its columns in bands on later pages — "down, then over" or "over, then
+down" — with the same rows at the same heights on every band (±0.4 pt). 14 columns came back as 4 sheets of 6, 6
+and 2; in a numbers-only band, detectTables also took the heading in by left edges, one column off its numbers.
+**Fix** (#293): `_p2eJoinColumnBands` (bands told apart by their heading row, order from the headings; joined when
+every band's k-th page matches the first band's row for row; a repeated first column kept once);
+`_p2eDropMisplacedHeading` (a heading-only column AND a numbers-only column → the heading is placed again by cell
+layout, now with a 0.5 pt bound). **Acceptance:** all 8 dev cases PASS; holdout of 60: one sheet 14 → 35, fully
+right (1 sheet, all rows/columns, cells ≥ 99 %, order) 10 → 31; groundtruth identical; e2e with a real 4-page wide
+print fails on pdfree.io before. Residual risk stated in the PR (separate same-shape tables in strict alternation).
+**Status:** `verified` — 9405dc6a on pdfree.io 2026-11-26 (e2e ✓; D 14/14, H 12/12 columns on one sheet).
+
+## Candidates (PDF→Excel printed spreadsheets, not yet fixed)
+Over-represented among the holdout workbooks still on several sheets (dev, 2026-11-26): wrapped multi-line cells
+(6 of 9 fail), repeated title columns (8 of 16), two-row headings (4 of 9), fit-to-width (5 of 12); and a column
+empty on a whole page changing the column count (G5). Wrapped text cells are 2.8–4.8 % wrong.
