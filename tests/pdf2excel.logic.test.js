@@ -768,6 +768,14 @@ test('two bands sharing a repeated ID column join by ID, one row each, the ID on
   expect(out[0].rows.length).toBe(41);
   expect(out[0].rows.find(r => r[0] === '10038')).toEqual(['10038', '', '', 'C-10038', 'D-10038']);
 });
+test('a band starting with an empty ruled row (an empty group row) still joins by ID', () => {
+  const b = keyed([3, 4], ['ID', 'C', 'D'], IDS, 'c');
+  b.rows.unshift(['', '', '']);
+  const out = _p2eJoinBandsByKey([keyed([1, 2], ['ID', 'A', 'B'], IDS, 'a'), b]);
+  expect(out.length).toBe(1);
+  expect(out[0].rows[0]).toEqual(['ID', 'A', 'B', 'C', 'D']);
+  expect(out[0].rows.length).toBe(41);
+});
 test('tables sharing a key but also other column names are not joined (two reports, one ID)', () => {
   expect(_p2eJoinBandsByKey([keyed([1], ['ID', 'Total'], IDS, 'a'), keyed([2], ['ID', 'Total'], IDS, 'b')]).length).toBe(2);
 });

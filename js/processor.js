@@ -4533,6 +4533,13 @@ export function _p2eJoinBandsByKey(tables) {
 }
 
 function _p2eKeyJoin(a, b) {
+  // a ruled band can start with an empty row — a two-row heading's group row,
+  // empty over that band's columns (2026-11-26): the heading is the first row
+  // with text, and the second table's empty rows above it are left out
+  const lead = t => Math.max(0, t.rows.findIndex(r => r.some(c => (c ?? '').trim())));
+  if (lead(a) > 0) return null;
+  const lb = lead(b);
+  if (lb > 0) b = { ...b, rows: b.rows.slice(lb), cellStyles: b.cellStyles?.slice(lb) };
   const head = t => t.rows[0]?.map(c => (c ?? '').replace(/\s+/g, ' ').trim());
   const ha = head(a), hb = head(b);
   if (!ha || !hb || !ha[0] || ha[0] !== hb[0] || a.rows.length < 3 || b.rows.length < 3) return null;
