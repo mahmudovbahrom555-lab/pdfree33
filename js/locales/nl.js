@@ -81,6 +81,7 @@ window.PDFREE_LOCALE = {
   prog_packaging:    'Inpakken...',
   prog_zip:          'ZIP aanmaken...',
   prog_compressing:  'Comprimeren...',
+  prog_compress_image: 'Afbeelding {n} van {total} comprimeren…',
   prog_processing:   'Verwerken...',
   prog_rendering:    'Pagina {i} van {n} renderen...',
   prog_watermark:    'Watermerk toepassen...',

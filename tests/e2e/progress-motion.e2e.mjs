@@ -14,6 +14,10 @@
 // Run: node tests/e2e/progress-motion.e2e.mjs   (dist/ served on :8934)
 
 import { chromium } from 'playwright';
+import { PDFDocument, PDFName, PDFRawStream } from 'pdf-lib';
+import zlib from 'zlib';
+import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -30,6 +34,54 @@ async function test(name, fn) {
 const browser = await chromium.launch();
 
 console.log(`\nProcess button motion E2E (real browser, ${BASE_URL}):`);
+
+// Compress (2026-11-26): the pre-pass works image by image before the main
+// worker starts, and the bar sat at "Loading PDF..." for 100 s on a 34 MB
+// report (pdfree.io); 25 people a week left Compress there, on average after
+// 106 s. Now the pre-pass names the image it is on and the bar moves.
+async function cmykImagesPdf(n) {
+  const pdf = await PDFDocument.create();
+  const page = pdf.addPage([595, 842]);
+  const W = 900, H = 600, xo = {};
+  let ops = '';
+  for (let k = 0; k < n; k++) {
+    const px = Buffer.alloc(W * H * 4);
+    for (let i = 0; i < px.length; i++) px[i] = (i * (k + 7) + (i >> 9)) % 251;
+    xo[`Im${k}`] = pdf.context.register(PDFRawStream.of(pdf.context.obj({ Type: 'XObject', Subtype: 'Image', Width: W, Height: H,
+      ColorSpace: 'DeviceCMYK', BitsPerComponent: 8, Filter: 'FlateDecode' }), zlib.deflateSync(px)));
+    ops += `q 90 0 0 60 ${20 + (k % 6) * 95} ${20 + Math.floor(k / 6) * 70} cm /Im${k} Do Q\n`;   // 900 px over 1.25 in: 720 ppi
+  }
+  page.node.set(PDFName.of('Resources'), pdf.context.obj({ XObject: xo }));
+  page.node.set(PDFName.of('Contents'), pdf.context.register(PDFRawStream.of(pdf.context.obj({}), Buffer.from(ops))));
+  const file = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'prog-')), 'cmyk-images.pdf');
+  fs.writeFileSync(file, await pdf.save());
+  return file;
+}
+await test('Compress: the pre-pass counts its images and the bar moves before the main step', async () => {
+  const ctx = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    const page = await ctx.newPage();
+    await page.goto(`${BASE_URL}/compress-pdf/`, { waitUntil: 'load' });
+    await page.setInputFiles('#fileInput', await cmykImagesPdf(24));
+    await page.waitForTimeout(3000);
+    await page.click('label[data-preset="medium"]');
+    await page.evaluate(() => {
+      window.__steps = [];
+      setInterval(() => window.__steps.push([(document.querySelector('#progressLabel')?.textContent || '').trim(),
+        parseFloat(document.querySelector('#progressFill')?.style.width) || 0]), 100);
+    });
+    await page.click('#mergeBtn');
+    await page.waitForFunction(() => window.__steps.some(([l]) => /^Done/.test(l)), null, { timeout: 180000 });
+    const steps = await page.evaluate(() => window.__steps);
+    const prep = steps.filter(([l]) => /image \d+ of \d+/i.test(l) && !/Recompressing/.test(l));
+    if (!prep.length) throw new Error(`no pre-pass image count shown — labels: ${JSON.stringify([...new Set(steps.map(s => s[0]))])}`);
+    const pcts = [...new Set(prep.map(s => s[1]))];
+    if (pcts.length < 3) throw new Error(`the bar didn't move in the pre-pass: ${JSON.stringify(pcts)}`);
+    if (Math.max(...pcts) > 18) throw new Error(`the pre-pass ran past the main step's 18 %: ${Math.max(...pcts)}`);
+  } finally {
+    await ctx.close();
+  }
+});
 
 await test('PDF→Word on a scan: the light runs the whole time, and the language step is named', async () => {
   const ctx = await browser.newContext({ serviceWorkers: 'block' });

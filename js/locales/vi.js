@@ -82,6 +82,7 @@ window.PDFREE_LOCALE = {
   prog_packaging:    'Đang đóng gói...',
   prog_zip:          'Đang tạo ZIP...',
   prog_compressing:  'Đang nén...',
+  prog_compress_image: 'Đang nén ảnh {n}/{total}…',
   prog_processing:   'Đang xử lý...',
   prog_rendering:    'Đang kết xuất trang {i} / {n}...',
   prog_watermark:    'Đang thêm watermark...',

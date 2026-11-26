@@ -58,6 +58,7 @@ export const EN = {
   prog_packaging:    'Packaging...',
   prog_zip:          'Building ZIP...',
   prog_compressing:  'Compressing...',
+  prog_compress_image: 'Compressing image {n} of {total}…',
   prog_processing:   'Processing...',
   prog_rendering:    'Rendering page {i} of {n}...',
   prog_watermark:    'Applying watermark...',

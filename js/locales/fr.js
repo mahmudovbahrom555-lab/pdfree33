@@ -81,6 +81,7 @@ window.PDFREE_LOCALE = {
   prog_packaging:    'Mise en paquet...',
   prog_zip:          'Création du ZIP...',
   prog_compressing:  'Compression...',
+  prog_compress_image: 'Compression de l’image {n} sur {total}…',
   prog_processing:   'Traitement en cours...',
   prog_rendering:    'Rendu de la page {i} sur {n}...',
   prog_watermark:    'Application du filigrane...',
