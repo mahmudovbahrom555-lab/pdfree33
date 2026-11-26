@@ -3718,7 +3718,7 @@ async function _runPdf2Excel(filesSnapshot, signal, decimalSeparator) {
       cellStyles: table.previewStyles,
       columnWidths: table.previewColumnWidths,
       rowHeights: table.rowHeights?.slice(0, 5),
-      rows: table.rows.slice(0, 5).map((row, ri) => ri === 0 ? row :
+      rows: table.rows.slice(0, 5).map((row, ri) => ri < (table.headerRows ?? 1) ? row :
         row.map(text => _p2ePreviewCell(_p2eCellValue(text, _p2eTableMark(table.rows, decimalSeparator))))),
     })),
   };
@@ -3751,8 +3751,9 @@ export function _p2eBuildWorkbook(tables, textRows, decimalSeparator) {
 
     // A table that writes 1.234,56 elsewhere reads its 1,234 the same way.
     const decimalMark = _p2eTableMark(tbl.rows, decimalSeparator);
+    const headerRows = tbl.headerRows ?? 1;
     tbl.rows.forEach((row, ri) => {
-      if (ri === 0) { sheet.addRow(row); return; } // header stays plain text
+      if (ri < headerRows) { sheet.addRow(row); return; } // header stays plain text
       const parsed    = row.map(cell => _p2eCellValue(cell, decimalMark));
       const excelRow  = sheet.addRow(parsed.map(p => p.value));
       parsed.forEach((p, ci) => {
@@ -3770,14 +3771,14 @@ export function _p2eBuildWorkbook(tables, textRows, decimalSeparator) {
     // gates emission at 0.72, so 0.8 marks the genuinely high-confidence tier
     // (same cutoff pdf2word's own document-level score uses for "high").
     if (tbl.confidence >= 0.8) {
-      sheet.getRow(1).font = { bold: true };
+      for (let r = 1; r <= headerRows; r++) sheet.getRow(r).font = { bold: true };
     }
 
     const colCount = tbl.rows[0]?.length || 0;
-    if (tbl.rows.length > 1 && colCount > 0) {
-      sheet.views = [{ state: 'frozen', ySplit: 1 }];
+    if (tbl.rows.length > headerRows && colCount > 0) {
+      sheet.views = [{ state: 'frozen', ySplit: headerRows }];
       sheet.autoFilter = {
-        from: { row: 1, column: 1 },
+        from: { row: headerRows, column: 1 },
         to:   { row: tbl.rows.length, column: colCount },
       };
     }
@@ -3958,7 +3959,7 @@ async function _p2eExtractTables(pdfDoc, signal, progress = setProgress) {
     page.cleanup?.();
   }
 
-  return { tables: _p2eJoinBandsByKey(_p2eStitchTables(_p2eJoinColumnBands(tables))), textRows, totalPages: pdfDoc.numPages, skippedPages, imagePages };
+  return { tables: _p2eWithGroupRows(_p2eJoinBandsByKey(_p2eStitchTables(_p2eJoinColumnBands(tables)))), textRows, totalPages: pdfDoc.numPages, skippedPages, imagePages };
 }
 
 // A whole row is treated as bold only when EVERY item on it is bold —
@@ -4019,6 +4020,47 @@ function _p2eHeadingAbove(rest, tbl, isFree) {
   if (filled.length < Math.max(2, Math.ceil(n / 2))) return null;
   if (filled.filter(text => typeof _p2eCellValue(text).value !== 'string').length * 2 > filled.length) return null;
   return { index: h, cells };
+}
+
+// Two-row heading (2026-11-26): the group row above a heading — "Group A"
+// over its columns, a merged cell printed from its first column's left — went
+// to the Text sheet; a heading must label half the columns. The line right
+// above the heading (within 1.5 row pitches) is its group row when every label
+// starts where a heading label starts (1.5 pt: spreadsheets print text from
+// the cell's left, the group's and the heading's alike) and all are words. A
+// lone label over the first column is a title, not a group.
+function _p2eGroupAbove(rest, tbl, isFree) {
+  const h = tbl.startIdx, g = h - 1;
+  if (g < 0 || !isFree(g) || tbl.rowLines.length < 3) return null;
+  const head = tbl.rows[0].map(c => (c ?? '').replace(/\s+/g, ' ').trim());
+  if (!head.some(Boolean) || head.some(c => c && typeof _p2eCellValue(c).value !== 'string')) return null;
+  const ys = tbl.rowLines.slice(1).map(lis => rest[lis[0]].y);
+  const pitch = ys.slice(1).map((y, i) => ys[i] - y).sort((a, b) => a - b)[Math.floor((ys.length - 1) / 2)];
+  if (!(pitch > 0) || rest[g].y - rest[h].y > pitch * 1.5) return null;
+  const byX = items => [...items].filter(it => it.str.trim()).sort((a, b) => a.x - b.x);
+  const starts = [];   // [x, column] of each heading label's first word
+  let col = -1, left = '';
+  for (const item of byX(tbl.rowLines[0].flatMap(li => rest[li].items))) {
+    const s = item.str.trim();
+    if (left.startsWith(s)) { left = left.slice(s.length).trim(); continue; }
+    col = head.findIndex((text, j) => j > col && text.startsWith(s));
+    if (col < 0) return null;
+    starts.push([item.x, col]);
+    left = head[col].slice(s.length).trim();
+  }
+  const cells = Array(head.length).fill('');
+  let last = -1, end = -Infinity;
+  for (const item of byX(rest[g].items)) {
+    const start = starts.find(([x, j]) => j > last && Math.abs(item.x - x) <= 1.5);
+    if (start) { last = start[1]; cells[last] = item.str.trim(); }
+    else if (last >= 0 && item.x - end <= (item.fontSize || 10) * 0.6) cells[last] = `${cells[last]} ${item.str.trim()}`;
+    else return null;
+    end = item.x + (item.width || 0);
+  }
+  const filled = cells.filter(Boolean);
+  if (!filled.length || (filled.length === 1 && cells[0])) return null;
+  if (filled.some(text => typeof _p2eCellValue(text).value !== 'string')) return null;
+  return { index: g, cells };
 }
 
 // Sparse rows (2026-11-26): detectTables starts and ends a table where two
@@ -4313,6 +4355,8 @@ export function _p2eExtractPage(lines, grids, page, pageView, scale = 1) {
       tbl.rowLines.unshift([head.index]);
       tbl.startIdx = head.index;
     }
+    const group = _p2eGroupAbove(rest, tbl, i => !consumedLines.has(restIdx[i]) && !_p2ePageFurniture(rest[i]));
+    if (group) tbl.startIdx = group.index;
     const boldRows = new Set();
     tbl.rowLines.forEach((lis, r) => { if (_p2eAllBold(lis.map(li => rest[li]))) boldRows.add(r); });
     for (let i = tbl.startIdx; i <= tbl.endIdx; i++) consumedLines.add(restIdx[i]);
@@ -4321,6 +4365,7 @@ export function _p2eExtractPage(lines, grids, page, pageView, scale = 1) {
     tables.push({
       rowBands: _p2eLineBands(tbl.rowLines.map(lis => lis.map(li => rest[li]))),
       page, rows: tbl.rows, confidence: tbl.confidence, boldRows, colCenters: tbl.colCenters,
+      ...(group && { groupRow: group.cells }),
       ...position(top, bottom, tbl.colCenters[0]),
     });
   }
@@ -4484,6 +4529,9 @@ function _p2eJoinRun(run, sameCols, sameRows) {
   const first = bands[0][0];
   const header = first.rows[0].map(c => c.trim());
   const table = { ...first, rows: [], boldRows: new Set(), cellStyles: [], rowHeights: [], merges: [], sourcePages: run.map(t => t.page) };
+  // the group row of a two-row heading, band after band
+  table.groupRow = bands.some(b => b[0].groupRow)
+    ? bands.flatMap((b, n) => (b[0].groupRow ?? b[0].rows[0].map(() => '')).slice(repeats[n] ? 1 : 0)) : undefined;
   const widths = [];
   bands.forEach((b, n) => widths.push(...(b[0].columnWidths ?? b[0].rows[0].map(() => null)).slice(repeats[n] ? 1 : 0)));
   if (widths.some(w => w != null)) table.columnWidths = widths;
@@ -4566,9 +4614,23 @@ function _p2eKeyJoin(a, b) {
     cellStyles.push([]);
   }
   const widths = a.columnWidths && b.columnWidths ? [...a.columnWidths, ...b.columnWidths.slice(1)] : a.columnWidths;
-  return { ...a, rows, cellStyles, columnWidths: widths, rowHeights: rows.map((_, r) => a.rowHeights?.[r] ?? null),
+  const groupRow = a.groupRow || b.groupRow
+    ? [...(a.groupRow ?? a.rows[0].map(() => '')), ...(b.groupRow ?? b.rows[0].map(() => '')).slice(1)] : undefined;
+  return { ...a, rows, cellStyles, groupRow, columnWidths: widths, rowHeights: rows.map((_, r) => a.rowHeights?.[r] ?? null),
     sourcePages: [...(a.sourcePages ?? [a.page]), ...(b.sourcePages ?? [b.page])], page: b.page,
     clearBelow: b.clearBelow, atBottom: b.atBottom, linesBelow: b.linesBelow };
+}
+
+// A two-row heading's group row (_p2eGroupAbove), kept apart while pages and
+// bands are joined, becomes the table's first row: two heading rows.
+export function _p2eWithGroupRows(tables) {
+  return tables.map(({ groupRow, ...t }) => (!groupRow ? t : {
+    ...t, rows: [groupRow, ...t.rows], headerRows: 2,
+    boldRows: new Set([...(t.boldRows?.has(0) ? [0] : []), ...[...(t.boldRows ?? [])].map(r => r + 1)]),
+    cellStyles: t.cellStyles && [[], ...t.cellStyles],
+    rowHeights: t.rowHeights && [null, ...t.rowHeights],
+    merges: (t.merges ?? []).map(m => ({ ...m, row: m.row + 1 })),
+  }));
 }
 
 export function _p2eStitchTables(tables) {

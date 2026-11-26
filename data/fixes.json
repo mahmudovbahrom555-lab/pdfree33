@@ -17,6 +17,14 @@
    "summary": "Today the 5 / 10 / 25 MB choices apply fixed settings and don't check the result. We measured it: the target was met for 13–50 % of large files. We are building a size check that keeps small print, stamps and Chinese text readable, and says so honestly when a size can't be reached."
   },
   {
+   "id": "C43",
+   "tool": "pdf-to-excel",
+   "status": "released",
+   "date": "2026-11-26",
+   "title": "The top row of a two-row heading was lost",
+   "summary": "When a table's heading has two rows (a group name such as \"Costs\" over several columns, the column names below), PDF to Excel moved the group names to a separate Text sheet. They now stay above the column names, in the column where each group starts."
+  },
+  {
    "id": "C42",
    "tool": "pdf-to-excel",
    "status": "fixed",

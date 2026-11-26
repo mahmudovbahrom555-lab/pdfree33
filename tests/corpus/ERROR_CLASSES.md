@@ -1406,6 +1406,20 @@ right (1 sheet, all rows/columns, cells ≥ 99 %, order) 10 → 31; groundtruth 
 print fails on pdfree.io before. Residual risk stated in the PR (separate same-shape tables in strict alternation).
 **Status:** `verified` — 9405dc6a on pdfree.io 2026-11-26 (e2e ✓; D 14/14, H 12/12 columns on one sheet).
 
+## C43 — PDF→Excel: the group row of a two-row heading goes to the Text sheet
+
+A heading in two rows — "Group A" over several columns (a merged cell, printed from its first column's left), the
+column labels below — lost its group row: a heading line must label half the columns, a group row labels 2–3.
+In 60 + 60 generated workbooks (dev, holdout) the group row sat above the heading in 1 of 9 / 5 of 14.
+**Fix:** `_p2eGroupAbove` — the line right above the heading (≤ 1.5 row pitches) whose every label starts where a
+heading label starts (1.5 pt) and is a word, not a lone label over the first column; kept as `groupRow` while pages
+and bands are joined (`_p2eJoinRun`, `_p2eKeyJoin`), then the table's first row (`_p2eWithGroupRows`, two heading
+rows: frozen and filtered below both). No merge is written: its extent can't be read from the text. Measure
+pre-registered (wip-bench `GROUPROW-PREREG.md`). **Acceptance:** group row in place dev 1 → 4 of 9, holdout
+5 → 10 of 14, none worse; data judge unchanged on both (40/60, 37/60; sheets 305, 231); groundtruth identical.
+**Open:** ruled (bordered/gridline) tables — the group row is missing from the grid or doubled (w1_010, w1_057).
+**Status:** `released`.
+
 ## Candidates (PDF→Excel printed spreadsheets, not yet fixed)
 Over-represented among the holdout workbooks still on several sheets (dev, 2026-11-26): wrapped multi-line cells
 (6 of 9 fail), repeated title columns (8 of 16), two-row headings (4 of 9), fit-to-width (5 of 12); and a column
