@@ -17,7 +17,7 @@ global.document = {
 global.window    = globalThis;
 global.Worker    = class { postMessage() {} terminate() {} addEventListener() {} };
 
-const { _p2eHasUnrepresentedImage, _p2eCellValue, _p2eDecimalMark, _p2eTableMark, _p2eExtractPage, _p2eStitchTables, _p2eJoinColumnBands } = await import('../js/processor.js');
+const { _p2eHasUnrepresentedImage, _p2eCellValue, _p2eDecimalMark, _p2eTableMark, _p2eExtractPage, _p2eStitchTables, _p2eJoinColumnBands, _p2eSmallPrintScale } = await import('../js/processor.js');
 const { detectTables, groupItemsIntoLines } = await import('../js/pdf2wordTables.js');
 
 const { initPdf2ExcelOptions, hidePdf2ExcelOptions, renderP2eConfidence } = await import('../js/pdf2excelUI.js');
@@ -640,6 +640,14 @@ test('a numbers-only band: each label over its own numbers, no empty first colum
   expect(tables.length).toBe(1);
   expect(tables[0].rows[0]).toEqual(['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6']);
   expect(tables[0].rows[3]).toEqual(['2770', '649', '2004', '4207', '7539', '4158']);
+});
+
+test('small print is read enlarged to 10 pt; ordinary text is left as it is', () => {
+  const items = sizes => sizes.map(h => ({ height: h, transform: [h, 0, 0, h, 0, 0] }));
+  expect(_p2eSmallPrintScale(items([3.2, 3.2, 3.2, 9]))).toBe(10 / 3.2);
+  expect(_p2eSmallPrintScale(items([10, 10, 12]))).toBe(1);
+  expect(_p2eSmallPrintScale(items([6, 6, 6]))).toBe(1);
+  expect(_p2eSmallPrintScale([])).toBe(1);
 });
 
 // ── _p2eStitchTables: one table across pages → one worksheet ──
