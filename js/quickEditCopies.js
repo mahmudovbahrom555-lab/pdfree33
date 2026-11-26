@@ -4,6 +4,8 @@ import { loadJSZip } from './lazyLibs.js';
 import { openOriginalPdf, originalLines, planOriginalCopies, prepareOriginalCopy, writeOriginalCopy } from './quickEditOriginal.js';
 import { bindRecipientImport, RECIPIENT_LIMIT } from './quickEditRecipients.js';
 import { watermarkTextRequest } from './watermarkTextRequest.js';
+import { confirmDialog } from './confirmDialog.js';
+import { t } from './i18n.js';
 
 export function substituteFields(text, fields, name) {
   for (const { start, end } of [...fields].sort((a, b) => b.start - a.start)) {
@@ -30,7 +32,7 @@ export function copyFilename(name, index) {
   return `${index + 1} - ${Array.from(safe).slice(0, 60).join('')}.pdf`;
 }
 
-export function bindQuickEditCopies(panel, source, file, fitDocument, originalOnly = false) {
+export function bindQuickEditCopies(panel, source, file, fitDocument, originalOnly = false, onFind) {
   const names = panel.querySelector('textarea');
   const status = panel.querySelector('[role="status"]');
   const bind = panel.querySelector('[data-bind]');
@@ -50,6 +52,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
   const recipient = panel.querySelector('#qeCopyRecipient');
   const dialog = panel.closest('[role="dialog"]');
   const toggle = dialog.querySelector('[data-copies-toggle]');
+  const findMode = dialog.querySelector('[data-qe-find-mode]');
   const save = dialog.querySelector('#qeModalSaveBtn');
   const hint = dialog.querySelector('.qe-modal__hint');
   const fields = new Map();
@@ -321,6 +324,25 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
   const readNames = () => names.value.split(/\r?\n/).map(name => name.trim()).filter(Boolean);
   const selectedName = () => readNames()[recipient.selectedIndex] || copyText('Name', '姓名');
   let busy = false;
+  findMode?.addEventListener('click', async () => {
+    if (busy) return;
+    let cancelled = false;
+    busy = findMode.disabled = true;
+    try {
+      if (names.value.trim() || fields.size || wmEnabled.checked || styleEnabled.checked) {
+        const proceed = await confirmDialog({
+          id: 'qeLeaveCopies', icon: '!', safeIsPrimary: true,
+          title: t('quickedit_find_title'), paragraphs: [t('quickedit_leave_copies')],
+          cancel: t('sig_cancel'), go: t('quickedit_find_btn'),
+        });
+        if (!proceed || !panel.isConnected) { cancelled = !proceed; return; }
+      }
+      await onFind();
+    } finally {
+      busy = findMode.disabled = false;
+      if (cancelled && panel.isConnected) findMode.focus();
+    }
+  });
 
   function refreshActions() {
     for (const mark of originalView.querySelectorAll('.qe-scan-field')) mark.textContent = selectedName();
@@ -457,7 +479,7 @@ export function bindQuickEditCopies(panel, source, file, fitDocument, originalOn
     activeJob = job;
     stop.hidden = false;
     stop.disabled = false;
-    const controls = [names, bind, reset, preview, download, viewSample, checkCopies, toggle, recipient, preserve, pageSelect, smallerText, place, wrapName, ...styling.querySelectorAll('input, select'), wmEnabled, wmText, wmPosition].filter(control => !control.disabled);
+    const controls = [names, bind, reset, preview, download, viewSample, checkCopies, toggle, findMode, recipient, preserve, pageSelect, smallerText, place, wrapName, ...styling.querySelectorAll('input, select'), wmEnabled, wmText, wmPosition].filter(control => control && !control.disabled);
     const importControls = Array.from(panel.querySelectorAll('[data-recipient-file], [data-import-options] input, [data-import-options] select, [data-import-options] button'))
       .filter(control => !control.disabled);
     controls.push(...importControls);

@@ -66,6 +66,17 @@ let _inerted    = [];
 export const COPY_MODE = 'personalized-copies';
 export const COPY_MODE_QUERY = `?mode=${COPY_MODE}`;
 
+export function selectQuickEditMode(mode, updateUrl = false) {
+  for (const button of document.querySelectorAll('#qeEntry [data-qe-mode]')) {
+    button.setAttribute('aria-pressed', String(button.dataset.qeMode === mode));
+  }
+  if (!updateUrl) return;
+  const url = new URL(location.href);
+  if (mode === COPY_MODE) url.searchParams.set('mode', COPY_MODE);
+  else url.searchParams.delete('mode');
+  history.replaceState(history.state, '', url);
+}
+
 export function initQuickEditOptions(file) {
   const el = id('quickEditOptions');
   if (!el) return;
@@ -228,10 +239,10 @@ function _dropPageEditor() {
 // Arabic, Persian and Hebrew can't be written in place yet (no shaping), so a
 // mostly right-to-left file keeps the previous editor and its script warning
 // rather than failing only after the edit
-async function _openInPlace(file, container, myGen) {
+async function _readEditableOriginal(file) {
   let original;
-  try { original = await openOriginalPdf(file); } catch { return false; }
   try {
+    original = await openOriginalPdf(file);
     let letters = 0, rtl = 0;
     for (let i = 1; i <= Math.min(3, original.pdf.numPages); i++) {
       for (const line of originalLines((await (await original.pdf.getPage(i)).getTextContent()).items)) {
@@ -239,14 +250,50 @@ async function _openInPlace(file, container, myGen) {
         rtl += (line.text.match(/[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/gu) || []).length;
       }
     }
-    if (!letters || rtl > letters * 0.3 || myGen !== _generation) { await original.pdf.destroy(); return myGen !== _generation; }
-  } catch { await original.pdf.destroy().catch(() => {}); return false; }
+    if (letters && rtl <= letters * 0.3) return original;
+  } catch { /* the original editor is unavailable for this document */ }
+  await original?.pdf.destroy().catch(() => {});
+  return null;
+}
+
+async function _openInPlace(file, container, myGen) {
+  const original = await _readEditableOriginal(file);
+  if (myGen !== _generation) {
+    await original?.pdf.destroy().catch(() => {});
+    return true;
+  }
+  if (!original) return false;
+  _showPageEditor(original, container);
+  return true;
+}
+
+function _showPageEditor(original, container) {
   _pageOriginal = original;
   _loading = false;
   container.innerHTML = _triggerHTML();
   _bindTriggerEvents(container);
-  await _openModal();
-  return true;
+  void _openModal();
+}
+
+async function _switchToFind() {
+  const modal = _modal;
+  const generation = _generation;
+  const status = modal.querySelector('[data-qe-mode-status]');
+  status.textContent = t('quickedit_find_opening');
+  const original = _pageOriginal || await _readEditableOriginal(_sourceFile);
+  if (modal !== _modal || generation !== _generation) {
+    if (original && original !== _pageOriginal) await original.pdf.destroy().catch(() => {});
+    return;
+  }
+  if (!original) {
+    status.textContent = t('quickedit_find_unavailable');
+    return;
+  }
+  _closeModal({ silent: true });
+  _forceRebuild = false;
+  selectQuickEditMode('edit', true);
+  _showPageEditor(original, _container);
+  _pageEditor?.root.querySelector('.qe-find__title')?.focus();
 }
 
 // From the in-place editor to the rebuild one, for a file the page editor
@@ -365,7 +412,11 @@ async function _openModal(docContainer, originalOnly = false) {
         <p class="qe-modal__title">${esc(_fileLabel)}</p>
         <button type="button" class="qe-modal-close" id="qeModalClose" aria-label="${esc(t('quickedit_close_aria'))}">✕</button>
       </div>
-      <p class="qe-modal__hint">${esc(t('quickedit_modal_hint'))}</p>
+      ${originalOnly ? `<div class="qe-mode-switch">
+        <button type="button" class="qe-copies__button" data-qe-find-mode>${esc(t('quickedit_find_title'))}</button>
+        <p role="status" data-qe-mode-status></p>
+      </div>` : ''}
+      <p class="qe-modal__hint"${pageMode ? ' hidden' : ''}>${esc(t('quickedit_modal_hint'))}</p>
       <div class="qe-workspace">
         <div class="qe-modal__stage" id="qeModalStage"></div>
         <section id="qeCopies" class="qe-copies" aria-labelledby="qeCopiesTitle" hidden>
@@ -469,7 +520,7 @@ async function _openModal(docContainer, originalOnly = false) {
           <p class="qe-copies__status" role="status"></p>
         </section>
       </div>
-      <div class="qe-modal__footer">
+      <div class="qe-modal__footer"${originalOnly ? ' hidden' : ''}>
         <button type="button" class="qe-copies__button" data-copies-toggle aria-expanded="false" aria-controls="qeCopies">${copyText('Create personalized copies', '生成个性化副本')}</button>
         <button type="button" class="merge-btn" id="qeModalSaveBtn" style="position:static;margin-top:0;">${esc(t('quickedit_save_btn'))}</button>
       </div>
@@ -548,7 +599,7 @@ async function _openModal(docContainer, originalOnly = false) {
     // delegated listener + editable-run classes already applied the first
     // time are still intact on the same, never-torn-down DOM node.
     if (docContainer) _bindEditableSpans(target);
-    _clearCopyFields = bindQuickEditCopies(id('qeCopies'), target, _sourceFile, _fitDocContainerToStage, originalOnly);
+    _clearCopyFields = bindQuickEditCopies(id('qeCopies'), target, _sourceFile, _fitDocContainerToStage, originalOnly, _switchToFind);
     const exampleNames = quickEditExamples.get(_sourceFile);
     if (exampleNames) {
       const names = id('qeCopyNames');
@@ -750,6 +801,7 @@ function _fitDocContainerToStage(container) {
 }
 
 function _onModalKeydown(e) {
+  if (e.defaultPrevented) return;
   if (e.key === 'Escape') { _closeModal(); return; }
   if (e.key !== 'Tab' || !_modal) return;
   const els = _focusables();
