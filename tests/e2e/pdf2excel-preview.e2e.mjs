@@ -135,6 +135,20 @@ await test('a spreadsheet printed "fit to width" in small print comes back as ON
   if (c.A131 !== 5129 || c.P131 !== 5585 || c.A132 !== undefined) throw new Error(`last row A=${c.A131} P=${c.P131}`);
 });
 
+await test('a two-row heading (LibreOffice print, "Costs" over B–D, "Sales" over E–F) keeps both rows, frozen below them', async () => {
+  const { page } = await open(null, path.join(__dirname, '..', 'fixtures', 'pdf2excel', 'printed-groups.pdf'));
+  const file = await convert(page);
+  const zip = await JSZip.loadAsync(fs.readFileSync(file));
+  const names = [...(await zip.file('xl/workbook.xml').async('string')).matchAll(/<sheet [^>]*name="([^"]+)"/g)].map(m => m[1]);
+  if (names.join() !== 'Table 1') throw new Error(`sheets: ${names.join(', ')}`);
+  const c = await cells(file);
+  const row = r => ['A','B','C','D','E','F'].map(col => c[col + r] ?? '').join();
+  if (row(1) !== ',Costs,,,Sales,') throw new Error(`group row ${row(1)}`);
+  if (row(2) !== 'ID,Rent,Staff,Travel,Units,Revenue') throw new Error(`heading ${row(2)}`);
+  if (c.A3 !== 2000 || c.A72 !== 2069 || c.A73 !== undefined) throw new Error(`rows A3=${c.A3} A72=${c.A72}`);
+  const xml = await zip.file('xl/worksheets/sheet1.xml').async('string');
+  if (!/ySplit="2"/.test(xml) || !/<autoFilter ref="A2:F72"/.test(xml)) throw new Error('not frozen/filtered below both heading rows');
+});
 await test('phone 390×844: downloads by itself, preview visible', async () => {
   const { page } = await open({ width: 390, height: 844 });
   const c = await cells(await convert(page));

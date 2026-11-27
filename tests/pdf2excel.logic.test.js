@@ -17,7 +17,7 @@ global.document = {
 global.window    = globalThis;
 global.Worker    = class { postMessage() {} terminate() {} addEventListener() {} };
 
-const { _p2eHasUnrepresentedImage, _p2eCellValue, _p2eDecimalMark, _p2eTableMark, _p2eExtractPage, _p2eStitchTables, _p2eJoinColumnBands, _p2eSmallPrintScale, _p2eJoinBandsByKey } = await import('../js/processor.js');
+const { _p2eHasUnrepresentedImage, _p2eCellValue, _p2eDecimalMark, _p2eTableMark, _p2eExtractPage, _p2eStitchTables, _p2eJoinColumnBands, _p2eSmallPrintScale, _p2eJoinBandsByKey, _p2eWithGroupRows, _p2eBuildWorkbook } = await import('../js/processor.js');
 const { detectTables, groupItemsIntoLines } = await import('../js/pdf2wordTables.js');
 
 const { initPdf2ExcelOptions, hidePdf2ExcelOptions, renderP2eConfidence } = await import('../js/pdf2excelUI.js');
@@ -565,6 +565,75 @@ test('a line that is only on the next page still keeps the tables apart', () => 
     ..._p2eExtractPage([at(805, [['Expenses', 55, 100]]), SHEET_HEAD(769), ...SHEET_ROWS(754, 10, 1048)], [], 2, SHEET_VIEW).tables,
   ]);
   expect(out.length).toBe(2);
+});
+
+// Two-row heading (2026-11-26): the group row above the heading ("Group A"
+// over Date–Category, "Group B" over Amount–Rate, each from its first
+// column's left) went to the Text sheet.
+const GROUPS = y => at(y, [['Group A', 132.7, 170.2], ['Group B', 288.1, 325.6]]);
+test('a two-row heading: the group row is kept above the heading, each label over its first column', () => {
+  const { tables, textRows } = _p2eExtractPage([GROUPS(784), SHEET_HEAD(769), ...SHEET_ROWS(754, 4, 1000)], [], 1, SHEET_VIEW);
+  expect(tables[0].groupRow).toEqual(['', 'Group A', '', 'Group B', '', '']);
+  expect(tables[0].rows[0][0]).toBe('ID');
+  expect(textRows.length).toBe(0);
+  const [out] = _p2eWithGroupRows(tables);
+  expect(out.rows.slice(0, 2).map(r => r[1])).toEqual(['Group A', 'Date']);
+  expect(out.headerRows).toBe(2);
+});
+test('a group label printed as two words still starts at its column', () => {
+  const split = at(784, [['Group', 132.7, 160], ['A', 162.5, 170.2], ['Group', 288.1, 316], ['B', 318.5, 325.6]]);
+  expect(_p2eExtractPage([split, SHEET_HEAD(769), ...SHEET_ROWS(754, 4, 1000)], [], 1, SHEET_VIEW).tables[0].groupRow)
+    .toEqual(['', 'Group A', '', 'Group B', '', '']);
+});
+test('not a group row: a title over the first column, a centred running header, a line of numbers', () => {
+  for (const line of [at(784, [['Expenses', 55, 100]]), at(784, [['Sheet1', 280, 310]]), at(784, [['2024', 132.7, 150], ['2025', 288.1, 306]])]) {
+    const { tables, textRows } = _p2eExtractPage([line, SHEET_HEAD(769), ...SHEET_ROWS(754, 4, 1000)], [], 1, SHEET_VIEW);
+    expect(tables[0].groupRow).toBe(undefined);
+    expect(textRows.length).toBe(1);
+  }
+});
+test('a group line far above the heading stays text', () => {
+  const { tables } = _p2eExtractPage([GROUPS(810), SHEET_HEAD(769), ...SHEET_ROWS(754, 4, 1000)], [], 1, SHEET_VIEW);
+  expect(tables[0].groupRow).toBe(undefined);
+});
+test('a two-row heading reprinted on every page: one table, both heading rows once', () => {
+  const page = (n, first, count) => _p2eExtractPage([GROUPS(784), SHEET_HEAD(769), ...SHEET_ROWS(754, count, first)], [], n, SHEET_VIEW).tables;
+  const out = _p2eWithGroupRows(_p2eStitchTables([...page(1, 1000, 48), ...page(2, 1048, 10)]));
+  expect(out.length).toBe(1);
+  expect(out[0].rows.length).toBe(60);
+  expect(out[0].rows[1][0]).toBe('ID');
+  expect(out[0].rows[50][0]).toBe('1048');
+});
+test('group rows shift the table\'s bold rows, styles, heights and merges by one', () => {
+  const [out] = _p2eWithGroupRows([{ rows: [['H'], ['1']], groupRow: ['G'], boldRows: new Set([0]),
+    cellStyles: [[{ font: {} }], []], rowHeights: [12, 13], merges: [{ row: 1, from: 0, to: 0 }] }]);
+  expect([...out.boldRows]).toEqual([0, 1]);
+  expect(out.cellStyles.length).toBe(3);
+  expect(out.rowHeights).toEqual([null, 12, 13]);
+  expect(out.merges[0].row).toBe(2);
+  expect('groupRow' in out).toBe(false);
+});
+test('the workbook freezes and filters below both heading rows, and keeps them as text', () => {
+  const sheets = [];
+  window.ExcelJS = { Workbook: class {
+    addWorksheet(name) {
+      const rows = [];
+      const row = r => (rows[r - 1] ??= { values: null, cells: {}, getCell(c) { return (this.cells[c] ??= {}); } });
+      const sheet = { name, rows, columns: [], addRow(values) { const r = row(rows.length + 1); r.values = values; return r; },
+        getRow: row, getColumn: () => ({}), getCell: (r, c) => row(r).getCell(c), mergeCellsWithoutStyle() {} };
+      sheets.push(sheet);
+      return sheet;
+    }
+  } };
+  try {
+    _p2eBuildWorkbook([{ rows: [['', 'Group A'], ['ID', 'Amount'], ['1', '2.50']], headerRows: 2, confidence: 0.9, boldRows: new Set() }], [], 'auto');
+  } finally { delete window.ExcelJS; }
+  const [sheet] = sheets;
+  expect(sheet.views).toEqual([{ state: 'frozen', ySplit: 2 }]);
+  expect(sheet.autoFilter.from.row).toBe(2);
+  expect(sheet.rows[1].values).toEqual(['ID', 'Amount']);
+  expect(sheet.rows[2].values).toEqual([1, 2.5]);
+  expect(sheet.rows.slice(0, 2).map(r => r.font?.bold)).toEqual([true, true]);
 });
 
 // ── A wide spreadsheet printed "down, then over" or "over, then down" ──
