@@ -63,6 +63,10 @@ window.PDFREE_LOCALE = {
   invalid_img:     'Seleziona un\'immagine JPG o PNG',
   dupe_skip_one:   '{n} duplicato ignorato',
   dupe_skip_many:  '{n} duplicati ignorati',
+  file_count_one:  '{n} file',
+  file_count_many: '{n} file',
+  page_count_one:  '{n} pagina',
+  page_count_many: '{n} pagine',
   not_valid_pdf:   '⚠️ "{name}" non è un file PDF valido',
   aes_help:        '🔒 PDF cifrato con {ver} — impossibile elaborare senza la password del proprietario. {restricted} Usa Sblocca PDF per rimuovere la password (se la conosci), poi carica di nuovo qui il file sbloccato.',
 
@@ -1386,6 +1390,7 @@ window.PDFREE_LOCALE = {
   quickedit_repeat_found:   'In {pages} pagine su {total}:',
   quickedit_repeat_remove:  'Rimuovi ovunque',
   quickedit_repeat_removed: 'Rimosso da {pages} pagine. Premi Salva per ottenere il PDF.',
+  quickedit_converting: 'Conversione in formato modificabile…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Impossibile caricare il motore di rendering PDF. Controlla la tua connessione internet.',
   draw_read_file_failed:       'Impossibile leggere il file.',

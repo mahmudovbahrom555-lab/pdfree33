@@ -1092,6 +1092,55 @@ await test('Chinese mobile: leave personalized copies, find a footer, undo, and 
   }
 });
 
+await test('Chinese: the loading screen is in Chinese with no copies button, and a repeated line removed by search is shown as removed', async () => {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  try {
+    await page.goto(`${BASE_URL}/zh/kuaisu-bianji-pdf/`);
+    const bytes = await page.evaluate(async () => {
+      const { loadPdfLib, loadFontkit } = await import('/js/lazyLibs.js');
+      await Promise.all([loadPdfLib(), loadFontkit()]);
+      const doc = await window.PDFLib.PDFDocument.create();
+      doc.registerFontkit(window.fontkit);
+      const font = await doc.embedFont(await (await fetch('/js/vendor/noto/notosanssc-v40.ttf')).arrayBuffer(), { subset: true });
+      for (let i = 1; i <= 4; i++) {
+        const sheet = doc.addPage([420, 595]);
+        sheet.drawText(`正文第 ${i} 页`, { x: 40, y: 520, size: 14, font });
+        sheet.drawText('扫码加入读书群', { x: 40, y: 35, size: 9, font });
+      }
+      return Array.from(await doc.save());
+    });
+    // everything the loading screen shows, however briefly
+    await page.evaluate(() => {
+      window.__loading = { texts: new Set(), copies: false };
+      new MutationObserver(() => {
+        const box = document.getElementById('quickEditOptions');
+        const progress = box?.querySelector('[data-qe-progress]');
+        if (progress) window.__loading.texts.add(progress.textContent);
+        if (progress && box.querySelector('#qeOpenOriginal')) window.__loading.copies = true;
+      }).observe(document.body, { subtree: true, childList: true, characterData: true });
+    });
+    await page.setInputFiles('#fileInput', { name: '读书.pdf', mimeType: 'application/pdf', buffer: Buffer.from(bytes) });
+    await page.waitForSelector('[data-repeats]:not([hidden]) .qe-repeat', { timeout: 20000 });
+    const loading = await page.evaluate(() => ({ texts: [...window.__loading.texts], copies: window.__loading.copies }));
+    expect(loading.texts.length > 0 && loading.texts.every(text => !/[A-Za-z]{3}/.test(text))).toBeTruthy();
+    expect(loading.copies).toBeFalsy();
+    expect(/^1 个文件 · /.test(await page.locator('#fileCount').innerText())).toBeTruthy();
+
+    const cards = page.locator('.qe-repeat');
+    const card = cards.nth(await cards.evaluateAll(rows => rows.findIndex(row => row.textContent.includes('扫码加入读书群'))));
+    await page.fill('[data-find-text]', '扫码加入读书群');
+    await page.click('.qe-find button[type=submit]');
+    await page.getByRole('button', { name: '删除匹配项（4 处）' }).click();
+    await page.waitForFunction(() => [...document.querySelectorAll('.qe-repeat')].some(row => row.textContent.startsWith('已从 4 页删除')));
+    expect(await card.locator('button').isHidden()).toBeTruthy();
+    await page.getByRole('button', { name: '撤销上次批量修改' }).click();
+    await card.locator('button').waitFor();
+    expect(/扫码加入读书群/.test(await card.innerText())).toBeTruthy();
+  } finally {
+    await page.close();
+  }
+});
+
 await test('repeated lines: the promo on every page is offered first and removed everywhere with one press', async () => {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   const getDownload = await captureDownload(page);

@@ -64,6 +64,10 @@ window.PDFREE_LOCALE = {
   invalid_img:     'Pilih gambar JPG atau PNG',
   dupe_skip_one:   '{n} duplikat dilewati',
   dupe_skip_many:  '{n} duplikat dilewati',
+  file_count_one:  '{n} file',
+  file_count_many: '{n} file',
+  page_count_one:  '{n} halaman',
+  page_count_many: '{n} halaman',
   not_valid_pdf:   '⚠️ „{name}" bukan file PDF yang valid',
   aes_help:        '🔒 PDF terenkripsi {ver} — tidak dapat diproses tanpa kata sandi pemilik. {restricted} Gunakan Buka Kunci PDF untuk menghapus kata sandi (jika Anda mengetahuinya), lalu unggah ulang file yang sudah dibuka kuncinya di sini.',
 
@@ -1387,6 +1391,7 @@ window.PDFREE_LOCALE = {
   quickedit_repeat_found:   'Di {pages} dari {total} halaman:',
   quickedit_repeat_remove:  'Hapus di semua halaman',
   quickedit_repeat_removed: 'Dihapus dari {pages} halaman. Tekan Simpan untuk mendapatkan PDF.',
+  quickedit_converting: 'Mengubah ke bentuk yang dapat diedit…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Gagal memuat perender PDF. Periksa koneksi internet Anda.',
   draw_read_file_failed:       'Tidak dapat membaca file.',

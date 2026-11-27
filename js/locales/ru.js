@@ -64,6 +64,10 @@ window.PDFREE_LOCALE = {
   invalid_img:     'Выберите изображение JPG или PNG',
   dupe_skip_one:   '{n} дубликат пропущен',
   dupe_skip_many:  '{n} дубликатов пропущено',
+  file_count_one:  '{n} файл',
+  file_count_many: 'Файлов: {n}',
+  page_count_one:  '{n} страница',
+  page_count_many: 'Страниц: {n}',
   not_valid_pdf:   '⚠️ «{name}» не является корректным PDF-файлом',
   aes_help:        '🔒 PDF зашифрован ({ver}) — обработка невозможна без пароля владельца. {restricted} Используйте Разблокировать PDF, чтобы удалить пароль (если вы его знаете), затем загрузите разблокированный файл сюда заново.',
 
@@ -1387,6 +1391,7 @@ window.PDFREE_LOCALE = {
   quickedit_repeat_found:   'На {pages} из {total} страниц:',
   quickedit_repeat_remove:  'Удалить везде',
   quickedit_repeat_removed: 'Удалено на {pages} страницах. Нажмите «Сохранить», чтобы получить PDF.',
+  quickedit_converting: 'Преобразуем в редактируемый вид…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Не удалось загрузить рендерер PDF. Проверьте подключение к интернету.',
   draw_read_file_failed:       'Не удалось прочитать файл.',

@@ -63,6 +63,10 @@ window.PDFREE_LOCALE = {
   invalid_img:     'Selecteer een JPG- of PNG-afbeelding',
   dupe_skip_one:   '{n} duplicaat overgeslagen',
   dupe_skip_many:  '{n} duplicaten overgeslagen',
+  file_count_one:  '{n} bestand',
+  file_count_many: '{n} bestanden',
+  page_count_one:  '{n} pagina',
+  page_count_many: '{n} pagina’s',
   not_valid_pdf:   '⚠️ "{name}" is geen geldig PDF-bestand',
   aes_help:        '🔒 PDF versleuteld met {ver} — kan niet worden verwerkt zonder het eigenaarswachtwoord. {restricted} Gebruik PDF Ontgrendelen om het wachtwoord te verwijderen (als je het weet), en upload het ontgrendelde bestand daarna hier opnieuw.',
 
@@ -1386,6 +1390,7 @@ window.PDFREE_LOCALE = {
   quickedit_repeat_found:   'Op {pages} van {total} pagina’s:',
   quickedit_repeat_remove:  'Overal verwijderen',
   quickedit_repeat_removed: 'Verwijderd van {pages} pagina’s. Tik op Opslaan om de PDF te krijgen.',
+  quickedit_converting: 'Omzetten naar een bewerkbare vorm…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Laden van PDF-renderer mislukt. Controleer je internetverbinding.',
   draw_read_file_failed:       'Kan het bestand niet lezen.',

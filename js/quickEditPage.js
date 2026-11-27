@@ -101,7 +101,7 @@ export function createPageEditor(stage, original, { onChange } = {}) {
       lastBatch.delete(entry.key);
       undoBatch.hidden = lastBatch.size === 0;
     }
-    onChange?.(edits.size);
+    changed();
   }
 
   function edit(span, entry) {
@@ -323,7 +323,7 @@ export function createPageEditor(stage, original, { onChange } = {}) {
     }
     forgetResults();
     findStatus.textContent = t('quickedit_replaced', { n: undo.size });
-    onChange?.(edits.size);
+    changed();
     void render().catch(() => {});
   });
 
@@ -337,7 +337,7 @@ export function createPageEditor(stage, original, { onChange } = {}) {
     undoBatch.hidden = true;
     forgetResults();
     findStatus.textContent = t('quickedit_batch_undone');
-    onChange?.(edits.size);
+    changed();
     findForm.querySelector('[type="submit"]').focus();
     void render().catch(() => {});
   });
@@ -351,6 +351,7 @@ export function createPageEditor(stage, original, { onChange } = {}) {
   // pages. Removing one is the same in-place edit as any other, checked on
   // save.
   const repeatsBox = root.querySelector('[data-repeats]');
+  const repeatRows = [];
   async function findRepeats() {
     if (total < 3 || total > 1000) return;
     const need = Math.max(3, Math.ceil(total / 2));
@@ -395,10 +396,8 @@ export function createPageEditor(stage, original, { onChange } = {}) {
       row.className = 'qe-repeat';
       const say = document.createElement('p');
       say.className = 'qe-repeat__text';
-      say.textContent = t('quickedit_repeat_found', { pages: offer.pages, total });
       const quote = document.createElement('q');
       quote.textContent = offer.text.length > 90 ? `${offer.text.slice(0, 88)}…` : offer.text;
-      say.append(' ', quote);
       const remove = document.createElement('button');
       remove.type = 'button';
       remove.className = 'qe-copies__button';
@@ -412,15 +411,32 @@ export function createPageEditor(stage, original, { onChange } = {}) {
         }
         undoBatch.hidden = lastBatch.size === 0;
         forgetResults();
-        say.textContent = t('quickedit_repeat_removed', { pages: offer.pages });
-        remove.remove();
-        onChange?.(edits.size);
+        changed();
         void render();
       });
       row.append(say, remove);
+      repeatRows.push({ offer, say, quote, remove });
       return row;
     }));
+    syncRepeats();
     repeatsBox.hidden = false;
+  }
+
+  // An offer shows what the edits say, however they were made: removed by
+  // Find & replace, it no longer offers "Remove all" (2026-11-27); undone,
+  // it offers it again.
+  function syncRepeats() {
+    for (const { offer, say, quote, remove } of repeatRows) {
+      const gone = offer.lines.every(line => edits.get(keyOf(line))?.text === '');
+      if (gone) say.textContent = t('quickedit_repeat_removed', { pages: offer.pages });
+      else say.replaceChildren(t('quickedit_repeat_found', { pages: offer.pages, total }), ' ', quote);
+      remove.hidden = gone;
+    }
+  }
+
+  function changed() {
+    syncRepeats();
+    onChange?.(edits.size);
   }
 
   prev.addEventListener('click', () => { if (pageIndex > 0) { active?.blur(); pageIndex--; void render(); } });

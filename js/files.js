@@ -616,11 +616,11 @@ function _updateMeta() {
   if (count > 0) {
     const countEl = id('fileCount');
     countEl.style.display = 'block';
-    let metaStr = `${count} file${count !== 1 ? 's' : ''}`;
+    let metaStr = tp(count, 'file_count_one', 'file_count_many');
     if (_currentTool === 'merge') {
       const scanned   = selectedFiles.filter(f => f._mergePageCount != null);
       const pageTotal = scanned.reduce((s, f) => s + (f._mergePageCount || 0), 0);
-      if (scanned.length > 0) metaStr += ` · ${pageTotal} page${pageTotal !== 1 ? 's' : ''}`;
+      if (scanned.length > 0) metaStr += ` · ${tp(pageTotal, 'page_count_one', 'page_count_many')}`;
     }
     metaStr += ` · ${fmtSize(total)}`;
     // Watermark removal and alternating the two halves of one scan accept one PDF.

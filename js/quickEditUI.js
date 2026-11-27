@@ -167,7 +167,7 @@ function _atlasSummaryHTML(atlasEri) {
 
 function _spinnerHTML(msg) {
   return `<div style="padding:24px 16px;text-align:center;color:var(--text3);font-size:14px;">
-    <div style="font-size:24px;margin-bottom:8px;">⏳</div><span data-qe-progress>${esc(msg)}</span>${_sourceOnlyButton()}</div>`;
+    <div style="font-size:24px;margin-bottom:8px;">⏳</div><span data-qe-progress>${esc(msg)}</span></div>`;
 }
 
 function _errorHTML(msg) {
@@ -316,7 +316,7 @@ async function _prepareAndRender(file, container) {
   _fileLabel = file.name;
   _container = container;
   _docContainer = null;
-  container.innerHTML = _spinnerHTML('Converting to an editable form…');
+  container.innerHTML = _spinnerHTML(t('quickedit_converting'));
   _bindTriggerEvents(container);
   const progress = container.querySelector('[data-qe-progress]');
 
@@ -338,7 +338,7 @@ async function _prepareAndRender(file, container) {
       mode: 'text',
       preserveNumericFields: true,
       onProgress:  (pct, label) => {
-        if (myGen === _generation) progress.textContent = label || 'Converting to an editable form…';
+        if (myGen === _generation) progress.textContent = label || t('quickedit_converting');
       },
       isCancelled: () => myGen !== _generation,
     });

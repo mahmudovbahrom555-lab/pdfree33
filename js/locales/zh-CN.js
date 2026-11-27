@@ -66,6 +66,10 @@ window.PDFREE_LOCALE = {
   invalid_img:     '请选择一张 JPG 或 PNG 图片',
   dupe_skip_one:   '已跳过 {n} 个重复文件',
   dupe_skip_many:  '已跳过 {n} 个重复文件',
+  file_count_one:  '{n} 个文件',
+  file_count_many: '{n} 个文件',
+  page_count_one:  '{n} 页',
+  page_count_many: '{n} 页',
   not_valid_pdf:   '⚠️ "{name}" 不是有效的 PDF 文件',
   aes_help:        '🔒 {ver} 加密的 PDF — 没有所有者密码无法处理。{restricted} 请先使用"解锁 PDF"移除密码（如果您知道密码），然后重新上传解锁后的文件。',
 
@@ -1435,6 +1439,7 @@ window.PDFREE_LOCALE = {
   quickedit_repeat_found:   '在 {total} 页中的 {pages} 页出现：',
   quickedit_repeat_remove:  '全部删除',
   quickedit_repeat_removed: '已从 {pages} 页删除。点击保存即可得到 PDF。',
+  quickedit_converting: '正在转换为可编辑格式…',
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'PDF 渲染器加载失败。请检查您的网络连接。',
   draw_read_file_failed:       '无法读取此文件。',

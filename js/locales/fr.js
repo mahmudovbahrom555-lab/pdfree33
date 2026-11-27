@@ -63,6 +63,10 @@ window.PDFREE_LOCALE = {
   invalid_img:     'Veuillez sélectionner une image JPG ou PNG',
   dupe_skip_one:   '{n} doublon ignoré',
   dupe_skip_many:  '{n} doublons ignorés',
+  file_count_one:  '{n} fichier',
+  file_count_many: '{n} fichiers',
+  page_count_one:  '{n} page',
+  page_count_many: '{n} pages',
   not_valid_pdf:   '⚠️ « {name} » n\'est pas un fichier PDF valide',
   aes_help:        "🔒 PDF chiffré {ver} — impossible à traiter sans le mot de passe propriétaire. {restricted} Utilisez Déverrouiller PDF pour supprimer le mot de passe (si vous le connaissez), puis redéposez ici le fichier déverrouillé.",
 
@@ -1388,6 +1392,7 @@ window.PDFREE_LOCALE = {
   quickedit_repeat_found:   'Sur {pages} pages sur {total} :',
   quickedit_repeat_remove:  'Supprimer partout',
   quickedit_repeat_removed: 'Supprimé sur {pages} pages. Appuyez sur Enregistrer pour obtenir le PDF.',
+  quickedit_converting: 'Conversion en format modifiable…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Échec du chargement du moteur de rendu PDF. Vérifiez votre connexion internet.',
   draw_read_file_failed:       'Impossible de lire le fichier.',
