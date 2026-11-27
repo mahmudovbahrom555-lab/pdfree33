@@ -40,6 +40,10 @@ export const EN = {
   invalid_img:     'Please select a JPG or PNG image',
   dupe_skip_one:   '{n} duplicate skipped',
   dupe_skip_many:  '{n} duplicates skipped',
+  file_count_one:  '{n} file',
+  file_count_many: '{n} files',
+  page_count_one:  '{n} page',
+  page_count_many: '{n} pages',
   not_valid_pdf:   '⚠️ "{name}" is not a valid PDF file',
   aes_help:        '🔒 {ver}-encrypted PDF — cannot be processed without the owner password. {restricted} Use Unlock PDF to remove the password (if you know it), then re-upload the unlocked file here.',
 
@@ -1412,6 +1416,7 @@ export const EN = {
   quickedit_repeat_found:        'On {pages} of {total} pages:',
   quickedit_repeat_remove:       'Remove everywhere',
   quickedit_repeat_removed:      'Removed from {pages} pages. Press Save to get the PDF.',
+  quickedit_converting: 'Converting to an editable form…',
 
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'Failed to load PDF renderer. Check your internet connection.',

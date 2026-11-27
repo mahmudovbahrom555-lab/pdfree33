@@ -65,6 +65,10 @@ window.PDFREE_LOCALE = {
   invalid_img:     'JPG 또는 PNG 이미지를 선택해 주세요',
   dupe_skip_one:   '중복 {n}개 건너뜀',
   dupe_skip_many:  '중복 {n}개 건너뜀',
+  file_count_one:  '파일 {n}개',
+  file_count_many: '파일 {n}개',
+  page_count_one:  '{n}페이지',
+  page_count_many: '{n}페이지',
   not_valid_pdf:   '⚠️ "{name}"은(는) 유효한 PDF 파일이 아닙니다',
   aes_help:        "🔒 {ver}로 암호화된 PDF — 소유자 비밀번호 없이 처리할 수 없습니다. {restricted} 비밀번호를 아는 경우 'PDF 잠금 해제'를 사용해 제거한 후, 잠금이 해제된 파일을 여기에 다시 업로드하세요.",
 
@@ -1388,6 +1392,7 @@ window.PDFREE_LOCALE = {
   quickedit_repeat_found:   '{total}페이지 중 {pages}페이지에 있는 줄:',
   quickedit_repeat_remove:  '모두 삭제',
   quickedit_repeat_removed: '{pages}페이지에서 삭제했습니다. 저장을 누르면 PDF가 만들어집니다.',
+  quickedit_converting: '편집 가능한 형태로 변환하는 중…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF 렌더러를 불러오지 못했습니다. 인터넷 연결을 확인하세요.',
   draw_read_file_failed:       '파일을 읽을 수 없습니다.',

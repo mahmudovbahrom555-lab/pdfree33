@@ -64,6 +64,10 @@ window.PDFREE_LOCALE = {
   invalid_img:     'Vui lòng chọn ảnh JPG hoặc PNG',
   dupe_skip_one:   'Bỏ qua {n} bản sao',
   dupe_skip_many:  'Bỏ qua {n} bản sao',
+  file_count_one:  '{n} tệp',
+  file_count_many: '{n} tệp',
+  page_count_one:  '{n} trang',
+  page_count_many: '{n} trang',
   not_valid_pdf:   '⚠️ „{name}" không phải file PDF hợp lệ',
   aes_help:        '🔒 PDF được mã hóa {ver} — không thể xử lý mà không có mật khẩu chủ sở hữu. {restricted} Sử dụng Mở Khóa PDF để xóa mật khẩu (nếu bạn biết), sau đó tải lại file đã mở khóa ở đây.',
 
@@ -1387,6 +1391,7 @@ window.PDFREE_LOCALE = {
   quickedit_repeat_found:   'Trên {pages} / {total} trang:',
   quickedit_repeat_remove:  'Xóa ở mọi trang',
   quickedit_repeat_removed: 'Đã xóa trên {pages} trang. Nhấn Lưu để nhận PDF.',
+  quickedit_converting: 'Đang chuyển sang dạng có thể chỉnh sửa…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'Không thể tải trình kết xuất PDF. Kiểm tra kết nối internet của bạn.',
   draw_read_file_failed:       'Không thể đọc tệp.',

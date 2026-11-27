@@ -63,6 +63,10 @@ window.PDFREE_LOCALE = {
   invalid_img:     'Bir JPG veya PNG resmi seçin',
   dupe_skip_one:   '{n} kopya atlandı',
   dupe_skip_many:  '{n} kopya atlandı',
+  file_count_one:  '{n} dosya',
+  file_count_many: '{n} dosya',
+  page_count_one:  '{n} sayfa',
+  page_count_many: '{n} sayfa',
   not_valid_pdf:   '⚠️ "{name}" geçerli bir PDF dosyası değil',
   aes_help:        '🔒 PDF {ver} tarafından şifrelenmiş — sahip parolası olmadan işlenemiyor. {restricted} Şifreyi kaldırmak için (biliyorsanız) PDF Kilidi Aç aracını kullanın, ardından kilidi açılmış dosyayı buraya tekrar yükleyin.',
 
@@ -1386,6 +1390,7 @@ window.PDFREE_LOCALE = {
   quickedit_repeat_found:   '{total} sayfanın {pages} tanesinde:',
   quickedit_repeat_remove:  'Her yerden kaldır',
   quickedit_repeat_removed: '{pages} sayfadan kaldırıldı. PDF’i almak için Kaydet’e basın.',
+  quickedit_converting: 'Düzenlenebilir biçime dönüştürülüyor…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF işleyicisi yüklenemedi. İnternet bağlantınızı kontrol edin.',
   draw_read_file_failed:       'Dosya okunamadı.',

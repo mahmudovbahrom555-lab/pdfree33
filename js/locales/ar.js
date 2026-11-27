@@ -68,6 +68,10 @@ window.PDFREE_LOCALE = {
   invalid_img:     'يرجى اختيار صورة بصيغة JPG أو PNG',
   dupe_skip_one:   'تم تخطي {n} ملف مكرر',
   dupe_skip_many:  'تم تخطي {n} ملفات مكررة',
+  file_count_one:  'ملف واحد',
+  file_count_many: 'عدد الملفات: {n}',
+  page_count_one:  'صفحة واحدة',
+  page_count_many: 'عدد الصفحات: {n}',
   not_valid_pdf:   '⚠️ "{name}" ليس ملف PDF صالحًا',
   aes_help:        '🔒 ملف PDF مشفر بمعيار {ver} — لا يمكن معالجته بدون كلمة مرور المالك. {restricted} استخدم أداة "فتح قفل PDF" لإزالة كلمة المرور (إذا كنت تعرفها)، ثم أعد رفع الملف بعد فتحه هنا.',
 
@@ -1437,6 +1441,7 @@ window.PDFREE_LOCALE = {
   quickedit_repeat_found:   'في {pages} من {total} صفحة:',
   quickedit_repeat_remove:  'إزالة من كل الصفحات',
   quickedit_repeat_removed: 'أُزيل من {pages} صفحة. اضغط حفظ للحصول على ملف PDF.',
+  quickedit_converting: 'جارٍ التحويل إلى صيغة قابلة للتحرير…',
   // ── drawUI.js + drawPointer.js ──────────────────────────────────
   draw_load_renderer_failed:   'فشل تحميل عارض PDF. تحقق من اتصالك بالإنترنت.',
   draw_read_file_failed:       'تعذّرت قراءة الملف.',

@@ -64,6 +64,10 @@ window.PDFREE_LOCALE = {
   invalid_img:     'Bitte ein JPG- oder PNG-Bild auswählen',
   dupe_skip_one:   '{n} Duplikat übersprungen',
   dupe_skip_many:  '{n} Duplikate übersprungen',
+  file_count_one:  '{n} Datei',
+  file_count_many: '{n} Dateien',
+  page_count_one:  '{n} Seite',
+  page_count_many: '{n} Seiten',
   not_valid_pdf:   '⚠️ „{name}" ist keine gültige PDF-Datei',
   aes_help:        '🔒 {ver}-verschlüsseltes PDF — ohne Eigentümer-Passwort nicht verarbeitbar. {restricted} Verwende PDF entsperren, um das Passwort zu entfernen (falls du es kennst), und lade die entsperrte Datei dann hier erneut hoch.',
 
@@ -1389,6 +1393,7 @@ window.PDFREE_LOCALE = {
   quickedit_repeat_found:   'Auf {pages} von {total} Seiten:',
   quickedit_repeat_remove:  'Überall entfernen',
   quickedit_repeat_removed: 'Auf {pages} Seiten entfernt. Tippe auf Speichern, um das PDF zu erhalten.',
+  quickedit_converting: 'Wird in eine bearbeitbare Form umgewandelt…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDF-Renderer konnte nicht geladen werden. Überprüfe deine Internetverbindung.',
   draw_read_file_failed:       'Datei konnte nicht gelesen werden.',

@@ -66,6 +66,10 @@ window.PDFREE_LOCALE = {
   invalid_img:     'JPGまたはPNG画像を選択してください',
   dupe_skip_one:   '重複ファイルを{n}件スキップしました',
   dupe_skip_many:  '重複ファイルを{n}件スキップしました',
+  file_count_one:  '{n} 個のファイル',
+  file_count_many: '{n} 個のファイル',
+  page_count_one:  '{n} ページ',
+  page_count_many: '{n} ページ',
   not_valid_pdf:   '⚠️「{name}」は有効なPDFファイルではありません',
   aes_help:        '🔒 {ver}で暗号化されたPDFです — 所有者パスワードがないと処理できません。{restricted} パスワードがわかる場合は「PDFのロック解除」で削除し、解除後のファイルをここに再度アップロードしてください。',
 
@@ -1389,6 +1393,7 @@ window.PDFREE_LOCALE = {
   quickedit_repeat_found:   '{total} ページ中 {pages} ページにある行:',
   quickedit_repeat_remove:  'すべて削除',
   quickedit_repeat_removed: '{pages} ページから削除しました。保存を押すと PDF ができます。',
+  quickedit_converting: '編集可能な形式に変換しています…',
   // ── drawUI.js + drawPointer.js ──────────────────────────
   draw_load_renderer_failed:   'PDFレンダラーの読み込みに失敗しました。インターネット接続を確認してください。',
   draw_read_file_failed:       'ファイルを読み込めませんでした。',
