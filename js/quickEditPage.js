@@ -40,11 +40,17 @@ export function createPageEditor(stage, original, { onChange } = {}) {
   const root = document.createElement('div');
   root.className = 'qe-page-editor';
   root.innerHTML = `
-    <form class="qe-find" data-find>
-      <input type="text" data-find-text aria-label="${t('quickedit_find')}" placeholder="${t('quickedit_find')}" enterkeyhint="search">
-      <input type="text" data-replace-text aria-label="${t('quickedit_replace_with')}" placeholder="${t('quickedit_replace_with')}">
-      <button type="submit" class="qe-copies__button">${t('quickedit_find_btn')}</button>
-      <button type="button" class="qe-copies__button" data-replace-all disabled>${t('quickedit_replace_all')}</button>
+    <form class="qe-find" data-find aria-labelledby="qeFindTitle">
+      <h2 id="qeFindTitle" class="qe-find__title" tabindex="-1">${t('quickedit_find_title')}</h2>
+      <div class="qe-find__fields">
+        <label>${t('quickedit_find')}<input type="text" data-find-text enterkeyhint="search" dir="auto"></label>
+        <label>${t('quickedit_replace_with')}<input type="text" data-replace-text dir="auto"></label>
+      </div>
+      <div class="qe-find__actions">
+        <button type="submit" class="qe-copies__button">${t('quickedit_find_btn')}</button>
+        <button type="button" class="qe-copies__button qe-copies__button--primary" data-replace-all disabled>${t('quickedit_replace_all')}</button>
+        <button type="button" class="qe-copies__button" data-undo-batch hidden>${t('quickedit_undo_batch')}</button>
+      </div>
       <p class="qe-find__status" data-find-status role="status"></p>
     </form>
     <div class="qe-repeats" data-repeats hidden></div>
@@ -79,6 +85,7 @@ export function createPageEditor(stage, original, { onChange } = {}) {
     active = null;
     span.contentEditable = 'false';
     span.classList.remove('qe-page-line--active');
+    const before = edits.get(entry.key)?.text;
     const text = plain(span.textContent).replace(/\s+/g, ' ').trim();
     if (!text || text === plain(entry.line.text).replace(/\s+/g, ' ').trim()) {
       edits.delete(entry.key);
@@ -88,6 +95,11 @@ export function createPageEditor(stage, original, { onChange } = {}) {
       edits.set(entry.key, { line: entry.line, text });
       span.textContent = text;
       span.classList.add('qe-page-line--edited');
+    }
+    if (edits.get(entry.key)?.text !== before) {
+      forgetResults();
+      lastBatch.delete(entry.key);
+      undoBatch.hidden = lastBatch.size === 0;
     }
     onChange?.(edits.size);
   }
@@ -167,6 +179,7 @@ export function createPageEditor(stage, original, { onChange } = {}) {
       // a removed line (Find, nothing to replace with) shows struck through
       span.textContent = edits.get(key)?.text || line.text;
       if (edits.has(key)) span.classList.add(edits.get(key).text ? 'qe-page-line--edited' : 'qe-page-line--removed');
+      if (matchedLines.has(key)) span.classList.add('qe-page-line--match');
       span.style.left = `${line.x / viewport.width * 100}%`;
       span.style.top = `${(viewport.height - line.y - line.size) / viewport.height * 100}%`;
       span.style.minWidth = `${(line.right - line.x) / viewport.width * 100}%`;
@@ -193,8 +206,31 @@ export function createPageEditor(stage, original, { onChange } = {}) {
   const findText = root.querySelector('[data-find-text]');
   const replaceText = root.querySelector('[data-replace-text]');
   const replaceAll = root.querySelector('[data-replace-all]');
+  const undoBatch = root.querySelector('[data-undo-batch]');
   const findStatus = root.querySelector('[data-find-status]');
-  let found = [], search = 0;
+  let found = [], search = 0, matchCount = 0;
+  let matchedLines = new Set();
+  const lastBatch = new Map();
+
+  function updateApplyButton() {
+    replaceAll.disabled = !matchCount;
+    replaceAll.textContent = matchCount
+      ? t(replaceText.value.trim() ? 'quickedit_replace_matches' : 'quickedit_remove_matches', { n: matchCount })
+      : t('quickedit_replace_all');
+  }
+
+  function forgetResults() {
+    search++;
+    found = [];
+    matchCount = 0;
+    matchedLines.clear();
+    view.querySelectorAll('.qe-page-line--match').forEach(span => span.classList.remove('qe-page-line--match'));
+    findStatus.textContent = '';
+    updateApplyButton();
+  }
+
+  findText.addEventListener('input', forgetResults);
+  replaceText.addEventListener('input', updateApplyButton);
 
   // Compared after NFC + lower case, per character so a match maps back to
   // the line: Chinese PDFs often map a glyph to a CJK compatibility
@@ -225,49 +261,85 @@ export function createPageEditor(stage, original, { onChange } = {}) {
 
   findForm.addEventListener('submit', async event => {
     event.preventDefault();
+    active?.blur();
     const query = findText.value.replace(/\s+/g, ' ').trim();
-    const mine = ++search;
-    found = [];
-    replaceAll.disabled = true;
-    if (!query) { findStatus.textContent = ''; return; }
+    forgetResults();
+    const mine = search;
+    if (!query) { findText.focus(); return; }
+    const matches = [];
     let count = 0;
     const pages = new Set();
-    for (let index = 0; index < total; index++) {
-      if (mine !== search || !root.isConnected) return;
-      findStatus.textContent = t('quickedit_searching', { n: index + 1, total });
-      const { lines } = await readPage(index);
-      for (const line of lines) {
-        const at = occurrences(line.text, query);
-        if (!at.length) continue;
-        found.push({ line, at });
-        count += at.length;
-        pages.add(index);
+    try {
+      for (let index = 0; index < total; index++) {
+        if (mine !== search || !root.isConnected) return;
+        if (index % 10 === 0) findStatus.textContent = t('quickedit_searching', { n: index + 1, total });
+        const { lines } = await readPage(index);
+        for (const line of lines) {
+          const text = edits.get(keyOf(line))?.text ?? line.text;
+          const at = occurrences(text, query);
+          if (!at.length) continue;
+          matches.push({ line, text, at });
+          count += at.length;
+          pages.add(index);
+        }
       }
+    } catch {
+      if (mine === search && root.isConnected) findStatus.textContent = t('quickedit_find_failed');
+      return;
     }
-    if (mine !== search) return;
+    if (mine !== search || !root.isConnected) return;
+    found = matches;
+    matchCount = count;
+    matchedLines = new Set(found.map(({ line }) => keyOf(line)));
     findStatus.textContent = count ? t('quickedit_found', { n: count, pages: pages.size }) : t('quickedit_found_none');
-    replaceAll.disabled = !count;
+    updateApplyButton();
+    if (count) {
+      pageIndex = found[0].line.page;
+      void render().catch(() => {});
+    }
   });
 
   replaceAll.addEventListener('click', () => {
     active?.blur();
-    const replacement = replaceText.value;
-    let lines = 0;
-    for (const { line, at } of found) {
-      let text = line.text;
+    if (!found.length) return;
+    const replacement = replaceText.value.trim() ? replaceText.value : '';
+    const undo = new Map();
+    for (const { line, text: current, at } of found) {
+      let text = current;
       for (const [start, end] of [...at].reverse()) text = text.slice(0, start) + replacement + text.slice(end);
       // NFC: a compatibility ideograph left in the line is written as the
       // ordinary one, which the replacement font has
       text = plain(text).replace(/\s+/g, ' ').trim();
-      if (text === plain(line.text).replace(/\s+/g, ' ').trim()) continue;
-      edits.set(keyOf(line), { line, text });
-      lines++;
+      if (text === plain(current).replace(/\s+/g, ' ').trim()) continue;
+      const key = keyOf(line);
+      undo.set(key, edits.get(key));
+      if (text === plain(line.text).replace(/\s+/g, ' ').trim()) edits.delete(key);
+      else edits.set(key, { line, text });
     }
-    found = [];
-    replaceAll.disabled = true;
-    findStatus.textContent = t('quickedit_replaced', { n: lines });
+    if (undo.size) {
+      lastBatch.clear();
+      for (const [key, before] of undo) lastBatch.set(key, before);
+      undoBatch.hidden = false;
+    }
+    forgetResults();
+    findStatus.textContent = t('quickedit_replaced', { n: undo.size });
     onChange?.(edits.size);
-    void render();
+    void render().catch(() => {});
+  });
+
+  undoBatch.addEventListener('click', () => {
+    active?.blur();
+    for (const [key, before] of lastBatch) {
+      if (before) edits.set(key, before);
+      else edits.delete(key);
+    }
+    lastBatch.clear();
+    undoBatch.hidden = true;
+    forgetResults();
+    findStatus.textContent = t('quickedit_batch_undone');
+    onChange?.(edits.size);
+    findForm.querySelector('[type="submit"]').focus();
+    void render().catch(() => {});
   });
 
   // ── Lines repeated on most pages, offered for removal (2026-11-13) ──
@@ -333,7 +405,13 @@ export function createPageEditor(stage, original, { onChange } = {}) {
       remove.textContent = t('quickedit_repeat_remove');
       remove.addEventListener('click', () => {
         active?.blur();
-        for (const line of offer.lines) edits.set(keyOf(line), { line, text: '' });
+        for (const line of offer.lines) {
+          const key = keyOf(line);
+          edits.set(key, { line, text: '' });
+          lastBatch.delete(key);
+        }
+        undoBatch.hidden = lastBatch.size === 0;
+        forgetResults();
         say.textContent = t('quickedit_repeat_removed', { pages: offer.pages });
         remove.remove();
         onChange?.(edits.size);

@@ -46,7 +46,7 @@ import { trackToolStart, trackToolSuccess, trackCompressTarget,
 import { confirmSignedCopy } from './signedConfirm.js';
 import { buildIndex, search, hasCjk,
          minQueryLength }                    from './search.js';
-import { COPY_MODE, COPY_MODE_QUERY, quickEditExamples } from './quickEditUI.js';
+import { COPY_MODE, COPY_MODE_QUERY, quickEditExamples, selectQuickEditMode } from './quickEditUI.js';
 import { loadPdfLib }                              from './lazyLibs.js';
 import { forgetStoredSignals, recordDownload,
          checkAndRecordConversion,
@@ -1836,18 +1836,10 @@ function initQuickEditEntry() {
   if (!entry) return;
   const buttons = [...entry.querySelectorAll('[data-qe-mode]')];
   const example = id('qeTryExample');
-  const select = (mode, updateUrl = false) => {
-    buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.qeMode === mode)));
-    if (!updateUrl) return;
-    const url = new URL(location.href);
-    if (mode === COPY_MODE) url.searchParams.set('mode', COPY_MODE);
-    else url.searchParams.delete('mode');
-    history.replaceState(history.state, '', url);
-  };
-  select(new URLSearchParams(location.search).get('mode') === COPY_MODE ? COPY_MODE : 'edit');
+  selectQuickEditMode(new URLSearchParams(location.search).get('mode') === COPY_MODE ? COPY_MODE : 'edit');
   buttons.forEach(button => button.addEventListener('click', () => {
     if (button.getAttribute('aria-pressed') === 'true') return;
-    select(button.dataset.qeMode, true);
+    selectQuickEditMode(button.dataset.qeMode, true);
     if (selectedFiles.length) initToolOptions('quickEdit', [...selectedFiles]);
   }));
   example.addEventListener('click', async () => {
@@ -1868,7 +1860,7 @@ function initQuickEditEntry() {
       if (selectedFiles.length) return;
       const file = new File([bytes], 'sample-invitation.pdf', { type: 'application/pdf' });
       quickEditExamples.set(file, lang.startsWith('zh') ? '王晓明\n陈小雨' : lang === 'ru' ? 'Анна Иванова\nИван Петров' : 'Alex Morgan\nJamie Chen');
-      select(COPY_MODE, true);
+      selectQuickEditMode(COPY_MODE, true);
       addFiles([file]);
     } catch {
       showToast(lang.startsWith('zh') ? '无法打开示例，请重试。' : lang === 'ru' ? 'Не удалось открыть пример. Попробуйте ещё раз.' : 'Could not open the example. Please try again.');

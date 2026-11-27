@@ -1013,6 +1013,85 @@ await test('Find & replace: a line on every page removed, a word replaced, nothi
   }
 });
 
+await test('Chinese mobile: leave personalized copies, find a footer, undo, and save only the intended changes', async () => {
+  const page = await browser.newPage({ viewport: { width: 320, height: 664 }, isMobile: true, hasTouch: true });
+  const getDownload = await captureDownload(page);
+  try {
+    await page.goto(`${BASE_URL}/zh/kuaisu-bianji-pdf/?mode=personalized-copies`);
+    const bytes = await page.evaluate(async () => {
+      const { loadPdfLib, loadFontkit } = await import('/js/lazyLibs.js');
+      await Promise.all([loadPdfLib(), loadFontkit()]);
+      const doc = await window.PDFLib.PDFDocument.create();
+      doc.registerFontkit(window.fontkit);
+      const fontBytes = await (await fetch('/js/vendor/noto/notosanssc-v40.ttf')).arrayBuffer();
+      const font = await doc.embedFont(fontBytes, { subset: true });
+      doc.addPage([420, 595]); // a cover without extractable text
+      for (let i = 1; i <= 3; i++) {
+        const sheet = doc.addPage([420, 595]);
+        sheet.drawText(`正文保留 ${i}`, { x: 40, y: 520, size: 14, font });
+        sheet.drawText('扫码加入读书群', { x: 40, y: 35, size: 9, font });
+      }
+      return Array.from(await doc.save());
+    });
+    await page.setInputFiles('#fileInput', { name: '2026-11《中文电子书测试文件——页脚查找与替换》.pdf', mimeType: 'application/pdf', buffer: Buffer.from(bytes) });
+    const switchMode = page.getByRole('button', { name: '在此 PDF 中查找和替换' });
+    await switchMode.waitFor();
+    const bounds = await switchMode.evaluate(async button => {
+      const card = button.closest('.qe-modal__card');
+      await Promise.allSettled(card.getAnimations().map(animation => animation.finished));
+      const { top, bottom } = button.getBoundingClientRect();
+      return { top, bottom, height: button.offsetHeight, viewportHeight: window.innerHeight };
+    });
+    if (bounds.top < 0 || bounds.bottom > bounds.viewportHeight || bounds.height < 44) {
+      throw new Error(`Find and Replace must fit the first screen with a 44 px tap target: ${JSON.stringify(bounds)}`);
+    }
+    await page.locator('#qeCopies textarea').fill('王小明');
+    await switchMode.tap();
+    await page.locator('#qeLeaveCopiesCancel').tap();
+    expect(await page.locator('#qeCopies textarea').inputValue()).toBe('王小明');
+    await switchMode.tap();
+    await page.locator('#qeLeaveCopiesGo').tap();
+    await page.getByRole('heading', { name: '在此 PDF 中查找和替换' }).waitFor();
+    expect(new URL(page.url()).searchParams.has('mode')).toBeFalsy();
+    expect(await page.locator('[data-qe-mode=edit]').getAttribute('aria-pressed')).toBe('true');
+
+    const search = page.getByRole('textbox', { name: '查找', exact: true });
+    const replace = page.getByRole('textbox', { name: '替换为（留空 = 删除）' });
+    const find = page.getByRole('button', { name: '查找', exact: true });
+    const apply = page.locator('[data-replace-all]');
+    await search.fill('扫码加入读书群');
+    await find.tap();
+    await page.getByRole('button', { name: '删除匹配项（3 处）' }).waitFor();
+    await page.locator('.qe-page-line--match').waitFor();
+    expect(await page.locator('[data-page-label]').innerText()).toBe('第 2 / 4 页');
+    await search.fill('其他文字');
+    expect(await apply.isDisabled()).toBeTruthy();
+    await search.fill('扫码加入读书群');
+    await find.tap();
+    await replace.fill('加入群聊');
+    await page.getByRole('button', { name: '替换匹配项（3 处）' }).tap();
+    await page.locator('.qe-page-line--edited').filter({ hasText: '加入群聊' }).waitFor();
+    await page.getByRole('button', { name: '撤销上次批量修改' }).tap();
+    await page.locator('.qe-page-line').filter({ hasText: '扫码加入读书群' }).waitFor();
+    await replace.fill('');
+    await find.tap();
+    await page.getByRole('button', { name: '删除匹配项（3 处）' }).tap();
+    await page.locator('.qe-page-line--removed').waitFor();
+    await find.tap();
+    await page.locator('[data-find-status]').filter({ hasText: /^找到 0 处/ }).waitFor();
+    expect(await apply.isDisabled()).toBeTruthy();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth === 320 && innerWidth === 320)).toBeTruthy();
+    await page.locator('#qeModalSaveBtn').tap();
+    await page.waitForSelector('#successCard', { timeout: 30000 });
+    for (let i = 0; i < 50 && !getDownload(); i++) await page.waitForTimeout(100);
+    expect(!!getDownload()).toBeTruthy();
+    const pages = await pagesText(page, getDownload());
+    expect(pages.map(s => s.replace(/\s/g, '')).join('|')).toBe('|正文保留1|正文保留2|正文保留3');
+  } finally {
+    await page.close();
+  }
+});
+
 await test('repeated lines: the promo on every page is offered first and removed everywhere with one press', async () => {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   const getDownload = await captureDownload(page);
