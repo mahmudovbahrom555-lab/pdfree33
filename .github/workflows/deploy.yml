@@ -428,6 +428,13 @@ jobs:
         # tests/e2e/quickEditSkeleton.e2e.mjs's own header comment.
         run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:quickedit-skeleton
 
+      - name: E2E — the address a homepage gives a tool (no 404, page language, logo home)
+        # 2026-11-28: a PDF chosen on the Quick Edit search result went to
+        # /quickEdit-pdf/ (404), Read PDF showed /read-pdf/ (404 on reload),
+        # tools opened from /zh/ showed English addresses, the logo kept the
+        # tool's address. See tests/e2e/tool-urls.e2e.mjs.
+        run: PDFREE_BASE_URL=http://localhost:8934 npm run test:e2e:tool-urls
+
       - name: E2E — Pages per Sheet (N-up, invoices on A4, annotations kept)
         # Golden path, the invoices mode with several files, the zh page, the
         # homepage search — and filled-in form values / notes drawn onto the

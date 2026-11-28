@@ -61,6 +61,7 @@ const TOOL_SLUGS = {
   jpg2pdf:  '/jpg2pdf/',   pdf2jpg:  '/pdf2jpg/',
   scanDocument: '/scan-document/',
   glossary: '/glossary-pdf/',
+  quickEdit: '/quick-edit-pdf/',
   merge:    '/merge-pdf/',             split:    '/split-pdf/',
   compress: '/compress-pdf/',          extract: '/extract-pdf/',
   watermark:'/watermark-pdf/', pagenum: '/pagenum-pdf/',
@@ -99,10 +100,23 @@ const _PATH_TO_TOOL = Object.fromEntries(
 // in every tool page's nav, and homepages carry them in nav and tool cards.
 // Without this a cross-sell from /ru/… landed on the English page, in
 // English (getLang() reads the page's lang).
+// A tool with no page of its own (Read PDF) opens on its homepage by
+// ?tool= — "/read-pdf/" made from its key was a 404 (2026-11-28).
 function _toolHref(tool) {
-  const link = document.querySelector(`a.nav-link[data-tool="${tool}"], .tools-grid a[data-tool="${tool}"]`);
-  return link ? new URL(link.getAttribute('href'), location.href).pathname : (TOOL_SLUGS[tool] || `/${tool}-pdf/`);
+  const link = document.querySelector(`a.nav-link[data-tool="${tool}"], .tools-grid a[data-tool="${tool}"], a[data-tool="${tool}"][href^="/"]`);
+  if (link) return new URL(link.getAttribute('href'), location.href).pathname;
+  return TOOL_SLUGS[tool] || `${_HOME_PATH}?tool=${encodeURIComponent(tool)}`;
 }
+
+// The homepage this page belongs to ("/zh/" for the Chinese one): where the
+// logo goes back to. It went "home" to the open tool's address before, so a
+// reload reopened the tool — on its English page (2026-11-28).
+const _HOME_PATH = (() => {
+  if (typeof document === 'undefined') return '/';
+  if (document.getElementById('toolSearch')) return location.pathname;
+  const logo = document.getElementById('logo');
+  return logo?.tagName === 'A' ? new URL(logo.getAttribute('href'), location.href).pathname : '/';
+})();
 
 function _toolFromPath(pathname) {
   const p = pathname.endsWith('/') ? pathname : pathname + '/';
@@ -250,7 +264,7 @@ async function _doShareTool(tool) {
 function goHome() {
   if (isProcessing) { showToast(t('wait_processing')); return; }
   showHomePage();                                    // visual feedback — immediate
-  history.pushState({}, 'PDFree', location.pathname);
+  history.pushState({}, 'PDFree', _HOME_PATH);
   document.title = t('home_title');
   requestAnimationFrame(() => hideAllToolOptions()); // heavy DOM — after paint
 }
@@ -279,7 +293,7 @@ function showTool(tool, pushHistory = true, preFiles = null) {
   showToolPage();
   window.scrollTo({ top: 0, behavior: 'instant' }); // scroll before first paint
   if (pushHistory) {
-    history.pushState({ tool }, lt.title, TOOL_SLUGS[tool] || `/${tool}-pdf/`);
+    history.pushState({ tool }, lt.title, _toolHref(tool));   // the page's own language
   }
 
   // Heavy DOM work deferred to after first paint — keeps INP under 200ms.
@@ -309,7 +323,9 @@ function _openToolWithFiles(key, files) {
   const copies = key === COPY_MODE;
   if (copies) key = 'quickEdit';
   if (TOOLS[key]?.inline === false && (files[0] || copies)) {
-    const href = copies ? _toolHref(key) + COPY_MODE_QUERY : (TOOL_SLUGS[key] || `/${key}-pdf/`);
+    // the page's own link: /zh/kuaisu-bianji-pdf/ on the Chinese homepage, not
+    // "/quickEdit-pdf/" made from the tool's key (a 404, 2026-11-28)
+    const href = _toolHref(key) + (copies ? COPY_MODE_QUERY : '');
     if (!files[0]) { location.href = href; return; }
     saveHandoff(files[0], files[0].name, currentTool, href)
       .catch(() => {})
