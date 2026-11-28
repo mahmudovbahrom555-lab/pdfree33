@@ -48,12 +48,31 @@ try {
       if (!want.test(name)) throw new Error(`got "${name}"`);
     });
   }
-  await test('"cl" (still typing) shows nothing and sends no Search Miss; "zzqx" does', async () => {
+  // one Search Miss per request, when the person leaves the box (or stops for 3 s), not per letter
+  const missesAfterBlur = async () => {
+    await en.page.evaluate(() => document.querySelector('#toolSearch').blur());
+    await en.page.waitForTimeout(300);
+    return en.events.filter(e => e.event === 'Search Miss').map(e => e.props.query);
+  };
+  await test('"cl" (still typing) shows nothing and sends no Search Miss; "zzqx" does, once, as it stands at the end', async () => {
     en.events.length = 0;
+    await en.page.focus('#toolSearch');
     if (await en.find('cl')) throw new Error('"cl" found a tool');
+    await en.find('zzq');
     await en.find('zzqx');
-    const misses = en.events.filter(e => e.event === 'Search Miss').map(e => e.props.query);
+    const misses = await missesAfterBlur();
     if (misses.join() !== 'zzqx') throw new Error(`misses sent: ${JSON.stringify(misses)}`);
+  });
+  await test('a file name typed into search is sent as "(private)", not its text', async () => {
+    en.events.length = 0;
+    await en.page.focus('#toolSearch');
+    await en.find('отчёт_Иванов.pdf');
+    const misses = await missesAfterBlur();
+    if (misses.join() !== '(private)') throw new Error(`misses sent: ${JSON.stringify(misses)}`);
+  });
+  await test('page numbers in a request: "拆分52到110" finds Split', async () => {
+    const name = await en.find('拆分52到110');
+    if (!/Split/.test(name)) throw new Error(`got "${name}"`);
   });
   await test('no page errors', async () => { if (en.errors.length) throw new Error(en.errors.join('; ')); });
 

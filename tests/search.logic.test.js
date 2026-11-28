@@ -29,7 +29,7 @@ import vm from 'vm';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT      = path.join(__dirname, '..');
 
-const { buildIndex, search } = await import('../js/search.js');
+const { buildIndex, search, missText } = await import('../js/search.js');
 const { TOOLS } = await import('../js/config.js');
 
 const index = buildIndex(TOOLS, 'en');
@@ -636,6 +636,51 @@ test('Chinese requests: insert blank page, combine, reorder, add shapes', () => 
   expect(topKey('调整顺序', idx.zh)).toBe('organize');
   expect(topKey('添加形状', idx.zh)).toBe('draw-pdf');
 });
+
+// ── Real Search Misses, 30 days to 2026-11-28 ───────────────
+// Requests for tools we have that found nothing: page numbers in the request,
+// a sentence, a missing synonym. Each now finds the tool asked for.
+console.log('\nReal misses (2026-11-28):');
+{
+  const byLang = {};
+  const idx = lang => (byLang[lang] ??= lang === 'en' ? index : buildIndex(TOOLS, lang, loadLocaleSearchTags(lang)));
+  for (const [lang, q, want] of [
+    ['zh-CN', '拆分52到110', 'split'], ['zh-CN', '提取第3页第5页第7页', 'extract'], ['zh-CN', '分隔', 'split'],
+    ['zh-CN', '切割', 'split'], ['zh-CN', '截页', 'extract'], ['fr', 'fractionner pdf', 'split'],
+    ['en', 'make words clear and background white', 'cleanScan'], ['en', 'repair and brighten', 'cleanScan'],
+    ['en', 'contrast low', 'cleanScan'], ['en', 'background shadow kam karna', 'cleanScan'], ['zh-CN', '清除背景', 'cleanScan'],
+    ['zh-CN', '去除黑底', 'cleanScan'], ['zh-CN', '加深', 'cleanScan'], ['pt', 'Limpar imagem', 'cleanScan'],
+    ['en', 'edit the file', 'quickEdit'], ['es', 'editar pdf y descargar', 'quickEdit'], ['en', 'modifier', 'quickEdit'],
+    ['en', 'merge them all together', 'merge'], ['en', 'date and signature', 'fill'], ['en', 'add fillable forms', 'formFields'],
+    ['en', 'add editable box', 'formFields'], ['en', '4up', 'nup'], ['zh-CN', '电纸书', 'ereader'], ['zh-CN', '文字选择', 'ocr'],
+    ['zh-CN', '分辨率改成300dpi', 'pdf2jpg'], ['en', 'high resolution', 'pdf2jpg'], ['zh-CN', '仅办理健康证使用', 'watermark'],
+    ['zh-CN', 'qushuiyin', 'redact'],
+    // 90 days to 2026-11-28
+    ['en', 'pdf to power point', 'pdf2ppt'], ['ja', 'PDFをｐｐｔｘに変換', 'pdf2ppt'], ['en', 'put multiple pages on one page', 'nup'],
+    ['en', 'combine every two pages in one page', 'nup'], ['fr', 'modifier les champs remplissables', 'formFields'],
+    ['ru', 'Убрать серый цвет', 'cleanScan'], ['en', 'Reduce the MB', 'compress'], ['en', '300kb', 'compress'],
+    ['en', 'duplicate page', 'organize'], ['en', 'whiteout', 'redact'], ['en', 'editing text', 'quickEdit'],
+    ['en', 'make the form editable', 'formFields'], ['zh-CN', '删除1-9页', 'organize'], ['fr', "ameliorer l'impression", 'cleanScan'],
+  ]) {
+    test(`[${lang}] "${q}" → ${want}`, () => expect(topKey(q, idx(lang))).toBe(want));
+  }
+  test('a request found directly still ranks above one found word by word', () => {
+    const results = search('merge them all together', index);
+    expect(results[0].score < 50).toBe(true);
+    expect(search('merge', index)[0].score).toBe(100);
+  });
+  test('a word still being typed is not searched word by word', () => {
+    expect(search('zzqx', index).length).toBe(0);
+  });
+}
+
+console.log('\nWhat a Search Miss may carry:');
+test('an ordinary request is sent as typed', () => expect(missText(' pdf to epub ')).toBe('pdf to epub'));
+test('a file name is not', () => expect(missText('教育部学籍在线验证报告_周莹.pdf')).toBe(null));
+test('text over 30 characters is not', () => expect(missText('МІНІСТЕРСТВО ОСВІТИ І НАУКИ УКРАЇНИ  ВІДОКРЕМЛЕНИЙ')).toBe(null));
+test('a number of 6+ digits (an ID) is not', () => expect(missText('passport 4512887')).toBe(null));
+test('an e-mail address is not', () => expect(missText('ivan@mail.ru')).toBe(null));
+test('page numbers are kept', () => expect(missText('拆分52到110')).toBe('拆分52到110'));
 
 // ── Summary ───────────────────────────────────────────────────
 console.log(`\n${passed} passed, ${failed} failed`);
