@@ -181,11 +181,30 @@ export function minQueryLength(q) {
 const NO_FUZZY_RE = /\d/;
 
 export function search(query, index) {
-  const q = foldDiacritics(query.toLowerCase().trim());
+  // NFKC: full-width letters a Japanese keyboard types ("ｐｐｔｘ") read as "pptx"
+  const q = foldDiacritics(query.normalize('NFKC').toLowerCase().trim());
   // Below the minimum only a whole name or tag counts: "md" is PDF to
   // Markdown, but "pd" or "cl" (a word still being typed) finds nothing.
   const short = q.length < minQueryLength(q);
   if (short && q.length < 2) return [];
+  const found = _searchVariants(q, index, short);
+  if (found.length || short) return found;
+  // Nothing found (Search Miss, 30 days to 2026-11-28): people write what they
+  // want done. Page numbers in the request — "拆分52到110" (split 52 to 110),
+  // "提取第3页第5页第7页" — hid the tool's name; a sentence — "edit the file",
+  // "merge them all together" — had no tag as a whole.
+  // numbers out, and in Chinese the words that frame them (第 3 页, 到, 至)
+  let digitless = q.replace(/[\d]+(?:\s*[-–~,，、]\s*[\d]+)*/g, ' ');
+  if (CJK_RE.test(q)) digitless = digitless.replace(/[第页頁到至和及、，,\s]/g, '');
+  digitless = digitless.replace(/\s+/g, ' ').trim();
+  if (digitless !== q && digitless.length >= minQueryLength(digitless)) {
+    const hits = _searchVariants(digitless, index, false);
+    if (hits.length) return hits.map(hit => ({ ...hit, score: hit.score - 5 }));
+  }
+  return _byWords(q, index);
+}
+
+function _searchVariants(q, index, short) {
   const simplified = toSimplified(q);
   const results = new Map();
   for (const variant of simplified === q ? [q] : [q, simplified]) {
@@ -195,6 +214,57 @@ export function search(query, index) {
     }
   }
   return [...results.values()].sort((a, b) => b.score - a.score);
+}
+
+// Words that say nothing about the tool, in the languages whose requests
+// came as sentences; a request is searched word by word without them.
+const _FILLER = new Set(('the a an and or to of in on into for with from my me it them this that all together ' +
+  'file files pdf pdfs page pages please want need how can i make add get ' +
+  'y de la el los las un una en para con mi ' +
+  'le les des et pour mon ma ' +
+  'e o os um uma em meu minha').split(' '));
+
+// Each remaining word alone, a confident match only (a whole or leading part
+// of a name or tag, score 70+); the tool most words name wins. Scores 30–39:
+// below every direct match, so a real result always comes first.
+function _byWords(q, index) {
+  if (CJK_RE.test(q)) return [];
+  const all = q.split(/\s+/);
+  const kept = all.filter(word => !_FILLER.has(word));
+  // the request without its filler words, as one phrase first: "add editable box" → "editable box"
+  if (kept.length && kept.length < all.length) {
+    const phrase = kept.join(' ');
+    const hits = phrase.length >= minQueryLength(phrase) ? _searchVariants(phrase, index, false).filter(hit => hit.score >= 70) : [];
+    if (hits.length) return hits.map(hit => ({ ...hit, score: 30 + Math.min(9, Math.floor(hit.score / 10)) }));
+  }
+  const words = kept.filter(word => word.length >= 3);
+  if (words.length < 1 || words.length === all.length && words.length < 2) return [];
+  const tally = new Map();
+  for (const word of words) {
+    const seen = new Set();
+    for (const hit of _search(word, index)) {
+      if (hit.score < 70 || seen.has(hit.key)) continue;
+      seen.add(hit.key);
+      const t = tally.get(hit.key) ?? { hit, words: 0, best: 0 };
+      t.words++;
+      t.best = Math.max(t.best, hit.score);
+      tally.set(hit.key, t);
+    }
+  }
+  return [...tally.values()]
+    .sort((a, b) => b.words - a.words || b.best - a.best)
+    .map(({ hit, words: n }) => ({ ...hit, score: 30 + Math.min(9, n) }));
+}
+
+// What a Search Miss may carry (2026-11-28): people paste file names and the
+// text of their documents into the box — a report named after a student, a
+// ministry's letterhead, a book's title and author. None of it is sent: a
+// file name, anything over 30 characters, a number of 6+ digits (an ID), an
+// address with @. null = send that a search found nothing, not what it was.
+export function missText(query) {
+  const q = query.trim();
+  if (q.length > 30 || /\.(pdf|docx?|xlsx?|pptx?|jpe?g|png|txt|epub|zip)\b/i.test(q) || /\d{6,}/.test(q) || q.includes('@')) return null;
+  return q;
 }
 
 function _search(q, index) {

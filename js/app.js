@@ -45,7 +45,7 @@ import { trackToolStart, trackToolSuccess, trackCompressTarget,
          trackShareTool, trackBehaviorCrossSell, trackToolNotice } from './analytics.js';
 import { confirmSignedCopy } from './signedConfirm.js';
 import { buildIndex, search, hasCjk,
-         minQueryLength }                    from './search.js';
+         minQueryLength, missText }          from './search.js';
 import { COPY_MODE, COPY_MODE_QUERY, quickEditExamples, selectQuickEditMode } from './quickEditUI.js';
 import { loadPdfLib }                              from './lazyLibs.js';
 import { forgetStoredSignals, recordDownload,
@@ -1666,12 +1666,27 @@ function initSearch() {
   searchEl.addEventListener('input', e => { if (!e.isComposing) _scheduleSearch(); });
   searchEl.addEventListener('compositionend', _scheduleSearch);
 
+  // One Search Miss per request, sent when the person stops typing (3 s),
+  // leaves the box or the page — not one per letter: "covert to m",
+  // "covert to ma", … each went out (2026-11-28). missText keeps file names
+  // and document text out of it.
+  let _pendingMiss = null, _missTimer = null;
+  const _sendMiss = () => {
+    clearTimeout(_missTimer);
+    if (_pendingMiss) trackSearchMiss(missText(_pendingMiss) ?? '(private)');
+    _pendingMiss = null;
+  };
+  const _dropMiss = () => { clearTimeout(_missTimer); _pendingMiss = null; };
+  searchEl.addEventListener('blur', _sendMiss);
+  window.addEventListener('pagehide', _sendMiss);
+
   function _runSearch(query) {
     const q = query.trim();
-    if (q.length < 2) { _clearResult(); return; }
+    if (q.length < 2) { _dropMiss(); _clearResult(); return; }
 
     const results = search(q, indexFor(q));
     if (results.length) {
+      _dropMiss();
       trackSearchQuery(results.length);
       _applyResult(results[0]);
       // The list is for genuinely plausible alternatives, not every hit —
@@ -1686,7 +1701,11 @@ function initSearch() {
       else candidatesEl.hidden = true;
     } else {
       // "cl", "pd": a word still being typed, not a miss.
-      if (q.length >= minQueryLength(q)) trackSearchMiss(q);
+      if (q.length >= minQueryLength(q)) {
+        _pendingMiss = q;
+        clearTimeout(_missTimer);
+        _missTimer = setTimeout(_sendMiss, 3000);
+      } else _dropMiss();
       resultEl.hidden = true;
       _activeResult   = null;
       // A short/early query (e.g. still mid-word) isn't a real "miss" yet —

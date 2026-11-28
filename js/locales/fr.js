@@ -6,7 +6,7 @@ window.PDFREE_LOCALE = {
   // exactly. Merged with (not replacing) the English tags in js/search.js.
   search_tags: {
     merge:            ['fusionner', 'combiner', 'joindre', 'unir', 'fusion de fichiers', 'plusieurs pdf', 'joindre des pdf', 'intercaler les pages', 'alterner les pages', 'recto verso', 'numérisation recto verso'],
-    split:            ['diviser', 'séparer', 'découper', 'couper', 'retirer des pages'],
+    split:            ['diviser', 'séparer', 'découper', 'couper', 'retirer des pages', 'fractionner', 'fractionner pdf'],
     compress:         ['compresser', 'réduire', 'plus petit', 'diminuer', 'optimiser', 'taille du fichier', 'trop lourd'],
     jpg2pdf:          ['image en pdf', 'photo en pdf', 'png en pdf', 'convertir image en pdf', 'jpg en pdf'],
     pdf2jpg:          ['pdf en image', 'exporter les pages', 'convertir en jpg', 'extraire les images', 'pdf en cbz'],
@@ -24,8 +24,8 @@ window.PDFREE_LOCALE = {
     meta:             ['métadonnées', 'titre', 'auteur', 'propriétés', 'informations sur le fichier'],
     protect:          ['protéger', 'mot de passe', 'verrouiller', 'chiffrer', 'crypter', 'restreindre'],
     fill:             ['remplir', 'formulaire', 'case à cocher', 'liste déroulante', 'champ de texte', 'remplir un formulaire'],
-    quickEdit:        ['modifier texte pdf', 'corriger faute pdf', 'édition rapide pdf', 'corriger coquille'],
-    formFields:       ['ajouter des champs', 'créer un formulaire pdf', 'pdf remplissable', 'ajouter un champ'],
+    quickEdit:        ['modifier texte pdf', 'corriger faute pdf', 'édition rapide pdf', 'corriger coquille', 'modifier', 'modifier pdf'],
+    formFields:       ['ajouter des champs', 'créer un formulaire pdf', 'pdf remplissable', 'ajouter un champ', 'champs remplissables', 'modifier les champs'],
     'compress-email':  ['email', 'courriel', 'gmail', 'outlook', 'envoyer pdf', 'pièce jointe', 'fichier trop lourd pour email'],
     'draw-pdf':        ['dessiner', 'annoter', 'annotation', 'marquer', 'flèche', 'forme', 'zone de texte', 'main levée', 'surligner', 'ajouter une image', 'insérer une image dans un pdf', 'coller une image', 'ajouter un logo'],
     ocr:              ['ocr', 'extraire le texte', 'numérisé', 'scan en texte', 'reconnaissance de texte', 'recherchable'],
