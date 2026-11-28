@@ -30,6 +30,9 @@ const ready = Promise.all([
   import('./vendor/pdf-lib.min.js'), import('./vendor/fontkit.umd.js'), import('./vendor/mupdf-1.28.1/mupdf.js'),
 ]).then(([, , engine]) => { ({ PDFLib, fontkit } = self); mupdf = engine.default; });
 const CHINESE_FONT = './vendor/noto/notosanssc-v40.ttf';
+// Remove unreferenced objects and compact the xref table after redaction.
+// Pairwise deduplication can stall the save on PDFs with many objects.
+const SAVE_OPTIONS = 'garbage=compact,compress';
 
 // line: the refused line's place in the request, when one line is the cause
 class Refusal extends Error {
@@ -170,7 +173,7 @@ async function prepare({ bytes, lines, heights }) {
         sheet.destroy();
       }
     }
-    const output = source.saveToBuffer('garbage=4,compress');
+    const output = source.saveToBuffer(SAVE_OPTIONS);
     try {
       return { bytes: output.asUint8Array().slice().buffer, plans };
     } finally {
@@ -203,7 +206,7 @@ async function write({ bytes, changes }) {
     const output = mupdf.Document.openDocument(out, 'application/pdf');
     try {
       output.subsetFonts();
-      const buffer = output.saveToBuffer('garbage=4,compress');
+      const buffer = output.saveToBuffer(SAVE_OPTIONS);
       try {
         out = buffer.asUint8Array().slice();
       } finally {

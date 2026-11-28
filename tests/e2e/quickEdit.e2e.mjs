@@ -869,8 +869,8 @@ await test('Quick Edit copies with a watermark: the name in the text and in the 
 // ── In place (the default for a file with a text layer): only the edited line
 // changes; the page count, the other lines and the other pages stay as they were
 
-async function inPlaceDoc() {
-  const { PDFDocument, StandardFonts } = await import('pdf-lib');
+async function inPlaceDoc(destinationCount = 0) {
+  const { PDFDocument, PDFHexString, PDFName, StandardFonts } = await import('pdf-lib');
   const doc = await PDFDocument.create();
   const font = await doc.embedFont(StandardFonts.Helvetica);
   for (let i = 1; i <= 3; i++) {
@@ -878,6 +878,15 @@ async function inPlaceDoc() {
     sheet.drawText(`Chapter ${i} heading`, { x: 40, y: 540, size: 16, font });
     sheet.drawText(`Body text on page ${i} stays exactly as written.`, { x: 40, y: 500, size: 11, font });
     sheet.drawText('Join our group for more books: example0001', { x: 40, y: 40, size: 8, font });
+  }
+  if (destinationCount) {
+    const page = doc.getPage(0).ref;
+    const names = [];
+    for (let i = 0; i < destinationCount; i++) {
+      const position = doc.context.obj([page, 'XYZ', 40 + (i % 360), 40 + Math.floor(i / 360), null]);
+      names.push(PDFHexString.fromText(`Section ${String(i).padStart(5, '0')}`), doc.context.register(position));
+    }
+    doc.catalog.set(PDFName.of('Names'), doc.context.obj({ Dests: { Names: names } }));
   }
   return Buffer.from(await doc.save());
 }
@@ -934,6 +943,28 @@ await test('in place: a file with text opens the page editor; only the edited li
     expect(pages[1].includes('Body text on page 2 stays exactly as written.')).toBeTruthy();
     expect(pages[0]).toBe('Chapter 1 heading Body text on page 1 stays exactly as written. Join our group for more books: example0001');
     expect(pages[2].includes('example0001')).toBeTruthy();
+  } finally {
+    await page.close();
+  }
+});
+
+await test('in place: saving a PDF with many reachable objects still finishes', async () => {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  const getDownload = await captureDownload(page);
+  try {
+    await page.goto(`${BASE_URL}/quick-edit-pdf/`);
+    // The destinations add many distinct PDF objects without bloating the rendered pages.
+    await page.setInputFiles('#fileInput', { name: 'many-objects.pdf', mimeType: 'application/pdf', buffer: await inPlaceDoc(33000) });
+    await page.waitForSelector('.qe-modal--open .qe-page-line', { timeout: 20000 });
+    await editLine(page, 'Chapter 1', 'Updated heading');
+    await page.click('#qeModalSaveBtn');
+    await page.waitForSelector('#successCard', { timeout: 15000 });
+    for (let i = 0; i < 50 && !getDownload(); i++) await page.waitForTimeout(100);
+    const pages = await pagesText(page, getDownload());
+    expect(pages.length).toBe(3);
+    expect(pages[0].includes('Updated heading')).toBeTruthy();
+    expect(pages[0].includes('Chapter 1')).toBeFalsy();
+    expect(pages[2].includes('Chapter 3 heading')).toBeTruthy();
   } finally {
     await page.close();
   }
