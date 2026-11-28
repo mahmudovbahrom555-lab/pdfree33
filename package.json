@@ -59,6 +59,7 @@
     "test:e2e:jpg2pdf-scan-hint": "node tests/e2e/jpg2pdf-scan-hint.e2e.mjs",
     "test:e2e:jpg2pdf-tiff": "node tests/e2e/jpg2pdf-tiff.e2e.mjs",
     "test:e2e:quickedit-skeleton": "node tests/e2e/quickEditSkeleton.e2e.mjs",
+    "test:e2e:tool-urls": "node tests/e2e/tool-urls.e2e.mjs",
     "check:prod:embed-sdk": "PDFREE_BASE_URL=https://pdfree.io node tests/e2e/embed-sdk.e2e.mjs",
     "check:prod:edge": "node scripts/check_edge_routing.mjs https://pdfree.io --browser --redirect-sample 20",
     "lint": "eslint js/*.js --ignore-pattern 'js/vendor/**'",

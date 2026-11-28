@@ -1172,6 +1172,24 @@ await test('Chinese: the loading screen is in Chinese with no copies button, and
   }
 });
 
+await test('homepage search: a PDF chosen on the Quick Edit result opens the Quick Edit page in the page language, not a 404', async () => {
+  for (const [home, target] of [['/', '/quick-edit-pdf/'], ['/zh/', '/zh/kuaisu-bianji-pdf/']]) {
+    const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+    try {
+      await page.goto(`${BASE_URL}${home}`);
+      await page.fill('#toolSearch', 'quick');
+      await page.locator('label[for="srFileInput"]').first().waitFor();   // the result card, not just its hidden input
+      await Promise.all([
+        page.waitForURL(url => new URL(url).pathname === target, { timeout: 15000 }),
+        page.setInputFiles('#srFileInput', EXTRACTABLE_PDF),
+      ]);
+      await page.waitForSelector('[data-find-text]', { timeout: 30000 });
+    } finally {
+      await page.close();
+    }
+  }
+});
+
 await test('repeated lines: the promo on every page is offered first and removed everywhere with one press', async () => {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   const getDownload = await captureDownload(page);
